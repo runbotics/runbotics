@@ -12,7 +12,7 @@ public class ProcessConstants {
         "      <bpmn2:incoming>Flow_1syiccm</bpmn2:incoming>\n" +
         "    </bpmn2:endEvent>\n" +
         "    <bpmn2:sequenceFlow id=\"Flow_1o48sj4\" sourceRef=\"StartEvent_1\" targetRef=\"Activity_0a1ma4g\" />\n" +
-        "    <bpmn2:serviceTask id=\"Activity_0vl0npo\" camunda:actionId=\"browser.read.text\" camunda:label=\"Read definition\" implementation=\"${environment.services.desktop()}\">\n" +
+        "    <bpmn2:serviceTask id=\"Activity_0vl0npo\" camunda:actionId=\"browser.read.text\" camunda:label=\"Read definition\" camunda:processOutput=\"true\" implementation=\"${environment.services.desktop()}\">\n" +
         "      <bpmn2:extensionElements>\n" +
         "        <camunda:inputOutput>\n" +
         "          <camunda:inputParameter name=\"target\">xpath=#{rpaParagraphXpath}</camunda:inputParameter>\n" +
