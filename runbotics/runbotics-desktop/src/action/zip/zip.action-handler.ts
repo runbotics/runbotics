@@ -4,6 +4,7 @@ import { ZipAction } from 'runbotics-common';
 import { ZipActionRequest, UnzipFileActionInput, ZipFileActionInput } from './zip.types';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '../../logger';
+import { handleFileSystemError } from '#utils/fileSystemError';
 import pathPackage from 'path';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
@@ -37,7 +38,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
             const zip = new AdmZip(`${fullPath}.zip`);
             zip.extractAllTo(fullPath);
         } catch (e) {
-            this.handleError('Unzip archive', e.code);
+            handleFileSystemError('Unzip archive', e);
         }
     }
 
@@ -65,7 +66,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
             zip.writeZip(`${pathToZip}.zip`);
             return `${pathToZip}.zip`;
         } catch (e) {
-            this.handleError('Create archive', e.code);
+            handleFileSystemError('Create archive', e);
         }
     }
 
@@ -82,20 +83,6 @@ export default class ZipActionHandler extends StatelessActionHandler {
     private isDirectory(path: string) {
         const stat = fs.lstatSync(path);
         return stat.isDirectory();
-    }
-
-    private handleError(actionName: string, error: string) {
-        switch (error) {
-            case 'EBUSY':
-                throw new Error(`${actionName} action: File with this name already exists.`);
-            case 'ENOENT':
-                throw new Error(`${actionName}: no such file or directory`);
-            case 'EACCES':
-            case 'EPERM':
-                throw new Error(`${actionName}: Directory permission denied`);
-            default:
-                throw new Error(`${actionName} action failed with error: ${error}`);
-        }
     }
 
     run(request: ZipActionRequest) {

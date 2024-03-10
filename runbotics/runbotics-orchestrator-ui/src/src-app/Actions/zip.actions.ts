@@ -8,7 +8,7 @@ import { translate } from '../hooks/useTranslations';
 const getZipActions: () => Record<string, IBpmnAction> = () => ({
     [ZipAction.UNZIP_FILE]: {
         id: ZipAction.UNZIP_FILE,
-        label: translate('Process.Details.Modeler.Actions.Zip.Unzip.Label'),
+        label: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Label'),
         script: ZipAction.UNZIP_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
@@ -20,7 +20,7 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             fileName: {
-                                title: translate('Process.Details.Modeler.Actions.Zip.Unzip.Name'),
+                                title: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Name'),
                                 type: 'string',
                             },
                             path: {
@@ -37,12 +37,12 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     fileName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.Unzip.Name.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Name.Info'),
                         }
                     },
                     path: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.Unzip.Path.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Path.Info'),
                         },
                     }
                 }
@@ -57,7 +57,7 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
     },
     [ZipAction.ZIP_FILE]: {
         id: ZipAction.ZIP_FILE,
-        label: translate('Process.Details.Modeler.Actions.Zip.Zip.Label'),
+        label: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.Label'),
         script: ZipAction.ZIP_FILE,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -75,7 +75,7 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                         type: 'object',
                         properties: {
                             fileName: {
-                                title: translate('Process.Details.Modeler.Actions.Zip.Zip.Name'),
+                                title: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.Name'),
                                 type: 'string',
                                 pattern: ActionRegex.DIRECTORY_NAME
                             }, 
@@ -84,7 +84,7 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                             },
                             zipName: {
-                                title: translate('Process.Details.Modeler.Actions.Zip.Zip.ZipName'),
+                                title: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName'),
                                 type: 'string',
                                 pattern: ActionRegex.DIRECTORY_NAME
                             }, 
@@ -110,24 +110,24 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                     
                     fileName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.Zip.Name.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.Name.Info'),
                         }
                     },
                     path: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.Zip.Path.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.Path.Info'),
                         },
                     },
                     zipName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.Zip.ZipName.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName.Info'),
                         },
                     },                    
                 },
                 output: {
                     variableName: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.Zip.Output.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.Output.Info'),
                         },
                     },
                 },
