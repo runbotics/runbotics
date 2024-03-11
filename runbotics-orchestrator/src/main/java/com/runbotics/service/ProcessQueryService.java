@@ -54,6 +54,8 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private final String PROCESS_CREATED_BY_NAME = "createdByName";
 
+    private final String PROCESS_COLLECTION_ID = "collectionId";
+
     public ProcessQueryService(
         ProcessRepository processRepository,
         ProcessMapper processMapper,
@@ -140,25 +142,50 @@ public class ProcessQueryService extends QueryService<Process> {
         Map<String, String> specification = this.createCustomSearchSpecification(criteria);
 
         if (hasRequesterRoleAdmin) {
-            return processRepository
-                .findBySearchForAdmin(
-                    specification.get(PROCESS_NAME),
-                    specification.get(PROCESS_TAG_NAME),
-                    specification.get(PROCESS_CREATED_BY_NAME),
-                    page
-                )
-                .map(processMapper::toDto);
-        } else {
-            return processRepository
-                .findBySearchForUser(
-                    user.getId(),
-                    specification.get(PROCESS_NAME),
-                    specification.get(PROCESS_TAG_NAME),
-                    specification.get(PROCESS_CREATED_BY_NAME),
-                    page
-                )
-                .map(processMapper::toDto);
+            return processRepository.findBySearchForAdmin(
+                specification.get(PROCESS_NAME),
+                specification.get(PROCESS_CREATED_BY_NAME),
+                specification.get(PROCESS_TAG_NAME),
+                page
+            ).map(processMapper::toDto);
         }
+
+        return processRepository.findBySearchForUser(
+            specification.get(PROCESS_NAME),
+            specification.get(PROCESS_CREATED_BY_NAME),
+            specification.get(PROCESS_TAG_NAME),
+            user,
+            page
+        ).map(processMapper::toDto);
+//        return processRepository
+//            .findBySearch(
+//                page,
+//                user,
+//                specification.get(PROCESS_NAME),
+//                specification.get(PROCESS_TAG_NAME),
+//                specification.get(PROCESS_CREATED_BY_NAME)
+//            ).map(processMapper::toDto);
+
+//        if (hasRequesterRoleAdmin) {
+//            return processRepository
+//                .findBySearchForAdmin(
+//                    specification.get(PROCESS_NAME),
+//                    specification.get(PROCESS_TAG_NAME),
+//                    specification.get(PROCESS_CREATED_BY_NAME),
+//                    page
+//                )
+//                .map(processMapper::toDto);
+//        } else {
+//            return processRepository
+//                .findBySearchForUser(
+//                    user.getId(),
+//                    specification.get(PROCESS_NAME),
+//                    specification.get(PROCESS_TAG_NAME),
+//                    specification.get(PROCESS_CREATED_BY_NAME),
+//                    page
+//                )
+//                .map(processMapper::toDto);
+//        }
     }
 
     @Transactional(readOnly = true)
@@ -168,55 +195,75 @@ public class ProcessQueryService extends QueryService<Process> {
         Map<String, String> specification = this.createCustomSearchSpecification(criteria);
 
         if (hasRequesterRoleAdmin) {
-            if (criteria.getCollectionId() != null) {
-                return processRepository
-                    .findBySearchAndCollectionForAdmin(
-                        specification.get(PROCESS_NAME),
-                        specification.get(PROCESS_TAG_NAME),
-                        specification.get(PROCESS_CREATED_BY_NAME),
-                        criteria.getCollectionId().getEquals(),
-                        page
-                    ).map(processMapper::toDto);
-            }
-
-            return processRepository
-                .findBySearchWithoutCollectionForAdmin(
+            return processRepository.findBySearchAndCollectionForAdmin(
                     specification.get(PROCESS_NAME),
-                    specification.get(PROCESS_TAG_NAME),
                     specification.get(PROCESS_CREATED_BY_NAME),
-                    page
-                ).map(processMapper::toDto);
-
-        } else {
-            if (criteria.getCollectionId() != null) {
-                processCollectionService.checkCollectionAvailability(
-                    criteria.getCollectionId().getEquals(), user
-                );
-
-                processCollectionService.checkAndGetCollectionAllAncestors(
-                    criteria.getCollectionId().getEquals(), user
-                );
-
-                return processRepository
-                    .findBySearchAndCollectionForUser(
-                        user.getId(),
-                        specification.get(PROCESS_NAME),
-                        specification.get(PROCESS_TAG_NAME),
-                        specification.get(PROCESS_CREATED_BY_NAME),
-                        criteria.getCollectionId().getEquals(),
-                        page
-                    ).map(processMapper::toDto);
-            }
-
-            return processRepository
-                .findBySearchWithoutCollectionForUser(
-                    user.getId(),
-                    specification.get(PROCESS_NAME),
                     specification.get(PROCESS_TAG_NAME),
-                    specification.get(PROCESS_CREATED_BY_NAME),
+                    criteria.getCollectionId() != null ? criteria.getCollectionId().getEquals() : null,
                     page
-                ).map(processMapper::toDto);
+                )
+                .map(processMapper::toDto);
         }
+
+        return processRepository.findBySearchAndCollectionForUser(
+                specification.get(PROCESS_NAME),
+                specification.get(PROCESS_CREATED_BY_NAME),
+                specification.get(PROCESS_TAG_NAME),
+                criteria.getCollectionId() != null ? criteria.getCollectionId().getEquals() : null,
+                user, page
+            )
+            .map(processMapper::toDto);
+
+//        if (hasRequesterRoleAdmin) {
+//            if (criteria.getCollectionId() != null) {
+//                return processRepository
+//                    .findBySearchAndCollectionForAdmin(
+//                        specification.get(PROCESS_NAME),
+//                        specification.get(PROCESS_TAG_NAME),
+//                        specification.get(PROCESS_CREATED_BY_NAME),
+//                        criteria.getCollectionId().getEquals(),
+//                        page
+//                    ).map(processMapper::toDto);
+//            }
+//
+//            return processRepository
+//                .findBySearchWithoutCollectionForAdmin(
+//                    specification.get(PROCESS_NAME),
+//                    specification.get(PROCESS_TAG_NAME),
+//                    specification.get(PROCESS_CREATED_BY_NAME),
+//                    page
+//                ).map(processMapper::toDto);
+//
+//        } else {
+//            if (criteria.getCollectionId() != null) {
+//                processCollectionService.checkCollectionAvailability(
+//                    criteria.getCollectionId().getEquals(), user
+//                );
+//
+//                processCollectionService.checkAndGetCollectionAllAncestors(
+//                    criteria.getCollectionId().getEquals(), user
+//                );
+//
+//                return processRepository
+//                    .findBySearchAndCollectionForUser(
+//                        user.getId(),
+//                        specification.get(PROCESS_NAME),
+//                        specification.get(PROCESS_TAG_NAME),
+//                        specification.get(PROCESS_CREATED_BY_NAME),
+//                        criteria.getCollectionId().getEquals(),
+//                        page
+//                    ).map(processMapper::toDto);
+//            }
+//
+//            return processRepository
+//                .findBySearchWithoutCollectionForUser(
+//                    user.getId(),
+//                    specification.get(PROCESS_NAME),
+//                    specification.get(PROCESS_TAG_NAME),
+//                    specification.get(PROCESS_CREATED_BY_NAME),
+//                    page
+//                ).map(processMapper::toDto);
+//        }
     }
 
     /**

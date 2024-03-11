@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpecificationExecutor<Process> {
+public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpecificationExecutor<Process>, ProcessCustomRepository {
     @Query("select process from Process process where process.createdBy.login = ?#{principal.username}")
     List<Process> findByCreatedByIsCurrentUser();
 
@@ -49,7 +49,7 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
             "GROUP BY p.id"
         , nativeQuery = true
     )
-    Page<Process> findBySearchForAdmin(String name, String tagName, String createdByName, Pageable pageable);
+    Page<Process> findBySearchForAdmin2(String name, String tagName, String createdByName, Pageable pageable);
 
     @Query(value =
         "SELECT p.* FROM process p " +
@@ -62,7 +62,7 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
             "GROUP BY p.id"
         , nativeQuery = true
     )
-    Page<Process> findBySearchForUser(Long id, String name, String tagName, String createdByName, Pageable pageable);
+    Page<Process> findBySearchForUser2(Long id, String name, String tagName, String createdByName, Pageable pageable);
 
     @Query(value =
         "SELECT p.* FROM process p " +
@@ -74,7 +74,7 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
             "GROUP BY p.id"
         , nativeQuery = true
     )
-    Page<Process> findBySearchAndCollectionForAdmin(String name, String tagName, String createdByName, UUID collectionId, Pageable pageable);
+    Page<Process> findBySearchAndCollectionForAdmin2(String name, String tagName, String createdByName, UUID collectionId, Pageable pageable);
 
     @Query(value =
         "SELECT p.* FROM process p " +
@@ -88,7 +88,7 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
             "GROUP BY p.id"
         , nativeQuery = true
     )
-    Page<Process> findBySearchAndCollectionForUser(Long id, String name, String tagName, String createdByName, UUID collectionId, Pageable pageable);
+    Page<Process> findBySearchAndCollectionForUser2(Long id, String name, String tagName, String createdByName, UUID collectionId, Pageable pageable);
 
     @Query(value =
         "SELECT p.* FROM process p " +
@@ -100,7 +100,7 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
             "GROUP BY p.id"
         , nativeQuery = true
     )
-    Page<Process> findBySearchWithoutCollectionForAdmin(String name, String tagName, String createdByName, Pageable pageable);
+    Page<Process> findBySearchWithoutCollectionForAdmin2(String name, String tagName, String createdByName, Pageable pageable);
 
     @Query(value =
         "SELECT p.* FROM process p " +
@@ -114,7 +114,7 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
             "GROUP BY p.id"
         , nativeQuery = true
     )
-    Page<Process> findBySearchWithoutCollectionForUser(Long id, String name, String tagName, String createdByName, Pageable pageable);
+    Page<Process> findBySearchWithoutCollectionForUser2(Long id, String name, String tagName, String createdByName, Pageable pageable);
 
     @Query(
         value = "SELECT COUNT(*) FROM Process process WHERE process.createdBy.id = ?1"
