@@ -12,16 +12,19 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { processCollectionActions } from '#src-app/store/slices/ProcessCollection';
 import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
-import { LocationOptionsProps } from './LocationOptions.types';
+import { LocationOptionsProps, ProcessCollectionHierarchy } from './LocationOptions.types';
 import { ABSTRACT_ROOT_COLLECTION_ID, accessTooltipIcon, getHierarchicalStructure } from './LocationOptions.utils';
 
-const LocationOptions: FC<LocationOptionsProps> = ({ isModifyDialogOpen, handleChange, parentId = null }) => {
+const LocationOptions: FC<LocationOptionsProps> = ({ isModifyDialogOpen, handleChange, isOwner, parentId = null, editedCollectionId }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { allUserAccessible: { isLoading, list: allUserAccessible } } = useSelector(state => state.processCollection);
 
     const rootCollections = allUserAccessible.filter(collection => collection.parentId === null);
-    const userAccessibleHierarchy = rootCollections.map((node: any) => getHierarchicalStructure(node, allUserAccessible));
+    const userAccessibleHierarchy = rootCollections.map((node: ProcessCollectionHierarchy) => {
+        const { parentNodeWithIcon } = getHierarchicalStructure({ parentNode: node, allNodes: allUserAccessible, editedCollectionId });
+        return parentNodeWithIcon;
+    });
 
     const rootProcessCollection: TreeStructureItem = {
         id: ABSTRACT_ROOT_COLLECTION_ID,
@@ -29,12 +32,17 @@ const LocationOptions: FC<LocationOptionsProps> = ({ isModifyDialogOpen, handleC
         parentId: null,
         children: userAccessibleHierarchy,
         icon: accessTooltipIcon.home,
+        selectable: isOwner,
     };
 
     const setSelected = (selected: CollectionId[] | CollectionId) => {
         if (typeof selected === 'string') {
-            if (selected === ABSTRACT_ROOT_COLLECTION_ID) handleChange('parentId', ROOT_PROCESS_COLLECTION_ID);
-            else handleChange('parentId', selected);
+            if (selected === ABSTRACT_ROOT_COLLECTION_ID) {
+                handleChange('parentId', ROOT_PROCESS_COLLECTION_ID);
+                return;
+            }
+            if (selected === editedCollectionId) return;
+            handleChange('parentId', selected);
         }
     };
 

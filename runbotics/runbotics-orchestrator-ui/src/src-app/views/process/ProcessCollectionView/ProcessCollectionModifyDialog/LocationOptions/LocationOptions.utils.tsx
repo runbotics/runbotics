@@ -7,7 +7,8 @@ import { ProcessCollection } from 'runbotics-common';
 import TooltipIcon from '#src-app/components/TooltipIcon';
 import { TootltipIcon as TootltipIconType} from '#src-app/components/TooltipIcon/TooltipIcon.types';
 
-import { GetIconParams, ProcessCollectionHierarchy } from './LocationOptions.types';
+
+import { GetHierarchicalStructureParams, GetHierarchicalStructureResult, GetIconParams, ProcessCollectionHierarchy } from './LocationOptions.types';
 
 export const accessTooltipIcon: Record<string, TootltipIconType> = {
     public: <TooltipIcon translationKey='Process.Collection.Structure.Icon.Public.Tooltip' icon={PublicOutlinedIcon} />,
@@ -28,17 +29,33 @@ export const getIcon = ({ isPublic, users }: GetIconParams) => {
     return accessTooltipIcon.private;
 };
 
-export const getHierarchicalStructure = (parentNode: ProcessCollectionHierarchy, allNodes: ProcessCollection[]) => {
-    const nodeChildren = allNodes.filter((node: any) => node.parentId === parentNode.id);
+export const getHierarchicalStructure = ({
+    parentNode,
+    allNodes,
+    editedCollectionId,
+}: GetHierarchicalStructureParams): GetHierarchicalStructureResult => {
+    const nodeChildren = allNodes.filter((node: ProcessCollection) => node.parentId === parentNode.id);
     const parentNodeWithIcon = {
         ...parentNode,
         icon: getIcon({ isPublic: parentNode.isPublic, users: parentNode.users }),
+        selectable: parentNode.id !== editedCollectionId,
     };
 
     return nodeChildren.length > 0
         ? {
-            ...parentNodeWithIcon,
-            children: nodeChildren.map((child: any) => getHierarchicalStructure(child, allNodes))
-        }
-        : parentNodeWithIcon;
+            parentNodeWithIcon: {
+                ...parentNodeWithIcon,
+                children: nodeChildren.map((child: ProcessCollectionHierarchy) => {
+                    const { parentNodeWithIcon: childParentNodeWithIcon } = getHierarchicalStructure({
+                        parentNode: child,
+                        allNodes,
+                        editedCollectionId,
+                    });
+
+                    return childParentNodeWithIcon;
+                }),
+            },
+        } : {
+            parentNodeWithIcon,
+        };
 };

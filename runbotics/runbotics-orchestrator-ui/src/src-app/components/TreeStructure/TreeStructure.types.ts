@@ -13,6 +13,7 @@ export interface TreeStructureItem {
     parentId: string;
     id: string;
     name: string;
+    selectable: boolean;
     icon?: TootltipIconType;
     children?: TreeStructureItem[];
 }

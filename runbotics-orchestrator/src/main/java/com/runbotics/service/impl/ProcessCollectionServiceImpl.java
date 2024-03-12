@@ -109,9 +109,13 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
     public void delete(UUID id, User user) {
         boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
         boolean hasCollectionAccess = hasUserAccessEveryCollection || processCollectionRepository.findUserAccessibleById(user, id).size() > 0;
+        boolean isOwner = hasUserAccessEveryCollection || processCollectionRepository.findById(id).get().getCreatedBy().getLogin().equals(user.getLogin());
 
         if (!hasCollectionAccess) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access to process collection");
+        }
+        if (!isOwner) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only collection creator can delete it");
         }
 
         processCollectionRepository.deleteById(id);
@@ -121,7 +125,8 @@ public  class ProcessCollectionServiceImpl implements ProcessCollectionService {
     public ProcessCollectionDTO save(ProcessCollectionDTO processCollectionDTO) {
         log.debug("Request to save ProcessCollectionDTO : {}", processCollectionDTO);
         ProcessCollection processCollection = processCollectionMapper.toEntity(processCollectionDTO);
-        processCollection.setCreatedBy(userService.getUserWithAuthorities().get());
+        Optional<User> createdBy = userService.getUserWithAuthoritiesByLogin(processCollectionDTO.getCreatedBy().getLogin());
+        processCollection.setCreatedBy(createdBy.isPresent() ? createdBy.get() : userService.getUserWithAuthorities().get());
         processCollection.setUsers(
             processCollection
                 .getUsers()
