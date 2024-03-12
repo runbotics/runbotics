@@ -36,7 +36,7 @@ const general: typeof englishGeneral = {
     'Process.Collection.Structure.Icon.Public.Tooltip': 'Publiczna',
     'Process.Collection.Structure.Icon.Home.Tooltip': 'Nadrzędny zbiór',
     'Process.Collection.Structure.NoCollections': 'Nowy zbiór zostanie utworzony w',
-    'Process.Collection.Structure.Root': 'Pałac',
+    'Process.Collection.Structure.Root': 'Home',
 };
 
 export default general;
