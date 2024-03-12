@@ -10,10 +10,10 @@ import { useDispatch } from '#src-app/store';
 import { deleteOne } from '#src-app/store/slices/ProcessCollection/ProcessCollection.thunks';
 
 
-import { DeleteCollectionProps } from './MenuItems.types';
+import { CollectionDeleteItemProps } from './MenuItems.types';
 import { translate } from '../../../../hooks/useTranslations';
 
-export const DeleteCollection: FC<DeleteCollectionProps> = ({ id, name, isOwner }) => {
+export const CollectionDeleteItem: FC<CollectionDeleteItemProps> = ({ id, name, isOwner }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const [isDialogOpen, setIsDialogOpen] = useState(false);

@@ -23,8 +23,6 @@ const general: typeof englishGeneral = {
     'Process.Collection.Tile.MenuItem.Delete.Fail': 'Nie masz uprawnień do usunięcia zbioru "{{ name }}"',
     'Process.Collection.Tile.MenuItem.Delete.Info': 'Tylko twórca zbioru może go usunąć',
     'Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title': 'Czy na pewno chcesz usunąć zbiór "{{ name }}"?',
-    'Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Ok': 'Potwierdź',
-    'Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Cancel': 'Anuluj',
     'Process.Collection.Tile.MenuItem.Edit': 'Edytuj',
     'Process.Collection.Navigation.Processes.Label': 'Procesy',
     'Process.Collection.Navigation.Collections.Label': 'Zbiory',

@@ -10,8 +10,8 @@ import PrivateIcon from '#public/images/icons/lock.svg';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import { useSelector } from '#src-app/store';
 
-import { DeleteCollection } from './MenuItems/DeleteCollection';
-import { EditCollection } from './MenuItems/EditCollection';
+import { CollectionDeleteItem } from './MenuItems/CollectionDeleteItem';
+import { CollectionEditItem } from './MenuItems/CollectionEditItem';
 import { StyledIconsBox } from './ProcessCollectionList.style';
 import { CollectionNameWrapper, ContextWrapper, MenuWrapper, ProcessCollectionTileWrapper, StyledLink } from './ProcessCollectionTile.styles';
 import { translate } from '../../../hooks/useTranslations';
@@ -66,8 +66,8 @@ const ProcessCollectionTile: FC<ProcessCollection> = (collection) => {
                     <MoreVertIcon />
                 </IconButton>
                 <Menu id="process-collection-actions-menu" anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-                    <EditCollection collection={collection} onClose={handleClose} />
-                    <DeleteCollection id={id} name={name} isOwner={isOwner} />
+                    <CollectionEditItem collection={collection} onClose={handleClose} />
+                    <CollectionDeleteItem id={id} name={name} isOwner={isOwner} />
                 </Menu>
             </MenuWrapper>
         </ProcessCollectionTileWrapper>

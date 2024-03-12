@@ -4,10 +4,10 @@ import { MenuItem } from '@mui/material';
 
 import ProcessCollectionModifyDialog from '#src-app/views/process/ProcessCollectionView/ProcessCollectionModifyDialog/ProcessCollectionModifyDialog';
 
-import { EditCollectionProps } from './MenuItems.types';
+import { CollectionEditItemProps } from './MenuItems.types';
 import { translate } from '../../../../hooks/useTranslations';
 
-export const EditCollection: FC<EditCollectionProps> = ({ collection, onClose }) => {
+export const CollectionEditItem: FC<CollectionEditItemProps> = ({ collection, onClose }) => {
     const [showDialog, setShowDialog] = useState<boolean>(false);
 
     const toggleShowDialog = () => {
