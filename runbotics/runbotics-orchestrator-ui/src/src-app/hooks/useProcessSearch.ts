@@ -11,7 +11,7 @@ import { processActions } from '#src-app/store/slices/Process';
 
 import useDebounce from './useDebounce';
 
-const DEBOUNCE_TIME = 250;
+const DEBOUNCE_TIME = 400;
 
 const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
     const searchParams = useSearchParams();
@@ -19,7 +19,7 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
     const searchFromUrl = searchParams.get('search');
     const searchFieldFromUrl = searchParams.get('searchField');
     const [search, setSearch] = useState(searchFromUrl || '');
-    const [searchField, setSearchField] = useState(searchFieldFromUrl || '');
+    const [searchField, setSearchField] = useState(searchFieldFromUrl || 'name');
     const replaceQueryParams = useReplaceQueryParams();
 
     const dispatch = useDispatch();
