@@ -10,11 +10,7 @@ import java.util.UUID;
 
 public interface ProcessCustomRepository {
 
-    Page<Process> findBySearchForAdmin(String name, String createdByName, String tagName, Pageable pageable);
+    Page<Process> findBySearch(String name, String createdByName, String tagName, User user, Pageable pageable);
 
-    Page<Process> findBySearchForUser(String name, String createdByName, String tagName, User user, Pageable pageable);
-
-    Page<Process> findBySearchAndCollectionForAdmin(String name, String createdByName, String tagName, UUID collectionId, Pageable pageable);
-
-    Page<Process> findBySearchAndCollectionForUser(String name, String createdByName, String tagName, UUID collectionId, User user, Pageable pageable);
+    Page<Process> findBySearchAndCollection(String name, String createdByName, String tagName, UUID collectionId, User user, Pageable pageable);
 }
