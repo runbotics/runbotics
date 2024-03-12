@@ -5,4 +5,4 @@ export interface EditCollectionProps {
     onClose: () => void;
 }
 
-export type DeleteCollectionProps = Pick<ProcessCollection, 'id' | 'name'>;
+export type DeleteCollectionProps = Pick<ProcessCollection, 'id' | 'name'> & { isOwner: boolean; };
