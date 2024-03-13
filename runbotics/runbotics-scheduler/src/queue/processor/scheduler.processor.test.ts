@@ -91,6 +91,7 @@ describe('SchedulerProcessor', () => {
                 ProcessInstanceSchedulerService,
                 SchedulerService,
                 QueueService,
+                QueueMessageService,
                 {
                     provide: getRepositoryToken(BotEntity),
                     useValue: {
@@ -123,7 +124,7 @@ describe('SchedulerProcessor', () => {
             })
             .overrideProvider(ProcessSchedulerService)
             .useValue({
-                startProcess: vi.fn().mockReturnValue(ORCHESTRATOR_INSTANCE_ID)
+                startProcess: vi.fn().mockReturnValue({ orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID })
             })
             .overrideProvider(BotWebSocketGateway)
             .useValue({
@@ -201,6 +202,8 @@ describe('SchedulerProcessor', () => {
     describe('onActive', () => {
         it('should emit WsMessage.ADD_WAITING_SCHEDULE with correct job data', async () => {
             vi.spyOn(processService, 'findById').mockResolvedValue({ id: PROCESS_ID } as any);
+            vi.spyOn(queueService, 'getActiveJobs').mockResolvedValue([ JOB ] as any);
+            vi.spyOn(queueService, 'getWaitingJobs').mockResolvedValue([] as any);
             await schedulerProcessor.onActive(JOB as Job);
 
             expect(processService.findById).toHaveBeenCalledWith(PROCESS_ID);
