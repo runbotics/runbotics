@@ -26,11 +26,13 @@ export interface IProcessInstance {
 export type ProcessInstanceNotification = Pick<IProcessInstance,
     'status' |
     'output' |
-    'process' |
+    'input' |
     'error'
 > & {
     started?: IProcessInstance['created'];
     finished?: IProcessInstance['updated'];
+    processId?: IProcess['id'];
+    processInstance?: IProcessInstance['id']
 };
 
 export interface EmailTriggerData {
