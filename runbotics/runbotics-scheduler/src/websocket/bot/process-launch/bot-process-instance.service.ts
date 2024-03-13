@@ -104,7 +104,7 @@ export class BotProcessService {
         if (statusList.includes(processInstance.status)) {
             const processInstanceNotification: ProcessInstanceNotification = {
                 processId: processInstance?.process?.id,
-                processInstance: processInstance?.id,
+                processInstanceId: processInstance?.id,
                 status: processInstance?.status,
                 input: processInstance?.input,
                 output: processInstance?.output,
