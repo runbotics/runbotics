@@ -21,6 +21,8 @@ const general: typeof englishGeneral = {
     'Process.Collection.Tile.MenuItem.Delete': 'Usuń',
     'Process.Collection.Tile.MenuItem.Delete.Success': 'Pomyślnie usunięto zbiór "{{ name }}"',
     'Process.Collection.Tile.MenuItem.Delete.Fail': 'Nie masz uprawnień do usunięcia zbioru "{{ name }}"',
+    'Process.Collection.Tile.MenuItem.Delete.Info': 'Tylko twórca zbioru może go usunąć',
+    'Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title': 'Czy na pewno chcesz usunąć zbiór "{{ name }}"?',
     'Process.Collection.Tile.MenuItem.Edit': 'Edytuj',
     'Process.Collection.Navigation.Processes.Label': 'Procesy',
     'Process.Collection.Navigation.Collections.Label': 'Zbiory',
@@ -32,7 +34,7 @@ const general: typeof englishGeneral = {
     'Process.Collection.Structure.Icon.Public.Tooltip': 'Publiczna',
     'Process.Collection.Structure.Icon.Home.Tooltip': 'Nadrzędny zbiór',
     'Process.Collection.Structure.NoCollections': 'Nowy zbiór zostanie utworzony w',
-    'Process.Collection.Structure.Root': 'Pałac',
+    'Process.Collection.Structure.Root': 'Home',
 };
 
 export default general;

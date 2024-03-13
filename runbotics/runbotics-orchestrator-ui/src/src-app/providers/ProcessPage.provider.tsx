@@ -7,7 +7,6 @@ import { processActions } from '#src-app/store/slices/Process';
 
 interface ProcessPageProps {
     search: string;
-    searchField: string;
     pageSize: number;
     setPageSize: Dispatch<SetStateAction<number>>;
     page: number;
@@ -29,7 +28,6 @@ export const ProcessPageContext = createContext<ProcessPageContextValues>(null);
 const ProcessPageProvider: FC<ProcessPageProps> = ({
     children,
     search,
-    searchField,
     pageSize,
     setPageSize,
     page,
@@ -79,17 +77,17 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     }, [page]);
 
     const handleGridPageChange = (event: MouseEvent<HTMLElement>, currentPage: number) => {
-        replaceQueryParams({ collectionId, page: currentPage - 1, pageSize, search, searchField });
+        replaceQueryParams({ collectionId, page: currentPage - 1, pageSize, search });
         setPage(currentPage - 1);
     };
 
     const handleTablePageChange = (currentPage: number) => {
-        replaceQueryParams({ page: currentPage, pageSize, search, searchField });
+        replaceQueryParams({ page: currentPage, pageSize, search });
         setPage(currentPage);
     };
 
     const handlePageSizeChange = (currentPageSize: number) => {
-        replaceQueryParams({ collectionId, page, pageSize: currentPageSize, search, searchField });
+        replaceQueryParams({ collectionId, page, pageSize: currentPageSize, search });
         setPageSize(currentPageSize);
     };
 
