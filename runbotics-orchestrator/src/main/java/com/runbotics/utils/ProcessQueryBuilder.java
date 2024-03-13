@@ -1,12 +1,11 @@
 package com.runbotics.utils;
 
 import com.runbotics.domain.Process;
-
+import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.List;
 
 public class ProcessQueryBuilder {
 

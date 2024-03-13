@@ -1,34 +1,33 @@
 package com.runbotics.repository.impl;
 
-import com.runbotics.domain.Process;
-import com.runbotics.domain.Process_;
-import com.runbotics.domain.User;
-import com.runbotics.domain.User_;
-import com.runbotics.domain.Tag_;
 import com.runbotics.domain.Guest;
 import com.runbotics.domain.Guest_;
+import com.runbotics.domain.Process;
 import com.runbotics.domain.ProcessCollection_;
+import com.runbotics.domain.Process_;
+import com.runbotics.domain.Tag_;
+import com.runbotics.domain.User;
+import com.runbotics.domain.User_;
 import com.runbotics.repository.ProcessCustomRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.utils.ProcessQueryBuilder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Subquery;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
 
@@ -41,11 +40,8 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
     private final String PROCESS_USER = "user";
     private final String PROCESS_COLLECTION_ID = "collectionId";
 
-    public Page<Process> findBySearch(
-        String name, String createdByName, String tagName, User user, Pageable pageable
-    ) {
-        boolean hasUserRoleAdmin = user.getAuthorities()
-            .stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
+    public Page<Process> findBySearch(String name, String createdByName, String tagName, User user, Pageable pageable) {
+        boolean hasUserRoleAdmin = user.getAuthorities().stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
         ProcessQueryBuilder processQueryBuilder = buildProcessQuery();
@@ -63,23 +59,27 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
 
             ParameterExpression<User> pUser = criteriaBuilder.parameter(User.class, PROCESS_USER);
 
-            predicates.add(criteriaBuilder.or(
-                criteriaBuilder.equal(root.get(Process_.CREATED_BY), pUser),
-                criteriaBuilder.equal(root.get(Process_.IS_PUBLIC), true)
-            ));
+            predicates.add(
+                criteriaBuilder.or(
+                    criteriaBuilder.equal(root.get(Process_.CREATED_BY), pUser),
+                    criteriaBuilder.equal(root.get(Process_.IS_PUBLIC), true)
+                )
+            );
             predicates.add(criteriaBuilder.in(userJoin).value(subquery).not());
         }
 
-        criteriaQuery.where(predicates.toArray(new Predicate[]{}));
-        criteriaCountingQuery.where(predicates.toArray(new Predicate[]{}));
+        criteriaQuery.where(predicates.toArray(new Predicate[] {}));
+        criteriaCountingQuery.where(predicates.toArray(new Predicate[] {}));
 
-        TypedQuery<Process> query = entityManager.createQuery(criteriaQuery)
+        TypedQuery<Process> query = entityManager
+            .createQuery(criteriaQuery)
             .setParameter(PROCESS_NAME, "%" + name.toUpperCase() + "%")
             .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
             .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
         if (!hasUserRoleAdmin) query.setParameter(PROCESS_USER, user);
 
-        TypedQuery<Long> cQuery = entityManager.createQuery(criteriaCountingQuery)
+        TypedQuery<Long> cQuery = entityManager
+            .createQuery(criteriaCountingQuery)
             .setParameter(PROCESS_NAME, "%" + name.toUpperCase() + "%")
             .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
             .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
@@ -89,10 +89,14 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
     }
 
     public Page<Process> findBySearchAndCollection(
-        String name, String createdByName, String tagName, UUID collectionId, User user, Pageable pageable
+        String name,
+        String createdByName,
+        String tagName,
+        UUID collectionId,
+        User user,
+        Pageable pageable
     ) {
-        boolean hasUserRoleAdmin = user.getAuthorities()
-            .stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
+        boolean hasUserRoleAdmin = user.getAuthorities().stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
         ProcessQueryBuilder processQueryBuilder = buildProcessQuery();
@@ -110,35 +114,36 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
 
             ParameterExpression<User> pUser = criteriaBuilder.parameter(User.class, PROCESS_USER);
 
-            predicates.add(criteriaBuilder.or(
-                criteriaBuilder.equal(root.get(Process_.CREATED_BY), pUser),
-                criteriaBuilder.equal(root.get(Process_.IS_PUBLIC), true)
-            ));
+            predicates.add(
+                criteriaBuilder.or(
+                    criteriaBuilder.equal(root.get(Process_.CREATED_BY), pUser),
+                    criteriaBuilder.equal(root.get(Process_.IS_PUBLIC), true)
+                )
+            );
             predicates.add(criteriaBuilder.in(userJoin).value(subquery).not());
         }
 
         ParameterExpression<UUID> pCollectionId = criteriaBuilder.parameter(UUID.class, PROCESS_COLLECTION_ID);
 
         if (collectionId != null) {
-            predicates.add(criteriaBuilder.equal(
-                root.get(Process_.COLLECTION_ID).get(ProcessCollection_.ID),
-                pCollectionId
-            ));
+            predicates.add(criteriaBuilder.equal(root.get(Process_.COLLECTION_ID).get(ProcessCollection_.ID), pCollectionId));
         } else {
             predicates.add(criteriaBuilder.isNull(root.get(Process_.COLLECTION_ID)));
         }
 
-        criteriaQuery.where(predicates.toArray(new Predicate[]{}));
-        criteriaCountingQuery.where(predicates.toArray(new Predicate[]{}));
+        criteriaQuery.where(predicates.toArray(new Predicate[] {}));
+        criteriaCountingQuery.where(predicates.toArray(new Predicate[] {}));
 
-        TypedQuery<Process> query = entityManager.createQuery(criteriaQuery)
+        TypedQuery<Process> query = entityManager
+            .createQuery(criteriaQuery)
             .setParameter(PROCESS_NAME, "%" + name.toUpperCase() + "%")
             .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
             .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
         if (!hasUserRoleAdmin) query.setParameter(PROCESS_USER, user);
         if (collectionId != null) query.setParameter(PROCESS_COLLECTION_ID, collectionId);
 
-        TypedQuery<Long> cQuery = entityManager.createQuery(criteriaCountingQuery)
+        TypedQuery<Long> cQuery = entityManager
+            .createQuery(criteriaCountingQuery)
             .setParameter(PROCESS_NAME, "%" + name.toUpperCase() + "%")
             .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
             .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
@@ -152,7 +157,7 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<Process> cq = criteriaBuilder.createQuery(Process.class);
-        Root<Process> root =  cq.from(Process.class);
+        Root<Process> root = cq.from(Process.class);
         Join<Object, Object> user = root.join(Process_.CREATED_BY, JoinType.LEFT);
         Join<Object, Object> tag = root.join(Process_.TAGS, JoinType.LEFT);
         cq.select(root);
@@ -169,25 +174,22 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
         ParameterExpression<String> pCreatedByName = criteriaBuilder.parameter(String.class, PROCESS_CREATED_BY_NAME);
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.or(
-            criteriaBuilder.like(criteriaBuilder.upper(root.get(Process_.NAME)), pName),
-            criteriaBuilder.like(criteriaBuilder.upper(user.get(User_.EMAIL)), pCreatedByName),
-            criteriaBuilder.like(criteriaBuilder.upper(tag.get(Tag_.NAME)), pTagName)
-        ));
+        predicates.add(
+            criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.upper(root.get(Process_.NAME)), pName),
+                criteriaBuilder.like(criteriaBuilder.upper(user.get(User_.EMAIL)), pCreatedByName),
+                criteriaBuilder.like(criteriaBuilder.upper(tag.get(Tag_.NAME)), pTagName)
+            )
+        );
 
         return new ProcessQueryBuilder(root, user, cq, cqCount, predicates);
     }
 
-    private Page<Process> getPageResult(
-        Pageable pageable, TypedQuery<Process> query, TypedQuery<Long> countingQuery
-    ) {
+    private Page<Process> getPageResult(Pageable pageable, TypedQuery<Process> query, TypedQuery<Long> countingQuery) {
         int pageNumber = pageable.getPageNumber();
         int pageSize = pageable.getPageSize();
 
-        List<Process> queryResult = query
-            .setFirstResult(pageNumber * pageSize)
-            .setMaxResults(pageSize)
-            .getResultList();
+        List<Process> queryResult = query.setFirstResult(pageNumber * pageSize).setMaxResults(pageSize).getResultList();
 
         Long totalPages = countingQuery.getSingleResult();
 

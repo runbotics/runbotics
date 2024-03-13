@@ -1,10 +1,9 @@
 package com.runbotics.repository;
 
 import com.runbotics.domain.Process;
-
-import java.util.List;
-
 import com.runbotics.domain.User;
+import com.runbotics.domain.User;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -39,15 +38,11 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
     )
     Page<Process> findByBotCollection(String collectionName, String userLogin, Pageable pageable);
 
-    @Query(
-        value = "SELECT COUNT(*) FROM Process process WHERE process.createdBy.id = ?1"
-    )
+    @Query(value = "SELECT COUNT(*) FROM Process process WHERE process.createdBy.id = ?1")
     int countUserProcesses(Long id);
 
     @Modifying
-    @Query(
-        "DELETE FROM Process process WHERE process.createdBy.id IS NULL AND process.isPublic = false"
-    )
+    @Query("DELETE FROM Process process WHERE process.createdBy.id IS NULL AND process.isPublic = false")
     void deleteUnassignedPrivateProcesses();
 
     List<Process> findAllByCreatedBy(User user);

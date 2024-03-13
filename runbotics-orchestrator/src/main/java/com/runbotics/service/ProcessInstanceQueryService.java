@@ -9,11 +9,11 @@ import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.service.criteria.ProcessInstanceCriteria;
 import com.runbotics.service.dto.ProcessInstanceDTO;
 import com.runbotics.service.mapper.ProcessInstanceMapper;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,8 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
                     .findByStatus(criteria.getStatus())
                     .stream()
                     .sorted(Comparator.comparing(ProcessInstance::getCreated).reversed())
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList())
+            );
         }
         final Specification<ProcessInstance> specification = createSpecification(criteria);
         return processInstanceMapper.toDto(
@@ -68,8 +69,8 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
                 .findAll(specification)
                 .stream()
                 .sorted(Comparator.comparing(ProcessInstance::getCreated).reversed())
-                .collect(Collectors.toList()));
-
+                .collect(Collectors.toList())
+        );
     }
 
     /**
@@ -115,14 +116,16 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
         List<ProcessInstance> processInstances = processInstanceRepository.findAll(specification, page.getSort());
         int indexOfSpecificProcessInstance = -1;
         for (ProcessInstance processInstance : processInstances) {
-          if (processInstance.getId().equals(id)) {
-              indexOfSpecificProcessInstance = processInstances.indexOf(processInstance);
-              break;
-          }
+            if (processInstance.getId().equals(id)) {
+                indexOfSpecificProcessInstance = processInstances.indexOf(processInstance);
+                break;
+            }
         }
         int pageNumber = indexOfSpecificProcessInstance < 0 ? 0 : indexOfSpecificProcessInstance / page.getPageSize();
         Pageable newPageable = PageRequest.of(pageNumber, page.getPageSize(), page.getSort());
-        Page<ProcessInstanceDTO> foundInstances = processInstanceRepository.findAll(specification, newPageable).map(processInstanceMapper::toDto);
+        Page<ProcessInstanceDTO> foundInstances = processInstanceRepository
+            .findAll(specification, newPageable)
+            .map(processInstanceMapper::toDto);
         return foundInstances;
     }
 

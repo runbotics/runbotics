@@ -76,12 +76,18 @@ public class ProcessInstanceResource {
      */
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_INSTANCE_READ + "')")
     @GetMapping("/process-instances-page")
-    public ResponseEntity<Page<ProcessInstanceDTO>> getProcessInstancesPage(ProcessInstanceCriteria criteria, Pageable pageable, @RequestParam Optional<UUID> instanceId) {
+    public ResponseEntity<Page<ProcessInstanceDTO>> getProcessInstancesPage(
+        ProcessInstanceCriteria criteria,
+        Pageable pageable,
+        @RequestParam Optional<UUID> instanceId
+    ) {
         log.debug("REST request to get ProcessInstances page by criteria: {}", criteria);
-        Page<ProcessInstanceDTO> page = (
-            instanceId.isPresent()
-                ? processInstanceQueryService.findByCriteriaWithSpecificInstance(instanceId.get(), criteria, pageable)
-                : processInstanceQueryService.findByCriteria(criteria, pageable));
+        Page<ProcessInstanceDTO> page =
+            (
+                instanceId.isPresent()
+                    ? processInstanceQueryService.findByCriteriaWithSpecificInstance(instanceId.get(), criteria, pageable)
+                    : processInstanceQueryService.findByCriteria(criteria, pageable)
+            );
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page);
     }

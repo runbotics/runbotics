@@ -257,7 +257,17 @@ export enum FolderAction {
 }
 
 export enum ZipAction {
-    UNZIP_FILE = 'zip.unzipFile'
+    UNZIP_FILE = 'zip.unzipArchive',
+    ZIP_FILE = 'zip.createArchive'
+}
+
+export enum FileSystemErrorMessages {
+    EBUSY = 'Resource with this name already exists.',
+    ENOENT = 'No such resource',
+    EACCESS = 'Access to the resource denied',
+    EPERM = 'Permission denied',
+    EEXISTS = 'Resource with this name already exists',
+    ENOTEMPTY = 'Cannot perform action on empty directory without setting "recursive" option',
 }
 
 export type AllActionIds =

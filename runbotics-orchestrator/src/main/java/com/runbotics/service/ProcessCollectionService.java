@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProcessCollectionService {
-
     void checkCollectionAvailability(UUID collectionId, User user);
     List<ProcessCollectionDTO> getChildrenCollectionsByRoot(User user);
 

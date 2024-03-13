@@ -5,14 +5,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class ProcessCollectionPackDTO implements Serializable {
+
     private List<ProcessCollectionDTO> childrenCollections;
 
     private List<ProcessCollectionDTO> breadcrumbs;
 
-    public ProcessCollectionPackDTO(
-        List<ProcessCollectionDTO> childrenCollections,
-        List<ProcessCollectionDTO> breadcrumbs
-    ) {
+    public ProcessCollectionPackDTO(List<ProcessCollectionDTO> childrenCollections, List<ProcessCollectionDTO> breadcrumbs) {
         this.childrenCollections = childrenCollections;
         this.breadcrumbs = breadcrumbs;
     }
@@ -48,9 +46,6 @@ public class ProcessCollectionPackDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "ProcessCollectionPackDTO{" +
-            "childrenCollections=" + childrenCollections +
-            ", breadcrumbs=" + breadcrumbs +
-            '}';
+        return "ProcessCollectionPackDTO{" + "childrenCollections=" + childrenCollections + ", breadcrumbs=" + breadcrumbs + '}';
     }
 }

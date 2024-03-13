@@ -1,10 +1,9 @@
 package com.runbotics.service.dto;
 
-import liquibase.pro.packaged.S;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
+import javax.validation.constraints.NotNull;
+import liquibase.pro.packaged.S;
 
 /**
  * A DTO for the {@link com.runbotics.domain.ScheduleProcess} entity.

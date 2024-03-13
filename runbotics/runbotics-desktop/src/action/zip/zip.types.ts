@@ -6,5 +6,12 @@ export type UnzipFileActionInput = {
     path?: string;
 };
 
+export type ZipFileActionInput = {
+    fileName: string;
+    path?: string;
+    zipName?: string
+};
+
 export type ZipActionRequest =
-    | DesktopRunRequest<ZipAction.UNZIP_FILE, UnzipFileActionInput>;
+    | DesktopRunRequest<ZipAction.UNZIP_FILE, UnzipFileActionInput>
+    | DesktopRunRequest<ZipAction.ZIP_FILE, ZipFileActionInput>
