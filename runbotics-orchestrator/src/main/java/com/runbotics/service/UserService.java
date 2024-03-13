@@ -394,6 +394,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public List<String> findUserFeatureKeys() {
+        Optional<String> login = SecurityUtils.getCurrentUserLogin();
+        if (login.isPresent()) {
+            return userRepository.findUserFeatureKeys(login.get());
+        }
+        return new ArrayList<String>();
+    }
+
+    @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable, UserCriteria criteria) {
         if (criteria.getEmail() == null) {
             return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
