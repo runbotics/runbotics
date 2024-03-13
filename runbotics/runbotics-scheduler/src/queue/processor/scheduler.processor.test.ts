@@ -23,6 +23,7 @@ import {
 } from 'runbotics-common';
 import { Job } from '#/utils/process';
 import { ProcessSchedulerService } from '#/queue/process/process-scheduler.service';
+import { QueueMessageService } from '../queue-message.service';
 
 const PROCESS_ID = 2137;
 const JOB_ID = 7312;
@@ -30,7 +31,7 @@ const ORCHESTRATOR_INSTANCE_ID = 'tEsT-InStAnCe-iD';
 
 const PROCESS: IProcess = {
     id: PROCESS_ID,
-}
+};
 
 const PROCESS_INPUT: ProcessInput = {
     variables: {
@@ -76,6 +77,7 @@ describe('SchedulerProcessor', () => {
     let processInstanceSchedulerService: ProcessInstanceSchedulerService;
     let schedulerService: SchedulerService;
     let queueService: QueueService;
+    let queueMessageService: QueueMessageService;
 
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -113,7 +115,7 @@ describe('SchedulerProcessor', () => {
         })
             .overrideProvider(BotService)
             .useValue({
-                findAvailableCollection: vi.fn().mockReturnValue([ {status: BotStatus.CONNECTED} as IBot ])    
+                findAvailableCollection: vi.fn().mockReturnValue([ {status: BotStatus.CONNECTED} as IBot ])
             })
             .overrideProvider(ProcessService)
             .useValue({
@@ -152,7 +154,8 @@ describe('SchedulerProcessor', () => {
         processInstanceSchedulerService = moduleRef.get(ProcessInstanceSchedulerService);
         schedulerService = moduleRef.get(SchedulerService);
         queueService = moduleRef.get(QueueService);
-        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, schedulerService, queueService);
+        queueMessageService = moduleRef.get(QueueMessageService);
+        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, schedulerService, queueService, queueMessageService);
     });
 
     it('should be defined', () => {
@@ -207,7 +210,7 @@ describe('SchedulerProcessor', () => {
 
     describe('onComplete', () => {
         it('should emit WsMessage.REMOVE_WAITING_SCHEDULE when a job is completed', async () => {
-            schedulerProcessor.onComplete(JOB);
+            schedulerProcessor.onComplete(JOB, 'mockInstanceId');
             expect(uiGateway.server.emit).toHaveBeenCalledWith(WsMessage.REMOVE_WAITING_SCHEDULE, JOB);
         });
     });
