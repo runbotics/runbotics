@@ -52,7 +52,8 @@ const UTILS = [
 
 const VARIABLES = [
     'tempFolder',
-    'userEmail'
+    'userEmail',
+    'errorMessage'
 ];
 
 const SERVICES_MAPPED = SERVICES.map((service) => ({
