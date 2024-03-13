@@ -32,7 +32,7 @@ export type ProcessInstanceNotification = Pick<IProcessInstance,
     started?: IProcessInstance['created'];
     finished?: IProcessInstance['updated'];
     processId?: IProcess['id'];
-    processInstance?: IProcessInstance['id']
+    processInstanceId?: IProcessInstance['id']
 };
 
 export interface EmailTriggerData {
