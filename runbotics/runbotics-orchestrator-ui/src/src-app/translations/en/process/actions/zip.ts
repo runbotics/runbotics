@@ -9,8 +9,8 @@ const zipTranslations = {
     'Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName': 'Zip name',
     'Process.Details.Modeler.Actions.Zip.CreateArchive.Path.Info': 'Path of folder containing folder or file to archive, e.g. "C:\\Users\\User\\Documents". By default it will be temp folder created during the process.',
     'Process.Details.Modeler.Actions.Zip.CreateArchive.Name.Info': 'Name of the file (with extension) or folder to be archived',
-    'Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName.Info': 'Name under you want to create zipped folder, e.g. "zippedFolder". By default it will be the name of the folder or file to archive',
-    'Process.Details.Modeler.Actions.Zip.CreateArchive.Output.Info': 'Path to newly created archived folder'
+    'Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName.Info': 'Name under you want to create archive, e.g. "zippedFolder". By default it will be the name of the folder or file to archive',
+    'Process.Details.Modeler.Actions.Zip.CreateArchive.Output.Info': 'Path to newly created archive'
 };
 
 export default zipTranslations;
