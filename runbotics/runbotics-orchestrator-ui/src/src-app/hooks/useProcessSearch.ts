@@ -17,9 +17,7 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const searchFromUrl = searchParams.get('search');
-    const searchFieldFromUrl = searchParams.get('searchField');
     const [search, setSearch] = useState(searchFromUrl || '');
-    const [searchField, setSearchField] = useState(searchFieldFromUrl || 'name');
     const replaceQueryParams = useReplaceQueryParams();
 
     const dispatch = useDispatch();
@@ -31,7 +29,6 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
             page,
             pageSize,
             search,
-            searchField,
             id: router.query.id,
             tab: router.query.tab,
         });
@@ -73,20 +70,17 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedValue, pageSize, searchField, collectionId]);
+    }, [debouncedValue, pageSize, collectionId]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchField('name');
         setSearch(event.target.value);
     };
 
     const handleAdvancedSearch = (filterModel: GridFilterModel) => {
-        setSearchField(filterModel.items[0].columnField);
         setSearch(filterModel.items[0].value ? filterModel.items[0].value : '');
     };
 
     const clearSearch = () => {
-        setSearchField('');
         setSearch('');
     };
 
@@ -94,7 +88,6 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
         handleSearch,
         search,
         handleAdvancedSearch,
-        searchField,
         clearSearch,
     };
 };

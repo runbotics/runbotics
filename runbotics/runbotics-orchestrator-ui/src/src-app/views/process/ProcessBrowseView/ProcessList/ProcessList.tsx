@@ -32,14 +32,14 @@ const ProcessList: VFC = () => {
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const pageSizeFromUrl = searchParams.get('pageSize');
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.GRID);
-    const { handleSearch, search, handleAdvancedSearch, searchField, clearSearch } = useProcessSearch(collectionId, pageSize, page);
+    const { handleSearch, search, handleAdvancedSearch, clearSearch } = useProcessSearch(collectionId, pageSize, page);
     const replaceQueryParams = useReplaceQueryParams();
 
     useEffect(() => {
         const pageNotAvailable = processesPage && page >= processesPage.totalPages;
         if (pageNotAvailable) {
             setPage(0);
-            replaceQueryParams({ collectionId, page: 0, pageSize, search, searchField });
+            replaceQueryParams({ collectionId, page: 0, pageSize, search });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processesPage]);
@@ -57,7 +57,7 @@ const ProcessList: VFC = () => {
                         mode === ProcessListDisplayMode.GRID ? DefaultPageSize.GRID : DefaultPageSize.TABLE;
                     setPageSize(newPageSize);
                     if (mode) setDisplayMode(mode);
-                    replaceQueryParams({ page, pageSize: newPageSize, search, searchField });
+                    replaceQueryParams({ page, pageSize: newPageSize, search });
                     clearSearch();
                 }}
             />
@@ -66,7 +66,6 @@ const ProcessList: VFC = () => {
                     pageSize,
                     setPageSize,
                     search,
-                    searchField,
                     page,
                     setPage,
                     collectionId
