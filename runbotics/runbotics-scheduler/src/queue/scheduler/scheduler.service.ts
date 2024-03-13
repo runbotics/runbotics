@@ -1,12 +1,12 @@
 import { ProcessService } from '#/database/process/process.service';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JobInformation, JobStatus, Queue } from 'bull';
 import { Job } from '#/utils/process';
 import { Logger } from '#/utils/logger';
 
 import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
-import { WsMessage } from 'runbotics-common';
+import { JobData, WsMessage } from 'runbotics-common';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
@@ -21,7 +21,7 @@ export class SchedulerService {
     private readonly logger = new Logger(SchedulerService.name);
 
     constructor(
-        @InjectQueue('scheduler') private readonly processQueue: Queue,
+        @InjectQueue('scheduler') private readonly processQueue: Queue<JobData>,
         private readonly processService: ProcessService,
         private readonly scheduleProcessService: ScheduleProcessService,
         private readonly uiGateway: UiGateway,
@@ -98,8 +98,8 @@ export class SchedulerService {
 
     async getJobById(id: number | string) {
         const job = await this.processQueue.getJob(id);
-        if (!job?.data) {
-            return Promise.reject();
+        if (!job || !job?.data) {
+            return Promise.reject(new NotFoundException(`Job with jobId (${id}) was not found.`));
         }
         const process = await this.processService.findById(Number(job.data.process.id));
         job.data.process = { ...process };
