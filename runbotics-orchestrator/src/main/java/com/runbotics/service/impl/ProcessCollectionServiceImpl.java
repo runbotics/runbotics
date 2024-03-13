@@ -98,12 +98,10 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
 
     @Override
     public void delete(UUID id, User user) {
-        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
-        boolean hasCollectionAccess =
-            hasUserAccessEveryCollection || processCollectionRepository.findUserAccessibleById(user, id).size() > 0;
-        boolean isOwner =
-            hasUserAccessEveryCollection ||
-            processCollectionRepository.findById(id).get().getCreatedBy().getLogin().equals(user.getLogin());
+        List<String> userFeatureKeys = userService.findUserFeatureKeys();
+        boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+        boolean hasCollectionAccess = hasUserAccessEveryCollection || processCollectionRepository.findUserAccessibleById(user, id).size() > 0;
+        boolean isOwner = hasUserAccessEveryCollection || processCollectionRepository.findById(id).get().getCreatedBy().getLogin().equals(user.getLogin());
 
         if (!hasCollectionAccess) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access to process collection");

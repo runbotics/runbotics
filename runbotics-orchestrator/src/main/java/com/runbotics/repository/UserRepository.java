@@ -1,9 +1,12 @@
 package com.runbotics.repository;
 
+import com.runbotics.domain.FeatureKey;
 import com.runbotics.domain.User;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -46,6 +49,17 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Page<User> findAllByActivatedIsTrueAndEmailIsContaining(Pageable pageable, String email);
 
     Page<User> findAllByActivatedIsFalseAndEmailIsContaining(Pageable pageable, String email);
+
+    @Query(
+        value = "SELECT feature_key " +
+            "FROM jhi_user_authority jua " +
+            "INNER JOIN jhi_user ju " +
+            "ON jua.user_id = ju.id " +
+            "INNER JOIN authority_feature_key afk " +
+            "ON afk.authority = jua.authority_name",
+        nativeQuery = true
+    )
+    List<String> findUserFeatureKeys(String login);
 
     @Query(
         "SELECT u FROM User u WHERE u.id != ?1 AND (u.email = ?2 OR u.login = ?3)"
