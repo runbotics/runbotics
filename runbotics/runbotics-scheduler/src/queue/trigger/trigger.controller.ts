@@ -1,17 +1,23 @@
-import { Body, Controller, HttpException, HttpStatus, Param, Post, Request, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, HttpException, HttpStatus, Param, Post, Request, UsePipes } from '@nestjs/common';
 import { AuthRequest } from '#/types';
 import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
 import { startProcessSchema } from '#/utils/pipes';
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { FeatureKey, ProcessInput, TriggerEvent } from 'runbotics-common';
+import { FeatureKey, JobData, ProcessInput, TriggerEvent } from 'runbotics-common';
 import { QueueService } from '../queue.service';
+import { Job, JobId } from 'bull';
+import { SchedulerService } from '../scheduler/scheduler.service';
+import { checkMessageProperty, checkStatusProperty } from '#/utils/error-message.utils';
 
 @Controller('scheduler/trigger')
 export class TriggerController {
     private readonly logger = new Logger(TriggerController.name);
 
-    constructor(private queueService: QueueService) { }
+    constructor(
+        private readonly queueService: QueueService,
+        private readonly schedulerService: SchedulerService,
+    ) {}
 
     @FeatureKeys(FeatureKey.PROCESS_IS_TRIGGERABLE_EXECUTE)
     @Post(':processId')
@@ -35,13 +41,40 @@ export class TriggerController {
             });
             this.logger.log(`<= Process ${processId} successfully started`);
 
-            return response;
-        } catch (err: any) {
+            return { jobId: response.id };
+        } catch (err: unknown) {
             this.logger.error(`<= Process ${processId} failed to start`);
-            throw new HttpException({
-                message: err?.message ?? 'Internal server error',
-                statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR
-            }, err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+
+            const message = checkMessageProperty(err) || 'Internal server error';
+            const statusCode = checkStatusProperty(err) || HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new HttpException({ message, statusCode }, statusCode);
+        }
+    }
+
+    @FeatureKeys(FeatureKey.PROCESS_IS_TRIGGERABLE_EXECUTE)
+    @Delete(':jobId')
+    async removeProcess(
+        @Param('jobId') jobId: JobId,
+        @Request() request: AuthRequest,
+    ) {
+        try {
+            this.logger.log(`Trying to remove job (${jobId}) from queue`);
+
+            const job: Job<JobData> = await this.schedulerService.getJobById(jobId);
+            const process = await this.queueService.getProcessById(job.data.process?.id);
+            await this.queueService.validateProcessAccess({ process: process, user: request.user, triggered: true });
+
+            this.logger.log(`=> Removing job (${jobId}) from queue`);
+
+            await this.queueService.deleteJobFromQueue(jobId);
+
+            this.logger.log(`<= Job (${jobId}) successfully removed`);
+        } catch (err: unknown) {
+            this.logger.error(`<= Failed to remove job (${jobId})`);
+
+            const message = checkMessageProperty(err) || 'Internal server error';
+            const statusCode = checkStatusProperty(err) || HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new HttpException({ message, statusCode }, statusCode);
         }
     }
 }
