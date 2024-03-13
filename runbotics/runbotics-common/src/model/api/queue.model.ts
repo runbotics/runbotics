@@ -6,6 +6,8 @@ import { IProcessInstance } from './process-instance.model';
 export interface ProcessInput {
     variables: Record<string, any>;
     callbackUrl?: string;
+    queueCallbackUrl?: string;
+    timeout?: number;
 }
 
 export type Trigger = Pick<IProcessInstance, 'trigger' | 'triggerData'>;
