@@ -3,7 +3,6 @@ import { FC, useEffect, useState, useMemo, MouseEvent } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LoadingButton } from '@mui/lab';
 import { IconButton, SvgIcon, Tooltip, Menu, MenuItem } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -15,18 +14,18 @@ import {
     IProcessInstance,
     ProcessInstanceStatus,
     isProcessInstanceFinished,
+    ProcessQueueMessage,
+    WsMessage,
 } from 'runbotics-common';
 import styled from 'styled-components';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import { useProcessQueueSocket } from '#src-app/hooks/useProcessQueueSocket';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
-import {
-    processActions,
-    StartProcessResponse,
-} from '#src-app/store/slices/Process';
+import { processActions } from '#src-app/store/slices/Process';
 import {
     processInstanceActions,
     processInstanceSelector,
@@ -180,58 +179,71 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             ...((isProcessAttended || rerunProcessInstance) && {
                 executionInfo,
             }),
-        }))
-            .then(unwrapResult)
-            .then((response: StartProcessResponse) => {
-                dispatch(
-                    processInstanceActions.updateOrchestratorProcessInstanceId(
-                        response.orchestratorProcessInstanceId
-                    )
-                );
-                isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
-
-                onRunClick?.();
-                setStarted(true);
-                closeModal();
-                recordProcessRunSuccess({
-                    processName,
-                    processId: String(processId),
-                    processInstanceId: response?.orchestratorProcessInstanceId
-                });
-            })
-            .catch((error) => {
-                setStarted(false);
-                const translationKeyPrefix = 'Component.BotProcessRunner.Error';
-                const guestMessage = 'ServersAreOverloaded';
-
-                const basicErrorMessage =
-                    isGuest
-                        ? translate(`${translationKeyPrefix}.${guestMessage}`)
-                        : translate(translationKeyPrefix);
-
-                const message = error?.message ?? basicErrorMessage;
-                const capitalizeMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
-
-                const translationKey =
-                    (isGuest && capitalizeMessage === 'AllBotsAreDisconnected')
-                        ? `${translationKeyPrefix}.${guestMessage}`
-                        : `${translationKeyPrefix}.${capitalizeMessage}`;
-
-                const errorMessage = checkIfKeyExists(translationKey)
-                    ? translate(translationKey)
-                    : message;
-                enqueueSnackbar(
-                    errorMessage,
-                    { variant: 'error' }
-                );
-                recordProcessRunFail({ processName, processId: String(processId), reason: errorMessage });
-            })
-            .finally(() => {
-                setSubmitting(false);
-                setLoading(false);
-                closeSnackbar(BOT_SEARCH_TOAST_KEY);
-            });
+        }));
     };
+
+    const handleCompleted = (payload: ProcessQueueMessage[WsMessage.PROCESS_COMPLETED]) => {
+        if (payload.processId !== processId) return;
+
+        dispatch(
+            processInstanceActions.updateOrchestratorProcessInstanceId(
+                payload.orchestratorProcessInstanceId
+            )
+        );
+        isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
+
+        onRunClick?.();
+        setStarted(true);
+        closeModal();
+        recordProcessRunSuccess({
+            processName,
+            processId: String(processId),
+            processInstanceId: payload.orchestratorProcessInstanceId
+        });
+
+        setSubmitting(false);
+        setLoading(false);
+        closeSnackbar(BOT_SEARCH_TOAST_KEY);
+    };
+
+    const handleFailed = (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => {
+        if (payload.processId !== processId) return;
+
+        setStarted(false);
+        const translationKeyPrefix = 'Component.BotProcessRunner.Error';
+        const guestMessage = 'ServersAreOverloaded';
+
+        const basicErrorMessage =
+            isGuest
+                ? translate(`${translationKeyPrefix}.${guestMessage}`)
+                : translate(translationKeyPrefix);
+
+        const message = payload.error ?? basicErrorMessage;
+        const capitalizeMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+
+        const translationKey =
+            (isGuest && capitalizeMessage === 'AllBotsAreDisconnected')
+                ? `${translationKeyPrefix}.${guestMessage}`
+                : `${translationKeyPrefix}.${capitalizeMessage}`;
+
+        const errorMessage = checkIfKeyExists(translationKey)
+            ? translate(translationKey)
+            : message;
+        enqueueSnackbar(
+            errorMessage,
+            { variant: 'error' }
+        );
+        recordProcessRunFail({ processName, processId: String(processId), reason: errorMessage });
+
+        setSubmitting(false);
+        setLoading(false);
+        closeSnackbar(BOT_SEARCH_TOAST_KEY);
+    };
+
+    useProcessQueueSocket({
+        onCompleted: handleCompleted,
+        onFailed: handleFailed,
+    }, []);
 
     const rerunInput = useMemo(() => {
         if (!isJsonValid(rerunProcessInstance?.input)) return null;

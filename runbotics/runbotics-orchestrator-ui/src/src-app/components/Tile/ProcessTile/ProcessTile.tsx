@@ -1,12 +1,11 @@
 import { FC, useRef, useState, useEffect } from 'react';
 
 import { Box, Divider, CardHeader, Tooltip } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey, isProcessInstanceActive } from 'runbotics-common';
+import { FeatureKey, ProcessQueueMessage, WsMessage, isProcessInstanceActive } from 'runbotics-common';
 
 import PlayIcon from '#public/images/icons/play.svg';
 import SquareIcon from '#public/images/icons/square.svg';
@@ -15,6 +14,7 @@ import { AttendedProcessModal } from '#src-app/components/AttendedProcessModal';
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import { useProcessQueueSocket } from '#src-app/hooks/useProcessQueueSocket';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
@@ -64,32 +64,39 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             ...((isProcessAttended) && {
                 executionInfo,
             })
-        }))
-            .then(unwrapResult)
-            .then((response) => {
-                dispatch(
-                    processInstanceActions.updateOrchestratorProcessInstanceIdMap({
-                        processId: process.id,
-                        orchestratorProcessInstanceId: response.orchestratorProcessInstanceId,
-                    })
-                );
+        }));
+    };
 
-                setIsProcessActive(true);
+    const handleCompleted = (payload: ProcessQueueMessage[WsMessage.PROCESS_COMPLETED]) => {
+        if (payload.processId !== process.id) return;
+
+        dispatch(
+            processInstanceActions.updateOrchestratorProcessInstanceIdMap({
+                processId: process.id,
+                orchestratorProcessInstanceId: payload.orchestratorProcessInstanceId,
             })
-            .catch((error) => {
-                const TRANSLATION_KEY_PREFIX_DEFAULT = 'Component.Tile.Process.Instance.Error';
-                const message = error.message ?? translate(TRANSLATION_KEY_PREFIX_DEFAULT);
-                const capitalizedMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
-                const translationKey = `${TRANSLATION_KEY_PREFIX_DEFAULT}.${capitalizedMessage}`;
+        );
 
-                const errorMessage = checkIfKeyExists(translationKey)
-                    ? translate(translationKey)
-                    : message;
-                enqueueSnackbar(
-                    errorMessage,
-                    { variant: 'error' }
-                );
-            });
+        setIsProcessActive(true);
+
+        if (isProcessAttended) setIsAttendedModalVisible(false);
+    };
+
+    const handleFailed = (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => {
+        if (payload.processId !== process.id) return;
+
+        const TRANSLATION_KEY_PREFIX_DEFAULT = 'Component.Tile.Process.Instance.Error';
+        const message = payload.error ?? translate(TRANSLATION_KEY_PREFIX_DEFAULT);
+        const capitalizedMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+        const translationKey = `${TRANSLATION_KEY_PREFIX_DEFAULT}.${capitalizedMessage}`;
+
+        const errorMessage = checkIfKeyExists(translationKey)
+            ? translate(translationKey)
+            : message;
+        enqueueSnackbar(
+            errorMessage,
+            { variant: 'error' }
+        );
 
         if (isProcessAttended) setIsAttendedModalVisible(false);
     };
@@ -132,6 +139,11 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             processInstance && isProcessInstanceActive(processInstance.status)
         );
     }, [processInstance]);
+
+    useProcessQueueSocket({
+        onCompleted: handleCompleted,
+        onFailed: handleFailed,
+    }, []);
 
     return (
         <Tile>
