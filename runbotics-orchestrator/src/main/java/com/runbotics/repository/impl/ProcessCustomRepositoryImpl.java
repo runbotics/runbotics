@@ -1,7 +1,13 @@
 package com.runbotics.repository.impl;
 
-import com.runbotics.domain.*;
 import com.runbotics.domain.Process;
+import com.runbotics.domain.Process_;
+import com.runbotics.domain.User;
+import com.runbotics.domain.User_;
+import com.runbotics.domain.Tag_;
+import com.runbotics.domain.Guest;
+import com.runbotics.domain.Guest_;
+import com.runbotics.domain.ProcessCollection_;
 import com.runbotics.repository.ProcessCustomRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.utils.ProcessQueryBuilder;
@@ -12,7 +18,14 @@ import org.springframework.data.domain.Pageable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Subquery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,15 +74,15 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
         criteriaCountingQuery.where(predicates.toArray(new Predicate[]{}));
 
         TypedQuery<Process> query = entityManager.createQuery(criteriaQuery)
-            .setParameter(PROCESS_NAME, "%"+name+"%")
-            .setParameter(PROCESS_CREATED_BY_NAME, "%"+createdByName+"%")
-            .setParameter(PROCESS_TAG_NAME, "%"+tagName+"%");
+            .setParameter(PROCESS_NAME, "%" + name.toUpperCase() + "%")
+            .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
+            .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
         if (!hasUserRoleAdmin) query.setParameter(PROCESS_USER, user);
 
         TypedQuery<Long> cQuery = entityManager.createQuery(criteriaCountingQuery)
-            .setParameter(PROCESS_NAME, "%"+name+"%")
-            .setParameter(PROCESS_CREATED_BY_NAME, "%"+createdByName+"%")
-            .setParameter(PROCESS_TAG_NAME, "%"+tagName+"%");
+            .setParameter(PROCESS_NAME, "%" + name.toUpperCase() + "%")
+            .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
+            .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
         if (!hasUserRoleAdmin) cQuery.setParameter(PROCESS_USER, user);
 
         return getPageResult(pageable, query, cQuery);
@@ -119,16 +132,16 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
         criteriaCountingQuery.where(predicates.toArray(new Predicate[]{}));
 
         TypedQuery<Process> query = entityManager.createQuery(criteriaQuery)
-            .setParameter(PROCESS_NAME, "%"+name+"%")
-            .setParameter(PROCESS_CREATED_BY_NAME, "%"+createdByName+"%")
-            .setParameter(PROCESS_TAG_NAME, "%"+tagName+"%");
+            .setParameter(PROCESS_NAME, "%" + name.toUpperCase() + "%")
+            .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
+            .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
         if (!hasUserRoleAdmin) query.setParameter(PROCESS_USER, user);
         if (collectionId != null) query.setParameter(PROCESS_COLLECTION_ID, collectionId);
 
         TypedQuery<Long> cQuery = entityManager.createQuery(criteriaCountingQuery)
-            .setParameter(PROCESS_NAME, "%"+name+"%")
-            .setParameter(PROCESS_CREATED_BY_NAME, "%"+createdByName+"%")
-            .setParameter(PROCESS_TAG_NAME, "%"+tagName+"%");
+            .setParameter(PROCESS_NAME, "%" + name.toUpperCase() + "%")
+            .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
+            .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
         if (!hasUserRoleAdmin) cQuery.setParameter(PROCESS_USER, user);
         if (collectionId != null) cQuery.setParameter(PROCESS_COLLECTION_ID, collectionId);
 
