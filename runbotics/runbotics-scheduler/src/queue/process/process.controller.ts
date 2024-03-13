@@ -8,6 +8,7 @@ import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, ProcessInput, TriggerEvent } from 'runbotics-common';
 import { ProcessGuestService } from './process-guest.service';
 import { GuestService } from '#/database/guest/guest.service';
+import { checkMessageProperty, checkStatusProperty } from '#/utils/error-message.utils';
 
 @Controller('scheduler/processes')
 export class ProcessController {
@@ -48,24 +49,23 @@ export class ProcessController {
 
             this.logger.log(`<= Process ${processId} successfully started`);
 
-            if(!isUserGuest) return response;
+            if (!isUserGuest) return { jobId: response.id };
 
             await this.guestService.incrementExecutionsCount(userId);
             this.logger.log(`Incremented user's (${userId}) executions-count to ${initialExecutionsCount + 1}`);
 
-            return response;
-        } catch (err: any) {
+            return { jobId: response.id };
+        } catch (err: unknown) {
             this.logger.error(`<= Process ${processId} failed to start`);
-            
+
             if(isUserGuest) {
                 await this.guestService.setExecutionsCount(userId, initialExecutionsCount);
                 this.logger.log(`Restored user's executions-count to ${initialExecutionsCount}`);
             }
 
-            throw new HttpException({
-                message: err?.message ?? 'Internal server error',
-                statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR
-            }, err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR);
+            const message = checkMessageProperty(err) || 'Internal server error';
+            const statusCode = checkStatusProperty(err) || HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new HttpException({ message, statusCode }, statusCode);
         }
     }
 }
