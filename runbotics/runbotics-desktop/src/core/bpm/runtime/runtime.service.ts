@@ -459,7 +459,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 ...request.variables,
                 tempFolder: this.getTempDirPath(),
                 userEmail: triggerData && 'userEmail' in triggerData ? triggerData.userEmail : '',
-                errorMessages: []
             },
             listener,
         };
@@ -650,6 +649,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             ...definition.environment.variables,
             ...vars,
         };
+
         // globalVariables[input.variable] = input.value;
         definition.environment.assignVariables(globalVariables);
     }

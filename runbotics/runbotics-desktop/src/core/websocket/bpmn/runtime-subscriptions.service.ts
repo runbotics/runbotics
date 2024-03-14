@@ -59,12 +59,9 @@ export class RuntimeSubscriptionsService {
                     switch (event.activity.content.type) {
                         case BpmnElementType.ERROR_EVENT_DEFINITION:
                             const variables = {};
-                            const prevMessages = event.activity.environment.variables['errorMessages'] as string[];
-                            prevMessages.push(desktopTask.output.description);
-                            variables['errorMessages'] = prevMessages;
+                            variables['caughtErrorMessage'] = desktopTask.output.description;
                             const setVariables = { ...event.activity.environment.variables, ...variables};
                             event.activity.environment.assignVariables(setVariables);
-                            processInstanceEvent.error = desktopTask.output.description;
                             processInstanceEvent.log = `ErrorEventDefinition: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
                             break;
