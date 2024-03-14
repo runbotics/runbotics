@@ -8,7 +8,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { VariableRowProps } from './VariableRow.types';
 import { GridContainer, GridTag, GridVariable } from './VariablesPanel.styles';
-import VariableCopyMenu from '../VariableCopyMenu';
+import VariableMenu from '../VariableMenu';
 
 const VariableRow: FC<VariableRowProps> = ({
     name,
@@ -48,7 +48,7 @@ const VariableRow: FC<VariableRowProps> = ({
                     <MoreVertIcon />
                 </IconButton>
                 {menu?.variableName === name ? (
-                    <VariableCopyMenu
+                    <VariableMenu
                         anchorElement={menu?.anchorElement}
                         handleMenuClose={handleMenuClose}
                         menuId={menu?.variableName}

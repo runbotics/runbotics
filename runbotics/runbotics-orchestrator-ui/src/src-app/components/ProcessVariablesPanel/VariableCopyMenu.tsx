@@ -1,18 +1,17 @@
 import { FC } from 'react';
 
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { Menu, MenuItem, ListItemText, ListItemIcon } from '@mui/material';
+import { MenuItem, ListItemText, ListItemIcon } from '@mui/material';
+
 import { useSnackbar } from 'notistack';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { VariableCopyMenuProps } from './VariablesPanel/VariableRow.types';
+import { VariableCopyMenuProps } from './VariablesPanel';
 
-const VariableCopyMenu: FC<VariableCopyMenuProps> = ({ anchorElement, handleMenuClose, menuId }) => {
+const VariableCopyMenu: FC<VariableCopyMenuProps> = ({ menuId, handleMenuClose }) => {
     const { enqueueSnackbar } = useSnackbar();
-    const hashName = `#{${menuId}}`;
-    const itemsToCopy = [hashName];
-    const isOpen = Boolean(menuId);
+    const hashName = `#${menuId}`;
 
     const handleCopy = (variableName: string) => {
         navigator.clipboard.writeText(variableName);
@@ -25,29 +24,13 @@ const VariableCopyMenu: FC<VariableCopyMenuProps> = ({ anchorElement, handleMenu
         handleMenuClose();
     };
 
-    if (!anchorElement) {
-        return null;
-    }
-
-    const menuItems = itemsToCopy.map((item) => (
-        <MenuItem key={item} onClick={() => handleCopy(item)}>
+    return (
+        <MenuItem key={hashName} onClick={() => handleCopy(hashName)}>
             <ListItemIcon sx={{ marginRight: '1rem' }}>
                 <ContentCopyIcon />
             </ListItemIcon>
-            <ListItemText>{item}</ListItemText>
+            <ListItemText>{hashName}</ListItemText>
         </MenuItem>
-    ));
-
-    return (
-        <Menu
-            key={menuId}
-            onClose={handleMenuClose}
-            id={menuId}
-            anchorEl={anchorElement}
-            open={isOpen}
-        >
-            {menuItems}
-        </Menu>
     );
 };
 
