@@ -6,19 +6,12 @@ import { useSnackbar } from 'notistack';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { VariableCopyMenuProps, VariableTag } from './VariablesPanel/VariableRow.types';
+import { VariableCopyMenuProps } from './VariablesPanel/VariableRow.types';
 
-const VariableCopyMenu: FC<VariableCopyMenuProps> = ({ anchorElement, handleMenuClose, menuId, tag }) => {
+const VariableCopyMenu: FC<VariableCopyMenuProps> = ({ anchorElement, handleMenuClose, menuId }) => {
     const { enqueueSnackbar } = useSnackbar();
     const hashName = `#{${menuId}}`;
-
-    const dollarName =
-        tag === VariableTag.ACTION_OUTPUT
-            ? `\${environment.output.${menuId}}`
-            : `\${environment.variables.${menuId}}`;
-
-    const itemsToCopy = [hashName, dollarName];
-
+    const itemsToCopy = [hashName];
     const isOpen = Boolean(menuId);
 
     const handleCopy = (variableName: string) => {
