@@ -27,7 +27,7 @@ export interface VariableMenuProps {
   tag: VariableTag
 }
 
-export interface VariableCopyMenuProps {
+export interface VariableCopyProps {
     menuId: string;
     handleMenuClose: () => void;
-  }
+}

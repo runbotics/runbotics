@@ -11,7 +11,7 @@ import VariableRow from './VariableRow';
 import {
     VariableTag,
     VariablePanelContextMenuState,
-} from './VariableRow.types';
+} from '../ProcessVariablesPanel.types';
 
 const VariablesPanel: FC = () => {
     const theme = useTheme();

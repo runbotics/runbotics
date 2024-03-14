@@ -7,9 +7,9 @@ import { useSnackbar } from 'notistack';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { VariableCopyMenuProps } from './VariablesPanel';
+import { VariableCopyProps } from '../VariablesPanel';
 
-const VariableCopyMenu: FC<VariableCopyMenuProps> = ({ menuId, handleMenuClose }) => {
+const VariableCopy: FC<VariableCopyProps> = ({ menuId, handleMenuClose }) => {
     const { enqueueSnackbar } = useSnackbar();
     const hashName = `#${menuId}`;
 
@@ -34,4 +34,4 @@ const VariableCopyMenu: FC<VariableCopyMenuProps> = ({ menuId, handleMenuClose }
     );
 };
 
-export default VariableCopyMenu;
+export default VariableCopy;

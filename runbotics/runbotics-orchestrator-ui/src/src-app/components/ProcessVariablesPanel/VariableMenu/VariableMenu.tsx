@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Menu } from '@mui/material';
 
-import { VariableMenuProps, VariableCopyMenu } from './VariablesPanel';
+import { VariableMenuProps, VariableCopyMenu } from '../VariablesPanel';
 
 const VariableMenu: FC<VariableMenuProps> = ({ anchorElement, handleMenuClose, menuId }) => {
     const isOpen = Boolean(menuId);

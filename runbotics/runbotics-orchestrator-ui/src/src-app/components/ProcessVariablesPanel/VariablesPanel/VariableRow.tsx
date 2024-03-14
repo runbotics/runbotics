@@ -6,9 +6,9 @@ import { Box, Grid, Chip, Divider, IconButton } from '@mui/material';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { VariableRowProps } from './VariableRow.types';
 import { GridContainer, GridTag, GridVariable } from './VariablesPanel.styles';
-import VariableMenu from '../VariableMenu';
+import { VariableRowProps } from '../ProcessVariablesPanel.types';
+import VariableMenu from '../VariableMenu/VariableMenu';
 
 const VariableRow: FC<VariableRowProps> = ({
     name,
