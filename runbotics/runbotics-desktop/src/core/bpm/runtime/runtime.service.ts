@@ -459,7 +459,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 ...request.variables,
                 tempFolder: this.getTempDirPath(),
                 userEmail: triggerData && 'userEmail' in triggerData ? triggerData.userEmail : '',
-                errorMessage: ''
+                errorMessages: []
             },
             listener,
         };
