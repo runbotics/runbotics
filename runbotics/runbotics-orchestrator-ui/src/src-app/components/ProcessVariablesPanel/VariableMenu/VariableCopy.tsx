@@ -7,11 +7,11 @@ import { useSnackbar } from 'notistack';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { VariableCopyProps } from '../VariablesPanel';
+import { VariableCopyProps } from '../ProcessVariablesPanel.types';
 
 const VariableCopy: FC<VariableCopyProps> = ({ menuId, handleMenuClose }) => {
     const { enqueueSnackbar } = useSnackbar();
-    const hashName = `#${menuId}`;
+    const hashName = `#{${menuId}}`;
 
     const handleCopy = (variableName: string) => {
         navigator.clipboard.writeText(variableName);

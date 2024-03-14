@@ -2,7 +2,8 @@ import { FC } from 'react';
 
 import { Menu } from '@mui/material';
 
-import { VariableMenuProps, VariableCopyMenu } from '../VariablesPanel';
+import VariableCopy from './VariableCopy';
+import { VariableMenuProps } from '../ProcessVariablesPanel.types';
 
 const VariableMenu: FC<VariableMenuProps> = ({ anchorElement, handleMenuClose, menuId }) => {
     const isOpen = Boolean(menuId);
@@ -19,7 +20,7 @@ const VariableMenu: FC<VariableMenuProps> = ({ anchorElement, handleMenuClose, m
             anchorEl={anchorElement}
             open={isOpen}
         >
-            <VariableCopyMenu menuId={menuId} handleMenuClose={handleMenuClose}/>
+            <VariableCopy menuId={menuId} handleMenuClose={handleMenuClose}/>
         </Menu>
     );
 };
