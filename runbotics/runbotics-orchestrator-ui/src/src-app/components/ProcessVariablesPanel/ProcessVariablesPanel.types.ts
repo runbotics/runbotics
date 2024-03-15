@@ -20,9 +20,14 @@ export interface VariableRowProps {
     menu: VariablePanelContextMenuState;
 }
 
-export interface VariableCopyMenuProps {
+export interface VariableMenuProps {
   anchorElement: HTMLElement,
   handleMenuClose: () => void;
   menuId: string,
   tag: VariableTag
+}
+
+export interface VariableCopyProps {
+    menuId: string;
+    handleMenuClose: () => void;
 }

@@ -7,11 +7,11 @@ import { useTheme } from '@mui/material/styles';
 import useProcessVariables from '#src-app/hooks/useProcessVariables';
 import { translate } from '#src-app/hooks/useTranslations';
 
-import VariableRow from './VariableRow';
 import {
     VariableTag,
     VariablePanelContextMenuState,
-} from './VariableRow.types';
+} from './ProcessVariablesPanel.types';
+import VariableRow from './VariableRow/VariableRow';
 
 const VariablesPanel: FC = () => {
     const theme = useTheme();
