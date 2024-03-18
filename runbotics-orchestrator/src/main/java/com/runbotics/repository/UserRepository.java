@@ -51,17 +51,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Page<User> findAllByActivatedIsFalseAndEmailIsContaining(Pageable pageable, String email);
 
     @Query(
-        value = "SELECT feature_key " +
-            "FROM jhi_user_authority jua " +
-            "INNER JOIN jhi_user ju " +
-            "ON jua.user_id = ju.id " +
-            "INNER JOIN authority_feature_key afk " +
-            "ON afk.authority = jua.authority_name",
-        nativeQuery = true
-    )
-    List<String> findUserFeatureKeys(String login);
-
-    @Query(
         "SELECT u FROM User u WHERE u.id != ?1 AND (u.email = ?2 OR u.login = ?3)"
     )
     Optional<User> findOtherUserByLoginOrEmail(Long id, String email, String login);
