@@ -537,6 +537,10 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.EmployeeId'),
                                 type: 'string'
                             },
+                            leaveConfigId: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfigId'),
+                                type: 'string'
+                            },
                             dateFrom: {
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateFrom'),
                                 type: 'string'
@@ -550,7 +554,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string'
                             }
                         },
-                        required: ['employeeId', 'dateFrom', 'dateTo']
+                        required: ['employeeId', 'leaveConfigId', 'dateFrom', 'dateTo']
                     },
                 },
             },
@@ -560,9 +564,10 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     employeeId: undefined,
+                    leaveConfigId: undefined,
                     dateFrom: undefined,
                     dateTo: undefined,
-                    description: 'xDDD',
+                    description: undefined,
                 }
             },
         },

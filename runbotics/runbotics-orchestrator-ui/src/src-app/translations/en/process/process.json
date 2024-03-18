@@ -139,6 +139,7 @@
     "Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.UrlParameters": "url parameters",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Label": "Create holiday leave",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.EmployeeId": "Employee ID",
+    "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfigId": "Leave config ID",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateFrom": "Date from",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateTo": "Date to",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Description": "Description",

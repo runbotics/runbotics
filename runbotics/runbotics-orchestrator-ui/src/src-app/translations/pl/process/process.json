@@ -141,6 +141,7 @@
     "Process.Details.Modeler.Actions.BeeOffice.GetActivitiesByUrl.UrlParameters": "Parametry adresu url",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Label": "Utwórz wniosek urlopowy",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.EmployeeId": "ID pracownika",
+    "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfigId": "ID konfiguracji urlopu",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateFrom": "Od daty",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateTo": "Do daty",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Description": "Opis",

@@ -72,10 +72,12 @@ export type BeeOfficeCreateNewTimetableActivityActionOutput = any;
 // ----
 export type BeeOfficeCreateHolidayLeaveActionInput = {
     employeeId: string;
+    leaveConfigId: string;
     dateFrom: string;
     dateTo: string;
     description?: string
 };
+export type BeeOfficeCreateHolidayLeaveActionOutput = any;
 
 // ----
 

@@ -36,7 +36,6 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeTypes.BeeOfficeGetEmployeeActionInput
     ): Promise<BeeOfficeTypes.BeeOfficeGetEmployeeActionOutput> {
         const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeEmployee[]>(
-            // temp: use Miodea api for tests
             `${this.serverConfigService.beeUrl}/api/employees/email%3BADD%3Beq%3B${input.email}/1`,
             {
                 headers: {
@@ -215,18 +214,23 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
 
     async createHolidayLeave(
         input: BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionInput
-    ): Promise<any> {
-        console.log('createHolidayLeave triggered!')
+    ): Promise<BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionOutput> {
+        const requestBody =  {
+            employee_id: input.employeeId,
+            leaveconfig_id: input.leaveConfigId,
+            fromdate: input.dateFrom,
+            todate: input.dateTo,
+            ...(input?.description && { descr_schedule: input.description })
+        };
 
-        const response = await externalAxios.put(
-            `${this.serverConfigService.beeUrl}/api/leaves`, 
-            // todo: use Miodea api: https://beeofficeadm.vm.local/
-            input, {
-            headers: {
-                Authorization: 'Bearer ' + (await this.getBearerToken()),
-            },
-            maxRedirects: 0,
-        });
+        const response = await externalAxios.post(
+            `${this.serverConfigService.beeUrl}/api/leaves`,
+            requestBody, {
+                headers: {
+                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                },
+                maxRedirects: 0,
+            });
 
         return response.data;
     }
