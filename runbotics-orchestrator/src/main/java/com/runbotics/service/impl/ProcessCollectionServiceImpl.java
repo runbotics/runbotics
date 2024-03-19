@@ -47,7 +47,8 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find process collection");
         }
 
-        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+        List<String> userFeatureKeys = userService.findUserFeatureKeys();
+        boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
         if (!hasUserAccessEveryCollection) {
             boolean isCollectionAvailable = !(processCollectionRepository.countAvailableCollectionsById(collectionId, user) == 0);
             if (!isCollectionAvailable) {
@@ -57,7 +58,8 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
     }
 
     public List<ProcessCollectionDTO> getChildrenCollectionsByRoot(User user) {
-        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+        List<String> userFeatureKeys = userService.findUserFeatureKeys();
+        boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         if (hasUserAccessEveryCollection) {
             return processCollectionMapper.toDto(processCollectionRepository.findAllRootCollections());
@@ -68,7 +70,8 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
     }
 
     public List<ProcessCollectionDTO> getChildrenCollectionsByParent(UUID parentId, User user) {
-        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+        List<String> userFeatureKeys = userService.findUserFeatureKeys();
+        boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         if (hasUserAccessEveryCollection) {
             return processCollectionMapper.toDto(processCollectionRepository.findAllChildrenCollections(parentId));
@@ -79,7 +82,8 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
     }
 
     public List<ProcessCollectionDTO> checkAndGetCollectionAllAncestors(UUID collectionId, User user) throws ResponseStatusException {
-        boolean hasUserAccessEveryCollection = user.getFeatureKeys().contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
+        List<String> userFeatureKeys = userService.findUserFeatureKeys();
+        boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         List<ProcessCollection> breadcrumbs = processCollectionRepository.findAllAncestors(collectionId);
         if (!hasUserAccessEveryCollection) {

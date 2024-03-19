@@ -2,6 +2,7 @@ package com.runbotics.service;
 
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
+import com.runbotics.domain.FeatureKey;
 import com.runbotics.domain.User;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
@@ -395,11 +396,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<String> findUserFeatureKeys() {
-        Optional<String> login = SecurityUtils.getCurrentUserLogin();
-        if (login.isPresent()) {
-            return userRepository.findUserFeatureKeys(login.get());
-        }
-        return new ArrayList<String>();
+        User user = this.getUserWithAuthorities().orElseGet(User::new);
+
+        return user
+                .getAuthorities()
+                .stream()
+                .map(Authority::getFeatureKeys)
+                .flatMap(Set::stream)
+                .map(FeatureKey::getName).distinct().collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
