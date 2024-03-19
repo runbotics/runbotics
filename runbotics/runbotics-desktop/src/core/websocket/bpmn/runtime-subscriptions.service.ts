@@ -19,7 +19,7 @@ import { WebsocketService } from '../websocket.service';
 import { StorageService } from '#config';
 import { truncateStructure } from '#utils/structureTruncator';
 
-const MAX_STRUCTURE_SIZE = 1_000;
+const MAX_STRUCTURE_SIZE = 100_000;
 
 @Injectable()
 export class RuntimeSubscriptionsService {
