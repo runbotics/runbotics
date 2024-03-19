@@ -134,6 +134,9 @@ importers:
       nodemailer:
         specifier: ^6.6.0
         version: 6.9.4
+      obj-walker:
+        specifier: 1.10.0
+        version: 1.10.0
       qs:
         specifier: ^6.11.1
         version: 6.11.2
@@ -12203,6 +12206,11 @@ packages:
   /json-buffer@3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}
 
+  /json-decycle@2.0.1:
+    resolution: {integrity: sha512-AONW7uc5/PHtqfOvJOPY1yPPEbJL+ZKeWXclkukRYRoVeNnm4Kyf5+SCezza/TXsqEHCFVp3M/SuSl1fUPmo6w==}
+    engines: {node: '>= 16.13.2'}
+    dev: false
+
   /json-parse-better-errors@1.0.2:
     resolution: {integrity: sha512-mrqyZKfX5EhL7hvqcV6WG1yYjnjeuYDzDhhcAAUrq8Po85NBQBJP+ZDUT75qZQ98IkUoBqdkExkukOU7Ts2wrw==}
     dev: true
@@ -13788,6 +13796,13 @@ packages:
 
   /oauth-sign@0.9.0:
     resolution: {integrity: sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==}
+    dev: false
+
+  /obj-walker@1.10.0:
+    resolution: {integrity: sha512-HUqWDjXgSARUAEZ+wE8bmxhX5KKh1YHqYlWXEYceFZO2P7LqMWjn+HQ8ovSUSkmy9ReN6s0MvBvL52Rk6btx1g==}
+    dependencies:
+      json-decycle: 2.0.1
+      lodash: 4.17.21
     dev: false
 
   /object-assign@4.1.1:
