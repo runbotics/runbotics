@@ -1,6 +1,7 @@
 import { isObjectOrArray, walkie } from 'obj-walker';
 
 const MAX_ARRAY_LENGTH = 2;
+const TRUNCATED_MESSAGE = '[Truncated]';
 
 interface TruncateStructureParams {
     originalObject: object;
@@ -10,11 +11,11 @@ interface TruncateStructureParams {
 type TruncateStructureOutput = string;
 
 const truncateArrays = ({ val }) => {
-    if(isObjectOrArray(val)){
+    if (isObjectOrArray(val)) {
         for (const [key, value] of Object.entries(val)) {
             if(Array.isArray(value)) {
                 const truncatedArr = val[key].slice(0, MAX_ARRAY_LENGTH);
-                val[key] = [...truncatedArr, '[Truncated]'];
+                val[key] = [...truncatedArr, TRUNCATED_MESSAGE];
             }
         }
     }
@@ -26,6 +27,6 @@ export const truncateStructure = ({ originalObject, maxSize }: TruncateStructure
     if (truncatedArraysJson.length <= maxSize) {
         return JSON.parse(truncatedArraysJson);
     }
-    const truncatedJson = truncatedArraysJson.slice(0, maxSize - 11) + '[Truncated]';
+    const truncatedJson = truncatedArraysJson.slice(0, maxSize - TRUNCATED_MESSAGE.length) + TRUNCATED_MESSAGE;
     return truncatedJson;
 };
