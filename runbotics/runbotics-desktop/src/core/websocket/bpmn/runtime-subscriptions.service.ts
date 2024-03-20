@@ -28,7 +28,7 @@ export class RuntimeSubscriptionsService {
         private readonly websocketService: WebsocketService,
         private readonly runtimeService: RuntimeService,
         private readonly loopHandlerService: LoopHandlerService,
-        private readonly storageService: StorageService
+        private readonly storageService: StorageService,
     ) {}
 
     private readonly logger = new RunboticsLogger(
@@ -60,7 +60,7 @@ export class RuntimeSubscriptionsService {
                         case BpmnElementType.ERROR_EVENT_DEFINITION:
                             const variables = {};
                             variables['caughtErrorMessage'] = desktopTask.output.description;
-                            const setVariables = { ...event.activity.environment.variables, ...variables};
+                            const setVariables = { ...event.activity.environment.variables, ...variables };
                             event.activity.environment.assignVariables(setVariables);
                             processInstanceEvent.log = `ErrorEventDefinition: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
