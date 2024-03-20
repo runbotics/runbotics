@@ -42,6 +42,7 @@ public final class FeatureKeyConstants {
     public static final String BOT_LOG_READ = "BOT_LOG_READ";
     public static final String BOT_DELETE = "BOT_DELETE";
 
+    public static final String BOT_COLLECTION_ALL_ACCESS = "BOT_COLLECTION_ALL_ACCESS";
     public static final String BOT_COLLECTION_READ = "BOT_COLLECTION_READ";
     public static final String BOT_COLLECTION_EDIT = "BOT_COLLECTION_EDIT";
     public static final String BOT_COLLECTION_ADD = "BOT_COLLECTION_ADD";

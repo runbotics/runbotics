@@ -107,6 +107,9 @@ export enum FeatureKey {
     // Allow to delete bot [ Bots page -> 3 vertical dots ]
     BOT_DELETE = 'BOT_DELETE',
 
+    // Read/write access to every collection
+    BOT_COLLECTION_ALL_ACCESS = 'BOT_COLLECTION_ALL_ACCESS',
+
     // Show "COLLECTIONS" tab [ Bots page ]
     BOT_COLLECTION_READ = 'BOT_COLLECTION_READ',
 
@@ -155,7 +158,7 @@ export enum FeatureKey {
     // Show "History" page [ History page ]
     HISTORY_READ = 'HISTORY_READ',
 
-    // no uses in runbotics-orchestrator-ui/**/*.ts - can be removed
+    // used for api/admin/users/limited
     BASIC_USER_READ = 'BASIC_USER_READ',
 
     // Access to users page, manage users

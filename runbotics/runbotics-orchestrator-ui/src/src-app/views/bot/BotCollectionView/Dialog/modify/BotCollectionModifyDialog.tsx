@@ -1,9 +1,10 @@
 import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 
-import { Autocomplete, Button, Dialog, DialogActions, Switch, TextField, Typography } from '@mui/material';
+import { Autocomplete, Button, CircularProgress, Dialog, DialogActions, Switch, TextField, Typography } from '@mui/material';
 import moment from 'moment';
-import { IBotCollection, IUser } from 'runbotics-common';
+import { FeatureKey, IBotCollection, IUser } from 'runbotics-common';
 
+import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { usersActions } from '#src-app/store/slices/Users';
 
@@ -27,30 +28,35 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
     const dispatch = useDispatch();
     useEffect(() => {
         if (open) dispatch(usersActions.getAllLimited());
+        if (open) dispatch(usersActions.getActiveNonAdmins());
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
     const { user: currentUser } = useSelector((state) => state.auth);
-    const { all } = useSelector((state) => state.users);
+    const { all: allUsers, activated: { nonAdmins } } = useSelector((state) => state.users);
     const [name, setName] = useState(collection ? collection.name : '');
     const [description, setDescription] = useState(collection ? collection.description : '');
     const [selectedUsers, setSelectedUsers] = useState<IUser[]>(collection ? collection.users : []);
     const [publicBotsIncluded, setPublicBotsIncluded] = useState(collection ? collection.publicBotsIncluded : true);
+    console.log(selectedUsers);
 
     const [error, setError] = useState(null);
 
     const { translate } = useTranslations();
 
-    const isOwner = !collection || currentUser.login === collection?.createdBy.login || currentUser.login === 'admin';
+    const shareableUsers = useMemo(() => ({
+        loading: nonAdmins.loading,
+        all: nonAdmins.all.filter(user => user.email !== currentUser.email)
+    }), [nonAdmins, currentUser.email, open]);
 
-    const filteredUsers = useMemo(() => all.filter((user) => user.login !== 'admin'), [all]);
+    const isOwner = !collection || currentUser.login === collection?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
 
     const createCollectionEntityToSend = (): IBotCollection => ({
         name,
         description,
         publicBotsIncluded,
         users: selectedUsers,
-        createdBy: all.find((user) => user.login === currentUser.login),
+        createdBy: allUsers.find((user) => user.login === currentUser.login),
         created: collection ? collection.created : moment().toISOString(),
         updated: moment().toISOString(),
         id: collection ? collection.id : null,
@@ -140,16 +146,30 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
                     <Autocomplete
                         onChange={handleSelectUsers}
                         multiple
+                        disabled={!isOwner}
                         id="bot-collection-users-select"
-                        options={filteredUsers}
+                        options={shareableUsers.loading ? [] : shareableUsers.all}
+                        isOptionEqualToValue={(optionUser, valueUser) => optionUser.login === valueUser.login}
+                        loading={shareableUsers.loading}
                         getOptionLabel={(user) => user.login}
                         defaultValue={selectedUsers}
-                        isOptionEqualToValue={(optionUser, valueUser) => optionUser.login === valueUser.login}
                         filterSelectedOptions
                         disableCloseOnSelect
                         readOnly={!isOwner}
                         renderInput={(params) => (
-                            <TextField {...params} label={translate('Bot.Collection.Dialog.Modify.Form.Users.Label')} />
+                            <TextField
+                                {...params}
+                                label={translate('Bot.Collection.Dialog.Modify.Form.Users.Label')}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {shareableUsers.loading ? <CircularProgress size={20} /> : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    ),
+                                }}
+                            />
                         )}
                     />
 

@@ -4,15 +4,14 @@ import { FC, useState, useEffect, ChangeEvent, useMemo } from 'react';
 import { TextField } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
-import { COLLECTION_ID_PARAM, IUser, ProcessCollection, ProcessCollectionKeys, ROOT_PROCESS_COLLECTION_ID, Role } from 'runbotics-common';
+import { COLLECTION_ID_PARAM, FeatureKey, ProcessCollection, ProcessCollectionKeys, ROOT_PROCESS_COLLECTION_ID } from 'runbotics-common';
 
 import CustomDialog from '#src-app/components/CustomDialog';
-import { hasRoleAccess } from '#src-app/components/utils/Secured';
+import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processCollectionActions } from '#src-app/store/slices/ProcessCollection/ProcessCollection.slice';
 import { usersActions } from '#src-app/store/slices/Users';
-import { User } from '#src-app/types/user';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import AccessOptions from './AccessOptions/';
@@ -29,19 +28,23 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
     const dispatch = useDispatch();
     const currentCollectionId = useSearchParams().get(COLLECTION_ID_PARAM) ?? ROOT_PROCESS_COLLECTION_ID;
 
-    const { all: allUsers } = useSelector((state) => state.users);
+    const { activated: { nonAdmins } } = useSelector((state) => state.users);
     const { user: currentUser } = useSelector((state) => state.auth);
 
     const [initialCollectionData, setInitialCollectionData] = useState<ProcessCollection>(prepareIncompleteCollectionEntity(currentUser, currentCollectionId, collection));
     const [collectionData, setCollectionData] = useState<ProcessCollection>(initialCollectionData);
 
-    const usersWithoutAdmin = useMemo(() => allUsers.filter((user: IUser) => !hasRoleAccess(user as User, [Role.ROLE_ADMIN])), [allUsers]);
+    const shareableUsers = useMemo(() => ({
+        loading: nonAdmins.loading,
+        all: nonAdmins.all.filter(user => user.email !== currentUser.email)
+    }), [nonAdmins, currentUser.email]);
 
-    const isOwner = !collection || currentUser.login === collection?.createdBy.login || hasRoleAccess(currentUser, [Role.ROLE_ADMIN]);
+    const isOwner = !collection || currentUser.login === collection?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
     const isUpdated = Boolean(collection);
 
     useEffect(() => {
         if (isOpen) dispatch(usersActions.getAllLimited());
+        if (isOpen) dispatch(usersActions.getActiveNonAdmins());
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
@@ -140,7 +143,7 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
                         collectionData={collectionData}
                         handleChange={handleFormPropertyChange}
                         isOwner={isOwner}
-                        usersWithoutAdmin={usersWithoutAdmin}
+                        shareableUsers={shareableUsers}
                         isModifyDialogOpen={isOpen}
                     />
                 </Form>

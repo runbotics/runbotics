@@ -4,6 +4,9 @@ export interface AccessOptionsProps {
     collectionData: ProcessCollection;
     handleChange: (property: ProcessCollectionKeys, newValue: ProcessCollectionValues ) => void;
     isOwner: boolean;
-    usersWithoutAdmin: IUser[];
+    shareableUsers: {
+        all: IUser[];
+        loading: boolean;
+    }
     isModifyDialogOpen: boolean;
 }
