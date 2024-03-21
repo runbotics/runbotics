@@ -216,13 +216,11 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionInput
     ): Promise<BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionOutput> {
 
-        // 1. check date regex -> if not throw error
         const dateRegex = new RegExp(ActionRegex.DATE_FORMAT);
         if (!dateRegex.test(input.dateFrom) || !dateRegex.test(input.dateTo)) {
             throw new Error('Date format not correct');
         }
 
-        // 2. fetch employees and check if uuid exists -> if not throw error
         const matchedLeaveConfig = await externalAxios.get(
             `${this.serverConfigService.beeUrl}/api/leaveconfig`, {
                 headers: {
@@ -234,7 +232,6 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
             throw new Error('Cannot find leave config with specific name');
         }
 
-        // 3. prepare object and make a post for create new leave
         const requestBody =  {
             employee_id: input.employeeId,
             leaveconfig_id: matchedLeaveConfig.ID,
