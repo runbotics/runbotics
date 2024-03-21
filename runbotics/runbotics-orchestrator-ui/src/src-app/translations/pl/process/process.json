@@ -316,6 +316,8 @@
     "Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Label": "Wybierz z Paska Narzędzi",
     "Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Target": "Cel",
     "Process.Details.Modeler.Actions.Sap.ClickToolbarButton.ToolId": "Id narzędzia",
+    "Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Label": "Przełącz pole wyboru",
+    "Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Target": "Cel",
     "Process.Details.Modeler.Actions.Sap.SelectTableRow.Label": "Zaznacz wiersz tabeli",
     "Process.Details.Modeler.Actions.Sap.SelectTableRow.Target": "Cel",
     "Process.Details.Modeler.Actions.Sap.SelectTableRow.RowIndex": "Indeks wiersza",

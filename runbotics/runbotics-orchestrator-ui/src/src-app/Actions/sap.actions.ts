@@ -681,6 +681,37 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    'sap.toggleCheckbox': {
+        id: SapAction.TOGGLE_CHECKBOX,
+        label: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Label'),
+        script: SapAction.TOGGLE_CHECKBOX,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Target'),
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    target: 'wnd[0]'
+                },
+            },
+        },
+    },
 });
 
 export default getSapActions;
