@@ -4,8 +4,6 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-
-
 // eslint-disable-next-line max-lines-per-function
 const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.createNewTimetableActivity': {
@@ -537,34 +535,50 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.EmployeeId'),
                                 type: 'string'
                             },
-                            leaveConfigId: {
-                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfigId'),
+                            leaveConfigName: {
                                 type: 'string'
                             },
                             dateFrom: {
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateFrom'),
-                                type: 'string'
+                                type: 'string',
+                                pattern: ActionRegex.DATE_FORMAT
                             },
                             dateTo: {
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateTo'),
-                                type: 'string'
+                                type: 'string',
+                                pattern: ActionRegex.DATE_FORMAT
                             },
                             description: {
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Description'),
                                 type: 'string'
                             }
                         },
-                        required: ['employeeId', 'leaveConfigId', 'dateFrom', 'dateTo']
+                        required: ['employeeId', 'leaveConfigName', 'dateFrom', 'dateTo']
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    leaveConfigName: {
+                        'ui:widget': 'LeaveConfigSelectWidget'
+                    },
+                    dateFrom: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.DateFormat')
+                        }
+                    },
+                    dateTo: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.DateFormat')
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
                     employeeId: undefined,
-                    leaveConfigId: undefined,
+                    leaveConfigName: undefined,
                     dateFrom: undefined,
                     dateTo: undefined,
                     description: undefined,
