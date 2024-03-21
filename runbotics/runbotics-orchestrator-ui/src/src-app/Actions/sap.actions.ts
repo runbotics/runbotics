@@ -698,6 +698,10 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Target'),
                                 type: 'string',
                             },
+                            checked: {
+                                title: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Checked'),
+                                type: 'boolean'
+                            },
                         },
                     },
                 },
