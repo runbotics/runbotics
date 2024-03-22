@@ -10,7 +10,7 @@ export const ExpandButtonWrapper = styled.div`
 `;
 
 export const StyledIconsBox = styled(Box)
-    <{ bgColor: Color }>(({ theme, bgColor }) => `
+    <{ $bgcolor: Color }>(({ theme, $bgcolor }) => `
     && {
         display: flex;
         justify-content: center;
@@ -18,6 +18,6 @@ export const StyledIconsBox = styled(Box)
         width: 28px;
         height: 28px;
         border-radius: 5px;
-        background-color: ${alpha(bgColor === 'grey' ? theme.palette[bgColor][700] : theme.palette[bgColor].main, 0.1)};
+        background-color: ${alpha($bgcolor === 'grey' ? theme.palette[$bgcolor][700] : theme.palette[$bgcolor].main, 0.1)};
     }
 `);

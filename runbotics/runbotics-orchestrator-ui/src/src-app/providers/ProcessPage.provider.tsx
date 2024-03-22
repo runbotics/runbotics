@@ -7,11 +7,11 @@ import { processActions } from '#src-app/store/slices/Process';
 
 interface ProcessPageProps {
     search: string;
-    searchField: string;
     pageSize: number;
     setPageSize: Dispatch<SetStateAction<number>>;
     page: number;
     setPage: Dispatch<SetStateAction<number>>;
+    collectionId: string | null;
 }
 
 interface ProcessPageContextValues {
@@ -28,45 +28,66 @@ export const ProcessPageContext = createContext<ProcessPageContextValues>(null);
 const ProcessPageProvider: FC<ProcessPageProps> = ({
     children,
     search,
-    searchField,
     pageSize,
     setPageSize,
     page,
     setPage,
+    collectionId
 }) => {
     const dispatch = useDispatch();
     const replaceQueryParams = useReplaceQueryParams();
 
     useUpdateEffect(() => {
-        dispatch(
-            processActions.getProcessesPage({
-                page,
-                size: pageSize,
-                filter: {
-                    contains: {
-                        ...(search.trim() && {
-                            name: search.trim(),
-                            createdByName: search.trim(),
-                            tagName: search.trim()
-                        })
+        if (collectionId !== undefined) {
+            dispatch(
+                processActions.getProcessesPageByCollection({
+                    page,
+                    size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(search.trim() && {
+                                name: search.trim(),
+                                createdByName: search.trim(),
+                                tagName: search.trim(),
+                            })
+                        },
+                        equals: {
+                            ...(collectionId !== null && { collectionId })
+                        }
                     },
-                },
-            }),
-        );
+                })
+            );
+        } else {
+            dispatch(
+                processActions.getProcessesPage({
+                    page,
+                    size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(search.trim() && {
+                                name: search.trim(),
+                                createdByName: search.trim(),
+                                tagName: search.trim()
+                            })
+                        },
+                    },
+                }),
+            );
+        }
     }, [page]);
 
     const handleGridPageChange = (event: MouseEvent<HTMLElement>, currentPage: number) => {
-        replaceQueryParams({ page: currentPage - 1, pageSize, search, searchField });
+        replaceQueryParams({ collectionId, page: currentPage - 1, pageSize, search });
         setPage(currentPage - 1);
     };
 
     const handleTablePageChange = (currentPage: number) => {
-        replaceQueryParams({ page: currentPage, pageSize, search, searchField });
+        replaceQueryParams({ page: currentPage, pageSize, search });
         setPage(currentPage);
     };
 
     const handlePageSizeChange = (currentPageSize: number) => {
-        replaceQueryParams({ page, pageSize: currentPageSize, search, searchField });
+        replaceQueryParams({ collectionId, page, pageSize: currentPageSize, search });
         setPageSize(currentPageSize);
     };
 

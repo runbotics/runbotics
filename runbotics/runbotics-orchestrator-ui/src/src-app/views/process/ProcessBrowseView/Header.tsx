@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC } from 'react';
 
-import { Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Grid, Stack, Tab, Tabs } from '@mui/material';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -13,13 +13,10 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { DefaultPageSize } from './ProcessList/ProcessList.utils';
-import useQuery from '../../../hooks/useQuery';
 import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
 import { getLastParamOfUrl } from '../../utils/routerUtils';
 import AddProcess from '../AddProcess';
 import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
-
-
 
 const PREFIX = 'Header';
 
@@ -45,29 +42,27 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
     const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
 
+
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { firstValueFrom } = useQuery();
 
     const currentTab = getLastParamOfUrl(router);
 
     const currentPage = parseInt(searchParams.get('page')) ?? DefaultPageValue.PAGE;
     const pageSize = parseInt(searchParams.get('pageSize')) ?? DefaultPageSize.GRID;
-    const collectionId = firstValueFrom(ProcessesTabs.COLLECTIONS) ?? null;
 
     const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcessesTabs) => {
         if (value === ProcessesTabs.COLLECTIONS) {
             router.replace({
-                pathname:  '/app/processes/collections',
+                pathname: '/app/processes/collections',
                 query: {
-                    collectionId,
                     pageSize: pageSize,
                     page: currentPage
                 }
             });
         } else {
             router.replace({
-                pathname:  '/app/processes',
+                pathname: '/app/processes',
                 query: {
                     pageSize: pageSize,
                     page: currentPage
@@ -106,11 +101,6 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
         >
             <Grid item>
                 {procesTabs}
-            </Grid>
-            <Grid item>
-                <Typography variant="h3" color="textPrimary">
-                    {translate('Process.List.Header.Solutions')}
-                </Typography>
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>

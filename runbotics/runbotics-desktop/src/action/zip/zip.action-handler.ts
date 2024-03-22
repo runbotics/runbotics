@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { ZipAction } from 'runbotics-common';
-import { ZipActionRequest, UnzipFileActionInput } from './zip.types';
+import { ZipActionRequest, UnzipFileActionInput, ZipFileActionInput } from './zip.types';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '../../logger';
+import { handleFileSystemError } from '#utils/fileSystemError';
 import pathPackage from 'path';
-import AdmZip from 'adm-zip'
+import AdmZip from 'adm-zip';
+import fs from 'fs';
 
 @Injectable()
 export default class ZipActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(ZipActionHandler.name);
 
-    constructor(
-        private readonly serverConfigService: ServerConfigService,
-    ) {
+    constructor(private readonly serverConfigService: ServerConfigService) {
         super();
     }
 
@@ -24,20 +24,73 @@ export default class ZipActionHandler extends StatelessActionHandler {
 
     async unzipFile(input: UnzipFileActionInput) {
         const { path, fileName } = input;
+        const fullPath = this.resolvePath(fileName, path);
+
+        if (!fileName) {
+            throw new Error('File name is mandatory');
+        }
+
+        if (fs.existsSync(fullPath)) {
+            throw new Error('File/folder with this name already exists');
+        }
 
         try {
-            const fullPath = this.resolvePath(fileName, path);
             const zip = new AdmZip(`${fullPath}.zip`);
             zip.extractAllTo(fullPath);
         } catch (e) {
-            throw new Error(`Archive unzip failed with error: ${e}`);
+            handleFileSystemError('Unzip archive', e);
         }
+    }
+
+    async zipFile(input: ZipFileActionInput) {
+        const { fileName, path, zipName } = input;
+
+        if (!fileName) {
+            throw new Error('File name is mandatory');
+        }
+        
+        try {
+            const fullPathToZip = this.resolvePath(fileName, path);
+            const isDirectory = this.isDirectory(fullPathToZip);
+            const pathToZip = this.getNewFolderPath(zipName, fullPathToZip);
+    
+            if (fs.existsSync(`${pathToZip}.zip`)) throw {code: 'EBUSY'};
+
+            const zip = new AdmZip();
+            if (isDirectory) {
+                zip.addLocalFolder(fullPathToZip);
+            } else {
+                zip.addLocalFile(fullPathToZip);
+            }
+
+            zip.writeZip(`${pathToZip}.zip`);
+            return `${pathToZip}.zip`;
+        } catch (e) {
+            handleFileSystemError('Create archive', e);
+        }
+    }
+
+    private getNewFolderPath(newName: string, path: string) {
+        const { dir, name } = pathPackage.parse(path);
+
+        if (!newName) {
+            return `${dir}${pathPackage.sep}${name}`;
+        }
+
+        return `${dir}${pathPackage.sep}${newName}`;
+    }
+
+    private isDirectory(path: string) {
+        const stat = fs.lstatSync(path);
+        return stat.isDirectory();
     }
 
     run(request: ZipActionRequest) {
         switch (request.script) {
             case ZipAction.UNZIP_FILE:
                 return this.unzipFile(request.input);
+            case ZipAction.ZIP_FILE:
+                return this.zipFile(request.input);
             default:
                 throw new Error('Action not found');
         }

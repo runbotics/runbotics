@@ -5,13 +5,14 @@ import { IUser } from 'runbotics-common';
 
 import Accordion from '#src-app/components/Accordion';
 import useTranslations from '#src-app/hooks/useTranslations';
+
 import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
 import { AccessOptionsProps } from './AccessOptions.types';
+import LocationOptions from '../LocationOptions/';
 
-const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, isOwner, usersWithoutAdmin }) => {
+const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, isOwner, usersWithoutAdmin, isModifyDialogOpen }) => {
     const { translate } = useTranslations();
-
     const isPublicTranslationKey = collectionData.isPublic ? 'True' : 'False';
 
     return (
@@ -54,6 +55,13 @@ const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, i
                         <InfoButtonTooltip message={translate('Proces.Collection.Dialog.Modify.Form.Users.Tooltip')} />
                     </Box>
                 </Box>
+                <LocationOptions
+                    editedCollectionId={collectionData.id}
+                    isModifyDialogOpen={isModifyDialogOpen}
+                    handleChange={handleChange}
+                    parentId={collectionData.parentId}
+                    isOwner={isOwner}
+                />
             </Box>
         </Accordion>
     );

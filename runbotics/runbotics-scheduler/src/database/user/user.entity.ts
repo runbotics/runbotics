@@ -8,49 +8,49 @@ export class UserEntity implements IUser {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
         id: number;
 
-    @Column({ unique: true })
+    @Column({ unique: true, type: 'varchar' })
         login: string;
 
-    @Column({ name: 'password_hash', select: false })
+    @Column({ name: 'password_hash', select: false, type: 'varchar' })
         passwordHash: string;
 
-    @Column({ name: 'first_name' })
+    @Column({ name: 'first_name', type: 'varchar' })
         firstName: string;
 
-    @Column({ name: 'last_name' })
+    @Column({ name: 'last_name', type: 'varchar' })
         lastName: string;
 
-    @Column({ unique: true })
+    @Column({ unique: true, type: 'varchar'  })
         email: string;
 
-    @Column({ name: 'image_url' })
+    @Column({ name: 'image_url', type: 'varchar'  })
         imageUrl: string;
 
-    @Column()
+    @Column({type: 'boolean'} )
         activated: boolean;
 
-    @Column({ name: 'lang_key' })
+    @Column({ name: 'lang_key', type: 'varchar'  })
         langKey: string;
 
-    @Column({ name: 'activation_key', select: false })
+    @Column({ name: 'activation_key', select: false, type: 'varchar'  })
         activationKey: string;
 
-    @Column({ name: 'reset_key', select: false })
+    @Column({ name: 'reset_key', select: false, type: 'varchar'  })
         resetKey: string;
 
-    @Column({ name: 'created_by' })
+    @Column({ name: 'created_by', type: 'varchar'  })
         createdBy: string;
 
-    @Column({ name: 'created_date', transformer: dateTransformer })
+    @Column({ name: 'created_date', transformer: dateTransformer, type: 'varchar'  })
         createdDate: string;
 
-    @Column({ name: 'reset_date', transformer: dateTransformer })
+    @Column({ name: 'reset_date', transformer: dateTransformer, type: 'varchar'  })
         resetDate: string;
 
-    @Column({ name: 'last_modified_by' })
+    @Column({ name: 'last_modified_by', type: 'varchar'  })
         lastModifiedBy: string;
 
-    @Column({ name: 'last_modified_date', transformer: dateTransformer })
+    @Column({ name: 'last_modified_date', transformer: dateTransformer, type: 'varchar'  })
         lastModifiedDate: string;
 
     @ManyToMany(() => AuthorityEntity)

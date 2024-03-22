@@ -182,6 +182,7 @@ export enum SapAction {
     SELECT_FROM_CONTEXT_MENU = 'sap.selectFromContextMenu',
     CLICK_TOOLBAR_BUTTON = 'sap.clickToolbarButton',
     SELECT_TABLE_ROW = 'sap.selectTableRow',
+    TOGGLE_CHECKBOX = 'sap.toggleCheckbox',
 }
 
 export enum ApplicationAction {
@@ -229,6 +230,18 @@ export enum DesktopAction {
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
 }
 
+export enum WindowsAction {
+    IS_WINDOW_OPEN = 'windows.isWindowOpen',
+    GET_ELEMENT = 'windows.getElement',
+    LIST_WINDOWS = 'windows.listWindows',
+    MOUSE_CLICK = 'windows.mouseClick',
+    WAIT_FOR_ELEMENT = 'windows.waitForElement',
+    PRESS_KEYS = 'windows.pressKeys',
+    SEND_KEYS = 'windows.sendKeys',
+    MINIMIZE_WINDOW = 'windows.minimizeWindow',
+    MAXIMIZE_WINDOW = 'windows.maximizeWindow',
+}
+
 export enum VisualBasicAction {
     RUN_SCRIPT = 'visualBasic.runScript',
 }
@@ -246,7 +259,17 @@ export enum FolderAction {
 }
 
 export enum ZipAction {
-    UNZIP_FILE = 'zip.unzipFile'
+    UNZIP_FILE = 'zip.unzipArchive',
+    ZIP_FILE = 'zip.createArchive'
+}
+
+export enum FileSystemErrorMessages {
+    EBUSY = 'Resource with this name already exists.',
+    ENOENT = 'No such resource',
+    EACCESS = 'Access to the resource denied',
+    EPERM = 'Permission denied',
+    EEXISTS = 'Resource with this name already exists',
+    ENOTEMPTY = 'Cannot perform action on empty directory without setting "recursive" option',
 }
 
 export type AllActionIds =

@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { defaultProcessValue } from 'runbotics-common';
 
 import { RootState } from '#src-app/store';
-
 import LoadingType from '#src-app/types/loading';
 
 import buildProcessExtraReducers from './Process.extraReducers';

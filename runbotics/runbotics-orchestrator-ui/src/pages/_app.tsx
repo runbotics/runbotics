@@ -1,20 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import moment from 'moment';
 import { AppContext, default as NextApp, AppProps as PageProps } from 'next/app';
 import getConfig from 'next/config';
-
 import { I18nextProvider } from 'react-i18next';
-
 import { Provider } from 'react-redux';
 
 import 'moment/locale/pl';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
-
 import MainLayout from '#src-app/layouts/MainLayout';
-
 import SnackbarProvider from '#src-app/providers/Snackbar.provider';
 import SocketProvider from '#src-app/providers/Socket.provider';
 import StylesProvider from '#src-app/providers/Styles.provider';
@@ -31,8 +27,9 @@ import '#src-landing/scss/global.scss';
 import Metadata from '#src-landing/components/Matadata/Metadata';
 
 interface AppProps extends PageProps {
-    emotionCache?: EmotionCache;
+    children: ReactNode | ReactNode[];
     runboticsEntrypointUrl: string;
+    emotionCache?: EmotionCache;
 }
 
 // without this line it didn't work
@@ -47,7 +44,7 @@ function App(props: AppProps) {
         emotionCache = clientSideEmotionCache,
         router,
     } = props;
-    let Layout: FC = React.Fragment;
+    let Layout: FC<{ children: ReactNode | ReactNode[] }> = React.Fragment;
 
     if (router.pathname.startsWith('/app/')) {
         Layout = MainLayout;

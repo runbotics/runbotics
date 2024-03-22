@@ -3,23 +3,27 @@ import React, { FC } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, Menu, Tooltip, Typography } from '@mui/material';
 import Image from 'next/image';
-
 import { useRouter } from 'next/router';
-import { ProcessCollection } from 'runbotics-common';
+import { FeatureKey, ProcessCollection } from 'runbotics-common';
 
 import PrivateIcon from '#public/images/icons/lock.svg';
+import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
+import { useSelector } from '#src-app/store';
 
-import { DeleteCollection } from './MenuItems/DeleteCollection';
-import { EditCollection } from './MenuItems/EditCollection';
-import { MoveCollection } from './MenuItems/MoveCollection';
+import { CollectionDeleteItem } from './MenuItems/CollectionDeleteItem';
+import { CollectionEditItem } from './MenuItems/CollectionEditItem';
 import { StyledIconsBox } from './ProcessCollectionList.style';
 import { CollectionNameWrapper, ContextWrapper, MenuWrapper, ProcessCollectionTileWrapper, StyledLink } from './ProcessCollectionTile.styles';
 import { translate } from '../../../hooks/useTranslations';
 import If from '../../utils/If';
 
-const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, parentId }) => {
+const ProcessCollectionTile: FC<ProcessCollection> = (collection) => {
     const router = useRouter();
+    const { id, name, isPublic } = collection;
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
+
+    const { user: currentUser } = useSelector((state) => state.auth);
+    const isOwner = currentUser.login === collection?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -50,7 +54,7 @@ const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, pare
                     </Tooltip>
                     <If condition={!isPublic}>
                         <Tooltip title={translate('Process.Collection.List.IsPrivate.Tooltip')}>
-                            <StyledIconsBox bgColor='grey'>
+                            <StyledIconsBox $bgcolor='grey'>
                                 <Image src={PrivateIcon} alt={translate('Process.Collection.List.Alt.PrivateIcon')} />
                             </StyledIconsBox>
                         </Tooltip>
@@ -62,9 +66,8 @@ const ProcessCollectionTile: FC<ProcessCollection> = ({ id, name, isPublic, pare
                     <MoreVertIcon />
                 </IconButton>
                 <Menu id="process-collection-actions-menu" anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-                    <MoveCollection id={id} />
-                    <EditCollection id={id} name={name} isPublic={isPublic} parentId={parentId} />
-                    <DeleteCollection id={id} />
+                    <CollectionEditItem collection={collection} onClose={handleClose} />
+                    <CollectionDeleteItem id={id} name={name} isOwner={isOwner} />
                 </Menu>
             </MenuWrapper>
         </ProcessCollectionTileWrapper>

@@ -100,7 +100,7 @@ export class MailService {
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
-            content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\nYou can visit us here ${this.serverConfigService.entrypointUrl}\n\nBest regards,\nRunBotics`,
+            content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\nYou can visit us here ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\nBest regards,\nRunBotics`,
         };
 
         if (!failedProcess.isPublic) {

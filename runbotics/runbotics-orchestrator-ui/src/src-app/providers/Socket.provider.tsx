@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, ReactNode, useEffect, useMemo } from 'react';
 
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -12,6 +12,7 @@ export const SocketContext = React.createContext<Socket | null>(null);
 interface SocketProviderProps {
     uri: string;
     shouldAttach: boolean;
+    children: ReactNode | ReactNode[];
 }
 
 const SocketProvider: FC<SocketProviderProps> = ({

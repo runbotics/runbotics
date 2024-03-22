@@ -11,6 +11,7 @@ import LoadingScreen from '../../../components/utils/LoadingScreen';
 import useTranslations from '../../../hooks/useTranslations';
 import { processCollectionSelector } from '../../../store/slices/ProcessCollection';
 import Header from '../ProcessBrowseView/Header';
+import ProcessList from '../ProcessBrowseView/ProcessList';
 
 export const ProcessCollectionView = () => {
     const { translate } = useTranslations();
@@ -20,7 +21,7 @@ export const ProcessCollectionView = () => {
     return (
         <InternalPage title={translate('Process.Collection.Navigation.Collections.Label')}>
             <Header />
-            <Box pt={2}>
+            <Box pt={2} sx={{ minHeight: '160px' }}>
                 <If condition={!isLoading} else={<LoadingScreen />} >
                     <ProcessCollectionPath
                         breadcrumbs={breadcrumbs}
@@ -29,6 +30,7 @@ export const ProcessCollectionView = () => {
                     <ProcessCollectionList />
                 </If>
             </Box>
+            <ProcessList/>
         </InternalPage>
     );
 };

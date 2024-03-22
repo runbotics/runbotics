@@ -15,7 +15,7 @@ import { formatTimeDiff } from '#src-app/utils/utils';
 
 import { Title } from '#src-app/views/utils/FormDialog.styles';
 
-import { HeaderWrapper, ProcessOutputButton } from './ProcessInstanceDetailsHeader.styles';
+import { HeaderWrapper, ProcessOutputButton, TextOutputWrapper } from './ProcessInstanceDetailsHeader.styles';
 import {
     hasProcessOutputProperty,
     isElementEnabled,
@@ -55,7 +55,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
 
             switch (process.outputType.type) {
                 case ProcessOutputType.TEXT:
-                    return <pre>{JSON.stringify(processOutputValue, null, 2)}</pre>;
+                    return <TextOutputWrapper>{JSON.stringify(processOutputValue, null, 2)}</TextOutputWrapper>;
                 case ProcessOutputType.HTML:
                     if (typeof processOutputValue !== 'string') {
                         return translate('Process.ProcessInstance.Details.Header.Dialog.InvalidOutputType');
