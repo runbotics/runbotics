@@ -38,6 +38,10 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Connect.Client'),
                                 type: 'string',
                             },
+                            language: {
+                                title: translate('Process.Details.Modeler.Actions.Sap.Connect.Language'),
+                                type: 'string'
+                            }
                         },
                         required: ['user', 'password', 'connectionName'],
                     },

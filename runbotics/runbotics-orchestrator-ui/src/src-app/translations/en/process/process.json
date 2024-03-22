@@ -289,6 +289,7 @@
     "Process.Details.Modeler.Actions.Sap.Connect.User": "User (env property)",
     "Process.Details.Modeler.Actions.Sap.Connect.Password": "Password (env property)",
     "Process.Details.Modeler.Actions.Sap.Connect.Client": "Client",
+    "Process.Details.Modeler.Actions.Sap.Connect.Language": "Language",
     "Process.Details.Modeler.Actions.Sap.Disconnect.Label": "Disconnect",
     "Process.Details.Modeler.Actions.Sap.StartTransaction.Label": "Start Transaction",
     "Process.Details.Modeler.Actions.Sap.StartTransaction.Transaction": "Transaction",
