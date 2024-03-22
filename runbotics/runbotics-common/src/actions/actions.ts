@@ -182,6 +182,7 @@ export enum SapAction {
     SELECT_FROM_CONTEXT_MENU = 'sap.selectFromContextMenu',
     CLICK_TOOLBAR_BUTTON = 'sap.clickToolbarButton',
     SELECT_TABLE_ROW = 'sap.selectTableRow',
+    TOGGLE_CHECKBOX = 'sap.toggleCheckbox',
 }
 
 export enum ApplicationAction {
