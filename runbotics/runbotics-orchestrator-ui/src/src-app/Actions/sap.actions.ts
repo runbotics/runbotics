@@ -703,6 +703,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'boolean'
                             },
                         },
+                        required: ['target']
                     },
                 },
             },
