@@ -711,7 +711,8 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: 'wnd[0]'
+                    target: 'wnd[0]',
+                    checked: true,
                 },
             },
         },
