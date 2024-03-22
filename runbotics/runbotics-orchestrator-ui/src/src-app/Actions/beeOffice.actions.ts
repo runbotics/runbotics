@@ -551,6 +551,25 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                             description: {
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Description'),
                                 type: 'string'
+                            },
+                            isAdditional: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.AdditionalData'),
+                                type: 'boolean'
+                            },
+                        },
+                        if: {
+                            properties: {
+                                isAdditional: {
+                                    const: true
+                                }
+                            }
+                        },
+                        then: {
+                            properties: {
+                                additionalProperties: {
+                                    title: 'Object',
+                                    type: 'string'
+                                }
                             }
                         },
                         required: ['employeeId', 'leaveConfigName', 'dateFrom', 'dateTo']
@@ -572,8 +591,12 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Common.DateFormat')
                         }
+                    },
+                    additionalProperties: {
+                        'ui:widget': 'EditorWidget',
+                        'ui:options': { language: 'json' }
                     }
-                }
+                },
             },
             formData: {
                 input: {
@@ -582,7 +605,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                     dateFrom: undefined,
                     dateTo: undefined,
                     description: undefined,
-                }
+                    isAdditional: false,
+                    additionalProperties: undefined
+                },
             },
         },
     },

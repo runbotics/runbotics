@@ -145,6 +145,7 @@
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateFrom": "Od daty",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateTo": "Do daty",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Description": "Opis",
+    "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.AdditionalData": "Dodatkowe dane",
     "Process.Details.Modeler.Actions.Browser.Target.Selector.Label": "Selektor",
     "Process.Details.Modeler.Actions.Browser.Target.XPath": "XPath",
     "Process.Details.Modeler.Actions.Browser.Target.CSS": "CSS",

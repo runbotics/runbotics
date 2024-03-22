@@ -75,7 +75,9 @@ export type BeeOfficeCreateHolidayLeaveActionInput = {
     leaveConfigName: string;
     dateFrom: string;
     dateTo: string;
-    description?: string
+    isAdditional: string;
+    description?: string;
+    additionalProperties?: string;
 };
 export type BeeOfficeCreateHolidayLeaveActionOutput = any;
 

@@ -237,7 +237,8 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
             leaveconfig_id: matchedLeaveConfig.ID,
             fromdate: input.dateFrom,
             todate: input.dateTo,
-            ...(input?.description && { descr_schedule: input.description })
+            ...(input?.description && { descr_schedule: input.description }),
+            ...(input.isAdditional && this.parseAdditionalProperties(input.additionalProperties))
         };
 
         const response = await externalAxios.post(
@@ -250,6 +251,14 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
             });
 
         return response.data;
+    }
+
+    private parseAdditionalProperties(inputObject: string) {
+        try {
+            return JSON.parse(inputObject);
+        } catch {
+            throw new Error('Cannot parse additional object');
+        }
     }
 
     run(request: BeeOfficeTypes.BeeOfficeActionRequest) {
