@@ -563,6 +563,7 @@
     "Process.Modeler.LoseModelerChangesContent": "All unsaved changes process wizard changes will be lost.",
     "Process.Modeler.DialogCancel": "Cancel",
     "Process.Modeler.DialogConfirm": "Ok",
+    "Process.Modeler.VariablesPanel.Tag.Variable": "Variable",
     "Process.Modeler.VariablesPanel.Tag.ActionOutput": "Action output",
     "Process.Modeler.VariablesPanel.Copy.Message.Success": "Variable copied",
     "Process.Modeler.VariablesPanel.Empty.Message": "No variables has yet been used in this process"

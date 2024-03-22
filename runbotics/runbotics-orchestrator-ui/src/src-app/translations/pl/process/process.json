@@ -570,6 +570,7 @@
     "Process.Modeler.DialogConfirm": "Ok",
     "Process.Details.Modeler.DetailsSidebar.Message.Label": "Wiadomość",
     "Process.Details.Modeler.DetailsSidebar.Variable.Label": "Zmienna",
+    "Process.Modeler.VariablesPanel.Tag.Variable": "Zmienna",
     "Process.Modeler.VariablesPanel.Tag.ActionOutput": "Wynik akcji",
     "Process.Modeler.VariablesPanel.Copy.Message.Success": "Skopiowano zmienną",
     "Process.Modeler.VariablesPanel.Empty.Message": "W tym procesie jeszcze nie użyto żadnej zmiennej"
