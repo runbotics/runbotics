@@ -56,10 +56,10 @@ const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, i
                                 InputProps={{
                                     ...params.InputProps,
                                     endAdornment: (
-                                        <React.Fragment>
+                                        <>
                                             {shareableUsers.loading ? <CircularProgress size={20} /> : null}
                                             {params.InputProps.endAdornment}
-                                        </React.Fragment>
+                                        </>
                                     ),
                                 }}
                             />

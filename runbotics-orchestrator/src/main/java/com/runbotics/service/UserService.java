@@ -376,7 +376,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<User> getNonAdminUsers() {
-    List<User> activeUsersWithIds = userRepository.findAllActivatedNonAdmins();
+        List<User> activeUsersWithIds = userRepository.findAllActivatedNonAdmins();
         return activeUsersWithIds.stream().filter(user -> !hasAdminRole(user)).collect(Collectors.toList());
     }
 
