@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import FolderActionHandler from './folder.action-handler';
 import fs from 'fs';
 import path from 'path';
-import { FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderCreateActionInput, FolderRenameActionInput } from './folder.types';
+import { FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderCreateActionInput, FolderRenameActionInput, FolderExistsActionInput } from './folder.types';
 import { ServerConfigService } from '../../config';
 
 describe('FolderActionHandler', () => {
@@ -434,5 +434,90 @@ describe('FolderActionHandler', () => {
         });
     });
 
+    describe('Exist folder', () => {
+        it('Should throw error when name is not provided', async () => {
+            const params: FolderExistsActionInput = {
+                name: undefined,
+                path: CWD
+            };
 
-});
+            await expect(folderActionHandler.existsFolder(params)).rejects.toThrowError(
+                'Cannot check if folder exists if name is not provided.'
+            );
+        });
+
+        it('Should throw error when provided path does not exist', async () => {
+            const nonExistentPath = '/nonExistentPath';
+        
+            const params: FolderExistsActionInput = {
+                name: TEST_FOLDER_NAME,
+                path: nonExistentPath
+            };
+        
+            await expect(folderActionHandler.existsFolder(params)).rejects.toThrowError(
+                'Provided path does not exist.'
+            );
+        });
+
+        it('Should return true if folder exists when all function parameters are specified', async () => {        
+            const params: FolderExistsActionInput = {
+                name: TEST_FOLDER_NAME,
+                path: CWD
+            };
+        
+            const result = await folderActionHandler.existsFolder(params);
+        
+            expect(result).toBe(true);
+    
+        });
+        
+        it('Should return true if folder exists if only the folder name is specified', async () => {        
+            const params: FolderExistsActionInput = {
+                name: TEST_FOLDER_NAME,
+                path: undefined
+            };
+
+            createTestFolder();
+        
+            const result = await folderActionHandler.existsFolder(params);
+        
+            expect(result).toBe(true);
+
+            removeTestFolder(FULL_TEST_FOLDER_PATH);
+    
+        });
+        
+
+        it('Should return false if folder does not exist when all function parameters are specified', async () => {
+            const nonExistentFolderName = 'nonExistingFolder';
+            
+            const params: FolderExistsActionInput = {
+                name: nonExistentFolderName,
+                path: CWD
+            };
+        
+            const result = await folderActionHandler.existsFolder(params);
+        
+            expect(result).toBe(false);
+        });
+
+        it('Should return false if folder does not exist if only the folder name is specified', async () => {
+            const nonExistentFolderName = 'nonExistingFolder';
+            
+            const params: FolderExistsActionInput = {
+                name: nonExistentFolderName,
+                path: undefined
+            };
+        
+            createTestFolder();
+
+            const result = await folderActionHandler.existsFolder(params);
+        
+            expect(result).toBe(false);
+
+            removeTestFolder(FULL_TEST_FOLDER_PATH);
+        });
+
+
+    });
+})

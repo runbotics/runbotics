@@ -241,7 +241,8 @@ export enum FolderAction {
     DELETE = 'folder.delete',
     DISPLAY_FILES = 'folder.displayFiles',
     CREATE = 'folder.create',
-    RENAME = 'folder.rename'
+    RENAME = 'folder.rename',
+    EXISTS = "folder.exists"
 }
 
 export enum ZipAction {
