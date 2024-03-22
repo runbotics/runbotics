@@ -26,23 +26,22 @@ const REJECT_REQUEST_TYPE = 'botCollection/createCollection/rejected';
 
 const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collection, onClose, open, pageParams }) => {
     const dispatch = useDispatch();
+    const { translate } = useTranslations();
+
     useEffect(() => {
         if (open) dispatch(usersActions.getAllLimited());
         if (open) dispatch(usersActions.getActiveNonAdmins());
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
+
     const { user: currentUser } = useSelector((state) => state.auth);
     const { all: allUsers, activated: { nonAdmins } } = useSelector((state) => state.users);
     const [name, setName] = useState(collection ? collection.name : '');
     const [description, setDescription] = useState(collection ? collection.description : '');
     const [selectedUsers, setSelectedUsers] = useState<IUser[]>(collection ? collection.users : []);
     const [publicBotsIncluded, setPublicBotsIncluded] = useState(collection ? collection.publicBotsIncluded : true);
-    console.log(selectedUsers);
-
     const [error, setError] = useState(null);
-
-    const { translate } = useTranslations();
 
     const shareableUsers = useMemo(() => ({
         loading: nonAdmins.loading,
@@ -163,10 +162,10 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
                                 InputProps={{
                                     ...params.InputProps,
                                     endAdornment: (
-                                        <React.Fragment>
+                                        <>
                                             {shareableUsers.loading ? <CircularProgress size={20} /> : null}
                                             {params.InputProps.endAdornment}
-                                        </React.Fragment>
+                                        </>
                                     ),
                                 }}
                             />
