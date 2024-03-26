@@ -2,8 +2,8 @@ import { SapAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, ActionSystem } from '../types';
 import { SAPLanguages } from './sap.types';
+import { IBpmnAction, Runner, ActionSystem } from '../types';
 
 
 
