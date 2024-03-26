@@ -316,6 +316,9 @@
     "Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Label": "Wybierz z Paska Narzędzi",
     "Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Target": "Cel",
     "Process.Details.Modeler.Actions.Sap.ClickToolbarButton.ToolId": "Id narzędzia",
+    "Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Label": "Przełącz pole wyboru",
+    "Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Target": "Cel",
+    "Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Checked": "Zaznaczony",
     "Process.Details.Modeler.Actions.Sap.SelectTableRow.Label": "Zaznacz wiersz tabeli",
     "Process.Details.Modeler.Actions.Sap.SelectTableRow.Target": "Cel",
     "Process.Details.Modeler.Actions.Sap.SelectTableRow.RowIndex": "Indeks wiersza",
@@ -567,6 +570,7 @@
     "Process.Modeler.DialogConfirm": "Ok",
     "Process.Details.Modeler.DetailsSidebar.Message.Label": "Wiadomość",
     "Process.Details.Modeler.DetailsSidebar.Variable.Label": "Zmienna",
+    "Process.Modeler.VariablesPanel.Tag.Variable": "Zmienna",
     "Process.Modeler.VariablesPanel.Tag.ActionOutput": "Wynik akcji",
     "Process.Modeler.VariablesPanel.Copy.Message.Success": "Skopiowano zmienną",
     "Process.Modeler.VariablesPanel.Empty.Message": "W tym procesie jeszcze nie użyto żadnej zmiennej"
