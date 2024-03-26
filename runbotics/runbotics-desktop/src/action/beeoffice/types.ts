@@ -79,7 +79,7 @@ export type BeeOfficeCreateHolidayLeaveActionInput = {
     description?: string;
     additionalProperties?: string;
 };
-export type BeeOfficeCreateHolidayLeaveActionOutput = any;
+export type BeeOfficeCreateHolidayLeaveActionOutput = unknown;
 
 // ----
 
