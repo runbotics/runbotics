@@ -55,7 +55,9 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
 
             switch (process.outputType.type) {
                 case ProcessOutputType.TEXT:
-                    return <TextOutputWrapper>{JSON.stringify(processOutputValue, null, 2)}</TextOutputWrapper>;
+                    return <TextOutputWrapper>
+                        <Typography variant='body2'>{processOutputValue}</Typography>
+                    </TextOutputWrapper>;
                 case ProcessOutputType.HTML:
                     if (typeof processOutputValue !== 'string') {
                         return translate('Process.ProcessInstance.Details.Header.Dialog.InvalidOutputType');
