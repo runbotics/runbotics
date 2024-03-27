@@ -293,6 +293,7 @@
     "Process.Details.Modeler.Actions.Sap.Connect.User": "Użytkownik [zmienna środowiskowa]",
     "Process.Details.Modeler.Actions.Sap.Connect.Password": "Hasło [zmienna środowiskowa]",
     "Process.Details.Modeler.Actions.Sap.Connect.Client": "Mandant",
+    "Process.Details.Modeler.Actions.Sap.Connect.Language": "Język",
     "Process.Details.Modeler.Actions.Sap.Disconnect.Label": "Rozłączenie",
     "Process.Details.Modeler.Actions.Sap.StartTransaction.Label": "Rozpocznij transakcję",
     "Process.Details.Modeler.Actions.Sap.StartTransaction.Transaction": "Transakcja",

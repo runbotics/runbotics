@@ -19,7 +19,7 @@ import getJiraServerActions from '#src-app/Actions/jira-server.actions';
 import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
 import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
-import getSapActions from '#src-app/Actions/sap.actions';
+import getSapActions from '#src-app/Actions/SapActions/sap.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
 import getWindowsActions from '#src-app/Actions/windows.actions';
