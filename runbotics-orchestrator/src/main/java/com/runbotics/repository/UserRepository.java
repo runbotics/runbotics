@@ -51,6 +51,20 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Page<User> findAllByActivatedIsFalseAndEmailIsContaining(Pageable pageable, String email);
 
     @Query(
+        value =
+            "SELECT * " +
+            "FROM jhi_user ju " +
+            "WHERE NOT EXISTS ( " +
+                "SELECT 1 " +
+                "FROM jhi_user_authority " +
+                "WHERE user_id = ju.id " +
+                "AND authority_name = 'ROLE_ADMIN' " +
+            ");",
+        nativeQuery = true
+    )
+    List<User> findAllActivatedNonAdmins();
+
+    @Query(
         "SELECT u FROM User u WHERE u.id != ?1 AND (u.email = ?2 OR u.login = ?3)"
     )
     Optional<User> findOtherUserByLoginOrEmail(Long id, String email, String login);
