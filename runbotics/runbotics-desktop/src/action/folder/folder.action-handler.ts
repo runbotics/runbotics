@@ -96,18 +96,17 @@ export default class FolderActionHandler extends StatelessActionHandler {
     async existsFolder(input: FolderExistsActionInput) {
         const { name, path } = input;
 
-        const folderPath = this.resolvePath(name, path);
-
         if (!name) {
-            throw new Error('Cannot check if folder exists if name is not provided.');
+            throw new Error('Name is not provided.');
         }
 
         if (path && !fs.existsSync(path)) {
             throw new Error('Provided path does not exist.');
         }
 
-        return fs.existsSync(folderPath);
+        const folderPath = this.resolvePath(name, path);
 
+        return fs.existsSync(folderPath);
     }
 
     handleFolderActionError(actionName: string, e: any, folderPath: string) {
