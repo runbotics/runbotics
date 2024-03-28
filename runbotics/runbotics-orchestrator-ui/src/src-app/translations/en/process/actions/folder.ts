@@ -17,6 +17,11 @@ const folderActionsTranslations = {
     'Process.Details.Modeler.Actions.Folder.Rename.Output.Info': 'Save path of the renamed folder to a variable',
     'Process.Details.Modeler.Actions.Folder.Path': 'Path',
     'Process.Details.Modeler.Actions.Folder.Path.Info': 'Path to directory where you want to create a new folder',
+    'Process.Details.Modeler.Actions.Folder.Exists.Label': 'Exists',
+    'Process.Details.Modeler.Actions.Folder.Exists.Name': 'Name',
+    'Process.Details.Modeler.Actions.Folder.Exists.Name.Info': 'Folder name. Cannot include the following characters: \\ / : * ? < > |',
+    'Process.Details.Modeler.Actions.Folder.Exists.Path.Info': 'Path to the parent folder',
+    'Process.Details.Modeler.Actions.Folder.Exists.Output.Info': 'Assign the output to variable',
 };
 
 export default folderActionsTranslations;
