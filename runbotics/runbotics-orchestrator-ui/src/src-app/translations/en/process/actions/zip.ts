@@ -5,11 +5,10 @@ const zipTranslations = {
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Path.Info': 'Path of folder containing zip file, e.g. "C:\\Users\\User\\Documents".',
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Name.Info': 'File name (without extension), e.g. "zippedArchive".',
     'Process.Details.Modeler.Actions.Zip.CreateArchive.Label': 'Create archive',
-    'Process.Details.Modeler.Actions.Zip.CreateArchive.Name': 'File/folder name to zip',
-    'Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName': 'Zip name',
-    'Process.Details.Modeler.Actions.Zip.CreateArchive.Path.Info': 'Path of folder containing folder or file to archive, e.g. "C:\\Users\\User\\Documents". By default it will be temp folder created during the process.',
-    'Process.Details.Modeler.Actions.Zip.CreateArchive.Name.Info': 'Name of the file (with extension) or folder to be archived',
-    'Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName.Info': 'Name under you want to create archive, e.g. "zippedFolder". By default it will be the name of the folder or file to archive',
+    'Process.Details.Modeler.Actions.Zip.Zip.Path': 'Path to the file/folder to archive',
+    'Process.Details.Modeler.Actions.Zip.CreateArchive.ZipPath': 'Full zip file destination path',
+    'Process.Details.Modeler.Actions.Zip.CreateArchive.Path.Info': 'Path to a file (with extension) or folder to archive. In case path is not absolute, archive will be created in the process temporary folder',
+    'Process.Details.Modeler.Actions.Zip.CreateArchive.ZipPath.Info': 'Path to a file (with .zip extension) where archive should be created. If not provided archive will be created in the temporary folder under the same name as the file',
     'Process.Details.Modeler.Actions.Zip.CreateArchive.Output.Info': 'Path to newly created archive'
 };
 
