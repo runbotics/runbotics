@@ -19,6 +19,11 @@ const folderActionsTranslations: typeof englishFolderActionsTranslations = {
     'Process.Details.Modeler.Actions.Folder.Rename.Output.Info': 'Zapisz ścieżkę do folderu jako zmienną',
     'Process.Details.Modeler.Actions.Folder.Path': 'Ścieżka',
     'Process.Details.Modeler.Actions.Folder.Path.Info': 'Ścieżka do nadrzędnego folderu w hierarchii plików',
+    'Process.Details.Modeler.Actions.Folder.Exists.Label': 'Istnieje',
+    'Process.Details.Modeler.Actions.Folder.Exists.Name': 'Nazwa',
+    'Process.Details.Modeler.Actions.Folder.Exists.Name.Info': 'Nazwa folderu. Nie może zawierać następujących znaków: \\ / : * ? < > |',
+    'Process.Details.Modeler.Actions.Folder.Exists.Path.Info': 'Ścieżka do nadrzędnego folderu w hierarchii plików',
+    'Process.Details.Modeler.Actions.Folder.Exists.Output.Info': 'Przypisz daną wyjściową do zmiennej',
 };
 
 export default folderActionsTranslations;

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { ActionRegex, FolderAction } from 'runbotics-common';
-import { FolderActionRequest, FolderCreateActionInput, FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderRenameActionInput } from './folder.types';
+import { FolderActionRequest, FolderCreateActionInput, FolderDeleteActionInput, FolderDisplayFilesActionInput, FolderRenameActionInput, FolderExistsActionInput } from './folder.types';
 import fs from 'fs';
 import pathPackage from 'path';
 import { ServerConfigService } from '#config';
@@ -93,6 +93,22 @@ export default class FolderActionHandler extends StatelessActionHandler {
         }
     }
 
+    async existsFolder(input: FolderExistsActionInput) {
+        const { name, path } = input;
+
+        if (!name) {
+            throw new Error('Name is not provided.');
+        }
+
+        if (path && !fs.existsSync(path)) {
+            throw new Error('Provided path does not exist.');
+        }
+
+        const folderPath = this.resolvePath(name, path);
+
+        return fs.existsSync(folderPath);
+    }
+
     handleFolderActionError(actionName: string, e: any, folderPath: string) {
         switch (e.code) {
             case 'ENOENT':
@@ -135,6 +151,8 @@ export default class FolderActionHandler extends StatelessActionHandler {
                 return this.createFolder(request.input);
             case FolderAction.RENAME:
                 return this.renameFolder(request.input);
+            case FolderAction.EXISTS:
+                return this.existsFolder(request.input);
             default:
                 throw new Error('Action not found');
         }

@@ -238,6 +238,82 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
             },
         },
     },
+    'folder.exists': {
+        id: FolderAction.EXISTS,
+        label: translate('Process.Details.Modeler.Actions.Folder.Exists.Label'),
+        script: FolderAction.EXISTS,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Folder.Exists.Label'),
+                        type: 'object',
+                        properties: {
+                            name: {
+                                title: translate('Process.Details.Modeler.Actions.Folder.Exists.Name'),
+                                type: 'string',
+                            },
+                            path: {
+                                title: translate('Process.Details.Modeler.Actions.Folder.Path'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['name'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    name: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Exists.Name.Info'),
+                        },
+                    },
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Exists.Path.Info'),
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.Exists.Output.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    path: undefined,
+                    name: undefined,
+                },
+                output: {
+                    variableName: undefined,
+                },
+            }
+        }
+    },
 });
 
 export default getFolderActions;
