@@ -5,14 +5,15 @@ import ZipActionHandler from './zip.action-handler';
 import { ServerConfigService } from '../../config';
 import { UnzipFileActionInput, ZipFileActionInput } from './zip.types';
 import { FileSystemErrorMessages } from 'runbotics-common';
+import AdmZip from 'adm-zip';
 
 describe('FolderActionHandler', () => {
     let zipActionHandler: ZipActionHandler;
     let serverConfigService: ServerConfigService;
 
     const TEMP_FOLDER_PATH = `${process.cwd()}${path.sep}temp`;
-    const FOLDER_TO_UNZIP_NAME = 'unzipThis';
-    const ZIP_TESTING_FOLDER = `${TEMP_FOLDER_PATH}${path.sep}${FOLDER_TO_UNZIP_NAME}`;
+    const ARCHIVE_NAME = 'zipArchiveName';
+    const ARCHIVE_FOLDER_PATH = `${TEMP_FOLDER_PATH}${path.sep}${ARCHIVE_NAME}`;
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -35,14 +36,14 @@ describe('FolderActionHandler', () => {
             fs.mkdirSync(TEMP_FOLDER_PATH, { recursive: true });
         }
 
-        if (fs.existsSync(`${ZIP_TESTING_FOLDER}.zip`)) {
-            fs.rmSync(`${ZIP_TESTING_FOLDER}.zip`);
+        if (fs.existsSync(`${ARCHIVE_FOLDER_PATH}.zip`)) {
+            fs.rmSync(`${ARCHIVE_FOLDER_PATH}.zip`);
         }
     });
 
     afterEach(async () => {
-        if (fs.existsSync(ZIP_TESTING_FOLDER)) {
-            fs.rmSync(ZIP_TESTING_FOLDER, { recursive: true });
+        if (fs.existsSync(ARCHIVE_FOLDER_PATH)) {
+            fs.rmSync(ARCHIVE_FOLDER_PATH, { recursive: true });
         }
 
         if (fs.existsSync(`${TEMP_FOLDER_PATH}.zip`)) {
@@ -53,7 +54,7 @@ describe('FolderActionHandler', () => {
 
     afterAll(async () => {
         removeExistingFolder(serverConfigService.tempFolderPath);
-        removeExistingFolder(ZIP_TESTING_FOLDER, false);
+        removeExistingFolder(ARCHIVE_FOLDER_PATH, false);
         removeExistingFolder(TEMP_FOLDER_PATH);
     });
 
@@ -63,10 +64,12 @@ describe('FolderActionHandler', () => {
         }
     };
 
-    const createTestZip = async (fileName: string, filePath?: string, zipName?: string) => {
-        const toZipPath = filePath ? `${filePath}${path.sep}${fileName}` : `${TEMP_FOLDER_PATH}${path.sep}${fileName}`;
-        createTestFolder(toZipPath);
-        zipActionHandler.zipFile({ fileName, path: filePath, zipName});
+    const createTestZip = async () => {
+        const zip = new AdmZip();
+
+        createTestFolder(ARCHIVE_FOLDER_PATH);
+        zip.addLocalFolder(ARCHIVE_FOLDER_PATH);
+        zip.writeZip(`${ARCHIVE_FOLDER_PATH}.zip`);
     };
 
     const removeExistingFolder = (folderPath: string, recursive = true) => {
@@ -81,16 +84,14 @@ describe('FolderActionHandler', () => {
     });
 
     describe('Create archive', async() => {
-        const ARCHIVE_NAME = 'zipArchiveName';
         const NEW_ARCHIVE_NAME = 'zipAsName';
-        const ARCHIVE_FOLDER_PATH = `${TEMP_FOLDER_PATH}${path.sep}${ARCHIVE_NAME}`;
-        const ARCHIVE_FOLDER_WITH_NEW_NAME_PATH = `${TEMP_FOLDER_PATH}${path.sep}${NEW_ARCHIVE_NAME}`;
+        const ARCHIVE_FOLDER_WITH_NEW_NAME_PATH = `${TEMP_FOLDER_PATH}${path.sep}${NEW_ARCHIVE_NAME}.zip`;
 
-        it('Should create zip named with fileName when optional inputs (path and zipName) are not provided', async() => {
+        // only mandatory input provided (zipped in TEMP_FOLDER_PATH)
+        it('Should create zip if path to the file is relative and destination path is not provided', async() => {
             const params: ZipFileActionInput = {
-                fileName: ARCHIVE_NAME,
-                path: undefined,
-                zipName: undefined
+                toZipPath: ARCHIVE_NAME,
+                zipPath: undefined,
             };
 
             createTestFolder(ARCHIVE_FOLDER_PATH);
@@ -102,11 +103,10 @@ describe('FolderActionHandler', () => {
             removeExistingFolder(`${ARCHIVE_FOLDER_PATH}.zip`);
         });
 
-        it('Should create zip named with fileName name when optional path is provided and optional zipName is not provided', async() => {
+        it('Should create zip if path to the file is absolute and destination path is not provided', async() => {
             const params: ZipFileActionInput = {
-                fileName: ARCHIVE_NAME,
-                path: TEMP_FOLDER_PATH,
-                zipName: undefined
+                toZipPath: ARCHIVE_FOLDER_PATH,
+                zipPath: undefined
             };
 
             createTestFolder(`${ARCHIVE_FOLDER_PATH}`);
@@ -118,44 +118,53 @@ describe('FolderActionHandler', () => {
             removeExistingFolder(`${ARCHIVE_FOLDER_PATH}.zip`);
         });
 
-        it('Should create zip named with new zipName when optional path is not provided', async() => {
+        // both inputs provided (zipped in provided zipPath)
+        it('Should create zip if path to the file is relative and destination path is provided', async() => {
             const params: ZipFileActionInput = {
-                fileName: ARCHIVE_NAME,
-                path: undefined,
-                zipName: NEW_ARCHIVE_NAME 
+                toZipPath: ARCHIVE_NAME,
+                zipPath: ARCHIVE_FOLDER_WITH_NEW_NAME_PATH,
+            };
+
+            createTestFolder(`${ARCHIVE_FOLDER_PATH}`);
+            await zipActionHandler.zipFile(params);
+            expect(
+                fs.existsSync(`${ARCHIVE_FOLDER_WITH_NEW_NAME_PATH}`)
+            ).toBeTruthy();
+            removeExistingFolder(`${ARCHIVE_FOLDER_PATH }`);
+            removeExistingFolder(`${ARCHIVE_FOLDER_WITH_NEW_NAME_PATH}`);
+        });
+
+        it('Should create zip if path to the file is absolute and destination path is provided', async() => {
+            const params: ZipFileActionInput = {
+                toZipPath: ARCHIVE_FOLDER_PATH,
+                zipPath: ARCHIVE_FOLDER_WITH_NEW_NAME_PATH,
             };
 
             createTestFolder(`${ARCHIVE_FOLDER_PATH }`);
             await zipActionHandler.zipFile(params);
             expect(
-                fs.existsSync(`${ARCHIVE_FOLDER_WITH_NEW_NAME_PATH}.zip`)
+                fs.existsSync(`${ARCHIVE_FOLDER_WITH_NEW_NAME_PATH}`)
             ).toBeTruthy();
             removeExistingFolder(`${ARCHIVE_FOLDER_PATH }`);
-            removeExistingFolder(`${ARCHIVE_FOLDER_WITH_NEW_NAME_PATH}.zip`);
+            removeExistingFolder(`${ARCHIVE_FOLDER_WITH_NEW_NAME_PATH}`);
         });
 
-        it('Should create zip named with new zipName when all parameters are provided', async() => {
-            const toZipPath = ARCHIVE_FOLDER_PATH;
+        // errors
+        it('Should throw error when path to what to zip is not found', async() => {
             const params: ZipFileActionInput = {
-                fileName: ARCHIVE_NAME,
-                path: TEMP_FOLDER_PATH,
-                zipName: NEW_ARCHIVE_NAME
+                toZipPath: undefined,
+                zipPath: undefined,
             };
 
-            createTestFolder(toZipPath);
-            await zipActionHandler.zipFile(params);
-            expect(
-                fs.existsSync(`${ARCHIVE_FOLDER_WITH_NEW_NAME_PATH}.zip`)
-            ).toBeTruthy();
-            removeExistingFolder(toZipPath);
-            removeExistingFolder(`${ARCHIVE_FOLDER_WITH_NEW_NAME_PATH}.zip`);
+            await expect(zipActionHandler.zipFile(params)).rejects.toThrowError(
+                'Path to the file/folder to archive is mandatory'
+            );
         });
 
-        it('Should throw error when fileName is not found', async() => {
+        it('Should throw error when resource not found', async() => {
             const params: ZipFileActionInput = {
-                fileName: 'notExistingFolderName',
-                path: undefined,
-                zipName: undefined
+                toZipPath: 'notExistingFolderName',
+                zipPath: undefined,
             };
 
             await expect(zipActionHandler.zipFile(params)).rejects.toThrowError(
@@ -163,46 +172,33 @@ describe('FolderActionHandler', () => {
             );
         });
 
-        it('Should throw error when fileName is not provided', async() => {
-            const params: ZipFileActionInput = {
-                fileName: undefined,
-                path: undefined,
-                zipName: undefined
-            };
-
-            await expect(zipActionHandler.zipFile(params)).rejects.toThrowError(
-                'File name is mandatory'
-            );
-        });
-
         it('Should throw error when zip file already exists', async() => {
             const params: ZipFileActionInput = {
-                fileName: ARCHIVE_NAME,
-                path: undefined,
-                zipName: undefined
+                toZipPath: ARCHIVE_NAME,
+                zipPath: undefined,
             };
 
-            createTestZip(ARCHIVE_NAME, TEMP_FOLDER_PATH);
+            createTestZip();
             await expect(zipActionHandler.zipFile(params)).rejects.toThrowError(
                 `Create archive action: ${FileSystemErrorMessages.EBUSY}`
             );
-            removeExistingFolder(`${ARCHIVE_FOLDER_PATH }`);
-            removeExistingFolder(`${ARCHIVE_FOLDER_PATH }.zip`);
+            removeExistingFolder(`${ARCHIVE_FOLDER_PATH}`);
+            removeExistingFolder(`${ARCHIVE_FOLDER_PATH}.zip`);
         });
     });
 
     describe('Unzip archive', async() => {
         it('Should unzip files when path is not provided', async() => {
-            const folderToUnzipPath = `${ZIP_TESTING_FOLDER}${path.sep}${FOLDER_TO_UNZIP_NAME}`;
+            const folderToUnzipPath = `${ARCHIVE_FOLDER_PATH}${path.sep}${ARCHIVE_NAME}`;
             const params: UnzipFileActionInput = {
-                fileName: FOLDER_TO_UNZIP_NAME,
+                fileName: ARCHIVE_NAME,
                 path: undefined
             };
 
-            createTestFolder(ZIP_TESTING_FOLDER);
+            createTestFolder(ARCHIVE_FOLDER_PATH);
             createTestFolder(folderToUnzipPath);
-            createTestZip(FOLDER_TO_UNZIP_NAME, TEMP_FOLDER_PATH);
-            removeExistingFolder(`${ZIP_TESTING_FOLDER}`);
+            createTestZip();
+            removeExistingFolder(`${ARCHIVE_FOLDER_PATH}`);
             expect(
                 fs.existsSync(folderToUnzipPath)
             ).toBeFalsy();
@@ -217,23 +213,23 @@ describe('FolderActionHandler', () => {
         });
 
         it('Should unzip archive when all parameters are provided', async() => {
-            const folderToUnzipPath = `${ZIP_TESTING_FOLDER}${path.sep}${FOLDER_TO_UNZIP_NAME}`;
+            const folderToUnzipPath = `${ARCHIVE_FOLDER_PATH}${path.sep}${ARCHIVE_NAME}`;
             const params: UnzipFileActionInput = {
-                fileName: FOLDER_TO_UNZIP_NAME,
+                fileName: ARCHIVE_NAME,
                 path: TEMP_FOLDER_PATH
             };
 
-            createTestFolder(ZIP_TESTING_FOLDER);
+            createTestFolder(ARCHIVE_FOLDER_PATH);
             createTestFolder(folderToUnzipPath);
-            createTestZip(FOLDER_TO_UNZIP_NAME, TEMP_FOLDER_PATH);
-            removeExistingFolder(`${ZIP_TESTING_FOLDER}`);
+            createTestZip();
+            removeExistingFolder(`${ARCHIVE_FOLDER_PATH}`);
             expect(
                 fs.existsSync(folderToUnzipPath)
             ).toBeFalsy();
 
             await zipActionHandler.unzipFile(params);
             expect(
-                fs.existsSync(`${ZIP_TESTING_FOLDER}`)
+                fs.existsSync(`${ARCHIVE_FOLDER_PATH}`)
             ).toBeTruthy();
 
             removeExistingFolder(folderToUnzipPath);
@@ -250,23 +246,23 @@ describe('FolderActionHandler', () => {
                 'File name is mandatory'
             );
 
-            removeExistingFolder(`${TEMP_FOLDER_PATH}${FOLDER_TO_UNZIP_NAME}`);
-            removeExistingFolder(`${TEMP_FOLDER_PATH}${FOLDER_TO_UNZIP_NAME}.zip`);
+            removeExistingFolder(`${TEMP_FOLDER_PATH}${ARCHIVE_NAME}`);
+            removeExistingFolder(`${TEMP_FOLDER_PATH}${ARCHIVE_NAME}.zip`);
         });
 
         it('Should throw error when zip file already exists', async() => {
             const params: UnzipFileActionInput = {
-                fileName: FOLDER_TO_UNZIP_NAME,
+                fileName: ARCHIVE_NAME,
                 path: TEMP_FOLDER_PATH
             };
 
-            await createTestZip(FOLDER_TO_UNZIP_NAME, TEMP_FOLDER_PATH);
+            await createTestZip();
             await expect(zipActionHandler.unzipFile(params)).rejects.toThrowError(
                 'File/folder with this name already exists'
             );
 
-            removeExistingFolder(`${TEMP_FOLDER_PATH}${FOLDER_TO_UNZIP_NAME}`);
-            removeExistingFolder(`${TEMP_FOLDER_PATH}${FOLDER_TO_UNZIP_NAME}.zip`);
+            removeExistingFolder(`${TEMP_FOLDER_PATH}${ARCHIVE_NAME}`);
+            removeExistingFolder(`${TEMP_FOLDER_PATH}${ARCHIVE_NAME}.zip`);
         });
     });
 });

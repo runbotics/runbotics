@@ -51,11 +51,10 @@ export default class ZipActionHandler extends StatelessActionHandler {
             );
         }
 
-        const fullToZipPath = isFilePathAbsolute(toZipPath) ? toZipPath : this.resolvePath(toZipPath);
-        const isDirectory = this.isDirectory(fullToZipPath);
-        const fullZipPath = isFilePathAbsolute(zipPath) ? zipPath : `${this.resolvePath(this.getZipFileName(toZipPath))}.zip)`;
-        
         try {
+            const fullToZipPath = isFilePathAbsolute(toZipPath) ? toZipPath : this.resolvePath(toZipPath);
+            const isDirectory = this.isDirectory(fullToZipPath);
+            const fullZipPath = isFilePathAbsolute(zipPath) ? zipPath : `${this.resolvePath(this.getZipFileName(toZipPath))}.zip`;
             if (fs.existsSync(fullZipPath)) throw { code: 'EBUSY' };
 
             const zip = new AdmZip();
