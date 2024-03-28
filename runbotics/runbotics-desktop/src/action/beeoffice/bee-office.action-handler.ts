@@ -1,5 +1,5 @@
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
-
+import { ActionRegex } from 'runbotics-common';
 import { Injectable } from '@nestjs/common';
 import { externalAxios, ServerConfigService } from '#config';
 import * as BeeOfficeTypes from './types';
@@ -212,6 +212,55 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         return response.data;
     }
 
+    async createHolidayLeave(
+        input: BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionInput
+    ): Promise<BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionOutput> {
+
+        const dateRegex = new RegExp(ActionRegex.DATE_FORMAT);
+        if (!dateRegex.test(input.dateFrom) || !dateRegex.test(input.dateTo)) {
+            throw new Error('Date format not correct');
+        }
+
+        const matchedLeaveConfig = await externalAxios.get(
+            `${this.serverConfigService.beeUrl}/api/leaveconfig`, {
+                headers: {
+                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                },
+                maxRedirects: 0,
+            }).then(response => response.data.find(config => config.name === input.leaveConfigName));
+        if (!matchedLeaveConfig) {
+            throw new Error('Cannot find leave config with specific name');
+        }
+
+        const requestBody =  {
+            employee_id: input.employeeId,
+            leaveconfig_id: matchedLeaveConfig.ID,
+            fromdate: input.dateFrom,
+            todate: input.dateTo,
+            ...(input?.description && { descr_schedule: input.description }),
+            ...(input.isAdditional && this.parseAdditionalProperties(input.additionalProperties))
+        };
+
+        const response = await externalAxios.post(
+            `${this.serverConfigService.beeUrl}/api/leaves`,
+            requestBody, {
+                headers: {
+                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                },
+                maxRedirects: 0,
+            });
+
+        return response.data;
+    }
+
+    private parseAdditionalProperties(inputObject: string) {
+        try {
+            return JSON.parse(inputObject);
+        } catch {
+            throw new Error('Cannot parse additional object');
+        }
+    }
+
     run(request: BeeOfficeTypes.BeeOfficeActionRequest) {
         switch (request.script) {
             case 'beeOffice.createNewTimetableActivity':
@@ -230,6 +279,8 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
                 return this.deleteTimeTableActivity(request.input);
             case 'beeOffice.getActivityGroups':
                 return this.getActivityGroups(request.input);
+            case 'beeOffice.createHolidayLeave':
+                return this.createHolidayLeave(request.input);
             default:
                 throw new Error('Action not found');
         }

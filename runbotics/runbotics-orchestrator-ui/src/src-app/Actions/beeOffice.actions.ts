@@ -4,8 +4,6 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-
-
 // eslint-disable-next-line max-lines-per-function
 const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
     'beeOffice.createNewTimetableActivity': {
@@ -516,6 +514,99 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 },
                 output: {
                     variableName: undefined,
+                },
+            },
+        },
+    },
+    'beeOffice.createHolidayLeave': {
+        id: BeeOfficeAction.CREATE_HOLIDAY_LEAVE,
+        label: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Label'),
+        script: BeeOfficeAction.CREATE_HOLIDAY_LEAVE,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        type: 'object',
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        properties: {
+                            employeeId: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.EmployeeId'),
+                                type: 'string'
+                            },
+                            leaveConfigName: {
+                                type: 'string'
+                            },
+                            dateFrom: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateFrom'),
+                                type: 'string',
+                                pattern: ActionRegex.DATE_FORMAT
+                            },
+                            dateTo: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateTo'),
+                                type: 'string',
+                                pattern: ActionRegex.DATE_FORMAT
+                            },
+                            description: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Description'),
+                                type: 'string'
+                            },
+                            isAdditional: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.AdditionalData'),
+                                type: 'boolean'
+                            },
+                        },
+                        if: {
+                            properties: {
+                                isAdditional: {
+                                    const: true
+                                }
+                            }
+                        },
+                        then: {
+                            properties: {
+                                additionalProperties: {
+                                    title: 'Object',
+                                    type: 'string'
+                                }
+                            }
+                        },
+                        required: ['employeeId', 'leaveConfigName', 'dateFrom', 'dateTo']
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+                input: {
+                    leaveConfigName: {
+                        'ui:widget': 'LeaveConfigSelectWidget'
+                    },
+                    dateFrom: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.DateFormat')
+                        }
+                    },
+                    dateTo: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.DateFormat')
+                        }
+                    },
+                    additionalProperties: {
+                        'ui:widget': 'EditorWidget',
+                        'ui:options': { language: 'json' }
+                    }
+                },
+            },
+            formData: {
+                input: {
+                    employeeId: undefined,
+                    leaveConfigName: undefined,
+                    dateFrom: undefined,
+                    dateTo: undefined,
+                    description: undefined,
+                    isAdditional: false,
+                    additionalProperties: undefined
                 },
             },
         },

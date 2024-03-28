@@ -2,7 +2,8 @@ import { SapAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, ActionSystem } from './types';
+import { SAPLanguages } from './sap.types';
+import { IBpmnAction, Runner, ActionSystem } from '../types';
 
 
 
@@ -38,6 +39,12 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Connect.Client'),
                                 type: 'string',
                             },
+                            language: {
+                                title: translate('Process.Details.Modeler.Actions.Sap.Connect.Language'),
+                                type: 'string',
+                                enum: Object.values(SAPLanguages),
+                                default: SAPLanguages.English,
+                            }
                         },
                         required: ['user', 'password', 'connectionName'],
                     },

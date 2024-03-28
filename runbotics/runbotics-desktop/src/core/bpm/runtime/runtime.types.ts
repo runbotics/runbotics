@@ -34,7 +34,7 @@ export interface DesktopTask extends BpmnExecutionEventMessageContent {
     };
     output?: Record<string, string> & {
         script: string;
-    };
+    } | BpmnExecutionEventMessageContentError;
 }
 
 export interface RunBoticsExecutionEnvironment extends BpmnEngineExecutionEnvironment {
