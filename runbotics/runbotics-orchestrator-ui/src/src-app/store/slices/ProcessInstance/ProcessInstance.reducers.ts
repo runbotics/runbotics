@@ -95,3 +95,16 @@ export const insert = (state: ProcessInstanceState, action: PayloadAction<IProce
     { state.all.page?.content.unshift(action.payload); }
 
 };
+
+export const updateJob = (state: ProcessInstanceState, action: PayloadAction<ProcessInstanceState['active']['job']>) => {
+    state.active.job = action.payload;
+};
+
+export const decrementJobIndex = (state: ProcessInstanceState, action: PayloadAction<string | number>) => {
+    if (state.active.job.jobIndex > 0 && action.payload !== state.active.job.jobId) --state.active.job.jobIndex;
+};
+
+export const updateJobIsProcessing = (state: ProcessInstanceState, action: PayloadAction<boolean>) => {
+    state.active.job.isProcessing = action.payload;
+};
+

@@ -14,7 +14,6 @@ import { ProcessInstanceController } from './process-instance/process-instance.c
 import { ProcessInstanceSchedulerService } from './process-instance/process-instance.scheduler.service';
 import { ProcessFileService } from './process/process-file.service';
 import { ProcessSchedulerService } from './process/process-scheduler.service';
-import { ProcessController } from './process/process.controller';
 import { SchedulerProcessor } from './processor/scheduler.processor';
 import { QueueService } from './queue.service';
 
@@ -23,6 +22,8 @@ import { SchedulerController } from './scheduler/scheduler.controller';
 import { SchedulerService } from './scheduler/scheduler.service';
 import { TriggerController } from './trigger/trigger.controller';
 import { ProcessGuestService } from './process/process-guest.service';
+import { ProcessWebsocketService } from './process/process-websocket.service';
+import { MessagingService } from './messaging/messaging.service';
 
 @Module({
     imports: [
@@ -51,13 +52,14 @@ import { ProcessGuestService } from './process/process-guest.service';
         }),
     ],
     controllers: [
-        SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController,
+        SchedulerController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController,
     ],
     providers: [
         SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService, ProcessInputService,
-        ProcessInstanceSchedulerService, BotSchedulerService, QueueService, ProcessGuestService,
+        ProcessInstanceSchedulerService, BotSchedulerService, QueueService, ProcessGuestService, ProcessWebsocketService,
+        MessagingService,
     ],
-    exports: [ QueueService, ProcessFileService ],
+    exports: [ QueueService, ProcessFileService, ProcessWebsocketService ],
 })
 export class QueueModule {
 }

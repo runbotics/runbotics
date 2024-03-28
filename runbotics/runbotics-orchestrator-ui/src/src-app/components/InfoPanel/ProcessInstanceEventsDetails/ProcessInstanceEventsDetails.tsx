@@ -107,6 +107,8 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);
 
+    if (active.job?.jobId || active.job?.errorMessage) return null;
+
     if (!processInstanceId && !active.orchestratorProcessInstanceId) {
         return (
             <Typography

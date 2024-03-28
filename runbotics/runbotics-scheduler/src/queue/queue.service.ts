@@ -8,11 +8,11 @@ import {
     NotFoundException,
     OnModuleInit,
 } from '@nestjs/common';
-import { Job, Queue } from 'bull';
+import { Job, Queue, JobId } from 'bull';
 import { v4 as uuidv4 } from 'uuid';
 import { ValidateProcessAccessProps } from '#/types/scheduled-process';
 import { Logger } from '#/utils/logger';
-import { StartProcessRequest, StartProcessResponse } from '#/types';
+import { StartProcessRequest } from '#/types';
 import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import {
     IProcess,
@@ -32,6 +32,7 @@ import { ServerConfigService } from '#/config/server-config/server-config.servic
 @Injectable()
 export class QueueService implements OnModuleInit {
     private readonly logger = new Logger(QueueService.name);
+    private queueWaitingTimers: Map<JobId, NodeJS.Timeout> = new Map();
 
     constructor(
         @InjectQueue('scheduler') private readonly processQueue: Queue<JobData>,
@@ -91,7 +92,35 @@ export class QueueService implements OnModuleInit {
                 return Promise.reject(err);
             });
 
-        return job.finished() as Promise<StartProcessResponse>;
+        if (input?.timeout) {
+            const timer = setTimeout(async () => {
+                this.logger.log(`Job: ${job.id} has waited too long and will be removed from the queue.`);
+                const jobStateFlags = await Promise.all([
+                    job.isActive(),
+                    job.isCompleted(),
+                    job.isFailed(),
+                    job.isDelayed(),
+                    job.isPaused(),
+                    job.isStuck(),
+                ]);
+
+                if (jobStateFlags.some((flag) => flag)) return;
+
+                await job.remove();
+            }, input.timeout);
+
+            this.queueWaitingTimers.set(job.id, timer);
+        }
+
+        return job;
+    }
+
+    async clearQueueTimer(jobId: JobId) {
+        const timeout = this.queueWaitingTimers.get(jobId);
+        if (timeout) {
+            clearTimeout(timeout);
+            this.queueWaitingTimers.delete(jobId);
+        }
     }
 
     async deleteJobFromQueue(id: string) {
@@ -231,6 +260,24 @@ export class QueueService implements OnModuleInit {
     private async deleteAllJobs() {
         const jobs = await this.processQueue.getJobs(['active', 'delayed', 'paused', 'waiting']);
         await Promise.all(jobs.map(job => job.remove()));
+    }
+
+    async getPosition(jobId: JobId) {
+        const activeJobs = await this.processQueue.getActive();
+        if (activeJobs.find((j) => j.id === jobId)) {
+          return 0;
+        }
+        const waitingJobs = await this.processQueue.getWaiting(0, 1000);
+        const foundJobIndex = waitingJobs.findIndex((j) => j.id === jobId);
+
+        if (foundJobIndex === -1) {
+          return foundJobIndex;
+        }
+        return foundJobIndex + 1;
+    }
+
+    async getJobById(jobId: JobId) {
+      return this.processQueue.getJob(jobId);
     }
 
 }

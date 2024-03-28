@@ -4,4 +4,5 @@ export interface StartProcessRequest extends Trigger {
     process: IProcess;
     input: ProcessInput;
     user: IUser;
+    clientId?: string;
 }

@@ -23,6 +23,7 @@ import {
 } from 'runbotics-common';
 import { Job } from '#/utils/process';
 import { ProcessSchedulerService } from '#/queue/process/process-scheduler.service';
+import { MessagingService } from '../messaging/messaging.service';
 
 const PROCESS_ID = 2137;
 const JOB_ID = 7312;
@@ -30,7 +31,7 @@ const ORCHESTRATOR_INSTANCE_ID = 'tEsT-InStAnCe-iD';
 
 const PROCESS: IProcess = {
     id: PROCESS_ID,
-}
+};
 
 const PROCESS_INPUT: ProcessInput = {
     variables: {
@@ -75,6 +76,7 @@ describe('SchedulerProcessor', () => {
     let botWebSocketGateway: BotWebSocketGateway;
     let processInstanceSchedulerService: ProcessInstanceSchedulerService;
     let schedulerService: SchedulerService;
+    let messagingService: MessagingService;
     let queueService: QueueService;
 
     beforeEach(async () => {
@@ -88,6 +90,7 @@ describe('SchedulerProcessor', () => {
                 BotWebSocketGateway,
                 ProcessInstanceSchedulerService,
                 SchedulerService,
+                MessagingService,
                 QueueService,
                 {
                     provide: getRepositoryToken(BotEntity),
@@ -141,6 +144,11 @@ describe('SchedulerProcessor', () => {
                     emit: vi.fn()
                 }
             })
+            .overrideProvider(MessagingService)
+            .useValue({
+                sendSpecificJobMessage: vi.fn(),
+                emitProcessQueueUpdate: vi.fn()
+            })
             .compile();
 
         // schedulerProcessor = moduleRef.get(SchedulerProcessor); //todo: use it instead of constructor
@@ -151,8 +159,9 @@ describe('SchedulerProcessor', () => {
         botWebSocketGateway = moduleRef.get(BotWebSocketGateway);
         processInstanceSchedulerService = moduleRef.get(ProcessInstanceSchedulerService);
         schedulerService = moduleRef.get(SchedulerService);
+        messagingService = moduleRef.get(MessagingService);
         queueService = moduleRef.get(QueueService);
-        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, schedulerService, queueService);
+        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, schedulerService, messagingService, queueService);
     });
 
     it('should be defined', () => {
@@ -165,14 +174,14 @@ describe('SchedulerProcessor', () => {
         });
 
         it('should run process if it\'s not scheduled process', async () => {
-            const result = await schedulerProcessor.process(JOB);
-            expect(result).toBe(ORCHESTRATOR_INSTANCE_ID);
+            await schedulerProcessor.process(JOB);
+            expect(messagingService.sendSpecificJobMessage).toHaveBeenCalledTimes(2);
         });
 
         it('should run process if it\'s scheduled process', async () => {
             vi.spyOn(queueService, 'handleAttendedProcess');
-            const result = await schedulerProcessor.process(SCHEDULED_JOB);
-            expect(result).toBe(ORCHESTRATOR_INSTANCE_ID);
+            await schedulerProcessor.process(SCHEDULED_JOB);
+            expect(messagingService.sendSpecificJobMessage).toHaveBeenCalledTimes(2);
         });
 
         it('should not run process if it\'s attended process hasn\'t got required variables', async () => {

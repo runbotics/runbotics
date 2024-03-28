@@ -1,12 +1,11 @@
-import { FC, useRef, useState, useEffect } from 'react';
+import { FC, useRef, useState, useEffect, useContext } from 'react';
 
 import { Box, Divider, CardHeader, Tooltip } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey, isProcessInstanceActive } from 'runbotics-common';
+import { FeatureKey, ProcessQueueMessage, WsMessage, isProcessInstanceActive } from 'runbotics-common';
 
 import PlayIcon from '#public/images/icons/play.svg';
 import SquareIcon from '#public/images/icons/square.svg';
@@ -15,10 +14,11 @@ import { AttendedProcessModal } from '#src-app/components/AttendedProcessModal';
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useStartProcessQueueSocket from '#src-app/hooks/useStartProcessQueueSocket';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useDispatch, useSelector } from '#src-app/store';
-import { processActions } from '#src-app/store/slices/Process';
-import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
+import { Job, processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { schedulerActions } from '#src-app/store/slices/Scheduler';
 import { ProcessTab } from '#src-app/utils/process-tab';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
@@ -41,6 +41,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
 
     const refProcessTileContent = useRef<HTMLDivElement>();
 
+    const socket = useContext(SocketContext);
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
@@ -49,6 +50,8 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const [isProcessActive, setIsProcessActive] = useState(
         processInstance && isProcessInstanceActive(processInstance.status)
     );
+    const [isRunning, setIsRunning] = useState(false);
+    const [job, setJob] = useState<Job>(null);
 
     const isProcessAttended = process.isAttended && Boolean(process?.executionInfo);
     const [isAttendedModalVisible, setIsAttendedModalVisible] = useState(false);
@@ -58,39 +61,55 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         else router.push(buildProcessUrl(process, ProcessTab.RUN));
     };
 
-    const handleProcessRun = (executionInfo?: Record<string, any>) => {
-        dispatch(processActions.startProcess({
+    const handleRun = (executionInfo?: Record<string, any>) => {
+        socket.emit(WsMessage.START_PROCESS, {
             processId: process.id,
             ...((isProcessAttended) && {
                 executionInfo,
+            }),
+        });
+    };
+
+    const handleWaiting = (payload: ProcessQueueMessage[WsMessage.PROCESS_WAITING]) => {
+        if (payload.processId !== process.id) return;
+        setJob({ ...payload, isProcessing: false, errorMessage: null });
+        setIsRunning(true);
+    };
+
+    const handleProcessing = (payload: ProcessQueueMessage[WsMessage.PROCESS_PROCESSING]) => {
+        if (payload.jobId !== job?.jobId || payload.processId !== process.id) return;
+        setJob(prev => ({ ...prev, isProcessing: true }));
+    };
+
+    const handleCompleted = (payload: ProcessQueueMessage[WsMessage.PROCESS_COMPLETED]) => {
+        if (payload.jobId !== job?.jobId || payload.processId !== process.id) return;
+        dispatch(
+            processInstanceActions.updateOrchestratorProcessInstanceIdMap({
+                processId: process.id,
+                orchestratorProcessInstanceId: payload.orchestratorProcessInstanceId,
             })
-        }))
-            .then(unwrapResult)
-            .then((response) => {
-                dispatch(
-                    processInstanceActions.updateOrchestratorProcessInstanceIdMap({
-                        processId: process.id,
-                        orchestratorProcessInstanceId: response.orchestratorProcessInstanceId,
-                    })
-                );
+        );
+        setJob(null);
+        setIsRunning(false);
+        if (isProcessAttended) setIsAttendedModalVisible(false);
+    };
 
-                setIsProcessActive(true);
-            })
-            .catch((error) => {
-                const TRANSLATION_KEY_PREFIX_DEFAULT = 'Component.Tile.Process.Instance.Error';
-                const message = error.message ?? translate(TRANSLATION_KEY_PREFIX_DEFAULT);
-                const capitalizedMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
-                const translationKey = `${TRANSLATION_KEY_PREFIX_DEFAULT}.${capitalizedMessage}`;
+    const handleFailed = (payload: ProcessQueueMessage[WsMessage.PROCESS_FAILED]) => {
+        if (payload.jobId !== job?.jobId || payload.processId !== process.id) return;
+        const translationKeyPrefix = 'Component.Tile.Process.Instance.Error';
+        const message = payload.message ?? translate(translationKeyPrefix);
+        const translationKeyFromMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+        const translationKey = `${translationKeyPrefix}.${translationKeyFromMessage}`;
 
-                const errorMessage = checkIfKeyExists(translationKey)
-                    ? translate(translationKey)
-                    : message;
-                enqueueSnackbar(
-                    errorMessage,
-                    { variant: 'error' }
-                );
-            });
-
+        const errorMessage = checkIfKeyExists(translationKey)
+            ? translate(translationKey)
+            : message;
+        enqueueSnackbar(
+            errorMessage,
+            { variant: 'error' }
+        );
+        setJob(null);
+        setIsRunning(false);
         if (isProcessAttended) setIsAttendedModalVisible(false);
     };
 
@@ -123,7 +142,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             setIsAttendedModalVisible(true);
         }
         else {
-            handleProcessRun();
+            handleRun();
         }
     };
 
@@ -133,19 +152,30 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         );
     }, [processInstance]);
 
+    useStartProcessQueueSocket({
+        onWaiting: handleWaiting,
+        onProcessing: handleProcessing,
+        onCompleted: handleCompleted,
+        onFailed: handleFailed,
+        onRemoved: (payload) => handleFailed(payload as ProcessQueueMessage[WsMessage.PROCESS_FAILED]),
+        onQueueUpdate: () => {},
+        job,
+        loading: isRunning || isProcessActive,
+    });
+
     return (
         <Tile>
             <AttendedProcessModal
                 process={process}
                 open={isAttendedModalVisible}
                 setOpen={setIsAttendedModalVisible}
-                onSubmit={handleProcessRun}
+                onSubmit={handleRun}
             />
             <StyledCardActionArea onClick={handleRedirect}>
                 <CardHeader
                     avatar={
                         <If
-                            condition={isProcessActive}
+                            condition={isProcessActive || isRunning}
                             else={
                                 <RunBox
                                     onClick={handleRunButtonClick}
@@ -160,7 +190,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
                             }
                         >
                             <RunBox
-                                onClick={handleProcessTerminate}
+                                onClick={(e) => { isProcessActive && handleProcessTerminate(e); }}
                             >
                                 <Tooltip title={translate('Component.Tile.Process.Header.Tooltip.AbortProcess')}>
                                     <Image

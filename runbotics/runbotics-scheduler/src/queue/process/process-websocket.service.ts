@@ -1,0 +1,103 @@
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
+import { JobData, ProcessInput, TriggerEvent } from 'runbotics-common';
+
+import { Logger } from '#/utils/logger';
+import { ProcessGuestService } from './process-guest.service';
+import { QueueService } from '../queue.service';
+import { GuestService } from '#/database/guest/guest.service';
+import { AuthService } from '#/auth/auth.service';
+import { AuthSocket } from '#/types';
+import { Job, JobId } from 'bull';
+import { checkMessageProperty, checkStatusProperty } from '#/utils/error-message.utils';
+
+@Injectable()
+export class ProcessWebsocketService {
+    private readonly logger = new Logger(ProcessWebsocketService.name);
+
+    constructor(
+        private readonly authService: AuthService,
+        private readonly processGuestService: ProcessGuestService,
+        private readonly guestService: GuestService,
+        @Inject(forwardRef(() => QueueService))
+        private readonly queueService: QueueService,
+    ) {
+    }
+
+    public async startProcess(client: AuthSocket, processId: number, input: ProcessInput) {
+        const user = await this.authService.validateWebsocketConnection(client);
+        const userId = user.id;
+        const isUserGuest = this.processGuestService.getIsGuest(user.authorities);
+        const initialExecutionsCount = isUserGuest ? await this.processGuestService.getExecutionsCount(userId) : 0;
+        try {
+            this.logger.log(`Checking if user (${userId}) is a guest and can start process ${processId}`);
+            await this.processGuestService.checkCanStartProcess(user);
+
+            this.logger.log(`=> Starting process ${processId}`);
+            const process = await this.queueService.getProcessById(processId);
+            await this.queueService.validateProcessAccess({ process, user });
+
+            const response = await this.queueService.createInstantJob({
+                process,
+                input,
+                user,
+                clientId: client.id,
+                trigger: { name: TriggerEvent.MANUAL },
+                triggerData: { userEmail: user.email }
+            });
+
+            const jobIndex = await this.queueService.getPosition(response.id);
+
+            this.logger.log(`<= Process ${processId} successfully started`);
+
+            if(!isUserGuest) return { jobId: response.id, jobIndex };
+
+            await this.guestService.incrementExecutionsCount(userId);
+            this.logger.log(`Incremented user's (${userId}) executions-count to ${initialExecutionsCount + 1}`);
+
+            return { jobId: response.id, jobIndex };
+        } catch (err) {
+            this.logger.error(`<= Process ${processId} failed to start`);
+
+            if(isUserGuest) {
+                await this.guestService.setExecutionsCount(userId, initialExecutionsCount);
+                this.logger.log(`Restored user's executions-count to ${initialExecutionsCount}`);
+            }
+
+            const message = checkMessageProperty(err) || 'Internal server error';
+            const statusCode = checkStatusProperty(err) || HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new HttpException({ message, statusCode }, statusCode);
+        }
+    }
+
+    public async terminateJob(client: AuthSocket, jobId: JobId) {
+        const user = await this.authService.validateWebsocketConnection(client);
+        const userId = user.id;
+        const isUserGuest = this.processGuestService.getIsGuest(user.authorities);
+        const initialExecutionsCount = isUserGuest ? await this.processGuestService.getExecutionsCount(userId) : null;
+        try {
+            this.logger.log(`Checking if user (${userId}) is a guest and can terminate job ${jobId}`);
+            await this.processGuestService.checkCanStartProcess(user);
+            const job: Job<JobData> = await this.queueService.getJobById(jobId);
+            await this.queueService.validateProcessAccess({ process: job.data.process, user });
+
+            this.logger.log(`=> Terminating job ${jobId}`);
+            await this.queueService.deleteJobFromQueue(jobId.toString());
+
+            this.logger.log(`<= Job ${jobId} successfully removed`);
+
+            await this.guestService.decrementExecutionsCount(userId);
+            this.logger.log(`Decremented user's (${userId}) executions-count to ${initialExecutionsCount - 1}`);
+        } catch (err) {
+            this.logger.error(`<= Job ${jobId} failed to be removed`);
+
+            if  (isUserGuest) {
+                await this.guestService.setExecutionsCount(userId, initialExecutionsCount);
+                this.logger.log(`Restored user's executions-count to ${initialExecutionsCount}`);
+            }
+
+            const message = checkMessageProperty(err) || 'Internal server error';
+            const statusCode = checkStatusProperty(err) || HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new HttpException({ message, statusCode }, statusCode);
+        }
+    }
+}
