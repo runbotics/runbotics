@@ -40,7 +40,7 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Name.Info'),
                         }
                     },
-                    path: {
+                    zipPath: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Path.Info'),
                         },
@@ -49,8 +49,8 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    path: undefined,
-                    fileName: undefined
+                    toZipPath: undefined,
+                    zipPath: undefined
                 }
             }
         }
@@ -74,22 +74,16 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            fileName: {
-                                title: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.Name'),
-                                type: 'string',
-                                pattern: ActionRegex.DIRECTORY_NAME
-                            }, 
-                            path: {
-                                title: translate('Process.Details.Modeler.Actions.Zip.Path'),
+                            toZipPath: {
+                                title: translate('Process.Details.Modeler.Actions.Zip.Zip.Path'),
                                 type: 'string',
                             },
-                            zipName: {
-                                title: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName'),
+                            zipPath: {
+                                title: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.ZipPath'),
                                 type: 'string',
-                                pattern: ActionRegex.DIRECTORY_NAME
-                            }, 
+                            },
                         },
-                        required: ['fileName']
+                        required: ['toZipPath']
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -107,22 +101,16 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    
-                    fileName: {
-                        'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.Name.Info'),
-                        }
-                    },
-                    path: {
+                    toZipPath: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.Path.Info'),
                         },
                     },
-                    zipName: {
+                    zipPath: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.ZipName.Info'),
-                        },
-                    },                    
+                            info: translate('Process.Details.Modeler.Actions.Zip.CreateArchive.ZipPath.Info'),
+                        }
+                    },
                 },
                 output: {
                     variableName: {
@@ -134,9 +122,8 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    fileName: undefined,
-                    path: undefined,
-                    zipName: undefined
+                    toZipPath: undefined,
+                    zipPath: undefined
                 },
                 output: {
                     variableName: undefined,
