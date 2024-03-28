@@ -10,6 +10,7 @@ const commonActionsTranslations: typeof englishCommonActionsTranslations = {
     'Process.Details.Modeler.Actions.Common.Date': 'Data',
     'Process.Details.Modeler.Actions.Common.Period': 'Okres',
     'Process.Details.Modeler.Actions.Common.Collection': 'Zbiór',
+    'Process.Details.Modeler.Actions.Common.DateFormat': 'Format daty: YYYY-MM-DD lub MM/DD/YYYY'
 };
 
 export default commonActionsTranslations;

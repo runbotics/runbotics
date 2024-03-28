@@ -8,7 +8,8 @@ export type BeeOfficeActionRequest =
 | DesktopRunRequest<'beeOffice.getSchedule', BeeOfficeGetScheduleActionInput>
 | DesktopRunRequest<'beeOffice.deleteTimeTableActivity', BeeOfficeDeleteTimeTableActionInput>
 | DesktopRunRequest<'beeOffice.getActivityGroups', BeeOfficeGetActivityGroupsActionInput>
-| DesktopRunRequest<'beeOffice.getActivitiesByURLParameters', BeeOfficeGetActivitiesByURLParametersActionInput>;
+| DesktopRunRequest<'beeOffice.getActivitiesByURLParameters', BeeOfficeGetActivitiesByURLParametersActionInput>
+| DesktopRunRequest<'beeOffice.createHolidayLeave', BeeOfficeCreateHolidayLeaveActionInput>
 
 // ----
 export type BeeOfficeGetActivityGroupsActionInput = {
@@ -67,6 +68,18 @@ export type BeeOfficeCreateNewTimetableActivityActionInput = {
     description: string;
 };
 export type BeeOfficeCreateNewTimetableActivityActionOutput = any;
+
+// ----
+export type BeeOfficeCreateHolidayLeaveActionInput = {
+    employeeId: string;
+    leaveConfigName: string;
+    dateFrom: string;
+    dateTo: string;
+    isAdditional: string;
+    description?: string;
+    additionalProperties?: string;
+};
+export type BeeOfficeCreateHolidayLeaveActionOutput = unknown;
 
 // ----
 

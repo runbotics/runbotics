@@ -19,7 +19,8 @@ export enum ActionRegex {
     EXCEL_DELETE_ROW_INPUT = '^[\\d]+$',
     EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$',
     EXCEL_CELL_RANGE = '^[A-Za-z]+[0-9]+:[A-Za-z]+[0-9]+$',
-    DIRECTORY_NAME = "^[^\\\\/?|<>*:]*$"
+    DIRECTORY_NAME = "^[^\\\\/?|<>*:]*$",
+    DATE_FORMAT = '^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\/[0-9]{2}\/[0-9]{4}))$'
 }
 
 export enum ACTION_GROUP {
@@ -163,6 +164,7 @@ export enum BeeOfficeAction {
     DELETE_TIMETABLE_ACTIVITY = 'beeOffice.deleteTimeTableActivity',
     GET_ACTIVITY_GROUPS = 'beeOffice.getActivityGroups',
     GET_ACTIVITIES_BY_URL_PARAMETERS = 'beeOffice.getActivitiesByURLParameters',
+    CREATE_HOLIDAY_LEAVE = 'beeOffice.createHolidayLeave',
 }
 
 export enum SapAction {

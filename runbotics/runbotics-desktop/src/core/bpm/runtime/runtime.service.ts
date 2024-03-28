@@ -42,7 +42,8 @@ import {
     IStartProcessInstance,
     RunBoticsExecutionEnvironment,
     BpmnExecutionEventMessageExtendedApi,
-    BpmnProcessInstance, BpmnExecutionEventMessageExtendedContent,
+    BpmnProcessInstance, 
+    BpmnExecutionEventMessageExtendedContent,
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
@@ -640,17 +641,16 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     };
 
     public async assignVariables(processInstanceId: string, vars: any) {
-        // assign to global scope
         const definitions = await this.engines[
             processInstanceId
         ].getDefinitions();
         const definition = definitions[0];
-        const globalVariables = {
+        const setVariables = {
             ...definition.environment.variables,
             ...vars,
         };
-        // globalVariables[input.variable] = input.value;
-        definition.environment.assignVariables(globalVariables);
+
+        definition.environment.assignVariables(setVariables);
     }
 
     public getSequencesWithoutExpression = (owner: ActivityOwner): string[] => owner.outbound
