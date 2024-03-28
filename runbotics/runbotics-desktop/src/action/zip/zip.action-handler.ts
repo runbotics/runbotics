@@ -60,7 +60,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
             const zip = new AdmZip();
             if (isDirectory) {
                 zip.addLocalFolder(fullToZipPath);
-                zip.writeZip(`${fullZipPath}`);
+                zip.writeZip(fullZipPath);
             } else {
                 zip.addLocalFile(fullToZipPath);
                 zip.writeZip(this.getZipPath(fullZipPath));
