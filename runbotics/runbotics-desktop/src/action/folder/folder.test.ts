@@ -442,7 +442,7 @@ describe('FolderActionHandler', () => {
             };
 
             await expect(folderActionHandler.existsFolder(params)).rejects.toThrowError(
-                'Cannot check if folder exists if name is not provided.'
+                'Name is not provided.'
             );
         });
 
