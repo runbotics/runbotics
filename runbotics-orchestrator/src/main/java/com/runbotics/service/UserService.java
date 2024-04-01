@@ -375,6 +375,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public List<User> getNonAdminUsers() {
+        return userRepository.findAllActivatedNonAdmins();
+    }
+
+    @Transactional(readOnly = true)
     public List<AdminUserDTO> getAllManagedUsersLimited() {
         return userRepository.findAll().stream().map(User::getLogin).map(AdminUserDTO::new).collect(Collectors.toList());
     }
