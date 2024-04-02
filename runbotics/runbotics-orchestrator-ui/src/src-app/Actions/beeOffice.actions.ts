@@ -536,6 +536,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string'
                             },
                             leaveConfigName: {
+                                title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfig'),
                                 type: 'string'
                             },
                             dateFrom: {
@@ -580,7 +581,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input'],
                 input: {
                     leaveConfigName: {
-                        'ui:widget': 'LeaveConfigSelectWidget'
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfig.Tooltip')
+                        }
                     },
                     dateFrom: {
                         'ui:options': {
