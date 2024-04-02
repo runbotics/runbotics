@@ -17,6 +17,7 @@ export interface InstantProcess extends Trigger {
     user?: IUser;
     input?: ProcessInput;
     isActive?: boolean;
+    clientId?: string;
 }
 
 export interface ScheduledProcess extends InstantProcess {
