@@ -1,4 +1,4 @@
-import { IProcess, IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
+import { IProcess, IProcessInstance, IProcessInstanceEvent, WsMessage, WsQueueMessage } from 'runbotics-common';
 
 import { Page } from '#src-app/utils/types/page';
 
@@ -11,12 +11,17 @@ type ActiveInfo = {
 
 type AllActiveMap = Record<ProcessId, ActiveInfo>;
 
+export type WsQueueMessageValues = {
+    [K in keyof WsQueueMessage]: WsQueueMessage[K] & { eventType: K };
+}[Exclude<keyof WsQueueMessage, WsMessage.PROCESS_START | WsMessage.JOB_REMOVE>];
+
 export interface ProcessInstanceState {
     allActiveMap: AllActiveMap;
     active: {
         orchestratorProcessInstanceId: string | null;
         processInstance: IProcessInstance | null;
         eventsMap: Record<string, IProcessInstanceEvent>;
+        jobsMap: Record<ProcessId, WsQueueMessageValues>
     };
     all: {
         loading: boolean;

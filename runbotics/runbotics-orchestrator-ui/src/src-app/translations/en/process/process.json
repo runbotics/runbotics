@@ -16,6 +16,8 @@
     "Process.Instance.Status.Stopped": "STOPPED",
     "Process.Instance.Status.Terminated": "TERMINATED",
     "Process.Instance.Status.Completed": "COMPLETED",
+    "Process.Instance.Status.Queued": "QUEUED",
+    "Process.Instance.Status.Creating": "CREATING",
     "Process.ProcessInstance.Details.Header.Dialog.Title": "Process Output",
     "Process.ProcessInstance.Details.Header.Dialog.InvalidOutputType": "Selected process output type is not compatible with data type to display.",
     "Process.ProcessInstance.Details.Header.Button": "See Output",

@@ -4,6 +4,7 @@ import { Box, Pagination } from '@mui/material';
 import styled from 'styled-components';
 
 import ProcessTile from '#src-app/components/Tile/ProcessTile';
+import { useProcessQueueSocket } from '#src-app/hooks/useProcessQueueSocket';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
 import { useSelector } from '#src-app/store';
 
@@ -23,6 +24,7 @@ const TileGrid = styled.div`
 `;
 
 const GridView: VFC = () => {
+    useProcessQueueSocket();
     const processesPage = useSelector((state) => state.process.all.page);
 
     const {

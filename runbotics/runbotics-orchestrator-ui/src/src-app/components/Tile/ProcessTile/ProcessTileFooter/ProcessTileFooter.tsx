@@ -17,7 +17,7 @@ import { Footer, IconsWrapper, StyledBox, StyledIconsBox } from './ProcessTileFo
 import { ProcessTileFooterProps } from './ProcessTileFooter.types';
 import ProcessTileActions from '../ProcessTileActions';
 
-const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process, processInstance }) => {
+const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process, processInstance, isJobWaiting, isJobCreating }) => {
     const { translate } = useTranslations();
     const formattedStatus = processInstance && capitalizeFirstLetter({
         text: processInstance.status,
@@ -55,14 +55,27 @@ const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process,
                 </If>
             </IconsWrapper>
             <StyledBox>
-                {processInstance &&
-                    <Label
-                        color={getProcessInstanceStatusColor(processInstance.status)}
-                    >
-                        {/*@ts-ignore*/}
-                        {translate(`Process.Instance.Status.${formattedStatus}`)}
-                    </Label>
-                }
+                <If
+                    condition={isJobWaiting || isJobCreating}
+                    else={
+                        processInstance &&
+                        <Label
+                            color={getProcessInstanceStatusColor(processInstance.status)}
+                        >
+                            {/*@ts-ignore*/}
+                            {translate(`Process.Instance.Status.${formattedStatus}`)}
+                        </Label>
+                    }
+                >
+                    {isJobWaiting &&
+                        <Label color='warning'>
+                            {translate('Process.Instance.Status.Queued')}
+                        </Label>}
+                    {isJobCreating &&
+                        <Label color='warning'>
+                            {translate('Process.Instance.Status.Creating')}
+                        </Label>}
+                </If>
                 <ProcessTileActions process={process} />
             </StyledBox>
         </Footer>
