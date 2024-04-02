@@ -142,7 +142,8 @@ describe('SchedulerProcessor', () => {
             .useValue({
                 server: {
                     emit: vi.fn()
-                }
+                },
+                emitAll: vi.fn()
             })
             .compile();
 

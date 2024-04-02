@@ -12,7 +12,7 @@ import { Logger } from '#/utils/logger';
 import { SECOND, sleep } from '#/utils/time';
 import { isScheduledProcess, Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
 import { BotService } from '#/database/bot/bot.service';
-import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, StartProcessResponse, WsMessage } from 'runbotics-common';
+import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, QueueEventType, StartProcessResponse, WsMessage } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
 import { ProcessService } from '#/database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
@@ -78,10 +78,14 @@ export class SchedulerProcessor {
 
         await Promise.all(jobs.map((job, jobIndex) => {
             const queuePosition = jobIndex + 1;
+            const processId = job?.data?.process?.id;
+            const jobId = job?.id;
             if (queuePosition === 1) {
-                return this.queueMessageService.sendQueueMessage('ACTIVE', job);
+                this.uiGateway.emitAll(WsMessage.JOB_ACTIVE, { processId, jobId });
+                return this.queueMessageService.sendQueueMessage(QueueEventType.ACTIVE, job);
             }
-            return this.queueMessageService.sendQueueMessage('UPDATE', job, queuePosition);
+            this.uiGateway.emitAll(WsMessage.JOB_WAITING, { processId, queuePosition, jobId });
+            return this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
         }));
     }
 
@@ -94,14 +98,15 @@ export class SchedulerProcessor {
         const jobs = [...active, ...waiting];
 
         const jobIndex = jobs.findIndex((job) => job.id === jobId);
-        const queuePosition = jobIndex + 1;
         const job = jobs[jobIndex];
+        if (!job) return;
 
-        if (job) {
-            this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
+        this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
 
-            await this.queueMessageService.sendQueueMessage('UPDATE', job, queuePosition);
-        }
+        const queuePosition = jobIndex + 1;
+        const processId = job?.data?.process?.id;
+        this.uiGateway.emitAll(WsMessage.JOB_WAITING, { processId, queuePosition, jobId });
+        await this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
     }
 
     @OnQueueCompleted()
@@ -112,17 +117,8 @@ export class SchedulerProcessor {
 
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
 
-        const user = job?.data?.user;
-        if (user?.id) {
-            this.uiGateway.emitByUserId<WsMessage.PROCESS_COMPLETED>(
-                user.id,
-                WsMessage.PROCESS_COMPLETED,
-                {
-                    processId: job?.data?.process?.id,
-                    orchestratorProcessInstanceId,
-                }
-            );
-        }
+        const processId = job?.data?.process?.id;
+        this.uiGateway.emitAll(WsMessage.PROCESS_START_COMPLETED, { processId, orchestratorProcessInstanceId });
     }
 
     @OnQueueFailed()
@@ -136,19 +132,10 @@ export class SchedulerProcessor {
 
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
 
-        await this.queueMessageService.sendQueueMessage('FAILED', job);
-
-        const user = job?.data?.user;
-        if (user?.id) {
-            this.uiGateway.emitByUserId<WsMessage.PROCESS_FAILED>(
-                user.id,
-                WsMessage.PROCESS_FAILED,
-                {
-                    processId: job?.data?.process?.id,
-                    error: error.message
-                }
-            );
-        }
+        const processId = job?.data?.process?.id;
+        const errorMessage = error.message;
+        this.uiGateway.emitAll( WsMessage.JOB_FAILED, { processId, errorMessage });
+        await this.queueMessageService.sendQueueMessage(QueueEventType.FAILED, job);
     }
 
     @OnQueueRemoved()
@@ -159,7 +146,24 @@ export class SchedulerProcessor {
 
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
 
-        await this.queueMessageService.sendQueueMessage('REMOVE', job);
+        const processId = job?.data?.process?.id;
+        this.uiGateway.emitAll(WsMessage.JOB_REMOVE_COMPLETED, { processId });
+        await this.queueMessageService.sendQueueMessage(QueueEventType.REMOVE, job);
+
+        const active = await this.queueService.getActiveJobs();
+        const waiting = await this.queueService.getWaitingJobs();
+        const jobs = [...active, ...waiting];
+
+        await Promise.all(jobs.map((job, jobIndex) => {
+            const queuePosition = jobIndex + 1;
+            const processId = job?.data?.process?.id;
+            const clientId = job?.data?.clientId;
+            const jobId = job?.id;
+            if (queuePosition === 1) return;
+
+            this.uiGateway.emitClient(clientId, WsMessage.JOB_WAITING, { processId, queuePosition, jobId });
+            return this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
+        }));
     }
 
     @OnQueueError({ name: 'scheduler' })
@@ -253,7 +257,6 @@ export class SchedulerProcessor {
             `[Q Process] Process "${process.name}" freed the queue | JobID: `,
             job.id
         );
-
         return orchestratorProcessInstanceId;
     }
 }

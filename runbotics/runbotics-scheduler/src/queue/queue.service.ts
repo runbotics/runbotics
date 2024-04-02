@@ -23,6 +23,7 @@ import {
     TriggerEvent,
     Role,
     JobData,
+    QueueEventType
 } from 'runbotics-common';
 import { UiGateway } from '../websocket/ui/ui.gateway';
 import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
@@ -94,27 +95,27 @@ export class QueueService implements OnModuleInit {
                 return Promise.reject(err);
             });
 
-            if (input?.timeout) {
-                const timer = setTimeout(async () => {
-                    this.logger.log(`Job: ${job.id} has waited too long and will be removed from the queue.`);
-                    const jobStateFlags = await Promise.all([
-                        job.isActive(),
-                        job.isCompleted(),
-                        job.isFailed(),
-                        job.isDelayed(),
-                        job.isPaused(),
-                        job.isStuck(),
-                    ]);
+        if (input?.timeout) {
+            const timer = setTimeout(async () => {
+                this.logger.log(`Job: ${job.id} has waited too long and will be removed from the queue.`);
+                const jobStateFlags = await Promise.all([
+                    job.isActive(),
+                    job.isCompleted(),
+                    job.isFailed(),
+                    job.isDelayed(),
+                    job.isPaused(),
+                    job.isStuck(),
+                ]);
 
-                    if (jobStateFlags.some(Boolean)) return;
+                if (jobStateFlags.some(Boolean)) return;
 
-                    await job.remove();
+                await job.remove();
 
-                    await this.queueMessageService.sendQueueMessage('TIMEOUT', job);
-                }, input.timeout);
+                await this.queueMessageService.sendQueueMessage(QueueEventType.TIMEOUT, job);
+            }, input.timeout);
 
-                this.queueWaitingTimers.set(job.id, timer);
-            }
+            this.queueWaitingTimers.set(job.id, timer);
+        }
 
         return job;
     }
@@ -272,5 +273,9 @@ export class QueueService implements OnModuleInit {
 
     public getActiveJobs() {
         return this.processQueue.getActive();
+    }
+
+    public getJobById(jobId: JobId) {
+        return this.processQueue.getJob(jobId);
     }
 }

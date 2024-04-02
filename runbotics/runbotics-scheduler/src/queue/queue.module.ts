@@ -58,7 +58,7 @@ import { QueueMessageService } from './queue-message.service';
         SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService, ProcessInputService,
         ProcessInstanceSchedulerService, BotSchedulerService, QueueService, ProcessGuestService, QueueMessageService,
     ],
-    exports: [ QueueService, ProcessFileService ],
+    exports: [ QueueService, ProcessFileService, ProcessGuestService ],
 })
 export class QueueModule {
 }
