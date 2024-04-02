@@ -5,6 +5,7 @@ import { IUser } from 'runbotics-common';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
+
 const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
     .params(params)
@@ -39,6 +40,12 @@ export const partialUpdate = createAsyncThunk(
 export const getAllActivatedByPage = createAsyncThunk<Page<IUser>, PageRequestParams>(
     'users/getAllActivatedByPage',
     (params) => axios.get<Page<IUser>>(buildPageURL(params, '/api/admin/users/activated'))
+        .then((response) => response.data),
+);
+
+export const getActiveNonAdmins = createAsyncThunk<IUser[]>(
+    'users/getActiveNonAdmins',
+    () => axios.get<IUser[]>('/api/admin/users/non-admins')
         .then((response) => response.data),
 );
 

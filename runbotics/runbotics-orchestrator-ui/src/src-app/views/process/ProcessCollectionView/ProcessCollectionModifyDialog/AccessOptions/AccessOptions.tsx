@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC } from 'react';
 
-import { Autocomplete, Box, Switch, TextField, FormControlLabel } from '@mui/material';
+import { Autocomplete, Box, Switch, TextField, FormControlLabel, CircularProgress } from '@mui/material';
 import { IUser } from 'runbotics-common';
 
 import Accordion from '#src-app/components/Accordion';
@@ -11,7 +11,7 @@ import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/A
 import { AccessOptionsProps } from './AccessOptions.types';
 import LocationOptions from '../LocationOptions/';
 
-const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, isOwner, usersWithoutAdmin, isModifyDialogOpen }) => {
+const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, isOwner, shareableUsers, isModifyDialogOpen }) => {
     const { translate } = useTranslations();
     const isPublicTranslationKey = collectionData.isPublic ? 'True' : 'False';
 
@@ -39,16 +39,30 @@ const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, i
                         onChange={(e: ChangeEvent<HTMLInputElement>, value: IUser[]) => handleChange('users', value)}
                         multiple
                         id="process-collection-users-select"
-                        options={usersWithoutAdmin}
-                        getOptionLabel={(user) => user.login}
+                        disabled={!isOwner}
                         defaultValue={collectionData?.users}
+                        getOptionLabel={(user) => user.login}
                         isOptionEqualToValue={(optionUser, valueUser) => optionUser.login === valueUser.login}
+                        options={shareableUsers.loading ? [] : shareableUsers.all}
                         filterSelectedOptions
                         disableCloseOnSelect
                         value={collectionData?.users}
+                        loading={shareableUsers.loading}
                         readOnly={!isOwner}
                         renderInput={(params) => (
-                            <TextField {...params} label={translate('Proces.Collection.Dialog.Modify.Form.Users.Placeholder')} />
+                            <TextField
+                                {...params}
+                                label={translate('Proces.Collection.Dialog.Modify.Form.Users.Placeholder')}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <>
+                                            {shareableUsers.loading ? <CircularProgress size={20} /> : null}
+                                            {params.InputProps.endAdornment}
+                                        </>
+                                    ),
+                                }}
+                            />
                         )}
                     />
                     <Box sx={{ flexShrink: 0 }}>
