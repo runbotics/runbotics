@@ -13,7 +13,7 @@ export enum ActionRegex {
     EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:]{1,31}$',
     EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
     EXCEL_COLUMN_NAME = '^[a-zA-Z]+',
-    EXCEL_ROW_NUMBER = '^\\d+$',
+    EXCEL_DIGITS_FROM_CELL_ADDRESS = '\\d+$',
     EXCEL_SPLIT_ADDRESS = '[!:]',
     EXCEL_ROW_RANGE = '^(\\d+:\\d+)$',
     EXCEL_DELETE_ROW_INPUT = '^[\\d]+$',
