@@ -180,7 +180,7 @@ export class ExcelService {
 
         const startColumnLetter = startCell.match(ActionRegex.EXCEL_COLUMN_NAME).toString();
         const startColumnNumber = this.getColumnNumber(startColumnLetter);
-        const startRow = Number(startCell.match(ActionRegex.EXCEL_ROW_NUMBER));
+        const startRow = Number(startCell.match(ActionRegex.EXCEL_DIGITS_FROM_CELL_ADDRESS));
 
         const endColumnNumber = startColumnNumber + values[0].length - 1;
         const endColumnLetter = this.getColumnLetter(endColumnNumber);
