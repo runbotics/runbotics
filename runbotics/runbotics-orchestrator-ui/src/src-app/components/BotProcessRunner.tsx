@@ -177,17 +177,18 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
     const handleRemoveJob = () => {
         const job = jobsMap[processId];
-        switch (job.eventType) {
-            case WsMessage.JOB_ACTIVE:
-            case WsMessage.JOB_WAITING:
-                closeSnackbar(JOB_CREATING_TOAST_KEY);
-                socket.emit(WsMessage.JOB_REMOVE, {
-                    processId,
-                    jobId: job.jobId,
-                });
-                break;
-            default:
-                break;
+        if (!job) return;
+
+        const eventType = job?.eventType;
+        if (
+            eventType === WsMessage.JOB_ACTIVE ||
+            eventType === WsMessage.JOB_WAITING
+        ) {
+            closeSnackbar(JOB_CREATING_TOAST_KEY);
+            socket.emit(WsMessage.JOB_REMOVE, {
+                processId,
+                jobId: job.jobId,
+            });
         }
     };
 
@@ -420,6 +421,24 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         </>
     );
 
+    const runProcessPanel = (
+        <>
+            <If
+                condition={hasRunProcessAccess && Boolean(rerunProcessInstance)}
+                else={runButton}
+            >
+                { rerunMenu }
+            </If>
+            <AttendedProcessModal
+                open={modalOpen}
+                process={process}
+                setOpen={setModalOpen}
+                onSubmit={handleRun}
+                rerunInput={rerunInput}
+            />
+        </>
+    );
+
     if (
         rerunProcessInstance &&
         (!isProcessAttended ||
@@ -433,23 +452,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
         <If
             condition={hasRunProcessAccess && (started || isJobQueued)}
-            else={
-                <>
-                    <If
-                        condition={hasRunProcessAccess && Boolean(rerunProcessInstance)}
-                        else={runButton}
-                    >
-                        { rerunMenu }
-                    </If>
-                    <AttendedProcessModal
-                        open={modalOpen}
-                        process={process}
-                        setOpen={setModalOpen}
-                        onSubmit={handleRun}
-                        rerunInput={rerunInput}
-                    />
-                </>
-            }
+            else={runProcessPanel}
         >
             { isJobQueued ? removeJobButton : terminateButton }
         </If>

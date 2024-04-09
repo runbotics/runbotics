@@ -174,17 +174,18 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         }
 
         const job = jobsMap[processId];
-        switch (job.eventType) {
-            case WsMessage.JOB_ACTIVE:
-            case WsMessage.JOB_WAITING:
-                closeSnackbar(JOB_CREATING_TOAST_KEY);
-                socket.emit(WsMessage.JOB_REMOVE, {
-                    processId,
-                    jobId: job.jobId,
-                });
-                break;
-            default:
-                break;
+        if (!job) return;
+
+        const eventType = job?.eventType;
+        if (
+            eventType === WsMessage.JOB_ACTIVE ||
+            eventType === WsMessage.JOB_WAITING
+        ) {
+            closeSnackbar(JOB_CREATING_TOAST_KEY);
+            socket.emit(WsMessage.JOB_REMOVE, {
+                processId,
+                jobId: job.jobId,
+            });
         }
     };
 

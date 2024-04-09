@@ -1,11 +1,27 @@
 import React, { useMemo } from 'react';
 
-import { Box, Alert, Typography } from '@mui/material';
+import { Box, Alert, Typography, AlertColor } from '@mui/material';
 
 import { WsMessage } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
+
+interface AlertProps {
+    message: string;
+    severity: AlertColor;
+}
+
+const AlertComponent = ({ message, severity }: AlertProps) => (
+    <Alert variant='filled' severity={severity}>
+        <Typography
+            variant="body1"
+            sx={{ textAlign: 'center' }}
+        >
+            {message}
+        </Typography>
+    </Alert>
+);
 
 const ProcessQueueDetails = () => {
     const { process } = useSelector((state) => state.process.draft);
@@ -18,37 +34,36 @@ const ProcessQueueDetails = () => {
             case WsMessage.PROCESS_START_FAILED:
             case WsMessage.JOB_REMOVE_FAILED:
             case WsMessage.JOB_FAILED:
+                const errorMessage = translate(
+                    'Component.ProcessQueueDetails.Error',
+                    { errorMessage: job.errorMessage }
+                );
                 return (
-                    <Alert variant='filled' severity='error'>
-                        <Typography
-                            variant="body1"
-                            sx={{ textAlign: 'center' }}
-                        >
-                            {translate('Component.ProcessQueueDetails.Error', { errorMessage: job.errorMessage })}
-                        </Typography>
-                    </Alert>
+                    <AlertComponent
+                        message={errorMessage}
+                        severity='error'
+                    />
                 );
             case WsMessage.JOB_WAITING:
+                const queuePositionMessage = translate(
+                    'Component.ProcessQueueDetails.Queue',
+                    { queuePosition: job.queuePosition }
+                );
                 return (
-                    <Alert variant='filled' severity='warning'>
-                        <Typography
-                            variant="body1"
-                            sx={{ textAlign: 'center' }}
-                        >
-                            {translate('Component.ProcessQueueDetails.Queue', { queuePosition: job.queuePosition })}
-                        </Typography>
-                    </Alert>
+                    <AlertComponent
+                        message={queuePositionMessage}
+                        severity='warning'
+                    />
                 );
             case WsMessage.JOB_ACTIVE:
+                const processingMessage = translate(
+                    'Component.ProcessQueueDetails.Processing'
+                );
                 return (
-                    <Alert variant='filled' severity='warning'>
-                        <Typography
-                            variant="body1"
-                            sx={{ textAlign: 'center' }}
-                        >
-                            {translate('Component.ProcessQueueDetails.Processing')}
-                        </Typography>
-                    </Alert>
+                    <AlertComponent
+                        message={processingMessage}
+                        severity='warning'
+                    />
                 );
             default:
                 return null;
