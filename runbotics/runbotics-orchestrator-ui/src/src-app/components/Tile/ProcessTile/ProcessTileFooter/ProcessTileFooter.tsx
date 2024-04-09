@@ -58,13 +58,14 @@ const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process,
                 <If
                     condition={isJobWaiting || isJobCreating}
                     else={
-                        processInstance &&
+                        <If condition={!!processInstance}>
                             <Label
-                                color={getProcessInstanceStatusColor(processInstance.status)}
+                                color={getProcessInstanceStatusColor(processInstance?.status)}
                             >
                                 {/*@ts-ignore*/}
                                 {translate(`Process.Instance.Status.${formattedStatus}`)}
                             </Label>
+                        </If>
                     }
                 >
                     <If condition={isJobWaiting}>
