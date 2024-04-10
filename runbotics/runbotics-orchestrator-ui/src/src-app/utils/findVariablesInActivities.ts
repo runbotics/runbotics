@@ -34,6 +34,8 @@ export const findVariablesInAction = (element: BPMNElement, searchPhrase: string
     const inputValues = extensionElements.values[0].inputParameters;
     const outputValues = extensionElements.values[0].outputParameters;
 
+    // console.log(outputValues);
+
     if (inputValues && inputValues.length > 0) {
         const inputVariable = inputValues.filter(
             value =>
@@ -53,16 +55,23 @@ export const findVariablesInAction = (element: BPMNElement, searchPhrase: string
     }
 
     if (outputValues && outputValues.length > 0) {
+        if (element.id === 'Activity_115xecy') {
+            console.log(element);
+            outputValues.forEach(value => {
+                console.log(value.name, value.value.toLowerCase().includes(searchPhrase));
+            });
+        }
         const outputVariable = outputValues.filter(
             value => value.name === 'variableName' && value.value.toLowerCase().includes(searchPhrase)
         );
 
         const hashVariables = findHashDollarVariable(outputValues, searchPhrase);
+        console.log('outputVariable', outputVariable);
 
         variableFound = [...outputVariable, ...hashVariables].length > 0;
     }
 
-    return false;
+    return variableFound;
 };
 
 const findHashDollarVariable = (extensionElementValues: CamundaInputParameter[] | CamundaOutputParameter[], searchPhrase: string) =>
