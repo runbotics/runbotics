@@ -1,6 +1,6 @@
 package com.runbotics.web.rest.admin;
 
-import com.runbotics.security.AuthoritiesConstants;
+import com.runbotics.security.FeatureKeyConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/tenants")
-@PreAuthorize("@securityService.checkAuthority('" + AuthoritiesConstants.ADMIN + "')")
+@PreAuthorize("@securityService.checkFeatureKey('" + FeatureKeyConstants.TENANT_ALL_ACCESS + "')")
 public class TenantAdminResource {
 
     @GetMapping("/all")

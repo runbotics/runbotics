@@ -186,6 +186,15 @@ export enum FeatureKey {
 
     // Allow to delete collection of processes (processes page -> COLLECTIONS tab -> 3 vertical dots -> "delete" option)
     PROCESS_COLLECTION_DELETE = 'PROCESS_COLLECTION_DELETE',
+
+    // Read/write access to every tenant resource
+    TENANT_ALL_ACCESS = 'TENANT_ALL_ACCESS',
+
+    // Allows to read the resources assigned to the tenant
+    TENANT_READ = 'TENANT_READ',
+
+    // Allows to edit the resources assigned to the tenant
+    TENANT_EDIT = 'TENANT_EDIT',
 }
 
 export interface IFeatureKey {

@@ -72,5 +72,9 @@ public final class FeatureKeyConstants {
     public static final String PROCESS_COLLECTION_DELETE = "PROCESS_COLLECTION_DELETE";
     public static final String PROCESS_COLLECTION_ALL_ACCESS = "PROCESS_COLLECTION_ALL_ACCESS";
 
+    public static final String TENANT_ALL_ACCESS = "TENANT_ALL_ACCESS";
+    public static final String TENANT_READ = "TENANT_READ";
+    public static final String TENANT_EDIT = "TENANT_EDIT";
+
     FeatureKeyConstants() {}
 }
