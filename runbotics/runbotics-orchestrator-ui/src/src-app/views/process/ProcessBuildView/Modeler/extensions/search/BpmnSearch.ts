@@ -1,7 +1,9 @@
-
+ 
+import { findVariablesInAction, findVariablesInGateway, findVariablesInLoop } from '#src-app/utils/findVariablesInActivities';
+import { getActivityType, Activity } from '#src-app/utils/getActivityType';
 import getElementLabel from '#src-app/utils/getElementLabel';
 
-import { BPMNElement, CamundaParameter, IBpmnSubProcessBusinessObject, ISequenceFlowBusinessObject, getParameterValue } from '../../helpers/elementParameters';
+import { BPMNElement, IBpmnGateway } from '../../helpers/elementParameters';
 
 interface Token {
     normal?: string;
@@ -42,10 +44,10 @@ export default class BpmnSearchProvider implements SearchProvider {
             }))
             .sort((item: Result) => item + item.element.id);
 
-        const actions = this._elementRegistry
+        const foundActions = this._elementRegistry
             .filter(
                 (element: BPMNElement) =>
-                    (element !== rootElement && hasVariables(element, pattern)) || (rootElement && element.id.startsWith('Activity'))
+                    (element !== rootElement && element.id.startsWith('Activity'))
             )
             .map((element: BPMNElement) => ({
                 primaryTokens: matchAndSplit(getElementLabel(element), pattern),
@@ -55,7 +57,7 @@ export default class BpmnSearchProvider implements SearchProvider {
             .filter((item: Result) => hasMatched(item.primaryTokens) || hasMatched(item.secondaryTokens))
             .sort((item: Result) => getElementLabel(item.element) + item.element.id);
 
-        return [...foundVariablesInActivities, ...actions];
+        return [...foundVariablesInActivities, ...foundActions];
     }
 }
 
@@ -67,74 +69,19 @@ const hasMatched = (tokens: Token[]): boolean => {
 
 const hasVariables = (element: BPMNElement, pattern: string) => {
     const lowerCasePattern = pattern.toLowerCase();
-    const businessObject = element.businessObject;
-    let variableFound = false;
-
-    if (element.id.startsWith('Gateway')) {
-        const gatewayOutgoingFlows: ISequenceFlowBusinessObject[] = (businessObject as unknown as BPMNElement)
-            .outgoing as unknown as ISequenceFlowBusinessObject[];
-
-        const gatewayExpressions = gatewayOutgoingFlows
-            .map(flow => flow.conditionExpression.body.toLowerCase())
-            .filter(expression => expression.includes(lowerCasePattern));
-
-        variableFound = gatewayExpressions.length > 0;
-    }
-
-    if (variableFound) {
-        return variableFound;
-    }
+    const activityType = getActivityType(element);
     
-    if (businessObject.actionId === 'loop.loop') {
-        const loopVariable = (element.businessObject as IBpmnSubProcessBusinessObject).loopCharacteristics.loopCardinality.body;
-        variableFound = loopVariable.toLowerCase().includes(lowerCasePattern);
+    if (!activityType) return false;
+
+    switch(activityType) {
+        case Activity.GATEWAY:
+            return findVariablesInGateway(element.businessObject as unknown as IBpmnGateway, lowerCasePattern);
+        case Activity.LOOP:
+            return findVariablesInLoop(element, lowerCasePattern);
+        case Activity.ACTION:
+            return findVariablesInAction(element, lowerCasePattern);
+        default: return false;
     }
-
-    if (variableFound) {
-        return variableFound;
-    }
-
-    const extensionElements = businessObject.extensionElements;
-
-    if (!extensionElements) {
-        return variableFound;
-    }
-
-    const inputValues = extensionElements.values[0].inputParameters;
-    const outputValues = extensionElements.values[0].outputParameters;
-
-    if (inputValues && inputValues.length > 0) {
-        const inputVariable = inputValues.filter(
-            value =>
-                (value.name === 'variable' && value.value.toLowerCase().includes(lowerCasePattern)) ||
-                (value.name === 'value' && (value.value.startsWith('#{') || value.value.startsWith('${')) && value.value.toLowerCase().includes(lowerCasePattern))
-        );
-
-        const hashVariables = inputValues
-            .filter(value => value.name === 'variables' || value.name === 'functionParams')
-            .map((camundaParam: CamundaParameter) => Object.values(getParameterValue(camundaParam)))
-            .flatMap(arr => arr)
-            .filter((foundValue: string) => foundValue.toLowerCase().includes(lowerCasePattern));
-
-        variableFound = [...inputVariable, ...hashVariables].length > 0;
-    }
-
-    if (variableFound) {
-        return variableFound;
-    }
-
-    if (outputValues && outputValues.length > 0) {
-        const outputVariable = outputValues.filter(
-            value => value.name === 'variableName' && value.value.toLowerCase().includes(lowerCasePattern)
-        );
-        variableFound = outputVariable.length > 0;
-    }
-
-    if (variableFound) {
-        return variableFound;
-    }
-
-    return false;
 };
 
 const matchAndSplit = (text: string, pattern: string): Token[] => {
