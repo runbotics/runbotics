@@ -138,9 +138,18 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
     @Override
     public List<ProcessCollectionDTO> getUserAccessible(User user) {
         User currentUser = userService.getUserWithAuthorities().get();
+        List<String> userFeatureKeys = userService.findUserFeatureKeys();
+        boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
-        List<ProcessCollection> userAccessible = processCollectionRepository.findAllUserAccessible(currentUser);
-        log.debug("userAccessible: {}", userAccessible);
-        return processCollectionMapper.toDto(userAccessible);
+        if (hasUserAccessEveryCollection) {
+            List<ProcessCollection> allCollections = processCollectionRepository.getAll();
+            log.debug("allCollections: {}", allCollections);
+
+            return processCollectionMapper.toDto(allCollections);
+        } else {
+            List<ProcessCollection> userAccessible = processCollectionRepository.findAllUserAccessible(currentUser);
+            log.debug("userAccessible: {}", userAccessible);
+            return processCollectionMapper.toDto(userAccessible);
+        }
     }
 }
