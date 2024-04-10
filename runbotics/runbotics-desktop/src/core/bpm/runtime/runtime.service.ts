@@ -42,7 +42,8 @@ import {
     IStartProcessInstance,
     RunBoticsExecutionEnvironment,
     BpmnExecutionEventMessageExtendedApi,
-    BpmnProcessInstance, BpmnExecutionEventMessageExtendedContent,
+    BpmnProcessInstance, 
+    BpmnExecutionEventMessageExtendedContent,
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
@@ -532,7 +533,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     private createEngineExecutionServices = (
         processInstanceId: string
     ): BpmnEngineExecuteOptions['services'] => ({
-        ...customServices,
+        ...this.createCustomServices(processInstanceId),
         desktop:
             (input: any) =>
                 async (
@@ -593,6 +594,31 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 },
     });
 
+    private createCustomServices = (processInstanceId: string) => Object.entries(customServices)
+        .reduce((acc, [serviceName, serviceFunction]) => {
+            acc[serviceName] = (arg0?: any, arg1?: any, arg2?: any) => {
+                try {
+                    return serviceFunction(arg0, arg1, arg2);
+                } catch (e) {
+                    this.purgeEngine(processInstanceId);
+                    const errorMsg = `Error in custom service [${serviceName}]: ${(e as Error)?.message}`;
+                    this.logger.error(`[${processInstanceId}] ${errorMsg}`);
+                    const processInstance = this.processInstances[processInstanceId];
+                    this.processEventBus.publish({
+                        processInstanceId: processInstanceId,
+                        eventType: ProcessInstanceStatus.ERRORED,
+                        processInstance: {
+                            ...processInstance,
+                            status: ProcessInstanceStatus.ERRORED,
+                            error: errorMsg,
+                        },
+                    });
+                    throw new Error((e as Error)?.message);
+                }
+            };
+            return acc;
+        }, {});
+
     public terminateProcessInstance = async (
         processInstanceId: string
     ): Promise<void> => {
@@ -615,17 +641,16 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     };
 
     public async assignVariables(processInstanceId: string, vars: any) {
-        // assign to global scope
         const definitions = await this.engines[
             processInstanceId
         ].getDefinitions();
         const definition = definitions[0];
-        const globalVariables = {
+        const setVariables = {
             ...definition.environment.variables,
             ...vars,
         };
-        // globalVariables[input.variable] = input.value;
-        definition.environment.assignVariables(globalVariables);
+
+        definition.environment.assignVariables(setVariables);
     }
 
     public getSequencesWithoutExpression = (owner: ActivityOwner): string[] => owner.outbound

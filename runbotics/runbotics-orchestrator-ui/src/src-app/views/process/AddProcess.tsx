@@ -14,7 +14,7 @@ import {
 import { PayloadAction } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { PlusCircle as PlusIcon } from 'react-feather';
+import { FilePlus } from 'react-feather';
 import { IProcess } from 'runbotics-common';
 
 import useTranslations, { checkIfKeyExists, translate } from '#src-app/hooks/useTranslations';
@@ -169,7 +169,7 @@ const AddProcess = () => {
                 onClick={() => setShowDialog(true)}
                 startIcon={
                     <SvgIcon fontSize="small">
-                        <PlusIcon />
+                        <FilePlus />
                     </SvgIcon>
                 }>
                 {translate('Process.Add.ActionName')}

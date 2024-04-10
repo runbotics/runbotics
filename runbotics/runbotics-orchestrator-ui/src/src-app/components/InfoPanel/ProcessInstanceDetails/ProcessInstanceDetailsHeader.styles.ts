@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import styled from 'styled-components';
 
 export const ProcessOutputButton = styled(Button)({
     textTransform: 'none',
@@ -18,3 +18,7 @@ export const HeaderWrapper = styled(Grid)(({theme}) => `
     justify-content: space-between;
     margin-bottom: ${theme.spacing(2)};
 `);
+
+export const TextOutputWrapper = styled.pre`
+    text-wrap: balance;
+`;

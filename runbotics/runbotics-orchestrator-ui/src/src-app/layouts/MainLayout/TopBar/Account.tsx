@@ -46,7 +46,7 @@ const Root = styled.div(({ theme }) => ({
     },
 }));
 
-const UsersLink = styled(RouterLink)(({ theme }) => `
+const MenuLink = styled(RouterLink)(({ theme }) => `
     text-decoration: none;
     color: ${theme.palette.text.primary};
 `);
@@ -125,9 +125,14 @@ const Account: FC = () => {
             >
                 <If condition={hasAdminAccess}>
                     <MenuItem>
-                        <UsersLink href='/app/users'>
+                        <MenuLink href='/app/users'>
                             {translate('Account.Users')}
-                        </UsersLink>
+                        </MenuLink>
+                    </MenuItem>
+                    <MenuItem>
+                        <MenuLink href='/monitoring/grafana'>
+                            {translate('Account.Monitoring')}
+                        </MenuLink>
                     </MenuItem>
                 </If>
                 <MenuItem onClick={handleLogout}>{translate('Account.Logout')}</MenuItem>

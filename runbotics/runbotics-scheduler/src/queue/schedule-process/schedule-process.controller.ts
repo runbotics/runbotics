@@ -45,13 +45,14 @@ export class ScheduleProcessController {
         if (!process) {
             throw new BadRequestException('Wrong process id');
         }
-
         const scheduleProcessWithUser = { ...scheduleProcess, user: request.user, process };
         const newScheduleProcess = await this.scheduleProcessService.save(scheduleProcessWithUser);
+
         await this.queueService.createScheduledJob({
             ...newScheduleProcess,
             trigger: { name: TriggerEvent.SCHEDULER },
-            triggerData: { userEmail: request.user.email }
+            triggerData: { userEmail: request.user.email },
+            input: { variables: newScheduleProcess?.inputVariables ? JSON.parse(newScheduleProcess.inputVariables) : null }
         });
 
         this.logger.log(`<= Creation successful: schedule process ${newScheduleProcess.id}`);

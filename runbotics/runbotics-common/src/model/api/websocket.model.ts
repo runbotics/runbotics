@@ -11,6 +11,7 @@ export enum BotWsMessage {
 
 export enum WsMessage {
     PROCESS_INSTANCE_EVENT = 'process-instance-event',
+    PROCESS_INSTANCE_LOOP_EVENT = 'process-instance-loop-event',
     PROCESS = 'process',
     BOT_STATUS = 'bot-status',
     BOT_DELETE = 'bot-delete',

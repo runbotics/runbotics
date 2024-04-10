@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.9.3",
+    "version": "2.10.0-SNAPSHOT.55",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -35,6 +35,7 @@
         "@nestjs/schematics": "^9.0.3",
         "@nestjs/typeorm": "^9.0.1",
         "@nestjs/websockets": "^9.1.6",
+        "@willsoto/nestjs-prometheus": "^6.0.0",
         "axios": "^1.1.3",
         "bull": "^4.10.2",
         "dayjs": "^1.11.0",

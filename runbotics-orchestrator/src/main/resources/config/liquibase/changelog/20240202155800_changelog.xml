@@ -1,0 +1,52 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <!-- Add feature keys for managing process collections -->
+    <changeSet author="jarockis" id="20240202155800-1">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="feature_key" />
+            </and>
+        </preConditions>
+        <sql>
+            INSERT INTO feature_key(name) VALUES
+            ('PROCESS_COLLECTION_READ'),
+            ('PROCESS_COLLECTION_ADD'),
+            ('PROCESS_COLLECTION_EDIT'),
+            ('PROCESS_COLLECTION_DELETE')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+    <!-- Assign new keys to user roles -->
+    <changeSet author="jarockis" id="20240202155800-2">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="feature_key" />
+                <sqlCheck expectedResult="4">
+                    SELECT COUNT(*)
+                    FROM feature_key
+                        WHERE name IN ('PROCESS_COLLECTION_READ', 'PROCESS_COLLECTION_ADD', 'PROCESS_COLLECTION_EDIT', 'PROCESS_COLLECTION_DELETE')
+                </sqlCheck>
+                <tableExists tableName="jhi_authority" />
+                <sqlCheck expectedResult="3">
+                    SELECT COUNT(*)
+                    FROM jhi_authority
+                        WHERE name IN ('ROLE_ADMIN', 'ROLE_USER', 'ROLE_EXTERNAL_USER')
+                </sqlCheck>
+                <tableExists tableName="authority_feature_key" />
+            </and>
+        </preConditions>
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_ADMIN','PROCESS_COLLECTION_READ'),
+            ('ROLE_ADMIN','PROCESS_COLLECTION_ADD'),
+            ('ROLE_ADMIN','PROCESS_COLLECTION_EDIT'),
+            ('ROLE_ADMIN','PROCESS_COLLECTION_DELETE'),
+            ('ROLE_USER','PROCESS_COLLECTION_READ'),
+            ('ROLE_USER','PROCESS_COLLECTION_ADD'),
+            ('ROLE_USER','PROCESS_COLLECTION_EDIT'),
+            ('ROLE_USER','PROCESS_COLLECTION_DELETE'),
+            ('ROLE_EXTERNAL_USER','PROCESS_COLLECTION_READ')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

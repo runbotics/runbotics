@@ -2,7 +2,8 @@ import { SapAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner, ActionSystem } from './types';
+import { SAPLanguages } from './sap.types';
+import { IBpmnAction, Runner, ActionSystem } from '../types';
 
 
 
@@ -38,6 +39,12 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Connect.Client'),
                                 type: 'string',
                             },
+                            language: {
+                                title: translate('Process.Details.Modeler.Actions.Sap.Connect.Language'),
+                                type: 'string',
+                                enum: Object.values(SAPLanguages),
+                                default: SAPLanguages.English,
+                            }
                         },
                         required: ['user', 'password', 'connectionName'],
                     },
@@ -677,6 +684,43 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     target: 'wnd[0]',
                     rowIndex: '0',
+                },
+            },
+        },
+    },
+    'sap.toggleCheckbox': {
+        id: SapAction.TOGGLE_CHECKBOX,
+        label: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Label'),
+        script: SapAction.TOGGLE_CHECKBOX,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            target: {
+                                title: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Target'),
+                                type: 'string',
+                            },
+                            checked: {
+                                title: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Checked'),
+                                type: 'boolean'
+                            },
+                        },
+                        required: ['target']
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {
+                input: {
+                    target: 'wnd[0]',
+                    checked: true,
                 },
             },
         },

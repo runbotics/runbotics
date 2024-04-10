@@ -17,6 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -204,6 +205,29 @@ public class UserResource {
         final Page<AdminUserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * {@code GET /admin/users/non-admins} : get all non-admin users. Only basic information
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
+     */
+    @GetMapping("/users/non-admins")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BASIC_USER_READ + "')")
+    public ResponseEntity<List<User>> getNonAdminUsers() {
+        log.debug("REST request to get all non-admin users");
+
+        List<User> nonAdminUsers = userService.getNonAdminUsers()
+            .stream().map(user -> {
+                User limitedUser = new User();
+                limitedUser.setId(user.getId());
+                limitedUser.setLogin(user.getLogin());
+                limitedUser.setEmail(user.getEmail());
+                return limitedUser;
+            })
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(nonAdminUsers, HttpStatus.OK);
     }
 
     private boolean onlyContainsAllowedProperties(Pageable pageable) {

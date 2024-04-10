@@ -24,6 +24,7 @@ import GoogleActionHandler from '#action/google';
 import JavaScriptActionHandler from '#action/rce';
 import DesktopActionHandler from '#action/desktop';
 import FolderActionHandler from '#action/folder';
+import ZipActionHandler from '#action/zip';
 import VisualBasicActionHandler from '#action/visual-basic';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '#logger';
@@ -35,6 +36,7 @@ import {
 } from './desktop-runner.types';
 import { FINISHED_PROCESS_STATUSES } from './desktop-runner.utils';
 import { ImageActionHandler } from '#action/image';
+
 
 @Injectable()
 export class DesktopRunnerService implements OnModuleInit {
@@ -73,6 +75,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly visualBasicActionHandler: VisualBasicActionHandler,
         private readonly imageActionHandler: ImageActionHandler,
         private readonly folderActionHandler: FolderActionHandler,
+        private readonly zipActionHandler: ZipActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -98,6 +101,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('visualBasic', visualBasicActionHandler)
             .set('image', imageActionHandler)
             .set('folder', folderActionHandler)
+            .set('zip', zipActionHandler)
     }
 
     async onModuleInit() {

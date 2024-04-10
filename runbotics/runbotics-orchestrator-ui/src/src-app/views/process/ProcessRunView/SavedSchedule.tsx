@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 
 import {
-    Avatar, Card, CardContent, Container, IconButton, SvgIcon, Typography, Box,
+    Avatar, Box, Card, CardContent, Container, IconButton, SvgIcon, Tooltip, Typography
 } from '@mui/material';
 import clsx from 'clsx';
 import cronstrue from 'cronstrue/i18n';
 import i18n from 'i18next';
-import { Trash as TrashIcon, Calendar as CalendarIcon } from 'react-feather';
+import { Trash as TrashIcon, Calendar as CalendarIcon, List as ListIcon } from 'react-feather';
 import { FeatureKey } from 'runbotics-common';
 import styled from 'styled-components';
 
@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 import { scheduleProcessActions, scheduleProcessSelector } from '#src-app/store/slices/ScheduleProcess';
+import { IProcess } from '#src-app/types/model/process.model';
+import { IScheduleProcess } from '#src-app/types/model/schedule-process.model';
 
 
 
@@ -30,6 +32,7 @@ const classes = {
     typography: `${PREFIX}-typography`,
     avatar: `${PREFIX}-avatar`,
     deleteButton: `${PREFIX}-deleteButton`,
+    attendedIcon: `${PREFIX}-attendedIcon`,
 };
 
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -46,6 +49,10 @@ const StyledContainer = styled(Container)(({ theme }) => ({
         padding: '1rem !important',
     },
 
+    [`& .${classes.cardContent}.disabled`]: {
+        backgroundColor: theme.palette.tag.action,
+    },
+
     [`& .${classes.typography}`]: {
         display: 'flex',
         marginLeft: theme.spacing(2),
@@ -60,18 +67,27 @@ const StyledContainer = styled(Container)(({ theme }) => ({
         height: 30,
     },
 
+    [`& .${classes.avatar}.disabled`]: {
+        backgroundColor: theme.palette.tag.variable,
+    },
+
     [`& .${classes.deleteButton}`]: {
         width: 35,
         height: 35,
     },
+
+    [`& .${classes.attendedIcon}`]: {
+        margin: 4,
+    },
 }));
 
 interface SavedScheduleProps {
-    processId: number;
+    process: IProcess
 }
 
-const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
+const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
     const dispatch = useDispatch();
+    const processId = process.id;
     const {
         schedules,
     } = useSelector(scheduleProcessSelector);
@@ -89,6 +105,22 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
             .toString(cronExpression, { locale: i18n.language }).toLowerCase(),
     });
 
+    const attendedInfo = (schedule: IScheduleProcess) => (
+        <div className={classes.attendedIcon}>
+            <If condition={Boolean(schedule.inputVariables)}>
+                <Tooltip title={<pre>{schedule.inputVariables}</pre>}>
+                    <Avatar classes={{ root: clsx(classes.avatar, { 'disabled': isNotRunableSchedule(schedule) }) }}>
+                        <SvgIcon fontSize="small">
+                            <ListIcon/>
+                        </SvgIcon>
+                    </Avatar>
+                </Tooltip>
+            </If>
+        </div>
+    );
+    
+    const isNotRunableSchedule = (schedule: IScheduleProcess) => !schedule.inputVariables && process.isAttended;
+
     return (
         <StyledContainer maxWidth={false} sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <Typography variant="h4" gutterBottom>
@@ -97,13 +129,14 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ processId }) => {
             <Box display="flex" flexDirection="column" gap="0.5rem">
                 {schedules.map((schedule) => (
                     <Card key={schedule.id} className={classes.card}>
-                        <CardContent className={classes.cardContent}>
+                        <CardContent classes={{ root: clsx(classes.cardContent, { 'disabled': isNotRunableSchedule(schedule) }) }}>
                             <Box display="flex" alignItems="center">
-                                <Avatar classes={{ root: clsx(classes.avatar) }}>
+                                <Avatar classes={{ root: clsx(classes.avatar, { 'disabled': isNotRunableSchedule(schedule) }) }}>
                                     <SvgIcon fontSize="small">
                                         <CalendarIcon />
                                     </SvgIcon>
                                 </Avatar>
+                                {attendedInfo(schedule)}
                                 <Typography
                                     variant="body1"
                                     className={classes.typography}

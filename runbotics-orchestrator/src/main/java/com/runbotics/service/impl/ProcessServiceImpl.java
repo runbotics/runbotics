@@ -111,6 +111,8 @@ public class ProcessServiceImpl implements ProcessService {
         processDTO.setIsPublic(false);
         BotSystem linuxSystem = new BotSystem(BotSystem.BotSystemName.LINUX.value());
         processDTO.setSystem(linuxSystem);
+        ProcessOutput processOutput = new ProcessOutput(ProcessOutput.ProcessOutputType.TEXT.value());
+        processDTO.setOutputType(processOutput);
         processDTO.setBotCollection(botCollectionService.getGuestCollection());
         return save(processDTO);
     }
@@ -141,6 +143,7 @@ public class ProcessServiceImpl implements ProcessService {
             .map(
                 existingProcess -> {
                     existingProcess.setDefinition(processDiagramDTO.getDefinition());
+                    existingProcess.setExecutionInfo(processDiagramDTO.getExecutionInfo());
                     existingProcess.setUpdated(ZonedDateTime.now());
                     existingProcess.setEditor(requester);
                     return existingProcess;

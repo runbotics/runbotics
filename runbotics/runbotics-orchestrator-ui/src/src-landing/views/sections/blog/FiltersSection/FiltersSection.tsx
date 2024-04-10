@@ -136,7 +136,7 @@ const FiltersSection: VFC<Props> = ({
         dateRange?.startDate,
     ]);
 
-    const categoriesCheckboxes = categories.map((category, index) => (
+    const categoriesCheckboxes = categories?.map((category, index) => (
         <Checkbox
             key={category.slug}
             className={
@@ -151,7 +151,7 @@ const FiltersSection: VFC<Props> = ({
         />
     ));
 
-    const tagsCheckboxes = tags.map((tag, index) => (
+    const tagsCheckboxes = tags?.map((tag, index) => (
         <Checkbox
             key={tag.slug}
             className={index < 5 || isTagsSectionExpanded ? '' : styles.hidden}
@@ -203,7 +203,7 @@ const FiltersSection: VFC<Props> = ({
                 <button
                     className={styles.expandSectionButton}
                     type="button"
-                    data-hide={categories.length <= 5}
+                    data-hide={categories?.length <= 5}
                     onClick={() => {
                         setCategoriesSectionExpand((prevState) => !prevState);
                     }}
@@ -231,7 +231,7 @@ const FiltersSection: VFC<Props> = ({
                 <button
                     className={styles.expandSectionButton}
                     type="button"
-                    data-hide={tags.length <= 5}
+                    data-hide={tags?.length <= 5}
                     onClick={() => {
                         setTagsSectionExpand((prevState) => !prevState);
                     }}

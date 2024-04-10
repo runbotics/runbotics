@@ -3,14 +3,7 @@ package com.runbotics.service.criteria;
 import java.io.Serializable;
 import java.util.Objects;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
-import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
-import tech.jhipster.service.filter.IntegerFilter;
-import tech.jhipster.service.filter.LongFilter;
-import tech.jhipster.service.filter.StringFilter;
-import tech.jhipster.service.filter.ZonedDateTimeFilter;
+import tech.jhipster.service.filter.*;
 
 /**
  * Criteria class for the {@link com.runbotics.domain.Process} entity. This class is used
@@ -43,6 +36,8 @@ public class ProcessCriteria implements Serializable, Criteria {
 
     private StringFilter tagName;
 
+    private UUIDFilter collectionId;
+
     public ProcessCriteria() {}
 
     public ProcessCriteria(ProcessCriteria other) {
@@ -55,6 +50,7 @@ public class ProcessCriteria implements Serializable, Criteria {
         this.createdByName = other.createdByName == null ? null : other.createdByName.copy();
         this.botCollectionName = other.botCollectionName == null ? null : other.botCollectionName.copy();
         this.tagName = other.tagName == null ? null : other.tagName.copy();
+        this.collectionId = other.collectionId == null ? null : other.collectionId.copy();
     }
 
     @Override
@@ -197,6 +193,14 @@ public class ProcessCriteria implements Serializable, Criteria {
         this.tagName = tagName;
     }
 
+    public UUIDFilter getCollectionId() {
+        return collectionId;
+    }
+
+    public void setCollectionId(UUIDFilter collectionId) {
+        this.collectionId = collectionId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -215,13 +219,14 @@ public class ProcessCriteria implements Serializable, Criteria {
             Objects.equals(createdById, that.createdById) &&
             Objects.equals(createdByName, that.createdByName) &&
             Objects.equals(botCollectionName, that.botCollectionName) &&
-            Objects.equals(tagName, that.tagName)
+            Objects.equals(tagName, that.tagName) &&
+            Objects.equals(collectionId, that.collectionId)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, isPublic, created, updated, createdById, createdByName, botCollectionName, tagName);
+        return Objects.hash(id, name, isPublic, created, updated, createdById, createdByName, botCollectionName, tagName, collectionId);
     }
 
     // prettier-ignore
@@ -235,6 +240,7 @@ public class ProcessCriteria implements Serializable, Criteria {
             (updated != null ? "updated=" + updated + ", " : "") +
             (createdById != null ? "createdById=" + createdById + ", " : "") +
             (tagName != null ? "tagName=" + tagName + ", " : "") +
+            (collectionId != null ? "collectionId=" + collectionId + ", ": "") +
             "}";
     }
 }

@@ -12,7 +12,6 @@ import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector, useDispatch } from '#src-app/store';
-import { currentProcessSelector } from '#src-app/store/slices/Process';
 import {
     scheduleProcessActions,
     scheduleProcessSelector,
@@ -39,7 +38,6 @@ const ProcessRunView: FC = () => {
     const dispatch = useDispatch();
     const { id } = useRouter().query;
     const processId = Number(id);
-    const { isAttended } = useSelector(currentProcessSelector);
     const { process, loading } = useSelector((state) => state.process.draft);
     const { schedules } = useSelector(scheduleProcessSelector);
     const hasReadHistoryAccess = useFeatureKey([
@@ -64,6 +62,7 @@ const ProcessRunView: FC = () => {
             process: {
                 id: processId,
             },
+            inputVariables: data.inputVariables
         }));
         dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
     };
@@ -93,9 +92,7 @@ const ProcessRunView: FC = () => {
                                 <Grid item>
                                     <If condition={hasAddScheduleAccess}>
                                         <ScheduleProcess
-                                            onProcessScheduler={
-                                                handleProcessSchedule
-                                            }
+                                            onProcessScheduler={handleProcessSchedule}
                                         />
                                     </If>
                                 </Grid>
@@ -107,17 +104,9 @@ const ProcessRunView: FC = () => {
             <If condition={hasReadSchedulesAccess}>
                 <Card sx={{ mt: 3, py: 3 }}>
                     <Grid item xs={12}>
-                        <SavedSchedule processId={processId} />
+                        <SavedSchedule process={process} />
                     </Grid>
-                    <If condition={isAttended}>
-                        <Grid item>
-                            <ValidationSchedule>
-                                {translate('Process.Run.ScheduleAttended.Message')}
-                            </ValidationSchedule>
-                        </Grid>
-                    </If>
-                    <If condition={schedules.length === 0 &&
-                        !isAttended}>
+                    <If condition={schedules.length === 0}>
                         <Grid item>
                             <ValidationSchedule>
                                 {translate('Process.Run.NoSchedules.Message')}

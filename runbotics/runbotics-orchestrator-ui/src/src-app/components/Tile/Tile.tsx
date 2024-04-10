@@ -1,11 +1,9 @@
 import React, { FunctionComponent } from 'react';
 
 import { Card } from '@mui/material';
-import { alpha } from '@mui/material/styles';
-
 import styled from 'styled-components';
 
-const Wrapper = styled(Card)<TileProps>`
+const Wrapper = styled(Card)<TileProps>(({ theme }) => `
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -14,15 +12,15 @@ const Wrapper = styled(Card)<TileProps>`
     min-height: 13.125rem;
 
     && {
-        box-shadow: 0 0.25rem 0.5rem 0 ${alpha('#8d8c8c', 0.4)};
+        box-shadow: ${theme.shadows[5]};
     }
 
     &:hover {
         ${({ hoverstyles }) =>
         hoverstyles &&
-            `box-shadow: 0 .25rem 1rem 0 ${alpha('#8d8c8c', 0.4)}`};
+            `box-shadow: ${theme.shadows[10]}`};
     }
-`;
+`);
 
 interface TileProps {
     hoverstyles?: boolean;

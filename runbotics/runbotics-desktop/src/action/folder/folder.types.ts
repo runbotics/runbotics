@@ -12,6 +12,24 @@ export type FolderDisplayFilesActionInput = {
     path?: string;
 };
 
+export type FolderCreateActionInput = {
+    name: string;
+    path?: string;
+};
+
+export type FolderRenameActionInput = {
+    path: string;
+    newName: string;
+};
+
+export type FolderExistsActionInput = {
+    name: string;
+    path?: string;
+};
+
 export type FolderActionRequest =
     | DesktopRunRequest<FolderAction.DELETE, FolderDeleteActionInput>
-    | DesktopRunRequest<FolderAction.DISPLAY_FILES, FolderDisplayFilesActionInput>;
+    | DesktopRunRequest<FolderAction.DISPLAY_FILES, FolderDisplayFilesActionInput>
+    | DesktopRunRequest<FolderAction.CREATE, FolderCreateActionInput>
+    | DesktopRunRequest<FolderAction.RENAME, FolderRenameActionInput>
+    | DesktopRunRequest<FolderAction.EXISTS, FolderExistsActionInput>;

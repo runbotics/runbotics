@@ -2,6 +2,7 @@ package com.runbotics.service;
 
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
+import com.runbotics.domain.FeatureKey;
 import com.runbotics.domain.User;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
@@ -374,6 +375,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public List<User> getNonAdminUsers() {
+        return userRepository.findAllActivatedNonAdmins();
+    }
+
+    @Transactional(readOnly = true)
     public List<AdminUserDTO> getAllManagedUsersLimited() {
         return userRepository.findAll().stream().map(User::getLogin).map(AdminUserDTO::new).collect(Collectors.toList());
     }
@@ -391,6 +397,18 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> findUserFeatureKeys() {
+        User user = this.getUserWithAuthorities().orElseGet(User::new);
+
+        return user
+                .getAuthorities()
+                .stream()
+                .map(Authority::getFeatureKeys)
+                .flatMap(Set::stream)
+                .map(FeatureKey::getName).distinct().collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

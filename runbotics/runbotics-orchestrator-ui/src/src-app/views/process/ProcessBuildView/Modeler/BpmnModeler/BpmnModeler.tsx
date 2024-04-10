@@ -11,7 +11,7 @@ import { isProcessInstanceActive } from 'runbotics-common';
 
 import 'react-resizable/css/styles.css';
 import InfoPanel from '#src-app/components/InfoPanel';
-import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesPanel/VariablesPanel';
+import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
 import If from '#src-app/components/utils/If';
 import useModelerListener, {
@@ -79,6 +79,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             errors,
             imported,
             customValidationErrors,
+            activeDrag
         } = useSelector((state) => state.process.modeler);
 
         useNavigationLock(
@@ -136,6 +137,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                         errors,
                         customValidationErrors,
                         imported,
+                        activeDrag
                     })
                 )
             );

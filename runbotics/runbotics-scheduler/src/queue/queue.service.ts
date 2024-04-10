@@ -63,8 +63,7 @@ export class QueueService implements OnModuleInit {
                 this.uiGateway.server.emit(WsMessage.ADD_SCHEDULE_PROCESS, scheduledProcess);
                 this.logger.log(`Process: "${scheduledProcess.process.name}":${scheduledProcess.process.id} successfully scheduled | scheduleID: ${scheduledProcess.id}`);
             })
-            .catch(err => this.logger
-                .error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
+            .catch(err => this.logger.error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
     }
 
     async createInstantJob(params: StartProcessRequest) {
@@ -158,6 +157,7 @@ export class QueueService implements OnModuleInit {
                     ...process,
                     trigger: { name: TriggerEvent.SCHEDULER },
                     triggerData: { userEmail: process.user.email },
+                    input: { variables: JSON.parse(process.inputVariables) }
                 }))
         );
         this.logger.log(`Created ${scheduledProcesses.length} schedule(s)`);
@@ -179,7 +179,7 @@ export class QueueService implements OnModuleInit {
         this.logger.log('Cleared staled job(s)');
     }
 
-    private async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
+    async handleAttendedProcess(process: IProcess, input?: ProcessInput) {
         if (!process.isAttended) return;
 
         const requiredVariables = getVariablesFromSchema(process.executionInfo, true);

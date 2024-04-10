@@ -59,14 +59,14 @@ function localStorageCopy(
         const { tree } = event;
 
         // persist in local storage, encoded as json
-        localStorage.setItem('bpmnClipboard', JSON.stringify(tree));
+        localStorage.setItem('bpmn_clipboard', JSON.stringify(tree));
     });
 
     // intercept global paste keybindings and
     // inject reified pasted stack
     keyboard.addListener(2000, _ => {
         // retrieve from local storage
-        const serializedCopy = localStorage.getItem('bpmnClipboard');
+        const serializedCopy = localStorage.getItem('bpmn_clipboard');
 
         if (!serializedCopy) {
             return;

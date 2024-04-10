@@ -31,7 +31,8 @@ export type InternalHandlerKey =
     | 'desktop'
     | 'visualBasic'
     | 'image'
-    | 'folder';
+    | 'folder'
+    | 'zip';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

@@ -42,6 +42,7 @@ public final class FeatureKeyConstants {
     public static final String BOT_LOG_READ = "BOT_LOG_READ";
     public static final String BOT_DELETE = "BOT_DELETE";
 
+    public static final String BOT_COLLECTION_ALL_ACCESS = "BOT_COLLECTION_ALL_ACCESS";
     public static final String BOT_COLLECTION_READ = "BOT_COLLECTION_READ";
     public static final String BOT_COLLECTION_EDIT = "BOT_COLLECTION_EDIT";
     public static final String BOT_COLLECTION_ADD = "BOT_COLLECTION_ADD";
@@ -64,6 +65,12 @@ public final class FeatureKeyConstants {
     public static final String HISTORY_READ = "HISTORY_READ";
 
     public static final String BASIC_USER_READ = "BASIC_USER_READ";
+
+    public static final String PROCESS_COLLECTION_READ = "PROCESS_COLLECTION_READ";
+    public static final String PROCESS_COLLECTION_ADD = "PROCESS_COLLECTION_ADD";
+    public static final String PROCESS_COLLECTION_EDIT = "PROCESS_COLLECTION_EDIT";
+    public static final String PROCESS_COLLECTION_DELETE = "PROCESS_COLLECTION_DELETE";
+    public static final String PROCESS_COLLECTION_ALL_ACCESS = "PROCESS_COLLECTION_ALL_ACCESS";
 
     FeatureKeyConstants() {}
 }

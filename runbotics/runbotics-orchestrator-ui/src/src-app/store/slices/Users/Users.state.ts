@@ -15,7 +15,11 @@ export interface UsersState {
         loading: boolean;
         all: IUser[];
         allByPage: Page<IUser> | null;
-    }
+        nonAdmins: {
+            all: IUser[];
+            loading: boolean;
+        };
+    };
     notActivated: {
         loading: boolean;
         all: IUser[];
