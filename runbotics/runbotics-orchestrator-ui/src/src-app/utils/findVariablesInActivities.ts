@@ -24,54 +24,46 @@ export const findVariablesInLoop = (element: BPMNElement, searchPhrase: string):
     return loopVariable.toLowerCase().includes(searchPhrase);
 };
 export const findVariablesInAction = (element: BPMNElement, searchPhrase: string): boolean => {
-    let variableFound = false;
     const extensionElements = element.businessObject.extensionElements;
 
-    if (!extensionElements) {
-        return false;
-    }
+    if (!extensionElements) return false;
 
     const inputValues = extensionElements.values[0].inputParameters;
     const outputValues = extensionElements.values[0].outputParameters;
 
-    // console.log(outputValues);
-
-    if (inputValues && inputValues.length > 0) {
-        const inputVariable = inputValues.filter(
-            value =>
-                (value.name === 'variable' && value.value.toLowerCase().includes(searchPhrase)) ||
-                (value.name === 'value' &&
-                    (value.value.startsWith('#{') || value.value.startsWith('${')) &&
-                    value.value.toLowerCase().includes(searchPhrase))
-        );
-
-        const hashVariables = findHashDollarVariable(inputValues, searchPhrase);
-            
-        variableFound = [...inputVariable, ...hashVariables].length > 0;
+    if (
+        (inputValues && inputValues.length > 0 && findInputVariablesInAction(inputValues, searchPhrase)) ||
+        (outputValues && outputValues.length > 0 && findOutputVariablesInAction(outputValues, searchPhrase))
+    ) {
+        return true;
     }
 
-    if (variableFound) {
-        return variableFound;
-    }
+    return false;
+};
 
-    if (outputValues && outputValues.length > 0) {
-        if (element.id === 'Activity_115xecy') {
-            console.log(element);
-            outputValues.forEach(value => {
-                console.log(value.name, value.value.toLowerCase().includes(searchPhrase));
-            });
-        }
-        const outputVariable = outputValues.filter(
-            value => value.name === 'variableName' && value.value.toLowerCase().includes(searchPhrase)
-        );
+const findInputVariablesInAction = (inputValues: CamundaInputParameter[], searchPhrase: string) => {
+    const inputVariable = inputValues.filter(
+        value =>
+            (value.name === 'variable' && value.value.toLowerCase().includes(searchPhrase)) ||
+            (value.name === 'value' &&
+                value.value &&
+                (value.value.startsWith('#{') || value.value.startsWith('${')) &&
+                value.value.toLowerCase().includes(searchPhrase))
+    );
 
-        const hashVariables = findHashDollarVariable(outputValues, searchPhrase);
-        console.log('outputVariable', outputVariable);
+    const hashVariables = findHashDollarVariable(inputValues, searchPhrase);
 
-        variableFound = [...outputVariable, ...hashVariables].length > 0;
-    }
+    return [...inputVariable, ...hashVariables].length > 0;
+};
 
-    return variableFound;
+const findOutputVariablesInAction = (outputValues: CamundaOutputParameter[], searchPhrase: string) => {
+    const outputVariable = outputValues.filter(
+        value => value.name === 'variableName' && value.value && value.value.toLowerCase().includes(searchPhrase)
+    );
+
+    const hashVariables = findHashDollarVariable(outputValues, searchPhrase);
+
+    return [...outputVariable, ...hashVariables].length > 0;
 };
 
 const findHashDollarVariable = (extensionElementValues: CamundaInputParameter[] | CamundaOutputParameter[], searchPhrase: string) =>
