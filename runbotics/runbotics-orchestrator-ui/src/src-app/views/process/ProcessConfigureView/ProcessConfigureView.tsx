@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, VFC } from 'react';
 
-import { Box, Dialog, Tooltip } from '@mui/material';
+import { Box, Dialog } from '@mui/material';
 import { useRouter } from 'next/router';
 import { IBotSystem, IBotCollection, NotificationProcess } from 'runbotics-common';
 

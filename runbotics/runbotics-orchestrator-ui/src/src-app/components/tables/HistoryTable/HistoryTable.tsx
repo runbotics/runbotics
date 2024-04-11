@@ -37,6 +37,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     const tableRef = useRef<HTMLDivElement>(null);
     const processInstances = useSelector(processInstanceSelector);
     const { page: processInstancePage, loadingPage } = processInstances.all;
+
     const router = useRouter();
     const { tab, id } = router.query;
     const { firstValueFrom } = useQuery();
@@ -173,7 +174,7 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                         pageSize={pageSize}
                         setPageSize={handleSetPageSize}
                         loading={loadingPage}
-                        subRowProperty="subprocesses"
+                        subRowProperty='subprocesses'      
                         singleSelect={hasProcessInstanceEventReadAccess}
                         instanceId={instanceId}
                     />

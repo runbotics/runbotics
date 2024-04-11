@@ -142,6 +142,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         const processInstance = {
             ...request,
             id: processInstanceId,
+            parentProcessInstanceId: request.parentProcessInstanceId,
             status: ProcessInstanceStatus.INITIALIZING,
             created: dayjs().toISOString(),
             ...(request.userId && { user: { id: request.userId } }),

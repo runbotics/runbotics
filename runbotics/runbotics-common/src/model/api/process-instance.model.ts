@@ -7,6 +7,7 @@ export interface IProcessInstance {
     id?: string;
     orchestratorProcessInstanceId?: string | null;
     rootProcessInstanceId?: string;
+    parentProcessInstanceId?: string;
     status?: ProcessInstanceStatus | null;
     created?: string | null;
     updated?: string | null;

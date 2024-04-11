@@ -1,4 +1,4 @@
-import { IProcess, IProcessInstance, IProcessInstanceEvent, WsMessage, WsQueueMessage } from 'runbotics-common';
+import { IProcess, IProcessInstance, IProcessInstanceEvent, WsQueueMessage } from 'runbotics-common';
 
 import { Page } from '#src-app/utils/types/page';
 
@@ -41,5 +41,5 @@ export interface ProcessInstanceRequestCriteria extends Omit<IProcessInstance, '
 export interface InstanceExtendedWithSubprocesses extends IProcessInstance {
     hasSubprocesses?: boolean;
     isLoadingSubprocesses?: boolean;
-    subprocesses?: IProcessInstance[];
+    subprocesses?: InstanceExtendedWithSubprocesses[];
 }

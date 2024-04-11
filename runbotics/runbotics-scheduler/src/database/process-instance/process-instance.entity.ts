@@ -44,6 +44,9 @@ export class ProcessInstanceEntity implements IProcessInstance {
     @Column({ name: 'root_process_instance_id', type: 'uuid' })
         rootProcessInstanceId: string;
 
+    @Column({ name: 'parent_process_instance_id', type: 'uuid' })
+        parentProcessInstanceId: string;
+
     @ManyToOne(() => TriggerEventEntity)
     @JoinColumn({ name: 'trigger', referencedColumnName: 'name' })
         trigger: ITriggerEvent;

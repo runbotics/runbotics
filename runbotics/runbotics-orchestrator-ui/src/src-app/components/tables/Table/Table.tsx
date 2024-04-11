@@ -48,9 +48,31 @@ const Table = <T extends object>({
         setIsLoading(loading);
     }, [loading]);
 
-    const data = useMemo(() => {
-        if (subRowProperty) return propData.map((row) => ({ ...row, subRows: row[subRowProperty] }));
+    const replaceKeyRecursive = (tableData: T | T[], subRowProperty: string, newKey: string) => {
+        if (typeof tableData !== 'object' || tableData === null) {
+            return tableData;
+        }
+      
+        if (Array.isArray(tableData)) {
+            return tableData.map(item => replaceKeyRecursive(item, subRowProperty, newKey));
+        }
+      
+        const newObj = {};
+      
+        for (const key in tableData) {
+            if (Object.hasOwnProperty.call(tableData, key)) {
+                const newKeyString = key === subRowProperty ? newKey : key;
+                newObj[newKeyString] = replaceKeyRecursive(tableData[key] as T[], subRowProperty, newKey);
+            }
+        }
+      
+        return newObj;
+    };
 
+    const data = useMemo(() => {
+        if (subRowProperty) {
+            return replaceKeyRecursive(propData, subRowProperty, 'subRows');
+        }
         return propData;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [propData]);
@@ -121,16 +143,6 @@ const Table = <T extends object>({
             </TableCell>
         ));
 
-    const countExpandedRows = () => {
-        let iterator = propPageSize;
-
-        return mappedRows.reduce((acc, row) => {
-            if (iterator <= 0 || row.depth > 0) return acc;
-            iterator--;
-            return acc + row.subRows.length + 1;
-        }, 0);
-    };
-
     const rowLoader = (
         <TableRow>
             <TableCell colSpan={columns.length ?? 7} sx={{ height: `${TABLE_ROW_HEIGHT}px`}}>
@@ -139,9 +151,9 @@ const Table = <T extends object>({
         </TableRow>
     );
 
+
     const renderTableRows = () => {
         const dataRows = mappedRows
-            .slice(0, countExpandedRows())
             .map((row: Row<T>) => {
                 prepareRow(row);
                 const rowKey = row.getRowProps().key;
@@ -160,6 +172,7 @@ const Table = <T extends object>({
                     </React.Fragment>
                 );
             });
+
         if (autoHeight) return dataRows;
 
         const dummyRows: JSX.Element[] = [];
