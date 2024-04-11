@@ -66,7 +66,7 @@ const findOutputVariablesInAction = (outputValues: CamundaOutputParameter[], sea
     return [...outputVariable, ...hashVariables].length > 0;
 };
 
-const findHashDollarVariable = (extensionElementValues: CamundaInputParameter[] | CamundaOutputParameter[], searchPhrase: string) =>
+const findHashDollarVariable = (extensionElementValues: CamundaParameter[], searchPhrase: string) =>
     extensionElementValues
         .filter(value => value.name === 'variables' || value.name === 'functionParams')
         .map((camundaParam: CamundaParameter) => Object.values(getParameterValue(camundaParam)))
