@@ -96,6 +96,12 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     List<ProcessCollection> findAllUserAccessible(User user);
 
     @Query(
+        value = "SELECT * FROM process_collection",
+        nativeQuery = true
+    )
+    List<ProcessCollection> getAll();
+
+    @Query(
         value = "SELECT pc " +
         "FROM ProcessCollection pc " +
         "LEFT JOIN pc.users u " +
