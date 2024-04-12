@@ -27,7 +27,7 @@ public class Tenant implements Serializable {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "createdBy", nullable = false)
     private User createdBy;
 
@@ -46,4 +46,90 @@ public class Tenant implements Serializable {
     @Column(name = "last_modified_date")
     @JsonIgnore
     private Instant lastModifiedDate = Instant.now();
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public void setCreatedBy(User user) {
+        this.createdBy = user;
+    }
+
+    public ZonedDateTime getCreated() {
+        return this.created;
+    }
+
+    public void setCreated(ZonedDateTime created) {
+        this.created = created;
+    }
+
+    public ZonedDateTime getUpdated() {
+        return this.updated;
+    }
+
+    public void setUpdated(ZonedDateTime updated) {
+        this.updated = updated;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Tenant)) {
+            return false;
+        }
+        return id != null && id.equals(((Tenant) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Tenant{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", createdBy=" + createdBy +
+            ", created=" + created +
+            ", updated=" + updated +
+            ", lastModifiedBy=" + lastModifiedBy +
+            ", lastModifiedDate=" + lastModifiedDate +
+            "}";
+    }
+
 }
