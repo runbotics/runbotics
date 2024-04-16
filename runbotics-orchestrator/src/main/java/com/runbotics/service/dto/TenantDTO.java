@@ -8,7 +8,7 @@ public class TenantDTO {
 
     private String name;
 
-    private UserDTO createdBy;
+    private Long createdById;
 
     private ZonedDateTime created;
 
@@ -30,12 +30,12 @@ public class TenantDTO {
         this.name = name;
     }
 
-    public UserDTO getCreatedBy() {
-        return this.createdBy;
+    public Long getCreatedById() {
+        return this.createdById;
     }
 
-    public void setCreatedBy(UserDTO createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedById(Long createdById) {
+        this.createdById = createdById;
     }
 
     public ZonedDateTime getCreated() {
@@ -75,7 +75,7 @@ public class TenantDTO {
         return "TenantDTO{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", createdBy=" + createdBy +
+            ", createdById=" + createdById +
             ", created=" + created +
             ", updated=" + updated +
             "}";

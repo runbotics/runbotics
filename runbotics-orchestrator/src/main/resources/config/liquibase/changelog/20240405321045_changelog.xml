@@ -64,7 +64,7 @@
     <!-- Alter tables for tenants join -->
     <!-- Alter jhi_user  -->
     <changeSet author="gasiorowskaa" id="20240405321045-3">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
                     SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
@@ -105,7 +105,7 @@
 
     <!-- Alter process -->
     <changeSet author="gasiorowskaa" id="20240405321045-4">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
                     SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
@@ -146,7 +146,7 @@
 
     <!-- Alter process collection -->
     <changeSet author="gasiorowskaa" id="20240405321045-5">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
                     SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
@@ -187,7 +187,7 @@
 
     <!-- Alter global variable -->
     <changeSet author="gasiorowskaa" id="20240405321045-6">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
                     SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
@@ -228,7 +228,7 @@
 
     <!-- Alter bot collections -->
     <changeSet author="gasiorowskaa" id="20240405321045-7">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
                     SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
@@ -269,7 +269,7 @@
 
     <!-- Alter tag -->
     <changeSet author="gasiorowskaa" id="20240405321045-8">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
                     SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'

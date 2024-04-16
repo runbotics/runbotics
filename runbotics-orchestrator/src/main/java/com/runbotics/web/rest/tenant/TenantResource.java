@@ -1,23 +1,54 @@
 package com.runbotics.web.rest.tenant;
 
-import org.springframework.http.HttpStatus;
+import com.runbotics.security.FeatureKeyConstants;
+import com.runbotics.service.TenantService;
+import com.runbotics.service.dto.TenantDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tenant/tenants")
 public class TenantResource {
 
-    @GetMapping
-    public ResponseEntity<Void> getUserTenant() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
+    private static final String ENTITY_NAME = "tenant";
+
+    private static final Logger log = LoggerFactory.getLogger(TenantResource.class);
+
+    private final TenantService tenantService;
+
+    public TenantResource(TenantService tenantService) {
+        this.tenantService = tenantService;
     }
 
-    @PatchMapping
-    public ResponseEntity<Void> updateUserTenant() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_READ + "')")
+    public ResponseEntity<TenantDTO> getUserTenant() {
+        log.debug("REST request to get tenant by requester");
+        Optional<TenantDTO> tenant = tenantService.getByRequester();
+
+        return ResponseUtil.wrapOrNotFound(tenant);
     }
+
+//    @PatchMapping
+//    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT + "')")
+//    public ResponseEntity<TenantDTO> updateUserTenant(@Valid @RequestBody TenantDTO tenantDTO) {
+//        log.debug("REST request to partial update tenant by requester");
+//        Optional<TenantDTO> updatedTenant = tenantService.partialUpdate(tenantDTO);
+//
+//        return ResponseUtil.wrapOrNotFound(
+//            updatedTenant,
+//            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tenantDTO.getId().toString())
+//        );
+//    }
 }

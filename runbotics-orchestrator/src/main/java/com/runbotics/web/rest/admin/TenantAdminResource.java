@@ -26,14 +26,14 @@ import java.util.UUID;
 @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_ALL_ACCESS + "')")
 public class TenantAdminResource {
 
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+
     private static final String ENTITY_NAME = "tenant";
 
     private static final Logger log = LoggerFactory.getLogger(TenantAdminResource.class);
 
     private final TenantService tenantService;
-
-    @Value("${jhipster.clientApp.name}")
-    private String applicationName;
 
     public TenantAdminResource(
         TenantService tenantService
@@ -65,10 +65,7 @@ public class TenantAdminResource {
         log.debug("REST request to get tenant by id: {}", id);
         Optional<TenantDTO> tenant = tenantService.getById(id);
 
-        return ResponseUtil.wrapOrNotFound(
-            tenant,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, id.toString())
-            );
+        return ResponseUtil.wrapOrNotFound(tenant);
     }
 
     /**

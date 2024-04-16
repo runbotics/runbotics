@@ -124,12 +124,11 @@ public class Tenant implements Serializable {
         return "Tenant{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", createdBy=" + createdBy +
+            ", createdById=" + createdBy.getId() +
             ", created=" + created +
             ", updated=" + updated +
             ", lastModifiedBy=" + lastModifiedBy +
             ", lastModifiedDate=" + lastModifiedDate +
             "}";
     }
-
 }

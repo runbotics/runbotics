@@ -4,10 +4,12 @@ import com.runbotics.domain.Tenant;
 import com.runbotics.service.dto.TenantDTO;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {})
 public interface TenantMapper extends EntityMapper<TenantDTO, Tenant> {
 
+    @Mapping(target = "createdById", source = "tenant.createdBy.id")
     @BeanMapping(qualifiedByName = "DTO")
     TenantDTO toDto(Tenant tenant);
 }

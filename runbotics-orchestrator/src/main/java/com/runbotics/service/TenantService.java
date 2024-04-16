@@ -15,6 +15,8 @@ public interface TenantService {
 
     Optional<TenantDTO> getById(UUID id);
 
+    Optional<TenantDTO> getByRequester();
+
     TenantDTO save(TenantDTO tenantDTO);
 
     Optional<TenantDTO> partialUpdate(TenantDTO tenantDTO);

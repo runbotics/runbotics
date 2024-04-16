@@ -64,6 +64,15 @@ public class TenantServiceImpl implements TenantService {
         return tenantRepository.findById(id).map(tenantMapper::toDto);
     }
 
+    public Optional<TenantDTO> getByRequester() {
+        User requester = userService.getUserWithAuthorities().get();
+        log.debug("Request to get Tenant by requester: {}", requester);
+
+        return tenantRepository
+            .findById(requester.getTenant().getId())
+            .map(tenantMapper::toDto);
+    }
+
     public TenantDTO save(TenantDTO tenantDTO) {
         log.debug("Request to save Tenant: {}", tenantDTO);
 
@@ -97,13 +106,13 @@ public class TenantServiceImpl implements TenantService {
         return tenantRepository
             .findById(tenantDTO.getId())
             .map(tenant -> {
-                if (tenantDTO.getCreatedBy() != null) {
-                    final User updatedUser = userRepository.findById(tenantDTO.getCreatedBy().getId()).orElseThrow(
+                if (tenantDTO.getCreatedById() != null) {
+                    final User updatedUser = userRepository.findById(tenantDTO.getCreatedById()).orElseThrow(
                         () -> new BadRequestAlertException("Could not found user while updating", ENTITY_NAME, "userNotFound")
                     );
                     tenant.setCreatedBy(updatedUser);
                 }
-                tenantDTO.setCreatedBy(null);
+                //tenantDTO.getCreatedById(null);
                 tenantMapper.partialUpdate(tenant, tenantDTO);
 
                 return tenant;
