@@ -75,7 +75,7 @@ const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process,
                     </If>
                     <If condition={isJobCreating}>
                         <Label color='warning'>
-                            {translate('Process.Instance.Status.Creating')}
+                            {translate('Process.Instance.Status.Pending')}
                         </Label>
                     </If>
                 </If>

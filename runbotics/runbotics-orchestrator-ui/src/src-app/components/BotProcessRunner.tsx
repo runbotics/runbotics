@@ -1,9 +1,10 @@
-import { FC, useEffect, useState, useMemo, MouseEvent, useContext } from 'react';
+import { FC, useEffect, useState, useMemo, MouseEvent } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LoadingButton } from '@mui/lab';
 import { IconButton, SvgIcon, Tooltip, Menu, MenuItem } from '@mui/material';
 
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Play as PlayIcon, X as XIcon } from 'react-feather';
@@ -21,11 +22,11 @@ import styled from 'styled-components';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
-import { useProcessQueueSocket } from '#src-app/hooks/useProcessQueueSocket';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
-import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useDispatch, useSelector } from '#src-app/store';
 import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
+import { processActions } from '#src-app/store/slices/Process/Process.slice';
+import { StartProcessResponse } from '#src-app/store/slices/Process/Process.state';
 import {
     processInstanceActions,
     processInstanceSelector,
@@ -104,8 +105,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const isGuest = user?.roles.includes(Role.ROLE_GUEST);
     const guestExecutionLimitExceeded = isGuest && executionsCount >= EXECUTION_LIMIT;
     const { pathname } = useRouter();
-    const socket = useContext(SocketContext);
-    useProcessQueueSocket();
 
     const processInstances = useSelector(processInstanceSelector);
     const { processInstance, jobsMap } = processInstances.active;
@@ -134,18 +133,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleTerminate = () => {
-        if (!started || !processInstance) {
-            enqueueSnackbar(
-                translate('Scheduler.ActiveProcess.Terminate.Failed', {
-                    processName,
-                }),
-                {
-                    variant: 'error',
-                }
-            );
-            return;
-        };
-
         dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
             .then(() => {
                 setStarted(false);
@@ -180,21 +167,38 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         if (!job) return;
 
         const eventType = job?.eventType;
-        if (
-            eventType === WsMessage.JOB_ACTIVE ||
-            eventType === WsMessage.JOB_WAITING
-        ) {
-            closeSnackbar(JOB_CREATING_TOAST_KEY);
-            socket.emit(WsMessage.JOB_REMOVE, {
-                processId,
-                jobId: job.jobId,
-            });
+        if (eventType === WsMessage.JOB_WAITING) {
+            dispatch(schedulerActions.removeWaitingJob({ jobId: String(job.jobId) }))
+                .then(() => {
+                    enqueueSnackbar(translate(
+                        'Component.BotProcessRunner.Success.RemovedJob',
+                        { processName: process.name }
+                    ), {
+                        variant: 'success',
+                    });
+                })
+                .catch(() => {
+                    enqueueSnackbar(
+                        translate('Scheduler.ActiveProcess.Terminate.Failed', {
+                            processName,
+                        }), {
+                            variant: 'error',
+                        }
+                    );
+                })
+                .finally(() => {
+                    dispatch(processInstanceActions.removeFromJobsMap({ processId }));
+                    dispatch(processInstanceActions.resetActive());
+
+                    setStarted(false);
+                    setSubmitting(false);
+                    setLoading(false);
+                    closeSnackbar(JOB_CREATING_TOAST_KEY);
+                });
         }
     };
 
     const handleRun = (executionInfo?: Record<string, any>) => {
-        onRunClick?.();
-
         recordItemClick({ itemName: CLICKABLE_ITEM.RUN_BUTTON, sourcePage: identifyPageByUrl(pathname) });
         if (started) return;
         dispatch(processInstanceActions.removeFromJobsMap({ processId }));
@@ -209,56 +213,41 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setLoading(true);
         setSubmitting(true);
 
-        socket.emit(WsMessage.PROCESS_START, {
-            processId,
+        dispatch(processActions.startProcess({
+            processId: process.id,
             ...((isProcessAttended || rerunProcessInstance) && {
-                variables: executionInfo,
+                executionInfo,
             }),
-        });
+        }))
+            .then(unwrapResult)
+            .then((response: StartProcessResponse) => {
+                dispatch(
+                    processInstanceActions.updateOrchestratorProcessInstanceId(
+                        response.orchestratorProcessInstanceId
+                    )
+                );
+                onRunClick?.();
+                closeModal();
+                recordProcessRunSuccess({
+                    processName,
+                    processId: String(processId),
+                    processInstanceId: response?.orchestratorProcessInstanceId
+                });
+            })
+            .catch((error) => {
+                handleRunFailed({
+                    processId: process.id,
+                    errorMessage: error?.message
+                });
+            });
     };
 
-    const handleRunCompleted = (payload: WsQueueMessage[WsMessage.PROCESS_START_COMPLETED]) => {
+    const handleRunCompleted = () => {
         dispatch(processInstanceActions.removeFromJobsMap({ processId }));
 
-        dispatch(
-            processInstanceActions.updateOrchestratorProcessInstanceId(
-                payload.orchestratorProcessInstanceId
-            )
-        );
         isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
 
-        enqueueSnackbar(translate(
-            'Component.BotProcessRunner.Success.ProcessStarted',
-            { processName: process.name }
-        ), {
-            variant: 'success',
-        });
-
-
-        onRunClick?.();
         setStarted(true);
-        closeModal();
-        recordProcessRunSuccess({
-            processName,
-            processId: String(processId),
-            processInstanceId: payload.orchestratorProcessInstanceId
-        });
-        setSubmitting(false);
-        setLoading(false);
-        closeSnackbar(JOB_CREATING_TOAST_KEY);
-    };
-
-    const handleJobRemoveCompleted = () => {
-        dispatch(processInstanceActions.removeFromJobsMap({ processId }));
-
-        enqueueSnackbar(translate(
-            'Component.BotProcessRunner.Success.RemovedJob',
-            { processName: process.name }
-        ), {
-            variant: 'success',
-        });
-
-        setStarted(false);
         setSubmitting(false);
         setLoading(false);
         closeSnackbar(JOB_CREATING_TOAST_KEY);
@@ -290,6 +279,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setSubmitting(false);
         setLoading(false);
         closeSnackbar(JOB_CREATING_TOAST_KEY);
+        dispatch(processInstanceActions.resetActive());
     };
 
     useEffect(() => {
@@ -299,24 +289,16 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     useEffect(() => {
         const jobPayload = jobsMap[processId];
         if (!jobPayload) return;
+        if (rerunProcessInstance &&
+            processInstance?.id !== rerunProcessInstance?.id
+        ) return;
 
         switch (jobPayload.eventType) {
             case WsMessage.PROCESS_START_COMPLETED:
-                handleRunCompleted({
-                    processId: jobPayload.processId,
-                    orchestratorProcessInstanceId: jobPayload.orchestratorProcessInstanceId,
-                });
+                handleRunCompleted();
                 break;
-            case WsMessage.JOB_REMOVE_COMPLETED:
-                handleJobRemoveCompleted();
-                break;
-            case WsMessage.PROCESS_START_FAILED:
-            case WsMessage.JOB_REMOVE_FAILED:
             case WsMessage.JOB_FAILED:
-                handleRunFailed({
-                    processId: jobPayload.processId,
-                    errorMessage: jobPayload.errorMessage,
-                });
+                handleRunFailed(jobPayload);
                 break;
             default:
                 break;

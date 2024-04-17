@@ -25,7 +25,7 @@ interface ProcessInstanceEventsDetailsProps {
     processInstanceId: string;
 }
 
-const QUEUED_JOB_STATUSES = [WsMessage.JOB_WAITING, WsMessage.JOB_ACTIVE];
+const JOB_STATUSES = [WsMessage.JOB_WAITING, WsMessage.JOB_ACTIVE, WsMessage.JOB_FAILED];
 
 const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     processInstanceId,
@@ -44,12 +44,12 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     const { active } = useSelector(processInstanceSelector);
     const { draft: { process } } = useSelector(processSelector);
     const processId = process?.id;
-    const isProcessQueued =
+    const isProcessQueuedOrFailed =
         processId &&
         active.jobsMap &&
         active.jobsMap[processId] &&
         'eventType' in active.jobsMap[processId] &&
-        QUEUED_JOB_STATUSES.includes(active.jobsMap[processId]?.eventType);
+        JOB_STATUSES.includes(active.jobsMap[processId]?.eventType);
 
     useEffect(() => {
         if (processInstanceId === active.processInstance?.id) {
@@ -117,7 +117,7 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);
 
-    if (isProcessQueued) return null;
+    if (isProcessQueuedOrFailed) return null;
 
     if (!processInstanceId && !active.orchestratorProcessInstanceId) {
         return (

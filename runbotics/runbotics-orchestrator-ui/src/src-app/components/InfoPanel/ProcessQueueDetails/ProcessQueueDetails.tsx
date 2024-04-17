@@ -31,8 +31,6 @@ const ProcessQueueDetails = () => {
     const queueDetailsAlert = useMemo(() => {
         const job = jobsMap[process?.id];
         switch (job?.eventType) {
-            case WsMessage.PROCESS_START_FAILED:
-            case WsMessage.JOB_REMOVE_FAILED:
             case WsMessage.JOB_FAILED:
                 const errorMessage = translate(
                     'Component.ProcessQueueDetails.Error',

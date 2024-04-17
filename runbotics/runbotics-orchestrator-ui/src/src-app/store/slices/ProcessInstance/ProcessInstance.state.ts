@@ -13,7 +13,7 @@ type AllActiveMap = Record<ProcessId, ActiveInfo>;
 
 export type WsQueueMessageValues = {
     [K in keyof WsQueueMessage]: WsQueueMessage[K] & { eventType: K };
-}[Exclude<keyof WsQueueMessage, WsMessage.PROCESS_START | WsMessage.JOB_REMOVE>];
+}[keyof WsQueueMessage];
 
 export interface ProcessInstanceState {
     allActiveMap: AllActiveMap;

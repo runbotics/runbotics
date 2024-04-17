@@ -4,11 +4,10 @@
 
     "Component.GenericMoreOptions.MoreOptions": "More options",
 
-    "Component.BotProcessRunner.Success.ProcessStarted": "Successfully started process {{processName}}",
     "Component.BotProcessRunner.Success.RemovedJob": "Process {{processName}} removed from queue",
     "Component.BotProcessRunner.Warning": "Looking for a bot",
     "Component.BotProcessRunner.Warning.CreatingJob": "Creating a job for bot",
-    "Component.BotProcessRunner.Warning.RemoveJob": "Can't remove job while creating",
+    "Component.BotProcessRunner.Warning.RemoveJob": "Can't remove while pending job",
     "Component.BotProcessRunner.Error": "All bots are busy",
     "Component.BotProcessRunner.Error.AllBotsAreDisconnected": "All bots are disconnected",
     "Component.BotProcessRunner.Error.ServersOverloaded": "Our servers are overloaded, please try again later",

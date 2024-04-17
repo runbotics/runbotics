@@ -6,6 +6,7 @@ import { Box } from '@mui/material';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
+import { useProcessQueueSocket } from '#src-app/hooks/useProcessQueueSocket';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import Header from './Header';
@@ -14,6 +15,7 @@ import HistoryTable from '../../../components/tables/HistoryTable';
 
 const HistoryListView: VFC = () => {
     useProcessInstanceSocket({ fullHistoryUpdate: true });
+    useProcessQueueSocket();
     const { translate } = useTranslations();
 
     return (

@@ -1,11 +1,12 @@
-import { FC, useRef, useState, useEffect, useContext } from 'react';
+import { FC, useRef, useState, useEffect } from 'react';
 
 import { Box, Divider, CardHeader, Tooltip } from '@mui/material';
+import { unwrapResult } from '@reduxjs/toolkit';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey, WsMessage, WsQueueMessage, isProcessInstanceActive } from 'runbotics-common';
+import { FeatureKey, StartProcessResponse, WsMessage, WsQueueMessage, isProcessInstanceActive } from 'runbotics-common';
 
 import PlayIcon from '#public/images/icons/play.svg';
 import SquareIcon from '#public/images/icons/square.svg';
@@ -15,8 +16,8 @@ import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
-import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useDispatch, useSelector } from '#src-app/store';
+import { processActions } from '#src-app/store/slices/Process';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { schedulerActions } from '#src-app/store/slices/Scheduler';
 import { ProcessTab } from '#src-app/utils/process-tab';
@@ -54,7 +55,6 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const isProcessAttended = process.isAttended && Boolean(process?.executionInfo);
     const [isAttendedModalVisible, setIsAttendedModalVisible] = useState(false);
     const processId = process?.id;
-    const socket = useContext(SocketContext);
     const isJobWaiting =
         jobsMap &&
         jobsMap[processId] &&
@@ -79,34 +79,36 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             key: JOB_CREATING_TOAST_KEY,
         });
 
-        socket.emit(WsMessage.PROCESS_START, {
-            processId,
+        dispatch(processActions.startProcess({
+            processId: process.id,
             ...((isProcessAttended) && {
-                variables: executionInfo,
+                executionInfo,
             }),
-        });
+        }))
+            .then(unwrapResult)
+            .then((response: StartProcessResponse) => {
+                dispatch(
+                    processInstanceActions.updateOrchestratorProcessInstanceIdMap({
+                        processId: process.id,
+                        orchestratorProcessInstanceId: response.orchestratorProcessInstanceId,
+                    })
+                );
+            })
+            .catch((error) => {
+                handleRunFailed({
+                    processId: process.id,
+                    errorMessage: error?.message
+                });
+            });
+
+        if (isProcessAttended) setIsAttendedModalVisible(false);
     };
 
-    const handleRunCompleted = (payload: WsQueueMessage[WsMessage.PROCESS_START_COMPLETED]) => {
+    const handleRunCompleted = () => {
         dispatch(processInstanceActions.removeFromJobsMap({ processId }));
-
-        dispatch(
-            processInstanceActions.updateOrchestratorProcessInstanceIdMap({
-                processId,
-                orchestratorProcessInstanceId: payload.orchestratorProcessInstanceId,
-            })
-        );
-
-        enqueueSnackbar(translate(
-            'Component.BotProcessRunner.Success.ProcessStarted',
-            { processName: process.name }
-        ), {
-            variant: 'success',
-        });
 
         setIsProcessActive(true);
         closeSnackbar(JOB_CREATING_TOAST_KEY);
-        if (isProcessAttended) setIsAttendedModalVisible(false);
     };
 
     const handleRunFailed = (payload: WsQueueMessage[WsMessage.JOB_FAILED]) => {
@@ -133,15 +135,6 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         e.stopPropagation();
 
         const processName = process.name;
-        if (!isProcessActive || !processInstance) {
-            enqueueSnackbar(
-                translate('Scheduler.ActiveProcess.Terminate.Failed', {
-                    processName,
-                }),
-                { variant: 'error' }
-            );
-            return;
-        };
 
         dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
             .then(() => {
@@ -177,31 +170,34 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
         if (!job) return;
 
         const eventType = job?.eventType;
-        if (
-            eventType === WsMessage.JOB_ACTIVE ||
-            eventType === WsMessage.JOB_WAITING
-        ) {
-            closeSnackbar(JOB_CREATING_TOAST_KEY);
-            socket.emit(WsMessage.JOB_REMOVE, {
-                processId,
-                jobId: job.jobId,
-            });
+        if (eventType === WsMessage.JOB_WAITING) {
+            dispatch(schedulerActions.removeWaitingJob({ jobId: String(job.jobId) }))
+                .then(() => {
+                    enqueueSnackbar(translate(
+                        'Component.BotProcessRunner.Success.RemovedJob',
+                        { processName: process.name }
+                    ), {
+                        variant: 'success',
+                    });
+                })
+                .catch(() => {
+                    enqueueSnackbar(
+                        translate('Scheduler.ActiveProcess.Terminate.Failed', {
+                            processName: process.name,
+                        }),
+                        {
+                            variant: 'error',
+                        }
+                    );
+                })
+                .finally(() => {
+                    dispatch(processInstanceActions.removeFromJobsMap({ processId }));
+
+                    setIsProcessActive(false);
+                    closeSnackbar(JOB_CREATING_TOAST_KEY);
+                    if (isProcessAttended) setIsAttendedModalVisible(false);
+                });
         }
-    };
-
-    const handleJobRemoveCompleted = () => {
-        dispatch(processInstanceActions.removeFromJobsMap({ processId }));
-
-        enqueueSnackbar(translate(
-            'Component.BotProcessRunner.Success.RemovedJob',
-            { processName: process.name }
-        ), {
-            variant: 'success',
-        });
-
-        setIsProcessActive(false);
-        closeSnackbar(JOB_CREATING_TOAST_KEY);
-        if (isProcessAttended) setIsAttendedModalVisible(false);
     };
 
     const handleRunButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -227,21 +223,10 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
 
         switch (jobPayload.eventType) {
             case WsMessage.PROCESS_START_COMPLETED:
-                handleRunCompleted({
-                    processId: jobPayload.processId,
-                    orchestratorProcessInstanceId: jobPayload.orchestratorProcessInstanceId,
-                });
+                handleRunCompleted();
                 break;
-            case WsMessage.JOB_REMOVE_COMPLETED:
-                handleJobRemoveCompleted();
-                break;
-            case WsMessage.PROCESS_START_FAILED:
-            case WsMessage.JOB_REMOVE_FAILED:
             case WsMessage.JOB_FAILED:
-                handleRunFailed({
-                    processId: jobPayload.processId,
-                    errorMessage: jobPayload.errorMessage,
-                });
+                handleRunFailed(jobPayload);
                 break;
             default:
                 break;
