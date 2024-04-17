@@ -431,7 +431,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     }
 
     return (
-
         <If
             condition={hasRunProcessAccess && (started || isJobQueued)}
             else={runProcessPanel}
