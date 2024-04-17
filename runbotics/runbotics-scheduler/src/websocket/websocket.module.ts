@@ -15,7 +15,6 @@ import { BotLifecycleService } from './bot/bot-lifecycle.service';
 import { Logger } from 'src/utils/logger';
 import { MailModule } from '#/mail/mail.module';
 import { ProcessModule } from '#/database/process/process.module';
-import { WsFeatureKeyGuard } from '#/auth/guards/ws-featureKey.guard';
 
 @Global()
 @Module({
@@ -37,7 +36,6 @@ import { WsFeatureKeyGuard } from '#/auth/guards/ws-featureKey.guard';
         WebsocketService,
         BotLifecycleService,
         Logger,
-        WsFeatureKeyGuard,
     ],
     exports: [
         BotWebSocketGateway, UiGateway, BotLogService, WebsocketService,

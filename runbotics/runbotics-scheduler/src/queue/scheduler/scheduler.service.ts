@@ -59,7 +59,7 @@ export class SchedulerService {
         const job = await this.processQueue.getJob(id);
 
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
-        await job?.moveToCompleted();
+        await job?.remove();
         this.logger.log(`QueueJob with id: ${id} successfully deleted`);
     }
 
