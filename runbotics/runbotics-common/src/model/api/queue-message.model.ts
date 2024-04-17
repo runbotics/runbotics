@@ -36,39 +36,20 @@ export interface StartProcessResponse {
 }
 
 export interface WsQueueMessage {
-    [WsMessage.PROCESS_START]: {
-        processId: IProcess['id'];
-        processInput: ProcessInput;
-    }
     [WsMessage.PROCESS_START_COMPLETED]: {
         processId: IProcess['id'];
-        orchestratorProcessInstanceId: StartProcessResponse['orchestratorProcessInstanceId'];
-    }
-    [WsMessage.PROCESS_START_FAILED]: {
-        processId: IProcess['id'];
-        errorMessage: string;
-    }
-
-    [WsMessage.JOB_REMOVE]: {
-        processId: IProcess['id'];
-        jobId: JobId;
-    }
-    [WsMessage.JOB_REMOVE_COMPLETED]: {
-        processId: IProcess['id'];
-    }
-    [WsMessage.JOB_REMOVE_FAILED]: {
-        processId: IProcess['id'];
-        errorMessage: string;
     }
 
     [WsMessage.JOB_WAITING]: {
         processId: IProcess['id'];
         queuePosition: number;
         jobId: JobId;
+        orchestratorProcessInstanceId?: string;
     };
     [WsMessage.JOB_ACTIVE]: {
         processId: IProcess['id'];
         jobId: JobId;
+        orchestratorProcessInstanceId: string;
     };
     [WsMessage.JOB_FAILED]: {
         processId: IProcess['id'];

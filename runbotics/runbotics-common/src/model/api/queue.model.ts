@@ -14,6 +14,7 @@ export type Trigger = Pick<IProcessInstance, 'trigger' | 'triggerData'>;
 
 export interface InstantProcess extends Trigger {
     process: IProcess;
+    orchestratorProcessInstanceId: string;
     user?: IUser;
     input?: ProcessInput;
     isActive?: boolean;
