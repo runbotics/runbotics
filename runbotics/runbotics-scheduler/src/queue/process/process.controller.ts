@@ -39,7 +39,7 @@ export class ProcessController {
             const process = await this.queueService.getProcessById(processId);
             await this.queueService.validateProcessAccess({ process: process, user: request.user });
 
-            const response = await this.queueService.createInstantJob({
+            const { orchestratorProcessInstanceId } = await this.queueService.createInstantJob({
                 process,
                 input,
                 user: request.user,
@@ -49,12 +49,12 @@ export class ProcessController {
 
             this.logger.log(`<= Process ${processId} successfully started`);
 
-            if (!isUserGuest) return { jobId: response.id };
+            if (!isUserGuest) return { orchestratorProcessInstanceId };
 
             await this.guestService.incrementExecutionsCount(userId);
             this.logger.log(`Incremented user's (${userId}) executions-count to ${initialExecutionsCount + 1}`);
 
-            return { jobId: response.id };
+            return { orchestratorProcessInstanceId };
         } catch (err: unknown) {
             this.logger.error(`<= Process ${processId} failed to start`);
 

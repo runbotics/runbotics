@@ -32,7 +32,7 @@ export class TriggerController {
             const process = await this.queueService.getProcessById(processId);
             await this.queueService.validateProcessAccess({ process: process, user: request.user, triggered: true });
 
-            const response = await this.queueService.createInstantJob({
+            const { orchestratorProcessInstanceId } = await this.queueService.createInstantJob({
                 process,
                 input,
                 user: request.user,
@@ -41,7 +41,7 @@ export class TriggerController {
             });
             this.logger.log(`<= Process ${processId} successfully started`);
 
-            return { jobId: response.id };
+            return { orchestratorProcessInstanceId };
         } catch (err: unknown) {
             this.logger.error(`<= Process ${processId} failed to start`);
 

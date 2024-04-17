@@ -30,6 +30,7 @@ import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
 import difference from 'lodash/difference';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
 import { QueueMessageService } from './queue-message.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class QueueService implements OnModuleInit {
@@ -79,7 +80,8 @@ export class QueueService implements OnModuleInit {
                 throw new BadRequestException(err);
             });
 
-        const instantProcess: InstantProcess = params;
+        const orchestratorProcessInstanceId = randomUUID();
+        const instantProcess: InstantProcess = { orchestratorProcessInstanceId, ...params };
 
         const job = await this.processQueue
             .add(instantProcess, {
@@ -117,7 +119,7 @@ export class QueueService implements OnModuleInit {
             this.queueWaitingTimers.set(job.id, timer);
         }
 
-        return job;
+        return { orchestratorProcessInstanceId };
     }
 
     async clearQueueTimer(jobId: JobId) {
@@ -133,7 +135,7 @@ export class QueueService implements OnModuleInit {
         const job = await this.processQueue.getJob(id);
 
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
-        await job.remove();
+        await job?.remove();
         this.logger.log(`Job with id: ${id} successfully deleted`);
     }
 
@@ -185,10 +187,12 @@ export class QueueService implements OnModuleInit {
         await this.clearStaledSchedules();
         this.logger.log('Creating schedules');
         const scheduledProcesses = await this.scheduleProcessService.findAll();
+        const orchestratorProcessInstanceId = randomUUID();
         await Promise.all(
             scheduledProcesses
                 .map(process => this.createScheduledJob({
                     ...process,
+                    orchestratorProcessInstanceId,
                     trigger: { name: TriggerEvent.SCHEDULER },
                     triggerData: { userEmail: process.user.email },
                     input: { variables: JSON.parse(process.inputVariables) }
