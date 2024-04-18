@@ -1,28 +1,25 @@
 import {
     BPMNElement,
+    BpmnSubProcess,
     CamundaInputParameter,
     CamundaOutputParameter,
     CamundaParameter,
-    IBpmnGateway,
-    IBpmnSubProcessBusinessObject,
-    ISequenceFlowBusinessObject,
     getParameterValue
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
-export const findVariablesInGateway = (businessObject: IBpmnGateway, searchPhrase: string): boolean => {
-    const gatewayOutgoingFlows: ISequenceFlowBusinessObject[] = businessObject.outgoing as unknown as ISequenceFlowBusinessObject[];
-
-    const gatewayExpressions = gatewayOutgoingFlows
-        .map(flow => flow.conditionExpression.body.toLowerCase())
+export const findVariablesInGateway = (element: BPMNElement, searchPhrase: string): boolean => {
+    const gatewayExpressions = element.outgoing
+        .map(flow => flow.businessObject.conditionExpression.body.toLowerCase())
         .filter(expression => expression.includes(searchPhrase));
 
     return gatewayExpressions.length > 0;
 };
 
-export const findVariablesInLoop = (element: BPMNElement, searchPhrase: string): boolean => {
-    const loopVariable = (element.businessObject as IBpmnSubProcessBusinessObject).loopCharacteristics.loopCardinality.body;
+export const findVariablesInLoop = (element: BpmnSubProcess, searchPhrase: string): boolean => {
+    const loopVariable = element.businessObject.loopCharacteristics.loopCardinality.body;
     return loopVariable.toLowerCase().includes(searchPhrase);
 };
+
 export const findVariablesInAction = (element: BPMNElement, searchPhrase: string): boolean => {
     const extensionElements = element.businessObject.extensionElements;
 
@@ -31,17 +28,11 @@ export const findVariablesInAction = (element: BPMNElement, searchPhrase: string
     const inputValues = extensionElements.values[0].inputParameters;
     const outputValues = extensionElements.values[0].outputParameters;
 
-    if (
-        (inputValues && inputValues.length > 0 && findInputVariablesInAction(inputValues, searchPhrase)) ||
-        (outputValues && outputValues.length > 0 && findOutputVariablesInAction(outputValues, searchPhrase))
-    ) {
-        return true;
-    }
-
-    return false;
+    return findInputVariablesInAction(inputValues, searchPhrase) || findOutputVariablesInAction(outputValues, searchPhrase);
 };
 
 const findInputVariablesInAction = (inputValues: CamundaInputParameter[], searchPhrase: string) => {
+    if (!inputValues) return false;
     const inputVariable = inputValues.filter(
         value =>
             (value.name === 'variable' && value.value.toLowerCase().includes(searchPhrase)) ||
@@ -57,6 +48,7 @@ const findInputVariablesInAction = (inputValues: CamundaInputParameter[], search
 };
 
 const findOutputVariablesInAction = (outputValues: CamundaOutputParameter[], searchPhrase: string) => {
+    if (!outputValues) return false;
     const outputVariable = outputValues.filter(
         value => value.name === 'variableName' && value.value && value.value.toLowerCase().includes(searchPhrase)
     );
@@ -67,8 +59,16 @@ const findOutputVariablesInAction = (outputValues: CamundaOutputParameter[], sea
 };
 
 const findHashDollarVariable = (extensionElementValues: CamundaParameter[], searchPhrase: string) =>
-    extensionElementValues
-        .filter(value => value.name === 'variables' || value.name === 'functionParams')
-        .map((camundaParam: CamundaParameter) => Object.values(getParameterValue(camundaParam)))
-        .flatMap(arr => arr)
-        .filter((foundValue: string) => foundValue.toLowerCase().includes(searchPhrase));
+    extensionElementValues.reduce((variables, currValue) => {
+        if (currValue.name !== 'variables' && currValue.name !== 'functionParams') return variables;
+
+        const variablesObject = Object.values(getParameterValue(currValue)).find((lookupValue: string) =>
+            lookupValue.toLowerCase().includes(searchPhrase)
+        );
+
+        if (!variablesObject) return variables;
+
+        variables.push(variablesObject);
+
+        return variables;
+    }, []);

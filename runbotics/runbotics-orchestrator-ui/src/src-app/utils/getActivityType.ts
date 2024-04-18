@@ -7,9 +7,9 @@ export enum Activity {
 }
 
 export const getActivityType = (element: BPMNElement): string | null => {
+    if (element.businessObject.actionId === 'loop.loop') return Activity.LOOP;
     if (element.id.startsWith('Gateway')) return Activity.GATEWAY;
     if (element.id.startsWith('Activity')) return Activity.ACTION;
-    if (element.businessObject.actionId === 'loop.loop') return Activity.LOOP;
 
     return null;
 };
