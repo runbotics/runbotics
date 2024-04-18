@@ -38,7 +38,7 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
     private final String PROCESS_TAG_NAME = "tagName";
     private final String PROCESS_CREATED_BY_NAME = "createdByName";
     private final String PROCESS_USER = "user";
-    private final String PROCESS_COLLECTION_ID = "collectionId";
+    private final String PROCESS_COLLECTION = "process_collection";
 
     public Page<Process> findBySearch(String name, String createdByName, String tagName, User user, Pageable pageable) {
         boolean hasUserRoleAdmin = user.getAuthorities().stream().anyMatch(auth -> auth.getName().equals(AuthoritiesConstants.ADMIN));
@@ -123,12 +123,12 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
             predicates.add(criteriaBuilder.in(userJoin).value(subquery).not());
         }
 
-        ParameterExpression<UUID> pCollectionId = criteriaBuilder.parameter(UUID.class, PROCESS_COLLECTION_ID);
+        ParameterExpression<UUID> pCollectionId = criteriaBuilder.parameter(UUID.class, PROCESS_COLLECTION);
 
         if (collectionId != null) {
-            predicates.add(criteriaBuilder.equal(root.get(Process_.COLLECTION_ID).get(ProcessCollection_.ID), pCollectionId));
+            predicates.add(criteriaBuilder.equal(root.get(Process_.PROCESS_COLLECTION).get(ProcessCollection_.ID), pCollectionId));
         } else {
-            predicates.add(criteriaBuilder.isNull(root.get(Process_.COLLECTION_ID)));
+            predicates.add(criteriaBuilder.isNull(root.get(Process_.PROCESS_COLLECTION)));
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[] {}));
@@ -140,7 +140,7 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
             .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
             .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
         if (!hasUserRoleAdmin) query.setParameter(PROCESS_USER, user);
-        if (collectionId != null) query.setParameter(PROCESS_COLLECTION_ID, collectionId);
+        if (collectionId != null) query.setParameter(PROCESS_COLLECTION, collectionId);
 
         TypedQuery<Long> cQuery = entityManager
             .createQuery(criteriaCountingQuery)
@@ -148,7 +148,7 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
             .setParameter(PROCESS_CREATED_BY_NAME, "%" + createdByName.toUpperCase() + "%")
             .setParameter(PROCESS_TAG_NAME, "%" + tagName.toUpperCase() + "%");
         if (!hasUserRoleAdmin) cQuery.setParameter(PROCESS_USER, user);
-        if (collectionId != null) cQuery.setParameter(PROCESS_COLLECTION_ID, collectionId);
+        if (collectionId != null) cQuery.setParameter(PROCESS_COLLECTION, collectionId);
 
         return getPageResult(pageable, query, cQuery);
     }
