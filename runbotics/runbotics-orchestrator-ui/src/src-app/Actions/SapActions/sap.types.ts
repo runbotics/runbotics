@@ -1,6 +1,12 @@
 export enum SAPLanguages {
     English = 'English',
     Polish = 'Polish',
+    German = 'German',
+
+    /* TODO: extend the enum with all SAP-supported languages */
+    // If language is not installed in target server,
+    // user should be notified when connection is not established  
+    /*
     Afrikaans = 'Afrikaans',
     Arabic = 'Arabic',
     Bulgarian = 'Bulgarian',
@@ -13,7 +19,6 @@ export enum SAPLanguages {
     Dutch = 'Dutch',
     Finnish = 'Finnish',
     French = 'French',
-    German = 'German',
     Greek = 'Greek',
     Hebrew = 'Hebrew',
     Hungarian = 'Hungarian',
@@ -35,4 +40,5 @@ export enum SAPLanguages {
     Thai = 'Thai',
     Turkish = 'Turkish',
     Ukrainian = 'Ukrainian',
+    */
 };
