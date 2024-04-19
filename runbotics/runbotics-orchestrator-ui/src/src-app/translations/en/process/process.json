@@ -147,7 +147,7 @@
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Label": "Create holiday leave",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.EmployeeId": "Employee ID",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfig": "Leave name",
-    "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfig.Tooltip": "The name of the selected leave type, later compared to the name field in the leave_config object",
+    "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfig.Tooltip": "The name of the selected leave type, later compared to the name field in the leave_config object (e.g. 'upon request', 'free')",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateFrom": "Date from",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.DateTo": "Date to",
     "Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.Description": "Description",
