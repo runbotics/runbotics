@@ -61,9 +61,17 @@ const ProcessMainView: FC = () => {
         },
     ].filter((processTab) => hasFeatureKeyAccess(user, processTab.featureKeys) && processTab.show);
 
-    const handleMainTabsChange = (processTab: ProcessTab) => {
-        router.push({ pathname: `/app/processes/${id}/${processTab}` });
-    };
+    const handleMainTabsChange = (processTab: ProcessTab, e: React.SyntheticEvent) => {
+        const url = `/app/processes/${id}/${processTab}`;
+
+        const keyboardEvent = e.nativeEvent as KeyboardEvent; 
+
+        if (keyboardEvent.ctrlKey) {
+            window.open(url, '_blank');
+        } else {
+            router.push({ pathname: url });
+        }
+    }
 
     useEffect(() => () => {
         dispatch(processInstanceActions.resetActive());
@@ -74,7 +82,7 @@ const ProcessMainView: FC = () => {
             <Grid container>
                 <Grid item my={1} ml={1} display={'flex'} gap={2}>
                     <Tabs
-                        onChange={(_, processTab) => handleMainTabsChange(processTab)}
+                        onChange={(e, processTab) => handleMainTabsChange(processTab, e)}
                         scrollButtons="auto"
                         textColor="secondary"
                         value={tab}
