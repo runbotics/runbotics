@@ -46,8 +46,9 @@ export const StyledLink = styled(Link)`
     color: inherit;
 `;
 
-export const CollectionListWrapper = styled.div<{ $expanded: boolean, $maxHeight: number }>`
-    height: ${({ $expanded, $maxHeight }) => $expanded ? `${$maxHeight}px` : '64px'};
+export const CollectionListWrapper = styled.div
+<{ $expanded: boolean, $maxHeight: number, $neededSpace: string }>`
+    height: ${({ $expanded, $maxHeight, $neededSpace }) => $expanded ? `${$maxHeight}px` : $neededSpace};
     overflow: hidden;
     transition: 0.4s;
 `;
