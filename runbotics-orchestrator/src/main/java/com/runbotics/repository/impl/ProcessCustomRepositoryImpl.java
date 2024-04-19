@@ -162,6 +162,7 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
         Join<Object, Object> tag = root.join(Process_.TAGS, JoinType.LEFT);
         cq.select(root);
         cq.groupBy(root.get(Process_.ID));
+        cq.orderBy(criteriaBuilder.desc(root.get(Process_.UPDATED)));
 
         CriteriaQuery<Long> cqCount = criteriaBuilder.createQuery(Long.class);
         Root<Process> cRoot = cqCount.from(Process.class);
