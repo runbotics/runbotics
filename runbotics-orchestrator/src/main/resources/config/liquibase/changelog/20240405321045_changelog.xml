@@ -11,13 +11,13 @@
     <changeSet author="gasiorowskaa" id="20240405321045-1">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="tenants" />
+                <tableExists tableName="tenant" />
             </not>
         </preConditions>
 
-        <createTable tableName="tenants">
+        <createTable tableName="tenant">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_tenants" />
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_tenant" />
             </column>
             <column name="name" type="varchar(255)">
                 <constraints unique="true" nullable="false" />
@@ -28,13 +28,12 @@
             <column name="created" type="timestamp" />
             <column name="updated" type="timestamp" />
             <column name="last_modified_by" type="varchar(50)" />
-            <column name="last_modified_date" type="timestamp" />
         </createTable>
 
         <addForeignKeyConstraint
             baseColumnNames="created_by"
-            baseTableName="tenants"
-            constraintName="fk_tenants_created_by"
+            baseTableName="tenant"
+            constraintName="fk_tenant_created_by"
             referencedColumnNames="id"
             referencedTableName="jhi_user"
             onDelete="SET NULL"
@@ -45,18 +44,17 @@
     <changeSet author="gasiorowskaa" id="20240405321045-2">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
+                SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
             </sqlCheck>
         </preConditions>
 
-        <insert tableName="tenants">
+        <insert tableName="tenant">
             <column name="id">b7f9092f-5973-c781-08db-4d6e48f78e98</column>
             <column name="name">Default organization</column>
             <column name="created_by">1</column>
             <column name="created"></column>
             <column name="updated"></column>
             <column name="last_modified_by">system</column>
-            <column name="last_modified_date"></column>
         </insert>
     </changeSet>
 
@@ -67,10 +65,10 @@
         <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
-                    SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
+                    SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
                 </sqlCheck>
                 <tableExists tableName="jhi_user" />
-                <tableExists tableName="tenants" />
+                <tableExists tableName="tenant" />
                 <not>
                     <columnExists tableName="jhi_user" columnName="tenant_id" />
                 </not>
@@ -86,7 +84,7 @@
             baseTableName="jhi_user"
             constraintName="fk_jhi_user_tenant_id"
             referencedColumnNames="id"
-            referencedTableName="tenants"
+            referencedTableName="tenant"
         />
 
         <addDefaultValue
@@ -108,10 +106,10 @@
         <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
-                    SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
+                    SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
                 </sqlCheck>
                 <tableExists tableName="process" />
-                <tableExists tableName="tenants" />
+                <tableExists tableName="tenant" />
                 <not>
                     <columnExists tableName="process" columnName="tenant_id" />
                 </not>
@@ -127,7 +125,7 @@
             baseTableName="process"
             constraintName="fk_process_tenant_id"
             referencedColumnNames="id"
-            referencedTableName="tenants"
+            referencedTableName="tenant"
         />
 
         <addDefaultValue
@@ -149,10 +147,10 @@
         <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
-                    SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
+                    SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
                 </sqlCheck>
                 <tableExists tableName="process_collection" />
-                <tableExists tableName="tenants" />
+                <tableExists tableName="tenant" />
                 <not>
                     <columnExists tableName="process_collection" columnName="tenant_id" />
                 </not>
@@ -168,7 +166,7 @@
             baseTableName="process_collection"
             constraintName="fk_process_collection_tenant_id"
             referencedColumnNames="id"
-            referencedTableName="tenants"
+            referencedTableName="tenant"
         />
 
         <addDefaultValue
@@ -190,10 +188,10 @@
         <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
-                    SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
+                    SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
                 </sqlCheck>
                 <tableExists tableName="global_variable" />
-                <tableExists tableName="tenants" />
+                <tableExists tableName="tenant" />
                 <not>
                     <columnExists tableName="global_variable" columnName="tenant_id" />
                 </not>
@@ -209,7 +207,7 @@
             baseTableName="global_variable"
             constraintName="fk_global_variable_tenant_id"
             referencedColumnNames="id"
-            referencedTableName="tenants"
+            referencedTableName="tenant"
         />
 
         <addDefaultValue
@@ -231,10 +229,10 @@
         <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
-                    SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
+                    SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
                 </sqlCheck>
                 <tableExists tableName="bot_collection" />
-                <tableExists tableName="tenants" />
+                <tableExists tableName="tenant" />
                 <not>
                     <columnExists tableName="bot_collection" columnName="tenant_id" />
                 </not>
@@ -250,7 +248,7 @@
             baseTableName="bot_collection"
             constraintName="fk_bot_collection_tenant_id"
             referencedColumnNames="id"
-            referencedTableName="tenants"
+            referencedTableName="tenant"
         />
 
         <addDefaultValue
@@ -272,10 +270,10 @@
         <preConditions onFail="HALT">
             <and>
                 <sqlCheck expectedResult="1">
-                    SELECT COUNT(*) FROM tenants WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
+                    SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
                 </sqlCheck>
                 <tableExists tableName="tag" />
-                <tableExists tableName="tenants" />
+                <tableExists tableName="tenant" />
                 <not>
                     <columnExists tableName="tag" columnName="tenant_id" />
                 </not>
@@ -291,7 +289,7 @@
             baseTableName="tag"
             constraintName="fk_tag_tenant_id"
             referencedColumnNames="id"
-            referencedTableName="tenants"
+            referencedTableName="tenant"
         />
 
         <addDefaultValue

@@ -2,18 +2,15 @@ package com.runbotics.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tenants")
+@Table(name = "tenant")
 public class Tenant implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,7 +24,7 @@ public class Tenant implements Serializable {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @OneToOne
     @JoinColumn(name = "createdBy", nullable = false)
     private User createdBy;
 
@@ -37,15 +34,9 @@ public class Tenant implements Serializable {
     @Column(name = "updated")
     private ZonedDateTime updated;
 
-    @LastModifiedBy
     @Column(name = "last_modified_by", length = 50)
     @JsonIgnore
     private String lastModifiedBy;
-
-    @LastModifiedDate
-    @Column(name = "last_modified_date")
-    @JsonIgnore
-    private Instant lastModifiedDate = Instant.now();
 
     public UUID getId() {
         return this.id;
@@ -95,14 +86,6 @@ public class Tenant implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Instant getLastModifiedDate() {
-        return this.lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,13 +105,12 @@ public class Tenant implements Serializable {
     @Override
     public String toString() {
         return "Tenant{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", createdById=" + createdBy.getId() +
-            ", created=" + created +
-            ", updated=" + updated +
-            ", lastModifiedBy=" + lastModifiedBy +
-            ", lastModifiedDate=" + lastModifiedDate +
+            (id != null ? "id=" + id + "," : "") +
+            (name != null ? "id=" + name + "," : "") +
+            (createdBy != null ? "id=" + createdBy.getId() + "," : "") +
+            (created != null ? "id=" + created + "," : "") +
+            (updated != null ? "id=" + updated + "," : "") +
+            (lastModifiedBy != null ? "id=" + lastModifiedBy + "," : "") +
             "}";
     }
 }

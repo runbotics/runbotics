@@ -1,9 +1,11 @@
 package com.runbotics.service.impl;
 
 import com.runbotics.domain.Tag;
+import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessRepository;
 import com.runbotics.repository.TagRepository;
 import com.runbotics.service.TagService;
+import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.dto.TagDTO;
 import com.runbotics.service.mapper.TagMapper;
@@ -31,20 +33,27 @@ public class TagServiceImpl implements TagService{
 
     private final ProcessRepository processRepository;
 
+    private final UserService userService;
+
     public TagServiceImpl(
         TagRepository tagRepository,
         TagMapper tagMapper,
-        ProcessRepository processRepository
+        ProcessRepository processRepository,
+        UserService userService
     ) {
         this.tagRepository = tagRepository;
         this.tagMapper = tagMapper;
         this.processRepository = processRepository;
+        this.userService = userService;
     }
 
     @Override
     public TagDTO save(TagDTO tagDTO) {
         log.debug("Request to save Tag : {}", tagDTO);
+        User requester = userService.getUserWithAuthorities().get();
+
         Tag tag = tagMapper.toEntity(tagDTO);
+        tag.setTenant(requester.getTenant());
         tag = tagRepository.save(tag);
         return tagMapper.toDto(tag);
     }

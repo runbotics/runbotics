@@ -47,6 +47,10 @@ public class GlobalVariable implements Serializable {
     @JsonIgnore
     private Set<Process> processes = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -155,6 +159,14 @@ public class GlobalVariable implements Serializable {
         this.creator = user;
     }
 
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -184,6 +196,7 @@ public class GlobalVariable implements Serializable {
             ", type='" + getType() + "'" +
             ", value='" + getValue() + "'" +
             ", lastModified='" + getLastModified() + "'" +
+            ", tenantId=" + (tenant != null ? tenant.getId() : "") +
             "}";
     }
 }

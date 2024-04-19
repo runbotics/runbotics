@@ -3,6 +3,7 @@ package com.runbotics.service;
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.FeatureKey;
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
@@ -157,6 +158,11 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
+
+        Tenant defaultTenant = new Tenant();
+        defaultTenant.setId(UUID.fromString("b7f9092f-5973-c781-08db-4d6e48f78e98"));
+        newUser.setTenant(defaultTenant);
+
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -200,6 +206,11 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
+
+        Tenant defaultTenant = new Tenant();
+        defaultTenant.setId(UUID.fromString("b7f9092f-5973-c781-08db-4d6e48f78e98"));
+        user.setTenant(defaultTenant);
+
         userRepository.save(user);
         log.debug("Created Information for User: {}", user);
         return user;

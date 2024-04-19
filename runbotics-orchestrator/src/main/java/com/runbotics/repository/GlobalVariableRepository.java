@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Spring Data SQL repository for the GlobalVariable entity.
@@ -17,6 +18,8 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface GlobalVariableRepository extends JpaRepository<GlobalVariable, Long>, JpaSpecificationExecutor<GlobalVariable> {
+    Long countAllByTenantId(UUID tenantId);
+
     @Query("select globalVariable from GlobalVariable globalVariable where globalVariable.user.login = ?#{principal.username}")
     List<GlobalVariable> findByUserIsCurrentUser();
 

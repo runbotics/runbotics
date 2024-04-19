@@ -2,6 +2,7 @@ package com.runbotics.service.impl;
 
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.Guest;
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.repository.GuestRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -96,6 +97,10 @@ public class GuestServiceImpl implements GuestService {
         guestUser.setLangKey(langKey);
         guestUser.setCreatedBy("system");
         guestUser.setActivationKey(RandomUtil.generateActivationKey());
+
+        Tenant defaultTenant = new Tenant();
+        defaultTenant.setId(UUID.fromString("b7f9092f-5973-c781-08db-4d6e48f78e98"));
+        guestUser.setTenant(defaultTenant);
 
         Set<Authority> authorities = new HashSet<>();
         var authority = new Authority();

@@ -9,6 +9,7 @@ import com.runbotics.service.UserService;
 import com.runbotics.service.dto.TenantDTO;
 import com.runbotics.service.mapper.TenantMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
+import com.runbotics.web.rest.errors.PreDatabaseErrorHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,16 +41,20 @@ public class TenantServiceImpl implements TenantService {
 
     private final UserRepository userRepository;
 
+    private final PreDatabaseErrorHandler preDatabaseErrorHandler;
+
     public TenantServiceImpl(
         TenantRepository tenantRepository,
         TenantMapper tenantMapper,
         UserService userService,
-        UserRepository userRepository
+        UserRepository userRepository,
+        PreDatabaseErrorHandler preDatabaseErrorHandler
     ) {
         this.tenantRepository = tenantRepository;
         this.tenantMapper = tenantMapper;
         this.userService = userService;
         this.userRepository = userRepository;
+        this.preDatabaseErrorHandler = preDatabaseErrorHandler;
     }
 
     public List<TenantDTO> getAll() {
@@ -112,7 +117,7 @@ public class TenantServiceImpl implements TenantService {
                     );
                     tenant.setCreatedBy(updatedUser);
                 }
-                //tenantDTO.getCreatedById(null);
+                tenantDTO.setUpdated(ZonedDateTime.now());
                 tenantMapper.partialUpdate(tenant, tenantDTO);
 
                 return tenant;
@@ -123,6 +128,10 @@ public class TenantServiceImpl implements TenantService {
 
     public void delete(UUID id) {
         if (tenantRepository.findById(id).isPresent()) {
+            if (preDatabaseErrorHandler.tenantResourceRelationCheck(id)) {
+                throw new BadRequestAlertException("Cannot delete tenant related to other resources", ENTITY_NAME, "tenantRelationExist");
+            }
+
             tenantRepository.deleteById(id);
         } else {
             throw new BadRequestAlertException("Cannot find tenant with this ID", ENTITY_NAME, "tenantNotFound");

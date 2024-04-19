@@ -2,6 +2,7 @@ package com.runbotics.service.impl;
 
 import com.runbotics.domain.GlobalVariable;
 import com.runbotics.domain.Process;
+import com.runbotics.domain.Tenant;
 import com.runbotics.repository.GlobalVariableRepository;
 import com.runbotics.service.GlobalVariableService;
 import com.runbotics.service.UserService;
@@ -52,6 +53,7 @@ public class GlobalVariableServiceImpl implements GlobalVariableService {
         var user = userService.getUserWithAuthorities().get();
         if ( globalVariableDTO.getId() == null ) globalVariable.setCreator(user);
         globalVariable.setUser(user);
+        globalVariable.setTenant(user.getTenant());
         globalVariable = globalVariableRepository.save(globalVariable);
         return globalVariableMapper.toDto(globalVariable);
     }

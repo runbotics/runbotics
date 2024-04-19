@@ -45,6 +45,8 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     @Override
     public BotCollectionDTO save(BotCollectionDTO botCollectionDTO) {
         log.debug("Request to save BotCollection : {}", botCollectionDTO);
+        User requester = userService.getUserWithAuthorities().get();
+
         BotCollection botCollection = botCollectionMapper.toEntity(botCollectionDTO);
         botCollection.setCreatedBy(userService.getUserWithAuthorities().get());
         botCollection.setUsers(
@@ -55,6 +57,7 @@ public class BotCollectionServiceImpl implements BotCollectionService {
                 .map(user -> userService.getUserWithAuthoritiesByLogin(user).get())
                 .collect(Collectors.toSet())
         );
+        botCollection.setTenant(requester.getTenant());
         botCollection = botCollectionRepository.save(botCollection);
         return botCollectionMapper.toDto(botCollection);
     }

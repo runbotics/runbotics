@@ -2,6 +2,8 @@ package com.runbotics.repository;
 
 import com.runbotics.domain.Tag;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long>, JpaSpecificationExecutor<Tag> {
+    Long countAllByTenantId(UUID tenantId);
 
     Optional<Tag> findOneByName(String name);
 
