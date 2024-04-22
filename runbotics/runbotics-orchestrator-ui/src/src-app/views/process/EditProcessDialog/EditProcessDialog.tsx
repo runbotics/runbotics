@@ -57,12 +57,14 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                 return;
             }
             if (!process.id) {
-                // const defaultProcessInfo = getDefaultProcessInfo(currentUser, currentCollection);
                 const processInfo: IProcess = { ...processFormState };
                 dispatch(
                     processActions.createProcess(processInfo)
                 ).then((res) => onAdd(res.payload));
                 return;
+            }
+            if (processFormState.processCollection?.id === null) {
+                onAdd({ processFormState, processCollection: null });
             }
             onAdd(processFormState);
         } catch (error) {

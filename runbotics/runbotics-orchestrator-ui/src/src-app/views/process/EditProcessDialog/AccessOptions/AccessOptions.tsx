@@ -18,13 +18,21 @@ const AccessOptions: FC<AccessOptionsProps> = ({ processData, setProcessData, is
     const isPublicTranslationKey = processData.isPublic ? 'True' : 'False';
 
     const changeCollectionId = (newId: CollectionId) => {
-        setProcessData((prevState) => ({
-            ...prevState,
-            processCollection: {
-                // ...prevState.processCollection, // todo
-                id: newId,
-            },
-        }));
+        if (newId === null) {
+            setProcessData((prevState) => {
+                const { processCollection: _processCollection, ...rest } = prevState;
+                return rest;
+            });
+        } else {
+            setProcessData((prevState) => ({
+                ...prevState,
+                processCollection: {
+                    id: newId,
+                },
+            }));
+        }
+
+
     };
 
     return (
