@@ -1,57 +1,100 @@
 import React, { FC, useState, useEffect } from 'react';
 
-import { FeatureKey, IProcess, Tag } from 'runbotics-common';
+import { useSnackbar } from 'notistack';
+import { FeatureKey, IProcess } from 'runbotics-common';
 
 import CustomDialog from '#src-app/components/CustomDialog';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
-import useProcessCollection from '#src-app/hooks/useProcessCollection';
-import useTranslations from '#src-app/hooks/useTranslations';
-import { useSelector } from '#src-app/store';
+import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import { useDispatch, useSelector } from '#src-app/store';
+
+import { processActions } from '#src-app/store/slices/Process';
+
+import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import AccessOptions from './AccessOptions';
 import { EditProcessDialogProps, FormValidationState } from './EditProcessDialog.types';
-import { initialFormValidationState, MAX_NUMBER_OF_TAGS } from './EditProcessDialog.utils';
+import { initialFormValidationState, inputErrorMessages, InputErrorType } from './EditProcessDialog.utils';
 import { GeneralOptions } from './GeneralOptions/GeneralOptions';
-import TagsInput from './TagsInput';
 import { Content, Form } from '../../utils/FormDialog.styles';
 
 
 const EditProcessDialog: FC<EditProcessDialogProps> = ({
     process, onAdd, onClose, open,
 }) => {
-    const { currentCollectionId } = useProcessCollection();
-
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialFormValidationState);
-    const [processFormState, setProcessFormState] = useState<IProcess>({ ...process, processCollection: { id: currentCollectionId, ...process.processCollection } });
-    const [autocompleteTagList, setAutocompleteTagList] = useState<Tag[]>([]);
-    const [selectedTagsNames, setSelectedTagsNames] = useState<string[]>([]);
-    const [search, setSearch] = useState<string>('');
+    const [inputErrorType, setInputErrorType] = useState<InputErrorType>(null);
+    const [processFormState, setProcessFormState] = useState<IProcess>({ ...process });
 
+    const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const { user: currentUser } = useSelector((state) => state.auth);
 
     const isOwner = !process || currentUser.login === process?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
 
-    const checkFormFieldsValidation = () => formValidationState.name;
+    const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        setFormValidationState(initialFormValidationState);
+    }, [process]);
+
+    useEffect(() => {
+        if (!processFormState.name || !processFormState.name.trim()) {
+            setInputErrorType(InputErrorType.REQUIRED);
+            setFormValidationState((prevState) => ({ ...prevState, name: false }));
+            return;
+        }
+        setFormValidationState((prevState) => ({ ...prevState, name: true }));
+        setInputErrorType(null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [processFormState.name]);
 
     const handleSubmit = () => {
-        onAdd(processFormState);
+        try {
+            if (!checkIsFormValid()) {
+                enqueueSnackbar(inputErrorMessages[inputErrorType], { variant: 'error' });
+                return;
+            }
+            if (!process.id) {
+                // const defaultProcessInfo = getDefaultProcessInfo(currentUser, currentCollection);
+                const processInfo: IProcess = { ...processFormState };
+                dispatch(
+                    processActions.createProcess(processInfo)
+                ).then((res) => onAdd(res.payload));
+                return;
+            }
+            onAdd(processFormState);
+        } catch (error) {
+            const message = error?.message ?? translate('Process.Add.Form.Error.General');
+            const translationKey = `Process.Add.Form.Error.${capitalizeFirstLetter({ text: error.message, delimiter: ' ' })}`;
+            checkIfKeyExists(translationKey)
+                ? enqueueSnackbar(
+                    translate(translationKey), {
+                        variant: 'error'
+                    }
+                )
+                : enqueueSnackbar(
+                    message, {
+                        variant: 'error'
+                    }
+                );
+        }
     };
 
     useEffect(() => {
         setProcessFormState(process);
-        setSelectedTagsNames(process.tags.map((tag) => tag.name));
     }, [process]);
 
     return (
         <CustomDialog
             isOpen={open}
             onClose={onClose}
-            title={translate('Process.Edit.Title')}
+            title={process.id ? translate('Process.Edit.Title') : translate('Process.Add.Title')}
             confirmButtonOptions={{
                 label: translate('Common.Save'),
                 onClick: handleSubmit,
-                isDisabled: !checkFormFieldsValidation(),
+                isDisabled: !checkIsFormValid(),
             }}
             cancelButtonOptions={{
                 label: translate('Common.Cancel'),
@@ -59,25 +102,16 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
             }}
         >
             <Content sx={{ overflowX: 'hidden' }}>
-                <Form>
+                <Form $gap={0}>
                     <GeneralOptions
                         processData={processFormState}
                         setProcessData={setProcessFormState}
                         formValidationState={formValidationState}
                         setFormValidationState={setFormValidationState}
+                        inputErrorType={inputErrorType}
                         isEditDialogOpen={open}
-                        isOwner={isOwner}
-                    />
-                    <TagsInput
-                        selected={selectedTagsNames}
-                        setSelected={setSelectedTagsNames}
                         formState={processFormState}
                         setFormState={setProcessFormState}
-                        search={search}
-                        setSearch={setSearch}
-                        autocompleteList={autocompleteTagList}
-                        setAutocompleteList={setAutocompleteTagList}
-                        maxAmount={MAX_NUMBER_OF_TAGS}
                         isOwner={isOwner}
                     />
                     <AccessOptions

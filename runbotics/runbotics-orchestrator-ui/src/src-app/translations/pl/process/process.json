@@ -43,6 +43,7 @@
     "Process.Edit.Table.Columns.SubscribedAt": "Zasubskrybowano",
     "Process.Edit.Table.Columns.Actions": "Akcje",
     "Process.Edit.Table.Columns.Actions.Delete": "Usuń",
+    "Process.Edit.Location.Title.Info": "Wybierz zbór, do którego chcesz zapisać proces",
     "Process.Delete.ActionName": "Usuń",
     "Process.Delete.Title": "Usuń proces {{ name }}",
     "Process.Delete.SuccessMessage": "Proces {{ name }} został pomyślnie usunięty",

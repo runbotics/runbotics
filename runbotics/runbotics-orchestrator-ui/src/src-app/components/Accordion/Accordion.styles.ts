@@ -10,7 +10,6 @@ export const StyledAccordion = styled(Accordion) <StyledExpandProps>`
         flex-direction: column;
 
         padding: 0;
-
         box-shadow: none;
 
         ::before {
@@ -35,6 +34,10 @@ export const StyledAccordionDetails = styled(AccordionDetails)<StyledExpandProps
     opacity: ${({ $expanded }) => $expanded ? 1 : 0};
 
     transition: opacity 300ms ease;
+
+    && {
+        padding: 0;
+    }
 `;
 
 export const CustomDivider = styled.div<StyledHoverProps>`

@@ -47,6 +47,7 @@
     "Process.Edit.Table.Columns.SubscribedAt": "Subscribed at",
     "Process.Edit.Table.Columns.Actions": "Actions",
     "Process.Edit.Table.Columns.Actions.Delete": "Delete",
+    "Process.Edit.Location.Title.Info": "Choose the collection where the process will be saved",
     "Process.Delete.ActionName": "Delete",
     "Process.Delete.Title": "Delete process {{ name }}",
     "Process.Delete.SuccessMessage": "Process {{ name }} deleted successfully",

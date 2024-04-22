@@ -2,18 +2,30 @@ import React, { FC } from 'react';
 
 import { Box, Switch, FormControlLabel } from '@mui/material';
 
+import { CollectionId } from 'runbotics-common';
+
 import Accordion from '#src-app/components/Accordion';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
 import { AccessOptionsProps } from './AccessOptions.types';
-import LocationOptions from '../../ProcessCollectionView/ProcessCollectionModifyDialog/LocationOptions';
+import LocationOptions from './LocationOptions';
 
 
 const AccessOptions: FC<AccessOptionsProps> = ({ processData, setProcessData, isOwner, isEditDialogOpen }) => {
     const { translate } = useTranslations();
     const isPublicTranslationKey = processData.isPublic ? 'True' : 'False';
+
+    const changeCollectionId = (newId: CollectionId) => {
+        setProcessData((prevState) => ({
+            ...prevState,
+            processCollection: {
+                // ...prevState.processCollection, // todo
+                id: newId,
+            },
+        }));
+    };
 
     return (
         <Accordion title={translate('Process.Edit.Form.Fields.Access')}>
@@ -34,11 +46,10 @@ const AccessOptions: FC<AccessOptionsProps> = ({ processData, setProcessData, is
                     <InfoButtonTooltip message={translate(`Process.Edit.Form.Fields.IsPublic.${isPublicTranslationKey}.Tooltip`)} />
                 </Box>
                 <LocationOptions
-                    editedCollectionId={String(processData.id)}
                     isModifyDialogOpen={isEditDialogOpen}
-                    handleChange={setProcessData}
-                    parentId={processData.processCollection?.id}
+                    handleChange={changeCollectionId}
                     isOwner={isOwner}
+                    collectionId={processData.processCollection?.id}
                 />
             </Box>
         </Accordion>
