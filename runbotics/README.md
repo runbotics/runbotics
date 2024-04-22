@@ -49,7 +49,7 @@ Main docker compose [config](https://github.com/runbotics/runbotics/blob/master/
 
 ```bash
 # Create containers
-$ docker-compose up -d
+$ docker-compose -f docker-compose.yml up -d
 
 # Kill all related containers
 $ docker-compose down
