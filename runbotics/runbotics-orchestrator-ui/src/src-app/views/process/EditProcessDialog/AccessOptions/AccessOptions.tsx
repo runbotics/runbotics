@@ -31,8 +31,6 @@ const AccessOptions: FC<AccessOptionsProps> = ({ processData, setProcessData, is
                 },
             }));
         }
-
-
     };
 
     return (

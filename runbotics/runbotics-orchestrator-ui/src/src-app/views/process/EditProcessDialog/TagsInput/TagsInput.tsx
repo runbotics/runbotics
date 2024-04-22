@@ -61,12 +61,14 @@ const TagsInput: FC<TagsInputProps> = ({
     };
 
     const handleEnter = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (
+        const shouldAddTag = (
             e.key === 'Enter'
             && search !== ''
             && selected.length < maxAmount
             && !selected.includes(search)
-        ) handleChange(selected.concat(search));
+        );
+
+        if (shouldAddTag) handleChange(selected.concat(search));
     };
 
     const refreshTagList = (searchedValue: string) => {

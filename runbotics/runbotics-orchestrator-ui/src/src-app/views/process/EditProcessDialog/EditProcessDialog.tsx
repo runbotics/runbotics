@@ -64,7 +64,8 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                 return;
             }
             if (processFormState.processCollection?.id === null) {
-                onAdd({ processFormState, processCollection: null });
+                const { processCollection: _processCollection, ...rest } = processFormState;
+                onAdd(rest);
             }
             onAdd(processFormState);
         } catch (error) {
