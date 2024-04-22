@@ -100,8 +100,8 @@ public class Process implements Serializable {
     private ProcessOutput outputType;
 
     @ManyToOne
-    @JoinColumn(name = "collection_id")
-    private ProcessCollection collectionId;
+    @JoinColumn(name = "process_collection")
+    private ProcessCollection processCollection;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -333,12 +333,12 @@ public class Process implements Serializable {
         this.outputType = outputType;
     }
 
-    public ProcessCollection getCollectionId() {
-        return collectionId;
+    public ProcessCollection getProcessCollection() {
+        return processCollection;
     }
 
-    public void setCollectionId(ProcessCollection processCollection) {
-        this.collectionId = processCollection;
+    public void setProcessCollection(ProcessCollection processCollection) {
+        this.processCollection = processCollection;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -383,7 +383,7 @@ public class Process implements Serializable {
             ", editor=" + editor +
             ", tags=" + tags +
             ", outputType=" + outputType +
-            ", collectionId=" + collectionId +
+            ", collectionId=" + processCollection +
             '}';
     }
 }

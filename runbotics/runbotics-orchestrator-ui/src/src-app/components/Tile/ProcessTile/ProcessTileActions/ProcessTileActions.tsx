@@ -14,6 +14,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
 import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
+
 import DeleteProcess from '#src-app/views/process/DeleteProcess';
 import EditProcessDialog from '#src-app/views/process/EditProcessDialog';
 

@@ -1,10 +1,8 @@
 package com.runbotics.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.runbotics.domain.BotCollection;
-import com.runbotics.domain.BotSystem;
+import com.runbotics.domain.*;
 import com.runbotics.domain.Process;
-import com.runbotics.domain.ProcessOutput;
 
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
@@ -66,6 +64,8 @@ public class ProcessDTO implements Serializable {
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private BotCollection botCollection;
+
+    private ProcessCollection processCollection;
 
     @JsonView(ProcessDTOViews.DefaultView.class)
     private UserDTO editor;
@@ -191,6 +191,14 @@ public class ProcessDTO implements Serializable {
         this.botCollection = botCollection;
     }
 
+    public ProcessCollection getProcessCollection() {
+        return processCollection;
+    }
+
+    public void setProcessCollection(ProcessCollection processCollection) {
+        this.processCollection = processCollection;
+    }
+
     public ZonedDateTime getLastRun() {
         return lastRun;
     }
@@ -261,6 +269,7 @@ public class ProcessDTO implements Serializable {
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", definition='" + definition + '\'' +
+            ", collection='" + processCollection + '\'' +
             ", isPublic=" + isPublic +
             ", created=" + created +
             ", updated=" + updated +

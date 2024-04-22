@@ -19,7 +19,7 @@ const CustomDialog: FC<CustomDialogProps> = ({ isOpen, onClose, title, children,
             {children}
         </DialogContent>
         <DialogActions>
-            <DialogButton options={cancelButtonOptions} >
+            <DialogButton options={cancelButtonOptions}>
                 <Typography variant='body2' fontWeight='medium'>
                     {cancelButtonOptions.label ?? translate('Common.Cancel')}
                 </Typography>

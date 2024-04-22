@@ -139,6 +139,7 @@ public class ProcessResource {
         @Valid @RequestBody ProcessDTO processDTO
     ) throws URISyntaxException {
         log.debug("REST request to update Process : {}, {}", id, processDTO);
+        log.debug("ProcessCollection.id: {}", processDTO.getProcessCollection());
         if (processDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }

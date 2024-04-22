@@ -54,7 +54,7 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private final String PROCESS_CREATED_BY_NAME = "createdByName";
 
-    private final String PROCESS_COLLECTION_ID = "collectionId";
+    private final String PROCESS_COLLECTION = "processCollection";
 
     public ProcessQueryService(
         ProcessRepository processRepository,

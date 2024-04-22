@@ -1,6 +1,9 @@
 export enum FeatureKey {
-    // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
-    PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW',
+     // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
+     PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW',
+
+    // CRUD access to every process for admins -> in the future can be extended for starting, stopping, etc.
+    PROCESS_ALL_ACCESS = 'PROCESS_ALL_ACCESS',
 
     // Show details on process tile (like: date created, author, time updated, is scheduled, etc.) [ Processes page ]
     PROCESS_LIST_DETAIL_VIEW = 'PROCESS_LIST_DETAIL_VIEW',

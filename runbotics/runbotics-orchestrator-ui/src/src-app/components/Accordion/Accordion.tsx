@@ -5,8 +5,8 @@ import { Box, Typography } from '@mui/material';
 import { CustomDivider, StyledAccordion, StyledAccordionDetails, StyledAccordionSummary, StyledExpandMoreOutlinedIcon } from './Accordion.styles';
 import { AccordionProps } from './Accordion.types';
 
-const Accordion: FC<AccordionProps> = ({ title, children }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+const Accordion: FC<AccordionProps> = ({ title, children, defaultExpanded = false, props }) => {
+    const [isExpanded, setIsExpanded] = useState(defaultExpanded);
     const [isHovered, setIsHovered] = useState(false);
 
     const toggleExpand = () => (_, isOpen) => {
@@ -14,7 +14,7 @@ const Accordion: FC<AccordionProps> = ({ title, children }) => {
     };
 
     return (
-        <StyledAccordion $expanded={isExpanded} onChange={toggleExpand()}>
+        <StyledAccordion $expanded={isExpanded} onChange={toggleExpand()} expanded={isExpanded} {...props}>
             <StyledAccordionSummary
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
@@ -25,7 +25,7 @@ const Accordion: FC<AccordionProps> = ({ title, children }) => {
                     <StyledExpandMoreOutlinedIcon $expanded={isExpanded} $hovered={isHovered} />
                 </Box>
             </StyledAccordionSummary>
-            <StyledAccordionDetails $expanded={isExpanded}>
+            <StyledAccordionDetails $expanded={isExpanded} >
                 {children}
             </StyledAccordionDetails>
         </StyledAccordion>
