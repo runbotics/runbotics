@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class ProcessServiceImpl implements ProcessService {
     private final UserService userService;
     private final BotCollectionService botCollectionService;
     private final GlobalVariableService globalVariableService;
+    private final ProcessCollectionService processCollectionService;
 
     public ProcessServiceImpl(
         ProcessRepository processRepository,
@@ -50,7 +52,8 @@ public class ProcessServiceImpl implements ProcessService {
         TagService tagService,
         UserService userService,
         BotCollectionService botCollectionService,
-        GlobalVariableService globalVariableService
+        GlobalVariableService globalVariableService,
+        ProcessCollectionService processCollectionService
     ) {
         this.processRepository = processRepository;
         this.processInstanceRepository = processInstanceRepository;
@@ -59,18 +62,26 @@ public class ProcessServiceImpl implements ProcessService {
         this.userService = userService;
         this.botCollectionService = botCollectionService;
         this.globalVariableService = globalVariableService;
+        this.processCollectionService = processCollectionService;
     }
 
     @Override
     public ProcessDTO save(ProcessDTO processDTO) {
         log.debug("Request to save Process : {}", processDTO);
+        User user = userService.getUserWithAuthorities().get();
+
         Process process = processMapper.toEntity(processDTO);
         process.setUpdated(ZonedDateTime.now());
         if (process.getId() == null) {
-            User user = userService.getUserWithAuthorities().get();
             process.setCreated(ZonedDateTime.now());
             process.setCreatedBy(user);
             process.setEditor(user);
+        } else {
+            Process existingProcess = processRepository.findById(
+                processDTO.getId()).orElseThrow(() -> new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound")
+            );
+
+            checkProcessPrivileges(user, existingProcess.getProcessCollection().getId());
         }
         if (process.getBotCollection() == null) {
             process.setBotCollection(botCollectionService.getPublicCollection());
@@ -136,21 +147,21 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public Optional<ProcessDTO> updateDiagram(ProcessDiagramUpdateDTO processDiagramDTO) {
+    public ProcessDTO updateDiagram(Long processId, ProcessDiagramUpdateDTO processDiagramDTO) {
         User requester = userService.getUserWithAuthorities().get();
-        return processRepository
-            .findById(processDiagramDTO.getId())
-            .map(
-                existingProcess -> {
-                    existingProcess.setDefinition(processDiagramDTO.getDefinition());
-                    existingProcess.setExecutionInfo(processDiagramDTO.getExecutionInfo());
-                    existingProcess.setUpdated(ZonedDateTime.now());
-                    existingProcess.setEditor(requester);
-                    return existingProcess;
-                }
-            )
-            .map(processRepository::save)
-            .map(processMapper::toDto);
+
+        Process process = processRepository.findById(processDiagramDTO.getId()).get();
+
+        checkProcessPrivileges(requester, process.getProcessCollection().getId());
+
+        updateGlobalVariables(processId, processDiagramDTO.getGlobalVariableIds());
+
+        process.setDefinition(processDiagramDTO.getDefinition());
+        process.setExecutionInfo(processDiagramDTO.getExecutionInfo());
+        process.setUpdated(ZonedDateTime.now());
+        process.setEditor(requester);
+
+        return processMapper.toDto(processRepository.save(process));
     }
 
     @Override
@@ -265,6 +276,9 @@ public class ProcessServiceImpl implements ProcessService {
         }
 
         var process = processOptional.get();
+
+        checkProcessPrivileges(requester, process.getProcessCollection().getId());
+
         var isGuest = requester.getAuthorities().contains(createGuestAuthority());
         var isCreator = Objects.equals(process.getCreatedBy().getId(), requester.getId());
         var isPublic = process.getIsPublic();
@@ -297,10 +311,13 @@ public class ProcessServiceImpl implements ProcessService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Process : {}", id);
+        User requester = this.userService.getUserWithAuthorities().get();
         Optional<Process> process = processRepository.findById(id);
         if (process.isEmpty()) {
             throw new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound");
         }
+
+        checkProcessPrivileges(requester, process.get().getProcessCollection().getId());
 
         List<Long> remainingTags = process.get().getTags().stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
@@ -354,5 +371,12 @@ public class ProcessServiceImpl implements ProcessService {
             .mapToLong(Long::parseLong)
             .boxed()
             .collect(Collectors.toList());
+    }
+
+    private void checkProcessPrivileges(User user, UUID processCollectionId) {
+        processCollectionService.checkCollectionAvailability(
+            processCollectionId,
+            user
+        );
     }
 }

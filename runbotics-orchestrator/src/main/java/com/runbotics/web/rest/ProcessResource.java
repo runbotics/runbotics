@@ -194,13 +194,12 @@ public class ProcessResource {
         log.debug("REST request to update diagram in Process: {}", id);
         checkProcessForEdit(id, processDiagramDTO);
 
-        processService.updateGlobalVariables(id, processDiagramDTO.getGlobalVariableIds());
-        Optional<ProcessDTO> result = processService.updateDiagram(processDiagramDTO);
+        ProcessDTO result = processService.updateDiagram(id, processDiagramDTO);
 
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDiagramDTO.getId().toString())
-        );
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_IS_ATTENDED_EDIT + "')")
