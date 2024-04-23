@@ -42,6 +42,7 @@ import { AttendedProcessModal } from './AttendedProcessModal';
 import If from './utils/If';
 
 const JOB_CREATING_TOAST_KEY = 'job-creating-toast';
+const RESET_ACTIVE_TIMEOUT = 5000;
 
 const isProcessActive = (
     processId: number,
@@ -279,7 +280,9 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         setSubmitting(false);
         setLoading(false);
         closeSnackbar(JOB_CREATING_TOAST_KEY);
-        dispatch(processInstanceActions.resetActive());
+        setTimeout(() => {
+            dispatch(processInstanceActions.resetActive());
+        }, RESET_ACTIVE_TIMEOUT);
     };
 
     useEffect(() => {
