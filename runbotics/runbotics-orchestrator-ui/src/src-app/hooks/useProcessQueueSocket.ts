@@ -12,9 +12,9 @@ export const useProcessQueueSocket = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        socket.on(WsMessage.PROCESS_START_COMPLETED, (payload: WsQueueMessage[WsMessage.PROCESS_START_COMPLETED]) => {
+        socket.on(WsMessage.PROCESS_STARTED, (payload: WsQueueMessage[WsMessage.PROCESS_STARTED]) => {
             dispatch(processInstanceActions.updateJobsMap({
-                eventType: WsMessage.PROCESS_START_COMPLETED,
+                eventType: WsMessage.PROCESS_STARTED,
                 ...payload,
             }));
         });
@@ -41,7 +41,7 @@ export const useProcessQueueSocket = () => {
         });
 
         return () => {
-            socket.off(WsMessage.PROCESS_START_COMPLETED);
+            socket.off(WsMessage.PROCESS_STARTED);
             socket.off(WsMessage.JOB_WAITING);
             socket.off(WsMessage.JOB_ACTIVE);
             socket.off(WsMessage.JOB_FAILED);

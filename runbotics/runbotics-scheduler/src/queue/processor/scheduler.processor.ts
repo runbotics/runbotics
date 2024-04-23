@@ -129,7 +129,7 @@ export class SchedulerProcessor {
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
 
         const processId = job?.data?.process?.id;
-        this.uiGateway.emitAll(WsMessage.PROCESS_START_COMPLETED, { processId });
+        this.uiGateway.emitAll(WsMessage.PROCESS_STARTED, { processId });
     }
 
     @OnQueueFailed()

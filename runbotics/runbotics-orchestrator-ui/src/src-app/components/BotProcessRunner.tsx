@@ -163,12 +163,12 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleRemoveJob = () => {
-        const job = jobsMap[processId];
-        if (!job) return;
+        const jobPayload = { ...jobsMap[processId] };
+        if (!jobPayload) return;
 
-        const eventType = job?.eventType;
+        const eventType = jobPayload?.eventType;
         if (eventType === WsMessage.JOB_WAITING) {
-            dispatch(schedulerActions.removeWaitingJob({ jobId: String(job.jobId) }))
+            dispatch(schedulerActions.removeWaitingJob({ jobId: String(jobPayload.jobId) }))
                 .then(() => {
                     enqueueSnackbar(translate(
                         'Component.BotProcessRunner.Success.RemovedJob',
@@ -287,14 +287,14 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     }, [processId, currentProcessInstance]);
 
     useEffect(() => {
-        const jobPayload = jobsMap[processId];
+        const jobPayload = { ...jobsMap[processId] };
         if (!jobPayload) return;
         if (rerunProcessInstance &&
             processInstance?.id !== rerunProcessInstance?.id
         ) return;
 
         switch (jobPayload.eventType) {
-            case WsMessage.PROCESS_START_COMPLETED:
+            case WsMessage.PROCESS_STARTED:
                 handleRunCompleted();
                 break;
             case WsMessage.JOB_FAILED:

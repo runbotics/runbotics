@@ -19,7 +19,7 @@ export enum WsMessage {
     REMOVE_SCHEDULE_PROCESS = 'remove-schedule-process',
     ADD_WAITING_SCHEDULE = 'add-waiting-schedule',
     REMOVE_WAITING_SCHEDULE = 'remove-waiting-schedule',
-    PROCESS_START_COMPLETED = 'process-start-completed',
+    PROCESS_STARTED = 'process-started',
     JOB_REMOVE = "job-remove",
     JOB_WAITING = 'job-waiting',
     JOB_ACTIVE = 'job-active',

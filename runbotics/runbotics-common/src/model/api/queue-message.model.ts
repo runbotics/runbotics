@@ -36,7 +36,7 @@ export interface StartProcessResponse {
 }
 
 export interface WsQueueMessage {
-    [WsMessage.PROCESS_START_COMPLETED]: {
+    [WsMessage.PROCESS_STARTED]: {
         processId: IProcess['id'];
     }
 

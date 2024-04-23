@@ -4,8 +4,7 @@ import { Box, CircularProgress } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useSnackbar } from 'notistack';
 
-import { WsMessage } from 'runbotics-common';
-
+import { checkJobStatus } from '#src-app/components/utils/checkJobStatus';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
@@ -23,8 +22,6 @@ interface ProcessInstanceDetailsProps {
     onClose?: () => void;
 }
 
-const JOB_STATUSES = [WsMessage.JOB_WAITING, WsMessage.JOB_ACTIVE, WsMessage.JOB_FAILED];
-
 const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInstanceId, onClose }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -34,12 +31,7 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
     const active = processInstanceState?.active;
     const { draft: { process } } = useSelector(processSelector);
     const processId = process?.id;
-    const isProcessQueuedOrFailed =
-        processId &&
-        active.jobsMap &&
-        active.jobsMap[processId] &&
-        'eventType' in active.jobsMap[processId] &&
-        JOB_STATUSES.includes(active.jobsMap[processId]?.eventType);
+    const isProcessQueuedOrFailed = checkJobStatus(processId, active);
 
     const getActiveProcessInstanceIfMatch = () =>
         processInstanceId === processInstanceState.active.processInstance?.id

@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState, VFC } from 'react';
 
 import { Box, Typography, Divider } from '@mui/material';
 
-import { IProcessInstanceEvent, WsMessage } from 'runbotics-common';
+import { IProcessInstanceEvent } from 'runbotics-common';
 
+import { checkJobStatus } from '#src-app/components/utils/checkJobStatus';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -25,8 +26,6 @@ interface ProcessInstanceEventsDetailsProps {
     processInstanceId: string;
 }
 
-const JOB_STATUSES = [WsMessage.JOB_WAITING, WsMessage.JOB_ACTIVE, WsMessage.JOB_FAILED];
-
 const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     processInstanceId,
 }) => {
@@ -44,12 +43,7 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     const { active } = useSelector(processInstanceSelector);
     const { draft: { process } } = useSelector(processSelector);
     const processId = process?.id;
-    const isProcessQueuedOrFailed =
-        processId &&
-        active.jobsMap &&
-        active.jobsMap[processId] &&
-        'eventType' in active.jobsMap[processId] &&
-        JOB_STATUSES.includes(active.jobsMap[processId]?.eventType);
+    const isProcessQueuedOrFailed = checkJobStatus(processId, active);
 
     useEffect(() => {
         if (processInstanceId === active.processInstance?.id) {
