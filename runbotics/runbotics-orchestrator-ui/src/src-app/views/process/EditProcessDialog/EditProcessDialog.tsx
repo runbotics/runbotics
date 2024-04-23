@@ -25,6 +25,19 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialFormValidationState);
     const [inputErrorType, setInputErrorType] = useState<InputErrorType>(null);
     const [processFormState, setProcessFormState] = useState<IProcess>({ ...process });
+    const [isNameDirty, setIsNameDirty] = useState<boolean>(false);
+
+    const resetState = () => {
+        setProcessFormState(process);
+        setFormValidationState(initialFormValidationState);
+        setInputErrorType(null);
+        setIsNameDirty(false);
+    };
+
+    const handleClose = () => {
+        onClose();
+        resetState();
+    };
 
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -40,7 +53,10 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     }, [process]);
 
     useEffect(() => {
-        if (!processFormState.name || !processFormState.name.trim()) {
+        if (processFormState.name) {
+            setIsNameDirty(true);
+        }
+        if (isNameDirty && (!processFormState.name || !processFormState.name.trim())) {
             setInputErrorType(InputErrorType.REQUIRED);
             setFormValidationState((prevState) => ({ ...prevState, name: false }));
             return;
@@ -92,7 +108,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     return (
         <CustomDialog
             isOpen={open}
-            onClose={onClose}
+            onClose={handleClose}
             title={process.id ? translate('Process.Edit.Title') : translate('Process.Add.Title')}
             confirmButtonOptions={{
                 label: translate('Common.Save'),
@@ -101,7 +117,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
             }}
             cancelButtonOptions={{
                 label: translate('Common.Cancel'),
-                onClick: onClose,
+                onClick: handleClose,
             }}
         >
             <Content sx={{ overflowX: 'hidden' }}>

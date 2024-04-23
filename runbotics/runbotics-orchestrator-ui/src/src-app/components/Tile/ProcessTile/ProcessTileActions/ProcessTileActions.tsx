@@ -3,12 +3,14 @@ import React, { useState, VFC, useContext } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { FeatureKey, IProcess, Role } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { useOwner } from '#src-app/hooks/useOwner';
+import useProcessCollection from '#src-app/hooks/useProcessCollection';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
@@ -18,6 +20,9 @@ import { processActions } from '#src-app/store/slices/Process';
 import DeleteProcess from '#src-app/views/process/DeleteProcess';
 import EditProcessDialog from '#src-app/views/process/EditProcessDialog';
 
+import { ProcessesTabs } from '#src-app/views/process/ProcessBrowseView/Header';
+import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
+
 import { ProcessTileActionsProps } from './ProcessTileActions.types';
 
 const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
@@ -25,6 +30,10 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const { page, pageSize, search } = useContext(ProcessPageContext);
+    const { currentCollectionId: collectionId } = useProcessCollection();
+    const router = useRouter();
+    const isCollectionsTab = getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
+
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
     const [isDialogVisible, setIsDialogVisible] = useState(false);
     const hasEditProcessAccess = useFeatureKey([FeatureKey.PROCESS_EDIT_INFO]);
@@ -50,21 +59,42 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
         try {
             await dispatch(processActions.updateProcess(processToSave));
             setIsDialogVisible(false);
-            await dispatch(
-                processActions.getProcessesPage({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim()
-                            })
+            if (isCollectionsTab) {
+                await dispatch(
+                    processActions.getProcessesPageByCollection({
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim()
+                                })
+                            },
+                            equals: {
+                                ...(collectionId !== null && { collectionId })
+                            }
                         }
-                    }
-                }),
-            );
+                    }),
+                );
+            } else {
+                await dispatch(
+                    processActions.getProcessesPage({
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim()
+                                })
+                            }
+                        }
+                    }),
+                );
+            }
             enqueueSnackbar(
                 translate('Component.Tile.Process.Update.Success', { name: process.name }),
                 { variant: 'success' }

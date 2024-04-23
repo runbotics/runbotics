@@ -45,6 +45,7 @@ const ProcessCollectionList: FC = () => {
         return () => {
             window.removeEventListener('resize', () => checkCollectionsWidth(collectionsWidthSum));
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processCollections]);
 
 

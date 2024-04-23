@@ -36,14 +36,14 @@ const LocationOptions: FC<LocationOptionsProps> = ({ isModifyDialogOpen, handleC
     };
 
     const setSelected = (selected: CollectionId[] | CollectionId) => {
-        if (typeof selected === 'string') {
-            if (selected === ABSTRACT_ROOT_COLLECTION_ID) {
-                handleChange('parentId', ROOT_PROCESS_COLLECTION_ID);
-                return;
-            }
-            if (selected === editedCollectionId) return;
-            handleChange('parentId', selected);
-        }
+        if (typeof selected !== 'string') { return; }
+        if (selected === ABSTRACT_ROOT_COLLECTION_ID) {
+            handleChange('parentId', ROOT_PROCESS_COLLECTION_ID);
+            return;
+        } else
+        if (selected === editedCollectionId) { return; }
+
+        handleChange('parentId', selected);
     };
 
     useEffect(() => {
