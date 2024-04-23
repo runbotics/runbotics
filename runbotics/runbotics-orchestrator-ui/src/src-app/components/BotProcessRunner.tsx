@@ -435,7 +435,12 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             condition={hasRunProcessAccess && (started || isJobQueued)}
             else={runProcessPanel}
         >
-            { isJobQueued ? removeJobButton : terminateButton }
+            <If
+                condition={isJobQueued}
+                else={terminateButton}
+            >
+                { removeJobButton }
+            </If>
         </If>
     );
 };
