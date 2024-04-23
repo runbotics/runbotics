@@ -69,16 +69,17 @@ public class ProcessServiceImpl implements ProcessService {
     public ProcessDTO save(ProcessDTO processDTO) {
         log.debug("Request to save Process : {}", processDTO);
         User user = userService.getUserWithAuthorities().get();
+        Long processId = processDTO.getId();
 
         Process process = processMapper.toEntity(processDTO);
         process.setUpdated(ZonedDateTime.now());
-        if (process.getId() == null) {
+        if (processId == null) {
             process.setCreated(ZonedDateTime.now());
             process.setCreatedBy(user);
             process.setEditor(user);
         } else {
-            Process existingProcess = processRepository.findById(
-                processDTO.getId()).orElseThrow(() -> new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound")
+            Process existingProcess = processRepository.findById(processId)
+                .orElseThrow(() -> new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound")
             );
 
             checkProcessPrivileges(user, existingProcess.getProcessCollection().getId());
@@ -104,7 +105,7 @@ public class ProcessServiceImpl implements ProcessService {
             process.setTags(tags);
         }
 
-        if (processDTO.getId() != null) {
+        if (processId != null) {
             List<Long> remainingTags = tagService.checkTagsToDelete(processDTO);
             process = processRepository.save(process);
             tagService.deleteUnusedTags(remainingTags);
