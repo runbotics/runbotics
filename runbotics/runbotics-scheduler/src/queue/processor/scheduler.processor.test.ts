@@ -45,7 +45,8 @@ const INSTANT_PROCESS: InstantProcess = {
     trigger: {
         name: TriggerEvent.MANUAL,
     },
-    input: PROCESS_INPUT
+    input: PROCESS_INPUT,
+    orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID
 };
 
 const SCHEDULED_PROCESS: ScheduledProcess = {
@@ -214,7 +215,7 @@ describe('SchedulerProcessor', () => {
 
     describe('onComplete', () => {
         it('should emit WsMessage.REMOVE_WAITING_SCHEDULE when a job is completed', async () => {
-            schedulerProcessor.onComplete(JOB, 'mockInstanceId');
+            schedulerProcessor.onComplete(JOB);
             expect(uiGateway.server.emit).toHaveBeenCalledWith(WsMessage.REMOVE_WAITING_SCHEDULE, JOB);
         });
     });
