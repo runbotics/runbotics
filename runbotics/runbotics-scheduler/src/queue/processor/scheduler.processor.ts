@@ -3,6 +3,7 @@ import {
     OnQueueCompleted,
     OnQueueError,
     OnQueueFailed,
+    OnQueueRemoved,
     OnQueueWaiting,
     Process,
     Processor,
@@ -11,7 +12,7 @@ import { Logger } from '#/utils/logger';
 import { SECOND, sleep } from '#/utils/time';
 import { isScheduledProcess, Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
 import { BotService } from '#/database/bot/bot.service';
-import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, WsMessage } from 'runbotics-common';
+import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, QueueEventType, StartProcessResponse, WsMessage } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
 import { ProcessService } from '#/database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
@@ -20,6 +21,8 @@ import { SchedulerService } from '../scheduler/scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { QueueService } from '#/queue/queue.service';
 import { BadRequestException } from '@nestjs/common';
+import { QueueMessageService } from '../queue-message.service';
+import { JobId } from 'bull';
 
 @Processor('scheduler')
 export class SchedulerProcessor {
@@ -33,7 +36,8 @@ export class SchedulerProcessor {
         private readonly botGateway: BotWebSocketGateway,
         private readonly processInstanceSchedulerService: ProcessInstanceSchedulerService,
         private readonly schedulerService: SchedulerService,
-        private readonly queueService: QueueService
+        private readonly queueService: QueueService,
+        private readonly queueMessageService: QueueMessageService
     ) {}
 
     @Process({ concurrency: 1 })
@@ -56,6 +60,8 @@ export class SchedulerProcessor {
 
     @OnQueueActive()
     async onActive(job: Job) {
+        this.logger.log(`[Q Active] Job ${job.id} is active`);
+
         const process = await this.processService.findById(
             Number(job.data.process.id)
         );
@@ -65,28 +71,108 @@ export class SchedulerProcessor {
             WsMessage.ADD_WAITING_SCHEDULE,
             jobWithProcessAndActive
         );
+
+        const active = await this.queueService.getActiveJobs();
+        const waiting = await this.queueService.getWaitingJobs();
+        const jobs = [...active, ...waiting];
+
+        await Promise.all(jobs.map((job, jobIndex) => {
+            const queuePosition = jobIndex + 1;
+            const processId = job?.data?.process?.id;
+            const jobId = job?.id;
+            const orchestratorProcessInstanceId = job?.data?.orchestratorProcessInstanceId;
+            if (queuePosition === 1) {
+                this.uiGateway.emitAll(WsMessage.JOB_ACTIVE, {
+                    processId,
+                    jobId,
+                    orchestratorProcessInstanceId,
+                });
+                return this.queueMessageService.sendQueueMessage(QueueEventType.ACTIVE, job);
+            }
+            this.uiGateway.emitAll(WsMessage.JOB_WAITING, { processId, queuePosition, jobId });
+            return this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
+        }));
     }
 
     @OnQueueWaiting()
-    async onWaiting(jobId: Job['id']) {
-        this.schedulerService.getJobById(jobId).then((job) => {
-            this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
-            this.logger.log(`[Q Waiting] Job ${jobId} is waiting`);
+    async onWaiting(jobId: JobId) {
+        this.logger.log(`[Q Waiting] Job ${jobId} is waiting`);
+
+        const active = await this.queueService.getActiveJobs();
+        const waiting = await this.queueService.getWaitingJobs();
+        const jobs = [...active, ...waiting];
+
+        const jobIndex = jobs.findIndex((job) => job.id === jobId);
+        const job = jobs[jobIndex];
+        if (!job) return;
+
+        this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
+
+        const queuePosition = jobIndex + 1;
+        const processId = job?.data?.process?.id;
+        const orchestratorProcessInstanceId = job?.data?.orchestratorProcessInstanceId;
+        this.uiGateway.emitAll(WsMessage.JOB_WAITING, {
+            processId,
+            queuePosition,
+            jobId,
+            orchestratorProcessInstanceId,
         });
+        await this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
     }
 
     @OnQueueCompleted()
     onComplete(job: Job) {
+        this.logger.log(`[Q Completed] Job ${job.id} is completed`);
+
+        this.queueService.clearQueueTimer(job.id);
+
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+
+        const processId = job?.data?.process?.id;
+        this.uiGateway.emitAll(WsMessage.PROCESS_STARTED, { processId });
     }
 
     @OnQueueFailed()
-    onFailed(job: Job, err: Error) {
-        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+    async onFailed(job: Job, error: Error) {
         this.logger.error(
             `[Q Fail] Job "${job.data.process.name}" failed`,
-            err
+            error
         );
+
+        this.queueService.clearQueueTimer(job.id);
+
+        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+
+        const processId = job?.data?.process?.id;
+        const errorMessage = error.message;
+        this.uiGateway.emitAll( WsMessage.JOB_FAILED, { processId, errorMessage });
+        await this.queueMessageService.sendQueueMessage(QueueEventType.FAILED, job);
+    }
+
+    @OnQueueRemoved()
+    async onRemove(job: Job) {
+        this.logger.log(`[Q Removed] Job ${job.id} is removed from queue`);
+
+        this.queueService.clearQueueTimer(job.id);
+
+        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+
+        await this.queueMessageService.sendQueueMessage(QueueEventType.REMOVE, job);
+
+        const active = await this.queueService.getActiveJobs();
+        const waiting = await this.queueService.getWaitingJobs();
+        const jobs = [...active, ...waiting];
+
+        await Promise.all(jobs.map((job, jobIndex) => {
+            const queuePosition = jobIndex + 1;
+            const processId = job?.data?.process?.id;
+            const clientId = job?.data?.clientId;
+            const jobId = job?.id;
+            if (queuePosition === 1) return;
+
+            this.uiGateway.emitClient(clientId, WsMessage.JOB_WAITING, { processId, queuePosition, jobId });
+            return this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
+        }));
     }
 
     @OnQueueError({ name: 'scheduler' })
@@ -97,6 +183,8 @@ export class SchedulerProcessor {
                 err
             );
         }
+
+        this.queueService.clearQueueTimer(job.id);
     }
 
     private isAnyBotConnected = (availableBots: IBot[]): boolean =>
@@ -169,8 +257,8 @@ export class SchedulerProcessor {
 
         this.logger.log(`Starting process ${process.name} on bot ${bot.id}`);
 
-        const processInstanceIdentifier =
-            await this.processSchedulerService.startProcess(job.data, bot);
+        const orchestratorProcessInstanceId = job.data.orchestratorProcessInstanceId;
+        await this.processSchedulerService.startProcess(job.data, bot, orchestratorProcessInstanceId);
 
         await this.botGateway.setBotStatusBusy(bot);
 
@@ -178,6 +266,6 @@ export class SchedulerProcessor {
             `[Q Process] Process "${process.name}" freed the queue | JobID: `,
             job.id
         );
-        return processInstanceIdentifier;
+        return orchestratorProcessInstanceId;
     }
 }

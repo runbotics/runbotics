@@ -23,6 +23,7 @@ import {
 } from 'runbotics-common';
 import { Job } from '#/utils/process';
 import { ProcessSchedulerService } from '#/queue/process/process-scheduler.service';
+import { QueueMessageService } from '../queue-message.service';
 
 const PROCESS_ID = 2137;
 const JOB_ID = 7312;
@@ -30,7 +31,7 @@ const ORCHESTRATOR_INSTANCE_ID = 'tEsT-InStAnCe-iD';
 
 const PROCESS: IProcess = {
     id: PROCESS_ID,
-}
+};
 
 const PROCESS_INPUT: ProcessInput = {
     variables: {
@@ -44,7 +45,8 @@ const INSTANT_PROCESS: InstantProcess = {
     trigger: {
         name: TriggerEvent.MANUAL,
     },
-    input: PROCESS_INPUT
+    input: PROCESS_INPUT,
+    orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID
 };
 
 const SCHEDULED_PROCESS: ScheduledProcess = {
@@ -76,6 +78,7 @@ describe('SchedulerProcessor', () => {
     let processInstanceSchedulerService: ProcessInstanceSchedulerService;
     let schedulerService: SchedulerService;
     let queueService: QueueService;
+    let queueMessageService: QueueMessageService;
 
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -89,6 +92,7 @@ describe('SchedulerProcessor', () => {
                 ProcessInstanceSchedulerService,
                 SchedulerService,
                 QueueService,
+                QueueMessageService,
                 {
                     provide: getRepositoryToken(BotEntity),
                     useValue: {
@@ -113,7 +117,7 @@ describe('SchedulerProcessor', () => {
         })
             .overrideProvider(BotService)
             .useValue({
-                findAvailableCollection: vi.fn().mockReturnValue([ {status: BotStatus.CONNECTED} as IBot ])    
+                findAvailableCollection: vi.fn().mockReturnValue([ {status: BotStatus.CONNECTED} as IBot ])
             })
             .overrideProvider(ProcessService)
             .useValue({
@@ -121,7 +125,7 @@ describe('SchedulerProcessor', () => {
             })
             .overrideProvider(ProcessSchedulerService)
             .useValue({
-                startProcess: vi.fn().mockReturnValue(ORCHESTRATOR_INSTANCE_ID)
+                startProcess: vi.fn().mockReturnValue({ orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID })
             })
             .overrideProvider(BotWebSocketGateway)
             .useValue({
@@ -139,7 +143,8 @@ describe('SchedulerProcessor', () => {
             .useValue({
                 server: {
                     emit: vi.fn()
-                }
+                },
+                emitAll: vi.fn()
             })
             .compile();
 
@@ -152,7 +157,8 @@ describe('SchedulerProcessor', () => {
         processInstanceSchedulerService = moduleRef.get(ProcessInstanceSchedulerService);
         schedulerService = moduleRef.get(SchedulerService);
         queueService = moduleRef.get(QueueService);
-        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, schedulerService, queueService);
+        queueMessageService = moduleRef.get(QueueMessageService);
+        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, schedulerService, queueService, queueMessageService);
     });
 
     it('should be defined', () => {
@@ -198,6 +204,8 @@ describe('SchedulerProcessor', () => {
     describe('onActive', () => {
         it('should emit WsMessage.ADD_WAITING_SCHEDULE with correct job data', async () => {
             vi.spyOn(processService, 'findById').mockResolvedValue({ id: PROCESS_ID } as any);
+            vi.spyOn(queueService, 'getActiveJobs').mockResolvedValue([ JOB ] as any);
+            vi.spyOn(queueService, 'getWaitingJobs').mockResolvedValue([] as any);
             await schedulerProcessor.onActive(JOB as Job);
 
             expect(processService.findById).toHaveBeenCalledWith(PROCESS_ID);

@@ -8,11 +8,11 @@ import {
     NotFoundException,
     OnModuleInit,
 } from '@nestjs/common';
-import { Job, Queue } from 'bull';
+import { Job, JobId, Queue } from 'bull';
 import { v4 as uuidv4 } from 'uuid';
 import { ValidateProcessAccessProps } from '#/types/scheduled-process';
 import { Logger } from '#/utils/logger';
-import { StartProcessRequest, StartProcessResponse } from '#/types';
+import { StartProcessRequest } from '#/types';
 import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import {
     IProcess,
@@ -23,15 +23,19 @@ import {
     TriggerEvent,
     Role,
     JobData,
+    QueueEventType
 } from 'runbotics-common';
 import { UiGateway } from '../websocket/ui/ui.gateway';
 import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
 import difference from 'lodash/difference';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
+import { QueueMessageService } from './queue-message.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class QueueService implements OnModuleInit {
     private readonly logger = new Logger(QueueService.name);
+    private queueWaitingTimers: Map<JobId, NodeJS.Timeout> = new Map();
 
     constructor(
         @InjectQueue('scheduler') private readonly processQueue: Queue<JobData>,
@@ -40,6 +44,7 @@ export class QueueService implements OnModuleInit {
         private readonly botSchedulerService: BotSchedulerService,
         private readonly uiGateway: UiGateway,
         private readonly serverConfigService: ServerConfigService,
+        private readonly queueMessageService: QueueMessageService
     ) { }
 
     async onModuleInit() {
@@ -75,7 +80,8 @@ export class QueueService implements OnModuleInit {
                 throw new BadRequestException(err);
             });
 
-        const instantProcess: InstantProcess = params;
+        const orchestratorProcessInstanceId = randomUUID();
+        const instantProcess: InstantProcess = { orchestratorProcessInstanceId, ...params };
 
         const job = await this.processQueue
             .add(instantProcess, {
@@ -91,15 +97,45 @@ export class QueueService implements OnModuleInit {
                 return Promise.reject(err);
             });
 
-        return job.finished() as Promise<StartProcessResponse>;
+        if (input?.timeout) {
+            const timer = setTimeout(async () => {
+                this.logger.log(`Job: ${job.id} has waited too long and will be removed from the queue.`);
+                const jobStateFlags = await Promise.all([
+                    job.isActive(),
+                    job.isCompleted(),
+                    job.isFailed(),
+                    job.isDelayed(),
+                    job.isPaused(),
+                    job.isStuck(),
+                ]);
+
+                if (jobStateFlags.some(Boolean)) return;
+
+                await job.remove();
+
+                await this.queueMessageService.sendQueueMessage(QueueEventType.TIMEOUT, job);
+            }, input.timeout);
+
+            this.queueWaitingTimers.set(job.id, timer);
+        }
+
+        return { orchestratorProcessInstanceId };
     }
 
-    async deleteJobFromQueue(id: string) {
+    async clearQueueTimer(jobId: JobId) {
+        const timeout = this.queueWaitingTimers.get(jobId);
+        if (timeout) {
+            clearTimeout(timeout);
+            this.queueWaitingTimers.delete(jobId);
+        }
+    }
+
+    async deleteJobFromQueue(id: JobId) {
         this.logger.log(`Deleting waiting job with id: ${id}`);
         const job = await this.processQueue.getJob(id);
 
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
-        await job?.moveToCompleted();
+        await job?.remove();
         this.logger.log(`Job with id: ${id} successfully deleted`);
     }
 
@@ -151,10 +187,12 @@ export class QueueService implements OnModuleInit {
         await this.clearStaledSchedules();
         this.logger.log('Creating schedules');
         const scheduledProcesses = await this.scheduleProcessService.findAll();
+        const orchestratorProcessInstanceId = randomUUID();
         await Promise.all(
             scheduledProcesses
                 .map(process => this.createScheduledJob({
                     ...process,
+                    orchestratorProcessInstanceId,
                     trigger: { name: TriggerEvent.SCHEDULER },
                     triggerData: { userEmail: process.user.email },
                     input: { variables: JSON.parse(process.inputVariables) }
@@ -233,5 +271,15 @@ export class QueueService implements OnModuleInit {
         await Promise.all(jobs.map(job => job.remove()));
     }
 
-}
+    public getWaitingJobs() {
+        return this.processQueue.getWaiting();
+    }
 
+    public getActiveJobs() {
+        return this.processQueue.getActive();
+    }
+
+    public getJobById(jobId: JobId) {
+        return this.processQueue.getJob(jobId);
+    }
+}

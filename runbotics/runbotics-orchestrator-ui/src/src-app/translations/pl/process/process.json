@@ -16,6 +16,8 @@
     "Process.Instance.Status.Stopped": "ZATRZYMANY",
     "Process.Instance.Status.Terminated": "PRZERWANY",
     "Process.Instance.Status.Completed": "UKOŃCZONY",
+    "Process.Instance.Status.Queued": "W KOLEJCE",
+    "Process.Instance.Status.Pending": "OCZEKUJĄCY",
     "Process.ProcessInstance.Details.Header.Dialog.Title": "Wynik procesu",
     "Process.ProcessInstance.Details.Header.Dialog.InvalidOutputType": "Wybrany typ wyniku procesu jest niekompatybilny z typem danych do wyświetlenia.",
     "Process.ProcessInstance.Details.Header.Button": "Pokaż wynik",

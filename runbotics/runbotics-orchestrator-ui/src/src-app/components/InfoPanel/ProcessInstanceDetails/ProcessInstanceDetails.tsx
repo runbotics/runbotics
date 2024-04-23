@@ -4,9 +4,11 @@ import { Box, CircularProgress } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useSnackbar } from 'notistack';
 
+import { checkJobStatus } from '#src-app/components/utils/checkJobStatus';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
+import { processSelector } from '#src-app/store/slices/Process/Process.slice';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 
 import ProcessInstanceDetailsHeader from './ProcessInstanceDetailsHeader';
@@ -26,6 +28,10 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
     const containerRef = React.useRef<HTMLDivElement>(null);
 
     const processInstanceState = useSelector(processInstanceSelector);
+    const active = processInstanceState?.active;
+    const { draft: { process } } = useSelector(processSelector);
+    const processId = process?.id;
+    const isProcessQueuedOrFailed = checkJobStatus(processId, active);
 
     const getActiveProcessInstanceIfMatch = () =>
         processInstanceId === processInstanceState.active.processInstance?.id
@@ -51,6 +57,8 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);
+
+    if (isProcessQueuedOrFailed) return null;
 
     const loading =
         processInstanceState.all.loading ||
