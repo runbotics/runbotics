@@ -75,7 +75,7 @@ public class ProcessInstance implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Bot bot;
 
-    @Formula("(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.parent_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)")
+    @Formula("(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.parent_process_instance_id = id OR process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)")
     private boolean hasSubprocesses;
 
     @Column(name = "error")
