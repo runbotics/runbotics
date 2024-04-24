@@ -50,22 +50,6 @@ public class SecurityService {
     }
 
     @Transactional
-    public boolean checkAuthority(String authority) {
-        User currentUser = userService.getUserWithAuthorities().orElseGet(User::new);
-        log.info("Checking if user {} has authority {}", currentUser.getLogin(), currentUser);
-        boolean isAllowed = currentUser
-            .getAuthorities()
-            .stream()
-            .map(Authority::getName)
-            .collect(Collectors.toList())
-            .contains(authority);
-        if (!isAllowed) {
-            log.warn("Access denied: User {} doesn't have specified authority {}", currentUser.getLogin(), authority);
-        }
-        return isAllowed;
-    }
-
-    @Transactional
     public boolean isProcessOwner(Long processId) {
         Long processOwnerId = processService.findOne(processId).get().getCreatedBy().getId();
         return this.isOwner(processOwnerId);
