@@ -395,7 +395,7 @@ public class Process implements Serializable {
             ", editor=" + editor +
             ", tags=" + tags +
             ", outputType=" + outputType +
-            ", collectionId=" + collectionId +
+            ", collectionId=" + (processCollection != null ? processCollection.getId() : "") +
             ", tenantId=" + (tenant != null ? tenant.getId() : "") +
             '}';
     }
