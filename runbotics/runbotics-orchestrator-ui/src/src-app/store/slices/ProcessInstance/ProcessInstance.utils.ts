@@ -9,7 +9,9 @@ const recursivelyInsertSubprocess = (
         currentNode.subprocesses = targetSubprocesses;
     }
 
-    currentNode.subprocesses?.forEach(subprocess => recursivelyInsertSubprocess(parentInstanceId, subprocess, targetSubprocesses));
+    currentNode.subprocesses?.forEach(subprocess => 
+        recursivelyInsertSubprocess(parentInstanceId, subprocess, targetSubprocesses)
+    );
 };
 
 export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: InstanceExtendedWithSubprocesses) => {
@@ -18,7 +20,7 @@ export const updateProcessInstanceProps = (state: ProcessInstanceState, processI
     if (!pageContent) return;
 
     pageContent
-        .map((instance: InstanceExtendedWithSubprocesses) => {
+        .forEach((instance: InstanceExtendedWithSubprocesses) => {
             recursivelyInsertSubprocess(id, instance, subprocesses);
         });
 

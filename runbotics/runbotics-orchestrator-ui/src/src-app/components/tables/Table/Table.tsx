@@ -48,13 +48,13 @@ const Table = <T extends object>({
         setIsLoading(loading);
     }, [loading]);
 
-    const replaceKeyRecursive = (tableData: T | T[], subRowProperty: string, newKey: string) => {
+    const replaceKeyRecursive = (tableData: T | T[], newKey: string) => {
         if (typeof tableData !== 'object' || tableData === null) {
             return tableData;
         }
       
         if (Array.isArray(tableData)) {
-            return tableData.map(item => replaceKeyRecursive(item, subRowProperty, newKey));
+            return tableData.map(item => replaceKeyRecursive(item, newKey));
         }
       
         const newObj = {};
@@ -62,7 +62,7 @@ const Table = <T extends object>({
         for (const key in tableData) {
             if (Object.hasOwnProperty.call(tableData, key)) {
                 const newKeyString = key === subRowProperty ? newKey : key;
-                newObj[newKeyString] = replaceKeyRecursive(tableData[key] as T[], subRowProperty, newKey);
+                newObj[newKeyString] = replaceKeyRecursive(tableData[key] as T[], newKey);
             }
         }
       
@@ -71,7 +71,7 @@ const Table = <T extends object>({
 
     const data = useMemo(() => {
         if (subRowProperty) {
-            return replaceKeyRecursive(propData, subRowProperty, 'subRows');
+            return replaceKeyRecursive(propData, 'subRows');
         }
         return propData;
         // eslint-disable-next-line react-hooks/exhaustive-deps
