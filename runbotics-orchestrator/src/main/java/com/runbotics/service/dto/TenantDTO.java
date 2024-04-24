@@ -66,11 +66,6 @@ public class TenantDTO {
     }
 
     @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
-    @Override
     public String toString() {
         return "TenantDTO{" +
             "id=" + id +

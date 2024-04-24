@@ -17,6 +17,7 @@ import com.runbotics.service.dto.UserDTO;
 import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import com.runbotics.service.mapper.AdminUserMapper;
 import com.runbotics.service.mapper.UserMapper;
+import com.runbotics.utils.Utils;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -159,9 +160,7 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
 
-        Tenant defaultTenant = new Tenant();
-        defaultTenant.setId(UUID.fromString("b7f9092f-5973-c781-08db-4d6e48f78e98"));
-        newUser.setTenant(defaultTenant);
+        newUser.setTenant(Utils.getDefaultTenant());
 
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
@@ -207,9 +206,7 @@ public class UserService {
             user.setAuthorities(authorities);
         }
 
-        Tenant defaultTenant = new Tenant();
-        defaultTenant.setId(UUID.fromString("b7f9092f-5973-c781-08db-4d6e48f78e98"));
-        user.setTenant(defaultTenant);
+        user.setTenant(Utils.getDefaultTenant());
 
         userRepository.save(user);
         log.debug("Created Information for User: {}", user);

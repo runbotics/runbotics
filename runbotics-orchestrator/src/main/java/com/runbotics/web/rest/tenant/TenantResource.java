@@ -39,6 +39,7 @@ public class TenantResource {
         return ResponseUtil.wrapOrNotFound(tenant);
     }
 
+//    Endpoint allows tenant admin to edit his organization - disabled feature for now
 //    @PatchMapping
 //    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT + "')")
 //    public ResponseEntity<TenantDTO> updateUserTenant(@Valid @RequestBody TenantDTO tenantDTO) {

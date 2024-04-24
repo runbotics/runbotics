@@ -11,6 +11,7 @@ import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.exception.GuestProcessInternalServerError;
+import com.runbotics.utils.Utils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -98,9 +99,7 @@ public class GuestServiceImpl implements GuestService {
         guestUser.setCreatedBy("system");
         guestUser.setActivationKey(RandomUtil.generateActivationKey());
 
-        Tenant defaultTenant = new Tenant();
-        defaultTenant.setId(UUID.fromString("b7f9092f-5973-c781-08db-4d6e48f78e98"));
-        guestUser.setTenant(defaultTenant);
+        guestUser.setTenant(Utils.getDefaultTenant());
 
         Set<Authority> authorities = new HashSet<>();
         var authority = new Authority();
