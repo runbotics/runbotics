@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +81,7 @@ public class ProcessServiceImpl implements ProcessService {
                 .orElseThrow(() -> new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound")
             );
 
-            checkProcessPrivileges(user, existingProcess.getProcessCollection().getId());
+            checkProcessPrivileges(user, existingProcess);
         }
         if (process.getBotCollection() == null) {
             process.setBotCollection(botCollectionService.getPublicCollection());
@@ -153,7 +152,7 @@ public class ProcessServiceImpl implements ProcessService {
 
         Process process = processRepository.findById(processDiagramDTO.getId()).get();
 
-        checkProcessPrivileges(requester, process.getProcessCollection().getId());
+        checkProcessPrivileges(requester, process);
 
         updateGlobalVariables(processId, processDiagramDTO.getGlobalVariableIds());
 
@@ -278,7 +277,7 @@ public class ProcessServiceImpl implements ProcessService {
 
         var process = processOptional.get();
 
-        checkProcessPrivileges(requester, process.getProcessCollection().getId());
+        checkProcessPrivileges(requester, processMapper.toEntity(process));
 
         var isGuest = requester.getAuthorities().contains(createGuestAuthority());
         var isCreator = Objects.equals(process.getCreatedBy().getId(), requester.getId());
@@ -318,7 +317,7 @@ public class ProcessServiceImpl implements ProcessService {
             throw new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound");
         }
 
-        checkProcessPrivileges(requester, process.get().getProcessCollection().getId());
+        checkProcessPrivileges(requester, process.get());
 
         List<Long> remainingTags = process.get().getTags().stream().map(Tag::getId).collect(Collectors.toList());
         processRepository.deleteById(id);
@@ -374,10 +373,12 @@ public class ProcessServiceImpl implements ProcessService {
             .collect(Collectors.toList());
     }
 
-    private void checkProcessPrivileges(User user, UUID processCollectionId) {
-        processCollectionService.checkCollectionAvailability(
-            processCollectionId,
-            user
-        );
+    private void checkProcessPrivileges(User user, Process process) {
+        if (process.getProcessCollection() != null) {
+            processCollectionService.checkCollectionAvailability(
+                process.getProcessCollection().getId(),
+                user
+            );
+        }
     }
 }
