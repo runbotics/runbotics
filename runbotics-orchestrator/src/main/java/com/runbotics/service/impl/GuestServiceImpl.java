@@ -99,6 +99,7 @@ public class GuestServiceImpl implements GuestService {
         guestUser.setCreatedBy("system");
         guestUser.setActivationKey(RandomUtil.generateActivationKey());
 
+        // Temporary solution for keeping tenant id not null
         guestUser.setTenant(Utils.getDefaultTenant());
 
         Set<Authority> authorities = new HashSet<>();

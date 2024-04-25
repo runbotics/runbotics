@@ -9,7 +9,7 @@
 
     <!-- Tenants table -->
     <changeSet author="gasiorowskaa" id="20240405321045-1">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="HALT">
             <not>
                 <tableExists tableName="tenant" />
             </not>
@@ -42,7 +42,7 @@
 
     <!-- Default tenant -->
     <changeSet author="gasiorowskaa" id="20240405321045-2">
-        <preConditions onFail="MARK_RAN">
+        <preConditions onFail="HALT">
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
             </sqlCheck>
@@ -93,12 +93,10 @@
             defaultValue="b7f9092f-5973-c781-08db-4d6e48f78e98"
         />
 
-        <addNotNullConstraint
-            tableName="jhi_user"
-            columnName="tenant_id"
-            defaultNullValue="b7f9092f-5973-c781-08db-4d6e48f78e98"
-            validate="true"
-        />
+        <sql>
+            UPDATE jhi_user SET tenant_id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'
+            WHERE tenant_id IS NULL;
+        </sql>
     </changeSet>
 
     <!-- Alter process -->

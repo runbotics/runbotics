@@ -160,6 +160,7 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
 
+        // Temporary solution for keeping tenant id not null
         newUser.setTenant(Utils.getDefaultTenant());
 
         userRepository.save(newUser);
@@ -206,6 +207,7 @@ public class UserService {
             user.setAuthorities(authorities);
         }
 
+        // Temporary solution for keeping tenant id not null
         user.setTenant(Utils.getDefaultTenant());
 
         userRepository.save(user);
