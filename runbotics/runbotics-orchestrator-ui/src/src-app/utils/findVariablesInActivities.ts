@@ -34,12 +34,9 @@ export const findVariablesInAction = (element: BPMNElement, searchPhrase: string
 const findInputVariablesInAction = (inputValues: CamundaInputParameter[], searchPhrase: string) => {
     if (!inputValues) return false;
     const inputVariable = inputValues.filter(
-        value =>
+        value => 
             (value.name === 'variable' && value.value.toLowerCase().includes(searchPhrase)) ||
-            (value.name === 'value' &&
-                value.value &&
-                (value.value.startsWith('#{') || value.value.startsWith('${')) &&
-                value.value.toLowerCase().includes(searchPhrase))
+            (value.value && hasValueSearchPhrase(value.value, searchPhrase))
     );
 
     const hashVariables = findHashDollarVariable(inputValues, searchPhrase);
@@ -72,3 +69,13 @@ const findHashDollarVariable = (extensionElementValues: CamundaParameter[], sear
 
         return variables;
     }, []);
+
+const hasValueSearchPhrase = (value: string, searchPhrase: string) => {
+    const lookIn = value.toLowerCase();
+
+    if (lookIn.toLowerCase().includes(searchPhrase)) return true;
+
+    if ((lookIn.includes('#{') || lookIn.includes('${')) && lookIn.toLowerCase().includes(searchPhrase)) return true;
+
+    return false;
+};

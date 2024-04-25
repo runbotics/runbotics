@@ -44,6 +44,7 @@ export default class BpmnSearchProvider implements SearchProvider {
                     const activityLabel = objectElement.element.id.startsWith('Gateway')
                         ? objectElement.element.id
                         : getElementLabel(objectElement.element);
+
                     currentElements.push({
                         primaryTokens: [{ normal: `variable in: ${activityLabel}` }],
                         secondaryTokens: [],
