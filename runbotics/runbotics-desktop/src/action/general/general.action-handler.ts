@@ -60,12 +60,12 @@ export default class GeneralActionHandler extends StatelessActionHandler {
             }
                 
             const processInstancesIds = Object.keys(this.runtimeService.processInstances);
-            const parentProcessId = processInstancesIds[processInstancesIds.length - 1];
+            const parentProcessId = processInstancesIds[processInstancesIds.length - 1] ?? request.rootProcessInstanceId;
 
             const processInstanceId = await this.runtimeService.startProcessInstance({
                 process: process,
                 variables: request.input.variables,
-                parentProcessInstanceId: parentProcessId ?? request.rootProcessInstanceId,
+                parentProcessInstanceId: parentProcessId,
                 userId: request.userId,
                 orchestratorProcessInstanceId: null,
                 rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
