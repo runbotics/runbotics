@@ -90,7 +90,7 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
                 state, 
                 { 
                     id: action.meta.arg.processInstanceId, 
-                    isLoadingSubprocesses: true 
+                    isLoadingSubprocesses: true,
                 }
             );
         })

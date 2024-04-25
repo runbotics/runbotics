@@ -18,6 +18,8 @@ public class ProcessInstanceDTO implements Serializable {
 
     private UUID rootProcessInstanceId;
 
+    private UUID parentProcessInstanceId;
+
     private String orchestratorProcessInstanceId;
 
     private ProcessInstanceStatus status;
@@ -64,6 +66,12 @@ public class ProcessInstanceDTO implements Serializable {
 
     public void setRootProcessInstanceId(UUID rootProcessInstanceId) {
         this.rootProcessInstanceId = rootProcessInstanceId;
+    }
+
+    public UUID getParentProcessInstanceId() { return parentProcessInstanceId; }
+
+    public void setParentProcessInstanceId(UUID parentProcessInstanceId) {
+        this.parentProcessInstanceId = parentProcessInstanceId;
     }
 
     public String getOrchestratorProcessInstanceId() {
