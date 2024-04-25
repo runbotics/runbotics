@@ -2,6 +2,7 @@ package com.runbotics.service.impl;
 
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.Guest;
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.repository.GuestRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -10,6 +11,7 @@ import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.exception.GuestProcessInternalServerError;
+import com.runbotics.utils.Utils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -96,6 +98,9 @@ public class GuestServiceImpl implements GuestService {
         guestUser.setLangKey(langKey);
         guestUser.setCreatedBy("system");
         guestUser.setActivationKey(RandomUtil.generateActivationKey());
+
+        // Temporary solution for keeping tenant id not null
+        guestUser.setTenant(Utils.getDefaultTenant());
 
         Set<Authority> authorities = new HashSet<>();
         var authority = new Authority();

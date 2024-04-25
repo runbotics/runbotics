@@ -22,6 +22,10 @@ public class Tag implements Serializable {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
+
     public Long getId() {
         return id;
     }
@@ -48,6 +52,14 @@ public class Tag implements Serializable {
         return this;
     }
 
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -69,6 +81,7 @@ public class Tag implements Serializable {
         return "Tag{" +
             "id=" + id +
             ", name='" + name + '\'' +
+            ", tenantId=" + (tenant != null ? tenant.getId() : "") +
             ",}";
     }
 }

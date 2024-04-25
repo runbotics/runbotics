@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface BotCollectionRepository extends JpaRepository<BotCollection, UUID>, JpaSpecificationExecutor<BotCollection> {
+    Long countAllByTenantId(UUID tenantId);
+
     BotCollection getBotCollectionByName(String name);
 
     @Query(value =

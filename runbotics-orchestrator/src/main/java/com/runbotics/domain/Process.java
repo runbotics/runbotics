@@ -103,6 +103,10 @@ public class Process implements Serializable {
     @JoinColumn(name = "process_collection")
     private ProcessCollection processCollection;
 
+    @ManyToOne
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -341,6 +345,14 @@ public class Process implements Serializable {
         this.processCollection = processCollection;
     }
 
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -383,7 +395,8 @@ public class Process implements Serializable {
             ", editor=" + editor +
             ", tags=" + tags +
             ", outputType=" + outputType +
-            ", collectionId=" + processCollection +
+            ", collectionId=" + (processCollection != null ? processCollection.getId() : "") +
+            ", tenantId=" + (tenant != null ? tenant.getId() : "") +
             '}';
     }
 }

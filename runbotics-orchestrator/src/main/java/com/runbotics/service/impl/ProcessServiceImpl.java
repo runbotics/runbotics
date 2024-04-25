@@ -71,6 +71,7 @@ public class ProcessServiceImpl implements ProcessService {
         Long processId = processDTO.getId();
 
         Process process = processMapper.toEntity(processDTO);
+        process.setTenant(user.getTenant());
         process.setUpdated(ZonedDateTime.now());
         if (processId == null) {
             process.setCreated(ZonedDateTime.now());

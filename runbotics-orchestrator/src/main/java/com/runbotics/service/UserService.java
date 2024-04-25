@@ -3,6 +3,7 @@ package com.runbotics.service;
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.FeatureKey;
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
@@ -16,6 +17,7 @@ import com.runbotics.service.dto.UserDTO;
 import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import com.runbotics.service.mapper.AdminUserMapper;
 import com.runbotics.service.mapper.UserMapper;
+import com.runbotics.utils.Utils;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -157,6 +159,10 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
+
+        // Temporary solution for keeping tenant id not null
+        newUser.setTenant(Utils.getDefaultTenant());
+
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -200,6 +206,10 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
+
+        // Temporary solution for keeping tenant id not null
+        user.setTenant(Utils.getDefaultTenant());
+
         userRepository.save(user);
         log.debug("Created Information for User: {}", user);
         return user;

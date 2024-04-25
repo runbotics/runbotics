@@ -131,6 +131,7 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
                 .map(user -> userService.getUserWithAuthoritiesByLogin(user).get())
                 .collect(Collectors.toSet())
         );
+        processCollection.setTenant(createdBy.get().getTenant());
         processCollection = processCollectionRepository.save(processCollection);
         return processCollectionMapper.toDto(processCollection);
     }
