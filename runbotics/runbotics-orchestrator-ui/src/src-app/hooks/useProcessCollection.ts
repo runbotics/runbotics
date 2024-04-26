@@ -12,13 +12,19 @@ export interface CollectionBreadcrumb {
     collectionId: string;
 }
 
+interface UseProcessCollectionOutput {
+    currentCollectionId: string;
+    breadcrumbs: CollectionBreadcrumb[];
+    currentCollection: ProcessCollection | null;
+}
+
 const getBreadcrumbs = (pathCollections: ProcessCollection[]): CollectionBreadcrumb[] =>
     pathCollections.map((collection) => ({
         name: collection.name,
         collectionId: collection.id
     }));
 
-const useProcessCollection = () => {
+const useProcessCollection = (): UseProcessCollectionOutput => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { active: { ancestors: collectionAncestors } } = useSelector(processCollectionSelector);
@@ -43,7 +49,7 @@ const useProcessCollection = () => {
 
     return ({
         currentCollectionId: collectionId,
-        currentCollection: collectionAncestors[0] ?? null,
+        currentCollection: collectionAncestors.at(-1) ? collectionAncestors.at(-1) : null,
         breadcrumbs,
     });
 };
