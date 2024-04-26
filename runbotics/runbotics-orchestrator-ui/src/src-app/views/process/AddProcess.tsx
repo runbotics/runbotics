@@ -29,7 +29,6 @@ export const AddProcess: FC = () => {
 
     const currentUser = useSelector((state) => state.auth.user);
     const { currentCollection } = useProcessCollection();
-    console.log('currentCollection', useProcessCollection());
     const defaultProcessInfo = getDefaultProcessInfo(currentUser, currentCollection);
 
     return (
