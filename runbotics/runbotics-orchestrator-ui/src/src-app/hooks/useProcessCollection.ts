@@ -49,7 +49,7 @@ const useProcessCollection = (): UseProcessCollectionOutput => {
 
     return ({
         currentCollectionId: collectionId,
-        currentCollection: collectionAncestors.at(-1) ? collectionAncestors.at(-1) : null,
+        currentCollection: collectionAncestors.at(-1) ?? null,
         breadcrumbs,
     });
 };
