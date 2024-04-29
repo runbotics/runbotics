@@ -74,9 +74,11 @@ const hasVariableNameSearchPhrase = (value: CamundaInputParameter, searchPhrase:
 const hasVariableValueSearchPhrase = (value: CamundaInputParameter, searchPhrase: string) => {
     if (!value.value) return false;
 
-    const lookIn = value.value.toLowerCase();
+    const lookInValues = value.value.toLowerCase().split(' ');
 
-    if ((lookIn.includes('#{') || lookIn.includes('${')) && lookIn.includes(searchPhrase)) return true;
+    const found = lookInValues.find(lookIn => (lookIn.includes('#{') || lookIn.includes('${')) && lookIn.includes(searchPhrase));
 
-    return false;
+    if (!found) return false;
+    
+    return true;
 };
