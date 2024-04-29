@@ -1,8 +1,8 @@
 package com.runbotics.domain;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * A Tag.
@@ -21,6 +21,10 @@ public class Tag implements Serializable {
     @NotNull
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
 
     public Long getId() {
         return id;
@@ -48,6 +52,14 @@ public class Tag implements Serializable {
         return this;
     }
 
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -66,9 +78,6 @@ public class Tag implements Serializable {
 
     @Override
     public String toString() {
-        return "Tag{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ",}";
+        return "Tag{" + "id=" + id + ", name='" + name + '\'' + ", tenantId=" + (tenant != null ? tenant.getId() : "") + ",}";
     }
 }

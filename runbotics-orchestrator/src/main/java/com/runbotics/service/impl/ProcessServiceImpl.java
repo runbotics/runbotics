@@ -10,14 +10,12 @@ import com.runbotics.service.dto.*;
 import com.runbotics.service.exception.ProcessAccessDenied;
 import com.runbotics.service.mapper.ProcessMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -71,15 +69,16 @@ public class ProcessServiceImpl implements ProcessService {
         Long processId = processDTO.getId();
 
         Process process = processMapper.toEntity(processDTO);
+        process.setTenant(user.getTenant());
         process.setUpdated(ZonedDateTime.now());
         if (processId == null) {
             process.setCreated(ZonedDateTime.now());
             process.setCreatedBy(user);
             process.setEditor(user);
         } else {
-            Process existingProcess = processRepository.findById(processId)
-                .orElseThrow(() -> new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound")
-            );
+            Process existingProcess = processRepository
+                .findById(processId)
+                .orElseThrow(() -> new BadRequestAlertException("Cannot find process with this id", ENTITY_NAME, "processNotFound"));
 
             checkProcessPrivileges(user, existingProcess);
         }
@@ -253,7 +252,6 @@ public class ProcessServiceImpl implements ProcessService {
             .map(process -> process.updateGlobalVariables(globalVariableService.findByIds(globalVariableIds)))
             .map(processRepository::save)
             .map(processMapper::toDto);
-
     }
 
     @Override
@@ -293,10 +291,7 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public List<ProcessDTO> findUserProcesses(User user) {
-        return this.processRepository.findAllByCreatedBy(user)
-            .stream()
-            .map(processMapper::toDto)
-            .collect(Collectors.toList());
+        return this.processRepository.findAllByCreatedBy(user).stream().map(processMapper::toDto).collect(Collectors.toList());
     }
 
     public boolean hasRequesterCreateProcessAccess() {
@@ -366,19 +361,12 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     private List<Long> mapStringIdsToLong(List<String> stringIds) {
-        return stringIds.stream()
-            .map(String::trim)
-            .mapToLong(Long::parseLong)
-            .boxed()
-            .collect(Collectors.toList());
+        return stringIds.stream().map(String::trim).mapToLong(Long::parseLong).boxed().collect(Collectors.toList());
     }
 
     private void checkProcessPrivileges(User user, Process process) {
         if (process.getProcessCollection() != null) {
-            processCollectionService.checkCollectionAvailability(
-                process.getProcessCollection().getId(),
-                user
-            );
+            processCollectionService.checkCollectionAvailability(process.getProcessCollection().getId(), user);
         }
     }
 }

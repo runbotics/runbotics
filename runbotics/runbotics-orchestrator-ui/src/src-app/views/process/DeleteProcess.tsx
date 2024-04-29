@@ -9,13 +9,18 @@ import {
     Typography,
     MenuItem,
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { IProcess } from 'runbotics-common';
 
+import useProcessCollection from '#src-app/hooks/useProcessCollection';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
 import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
+
+import { ProcessesTabs } from './ProcessBrowseView/Header';
+import { getLastParamOfUrl } from '../utils/routerUtils';
 
 type DeleteProcessDialogProps = {
     open?: boolean;
@@ -29,23 +34,49 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
     const { enqueueSnackbar } = useSnackbar();
     const { page, pageSize, search } = useContext(ProcessPageContext);
     const { translate } = useTranslations();
+    const { currentCollectionId: collectionId } = useProcessCollection();
+    const router = useRouter();
+    const isCollectionsTab = getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
 
     const handleSubmit = async () => {
         await dispatch(processActions.deleteProcess({ processId: props.process.id }));
         props.onDelete(props.process);
-        dispatch(processActions.getProcessesPage({
-            page,
-            size: pageSize,
-            filter: {
-                contains: {
-                    ...(search.trim() && {
-                        name: search.trim(),
-                        createdByName: search.trim(),
-                        tagName: search.trim()
-                    })
+
+        if (isCollectionsTab) {
+            await dispatch(
+                processActions.getProcessesPageByCollection({
+                    page,
+                    size: pageSize,
+                    filter: {
+                        contains: {
+                            ...(search.trim() && {
+                                name: search.trim(),
+                                createdByName: search.trim(),
+                                tagName: search.trim()
+                            })
+                        },
+                        equals: {
+                            ...(collectionId !== null && { collectionId })
+                        }
+                    }
+                }),
+            );
+        } else {
+            dispatch(processActions.getProcessesPage({
+                page,
+                size: pageSize,
+                filter: {
+                    contains: {
+                        ...(search.trim() && {
+                            name: search.trim(),
+                            createdByName: search.trim(),
+                            tagName: search.trim()
+                        })
+                    },
                 },
-            },
-        }));
+            }));
+        }
+
         enqueueSnackbar(translate('Process.Delete.SuccessMessage', { name: props.process.name }), {
             variant: 'success',
         });

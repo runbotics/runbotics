@@ -1,16 +1,15 @@
 package com.runbotics.domain;
 
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "process_collection")
@@ -23,7 +22,7 @@ public class ProcessCollection implements Serializable {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column()
+    @Column
     private UUID parentId;
 
     @NotNull
@@ -54,6 +53,10 @@ public class ProcessCollection implements Serializable {
     @BatchSize(size = 20)
     private Set<User> users = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
+
     public UUID getId() {
         return id;
     }
@@ -78,13 +81,17 @@ public class ProcessCollection implements Serializable {
         this.description = description;
     }
 
-    public Boolean getIsPublic() { return this.isPublic; }
+    public Boolean getIsPublic() {
+        return this.isPublic;
+    }
 
     public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 
-    public UUID getParentId() { return this.parentId; }
+    public UUID getParentId() {
+        return this.parentId;
+    }
 
     public void setParentId(UUID parentId) {
         this.parentId = parentId;
@@ -122,6 +129,14 @@ public class ProcessCollection implements Serializable {
         this.users = users;
     }
 
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
+    }
+
     @Override
     public String toString() {
         return (
@@ -144,6 +159,8 @@ public class ProcessCollection implements Serializable {
             parentId +
             ", users=" +
             users +
+            ", tenantId=" +
+            (tenant != null ? tenant.getId() : "") +
             '}'
         );
     }

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProcessCollectionRepository extends JpaRepository<ProcessCollection, UUID>, JpaSpecificationExecutor<ProcessCollection> {
+    Long countAllByTenantId(UUID tenantId);
+
     @Query(value = "SELECT COUNT(*) FROM ProcessCollection pc WHERE pc.id = ?1")
     int countCollectionsById(UUID id);
 
@@ -79,7 +81,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
         "SELECT pc.*, bc.lvl + 1 FROM bread_crumbs bc " +
         "JOIN process_collection pc ON pc.id = bc.parent_id " +
         ") " +
-        "SELECT bc.id, bc.name, bc.description, bc.created, bc.updated, bc.created_by, bc.is_public, bc.parent_id " +
+        "SELECT bc.id, bc.name, bc.description, bc.created, bc.updated, bc.created_by, bc.is_public, bc.parent_id, bc.tenant_id " +
         "FROM bread_crumbs bc " +
         "ORDER BY bc.lvl DESC",
         nativeQuery = true
@@ -95,10 +97,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     )
     List<ProcessCollection> findAllUserAccessible(User user);
 
-    @Query(
-        value = "SELECT * FROM process_collection",
-        nativeQuery = true
-    )
+    @Query(value = "SELECT * FROM process_collection", nativeQuery = true)
     List<ProcessCollection> getAll();
 
     @Query(

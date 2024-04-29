@@ -78,14 +78,14 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             textColor="secondary"
         >
             <Tab
-                key={ProcessesTabs.PROCESSES}
-                value={ProcessesTabs.PROCESSES}
-                label={translate('Process.Collection.Navigation.Processes.Label')}
-            />
-            <Tab
                 key={ProcessesTabs.COLLECTIONS}
                 value={ProcessesTabs.COLLECTIONS}
                 label={translate('Process.Collection.Navigation.Collections.Label')}
+            />
+            <Tab
+                key={ProcessesTabs.PROCESSES}
+                value={ProcessesTabs.PROCESSES}
+                label={translate('Process.Collection.Navigation.Processes.Label')}
             />
         </Tabs>
     );

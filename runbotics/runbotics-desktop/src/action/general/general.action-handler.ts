@@ -58,16 +58,21 @@ export default class GeneralActionHandler extends StatelessActionHandler {
             if (processSystem !== BotSystem.ANY && processSystem !== system) {
                 reject(new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`));
             }
+                
+            const processInstancesIds = Object.keys(this.runtimeService.processInstances);
+            const parentProcessId = processInstancesIds[processInstancesIds.length - 1] ?? request.rootProcessInstanceId;
 
             const processInstanceId = await this.runtimeService.startProcessInstance({
                 process: process,
                 variables: request.input.variables,
+                parentProcessInstanceId: parentProcessId,
                 userId: request.userId,
                 orchestratorProcessInstanceId: null,
                 rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
                 trigger: request.trigger as ITriggerEvent,
                 triggerData: request.triggerData,
             });
+
             const subscription = this.runtimeService.processChange().subscribe((data) => {
                 if (data.processInstanceId === processInstanceId) {
                     switch (data.eventType) {

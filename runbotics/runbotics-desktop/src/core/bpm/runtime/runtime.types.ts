@@ -52,6 +52,7 @@ export interface IProcessParams {
 export interface IStartProcessInstance extends IProcessParams, Omit<StartProcessMessageBody, 'processId' | 'input'> {
     process: IProcess;
     rootProcessInstanceId?: string;
+    parentProcessInstanceId?: string;
 }
 
 export interface BpmnExecutionEventMessageContentError {

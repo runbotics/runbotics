@@ -248,9 +248,13 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
                     Authorization: 'Bearer ' + (await this.getBearerToken()),
                 },
                 maxRedirects: 0,
+            })
+            .then(res => res.data)
+            .catch(err => {
+                throw new Error(err.response.data);
             });
 
-        return response.data;
+        return response;
     }
 
     private parseAdditionalProperties(inputObject: string) {

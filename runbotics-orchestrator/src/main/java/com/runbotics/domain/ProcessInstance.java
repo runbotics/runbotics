@@ -5,13 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -32,6 +31,9 @@ public class ProcessInstance implements Serializable {
 
     @Column(name = "root_process_instance_id")
     private UUID rootProcessInstanceId;
+
+    @Column(name = "parent_process_instance_id")
+    private UUID parentProcessInstanceId;
 
     @Column(name = "orchestrator_process_instance_id")
     private String orchestratorProcessInstanceId;
@@ -72,7 +74,9 @@ public class ProcessInstance implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Bot bot;
 
-    @Formula("(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)")
+    @Formula(
+        "(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.parent_process_instance_id = id OR process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)"
+    )
     private boolean hasSubprocesses;
 
     @Column(name = "error")
@@ -108,6 +112,14 @@ public class ProcessInstance implements Serializable {
 
     public void setRootProcessInstanceId(UUID rootProcessInstanceId) {
         this.rootProcessInstanceId = rootProcessInstanceId;
+    }
+
+    public UUID getParentProcessInstanceId() {
+        return this.parentProcessInstanceId;
+    }
+
+    public void setParentProcessInstanceId(UUID parentProcessInstanceId) {
+        this.parentProcessInstanceId = parentProcessInstanceId;
     }
 
     public String getOrchestratorProcessInstanceId() {
@@ -267,11 +279,11 @@ public class ProcessInstance implements Serializable {
         this.triggerData = triggerData;
     }
 
-    public Boolean getWarning(){
+    public Boolean getWarning() {
         return this.warning;
     }
 
-    public void setWarning(Boolean warning){
+    public void setWarning(Boolean warning) {
         this.warning = warning;
     }
 
@@ -297,7 +309,8 @@ public class ProcessInstance implements Serializable {
     public String toString() {
         return "ProcessInstance{" +
             "id=" + getId() +
-            ", parentId='" + getRootProcessInstanceId() + "'" +
+            ", parentId='" + getParentProcessInstanceId() + "'" +
+            ", rootId='" + getRootProcessInstanceId() + "'" +
             ", orchestratorProcessInstanceId='" + getOrchestratorProcessInstanceId() + "'" +
             ", status='" + getStatus() + "'" +
             ", created='" + getCreated() + "'" +

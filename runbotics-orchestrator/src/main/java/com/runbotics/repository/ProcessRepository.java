@@ -4,6 +4,7 @@ import com.runbotics.domain.Process;
 import com.runbotics.domain.User;
 import com.runbotics.domain.User;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpecificationExecutor<Process>, ProcessCustomRepository {
+    Long countAllByTenantId(UUID tenantId);
+
     @Query("select process from Process process where process.createdBy.login = ?#{principal.username}")
     List<Process> findByCreatedByIsCurrentUser();
 
