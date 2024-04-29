@@ -12,21 +12,20 @@ import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.exception.GuestProcessInternalServerError;
 import com.runbotics.utils.Utils;
+import java.util.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.security.RandomUtil;
 
-import java.util.*;
-
 @Service
 public class GuestServiceImpl implements GuestService {
+
     private final UserService userService;
     private final GuestRepository guestRepository;
     private final ProcessService processService;
     private final PasswordEncoder passwordEncoder;
-
 
     public GuestServiceImpl(
         UserService userService,
@@ -41,7 +40,9 @@ public class GuestServiceImpl implements GuestService {
     }
 
     public boolean verifyGuestLimit(String guestIp) {
-        Optional<Guest> guestOptional = guestRepository.findAll().stream()
+        Optional<Guest> guestOptional = guestRepository
+            .findAll()
+            .stream()
             .filter(guest -> passwordEncoder.matches(guestIp, guest.getIp()))
             .findFirst();
         return guestOptional.isEmpty();

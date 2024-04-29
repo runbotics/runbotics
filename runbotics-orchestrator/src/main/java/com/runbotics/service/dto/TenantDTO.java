@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class TenantDTO {
+
     private UUID id;
 
     private String name;
@@ -67,12 +68,20 @@ public class TenantDTO {
 
     @Override
     public String toString() {
-        return "TenantDTO{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", createdById=" + createdById +
-            ", created=" + created +
-            ", updated=" + updated +
-            "}";
+        return (
+            "TenantDTO{" +
+            "id=" +
+            id +
+            ", name='" +
+            name +
+            '\'' +
+            ", createdById=" +
+            createdById +
+            ", created=" +
+            created +
+            ", updated=" +
+            updated +
+            "}"
+        );
     }
 }

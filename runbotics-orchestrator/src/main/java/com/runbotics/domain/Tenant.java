@@ -1,13 +1,12 @@
 package com.runbotics.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "tenant")
@@ -104,13 +103,15 @@ public class Tenant implements Serializable {
 
     @Override
     public String toString() {
-        return "Tenant{" +
+        return (
+            "Tenant{" +
             (id != null ? "id=" + id + "," : "") +
             (name != null ? "id=" + name + "," : "") +
             (createdBy != null ? "id=" + createdBy.getId() + "," : "") +
             (created != null ? "id=" + created + "," : "") +
             (updated != null ? "id=" + updated + "," : "") +
             (lastModifiedBy != null ? "id=" + lastModifiedBy + "," : "") +
-            "}";
+            "}"
+        );
     }
 }

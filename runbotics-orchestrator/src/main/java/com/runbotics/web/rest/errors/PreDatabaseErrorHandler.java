@@ -1,9 +1,8 @@
 package com.runbotics.web.rest.errors;
 
 import com.runbotics.repository.*;
-import org.springframework.stereotype.Component;
-
 import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PreDatabaseErrorHandler {

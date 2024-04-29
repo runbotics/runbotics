@@ -327,18 +327,17 @@ public class UserService {
             .findById(adminUserDTO.getId())
             .map(
                 existingUser -> {
-                    userRepository.findOtherUserByLoginOrEmail(
-                        adminUserDTO.getId(),
-                        adminUserDTO.getEmail(),
-                        adminUserDTO.getLogin()
-                    )
-                    .ifPresent(user -> {
-                        if (user.getEmail().equals(adminUserDTO.getEmail())) {
-                            throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
-                        } else {
-                            throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
-                        }
-                    });
+                    userRepository
+                        .findOtherUserByLoginOrEmail(adminUserDTO.getId(), adminUserDTO.getEmail(), adminUserDTO.getLogin())
+                        .ifPresent(
+                            user -> {
+                                if (user.getEmail().equals(adminUserDTO.getEmail())) {
+                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
+                                } else {
+                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
+                                }
+                            }
+                        );
 
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
 
@@ -414,11 +413,13 @@ public class UserService {
         User user = this.getUserWithAuthorities().orElseGet(User::new);
 
         return user
-                .getAuthorities()
-                .stream()
-                .map(Authority::getFeatureKeys)
-                .flatMap(Set::stream)
-                .map(FeatureKey::getName).distinct().collect(Collectors.toList());
+            .getAuthorities()
+            .stream()
+            .map(Authority::getFeatureKeys)
+            .flatMap(Set::stream)
+            .map(FeatureKey::getName)
+            .distinct()
+            .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

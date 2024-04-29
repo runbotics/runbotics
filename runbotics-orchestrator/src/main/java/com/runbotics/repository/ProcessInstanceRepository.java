@@ -31,13 +31,17 @@ public interface ProcessInstanceRepository extends JpaRepository<ProcessInstance
     @Query("SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.bot.installationId like %?1%")
     Page<ProcessInstance> findAllByBotInstallationId(String botId, Pageable pageable);
 
-    @Query("SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.status IN ?1 AND process_instance.rootProcessInstanceId IS NULL")
+    @Query(
+        "SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.status IN ?1 AND process_instance.rootProcessInstanceId IS NULL"
+    )
     List<ProcessInstance> findByStatus(List<ProcessInstanceStatus> status);
 
     @Query("SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.user.login like %?1%")
     Page<ProcessInstance> findAllByCreatedByName(String username, Pageable pageable);
 
-    @Query("SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.parentProcessInstanceId = ?1 OR (process_instance.parentProcessInstanceId IS NULL AND process_instance.rootProcessInstanceId = ?1)")
+    @Query(
+        "SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.parentProcessInstanceId = ?1 OR (process_instance.parentProcessInstanceId IS NULL AND process_instance.rootProcessInstanceId = ?1)"
+    )
     List<ProcessInstance> findByParentId(UUID parentId);
 
     @Modifying

@@ -3,6 +3,7 @@ package com.runbotics.web.rest.tenant;
 import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.TenantService;
 import com.runbotics.service.dto.TenantDTO;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.ResponseUtil;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tenant/tenants")
@@ -38,17 +37,16 @@ public class TenantResource {
 
         return ResponseUtil.wrapOrNotFound(tenant);
     }
-
-//    Endpoint allows tenant admin to edit his organization - disabled feature for now
-//    @PatchMapping
-//    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT + "')")
-//    public ResponseEntity<TenantDTO> updateUserTenant(@Valid @RequestBody TenantDTO tenantDTO) {
-//        log.debug("REST request to partial update tenant by requester");
-//        Optional<TenantDTO> updatedTenant = tenantService.partialUpdate(tenantDTO);
-//
-//        return ResponseUtil.wrapOrNotFound(
-//            updatedTenant,
-//            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tenantDTO.getId().toString())
-//        );
-//    }
+    //    Endpoint allows tenant admin to edit his organization - disabled feature for now
+    //    @PatchMapping
+    //    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT + "')")
+    //    public ResponseEntity<TenantDTO> updateUserTenant(@Valid @RequestBody TenantDTO tenantDTO) {
+    //        log.debug("REST request to partial update tenant by requester");
+    //        Optional<TenantDTO> updatedTenant = tenantService.partialUpdate(tenantDTO);
+    //
+    //        return ResponseUtil.wrapOrNotFound(
+    //            updatedTenant,
+    //            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tenantDTO.getId().toString())
+    //        );
+    //    }
 }

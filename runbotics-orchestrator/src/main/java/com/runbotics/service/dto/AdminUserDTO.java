@@ -2,7 +2,6 @@ package com.runbotics.service.dto;
 
 import com.runbotics.config.Constants;
 import com.runbotics.domain.User;
-
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
@@ -47,7 +46,6 @@ public class AdminUserDTO {
 
     private Instant lastModifiedDate;
 
-
     private Set<String> roles;
 
     private Set<String> featureKeys;
@@ -72,7 +70,12 @@ public class AdminUserDTO {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.roles = user.getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet());
-        this.featureKeys = user.getAuthorities().stream().flatMap(authority -> authority.getFeatureKeys().stream().map(featureKey -> featureKey.getName())).collect(Collectors.toSet());
+        this.featureKeys =
+            user
+                .getAuthorities()
+                .stream()
+                .flatMap(authority -> authority.getFeatureKeys().stream().map(featureKey -> featureKey.getName()))
+                .collect(Collectors.toSet());
         this.tenantId = user.getTenant().getId();
     }
 

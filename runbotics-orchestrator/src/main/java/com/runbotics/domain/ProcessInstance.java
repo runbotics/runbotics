@@ -5,13 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.runbotics.modules.bot.entity.ProcessInstanceStatus;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -75,7 +74,9 @@ public class ProcessInstance implements Serializable {
     @JsonIgnoreProperties(value = { "user" }, allowSetters = true)
     private Bot bot;
 
-    @Formula("(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.parent_process_instance_id = id OR process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)")
+    @Formula(
+        "(SELECT CASE WHEN EXISTS (SELECT id FROM process_instance WHERE process_instance.parent_process_instance_id = id OR process_instance.root_process_instance_id = id) THEN 'TRUE' ELSE 'FALSE' END)"
+    )
     private boolean hasSubprocesses;
 
     @Column(name = "error")
@@ -278,11 +279,11 @@ public class ProcessInstance implements Serializable {
         this.triggerData = triggerData;
     }
 
-    public Boolean getWarning(){
+    public Boolean getWarning() {
         return this.warning;
     }
 
-    public void setWarning(Boolean warning){
+    public void setWarning(Boolean warning) {
         this.warning = warning;
     }
 

@@ -2,7 +2,6 @@ package com.runbotics.service;
 
 import com.runbotics.domain.Tenant;
 import com.runbotics.service.dto.TenantDTO;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

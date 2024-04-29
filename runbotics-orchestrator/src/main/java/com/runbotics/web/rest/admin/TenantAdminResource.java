@@ -4,6 +4,13 @@ import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.TenantService;
 import com.runbotics.service.dto.TenantDTO;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,14 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/tenants")
@@ -35,9 +34,7 @@ public class TenantAdminResource {
 
     private final TenantService tenantService;
 
-    public TenantAdminResource(
-        TenantService tenantService
-    ) {
+    public TenantAdminResource(TenantService tenantService) {
         this.tenantService = tenantService;
     }
 

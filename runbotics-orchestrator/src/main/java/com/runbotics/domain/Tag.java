@@ -1,8 +1,8 @@
 package com.runbotics.domain;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * A Tag.
@@ -78,10 +78,6 @@ public class Tag implements Serializable {
 
     @Override
     public String toString() {
-        return "Tag{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", tenantId=" + (tenant != null ? tenant.getId() : "") +
-            ",}";
+        return "Tag{" + "id=" + id + ", name='" + name + '\'' + ", tenantId=" + (tenant != null ? tenant.getId() : "") + ",}";
     }
 }

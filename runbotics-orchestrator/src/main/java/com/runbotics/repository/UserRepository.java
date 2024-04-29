@@ -5,7 +5,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -52,21 +51,18 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Page<User> findAllByActivatedIsFalseAndEmailIsContaining(Pageable pageable, String email);
 
     @Query(
-        value =
-            "SELECT * " +
-            "FROM jhi_user ju " +
-            "WHERE NOT EXISTS ( " +
-                "SELECT 1 " +
-                "FROM jhi_user_authority " +
-                "WHERE user_id = ju.id " +
-                "AND authority_name = 'ROLE_ADMIN' " +
-            ");",
+        value = "SELECT * " +
+        "FROM jhi_user ju " +
+        "WHERE NOT EXISTS ( " +
+        "SELECT 1 " +
+        "FROM jhi_user_authority " +
+        "WHERE user_id = ju.id " +
+        "AND authority_name = 'ROLE_ADMIN' " +
+        ");",
         nativeQuery = true
     )
     List<User> findAllActivatedNonAdmins();
 
-    @Query(
-        "SELECT u FROM User u WHERE u.id != ?1 AND (u.email = ?2 OR u.login = ?3)"
-    )
+    @Query("SELECT u FROM User u WHERE u.id != ?1 AND (u.email = ?2 OR u.login = ?3)")
     Optional<User> findOtherUserByLoginOrEmail(Long id, String email, String login);
 }

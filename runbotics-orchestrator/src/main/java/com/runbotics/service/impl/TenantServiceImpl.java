@@ -10,17 +10,15 @@ import com.runbotics.service.dto.TenantDTO;
 import com.runbotics.service.mapper.TenantMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import com.runbotics.web.rest.errors.PreDatabaseErrorHandler;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Tenant}.
@@ -59,9 +57,7 @@ public class TenantServiceImpl implements TenantService {
 
     public List<TenantDTO> getAll() {
         log.debug("Request to get all Tenants");
-        return tenantRepository.findAll()
-            .stream().map(tenantMapper::toDto)
-            .collect(Collectors.toList());
+        return tenantRepository.findAll().stream().map(tenantMapper::toDto).collect(Collectors.toList());
     }
 
     public Optional<TenantDTO> getById(UUID id) {
@@ -73,9 +69,7 @@ public class TenantServiceImpl implements TenantService {
         User requester = userService.getUserWithAuthorities().get();
         log.debug("Request to get Tenant by requester: {}", requester);
 
-        return tenantRepository
-            .findById(requester.getTenant().getId())
-            .map(tenantMapper::toDto);
+        return tenantRepository.findById(requester.getTenant().getId()).map(tenantMapper::toDto);
     }
 
     public TenantDTO save(TenantDTO tenantDTO) {
@@ -110,18 +104,22 @@ public class TenantServiceImpl implements TenantService {
 
         return tenantRepository
             .findById(tenantDTO.getId())
-            .map(tenant -> {
-                if (tenantDTO.getCreatedById() != null) {
-                    final User updatedUser = userRepository.findById(tenantDTO.getCreatedById()).orElseThrow(
-                        () -> new BadRequestAlertException("Could not found user while updating", ENTITY_NAME, "userNotFound")
-                    );
-                    tenant.setCreatedBy(updatedUser);
-                }
-                tenantDTO.setUpdated(ZonedDateTime.now());
-                tenantMapper.partialUpdate(tenant, tenantDTO);
+            .map(
+                tenant -> {
+                    if (tenantDTO.getCreatedById() != null) {
+                        final User updatedUser = userRepository
+                            .findById(tenantDTO.getCreatedById())
+                            .orElseThrow(
+                                () -> new BadRequestAlertException("Could not found user while updating", ENTITY_NAME, "userNotFound")
+                            );
+                        tenant.setCreatedBy(updatedUser);
+                    }
+                    tenantDTO.setUpdated(ZonedDateTime.now());
+                    tenantMapper.partialUpdate(tenant, tenantDTO);
 
-                return tenant;
-            })
+                    return tenant;
+                }
+            )
             .map(tenantRepository::save)
             .map(tenantMapper::toDto);
     }
