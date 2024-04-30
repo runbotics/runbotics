@@ -1,4 +1,4 @@
-name: Win build - TEST
+name: Build bot executable file
 
 on:
   push:
