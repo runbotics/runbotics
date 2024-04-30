@@ -6,10 +6,19 @@ import com.runbotics.repository.TenantRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.service.TenantService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.criteria.TenantCriteria;
 import com.runbotics.service.dto.TenantDTO;
 import com.runbotics.service.mapper.TenantMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import com.runbotics.web.rest.errors.PreDatabaseErrorHandler;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +67,16 @@ public class TenantServiceImpl implements TenantService {
     public List<TenantDTO> getAll() {
         log.debug("Request to get all Tenants");
         return tenantRepository.findAll().stream().map(tenantMapper::toDto).collect(Collectors.toList());
+    }
+
+    public Page<TenantDTO> getAllByPage(Pageable pageable, TenantCriteria tenantCriteria) {
+        if (tenantCriteria.getName() == null) {
+            return tenantRepository.findAll(pageable).map(tenantMapper::toDto);
+        }
+
+        return tenantRepository.findAllByNameIsContainingIgnoreCase(
+          pageable, tenantCriteria.getName().getContains()
+        ).map(tenantMapper::toDto);
     }
 
     public Optional<TenantDTO> getById(UUID id) {
