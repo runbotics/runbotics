@@ -1,4 +1,5 @@
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
+import { UserDTO } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { formatDate } from '#src-app/utils/dateFormat';
@@ -19,7 +20,8 @@ const useTenantsListColumns = (): GridColDef[] => {
             field: TenantField.CREATED_BY,
             headerName: translate('Tenants.List.Table.Columns.CreatedBy'),
             filterable: false,
-            flex: 0.6
+            flex: 0.6,
+            valueFormatter: (params: GridValueFormatterParams<UserDTO>) => params.value.login
         },
         {
             field: TenantField.CREATED_DATE,

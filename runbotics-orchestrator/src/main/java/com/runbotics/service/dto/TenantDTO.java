@@ -9,7 +9,7 @@ public class TenantDTO {
 
     private String name;
 
-    private Long createdById;
+    private UserDTO createdBy;
 
     private ZonedDateTime created;
 
@@ -31,12 +31,12 @@ public class TenantDTO {
         this.name = name;
     }
 
-    public Long getCreatedById() {
-        return this.createdById;
+    public UserDTO getCreatedBy() {
+        return this.createdBy;
     }
 
-    public void setCreatedById(Long createdById) {
-        this.createdById = createdById;
+    public void setCreatedBy(UserDTO createdBy) {
+        this.createdBy = createdBy;
     }
 
     public ZonedDateTime getCreated() {
@@ -68,20 +68,12 @@ public class TenantDTO {
 
     @Override
     public String toString() {
-        return (
-            "TenantDTO{" +
-            "id=" +
-            id +
-            ", name='" +
-            name +
-            '\'' +
-            ", createdById=" +
-            createdById +
-            ", created=" +
-            created +
-            ", updated=" +
-            updated +
-            "}"
-        );
+        return "TenantDTO{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", createdById=" + createdBy +
+            ", created=" + created +
+            ", updated=" + updated +
+            "}";
     }
 }

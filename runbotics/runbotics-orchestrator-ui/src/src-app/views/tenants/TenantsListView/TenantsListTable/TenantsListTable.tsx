@@ -1,7 +1,10 @@
-import { VFC } from 'react';
+import { VFC, useEffect } from 'react';
 
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+
+import { useDispatch, useSelector } from '#src-app/store';
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 
 import { DataGridStyle } from './TenantsListTable.styles';
 import useTenantsListColumns from './useTenantsListColumns';
@@ -11,6 +14,12 @@ const TenantsListTable: VFC = ({
 
 }) => {
     const tenantsListColumns = useTenantsListColumns();
+    const { all } = useSelector(tenantsSelector);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(tenantsActions.getAll());
+    }, []);
 
     return (
         <Card>
@@ -20,7 +29,7 @@ const TenantsListTable: VFC = ({
                         sx={DataGridStyle}
                         autoHeight
                         columns={tenantsListColumns}
-                        rows={[]}
+                        rows={all}
                         rowCount={0}
                         // loading={activated.loading}
                         // page={page}

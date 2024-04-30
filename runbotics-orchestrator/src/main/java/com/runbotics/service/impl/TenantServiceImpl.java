@@ -104,18 +104,15 @@ public class TenantServiceImpl implements TenantService {
 
         return tenantRepository
             .findById(tenantDTO.getId())
-            .map(
-                tenant -> {
-                    if (tenantDTO.getCreatedById() != null) {
-                        final User updatedUser = userRepository
-                            .findById(tenantDTO.getCreatedById())
-                            .orElseThrow(
-                                () -> new BadRequestAlertException("Could not found user while updating", ENTITY_NAME, "userNotFound")
-                            );
-                        tenant.setCreatedBy(updatedUser);
-                    }
-                    tenantDTO.setUpdated(ZonedDateTime.now());
-                    tenantMapper.partialUpdate(tenant, tenantDTO);
+            .map(tenant -> {
+                if (tenantDTO.getCreatedBy() != null) {
+                    final User updatedUser = userRepository.findById(tenantDTO.getCreatedBy().getId()).orElseThrow(
+                        () -> new BadRequestAlertException("Could not found user while updating", ENTITY_NAME, "userNotFound")
+                    );
+                    tenant.setCreatedBy(updatedUser);
+                }
+                tenantDTO.setUpdated(ZonedDateTime.now());
+                tenantMapper.partialUpdate(tenant, tenantDTO);
 
                     return tenant;
                 }
