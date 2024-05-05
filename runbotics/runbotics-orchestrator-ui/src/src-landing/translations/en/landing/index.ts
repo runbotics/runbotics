@@ -7,6 +7,7 @@ import heroTranslations from './hero.json';
 import integrationTranslations from './integration.json';
 import openSourceTranslations from './open-source.json';
 import partnerTranslations from './partner.json';
+import aboutTeamTranslations from './about-team.json';
 import policyTranslations from './policy.json';
 import prosTranslations from './pros.json';
 import rpaTranslations from './rpa.json';
@@ -25,6 +26,7 @@ const landingPageTranslations = {
     ...rpaTranslations,
     ...footerTranslations,
     ...blogTranslations,
+    ...aboutTeamTranslations,
     ...policyTranslations,
 };
 

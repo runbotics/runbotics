@@ -61,9 +61,39 @@ const ProcessMainView: FC = () => {
         },
     ].filter((processTab) => hasFeatureKeyAccess(user, processTab.featureKeys) && processTab.show);
 
-    const handleMainTabsChange = (processTab: ProcessTab) => {
-        router.push({ pathname: `/app/processes/${id}/${processTab}` });
-    };
+    // const handleMainTabsChange = (processTab: ProcessTab) => {
+    //     router.push({ pathname: `/app/processes/${id}/${processTab}` });
+    // };
+
+    const handleMainTabsChange = (processTab: ProcessTab, e: React.SyntheticEvent) => {
+        const url = `/app/processes/${id}/${processTab}`;
+
+        const keyboardEvent = e.nativeEvent as KeyboardEvent; 
+        const mouseEvent = e.nativeEvent as MouseEvent; 
+        
+        console.log(e)
+        console.log(mouseEvent.button)
+
+
+        if (mouseEvent) {
+            if (mouseEvent.button === 1) {
+                window.open(url, '_blank');
+                return;
+            }
+            if (mouseEvent.button === 0 && keyboardEvent.ctrlKey) {
+                window.open(url, '_blank');
+                return;
+            } else {
+                router.push({ pathname: url });
+            } 
+        }
+         // if (keyboardEvent.ctrlKey) {
+        //     window.open(url, '_blank');
+        // } else {
+        //     router.push({ pathname: url });
+        // }
+
+    }
 
     useEffect(() => () => {
         dispatch(processInstanceActions.resetActive());
@@ -74,7 +104,7 @@ const ProcessMainView: FC = () => {
             <Grid container>
                 <Grid item my={1} ml={1} display={'flex'} gap={2}>
                     <Tabs
-                        onChange={(_, processTab) => handleMainTabsChange(processTab)}
+                        onChange={(event, processTab) => handleMainTabsChange(processTab, event)}
                         scrollButtons="auto"
                         textColor="secondary"
                         value={tab}

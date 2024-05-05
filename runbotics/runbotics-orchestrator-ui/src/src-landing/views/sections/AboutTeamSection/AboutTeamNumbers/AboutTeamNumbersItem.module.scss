@@ -1,0 +1,16 @@
+@import '#src-landing/scss/main';
+
+.number{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 80px;
+    max-width: 30%;
+    padding-left: $padding-1;
+    border-left: 4px solid #FFFFFF;
+}
+
+.numberText{
+    margin-top: 12px;
+    font-weight: $font-weight-medium;
+}

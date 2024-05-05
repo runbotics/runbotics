@@ -12,6 +12,7 @@ import HeroSection from '#src-landing/views/sections/HeroSection';
 import IntegrationSection from '#src-landing/views/sections/IntegrationSection';
 import OpenSourceSection from '#src-landing/views/sections/OpenSourceSection';
 import PartnerSection from '#src-landing/views/sections/PartnerSection';
+import AboutTeamSection from '#src-landing/views/sections/AboutTeamSection';
 import ProsSection from '#src-landing/views/sections/ProsSection';
 import RPASection from '#src-landing/views/sections/RPASection';
 
@@ -34,6 +35,7 @@ const MainView: VFC<Props> = ({ blogPosts }) => {
             {/* <TemplatesSection /> */}
             <IntegrationSection />
             <PartnerSection />
+            <AboutTeamSection />
             <BlogSection posts={blogPosts} />
             <ContactSection />
         </Layout> );
