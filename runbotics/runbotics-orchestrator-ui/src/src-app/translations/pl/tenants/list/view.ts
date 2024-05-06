@@ -2,6 +2,7 @@ import englishViewListTranslations from '#src-app/translations/en/tenants/list/v
 
 const viewListTranslations: typeof englishViewListTranslations = {
     'Tenants.List.View.SearchBarPlaceholder': 'Szukaj',
+    'Tenants.List.View.Events.Error.FindingTenants': 'Wystąpił błąd podczas znajdowania organizacji',
 };
 
 export default viewListTranslations;

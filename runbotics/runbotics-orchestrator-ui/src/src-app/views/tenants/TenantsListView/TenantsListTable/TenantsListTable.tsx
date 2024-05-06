@@ -1,25 +1,35 @@
-import { VFC, useEffect } from 'react';
+import { VFC } from 'react';
 
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { useDispatch, useSelector } from '#src-app/store';
-import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
+import useTranslations from '#src-app/hooks/useTranslations';
+import { useSelector } from '#src-app/store';
+import { tenantsSelector } from '#src-app/store/slices/Tenants';
 
 import { DataGridStyle } from './TenantsListTable.styles';
 import useTenantsListColumns from './useTenantsListColumns';
 import { ROWS_PER_PAGE } from '../../TenantsBrowseView/TenantsBrowseView.utils';
 
-const TenantsListTable: VFC = ({
+interface TenantListTableProps {
+    page: number;
+    onPageChange: (page: number) => void;
+    pageSize: number;
+    onPageSizeChange: (pageSize: number) => void;
+    openTenantEditDialog: (row) => void;
+}
 
+const TenantsListTable: VFC<TenantListTableProps> = ({
+    page,
+    onPageChange,
+    pageSize,
+    onPageSizeChange,
+    openTenantEditDialog
 }) => {
-    const tenantsListColumns = useTenantsListColumns();
-    const { all } = useSelector(tenantsSelector);
-    const dispatch = useDispatch();
+    const { translate } = useTranslations();
 
-    useEffect(() => {
-        dispatch(tenantsActions.getAll());
-    }, []);
+    const tenantsListColumns = useTenantsListColumns();
+    const { loading, allByPage } = useSelector(tenantsSelector);
 
     return (
         <Card>
@@ -29,20 +39,20 @@ const TenantsListTable: VFC = ({
                         sx={DataGridStyle}
                         autoHeight
                         columns={tenantsListColumns}
-                        rows={all}
-                        rowCount={0}
-                        // loading={activated.loading}
-                        // page={page}
-                        // onPageChange={(newPage) => onPageChange(newPage)}
-                        // pageSize={pageSize}
-                        // onPageSizeChange={(newPageSize) => onPageSizeChange(newPageSize)}
+                        rows={allByPage?.content ?? []}
+                        rowCount={allByPage?.totalElements ?? 0}
+                        loading={loading}
+                        page={page}
+                        onPageChange={(newPage) => onPageChange(newPage)}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => onPageSizeChange(newPageSize)}
                         disableSelectionOnClick
-                        // onRowClick={({ row }) => openUserEditDialog(row)}
+                        onRowClick={({ row }) => openTenantEditDialog(row)}
                         paginationMode='server'
                         rowsPerPageOptions={ROWS_PER_PAGE}
-                        // localeText={{
-                        //     noRowsLabel: translate('Users.List.Table.Error.Rows')
-                        // }}
+                        localeText={{
+                            noRowsLabel: translate('Tenants.List.Table.Error.Rows')
+                        }}
                     />
                 </Grid>
             </Grid>

@@ -1,9 +1,12 @@
-import { VFC, useState } from 'react';
+import { VFC, useState, useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
+import useTenantSearch from '#src-app/hooks/useTenantSearch';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { useSelector } from '#src-app/store';
+import { tenantsSelector } from '#src-app/store/slices/Tenants';
 
 import TenantsListTable from './TenantsListTable/TenantsListTable';
 import { StyledActionsContainer, StyledTextField } from './TenantsListView.styles';
@@ -24,10 +27,23 @@ const TenantsListView: VFC = () => {
             : DefaultPageValue.PAGE_SIZE
     );
 
-    const [search, setSearch] = useState(); // change to hook
-    const handleSearch = (event) => {
-        setSearch(event.target.value);
-    };
+    const { allByPage } = useSelector(tenantsSelector);
+
+    const { search, handleSearch, refreshSearch } = useTenantSearch({ page, pageSize: limit });
+
+    useEffect(() => {
+        const isPageNotAvailable = allByPage?.totalPages && page >= allByPage?.totalPages;
+        if (isPageNotAvailable) {
+            router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit } });
+            setPage(0);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [allByPage]);
+
+    useEffect(() => {
+        refreshSearch();
+    }, []);
 
     return (
         <>
@@ -40,7 +56,13 @@ const TenantsListView: VFC = () => {
                     onChange={handleSearch}
                 />
             </StyledActionsContainer>
-            <TenantsListTable/>
+            <TenantsListTable
+                page={page}
+                onPageChange={setPage}
+                pageSize={limit}
+                onPageSizeChange={setLimit}
+                openTenantEditDialog={() => {}}
+            />
         </>
     );
 };
