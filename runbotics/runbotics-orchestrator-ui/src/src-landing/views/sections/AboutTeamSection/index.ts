@@ -1,3 +1,3 @@
-import AboutTeamSection from './AboutTeamSection';
+import BlogSection from './AboutTeamSection';
 
-export default AboutTeamSection;
+export default BlogSection;
