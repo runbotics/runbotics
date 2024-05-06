@@ -195,6 +195,12 @@ export enum FeatureKey {
 
     // Allows to edit the resources assigned to the tenant
     TENANT_EDIT = 'TENANT_EDIT',
+
+    // Allows to read credentials
+    CREDENTIALS_READ = 'CREDENTIALS_READ',
+
+    // Allows to read credenitals collections
+    CREDENTIALS_COLLECTIONS_READ = 'CREDENTIALS_COLLECTIONS_READ'
 }
 
 export interface IFeatureKey {

@@ -7,6 +7,7 @@ import botTranslations from './bot.json';
 import collectionTranslations from './collections';
 import commonTranslations from './common.json';
 import componentsTranslations from './components.json';
+import credenitalsTranslations from './credenitals';
 import demoTranslations from './demo.json';
 import error404Translations from './error404.json';
 import historyTranslations from './history.json';
@@ -41,6 +42,7 @@ const translationResources = {
     ...blogTranslations,
     ...demoTranslations,
     ...usersTranslations,
+    ...credenitalsTranslations
 };
 
 export default translationResources;
