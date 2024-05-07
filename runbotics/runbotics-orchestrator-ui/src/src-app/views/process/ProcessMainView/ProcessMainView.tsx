@@ -5,6 +5,7 @@ import { Divider, Grid, Tab, Tabs } from '@mui/material';
 import { useRouter } from 'next/router';
 import { FeatureKey, Role } from 'runbotics-common';
 
+import Link from 'next/link';
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAuth from '#src-app/hooks/useAuth';
@@ -38,6 +39,7 @@ const ProcessMainView: FC = () => {
 
     useEffect(() => () => {
         dispatch(processActions.resetDraft());
+        dispatch(processInstanceActions.resetActive());
     }, []);
 
     const processTabs = [
@@ -46,54 +48,43 @@ const ProcessMainView: FC = () => {
             label: translate('Process.MainView.Tabs.Build.Title'),
             featureKeys: [FeatureKey.PROCESS_BUILD_VIEW],
             show: true,
+            href: `/app/processes/${id}/${ProcessTab.BUILD}`
         },
         {
             value: ProcessTab.RUN,
             label: translate('Process.MainView.Tabs.Run.Title'),
             featureKeys: [FeatureKey.PROCESS_RUN_VIEW],
             show: true,
+            href: `/app/processes/${id}/${ProcessTab.RUN}`
         },
         {
             value: ProcessTab.CONFIGURE,
             label: translate('Process.MainView.Tabs.Configure.Title'),
             featureKeys: [FeatureKey.PROCESS_CONFIGURE_VIEW],
             show: process?.isPublic ? (isAdmin || isProcessOwner(process.createdBy?.id)) : true,
+            href: `/app/processes/${id}/${ProcessTab.CONFIGURE}`
         },
     ].filter((processTab) => hasFeatureKeyAccess(user, processTab.featureKeys) && processTab.show);
 
-    const handleMainTabsChange = (processTab: ProcessTab, e: React.SyntheticEvent) => {
-        const url = `/app/processes/${id}/${processTab}`;
-
-        const keyboardEvent = e.nativeEvent as KeyboardEvent; 
-
-        if (keyboardEvent.ctrlKey) {
-            window.open(url, '_blank');
-        } else {
-            router.push({ pathname: url });
-        }
-    }
-
-    useEffect(() => () => {
-        dispatch(processInstanceActions.resetActive());
-    }, []);
 
     return (
         <ProcessInternalPage title={translate('Process.MainView.Meta.Title')} fullWidth>
             <Grid container>
                 <Grid item my={1} ml={1} display={'flex'} gap={2}>
                     <Tabs
-                        onChange={(e, processTab) => handleMainTabsChange(processTab, e)}
                         scrollButtons="auto"
                         textColor="secondary"
                         value={tab}
                         variant="scrollable"
                     >
                         {processTabs.length > 1 && processTabs.map((processTab) => (
-                            <Tab
-                                key={processTab.value}
-                                label={processTab.label}
-                                value={processTab.value}
-                            />
+                            <Link key={processTab.value} href={processTab.href} passHref>
+                                <Tab 
+                                    label={processTab.label}
+                                    value={processTab.value}
+                                />
+                            </Link>
+                            
                         ))}
                     </Tabs>
                     {isGuest &&
