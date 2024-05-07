@@ -1,4 +1,5 @@
-import { PrimaryColumn, Entity, Column } from 'typeorm';
+import { PrimaryColumn, Entity, Column, OneToOne } from 'typeorm';
+import { ProcessContextSecret } from '#/database/process-context-secret/process-context-secret.entity';
 
 @Entity({ name: 'secret' })
 export class Secret {
@@ -13,4 +14,7 @@ export class Secret {
     
     @Column()
     iv: string;
+    
+    @OneToOne(() => ProcessContextSecret, processContextSecret => processContextSecret.secret)
+    processContextSecret: ProcessContextSecret | null;
 }

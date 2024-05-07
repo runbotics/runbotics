@@ -6,9 +6,15 @@
     <changeSet author="pilakw" id="20240412127832-1">
         <createTable tableName="secret">
             <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
-            <column name="tenantId" type="bigint"/>
+            <column name="tenantId" type="${uuid_type}">
+                <constraints
+                    nullable="false"
+                    foreignKeyName="fk_process_id"
+                    references="process(id)"
+                />
+            </column>
             <column name="data" type="text"/>
             <column name="iv" type="text">
                 <constraints unique="true"/>
@@ -19,12 +25,10 @@
     <changeSet author="pilakw" id="20240412127832-2">
         <createTable tableName="process_context">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
-            <column name="tenantId" type="bigint"/>
             <column name="processId" type="bigint">
                 <constraints
-                    primaryKey="true"
                     nullable="false"
                     foreignKeyName="fk_process_id"
                     references="process(id)"
@@ -36,17 +40,24 @@
     <changeSet author="pilakw" id="20240412127832-3">
         <createTable tableName="process_context_secret">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true"/>
             </column>
-            <column name="name" type="text"/>
-            <column name="processId" type="bigint">
+            <column name="processContextId" type="bigint">
                 <constraints
-                    primaryKey="true"
                     nullable="false"
-                    foreignKeyName="fk_process_id"
-                    references="process(id)"
+                    foreignKeyName="fk_process_context_id"
+                    references="process_context(id)"
                 />
             </column>
+            <column name="name" type="text"/>
+            <column name="secretId" type="bigint">
+                <constraints
+                    nullable="false"
+                    foreignKeyName="fk_process_context_id"
+                    references="process_context(id)"
+                />
+            </column>
+            <column name="order" type="int"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
