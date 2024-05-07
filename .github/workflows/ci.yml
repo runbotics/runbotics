@@ -216,6 +216,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Create .npmrc
+        shell: bash
+        run: |
+          echo -en "\n@runbotics:registry = https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
+
       - name: Install dependencies
         run: ${{ env.RUSH }} install -t .
 
