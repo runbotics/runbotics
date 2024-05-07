@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import InternalPage from '#src-app/components/pages/InternalPage';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import CredentialsList from './CredentialsList/CredentialsList';
 import Header from '../Header';
 
 
@@ -14,8 +15,8 @@ export const CredentialsView = () => {
     return (
         <InternalPage title={translate('Credentials.Tab.Credentials')}>
             <Header/>
-            <Box mt={6} display="flex" justifyContent="center">
-                Tu będzie lista wszystkich kredek
+            <Box mt={6}>
+                <CredentialsList/>
             </Box>
         </InternalPage>
     );

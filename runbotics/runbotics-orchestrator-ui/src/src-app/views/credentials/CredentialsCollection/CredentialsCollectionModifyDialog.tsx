@@ -2,6 +2,8 @@
 import CustomDialog from '#src-app/components/CustomDialog';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import EditCredentialsCollection from './EditCredentialsCollection/EditCredentialsCollection';
+
 const CredentialsCollectionModifyDialog = ({open: isOpen, onClose, collection}) => {
     const {translate} = useTranslations();
 
@@ -22,7 +24,7 @@ const CredentialsCollectionModifyDialog = ({open: isOpen, onClose, collection}) 
         <CustomDialog
             isOpen={isOpen}
             onClose={closeDialog}
-            title={translate(`Process.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}
+            title={translate(`Credentials.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}
             confirmButtonOptions={{
                 label: translate('Common.Save'),
                 onClick: handleSubmit,
@@ -31,7 +33,7 @@ const CredentialsCollectionModifyDialog = ({open: isOpen, onClose, collection}) 
             cancelButtonOptions={{
                 onClick: closeDialog,
             }}>
-                Formularz modyfikacji kolekcji
+            <EditCredentialsCollection collection={collection} onSubmit={handleSubmit}/>
         </CustomDialog>
     );
 };
