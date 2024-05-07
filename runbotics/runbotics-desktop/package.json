@@ -84,7 +84,7 @@
         "asar": true,
         "asarUnpack": [
             "node_modules/tesseract.js/**/*",
-            "node_modules/@runbotics/nut-js/**/*"
+            "node_modules/@runbotics/**/*"
         ],
         "mac": {
             "category": "utility"
