@@ -10,7 +10,6 @@ import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentia
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import CredentialsHeader from './CredentialsHeader';
-import GridView from '../../GridView';
 import { CredentialsTabs } from '../../Header';
 
 const CredentialsList: VFC = () => {
