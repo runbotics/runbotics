@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { TextField, Button } from '@mui/material';
 import styled from 'styled-components';
 
 export const StyledActionsContainer = styled.div`
@@ -13,5 +13,12 @@ export const StyledTextField = styled(TextField)`
     width: 350px;
     && {
         margin: 0;
+    }
+`;
+
+export const StyledButton = styled(Button)`
+    width: 200px;
+    && {
+        margin-left: 20px;
     }
 `;

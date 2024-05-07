@@ -2,15 +2,17 @@ import { VFC, useState, useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
+import { Tenant } from 'runbotics-common';
 
 import useTenantSearch from '#src-app/hooks/useTenantSearch';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { tenantsSelector } from '#src-app/store/slices/Tenants';
 
+import TenantsListEditDialog from './TenantsListEdit';
 import TenantsListTable from './TenantsListTable/TenantsListTable';
-import { StyledActionsContainer, StyledTextField } from './TenantsListView.styles';
-
+import { StyledActionsContainer, StyledButton, StyledTextField } from './TenantsListView.styles';
+import CreateTenantDialog from '../CreateTenantDialog';
 import { ROWS_PER_PAGE, DefaultPageValue } from '../TenantsBrowseView/TenantsBrowseView.utils';
 
 const TenantsListView: VFC = () => {
@@ -31,6 +33,27 @@ const TenantsListView: VFC = () => {
 
     const { search, handleSearch, refreshSearch } = useTenantSearch({ page, pageSize: limit });
 
+    const [tenantData, setTenantData] = useState<Tenant>();
+    const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
+    const [isCreateDialogVisible, setIsCreateDialogVisible] = useState(false);
+
+    const handleOpenEditDialog = (rowData) => {
+        setIsEditDialogVisible(true);
+        setTenantData(rowData);
+    };
+
+    const handleCloseEditDialog = () => {
+        setIsEditDialogVisible(false);
+    };
+
+    const handleOpenCreateDialog = () => {
+        setIsCreateDialogVisible(true);
+    };
+
+    const handleCloseCreateDialog = () => {
+        setIsCreateDialogVisible(false);
+    };
+
     useEffect(() => {
         const isPageNotAvailable = allByPage?.totalPages && page >= allByPage?.totalPages;
         if (isPageNotAvailable) {
@@ -47,6 +70,15 @@ const TenantsListView: VFC = () => {
 
     return (
         <>
+            <CreateTenantDialog
+                open={isCreateDialogVisible}
+                onClose={handleCloseCreateDialog}
+            />
+            <TenantsListEditDialog
+                open={isEditDialogVisible}
+                onClose={handleCloseEditDialog}
+                tenantData={tenantData}
+            />
             <StyledActionsContainer>
                 <StyledTextField
                     margin='dense'
@@ -55,13 +87,20 @@ const TenantsListView: VFC = () => {
                     value={search}
                     onChange={handleSearch}
                 />
+                <StyledButton
+                    variant='contained'
+                    color='primary'
+                    onClick={handleOpenCreateDialog}
+                >
+                    Create new
+                </StyledButton>
             </StyledActionsContainer>
             <TenantsListTable
                 page={page}
                 onPageChange={setPage}
                 pageSize={limit}
                 onPageSizeChange={setLimit}
-                openTenantEditDialog={() => {}}
+                openTenantEditDialog={handleOpenEditDialog}
             />
         </>
     );

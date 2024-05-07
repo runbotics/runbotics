@@ -21,3 +21,20 @@ export const getAllByPage = createAsyncThunk<Page<Tenant>, PageRequestParams>(
     (params) => axios.get<Page<Tenant>>(buildPageURL(params, '/api/admin/tenants/all-page'))
         .then(response => response.data)
 );
+
+export const createOne = createAsyncThunk<Tenant, Tenant>(
+    'tenants/create',
+    (tenant) => axios.post<Tenant>('/api/admin/tenants', tenant)
+        .then(response => response.data)
+);
+
+export const partialUpdate = createAsyncThunk<Tenant, Tenant>(
+    'tenants/partialUpdate',
+    (tenant) => axios.patch<Tenant>(`/api/admin/tenants/${tenant.id}`, tenant)
+        .then(response => response.data)
+);
+
+export const deleteOne = createAsyncThunk<void, number>(
+    'tenants/delete',
+    (id) => axios.delete(`/api/admin/tenants/${id}`)
+);

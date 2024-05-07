@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { TenantsState } from './Tenants.state';
-import { getAll, getAllByPage } from './Tenants.thunks';
+import { createOne, deleteOne, getAll, getAllByPage, partialUpdate } from './Tenants.thunks';
 
 const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState>) => {
     builder
@@ -26,6 +26,39 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
             state.loading = false;
         })
         .addCase(getAllByPage.rejected, (state) => {
+            state.loading = false;
+        })
+
+        // CREATE ONE
+        .addCase(createOne.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(createOne.fulfilled, (state) => {
+            state.loading = false;
+        })
+        .addCase(createOne.rejected, (state) => {
+            state.loading = false;
+        })
+
+        // PARTIAL UPDATE
+        .addCase(partialUpdate.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(partialUpdate.fulfilled, (state) => {
+            state.loading = false;
+        })
+        .addCase(partialUpdate.rejected, (state) => {
+            state.loading = false;
+        })
+
+        // DELETE ONE
+        .addCase(deleteOne.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(deleteOne.fulfilled, (state) => {
+            state.loading = false;
+        })
+        .addCase(deleteOne.rejected, (state) => {
             state.loading = false;
         });
 };
