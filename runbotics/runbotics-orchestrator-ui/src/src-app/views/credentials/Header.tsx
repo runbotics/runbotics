@@ -10,7 +10,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 // import { DefaultPageSize } from './ProcessList/ProcessList.utils';
 // import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
-import AddNewCredentialButton from './Credenitals/AddNewCredentialButton';
+import AddNewCredentialButton from './Credentials/AddNewCredentialButton';
 import AddCollectionButton from '../process/ProcessCollectionView/AddCollection/AddCollectionButton';
 import { getLastParamOfUrl } from '../utils/routerUtils';
 // import AddProcess from '../AddProcess';
