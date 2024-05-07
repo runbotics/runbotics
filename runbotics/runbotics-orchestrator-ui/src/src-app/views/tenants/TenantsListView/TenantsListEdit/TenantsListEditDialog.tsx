@@ -8,6 +8,7 @@ import { Tenant } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useTenantSearch from '#src-app/hooks/useTenantSearch';
+import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
@@ -26,6 +27,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
     open, onClose, tenantData
 }) => {
     const dispatch = useDispatch();
+    const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
 
     const { refreshSearch } = useTenantSearch();
@@ -58,12 +60,18 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
         dispatch(tenantsActions.partialUpdate(dataPayload)).unwrap()
             .then(() => {
                 handleClose();
-                enqueueSnackbar('Success edit', { variant: 'success' });
+                enqueueSnackbar(
+                    translate('Tenants.List.Edit.Form.Event.Success'),
+                    { variant: 'success' }
+                );
                 refreshSearch();
             })
             .catch(() => {
                 handleClose();
-                enqueueSnackbar('Edit failed', { variant: 'error' });
+                enqueueSnackbar(
+                    translate('Tenants.List.Edit.Form.Event.Error'),
+                    { variant: 'error' }
+                );
             });
     };
 
@@ -82,7 +90,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
             <If condition={open}>
                 <Dialog open>
                     <Title>
-                        Edit tenant
+                        {translate('Tenants.List.Edit.Form.Title')}
                     </Title>
                     <Content>
                         <Form>
@@ -100,14 +108,14 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                             onClick={handleOpenDeleteDialog}
                             loading={loading}
                         >
-                            Delete
+                            {translate('Tenants.List.Edit.Form.Button.Delete')}
                         </DeleteButton>
                         <Box>
                             <StyledButton
                                 onClick={handleClose}
                                 disabled={loading}
                             >
-                                Cancel
+                                {translate('Tenants.List.Edit.Form.Button.Cancel')}
                             </StyledButton>
                             <LoadingButton
                                 variant='contained'
@@ -115,7 +123,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                                 loading={loading}
                                 disabled={!checkFormFieldsValidation()}
                             >
-                                Save
+                                {translate('Tenants.List.Edit.Form.Button.Save')}
                             </LoadingButton>
                         </Box>
                     </StyledDialogActions>

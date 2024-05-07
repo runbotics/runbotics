@@ -27,11 +27,11 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
     return (
         <>
             <TextField
-                label='Name'
+                label={translate('Tenants.List.Edit.Form.Label.Name')}
                 value={tenant.name}
                 onChange={handleNameFieldInput}
                 error={!formValidationState.name}
-                {...(!formValidationState.name && { helperText: translate('Users.List.Edit.Form.Error.FieldRequired') })}
+                {...(!formValidationState.name && { helperText: translate('Tenants.List.Edit.Form.Error.FieldRequired') })}
             />
         </>
     );

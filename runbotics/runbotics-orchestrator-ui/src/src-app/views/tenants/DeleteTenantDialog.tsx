@@ -7,8 +7,8 @@ import { Tenant } from 'runbotics-common';
 import CustomDialog from '#src-app/components/CustomDialog';
 import useTenantSearch from '#src-app/hooks/useTenantSearch';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { useDispatch } from '#src-app/store';
-import { tenantsActions } from '#src-app/store/slices/Tenants';
+import { useDispatch, useSelector } from '#src-app/store';
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 
 interface DeleteTenantDialogProps {
     open: boolean;
@@ -27,16 +27,18 @@ const DeleteTenantDialog: VFC<DeleteTenantDialogProps> = ({
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
 
+    const { loading } = useSelector(tenantsSelector);
     const { refreshSearch } = useTenantSearch();
     const [tenantId, setTenantId] = useState(null);
 
     const handleSubmit = () => {
-        dispatch(tenantsActions.deleteOne(tenantId)).unwrap()
+        dispatch(tenantsActions.deleteOne(tenantId))
+            .unwrap()
             .then(() => {
                 onClose();
                 onDelete();
                 enqueueSnackbar(
-                    'Success',
+                    translate('Tenants.Actions.Modals.DeleteModal.Message.Success'),
                     { variant: 'success' }
                 );
                 refreshSearch();
@@ -44,7 +46,7 @@ const DeleteTenantDialog: VFC<DeleteTenantDialogProps> = ({
             .catch(() => {
                 onClose();
                 enqueueSnackbar(
-                    'Fail',
+                    translate('Tenants.Actions.Modals.DeleteModal.Message.Fail'),
                     { variant: 'error' }
                 );
             });
@@ -58,15 +60,15 @@ const DeleteTenantDialog: VFC<DeleteTenantDialogProps> = ({
         <CustomDialog
             isOpen={open}
             onClose={onClose}
-            title='Are you sure you want to delete this tenant?'
+            title={translate('Tenants.Actions.Modals.DeleteModal.TitleMessage')}
             cancelButtonOptions={{
-                isDisabled: false,
-                label: 'cancel',
+                isDisabled: loading,
+                label: translate('Tenants.Actions.Modals.DeleteModal.Button.Cancel'),
                 onClick: onClose
             }}
             confirmButtonOptions={{
-                isLoading: false,
-                label: 'confirm',
+                isLoading: loading,
+                label: translate('Tenants.Actions.Modals.DeleteModal.Button.Delete'),
                 onClick: handleSubmit
             }}
         >

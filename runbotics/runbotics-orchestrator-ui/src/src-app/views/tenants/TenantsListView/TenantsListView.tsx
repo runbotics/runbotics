@@ -92,7 +92,7 @@ const TenantsListView: VFC = () => {
                     color='primary'
                     onClick={handleOpenCreateDialog}
                 >
-                    Create new
+                    {translate('Tenants.List.View.Button.CreateTenant')}
                 </StyledButton>
             </StyledActionsContainer>
             <TenantsListTable

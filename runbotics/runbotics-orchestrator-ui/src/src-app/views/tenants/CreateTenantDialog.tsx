@@ -42,30 +42,35 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
             .unwrap()
             .then(() => {
                 handleClose();
-                enqueueSnackbar('Success', { variant: 'success' });
+                enqueueSnackbar(
+                    translate('Tenants.Actions.Modals.CreateModal.Message.Success'),
+                    { variant: 'success' }
+                );
                 refreshSearch();
             })
             .catch(() => {
-                enqueueSnackbar('Fail', { variant: 'error' });
+                enqueueSnackbar(
+                    translate('Tenants.Actions.Modals.CreateModal.Message.Fail'),
+                    { variant: 'error' }
+                );
                 handleClose();
             });
-
     };
 
     return (
         <If condition={open}>
             <Dialog open>
                 <Title>
-                    Create new tenant
+                    {translate('Tenants.Actions.Modals.CreateModal.TitleMessage')}
                 </Title>
                 <Content>
                     <Form>
                         <TextField
-                            label='Name'
+                            label={translate('Tenants.Actions.Modals.CreateModal.Field.Name')}
                             value={name}
                             onChange={handleNameInputChange}
                             error={isFieldEmpty}
-                            {...(isFieldEmpty && { helperText: translate('Users.List.Edit.Form.Error.FieldRequired') })}
+                            {...(isFieldEmpty && { helperText: translate('Tenants.List.Edit.Form.Error.FieldRequired') })}
                         />
                     </Form>
                 </Content>
@@ -73,14 +78,14 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
                     <Button
                         onClick={handleClose}
                     >
-                        Close
+                        {translate('Tenants.Actions.Modals.CreateModal.Button.Close')}
                     </Button>
                     <Button
                         variant='contained'
                         onClick={handleSubmit}
                         disabled={isFieldEmpty}
                     >
-                        Create
+                        {translate('Tenants.Actions.Modals.CreateModal.Button.Create')}
                     </Button>
                 </DialogActions>
             </Dialog>
