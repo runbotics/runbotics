@@ -1,43 +1,76 @@
-import React, { VFC } from 'react';
+import React, { FC, useEffect } from 'react';
 
-import { Box } from '@mui/material';
+import { Pagination, Box } from '@mui/material';
+
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
+import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
+import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 
-const PREFIX = 'GridView';
+import If from '#src-app/components/utils/If';
+import { useSelector } from '#src-app/store';
 
-const classes = {
-    root: `${PREFIX}-root`,
-    cardsWrapper: `${PREFIX}-cardsWrapper`,
-};
+import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
+import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentials.thunks';
+
+import { getCredentials } from './Credentials/Credentials.utils';
+import { GridViewProps } from './Credentials.types';
+import { CollectionsRoot } from '../bot/BotCollectionView/BotCollectionView.styles';
+
+import { getLastParamOfUrl } from '../utils/routerUtils';
+
 
 const TileGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     grid-auto-rows: 1fr;
-    min-height: 16.25rem;
+    min-height: 8rem;
     gap: 1rem;
 `;
 
-const CredentialsGridView: VFC = () => 
-// useProcessQueueSocket();
-// const credentialsPage = useSelector((state) => state.credentials.all.page);
+const GridView: FC<GridViewProps> = () => {
+    const dispatch = useDispatch();
+    // const credentials = useSelector(state => state.credentials.all);
+    const collections = useSelector(state => state.credentialCollections.data);
+    const credentials = getCredentials();
+    // const allCollections = getCredentialsCollections();
+    const router = useRouter();
+    const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
 
-// const {
-//     page,
-//     handleGridPageChange,
-// } = useContext(ProcessPageContext);
+    useEffect(() => {
+        dispatch(fetchAllCredentials());
+        // dispatch(fetchCollectionCredentials('kolekcja_basi'));
+        dispatch(fetchAllTemplates());
+    }, [dispatch]);
 
-    (
+    useEffect(() => {
+        dispatch(fetchAllCredentialCollections());
+    }, [dispatch]);
+    
+    const credentialsTiles = credentials.map(credential => <CredentialTile key={credential.id} credential={credential}/>);
+
+    const collectionsTiles = collections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection}/>);
+
+    return (
         <>
-            <TileGrid className={classes.cardsWrapper}>
-                CredentialsTile Arr
-            </TileGrid>
+            <CollectionsRoot>
+                <TileGrid>
+                    <If condition={!isCollectionsTab}>
+                        {credentialsTiles}
+                    </If>
+                    <If condition={isCollectionsTab}>
+                        {collectionsTiles}
+                    </If>
+                </TileGrid>
+            </CollectionsRoot>
             <Box mt={6} display="flex" justifyContent="center">
-                Box
+                <Pagination count={1} />
             </Box>
         </>
-    )
-;
+    );
+};
 
-export default CredentialsGridView;
+export default GridView;
+
