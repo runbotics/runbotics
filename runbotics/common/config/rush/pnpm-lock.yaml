@@ -53,8 +53,8 @@ importers:
       '@nestjs/schedule':
         specifier: ^3.0.3
         version: 3.0.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)
-      '@nut-tree/nut-js':
-        specifier: ^3.1.2
+      '@runbotics/nut-js':
+        specifier: 3.1.2
         version: 3.1.2
       '@runbotics/runbotics-sdk':
         specifier: workspace:^1.0.0
@@ -4934,69 +4934,6 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@nut-tree/libnut-darwin@2.5.2:
-    resolution: {integrity: sha512-OKqCgpBbZj2oNQkLM+mM7TyiLBAQsRyN7Q5UXVKbyXnzcQTU1FZBJ1mLGvdfzzspajznL3Mkl08AQE+xYYbTMw==}
-    engines: {node: '>=10.15.3'}
-    cpu: [x64, arm64]
-    os: [darwin, linux, win32]
-    dependencies:
-      bindings: 1.5.0
-    optionalDependencies:
-      '@nut-tree/node-mac-permissions': 2.2.1
-    dev: false
-
-  /@nut-tree/libnut-linux@2.5.2:
-    resolution: {integrity: sha512-uY6XDuNE8soYRUhV23g6KQN5BRR43MYNLyPnrrQa5Wtfgm6oW9kBRu6JtkWz6Fn6trAWrVAKnbPoTiEgHuGz9w==}
-    engines: {node: '>=10.15.3'}
-    cpu: [x64, arm64]
-    os: [darwin, linux, win32]
-    dependencies:
-      bindings: 1.5.0
-    optionalDependencies:
-      '@nut-tree/node-mac-permissions': 2.2.1
-    dev: false
-
-  /@nut-tree/libnut-win32@2.5.2:
-    resolution: {integrity: sha512-cnNAQ0pzUMH7hrSjTWRiFfXid3sbSZ78jpv1rA154dlka3wqo6m1OtaX4PLVQK4irZl5REz74iPdHcjeTy9rtg==}
-    engines: {node: '>=10.15.3'}
-    cpu: [x64, arm64]
-    os: [darwin, linux, win32]
-    dependencies:
-      bindings: 1.5.0
-    optionalDependencies:
-      '@nut-tree/node-mac-permissions': 2.2.1
-    dev: false
-
-  /@nut-tree/libnut@2.5.2:
-    resolution: {integrity: sha512-IwlGgalGQjjCrbPq52HTLtsR6MRsGJ6c4GhgHmgwJPD/yBVCzsU5EA2rwDgjKSgK+jiLOpykySDZQ+owhyd1zw==}
-    engines: {node: '>=10.15.3'}
-    dependencies:
-      '@nut-tree/libnut-darwin': 2.5.2
-      '@nut-tree/libnut-linux': 2.5.2
-      '@nut-tree/libnut-win32': 2.5.2
-    dev: false
-
-  /@nut-tree/node-mac-permissions@2.2.1:
-    resolution: {integrity: sha512-yoijwCqt2yS9UFTv7THGUwZgy2D2TorN703QpYNOergbTJ6vEmeG379pIZDfBuvf56n24RMzKJVoSqr9WIq/Yw==}
-    os: [darwin]
-    requiresBuild: true
-    dependencies:
-      bindings: 1.5.0
-      node-addon-api: 5.0.0
-    dev: false
-    optional: true
-
-  /@nut-tree/nut-js@3.1.2:
-    resolution: {integrity: sha512-hi7DBZz9O/t4goeQu3hKeauQbb0PcBmurScl3/t5L3I1pub3ibV24sft8KNSS3INKnGCj7I3Ma5iNHQ24g+95g==}
-    cpu: [x64, arm64]
-    os: [linux, darwin, win32]
-    dependencies:
-      '@nut-tree/libnut': 2.5.2
-      clipboardy: 2.3.0
-      jimp: 0.16.13
-      node-abort-controller: 2.0.0
-    dev: false
-
   /@nuxtjs/opencollective@0.3.2:
     resolution: {integrity: sha512-um0xL3fO7Mf4fDxcqx9KryrB7zgRM5JSlvGN5AGkP6JLM5XEKyjeAiPbNxdXVXQ16isuAhYpvP88NgL2BGd6aA==}
     engines: {node: '>=8.0.0', npm: '>=5.0.0'}
@@ -5257,6 +5194,69 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
     dev: true
+
+  /@runbotics/libnut-darwin@2.5.2:
+    resolution: {integrity: sha512-0m/73dboUMKHjC5n/K1UnCDdezGVTBL2yyYQXxc2eBWB3CkMwR99SLE7IHLcKKJP9sRSt1a92T2VVoRpf8fRzg==, tarball: https://npm.pkg.github.com/download/@runbotics/libnut-darwin/2.5.2/463c75ce72010ec23bd5302c620495b9824761d9}
+    engines: {node: '>=10.15.3'}
+    cpu: [x64, arm64]
+    os: [darwin, linux, win32]
+    dependencies:
+      bindings: 1.5.0
+    optionalDependencies:
+      '@runbotics/node-mac-permissions': 2.2.1
+    dev: false
+
+  /@runbotics/libnut-linux@2.5.2:
+    resolution: {integrity: sha512-OmpUqyETVUulDxm9KBayn+XfSzn5TQcBaLBFlvZD9wXOS4ZjNbWVk5tqkSKynfW320AbKpkWTHEf9L6gtOtWlw==, tarball: https://npm.pkg.github.com/download/@runbotics/libnut-linux/2.5.2/edad82d8de9dc6c3c652ee9497acb851a2dd972c}
+    engines: {node: '>=10.15.3'}
+    cpu: [x64, arm64]
+    os: [darwin, linux, win32]
+    dependencies:
+      bindings: 1.5.0
+    optionalDependencies:
+      '@runbotics/node-mac-permissions': 2.2.1
+    dev: false
+
+  /@runbotics/libnut-win32@2.5.2:
+    resolution: {integrity: sha512-1Z/nENds3m/uiDroZPhpQfVzc4/3UnQj9vfDB40fmXYAWVzdoUZ3hOTF/fVzuaDYwygbypaytLuHVU3Vfs9w/w==, tarball: https://npm.pkg.github.com/download/@runbotics/libnut-win32/2.5.2/c89c49f9e760fe0bc0bc9ecb8847e067c8ff350c}
+    engines: {node: '>=10.15.3'}
+    cpu: [x64, arm64]
+    os: [darwin, linux, win32]
+    dependencies:
+      bindings: 1.5.0
+    optionalDependencies:
+      '@runbotics/node-mac-permissions': 2.2.1
+    dev: false
+
+  /@runbotics/libnut@2.5.2:
+    resolution: {integrity: sha512-RHYXWGsMdxvNifYrFYgG2ZWTUbyAKgCDwUT+7ndHXSZU1MwUjFTvgC26cZI2a1N9PKu2TuBqiG1JfrNkm1n9eg==, tarball: https://npm.pkg.github.com/download/@runbotics/libnut/2.5.2/21504ae4504a0ea7d9a346f4889f06527b443e63}
+    engines: {node: '>=10.15.3'}
+    dependencies:
+      '@runbotics/libnut-darwin': 2.5.2
+      '@runbotics/libnut-linux': 2.5.2
+      '@runbotics/libnut-win32': 2.5.2
+    dev: false
+
+  /@runbotics/node-mac-permissions@2.2.1:
+    resolution: {integrity: sha512-65kTuPSScsX2/5VvWAMJNuzx1/KxaqIPFMBrCbYjPXNlb+hLHoFmpdarrQyvUi1wgzabU5mhqu9CZjV8GwMtLg==, tarball: https://npm.pkg.github.com/download/@runbotics/node-mac-permissions/2.2.1/60207fc86a3d9304e4367924f08830fa05f7e3aa}
+    os: [darwin]
+    requiresBuild: true
+    dependencies:
+      bindings: 1.5.0
+      node-addon-api: 5.0.0
+    dev: false
+    optional: true
+
+  /@runbotics/nut-js@3.1.2:
+    resolution: {integrity: sha512-XISusF6PeKAgXe42RyRSKXozYHlFg5HzS7+EruKT0UJcJ5xP9Jpm/AhLyeehn41iVkd2lNZYE8rZ3YzLingsVQ==, tarball: https://npm.pkg.github.com/download/@runbotics/nut-js/3.1.2/116cb8a0a2f95436e903a862b67fc9db29405981}
+    cpu: [x64, arm64]
+    os: [linux, darwin, win32]
+    dependencies:
+      '@runbotics/libnut': 2.5.2
+      clipboardy: 2.3.0
+      jimp: 0.16.13
+      node-abort-controller: 2.0.0
+    dev: false
 
   /@rushstack/eslint-patch@1.3.3:
     resolution: {integrity: sha512-0xd7qez0AQ+MbHatZTlI1gu5vkG8r7MYRUJAHPAHJBmGLs16zpkrpAVLvjQKQOqaXPDUBwOiJzNc00znHSCVBw==}
@@ -14333,6 +14333,7 @@ packages:
 
   /phin@2.9.3:
     resolution: {integrity: sha512-CzFr90qM24ju5f88quFC/6qohjC144rehe5n6DH900lgXmUe86+xCKc10ev56gRKC4/BkHUoG4uSiQgBiIXwDA==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: false
 
   /pick-util@1.1.5:
