@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
+import CredentialsHeader from './Header';
 import GridView from '../../GridView';
 import { CredentialsTabs } from '../../Header';
 
@@ -26,6 +27,7 @@ const CredentialsList: VFC = () => {
 
     return (
         <Box display="flex" flexDirection="column" gap="1.5rem">
+            <CredentialsHeader/>
             <GridView/>
         </Box>
     );

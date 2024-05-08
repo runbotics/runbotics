@@ -8,13 +8,10 @@ import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-// import { DefaultPageSize } from './ProcessList/ProcessList.utils';
-// import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
-import AddNewCredentialButton from './Credentials/AddNewCredentialButton';
-import AddCollectionButton from '../process/ProcessCollectionView/AddCollection/AddCollectionButton';
+import AddCredential from './Credential/AddCredential';
+import AddCredentialsCollection from './CredentialsCollection/AddCredentialsCollection';
 import { getLastParamOfUrl } from '../utils/routerUtils';
-// import AddProcess from '../AddProcess';
-// import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
+
 
 const PREFIX = 'Header';
 
@@ -101,8 +98,8 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>
-                    <AddNewCredentialButton/>
-                    <AddCollectionButton/>
+                    <AddCredential/>
+                    <AddCredentialsCollection/>
                     {/* <If condition={hasProcessAddAccess}>
                         <AddProcess />
                     </If>
