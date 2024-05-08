@@ -68,6 +68,7 @@ jobs:
         shell: bash
         run: |
           echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../runbotics-build-configuration/runbotics-desktop/.npmrc
 
       - name: Check NPM
         run:  npm -v
