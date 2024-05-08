@@ -5207,7 +5207,7 @@ packages:
     dev: false
 
   /@runbotics/libnut-linux@2.5.2:
-    resolution: {integrity: sha512-OmpUqyETVUulDxm9KBayn+XfSzn5TQcBaLBFlvZD9wXOS4ZjNbWVk5tqkSKynfW320AbKpkWTHEf9L6gtOtWlw==, tarball: https://npm.pkg.github.com/download/@runbotics/libnut-linux/2.5.2/edad82d8de9dc6c3c652ee9497acb851a2dd972c}
+    resolution: {integrity: sha512-HKFNto+Hlj4FX5mcjOLic20Jb2kODqojD42w0QEcvGA+LyWcIy+1lw/wYGNp2Nq5Q55N0Mh0KdArt1eHKiHUSw==, tarball: https://npm.pkg.github.com/download/@runbotics/libnut-linux/2.5.2/93ad48488df32f19ddfae03878c9c2fe42b03a0c}
     engines: {node: '>=10.15.3'}
     cpu: [x64, arm64]
     os: [darwin, linux, win32]
@@ -5229,7 +5229,7 @@ packages:
     dev: false
 
   /@runbotics/libnut@2.5.2:
-    resolution: {integrity: sha512-RHYXWGsMdxvNifYrFYgG2ZWTUbyAKgCDwUT+7ndHXSZU1MwUjFTvgC26cZI2a1N9PKu2TuBqiG1JfrNkm1n9eg==, tarball: https://npm.pkg.github.com/download/@runbotics/libnut/2.5.2/21504ae4504a0ea7d9a346f4889f06527b443e63}
+    resolution: {integrity: sha512-0khM+ucjekR/UZZWOL2wPgRXs/pYcZH+zqK/pbK+DF9Xdt218S1F6HSduz1E38waUTuzsj5k7mNt78wWUXzazg==, tarball: https://npm.pkg.github.com/download/@runbotics/libnut/2.5.2/6ec64284ee25baced45c92cd20425100802d4e39}
     engines: {node: '>=10.15.3'}
     dependencies:
       '@runbotics/libnut-darwin': 2.5.2
