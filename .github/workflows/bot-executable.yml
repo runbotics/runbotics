@@ -10,7 +10,7 @@ on:
     #    - 'hotfix/**'
 
 env:
-  NODE_VERSION: 18.x
+  NODE_VERSION: 18.20.1
   # PNPM_VERSION: 8.7.1
   RUSH: node ../common/scripts/install-run-rush.js
 
@@ -37,7 +37,7 @@ jobs:
     needs: changes-detection
     if: ${{ needs.changes-detection.outputs.bot == 'true' }}
 
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     permissions:
       contents: read
@@ -72,11 +72,11 @@ jobs:
       - name: Check NPM
         run:  npm -v
 
-      - name: Install RUSH
-        run:  npm install --global @microsoft/rush
+      # - name: Install RUSH
+      #   run:  npm install --global @microsoft/rush
 
-      # - name: Install dependencies
-      #   run:  ${{ env.RUSH }} install -t .
+      - name: Install dependencies
+        run:  ${{ env.RUSH }} install -t .
 
       # - name: Build
       #   run: ${{ env.RUSH }} rebuild -t .
