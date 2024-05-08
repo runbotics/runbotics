@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - 'bugfix/RPA-1529'
-    #- 'develop'
-    #- 'master'
-    #- 'release/**'
-    #- 'hotfix/**'
+    #  - 'develop'
+    #  - 'master'
+    #  - 'release/**'
+    #  - 'hotfix/**'
 
 env:
   NODE_VERSION: 18.x
