@@ -94,7 +94,7 @@ public class TenantServiceImpl implements TenantService {
     public TenantDTO save(TenantDTO tenantDTO) {
         log.debug("Request to save Tenant: {}", tenantDTO);
 
-        final User user = userService.getUserWithAuthorities().get();
+        final User currentUser = userService.getUserWithAuthorities().get();
 
         if (tenantDTO.getId() != null) {
             throw new BadRequestAlertException("New object cannot have an ID", ENTITY_NAME, "idExist");
@@ -107,7 +107,7 @@ public class TenantServiceImpl implements TenantService {
         }
 
         Tenant tenant = tenantMapper.toEntity(tenantDTO);
-        tenant.setCreatedBy(user);
+        tenant.setCreatedBy(currentUser);
         tenant.setUpdated(ZonedDateTime.now());
         tenant.setCreated(ZonedDateTime.now());
 
@@ -121,6 +121,14 @@ public class TenantServiceImpl implements TenantService {
             throw new BadRequestAlertException("ID is not provided", ENTITY_NAME, "idNotProvided");
         }
 
+        tenantRepository.findByName(tenantDTO.getName()).ifPresent(tenant -> {
+            if (!tenant.getId().equals(tenantDTO.getId())) {
+                throw new BadRequestAlertException("Name is already used", ENTITY_NAME, "nameNotAvailable");
+            }
+        });
+
+        final User currentUser = userService.getUserWithAuthorities().get();
+
         return tenantRepository
             .findById(tenantDTO.getId())
             .map(tenant -> {
@@ -131,6 +139,7 @@ public class TenantServiceImpl implements TenantService {
                     tenant.setCreatedBy(updatedUser);
                 }
                 tenantDTO.setUpdated(ZonedDateTime.now());
+                tenantDTO.setLastModifiedBy(currentUser.getEmail());
                 tenantMapper.partialUpdate(tenant, tenantDTO);
 
                     return tenant;

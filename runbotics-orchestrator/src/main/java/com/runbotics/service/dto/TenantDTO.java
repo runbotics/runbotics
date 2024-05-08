@@ -15,6 +15,8 @@ public class TenantDTO {
 
     private ZonedDateTime updated;
 
+    private String lastModifiedBy;
+
     public UUID getId() {
         return this.id;
     }
@@ -55,6 +57,14 @@ public class TenantDTO {
         this.updated = updated;
     }
 
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -74,6 +84,7 @@ public class TenantDTO {
             ", createdById=" + createdBy +
             ", created=" + created +
             ", updated=" + updated +
+            ", lastModifiedBy" + lastModifiedBy +
             "}";
     }
 }
