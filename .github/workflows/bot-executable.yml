@@ -16,7 +16,7 @@ env:
 
 jobs:
   changes-detection:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     outputs:
       bot: ${{ steps.filter.outputs.bot }}
