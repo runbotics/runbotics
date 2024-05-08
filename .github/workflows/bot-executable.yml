@@ -73,7 +73,7 @@ jobs:
         run:  npm -v
 
       - name: Install RUSH
-        run:  ${{ env.RUSH }}
+        run:  npm install --global @microsoft/rush
 
       # - name: Install dependencies
       #   run:  ${{ env.RUSH }} install -t .
