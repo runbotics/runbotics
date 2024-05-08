@@ -3,11 +3,10 @@ name: Build bot executable file
 on:
   push:
     branches:
-      - 'bugfix/RPA-1529-2'
-      # - 'develop'
-      # - 'master'
-      # - 'release/**'
-      # - 'hotfix/**'
+      - 'develop'
+      - 'master'
+      - 'release/**'
+      - 'hotfix/**'
 
 env:
   NODE_VERSION: 18.20.1
