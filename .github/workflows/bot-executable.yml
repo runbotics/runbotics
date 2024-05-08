@@ -51,18 +51,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Clone submodules
-        run: git submodule update --init --recursive
+      # - name: Clone submodules
+      #   run: git submodule update --init --recursive
+
+      - name: Cache Rush
+        id: cache-rush
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-rush
+        with:
+          path: ~/.rush
+          key: ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+          restore-keys: |
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-
+
+      - name: Cache pnpm
+        id: cache-pnpm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-pnpm
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: |
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+            ${{ runner.os }}-bot-${{ env.CACHE_NAME }}-
 
       - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      # - name: Setup PNPM
+      #   uses: pnpm/action-setup@v2
+      #   with:
+      #     version: ${{ env.PNPM_VERSION }}
 
       - name: Update .npmrc
         shell: bash
