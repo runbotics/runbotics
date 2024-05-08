@@ -31,12 +31,17 @@ jobs:
         with:
           filters: |
             bot:
-              - 'runbotics/runbotics-desktop/package.json'
-              
+              - 'runbotics/runbotics-desktop/**'
+
   build-bot:
     needs: changes-detection
     if: ${{ needs.changes-detection.outputs.bot == 'true' }}
+
     runs-on: windows-latest
+
+    permissions:
+      contents: read
+      packages: read
 
     defaults:
       run:
@@ -83,7 +88,7 @@ jobs:
         with:
           path: './runbotics/runbotics-desktop/package.json'
 
-      - name: Run electron-install script 
+      - name: Run electron-install script
         shell: bash
         run: |
             cd ../common/deploy/runbotics-desktop/ &&

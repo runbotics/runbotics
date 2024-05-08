@@ -112,8 +112,7 @@
         "win": {
             "target": "nsis",
             "icon": "./public/icons/runbotics-512x512.png",
-            "certificateFile": "./cert/selfsigncert.pfx",
-            "certificatePassword": "&#%TysWeL^^J@S46"
+            "verifyUpdateCodeSignature": false
         },
         "nsis": {
             "allowToChangeInstallationDirectory": true,
