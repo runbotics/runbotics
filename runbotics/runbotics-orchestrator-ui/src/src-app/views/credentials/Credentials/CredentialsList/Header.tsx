@@ -18,7 +18,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 
 const CredentialsHeader = () => {
     const { translate } = useTranslations();
-    const credentials = [];
+    const credentials = [1, 2, 3, 4];
 
     return (
         <Box display="flex" alignItems="center" justifyContent="space-between">

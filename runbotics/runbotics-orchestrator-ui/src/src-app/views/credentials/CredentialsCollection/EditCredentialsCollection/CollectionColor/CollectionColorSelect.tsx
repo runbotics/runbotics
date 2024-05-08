@@ -22,9 +22,7 @@ const CollectionColorSelect = ({currentColor}) => {
         </MenuItem>
     ));
 
-
     return (
-     
         <FormControl fullWidth >
             <InputLabel id="collection_color">Collection color</InputLabel>
             <Select
@@ -38,8 +36,7 @@ const CollectionColorSelect = ({currentColor}) => {
                 {colorsToChoose}
             </Select>
         </FormControl>
-     
-    );
+    )
 };
 
 export default CollectionColorSelect;
