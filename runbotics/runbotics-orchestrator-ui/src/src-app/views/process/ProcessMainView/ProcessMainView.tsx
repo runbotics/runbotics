@@ -1,11 +1,11 @@
 import React, { FC, useEffect } from 'react';
 
-import { Divider, Grid, Tab, Tabs } from '@mui/material';
+import { Divider, Grid, Tab, Tabs, } from '@mui/material';
 
 import { useRouter } from 'next/router';
 import { FeatureKey, Role } from 'runbotics-common';
 
-import Link from 'next/link';
+import LinkTab from 'next/link';
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAuth from '#src-app/hooks/useAuth';
@@ -23,7 +23,8 @@ import {
     ProcessInternalPage,
     ProcessTitle,
     TutorialBlogPost,
-    TutorialLink
+    TutorialLink,
+    TablLink
 } from './ProcessMainView.styled';
 
 const ProcessMainView: FC = () => {
@@ -73,17 +74,17 @@ const ProcessMainView: FC = () => {
                 <Grid item my={1} ml={1} display={'flex'} gap={2}>
                     <Tabs
                         scrollButtons="auto"
-                        textColor="secondary"
+                        // textColor="secondary"
                         value={tab}
                         variant="scrollable"
                     >
                         {processTabs.length > 1 && processTabs.map((processTab) => (
-                            <Link key={processTab.value} href={processTab.href} passHref>
+                            <TablLink key={processTab.value} href={processTab.href} passHref isActive={processTab.value === tab}>
                                 <Tab 
                                     label={processTab.label}
                                     value={processTab.value}
                                 />
-                            </Link>
+                            </TablLink>
                             
                         ))}
                     </Tabs>
