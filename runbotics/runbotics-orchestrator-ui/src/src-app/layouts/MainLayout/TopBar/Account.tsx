@@ -131,7 +131,7 @@ const Account: FC = () => {
                     </MenuItem>
                     <MenuItem>
                         <MenuLink href='/app/tenants'>
-                            {translate('Account.Tenants')} {/* to change also for tenant admin */}
+                            {translate('Account.Tenants')}
                         </MenuLink>
                     </MenuItem>
                     <MenuItem>
