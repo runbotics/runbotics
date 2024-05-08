@@ -1,30 +1,34 @@
 @import '#src-landing/scss/main';
 
-
-.background{
+.background {
     width: 100%;
-    background: linear-gradient(to bottom, white 65%, #F9B934 65%);  
+    background: linear-gradient(
+        to bottom,
+        $palette-white 65%,
+        $palette-accent-primary 65%
+    );
 }
 
 .section {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 65% 35%;  
+    grid-template-rows: 65% 35%;
     width: 100%;
     max-width: 1672px;
     margin: 0 auto;
     min-height: 950px;
 }
 
-.description{
-    font-weight: $font-weight-medium
+.description {
+    font-weight: $font-weight-medium;
 }
 
-.team, .numbers {
+.team,
+.numbers {
     grid-column: 1;
 }
 
-.team{
+.team {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -35,11 +39,11 @@
     font-family: 'Montserrat';
 }
 
-.content{
+.content {
     width: 75%;
 }
 
-.iconBackground{
+.iconBackground {
     position: absolute;
     width: 26%;
     height: auto;
@@ -47,7 +51,7 @@
     top: 30%;
 }
 
-.manager{
+.manager {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -56,12 +60,12 @@
 
 .manager img {
     margin-right: $margin-3;
-    padding: 5px;
-    border: 1px solid #000000;
+    padding: 4px;
+    border: 1px solid $palette-black;
     border-radius: 305px;
 }
 
-.numberText{
+.numberText {
     margin-top: $margin-2;
     font-weight: $font-weight-medium;
 }
@@ -77,7 +81,7 @@
     object-fit: cover;
 }
 
-.numbers{
+.numbers {
     display: flex;
     justify-content: space-between;
     padding: $padding-12 $padding-10 $padding-12 $padding-3;
@@ -88,15 +92,15 @@
     .section {
         min-height: 930px;
     }
-    .content{
+    .content {
         width: 75%;
     }
 
-    .iconBackground{
+    .iconBackground {
         right: $margin-6;
     }
 
-    .manager{
+    .manager {
         width: 80%;
         margin-right: $margin-2;
     }
@@ -106,20 +110,19 @@
         max-width: 95%;
     }
 
-    .numbers{
+    .numbers {
         padding: $padding-12 $padding-4 $padding-12 $padding-4;
     }
-    
 }
 
 @media screen and (max-width: $breakpoint-md) {
     .section {
         height: auto;
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto; 
+        grid-template-rows: auto auto auto;
     }
 
-    .team{
+    .team {
         width: 72%;
         min-height: 406px;
         margin-left: auto;
@@ -130,7 +133,7 @@
         width: 80%;
     }
 
-    .iconBackground{
+    .iconBackground {
         width: 15%;
         height: auto;
         top: 45%;
@@ -138,13 +141,13 @@
 
     .photo {
         grid-column: 1;
-        grid-row: 2; 
+        grid-row: 2;
         width: 72%;
         height: 550px;
         margin: auto;
     }
 
-    .manager{
+    .manager {
         width: 70%;
     }
 
@@ -155,8 +158,7 @@
 }
 
 @media screen and (max-width: $breakpoint-sm) {
-
-    .iconBackground{
+    .iconBackground {
         top: 50%;
     }
 
@@ -165,12 +167,76 @@
         height: 450px;
     }
 
-    .manager{
+    .manager {
         width: 80%;
     }
 
     .numbers {
         grid-row: 3;
         padding: $padding-12 $padding-4 $padding-12 $padding-4;
+    }
+}
+
+@media screen and (max-width: $breakpoint-xs) {
+    .section {
+        width: 100%;
+        padding: $padding-9 $padding-3;
+    }
+
+    .team {
+        width: 100%;
+        min-height: 400px;
+        margin-top: $margin-0;
+    }
+
+    .team h3 {
+        font-size: $font-size-h4;
+    }
+
+    .content {
+        width: 100%;
+        font-size: $font-size-body4;
+    }
+
+    .iconBackground {
+        top: 50%;
+        width: auto;
+        right: $padding-0;
+    }
+
+    .photo {
+        width: 100%;
+        height: 330px;
+    }
+
+    .manager {
+        width: 100%;
+        height: 95px;
+        margin-right: $margin-0;
+    }
+
+    .manager img {
+        height: 95px;
+        margin-right: $margin-2;
+    }
+
+    .manager div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100%;
+    }
+
+    .manager h6 {
+        font-size: $font-size-body3;
+    }
+
+    .manager p {
+        font-size: $font-size-body4;
+    }
+
+    .numbers {
+        flex-direction: column;
+        padding: $padding-0;
     }
 }
