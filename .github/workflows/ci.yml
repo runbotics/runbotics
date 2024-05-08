@@ -215,6 +215,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: ${{ env.RUSH }} install -t .
