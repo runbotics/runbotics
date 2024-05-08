@@ -1,10 +1,4 @@
-export interface Credential {
-    id?: string,
-    name: string,
-    description: string,
-    collection: string,
-    collectionColor?: string
-}
+import { Credential } from '#src-app/views/credentials/Credential/Credential.types';
 
 export interface CredentialTileProps {
     credential: Credential

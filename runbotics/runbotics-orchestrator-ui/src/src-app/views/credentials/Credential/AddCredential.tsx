@@ -5,9 +5,15 @@ import { Button, SvgIcon } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-const AddNewCredentialButton: FC = () => {
-    const {translate} = useTranslations();
+import EditCredential from './EditCredential/EditCredential';
+import { getInitialCredentialData } from './EditCredential/EditCredential.utils';
+
+const AddCredential: FC = () => {
+    const { translate } = useTranslations();
     const [showDialog, setShowDialog] = useState(false);
+
+    const initialCredentialInfo = getInitialCredentialData();
+    const handleAdd = () => {};
 
     return (
         <>
@@ -15,18 +21,18 @@ const AddNewCredentialButton: FC = () => {
                 color="primary"
                 variant="contained"
                 onClick={() => setShowDialog(true)}
-                startIcon={(
+                startIcon={
                     <SvgIcon fontSize="small">
                         <AddCircleOutlineIcon />
                     </SvgIcon>
-                )}
+                }
             >
                 {translate('Credentials.Add')}
             </Button>
-            {/* Edit process dialog */}
+            <EditCredential open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} credential={initialCredentialInfo} />
         </>
-
     );
 };
 
-export default AddNewCredentialButton;
+export default AddCredential;
+

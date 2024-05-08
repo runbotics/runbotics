@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 
+import { CollectionColors } from './CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 import { CollectionsRoot } from '../bot/BotCollectionView/BotCollectionView.styles';
 
 const TileGrid = styled.div`
@@ -26,7 +27,7 @@ const GridView: VFC = () => (
                         name: 'Jakas Nazwa',
                         collection: 'Jakas kolekcja',
                         description: 'Jakies description',
-                        collectionColor: 'rgba(251, 176, 64, 1)'
+                        collectionColor: CollectionColors.LIGHT_ORANGE.hex
                     }}
                 />
                 <CredentialTile
@@ -35,11 +36,26 @@ const GridView: VFC = () => (
                         name: 'Tymczasowa Nazwa',
                         collection: 'Tymczasowa kolekcja',
                         description: 'Tymczasowe description',
-                        collectionColor: 'rgba(255, 105, 0, 1)'
+                        collectionColor: CollectionColors.DARK_ORANGE.hex
                     }}
                 />
                 <CredentialTile
-                    credential={{ id: 'nowe_id', name: 'Nowa Nazwa', collection: 'Nowa kolekcja', description: 'Jakies description', collectionColor: 'rgba(53, 214, 141, 1)' }}
+                    credential={{
+                        id: 'zmyslone_id',
+                        name: 'Zmyslona Nazwa',
+                        collection: 'Zmyslona kolekcja',
+                        description: 'Zmyslone description',
+                        collectionColor: CollectionColors.LIGHT_GREEN.hex
+                    }}
+                />
+                <CredentialTile
+                    credential={{
+                        id: 'nowe_id',
+                        name: 'Nowa Nazwa',
+                        collection: 'Nowa kolekcja',
+                        description: 'Jakies description',
+                        collectionColor: CollectionColors.DARK_GREEN.hex
+                    }}
                 />
                 <CredentialTile
                     credential={{
@@ -47,7 +63,34 @@ const GridView: VFC = () => (
                         name: 'Unikalna Nazwa',
                         collection: 'Unikalna kolekcja',
                         description: 'Unikalne description',
-                        collectionColor: 'rgba(46, 76, 230, 1)'
+                        collectionColor: CollectionColors.LIGHT_BLUE.hex
+                    }}
+                />
+                <CredentialTile
+                    credential={{
+                        id: 'ciemne_niebieskie_id',
+                        name: 'Ciemna Niebieska Nazwa',
+                        collection: 'Ciemna niebieska kolekcja',
+                        description: 'Ciemne niebieska description',
+                        collectionColor: CollectionColors.DARK_BLUE.hex
+                    }}
+                />
+                <CredentialTile
+                    credential={{
+                        id: 'szare_id',
+                        name: 'Szara Nazwa',
+                        collection: 'Szara kolekcja',
+                        description: 'Szare description',
+                        collectionColor: CollectionColors.LIGHT_GREY.hex
+                    }}
+                />
+                <CredentialTile
+                    credential={{
+                        id: 'ciemne_szare_id',
+                        name: 'Ciemna Szara Nazwa',
+                        collection: 'Ciemna szara kolekcja',
+                        description: 'Ciemne szare description',
+                        collectionColor: CollectionColors.DARK_GREY.hex
                     }}
                 />
             </TileGrid>
