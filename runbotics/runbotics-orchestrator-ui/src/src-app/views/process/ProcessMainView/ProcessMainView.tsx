@@ -5,8 +5,6 @@ import { Divider, Grid, Tab, Tabs, } from '@mui/material';
 import { useRouter } from 'next/router';
 import { FeatureKey, Role } from 'runbotics-common';
 
-import LinkTab from 'next/link';
-
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAuth from '#src-app/hooks/useAuth';
 import { useOwner } from '#src-app/hooks/useOwner';
@@ -24,7 +22,7 @@ import {
     ProcessTitle,
     TutorialBlogPost,
     TutorialLink,
-    TablLink
+    TabLink
 } from './ProcessMainView.styled';
 
 const ProcessMainView: FC = () => {
@@ -79,13 +77,12 @@ const ProcessMainView: FC = () => {
                         variant="scrollable"
                     >
                         {processTabs.length > 1 && processTabs.map((processTab) => (
-                            <TablLink key={processTab.value} href={processTab.href} passHref isActive={processTab.value === tab}>
-                                <Tab 
+                            <TabLink key={processTab.value} href={processTab.href} passHref isActive={processTab.value === tab}>
+                                <Tab
                                     label={processTab.label}
                                     value={processTab.value}
                                 />
-                            </TablLink>
-                            
+                            </TabLink>
                         ))}
                     </Tabs>
                     {isGuest &&

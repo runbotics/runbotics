@@ -24,7 +24,7 @@ export const ProcessInternalPage = styled(InternalPage)`
     }
 `;
 
-export const TablLink = styled(Link)<{ isActive?: boolean }>(({ theme, isActive }) => ({
+export const TabLink = styled(Link)<{ isActive?: boolean }>(({ theme, isActive }) => ({
     textDecoration: 'none',
     cursor: 'pointer',
     color: isActive ? theme.palette.secondary.main : theme.palette.text.secondary,
