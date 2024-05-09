@@ -1,12 +1,15 @@
 import Image from 'next/image';
-import { translate } from '#src-app/hooks/useTranslations';
-import Typography from '#src-landing/components/Typography';
-import styles from './AboutTeamSection.module.scss';
+
+import menager from '#public/images/photos/menager.png';
 import team from '#public/images/photos/team.jpg';
 import quotation_mark from '#public/images/shapes/quotation_ mark.png';
-import menager from '#public/images/photos/menager.png';
-import { ABOUT_TEAM_SECTION_TITLE_ID } from './AboutTeamSection.utils';
+import { translate } from '#src-app/hooks/useTranslations';
+
+import Typography from '#src-landing/components/Typography';
+
 import NumberComponent from './AboutTeamNumbers/AboutTeamNumbersItem';
+import styles from './AboutTeamSection.module.scss';
+import { ABOUT_TEAM_SECTION_TITLE_ID } from './AboutTeamSection.utils';
 
 const AboutTeamSection = () => {
     return (

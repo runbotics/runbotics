@@ -1,6 +1,9 @@
 import { translate } from '#src-app/hooks/useTranslations';
+
 import Typography from '#src-landing/components/Typography';
+
 import styles from './AboutTeamNumbersItem.module.scss';
+
 import { ABOUT_TEAM_SECTION_TITLE_ID } from '../AboutTeamSection.utils';
 
 const NumberComponent = ({ number, textKey }) => {
