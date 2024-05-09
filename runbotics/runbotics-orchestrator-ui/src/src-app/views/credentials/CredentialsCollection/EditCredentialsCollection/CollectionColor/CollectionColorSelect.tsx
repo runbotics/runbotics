@@ -37,17 +37,6 @@ const CollectionColorSelect = () => {
             >
                 {colorsToChoose}
             </Select>
-       
-            
-            {/* <ColorSelected sx={{display:'flex'}}
-                labelId="collection_color-label"
-                id="collection_color-select"
-                value={collectionColor}
-                label="Collection color"
-                onChange={handleChange}
-            >
-                {colorsToChoose}
-            </ColorSelected> */}
         </FormControl>
      
     );

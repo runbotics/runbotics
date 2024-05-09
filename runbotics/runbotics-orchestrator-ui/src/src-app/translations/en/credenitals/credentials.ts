@@ -11,4 +11,7 @@ export const credentials = {
     'Credential.Form.Fields.Name.Label': 'Name',
     'Credential.Form.Fields.Description.Label': 'Description',
     'Credential.Form.Fields.Collection.Label': 'Collection',
+    'Credential.Add.Save': 'Save credential',
+    'Credential.Add.Cancel': 'Cancel',
+    
 };
