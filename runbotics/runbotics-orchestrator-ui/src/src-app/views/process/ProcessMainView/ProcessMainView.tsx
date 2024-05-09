@@ -74,7 +74,7 @@ const ProcessMainView: FC = () => {
                 <Grid item my={1} ml={1} display={'flex'} gap={2}>
                     <Tabs
                         scrollButtons="auto"
-                        // textColor="secondary"
+                        textColor="secondary"
                         value={tab}
                         variant="scrollable"
                     >

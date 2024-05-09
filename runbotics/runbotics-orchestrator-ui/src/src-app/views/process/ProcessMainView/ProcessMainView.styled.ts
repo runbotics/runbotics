@@ -24,18 +24,15 @@ export const ProcessInternalPage = styled(InternalPage)`
     }
 `;
 
-export const TablLink = styled(Link)<{ isActive?: boolean }>`
-    && {
-        text-decoration: none;
-        cursor: pointer;    
-        color: ${props => props.isActive ? '#FBB040' : '#000000'};
-        border-bottom: ${props => props.isActive ? '0.15rem solid #EA8E05' : 'none'};
-    }
-
-    && .MuiButtonBase-root.MuiTab-root {
-        opacity: 1;
-    }
-`;
+export const TablLink = styled(Link)<{ isActive?: boolean }>(({ theme, isActive }) => ({
+    textDecoration: 'none',
+    cursor: 'pointer',
+    color: isActive ? theme.palette.secondary.main : theme.palette.text.secondary,
+    borderBottom: isActive ? `0.15rem solid ${theme.palette.primary.main}` : 'none',
+    '& .MuiButtonBase-root.MuiTab-root': {
+        opacity: 1,
+    },
+}));
 
 
 export const TutorialBlogPost = styled(Typography)`
