@@ -19,7 +19,7 @@ import {
     Key,
     Region,
     FileType,
-} from '@nut-tree/nut-js';
+} from '@runbotics/nut-js';
 
 import { RunboticsLogger } from '#logger';
 
