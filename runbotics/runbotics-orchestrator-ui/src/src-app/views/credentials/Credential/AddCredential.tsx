@@ -1,26 +1,29 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Button, SvgIcon } from '@mui/material';
 
+import { useRouter } from 'next/router';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import EditCredential from './EditCredential/EditCredential';
-import { getInitialCredentialData } from './EditCredential/EditCredential.utils';
+import { Credential } from './Credential.types';
 
 const AddCredential: FC = () => {
     const { translate } = useTranslations();
-    const [showDialog, setShowDialog] = useState(false);
+    const router = useRouter();
 
-    const initialCredentialInfo = getInitialCredentialData();
-    const handleAdd = () => {};
+    const createCredentialRedirect = (credential: Credential) => {
+        const credentialId = 'credentialId';
+        router.push(`/app/credentials/${credentialId}/create`);
+    };
 
     return (
         <>
             <Button
                 color="primary"
                 variant="contained"
-                onClick={() => setShowDialog(true)}
+                onClick={createCredentialRedirect}
                 startIcon={
                     <SvgIcon fontSize="small">
                         <AddCircleOutlineIcon />
@@ -29,7 +32,7 @@ const AddCredential: FC = () => {
             >
                 {translate('Credentials.Add')}
             </Button>
-            <EditCredential open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} credential={initialCredentialInfo} />
+            {/* <EditCredential open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} credential={initialCredentialInfo} /> */}
         </>
     );
 };
