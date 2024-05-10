@@ -2,16 +2,23 @@ import React from 'react';
 
 import { Grid } from '@mui/material';
 
+import styled from 'styled-components';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import CredentialLocation from './CredentialLocation';
 import CredentialOptions from './CredentialOptions';
 
+const StyledGrid = styled(Grid)(({theme}) => `
+    margin-bottom: ${theme.spacing(3)};
+    spacing: ${theme.spacing(2)};
+`);
+
 export const Header: React.FC<{}> = () => {
     const { translate } = useTranslations();
 
     return (
-        <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+        <StyledGrid container alignItems="center" justifyContent="space-between">
             <Grid item>
                 <CredentialLocation 
                 // collection={collection}
@@ -20,7 +27,7 @@ export const Header: React.FC<{}> = () => {
             <Grid item>
                 <CredentialOptions/>
             </Grid>
-        </Grid>
+        </StyledGrid>
     );
 };
 

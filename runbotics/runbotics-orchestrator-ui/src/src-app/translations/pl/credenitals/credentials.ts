@@ -13,5 +13,23 @@ export const credentials = {
     'Credential.Form.Fields.Collection.Label': 'Kolekcja',
     'Credential.Add.Save': 'Zapisz dane dostępowe',
     'Credential.Add.Cancel': 'Anuluj',
+    'Credential.Details.Name.Label': 'Nazwa',
+    'Credential.Details.Description.Label': 'Opis',
+    'Credential.Details.Collection.Label': 'Kolekcja',
+    'Credential.Details.Dislaimer.Label': 'Wyjaśnienie: ',
+    'Credential.Details.Dislaimer.Text': 'Wszystkie dane dostępowe muszą należeń do kolekcji. Tylko właściciel danych dostępowych może decydować o udostępnieniu kolekcji innym użytkownikom.',
+    'Credential.GeneralInfo.Title': 'Informacje ogólne',
+    'Credential.Attributes.Title': 'Atrybuty',
+    'Credential.Attribute.Label': 'Atrybut',
+    'Credential.Attribute.Name.Label': 'Nazwa atrybutu',
+    'Credential.Attribute.Description.Label': 'Opis (opcjonalnie)',
+    'Credential.Attribute.Details.Label': 'Szczegóły',
+    'Credential.Attribute.Details.Info': 'Poniżej podaj dane dostępowe takie jak: e-mail, login, hasło lub inną potrzebną wartość. Jeden atrybut to jedna dana dostępowa',
+    'Credential.Attribute.Value.Label': 'Wartość',
+    'Credential.Attribute.Security.Label': 'Security',
+    'Credential.Attribute.Security.MaskValue': 'Zamaskuj wartość',
+    'Credential.Attribute.Edit.Confirm': 'Zatwierdź',
+    'Credential.Attribute.Edit.Cancel': 'Anuluj',
 };
     
+ 

@@ -52,8 +52,7 @@ const CredentialLocation = () => {
                     <Typography
                         variant='body2'
                     >
-                        Nowa kolekcja
-                        {/* Nazwa kolekcji */}
+                        Nowy credential
                     </Typography>
                 </Breadcrumbs>
             </Grid>
