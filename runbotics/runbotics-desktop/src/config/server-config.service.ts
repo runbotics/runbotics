@@ -145,7 +145,8 @@ export class ServerConfigService {
 
     private getEnvValue(key: string): string | undefined {
         const configValue = this.configService.get(key);
-        const encKey = this.configService.get('ENC_KEY');
+        const fullEncKey = process.argv.find((arg) => arg.startsWith('--enc-key='));
+        const encKey = fullEncKey ? fullEncKey.split('=')[1] : '';
         return (encKey && configValue) ? decrypt(configValue, encKey) : configValue;
     }
 }
