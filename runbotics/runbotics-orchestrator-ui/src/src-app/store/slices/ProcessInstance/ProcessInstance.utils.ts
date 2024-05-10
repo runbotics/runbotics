@@ -1,19 +1,28 @@
 import { ProcessInstanceState, InstanceExtendedWithSubprocesses } from './ProcessInstance.state';
 
+const recursivelyInsertSubprocess = (
+    parentInstanceId: string, 
+    currentNode: InstanceExtendedWithSubprocesses, 
+    targetSubprocesses: InstanceExtendedWithSubprocesses[],
+) => {
+    if (currentNode.id === parentInstanceId) {
+        currentNode.subprocesses = targetSubprocesses;
+    }
+
+    currentNode.subprocesses?.forEach(subprocess => 
+        recursivelyInsertSubprocess(parentInstanceId, subprocess, targetSubprocesses)
+    );
+};
+
 export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: InstanceExtendedWithSubprocesses) => {
-    const { id, subprocesses, hasSubprocesses, isLoadingSubprocesses } = processInstance;
+    const { id, subprocesses } = processInstance;
     const pageContent = state.all.page?.content;
     if (!pageContent) return;
 
-    state.all.page.content = pageContent
-        .map((instance: InstanceExtendedWithSubprocesses) => 
-            instance.id !== id
-                ? instance 
-                : ({ 
-                    ...instance,
-                    subprocesses: subprocesses !== undefined ? subprocesses : instance.subprocesses, 
-                    hasSubprocesses: hasSubprocesses !== undefined ? hasSubprocesses : instance.hasSubprocesses,
-                    isLoadingSubprocesses: isLoadingSubprocesses !== undefined ? isLoadingSubprocesses : instance.isLoadingSubprocesses,
-                })
-        );
+    pageContent
+        .forEach((instance: InstanceExtendedWithSubprocesses) => {
+            recursivelyInsertSubprocess(id, instance, subprocesses);
+        });
+
+    state.all.page.content = pageContent;
 };

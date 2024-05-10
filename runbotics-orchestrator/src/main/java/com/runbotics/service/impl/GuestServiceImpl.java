@@ -2,6 +2,7 @@ package com.runbotics.service.impl;
 
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.Guest;
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.repository.GuestRepository;
 import com.runbotics.security.AuthoritiesConstants;
@@ -10,21 +11,21 @@ import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.exception.GuestProcessInternalServerError;
+import com.runbotics.utils.Utils;
+import java.util.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.security.RandomUtil;
 
-import java.util.*;
-
 @Service
 public class GuestServiceImpl implements GuestService {
+
     private final UserService userService;
     private final GuestRepository guestRepository;
     private final ProcessService processService;
     private final PasswordEncoder passwordEncoder;
-
 
     public GuestServiceImpl(
         UserService userService,
@@ -39,7 +40,9 @@ public class GuestServiceImpl implements GuestService {
     }
 
     public boolean verifyGuestLimit(String guestIp) {
-        Optional<Guest> guestOptional = guestRepository.findAll().stream()
+        Optional<Guest> guestOptional = guestRepository
+            .findAll()
+            .stream()
             .filter(guest -> passwordEncoder.matches(guestIp, guest.getIp()))
             .findFirst();
         return guestOptional.isEmpty();
@@ -96,6 +99,9 @@ public class GuestServiceImpl implements GuestService {
         guestUser.setLangKey(langKey);
         guestUser.setCreatedBy("system");
         guestUser.setActivationKey(RandomUtil.generateActivationKey());
+
+        // Temporary solution for keeping tenant id not null
+        guestUser.setTenant(Utils.getDefaultTenant());
 
         Set<Authority> authorities = new HashSet<>();
         var authority = new Authority();

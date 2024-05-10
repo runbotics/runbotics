@@ -24,6 +24,17 @@ export const ProcessInternalPage = styled(InternalPage)`
     }
 `;
 
+export const TabLink = styled(Link)<{ isActive?: boolean }>(({ theme, isActive }) => ({
+    textDecoration: 'none',
+    cursor: 'pointer',
+    color: isActive ? theme.palette.secondary.main : theme.palette.text.secondary,
+    borderBottom: isActive ? `0.15rem solid ${theme.palette.primary.main}` : 'none',
+    '& .MuiButtonBase-root.MuiTab-root': {
+        opacity: 1,
+    },
+}));
+
+
 export const TutorialBlogPost = styled(Typography)`
     display: flex;
     align-items: center;

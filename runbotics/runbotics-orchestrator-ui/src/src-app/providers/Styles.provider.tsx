@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import '@mui/lab';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
@@ -12,7 +12,7 @@ import GlobalStyles from '#src-app/components/utils/GlobalStyles';
 import useSettings from '#src-app/hooks/useSettings';
 import createTheme from '#src-app/theme';
 
-const StylesProvider: FC = ({ children }) => {
+const StylesProvider: FC<{ children: ReactNode | ReactNode[] }> = ({ children }) => {
     const { settings } = useSettings();
     const { i18n } = useTranslation();
     const theme = createTheme(settings, i18n.language);

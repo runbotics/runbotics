@@ -30,6 +30,7 @@ export interface DataTableProps<T extends object> {
     renderSubRow?: (row: Row<T> | ProcessInstanceRow) => ReactNode;
     singleSelect?: boolean;
     autoHeight?: boolean;
+    instanceId?: string;
 }
 
 export interface TableRowExpanderProps {

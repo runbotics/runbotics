@@ -37,14 +37,15 @@ interface ProcessListHeaderProps {
     search: string;
     onDisplayModeChange: (mode: ProcessListDisplayMode) => void;
     onSearchChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    isCollectionView: boolean;
 }
 
 const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
-    displayMode, onDisplayModeChange, processesLength, search, onSearchChange,
+    displayMode, onDisplayModeChange, processesLength, search, onSearchChange, isCollectionView
 }) => {
     const { translate } = useTranslations();
-    const displayTableListView = useFeatureKey([FeatureKey.PROCESS_LIST_TABLE_VIEW]);
-    
+    const displayTableListView = useFeatureKey([FeatureKey.PROCESS_LIST_TABLE_VIEW]) && !isCollectionView;
+
     return (
         <Box display="flex" alignItems="center" justifyContent="space-between">
             <StyledTypography variant="h5" color="textPrimary">

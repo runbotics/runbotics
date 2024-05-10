@@ -8,18 +8,17 @@ import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
 import com.runbotics.service.mapper.BotCollectionMapper;
 import com.runbotics.utils.Utils;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class BotCollectionServiceImpl implements BotCollectionService {
@@ -45,6 +44,8 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     @Override
     public BotCollectionDTO save(BotCollectionDTO botCollectionDTO) {
         log.debug("Request to save BotCollection : {}", botCollectionDTO);
+        User requester = userService.getUserWithAuthorities().get();
+
         BotCollection botCollection = botCollectionMapper.toEntity(botCollectionDTO);
         botCollection.setCreatedBy(userService.getUserWithAuthorities().get());
         botCollection.setUsers(
@@ -55,6 +56,7 @@ public class BotCollectionServiceImpl implements BotCollectionService {
                 .map(user -> userService.getUserWithAuthoritiesByLogin(user).get())
                 .collect(Collectors.toSet())
         );
+        botCollection.setTenant(requester.getTenant());
         botCollection = botCollectionRepository.save(botCollection);
         return botCollectionMapper.toDto(botCollection);
     }
@@ -91,11 +93,7 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     @Transactional(readOnly = true)
     public List<BotCollectionDTO> findAll() {
         log.debug("Request to get all BotCollections");
-        return botCollectionRepository
-            .findAll()
-            .stream().
-            map(botCollectionMapper::toDto)
-            .collect(Collectors.toList());
+        return botCollectionRepository.findAll().stream().map(botCollectionMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -146,8 +144,7 @@ public class BotCollectionServiceImpl implements BotCollectionService {
                 .findAllByUserAndByCreatedByName(pageable, userId, createdByName, commonCollections)
                 .map(botCollectionMapper::toDto);
         }
-        return botCollectionRepository.findAllByUser(pageable, userId, commonCollections)
-            .map(botCollectionMapper::toDto);
+        return botCollectionRepository.findAllByUser(pageable, userId, commonCollections).map(botCollectionMapper::toDto);
     }
 
     private List<BotCollectionDTO> getCollectionsForUser(Long userId, BotCollection publicCollection, BotCollection guestCollection) {
@@ -165,10 +162,6 @@ public class BotCollectionServiceImpl implements BotCollectionService {
     }
 
     private boolean isCollectionInCollectionForUser(BotCollection collection, List<BotCollection> collectionsForUser) {
-        return !collectionsForUser
-            .stream()
-            .map(BotCollection::getId)
-            .collect(Collectors.toList())
-            .contains(collection.getId());
+        return !collectionsForUser.stream().map(BotCollection::getId).collect(Collectors.toList()).contains(collection.getId());
     }
 }

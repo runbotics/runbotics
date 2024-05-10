@@ -8,6 +8,7 @@ import { Server } from 'socket.io';
 import { AuthService } from '#/auth/auth.service';
 import { AuthSocket } from '#/types';
 import { Logger } from '#/utils/logger';
+import { WsQueueMessage } from 'runbotics-common';
 
 @WebSocketGateway({ path: '/ws-ui', cors: { origin: '*' } })
 export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -16,7 +17,7 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
 
     constructor(
         private readonly authService: AuthService,
-    ) { }
+    ) {}
 
     async handleConnection(client: AuthSocket) {
         try {
@@ -30,5 +31,19 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
 
     handleDisconnect(client: AuthSocket) {
         this.logger.log(`Client disconnected: ${client.id}`);
+    }
+
+    emitAll<T extends keyof WsQueueMessage>(event: T, data: WsQueueMessage[T]) {
+        this.server.emit(event, data);
+    }
+
+    emitClient<T extends keyof WsQueueMessage>(clientId: string, event: T, data: WsQueueMessage[T]) {
+        const clientSocket = this.server.sockets.sockets.get(clientId);
+        if (!clientSocket) {
+            this.logger.error(`Client with ID: ${clientId} not found.`);
+            return;
+        }
+
+        clientSocket.emit(event, data);
     }
 }

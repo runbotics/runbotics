@@ -1,6 +1,7 @@
 import React, { FunctionComponent, ReactNode } from 'react';
 
 interface IfProps {
+    children: ReactNode;
     condition: boolean | undefined;
     else?: ReactNode;
 }

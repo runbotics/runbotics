@@ -9,14 +9,16 @@ import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.service.criteria.ProcessInstanceCriteria;
 import com.runbotics.service.dto.ProcessInstanceDTO;
 import com.runbotics.service.mapper.ProcessInstanceMapper;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -58,7 +60,8 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
                     .findByStatus(criteria.getStatus())
                     .stream()
                     .sorted(Comparator.comparing(ProcessInstance::getCreated).reversed())
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList())
+            );
         }
         final Specification<ProcessInstance> specification = createSpecification(criteria);
         return processInstanceMapper.toDto(
@@ -66,8 +69,8 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
                 .findAll(specification)
                 .stream()
                 .sorted(Comparator.comparing(ProcessInstance::getCreated).reversed())
-                .collect(Collectors.toList()));
-
+                .collect(Collectors.toList())
+        );
     }
 
     /**
@@ -98,6 +101,32 @@ public class ProcessInstanceQueryService extends QueryService<ProcessInstance> {
 
         final Specification<ProcessInstance> specification = createSpecification(criteria);
         return processInstanceRepository.findAll(specification, page).map(processInstanceMapper::toDto);
+    }
+
+    /**
+     * Return a {@link Page} of {@link ProcessInstanceDTO} which matches the criteria from the database and also contains enity with provided id.
+     * @param id The id of entity which should appear in the {@link Page} of {@link ProcessInstanceDTO}
+     * @param criteria The object which holds all the filters, which the entities should match.
+     * @param page The page, which should be returned.
+     * @return the matching entities.
+     */
+    @Transactional(readOnly = true)
+    public Page<ProcessInstanceDTO> findByCriteriaWithSpecificInstance(UUID id, ProcessInstanceCriteria criteria, Pageable page) {
+        final Specification<ProcessInstance> specification = createSpecification(criteria);
+        List<ProcessInstance> processInstances = processInstanceRepository.findAll(specification, page.getSort());
+        int indexOfSpecificProcessInstance = -1;
+        for (ProcessInstance processInstance : processInstances) {
+            if (processInstance.getId().equals(id)) {
+                indexOfSpecificProcessInstance = processInstances.indexOf(processInstance);
+                break;
+            }
+        }
+        int pageNumber = indexOfSpecificProcessInstance < 0 ? 0 : indexOfSpecificProcessInstance / page.getPageSize();
+        Pageable newPageable = PageRequest.of(pageNumber, page.getPageSize(), page.getSort());
+        Page<ProcessInstanceDTO> foundInstances = processInstanceRepository
+            .findAll(specification, newPageable)
+            .map(processInstanceMapper::toDto);
+        return foundInstances;
     }
 
     /**

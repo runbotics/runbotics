@@ -1,11 +1,12 @@
 import { useContext, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { IProcessInstance, IProcessInstanceEvent, WsMessage, isProcessInstanceFinished } from 'runbotics-common';
+import { IProcessInstance, IProcessInstanceEvent, WsMessage, isProcessInstanceFinished, IProcessInstanceLoopEvent } from 'runbotics-common';
 
 import { SocketContext } from '#src-app/providers/Socket.provider';
 import { processSelector } from '#src-app/store/slices/Process';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
+import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
 interface ProcessInstanceSocketHookProps {
     orchestratorProcessInstanceId?: string | null;
@@ -54,9 +55,18 @@ const useProcessInstanceSocket = ({
             { dispatch(processInstanceActions.updateSingleActiveEvent(processInstanceEvent)); }
         });
 
+        socket.on(WsMessage.PROCESS_INSTANCE_LOOP_EVENT, (processInstanceLoopEvent: IProcessInstanceLoopEvent) => {
+            if (
+                processInstanceLoopEvent.processInstance.orchestratorProcessInstanceId ===
+                processInstanceState.active.orchestratorProcessInstanceId
+            )
+            { dispatch(processInstanceEventActions.updateSingleActiveLoopEvent(processInstanceLoopEvent)); }
+        });
+
         return () => {
             socket.off(WsMessage.PROCESS);
             socket.off(WsMessage.PROCESS_INSTANCE_EVENT);
+            socket.off(WsMessage.PROCESS_INSTANCE_LOOP_EVENT);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, orchestratorProcessInstanceId, processInstanceState.active.processInstance]);

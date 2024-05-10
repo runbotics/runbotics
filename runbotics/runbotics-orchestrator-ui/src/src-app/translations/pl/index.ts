@@ -4,6 +4,7 @@ import landingPageTranslations from '#src-landing/translations/pl/landing';
 import accountTranslations from './account.json';
 import actionTranslations from './action.json';
 import botTranslations from './bot.json';
+import collectionTranslations from './collections';
 import commonTranslations from './common.json';
 import componentsTranslations from './components.json';
 import demoTranslations from './demo.json';
@@ -28,6 +29,7 @@ const translationResources = {
     ...historyTranslations,
     ...botTranslations,
     ...processTranslations,
+    ...collectionTranslations,
     ...error404Translations,
     ...actionTranslations,
     ...schedulerTranslations,

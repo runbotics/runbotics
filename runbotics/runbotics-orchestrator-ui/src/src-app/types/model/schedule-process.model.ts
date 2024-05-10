@@ -7,6 +7,7 @@ export interface IScheduleProcess {
     cron?: string;
     process?: IProcess;
     user?: IUser;
+    inputVariables?: string;
 }
 
 export const defaultValue: Readonly<IScheduleProcess> = {};

@@ -1,7 +1,9 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, FocusEvent, useEffect, useState } from 'react';
 
 import { FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+
+import { BpmnElementType } from 'runbotics-common';
 
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import useOptions from '#src-app/hooks/useOptions';
@@ -22,6 +24,8 @@ import { BpmnConnectionFactory, IBpmnConnection, IBpmnGateway } from '../../help
 
 import FlowLabelForm from '../FlowLabelForm';
 
+const EXCLUDED_CONNECTION_TYPES = [BpmnElementType.ASSOCIATION];
+
 // eslint-disable-next-line max-lines-per-function
 const GatewayFormRenderer = () => {
     const theme = useTheme();
@@ -32,41 +36,52 @@ const GatewayFormRenderer = () => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
 
-    const createInitExpressions = () => gateway.outgoing.reduce((initExpressions, flow) => {
-        if (flow.businessObject.conditionExpression === undefined) {
-            BpmnConnectionFactory.from(modeler).setConditionExpression(flow, null);
-            dispatch(processActions.setCustomValidationError({
-                elementId: flow.id,
-                elementName: `${flow.businessObject.name ?? flow.id}`,
-                type: ModelerErrorType.FORM_ERROR,
-            }));
-        }
-        const expression = flow.businessObject.conditionExpression?.body;
-        if (expression !== undefined) {
-            initExpressions[flow.id] = expression;
-        }
-        return initExpressions;
-    }, {});
+    const [defaultFlow, setDefaultFlow] = useState(gateway.businessObject.default?.id);
+    const [expressions, setExpressions] = useState({});
+    const [filteredGatewayConnections, setFilteredGatewayConnections] = useState<IBpmnConnection[]>([]);
 
-    const [defaultFlow, setDefaultFlow] = React.useState(gateway.businessObject.default?.id);
-    const [expressions, setExpressions] = React.useState(createInitExpressions());
+    useEffect(() => {
+        const tempFilteredGateway = gateway.outgoing
+            .filter(connection => !EXCLUDED_CONNECTION_TYPES.includes(connection.type));
+
+        const createInitExpressions = () => tempFilteredGateway
+            .reduce((initExpressions, flow) => {
+                if (flow.businessObject.conditionExpression === undefined) {
+                    BpmnConnectionFactory.from(modeler).setConditionExpression(flow, null);
+                    dispatch(processActions.setCustomValidationError({
+                        elementId: flow.id,
+                        elementName: `${flow.businessObject.name ?? flow.id}`,
+                        type: ModelerErrorType.FORM_ERROR,
+                    }));
+                }
+                const expression = flow.businessObject.conditionExpression?.body;
+                if (expression !== undefined) {
+                    initExpressions[flow.id] = expression;
+                }
+                return initExpressions;
+            }, {});
+
+        setExpressions(createInitExpressions());
+        setFilteredGatewayConnections(tempFilteredGateway);
+    }, []);
 
     const isSequenceWithExpression = (outgoing: IBpmnConnection) =>
         gateway.businessObject.default?.id === outgoing.id || Boolean(outgoing.businessObject.conditionExpression?.body?.trim());
 
     const validateFlows = () => {
-        gateway.outgoing.forEach((flow) => {
-            if (isSequenceWithExpression(flow)) {
-                dispatch(processActions.removeCustomValidationError(flow.id));
-            } else {
-                dispatch(processActions.setCustomValidationError({
-                    elementId: flow.id,
-                    elementName: `${flow.businessObject.name ?? flow.id}`,
-                    type: ModelerErrorType.FORM_ERROR,
-                }));
-            }
-        });
-    }
+        filteredGatewayConnections
+            .forEach((flow) => {
+                if (isSequenceWithExpression(flow)) {
+                    dispatch(processActions.removeCustomValidationError(flow.id));
+                } else {
+                    dispatch(processActions.setCustomValidationError({
+                        elementId: flow.id,
+                        elementName: `${flow.businessObject.name ?? flow.id}`,
+                        type: ModelerErrorType.FORM_ERROR,
+                    }));
+                }
+            });
+    };
 
     const setDefaultConnection = (outgoing: IBpmnConnection) => {
         setDefaultFlow(outgoing.id);
@@ -75,29 +90,30 @@ const GatewayFormRenderer = () => {
     };
 
     const handleFlowChanged = (value: string, id: string) => {
-        gateway.outgoing.forEach((outgoing) => {
-            if (expressions && id === outgoing.id && expressions[outgoing.id] !== value) {
-                BpmnConnectionFactory.from(modeler).setConditionExpression(
-                    outgoing,
-                    value
-                );
-                setExpressions({ ...expressions, [id]: value });
-            }
-        });
+        filteredGatewayConnections
+            .forEach((outgoing) => {
+                if (expressions && id === outgoing.id && expressions[outgoing.id] !== value) {
+                    BpmnConnectionFactory.from(modeler).setConditionExpression(
+                        outgoing,
+                        value
+                    );
+                    setExpressions({ ...expressions, [id]: value });
+                }
+            });
         validateFlows();
     };
 
     const getOutgoingById = (id: string) =>
         gateway.outgoing.find((outgoing) => outgoing.id === id);
 
-    const handleOnFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+    const handleOnFocus = (event: FocusEvent<HTMLInputElement>) => {
         const outgoing = getOutgoingById(event.target.name);
         if (outgoing) {
             BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, theme.palette.primary.main);
         }
     };
 
-    const handleOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const handleOnBlur = (event: FocusEvent<HTMLInputElement>) => {
         const outgoing = getOutgoingById(event.target.name);
         if (outgoing) {
             BpmnConnectionFactory.from(modeler).setConnectionColor(outgoing, theme.palette.common.black);
@@ -163,43 +179,45 @@ const GatewayFormRenderer = () => {
                         onBlur={handleOnBlur}
                     >
                         {
-                            gateway.outgoing.map((outgoing) => (
-                                <MenuItem key={'flow-menu-item-' + outgoing.id} value={outgoing.id}>
-                                    {outgoing.businessObject.name ? outgoing.businessObject.name : outgoing.id}
-                                </MenuItem>
-                            ))
+                            filteredGatewayConnections
+                                .map((outgoing) => (
+                                    <MenuItem key={'flow-menu-item-' + outgoing.id} value={outgoing.id}>
+                                        {outgoing.businessObject.name ? outgoing.businessObject.name : outgoing.id}
+                                    </MenuItem>
+                                ))
                         }
                     </Select>
                 </FormControl>
                 {
-                    gateway.outgoing.map((outgoing) => (
-                        <FlowExpression key={'flow-expression-' + outgoing.id}>
-                            <FlowLabelForm
-                                formLabel={translate('Process.Details.Modeler.ActionPanel.Form.FlowName.Title')}
-                                onSubmit={(name) => handleConnectionNameChange(name, outgoing)}
-                                selectedElement={outgoing}
-                                onCancel={() => handleCancel(outgoing)}
-                                onFocus={handleOnFocus}
-                            />
-                            <AutocompleteWidget
-                                id={'autocomplete-text-field-' + outgoing.id}
-                                withName={true}
-                                onChange={handleExpressionChange}
-                                autocompleteOptions={options}
-                                handleOnBlur={handleOnBlur}
-                                handleOnFocus={handleOnFocus}
-                                label={`${translate(
-                                    'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
-                                )}`}
-                                value={outgoing.businessObject.conditionExpression?.body ?? ''}
-                                name={outgoing.id}
-                                customErrors={isSequenceWithExpression(outgoing) ? undefined : [emptyExpressionError]}
-                                disabled={false}
-                                required={false}
-                                autofocus={false}
-                            />
-                        </FlowExpression>
-                    ))
+                    filteredGatewayConnections
+                        .map((outgoing) => (
+                            <FlowExpression key={'flow-expression-' + outgoing.id}>
+                                <FlowLabelForm
+                                    formLabel={translate('Process.Details.Modeler.ActionPanel.Form.FlowName.Title')}
+                                    onSubmit={(name) => handleConnectionNameChange(name, outgoing)}
+                                    selectedElement={outgoing}
+                                    onCancel={() => handleCancel(outgoing)}
+                                    onFocus={handleOnFocus}
+                                />
+                                <AutocompleteWidget
+                                    id={'autocomplete-text-field-' + outgoing.id}
+                                    withName={true}
+                                    onChange={handleExpressionChange}
+                                    autocompleteOptions={options}
+                                    handleOnBlur={handleOnBlur}
+                                    handleOnFocus={handleOnFocus}
+                                    label={`${translate(
+                                        'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
+                                    )}`}
+                                    value={outgoing.businessObject.conditionExpression?.body ?? ''}
+                                    name={outgoing.id}
+                                    customErrors={isSequenceWithExpression(outgoing) ? undefined : [emptyExpressionError]}
+                                    disabled={false}
+                                    required={false}
+                                    autofocus={false}
+                                />
+                            </FlowExpression>
+                        ))
                 }
             </GatewayFormMenu>
         </>

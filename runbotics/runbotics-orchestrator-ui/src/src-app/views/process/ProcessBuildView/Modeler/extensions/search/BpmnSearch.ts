@@ -1,6 +1,10 @@
+import _ from 'lodash';
+
+import { findVariablesInAction, findVariablesInGateway, findVariablesInLoop } from '#src-app/utils/findVariablesInActivities';
+import { getActivityType, Activity } from '#src-app/utils/getActivityType';
 import getElementLabel from '#src-app/utils/getElementLabel';
 
-import { BPMNElement } from '../../helpers/elementParameters';
+import { BPMNElement, BPMNElementRegistry, BpmnSubProcess } from '../../helpers/elementParameters';
 
 interface Token {
     normal?: string;
@@ -11,6 +15,7 @@ interface Result {
     primaryTokens: Token[];
     secondaryTokens: Token[];
     element: BPMNElement;
+    activityLabelId: string;
 }
 
 interface SearchProvider {
@@ -31,25 +36,52 @@ export default class BpmnSearchProvider implements SearchProvider {
 
     public find(pattern: string): Result[] {
         const rootElement = this._canvas.getRootElement();
-        return this._elementRegistry
-            .filter(
-                (element: BPMNElement) =>
-                    element !== rootElement && element.id.startsWith('Activity')
-            )
-            .map((element: BPMNElement) => ({
-                primaryTokens: matchAndSplit(getElementLabel(element), pattern),
+        const _elements: BPMNElementRegistry = this._elementRegistry._elements;
+
+        const foundVariablesInActions: Result[] = Object.values(_elements)
+            ?.reduce<Result[]>((currentElements, objectElement) => {
+                if (objectElement.element !== rootElement && hasVariables(objectElement.element, pattern)) {
+                    const activityLabel = objectElement.element.id.startsWith('Gateway')
+                        ? objectElement.element.id
+                        : getElementLabel(objectElement.element);
+
+                    currentElements.push({
+                        primaryTokens: [{ normal: `variable in: ${activityLabel}` }],
+                        secondaryTokens: [],
+                        element: objectElement.element,
+                        activityLabelId: activityLabel + objectElement.element.id
+                    });
+                }
+                return currentElements;
+            }, [])
+            .sort((resultA, resultB) => resultA.activityLabelId.localeCompare(resultB.activityLabelId));
+
+        const foundActions: Result[] = Object.values(_elements)?.reduce<Result[]>((currentElements, objectElement) => {
+            if (
+                objectElement.element === rootElement ||
+                (objectElement.element === rootElement && !objectElement.element.id.startsWith('Activity'))
+            ) {
+                return currentElements;
+            }
+            const activityLabel = objectElement.element.id.startsWith('Gateway')
+                ? objectElement.element.id
+                : getElementLabel(objectElement.element);
+
+            const action = {
+                primaryTokens: matchAndSplit(activityLabel, pattern),
                 secondaryTokens: [],
-                element: element
-            }))
-            .filter(
-                (item: Result) =>
-                    hasMatched(item.primaryTokens) ||
-                    hasMatched(item.secondaryTokens)
-            )
-            .sort(
-                (item: Result) =>
-                    getElementLabel(item.element) + item.element.id
-            );
+                element: objectElement.element,
+                activityLabelId: activityLabel + objectElement.element.id
+            };
+
+            if (hasMatched(action.primaryTokens) || hasMatched(action.secondaryTokens)) {
+                currentElements.push(action);
+            }
+
+            return currentElements;
+        }, []);
+
+        return [...sortByLabelId(foundVariablesInActions), ...sortByLabelId(foundActions)];
     }
 }
 
@@ -57,6 +89,24 @@ const hasMatched = (tokens: Token[]): boolean => {
     const matched = tokens.filter((token: Token) => Boolean(token.matched));
 
     return matched.length > 0;
+};
+
+const hasVariables = (element: BPMNElement, pattern: string) => {
+    const lowerCasePattern = pattern.toLowerCase();
+    const activityType = getActivityType(element);
+    
+    if (!activityType) return false;
+    
+    switch (activityType) {
+        case Activity.GATEWAY:
+            return findVariablesInGateway(element, lowerCasePattern);
+        case Activity.LOOP:
+            return findVariablesInLoop(element as BpmnSubProcess, lowerCasePattern);
+        case Activity.ACTION:
+            return findVariablesInAction(element, lowerCasePattern);
+        default:
+            return false;
+    }
 };
 
 const matchAndSplit = (text: string, pattern: string): Token[] => {
@@ -82,5 +132,10 @@ const matchAndSplit = (text: string, pattern: string): Token[] => {
 
     return tokens;
 };
+
+const sortByLabelId = (results: Result[]): Result[] =>
+    _.sortBy(results, function (obj) {
+        return obj.activityLabelId;
+    });
 
 BpmnSearchProvider.$inject = ['elementRegistry', 'searchPad', 'canvas'];

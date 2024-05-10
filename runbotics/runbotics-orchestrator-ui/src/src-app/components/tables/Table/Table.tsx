@@ -38,6 +38,7 @@ const Table = <T extends object>({
     renderSubRow,
     singleSelect,
     autoHeight,
+    instanceId,
 }: DataTableProps<T>) => {
     const [isLoading, setIsLoading] = useState(true);
     const [pageSize, setPageSize] = useState(propPageSize);
@@ -47,9 +48,31 @@ const Table = <T extends object>({
         setIsLoading(loading);
     }, [loading]);
 
-    const data = useMemo(() => {
-        if (subRowProperty) return propData.map((row) => ({ ...row, subRows: row[subRowProperty] }));
+    const replaceKeyRecursive = (tableData: T | T[], newKey: string) => {
+        if (typeof tableData !== 'object' || tableData === null) {
+            return tableData;
+        }
+      
+        if (Array.isArray(tableData)) {
+            return tableData.map(item => replaceKeyRecursive(item, newKey));
+        }
+      
+        const newObj = {};
+      
+        for (const key in tableData) {
+            if (Object.hasOwnProperty.call(tableData, key)) {
+                const newKeyString = key === subRowProperty ? newKey : key;
+                newObj[newKeyString] = replaceKeyRecursive(tableData[key] as T[], newKey);
+            }
+        }
+      
+        return newObj;
+    };
 
+    const data = useMemo(() => {
+        if (subRowProperty) {
+            return replaceKeyRecursive(propData, 'subRows');
+        }
         return propData;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [propData]);
@@ -74,15 +97,29 @@ const Table = <T extends object>({
         useRowSelect,
     );
 
+    const mappedRows = useMemo(() => {
+        if (!instanceId) return rows;
+        return rows.map((row: (Row<T> & { original: { id: string } })) => {
+            if (row.original.id === instanceId) {
+                return {
+                    ...row,
+                    isSelected: true,
+                };
+            }
+            return row;
+        });
+    }, [rows, instanceId]);
+
+
     useEffect(() => {
         setPageSize(propPageSize);
     }, [propPageSize]);
 
     useEffect(() => {
-        if (rows.length !== pageSize) setPageSize(rows.length);
+        if (mappedRows.length !== pageSize) setPageSize(mappedRows.length);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [rows.length]);
+    }, [mappedRows.length]);
 
     const handleRowClick = (row: Row<T>) => {
         if (onRowClick) onRowClick(row.original);
@@ -106,16 +143,6 @@ const Table = <T extends object>({
             </TableCell>
         ));
 
-    const countExpandedRows = () => {
-        let iterator = propPageSize;
-
-        return rows.reduce((acc, row) => {
-            if (iterator <= 0 || row.depth > 0) return acc;
-            iterator--;
-            return acc + row.subRows.length + 1;
-        }, 0);
-    };
-
     const rowLoader = (
         <TableRow>
             <TableCell colSpan={columns.length ?? 7} sx={{ height: `${TABLE_ROW_HEIGHT}px`}}>
@@ -124,9 +151,9 @@ const Table = <T extends object>({
         </TableRow>
     );
 
+
     const renderTableRows = () => {
-        const dataRows = rows
-            .slice(0, countExpandedRows())
+        const dataRows = mappedRows
             .map((row: Row<T>) => {
                 prepareRow(row);
                 const rowKey = row.getRowProps().key;
@@ -145,6 +172,7 @@ const Table = <T extends object>({
                     </React.Fragment>
                 );
             });
+
         if (autoHeight) return dataRows;
 
         const dummyRows: JSX.Element[] = [];
@@ -216,7 +244,7 @@ const Table = <T extends object>({
                         <DataTableFooter
                             sx={{
                                 borderTop: (theme) =>
-                                    TABLE_PAGE_SIZES[0] > rows.length
+                                    TABLE_PAGE_SIZES[0] > mappedRows.length
                                         ? `1px solid ${theme.palette.grey[300]}`
                                         : undefined,
                             }}

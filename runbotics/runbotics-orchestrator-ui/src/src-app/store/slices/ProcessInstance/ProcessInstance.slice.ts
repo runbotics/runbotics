@@ -12,6 +12,7 @@ export const initialState: ProcessInstanceState = {
         orchestratorProcessInstanceId: null,
         processInstance: null,
         eventsMap: {},
+        jobsMap: {},
     },
     all: {
         byId: {},

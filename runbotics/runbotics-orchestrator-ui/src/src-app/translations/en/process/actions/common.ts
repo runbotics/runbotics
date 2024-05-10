@@ -8,6 +8,7 @@ const commonActionsTranslations = {
     'Process.Details.Modeler.Actions.Common.Date': 'Date',
     'Process.Details.Modeler.Actions.Common.Period': 'Period',
     'Process.Details.Modeler.Actions.Common.Collection': 'Collection',
+    'Process.Details.Modeler.Actions.Common.DateFormat': 'Date format: YYYY-MM-DD or MM/DD/YYYY'
 };
 
 export default commonActionsTranslations;

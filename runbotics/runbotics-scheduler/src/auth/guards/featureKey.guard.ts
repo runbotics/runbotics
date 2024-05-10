@@ -1,7 +1,6 @@
 import { JwtAuthGuard } from './jwt.guard';
 import { FeatureKey } from 'runbotics-common';
 import { ExecutionContext } from '@nestjs/common';
-import { IS_PUBLIC_KEY } from './public.guard';
 import { AuthRequest } from '#/types/auth-request';
 import { FEATURE_KEY } from '../featureKey.decorator';
 
@@ -9,12 +8,8 @@ export class FeatureKeyGuard extends JwtAuthGuard {
 
     async canActivate(context: ExecutionContext) {
         await super.canActivate(context);
-        const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
 
-        if (isPublic) {
+        if (super.isPublic(context)) {
             return true;
         }
 

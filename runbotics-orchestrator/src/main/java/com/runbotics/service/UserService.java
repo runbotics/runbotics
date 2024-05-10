@@ -2,6 +2,8 @@ package com.runbotics.service;
 
 import com.runbotics.config.Constants;
 import com.runbotics.domain.Authority;
+import com.runbotics.domain.FeatureKey;
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.repository.AuthorityRepository;
 import com.runbotics.repository.ProcessRepository;
@@ -15,6 +17,7 @@ import com.runbotics.service.dto.UserDTO;
 import com.runbotics.service.mapper.AccountPartialUpdateMapper;
 import com.runbotics.service.mapper.AdminUserMapper;
 import com.runbotics.service.mapper.UserMapper;
+import com.runbotics.utils.Utils;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -156,6 +159,10 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
+
+        // Temporary solution for keeping tenant id not null
+        newUser.setTenant(Utils.getDefaultTenant());
+
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -199,6 +206,10 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
+
+        // Temporary solution for keeping tenant id not null
+        user.setTenant(Utils.getDefaultTenant());
+
         userRepository.save(user);
         log.debug("Created Information for User: {}", user);
         return user;
@@ -316,18 +327,17 @@ public class UserService {
             .findById(adminUserDTO.getId())
             .map(
                 existingUser -> {
-                    userRepository.findOtherUserByLoginOrEmail(
-                        adminUserDTO.getId(),
-                        adminUserDTO.getEmail(),
-                        adminUserDTO.getLogin()
-                    )
-                    .ifPresent(user -> {
-                        if (user.getEmail().equals(adminUserDTO.getEmail())) {
-                            throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
-                        } else {
-                            throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
-                        }
-                    });
+                    userRepository
+                        .findOtherUserByLoginOrEmail(adminUserDTO.getId(), adminUserDTO.getEmail(), adminUserDTO.getLogin())
+                        .ifPresent(
+                            user -> {
+                                if (user.getEmail().equals(adminUserDTO.getEmail())) {
+                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
+                                } else {
+                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
+                                }
+                            }
+                        );
 
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
 
@@ -374,6 +384,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public List<User> getNonAdminUsers() {
+        return userRepository.findAllActivatedNonAdmins();
+    }
+
+    @Transactional(readOnly = true)
     public List<AdminUserDTO> getAllManagedUsersLimited() {
         return userRepository.findAll().stream().map(User::getLogin).map(AdminUserDTO::new).collect(Collectors.toList());
     }
@@ -391,6 +406,20 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> findUserFeatureKeys() {
+        User user = this.getUserWithAuthorities().orElseGet(User::new);
+
+        return user
+            .getAuthorities()
+            .stream()
+            .map(Authority::getFeatureKeys)
+            .flatMap(Set::stream)
+            .map(FeatureKey::getName)
+            .distinct()
+            .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

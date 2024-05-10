@@ -7,6 +7,7 @@ export interface IProcessInstance {
     id?: string;
     orchestratorProcessInstanceId?: string | null;
     rootProcessInstanceId?: string;
+    parentProcessInstanceId?: string;
     status?: ProcessInstanceStatus | null;
     created?: string | null;
     updated?: string | null;
@@ -26,11 +27,13 @@ export interface IProcessInstance {
 export type ProcessInstanceNotification = Pick<IProcessInstance,
     'status' |
     'output' |
-    'process' |
+    'input' |
     'error'
 > & {
     started?: IProcessInstance['created'];
     finished?: IProcessInstance['updated'];
+    processId?: IProcess['id'];
+    processInstanceId?: IProcessInstance['id']
 };
 
 export interface EmailTriggerData {

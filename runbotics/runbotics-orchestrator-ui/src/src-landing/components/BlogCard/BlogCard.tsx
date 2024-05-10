@@ -50,7 +50,7 @@ const BlogCard: FC<BlogCardProps> = ({ post, className }) => {
                 <div className={styles.wrapper}>
                     {post.featuredImage?.url &&
                         <Image
-                            src={post.featuredImage?.url}
+                            src={`${post.featuredImage.url}?w=384`}
                             fill
                             alt={post.imageAlt ?? ''}
                             className={styles.img}
