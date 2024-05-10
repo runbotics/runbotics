@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 
-import { Divider, Grid, Tab, Tabs, } from '@mui/material';
+import { Divider, Grid, Tab, Tabs } from '@mui/material';
 
 import { useRouter } from 'next/router';
 import { FeatureKey, Role } from 'runbotics-common';
