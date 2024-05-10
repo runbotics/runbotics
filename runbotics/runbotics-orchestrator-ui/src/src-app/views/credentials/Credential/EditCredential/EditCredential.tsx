@@ -15,6 +15,7 @@ import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import CredentialAttributesList from './CredentialAttributeList/CredentialAttributeList';
 import { EditCredentialProps } from './EditCredential.types';
+import GeneralInfo from './GeneralInfo/GeneralInfo';
 import Header from './Header/Header';
 import { tempCredentials } from '../../Credentials/Credentials.utils';
 import GeneralInfo from '../GeneralInfo/GeneralInfo';
