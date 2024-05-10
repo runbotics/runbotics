@@ -5,6 +5,7 @@ import { BlogPost } from '#contentful/common';
 import { ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
 import { recordPageEntrance } from '#src-app/utils/Mixpanel/utils';
 import Layout from '#src-landing/components/Layout';
+import AboutTeamSection from '#src-landing/views/sections/AboutTeamSection';
 import BenefitsSection from '#src-landing/views/sections/BenefitsSection';
 import BlogSection from '#src-landing/views/sections/BlogSection';
 import ContactSection from '#src-landing/views/sections/ContactSection';
@@ -34,6 +35,7 @@ const MainView: VFC<Props> = ({ blogPosts }) => {
             {/* <TemplatesSection /> */}
             <IntegrationSection />
             <PartnerSection />
+            <AboutTeamSection />
             <BlogSection posts={blogPosts} />
             <ContactSection />
         </Layout> );

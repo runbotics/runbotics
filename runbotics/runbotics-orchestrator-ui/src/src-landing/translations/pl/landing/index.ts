@@ -1,3 +1,4 @@
+import aboutTeamTranslations from './about-team.json';
 import benefitsTranslations from './benefits.json';
 import blogTranslations from './blog.json';
 import contactTranslations from './contact.json';
@@ -25,6 +26,7 @@ const landingPageTranslations = {
     ...rpaTranslations,
     ...footerTranslations,
     ...blogTranslations,
+    ...aboutTeamTranslations,
     ...policyTranslations,
 };
 
