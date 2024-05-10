@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@azure/msal-node": "^1.15.0",
-        "@runbotics/nut-js": "^3.1.2-1",
+        "@runbotics/nut-js": "^3.1.2",
         "@microsoft/microsoft-graph-client": "^3.0.5",
         "@nestjs-modules/mailer": "1.8.1",
         "@nestjs/common": "^9.2.1",
