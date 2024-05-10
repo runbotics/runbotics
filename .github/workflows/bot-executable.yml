@@ -7,10 +7,11 @@ on:
       - 'master'
       - 'release/**'
       - 'hotfix/**'
+  workflow_dispatch:
 
 env:
-  NODE_VERSION: 18.x
-  PNPM_VERSION: 8.7.x
+  NODE_VERSION: 18.20.1
+  PNPM_VERSION: 8.7.1
   RUSH: node ../common/scripts/install-run-rush.js
 
 jobs:
@@ -31,11 +32,16 @@ jobs:
           filters: |
             bot:
               - 'runbotics/runbotics-desktop/package.json'
-              
+
   build-bot:
     needs: changes-detection
     if: ${{ needs.changes-detection.outputs.bot == 'true' }}
+
     runs-on: windows-latest
+
+    permissions:
+      contents: read
+      packages: read
 
     defaults:
       run:
@@ -58,6 +64,12 @@ jobs:
         with:
           version: ${{ env.PNPM_VERSION }}
 
+      - name: Update .npmrc
+        shell: bash
+        run: |
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../runbotics-build-configuration/runbotics-desktop/.npmrc
+
       - name: Install dependencies
         run:  ${{ env.RUSH }} install -t .
 
@@ -77,7 +89,7 @@ jobs:
         with:
           path: './runbotics/runbotics-desktop/package.json'
 
-      - name: Run electron-install script 
+      - name: Run electron-install script
         shell: bash
         run: |
             cd ../common/deploy/runbotics-desktop/ &&
@@ -128,4 +140,3 @@ jobs:
           name: patch-notes-${{ env.PACKAGE_VERSION }}
           path: './runbotics/runbotics-desktop/patch_notes.md'
           if-no-files-found: error
-
