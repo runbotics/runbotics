@@ -4,7 +4,7 @@ import getAsanaActions from '#src-app/Actions/asana.actions';
 import getBeeOfficeActions from '#src-app/Actions/beeOffice.actions';
 import getBrowserActions from '#src-app/Actions/browser.actions';
 import getCloudExcelActions from '#src-app/Actions/cloudExcel.actions';
-import getCloudFileActions from '#src-app/Actions/cloudFile.actions';
+import getCloudFileActions from '#src-app/Actions/cloudFile/cloudFile.actions';
 import getCsvActions from '#src-app/Actions/csv.actions';
 import getDesktopActions from '#src-app/Actions/desktop.actions';
 import getExcelActions from '#src-app/Actions/excel.actions';
