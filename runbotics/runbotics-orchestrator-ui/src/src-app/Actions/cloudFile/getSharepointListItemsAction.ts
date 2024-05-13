@@ -5,7 +5,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 export const getSharepointListItemsAction: IBpmnAction = {
     id: CloudFileAction.GET_SHAREPOINT_LIST_ITEMS,
-    label: translate('Process.Details.Modeler.Actions.CloudFile.GetSharePointList.Label'),
+    label: translate('Process.Details.Modeler.Actions.CloudFile.GetSharePointListItems.Label'),
     script: CloudFileAction.GET_SHAREPOINT_LIST_ITEMS,
     runner: Runner.DESKTOP_SCRIPT,
     output: {
