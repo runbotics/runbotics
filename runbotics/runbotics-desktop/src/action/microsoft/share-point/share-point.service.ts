@@ -22,7 +22,7 @@ export class SharePointService {
         private readonly microsoftGraphService: MicrosoftGraphService,
     ) {}
     
-    async getListItems (siteId, listName): Promise<SharepointListItem[]> {
+    async getListItems (siteId: string, listName: string): Promise<SharepointListItem[]> {
         const result = await this.microsoftGraphService
             .get(`/sites/${siteId}/lists/${listName}/items?expand=fields`) as ODataCollection<SharepointListItem>;
         return result.value;
