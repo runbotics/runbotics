@@ -21,6 +21,9 @@ const cloudFileActionsTranslations = {
     'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.Label': 'Create share link',
     'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.ShareType': 'Share type',
     'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.ShareScope': 'Share scope',
+
+    'Process.Details.Modeler.Actions.CloudFile.GetSharePointList.Label': 'Get SharePoint list',
+    'Process.Details.Modeler.Actions.CloudFile.GetSharePointList.Name': 'List name',
 };
 
 export default cloudFileActionsTranslations;
