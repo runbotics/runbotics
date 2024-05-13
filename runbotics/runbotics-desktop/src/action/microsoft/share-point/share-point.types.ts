@@ -1,6 +1,10 @@
 import { Drive } from '../common.types';
 import { RequestOptions } from '../microsoft-graph';
 
+export interface ODataCollection<T> {
+    values: T[];
+}
+
 export interface SharePointCommon {
     siteId: Site['id'];
     driveId: Drive['id'];
@@ -61,4 +65,20 @@ export interface Site {
 export interface SiteWithDrives extends Site {
     'drives@odata.context': string;
     drives: Drive[];
+}
+
+export interface SharepointListItem {
+    createdBy: unknown;
+    createdDateTime: number;
+    description: string;
+    eTag: string;
+    id: string;
+    lastModifiedBy: unknown;
+    lastModifiedDateTime: number;
+    name: string;
+    parentReference: unknown;
+    sharepointIds: unknown;
+    webUrl: string;
+    
+    fields: Record<string, unknown>;
 }
