@@ -182,7 +182,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
                 return this.deleteItem(request.input);
             case CloudFileAction.CREATE_SHARE_LINK:
                 return this.createShareLink(request.input);
-            case CloudFileAction.GET_SHAREPOINT_LIST:
+            case CloudFileAction.GET_SHAREPOINT_LIST_ITEMS:
                 return this.getSharepointListItems(request.input);
             default:
                 throw new Error('Action not found');
@@ -221,13 +221,10 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
     
     private async getSharepointListItems({ listName, siteName }: SharepointGetListItems){
-        const { site } = await this.getSharePointListInfo({
-            listName,
-            siteName
-        });
+        const site = (await this.sharePointService.getSitesByName(siteName)).value[0];
         
-        console.log('dupa', site)
-        
+        console.log('dupaxD', site)
+
         return this.sharePointService.getListItems(site.id, listName);
     }
 }

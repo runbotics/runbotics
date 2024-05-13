@@ -2,7 +2,7 @@ import { Drive } from '../common.types';
 import { RequestOptions } from '../microsoft-graph';
 
 export interface ODataCollection<T> {
-    values: T[];
+    value: T[];
 }
 
 export interface SharePointCommon {

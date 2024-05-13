@@ -155,7 +155,7 @@ export enum CloudFileAction {
     MOVE_FILE = 'cloudFile.moveFile',
     DELETE_ITEM = 'cloudFile.deleteItem',
     CREATE_SHARE_LINK = 'cloudFile.createShareLink',
-    GET_SHAREPOINT_LIST = 'cloudFile.getSharePointList'
+    GET_SHAREPOINT_LIST_ITEMS = 'cloudFile.getSharePointList'
 }
 
 export enum BeeOfficeAction {

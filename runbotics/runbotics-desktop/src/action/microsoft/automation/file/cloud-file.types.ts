@@ -8,7 +8,7 @@ export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>
     | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>
     | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>
-    | DesktopRunRequest<CloudFileAction.GET_SHAREPOINT_LIST, SharepointGetListItems>;
+    | DesktopRunRequest<CloudFileAction.GET_SHAREPOINT_LIST_ITEMS, SharepointGetListItems>;
 
 interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
