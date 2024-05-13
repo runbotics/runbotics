@@ -223,8 +223,6 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     private async getSharepointListItems({ listName, siteName }: SharepointGetListItems){
         const site = (await this.sharePointService.getSitesByName(siteName)).value[0];
         
-        console.log('dupaxD', site)
-
         return this.sharePointService.getListItems(site.id, listName);
     }
 }
