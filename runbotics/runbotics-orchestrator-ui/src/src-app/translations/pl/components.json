@@ -4,9 +4,9 @@
 
     "Component.GenericMoreOptions.MoreOptions": "Więcej opcji",
 
-    "Component.BotProcessRunner.Success.RemovedJob": "Proces {{processName}} usunięty z kolejki",
+    "Component.BotProcessRunner.Success.RemovedJob": "Proces {{ processName }} usunięty z kolejki",
     "Component.BotProcessRunner.Warning": "Wyszukiwanie bota",
-    "Component.BotProcessRunner.Warning.CreatingJob": "Tworzenie zadania dla bota",
+    "Component.BotProcessRunner.Warning.CreatingJob": "Dodawanie procesu do kolejki",
     "Component.BotProcessRunner.Warning.RemoveJob": "Nie można usunąć zadania podczas przetwarzania",
     "Component.BotProcessRunner.Error": "Wszystkie boty są zajęte",
     "Component.BotProcessRunner.Error.AllBotsAreDisconnected": "Wszystkie boty są odłączone",
@@ -20,8 +20,8 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Uruchom ponownie",
 
     "Component.ProcessQueueDetails.Error": "Przetwarzanie procesu nie udało się. Wiadomość błędu: {{ errorMessage }}",
-    "Component.ProcessQueueDetails.Processing": "Zadanie jest przetwarzane, wyszukiwanie bota.",
-    "Component.ProcessQueueDetails.Queue": "Zadanie zostało stworzone. Czekanie na przetwarzanie procesu. Miejsce w kolejce: {{ queuePosition }}",
+    "Component.ProcessQueueDetails.Processing": "Oczekiwanie na rozpoczęcie procesu, szukanie bota.",
+    "Component.ProcessQueueDetails.Queue": "Oczekiwanie na przetwarzanie. Twój proces jest {{ queuePosition }} w kolejce.",
 
     "Component.Tile.Avatar.AriaLabel": "Przepis",
     "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Ikona procesu triggerowalnego",
