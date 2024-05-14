@@ -48,9 +48,11 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentAttribute, setCurrentAttribute] = useState(attribute);
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
 
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, attributeId) => {
         setAnchorEl(event.currentTarget);
+        setHoveredIndex(attributeId);
     };
 
     const handlePopoverClose = () => {
@@ -87,7 +89,7 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
 
     return (
         <Grid item spacing={3}>
-            <Card sx={{ backgroundColor: grey[100], border: `1px solid ${grey[400]}` }}>
+            <Card sx={{ backgroundColor: grey[100], border: `1px solid ${grey[400]}`, minHeight:'420px'}}>
                 <StyledGridContainer container spacing={2}>
                     <Grid item xs={6} alignSelf="center" marginBottom="8px">
                         <Grid container alignItems="center">
@@ -139,29 +141,29 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
                                 {translate('Credential.Attribute.Details.Label')}
                             </Typography>
                             <IconButton color="secondary" 
-                                onMouseEnter={handlePopoverOpen}
+                                onMouseEnter={(event) => handlePopoverOpen(event, currentAttribute.id)}
                                 onMouseLeave={handlePopoverClose}
                             >
                                 <HelpOutlineOutlinedIcon />
                             </IconButton>
                         </Grid>
                         <Popover
-                            id="mouse-over-popover"
-                            sx={{ mt: 1, pointerEvents: 'none', width: '30%' }}
+                            id={`mouse-over-popover-${currentAttribute.id}`}
+                            sx={{ mt: 1, pointerEvents: 'none'}}
                             open={open}
                             anchorEl={anchorEl}
                             anchorOrigin={{
                                 vertical: 'bottom',
-                                horizontal: 'center'
+                                horizontal: 'right'
                             }}
                             transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right'
+                                vertical: 'bottom',
+                                horizontal: 'left'
                             }}
                             onClose={handlePopoverClose}
                             disableRestoreFocus
                         >
-                            <Typography variant="h6" fontWeight={400} marginBottom={2}>
+                            <Typography variant="h6" fontWeight={400} maxWidth="280px" padding='8px' sx={{backgroundColor: grey[50]}}>
                                 {translate('Credential.Attribute.Details.Info')}
                             </Typography>
                         </Popover>
