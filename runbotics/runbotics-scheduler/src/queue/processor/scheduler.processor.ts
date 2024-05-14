@@ -12,12 +12,11 @@ import { Logger } from '#/utils/logger';
 import { SECOND, sleep } from '#/utils/time';
 import { isScheduledProcess, Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
 import { BotService } from '#/database/bot/bot.service';
-import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, QueueEventType, StartProcessResponse, WsMessage } from 'runbotics-common';
+import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, QueueEventType, WsMessage } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
 import { ProcessService } from '#/database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
-import { SchedulerService } from '../scheduler/scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { QueueService } from '#/queue/queue.service';
 import { BadRequestException } from '@nestjs/common';
@@ -35,7 +34,6 @@ export class SchedulerProcessor {
         private readonly uiGateway: UiGateway,
         private readonly botGateway: BotWebSocketGateway,
         private readonly processInstanceSchedulerService: ProcessInstanceSchedulerService,
-        private readonly schedulerService: SchedulerService,
         private readonly queueService: QueueService,
         private readonly queueMessageService: QueueMessageService
     ) {}
@@ -81,15 +79,25 @@ export class SchedulerProcessor {
             const processId = job?.data?.process?.id;
             const jobId = job?.id;
             const orchestratorProcessInstanceId = job?.data?.orchestratorProcessInstanceId;
+            const clientId = job?.data?.input?.clientId;
+
             if (queuePosition === 1) {
-                this.uiGateway.emitAll(WsMessage.JOB_ACTIVE, {
-                    processId,
-                    jobId,
-                    orchestratorProcessInstanceId,
-                });
+                this.uiGateway.emitClient(
+                    clientId,
+                    WsMessage.JOB_ACTIVE,
+                    {
+                        processId,
+                        jobId,
+                        orchestratorProcessInstanceId,
+                    }
+                );
                 return this.queueMessageService.sendQueueMessage(QueueEventType.ACTIVE, job);
             }
-            this.uiGateway.emitAll(WsMessage.JOB_WAITING, { processId, queuePosition, jobId });
+            this.uiGateway.emitClient(
+                clientId,
+                WsMessage.JOB_WAITING,
+                { processId, queuePosition, jobId }
+            );
             return this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
         }));
     }
@@ -111,12 +119,18 @@ export class SchedulerProcessor {
         const queuePosition = jobIndex + 1;
         const processId = job?.data?.process?.id;
         const orchestratorProcessInstanceId = job?.data?.orchestratorProcessInstanceId;
-        this.uiGateway.emitAll(WsMessage.JOB_WAITING, {
-            processId,
-            queuePosition,
-            jobId,
-            orchestratorProcessInstanceId,
-        });
+        const clientId = job?.data?.input?.clientId;
+
+        this.uiGateway.emitClient(
+            clientId,
+            WsMessage.JOB_WAITING,
+            {
+                processId,
+                queuePosition,
+                jobId,
+                orchestratorProcessInstanceId,
+            }
+        );
         await this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
     }
 
@@ -129,7 +143,8 @@ export class SchedulerProcessor {
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
 
         const processId = job?.data?.process?.id;
-        this.uiGateway.emitAll(WsMessage.PROCESS_STARTED, { processId });
+        const clientId = job?.data?.input?.clientId;
+        this.uiGateway.emitClient(clientId, WsMessage.PROCESS_STARTED, { processId });
     }
 
     @OnQueueFailed()
@@ -144,8 +159,9 @@ export class SchedulerProcessor {
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
 
         const processId = job?.data?.process?.id;
+        const clientId = job?.data?.input?.clientId;
         const errorMessage = error.message;
-        this.uiGateway.emitAll( WsMessage.JOB_FAILED, { processId, errorMessage });
+        this.uiGateway.emitClient(clientId, WsMessage.JOB_FAILED, { processId, errorMessage });
         await this.queueMessageService.sendQueueMessage(QueueEventType.FAILED, job);
     }
 
@@ -166,7 +182,7 @@ export class SchedulerProcessor {
         await Promise.all(jobs.map((job, jobIndex) => {
             const queuePosition = jobIndex + 1;
             const processId = job?.data?.process?.id;
-            const clientId = job?.data?.clientId;
+            const clientId = job?.data?.input?.clientId;
             const jobId = job?.id;
             if (queuePosition === 1) return;
 
