@@ -7,6 +7,8 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import Typography from '#src-landing/components/Typography';
 
+import { TEAM_SECTION_ID } from '#src-landing/utils/utils';
+
 import NumberComponent from './AboutTeamNumbers/AboutTeamNumbersItem';
 import styles from './AboutTeamSection.module.scss';
 import { ABOUT_TEAM_SECTION_TITLE_ID } from './AboutTeamSection.utils';
@@ -15,7 +17,7 @@ const AboutTeamSection = () => {
     return (
         <div className={styles.background}>
             <section
-                id={ABOUT_TEAM_SECTION_TITLE_ID}
+                id={TEAM_SECTION_ID}
                 aria-labelledby={ABOUT_TEAM_SECTION_TITLE_ID}
                 className={styles.section}
             >
