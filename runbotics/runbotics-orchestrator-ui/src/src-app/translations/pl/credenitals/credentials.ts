@@ -28,6 +28,8 @@ export const credentials = {
     'Credential.Attribute.Value.Label': 'Wartość',
     'Credential.Attribute.Security.Label': 'Security',
     'Credential.Attribute.Security.MaskValue': 'Zamaskuj wartość',
+    'Credential.Attribute.Edit.AddCredential': 'Dodaj',
+    'Credential.Attribute.Edit.Edit': 'Edytuj',
     'Credential.Attribute.Edit.Confirm': 'Zatwierdź',
     'Credential.Attribute.Edit.Cancel': 'Anuluj',
 };
