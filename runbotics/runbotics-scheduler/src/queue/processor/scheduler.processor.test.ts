@@ -5,7 +5,6 @@ import { ProcessService } from '#/database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
-import { SchedulerService } from '../scheduler/scheduler.service';
 import { QueueService } from '#/queue/queue.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BotEntity } from '#/database/bot/bot.entity';
@@ -76,7 +75,6 @@ describe('SchedulerProcessor', () => {
     let uiGateway: UiGateway;
     let botWebSocketGateway: BotWebSocketGateway;
     let processInstanceSchedulerService: ProcessInstanceSchedulerService;
-    let schedulerService: SchedulerService;
     let queueService: QueueService;
     let queueMessageService: QueueMessageService;
 
@@ -90,7 +88,6 @@ describe('SchedulerProcessor', () => {
                 UiGateway,
                 BotWebSocketGateway,
                 ProcessInstanceSchedulerService,
-                SchedulerService,
                 QueueService,
                 QueueMessageService,
                 {
@@ -135,16 +132,13 @@ describe('SchedulerProcessor', () => {
             .useValue({
                 saveFailedProcessInstance: vi.fn()
             })
-            .overrideProvider(SchedulerService)
-            .useValue({
-                getJobById: vi.fn().mockResolvedValue(JOB)
-            })
             .overrideProvider(UiGateway)
             .useValue({
                 server: {
                     emit: vi.fn()
                 },
-                emitAll: vi.fn()
+                emitAll: vi.fn(),
+                emitClient: vi.fn(),
             })
             .compile();
 
@@ -155,10 +149,9 @@ describe('SchedulerProcessor', () => {
         uiGateway = moduleRef.get(UiGateway);
         botWebSocketGateway = moduleRef.get(BotWebSocketGateway);
         processInstanceSchedulerService = moduleRef.get(ProcessInstanceSchedulerService);
-        schedulerService = moduleRef.get(SchedulerService);
         queueService = moduleRef.get(QueueService);
         queueMessageService = moduleRef.get(QueueMessageService);
-        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, schedulerService, queueService, queueMessageService);
+        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, queueService, queueMessageService);
     });
 
     it('should be defined', () => {
