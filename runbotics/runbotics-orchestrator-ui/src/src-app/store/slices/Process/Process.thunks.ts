@@ -3,6 +3,7 @@ import Axios from 'axios';
 
 import { IProcess, Tag, NotificationProcess, IUser } from 'runbotics-common';
 
+import { Socket } from 'socket.io-client';
 
 import { RootState } from '#src-app/store';
 import LoadingType from '#src-app/types/loading';
@@ -126,9 +127,9 @@ export const createGuestProcess = createAsyncThunk<IProcess>(
         }),
 );
 
-export const startProcess = createAsyncThunk<StartProcessResponse, { processId: IProcess['id'], executionInfo?: Record<string, any> }>(
+export const startProcess = createAsyncThunk<StartProcessResponse, { processId: IProcess['id'], clientId: Socket['id'], executionInfo?: Record<string, any> }>(
     'processes/startProcess',
-    ({ processId, executionInfo }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, { variables: executionInfo })
+    ({ processId, clientId, executionInfo }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, { clientId, variables: executionInfo })
         .then((response) => response.data)
         .catch((error) => {
             const message = error.response.status === 504 ? { message: 'Process start failed' } : error.response.data;
