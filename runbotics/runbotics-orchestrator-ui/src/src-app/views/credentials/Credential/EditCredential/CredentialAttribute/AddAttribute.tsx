@@ -13,7 +13,7 @@ export const AddAttribute = ({ onClick }) => {
 
     const StyledAddCard = styled(Card)`
         cursor: pointer;
-        min-height: 100%;
+        min-height: 420px;
         display: flex;
         justify-content: center;
         align-items: center;
