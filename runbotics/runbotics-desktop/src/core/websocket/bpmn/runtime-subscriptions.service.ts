@@ -216,6 +216,7 @@ export class RuntimeSubscriptionsService {
                 triggerData: event.processInstance.triggerData,
                 error: event.processInstance.error,
                 callbackUrl: event.processInstance.callbackUrl,
+                parentProcessInstanceId: event.processInstance.parentProcessInstanceId,
             };
             switch (event.eventType) {
                 case ProcessInstanceStatus.INITIALIZING:

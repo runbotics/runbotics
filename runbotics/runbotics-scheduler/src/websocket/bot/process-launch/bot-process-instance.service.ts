@@ -134,6 +134,7 @@ export class BotProcessService {
         instanceToSave.user = processInstance.user;
         instanceToSave.trigger = processInstance.trigger;
         instanceToSave.triggerData = processInstance.triggerData;
+        instanceToSave.parentProcessInstanceId = processInstance.parentProcessInstanceId;
         return instanceToSave;
     }
 
