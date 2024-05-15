@@ -8,6 +8,7 @@ export interface ProcessInput {
     callbackUrl?: string;
     queueCallbackUrl?: string;
     timeout?: number;
+    clientId?: string;
 }
 
 export type Trigger = Pick<IProcessInstance, 'trigger' | 'triggerData'>;
@@ -18,7 +19,6 @@ export interface InstantProcess extends Trigger {
     user?: IUser;
     input?: ProcessInput;
     isActive?: boolean;
-    clientId?: string;
 }
 
 export interface ScheduledProcess extends InstantProcess {

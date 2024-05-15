@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useMemo, MouseEvent } from 'react';
+import { FC, useEffect, useState, useMemo, MouseEvent, useContext } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LoadingButton } from '@mui/lab';
@@ -23,6 +23,7 @@ import styled from 'styled-components';
 import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useDispatch, useSelector } from '#src-app/store';
 import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
 import { processActions } from '#src-app/store/slices/Process/Process.slice';
@@ -91,6 +92,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     variant = 'text',
 }) => {
     const dispatch = useDispatch();
+    const socket = useContext(SocketContext);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [started, setStarted] = useState(
         setInitialState(rerunProcessInstance)
@@ -216,6 +218,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
         dispatch(processActions.startProcess({
             processId: process.id,
+            clientId: socket.id,
             ...((isProcessAttended || rerunProcessInstance) && {
                 executionInfo,
             }),

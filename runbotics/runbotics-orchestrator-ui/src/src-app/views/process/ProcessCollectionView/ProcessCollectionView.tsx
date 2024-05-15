@@ -7,6 +7,11 @@ import ProcessCollectionPath from '#src-app/components/Tile/ProcessCollectionTil
 import LoadingBox from '#src-app/components/utils/LoadingBox';
 import useProcessCollection from '#src-app/hooks/useProcessCollection';
 
+import useProcessInstanceMapSocket from '#src-app/hooks/useProcessInstanceMapSocket';
+
+import { useDispatch } from '#src-app/store';
+import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
+
 import InternalPage from '../../../components/pages/InternalPage';
 import ProcessCollectionList from '../../../components/Tile/ProcessCollectionTile/ProcessCollectionList';
 import If from '../../../components/utils/If';
@@ -16,11 +21,20 @@ import Header from '../ProcessBrowseView/Header';
 import ProcessList from '../ProcessBrowseView/ProcessList';
 
 export const ProcessCollectionView = () => {
+    const dispatch = useDispatch();
     const { translate } = useTranslations();
     const { active: { isLoading, childrenCollections } } = useSelector(processCollectionSelector);
 
     const { currentCollectionId, breadcrumbs } = useProcessCollection();
     const [sectionHeight, setSectionHeight] = useState({ minHeight: '120px' });
+
+    useProcessInstanceMapSocket();
+
+    useEffect(() =>
+        () => {
+            dispatch(processInstanceActions.resetAllActiveProcessInstances());
+        }
+    , []);
 
     useEffect(() => {
         setTimeout(() => {

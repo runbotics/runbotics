@@ -71,7 +71,7 @@ services:
       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
       - RUNBOTICS_INSTALLATION_ID=admin
       - RUNBOTICS_USERNAME=runbotics
-      - RUNBOTICS_PASSWORD=RunBotics123
+      - RUNBOTICS_PASSWORD=runbotics
       - RUNBOTICS_HOT_RELOAD=true
       - RUNBOTICS_BOT_COLLECTION=30bdfb61-841b-519b-ce54-1d0e56877f73
       - RUNBOTICS_LOGGER_FILE_MODE=false
