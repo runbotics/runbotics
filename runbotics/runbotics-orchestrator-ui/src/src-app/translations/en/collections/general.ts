@@ -21,6 +21,7 @@ const englishGeneral = {
     'Process.Collection.Tile.MenuItem.Delete.Fail': 'You don\'t have permission to delete collection "{{ name }}"',
     'Process.Collection.Tile.MenuItem.Delete.Info': 'Only collection creator can delete it',
     'Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title': 'Are you sure you want to delete collection "{{ name }}"?',
+    'Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning': 'This will delete all processes and collections inside!',
     'Process.Collection.Tile.MenuItem.Edit': 'Edit',
     'Process.Collection.Navigation.Processes.Label': 'Processes',
     'Process.Collection.Navigation.Collections.Label': 'Collections',

@@ -9,11 +9,11 @@ import {
     Typography,
     MenuItem,
 } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { IProcess } from 'runbotics-common';
 
-import useProcessCollection from '#src-app/hooks/useProcessCollection';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
 import { useDispatch } from '#src-app/store';
@@ -34,7 +34,8 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
     const { enqueueSnackbar } = useSnackbar();
     const { page, pageSize, search } = useContext(ProcessPageContext);
     const { translate } = useTranslations();
-    const { currentCollectionId: collectionId } = useProcessCollection();
+    const searchParams = useSearchParams();
+    const collectionId = searchParams.get('collectionId');
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
 

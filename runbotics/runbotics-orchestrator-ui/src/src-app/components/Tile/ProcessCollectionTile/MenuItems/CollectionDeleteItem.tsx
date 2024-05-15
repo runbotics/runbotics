@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 
-import { Box, MenuItem } from '@mui/material';
+import { Alert, Box, MenuItem } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 
@@ -46,7 +46,9 @@ export const CollectionDeleteItem: FC<CollectionDeleteItemProps> = ({ id, name, 
                 onClose={toggleDialog}
                 confirmButtonOptions={{ onClick: handleDelete }}
                 cancelButtonOptions={{ onClick: toggleDialog }}
-            />
+            >
+                <Alert severity="warning">{translate('Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning')}</Alert>
+            </CustomDialog>
         </>
     );
 };

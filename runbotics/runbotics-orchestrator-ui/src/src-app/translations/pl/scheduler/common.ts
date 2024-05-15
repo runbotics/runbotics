@@ -5,7 +5,7 @@ const schedulerCommonTranslations: typeof englishSchedulerCommonTranslations = {
     'Scheduler.Common.Title': 'Harmonogram',
     'Scheduler.Common.BotSystem': 'Typ bota',
     'Scheduler.Common.Login': 'Dodano harmonogram ({{ login }})',
-    'Scheduler.Common.BotCollection': 'Kolekcja botów',
+    'Scheduler.Common.BotCollection': 'Zbiór botów',
 };
 
 export default schedulerCommonTranslations;
