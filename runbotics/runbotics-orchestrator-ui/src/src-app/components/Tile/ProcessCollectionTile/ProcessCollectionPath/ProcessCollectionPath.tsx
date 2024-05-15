@@ -27,11 +27,7 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
             <Breadcrumbs>
                 <StyledLink
                     href={{
-                        pathname: router.pathname,
-                        query: {
-                            ...router.query,
-                            collectionId: null
-                        }
+                        pathname: 'collections',
                     }}
                 >
                     <HomeBox>
@@ -51,7 +47,7 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
                             pathname: router.pathname,
                             query: {
                                 ...router.query,
-                                collectionId: breadcrumb.collectionId
+                                ...(breadcrumb.collectionId  && { collectionId: breadcrumb.collectionId }),
                             }
                         }}
                     >
