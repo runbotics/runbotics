@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useLoading from '#src-app/hooks/useLoading';
+import { useProcessQueueSocket } from '#src-app/hooks/useProcessQueueSocket';
 import useProcessSearch from '#src-app/hooks/useProcessSearch';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import ProcessPageProvider from '#src-app/providers/ProcessPage.provider';
@@ -34,6 +35,7 @@ const ProcessList: VFC = () => {
     const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.GRID);
     const { handleSearch, search, handleAdvancedSearch, clearSearch } = useProcessSearch(collectionId, pageSize, page);
     const replaceQueryParams = useReplaceQueryParams();
+    useProcessQueueSocket();
 
     useEffect(() => {
         const pageNotAvailable = processesPage && page >= processesPage.totalPages;

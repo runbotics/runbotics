@@ -1,4 +1,4 @@
-import { FC, useRef, useState, useEffect } from 'react';
+import { FC, useRef, useState, useEffect, useContext } from 'react';
 
 import { Box, Divider, CardHeader, Tooltip } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -16,6 +16,7 @@ import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import { processInstanceActions, processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
@@ -36,6 +37,7 @@ const JOB_CREATING_TOAST_KEY = 'job-creating-toast';
 // eslint-disable-next-line max-lines-per-function
 const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
     const router = useRouter();
+    const socket = useContext(SocketContext);
     const searchParams = useSearchParams();
     const searchFromUrl = searchParams.get('search');
     const hasProcessDetailsAccess = useFeatureKey([FeatureKey.PROCESS_LIST_DETAIL_VIEW]);
@@ -81,6 +83,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
 
         dispatch(processActions.startProcess({
             processId: process.id,
+            clientId: socket.id,
             ...((isProcessAttended) && {
                 executionInfo,
             }),

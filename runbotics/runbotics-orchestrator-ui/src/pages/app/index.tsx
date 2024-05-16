@@ -9,7 +9,7 @@ export default AppPage;
 export function getServerSideProps() {
     return {
         redirect: {
-            destination: '/app/processes',
+            destination: '/app/processes/collections',
             permanent: false,
         },
     };

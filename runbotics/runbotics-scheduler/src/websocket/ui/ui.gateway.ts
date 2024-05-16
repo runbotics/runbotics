@@ -37,7 +37,9 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
         this.server.emit(event, data);
     }
 
-    emitClient<T extends keyof WsQueueMessage>(clientId: string, event: T, data: WsQueueMessage[T]) {
+    emitClient<T extends keyof WsQueueMessage>(clientId: string | undefined, event: T, data: WsQueueMessage[T]) {
+        if (!clientId) return;
+
         const clientSocket = this.server.sockets.sockets.get(clientId);
         if (!clientSocket) {
             this.logger.error(`Client with ID: ${clientId} not found.`);

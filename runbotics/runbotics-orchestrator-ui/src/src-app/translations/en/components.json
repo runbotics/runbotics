@@ -4,9 +4,9 @@
 
     "Component.GenericMoreOptions.MoreOptions": "More options",
 
-    "Component.BotProcessRunner.Success.RemovedJob": "Process {{processName}} removed from queue",
+    "Component.BotProcessRunner.Success.RemovedJob": "Process {{ processName }} removed from queue",
     "Component.BotProcessRunner.Warning": "Looking for a bot",
-    "Component.BotProcessRunner.Warning.CreatingJob": "Creating a job for bot",
+    "Component.BotProcessRunner.Warning.CreatingJob": "Adding process to a queue",
     "Component.BotProcessRunner.Warning.RemoveJob": "Can't remove while pending job",
     "Component.BotProcessRunner.Error": "All bots are busy",
     "Component.BotProcessRunner.Error.AllBotsAreDisconnected": "All bots are disconnected",
@@ -20,8 +20,8 @@
     "Component.BotProcessRunner.Menu.RerunProcess": "Rerun",
 
     "Component.ProcessQueueDetails.Error": "Processing failed. Error message: {{ errorMessage }}",
-    "Component.ProcessQueueDetails.Processing": "Job is being processed, searching for a bot.",
-    "Component.ProcessQueueDetails.Queue": "Job created successfully. Waiting for processing. Place in queue: {{ queuePosition }}",
+    "Component.ProcessQueueDetails.Processing": "Waiting for the process to start, searching for a bot.",
+    "Component.ProcessQueueDetails.Queue": "Waiting for processing. Your process is {{ queuePosition }} in queue.",
 
     "Component.Tile.Avatar.AriaLabel": "recipe",
     "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Process triggerable icon",
