@@ -1,13 +1,16 @@
 package com.runbotics.service.impl;
 
 import com.runbotics.domain.Tenant;
+import com.runbotics.domain.TenantInviteCode;
 import com.runbotics.domain.User;
+import com.runbotics.repository.TenantInviteCodeRepository;
 import com.runbotics.repository.TenantRepository;
 import com.runbotics.repository.UserRepository;
 import com.runbotics.service.TenantService;
 import com.runbotics.service.UserService;
 import com.runbotics.service.criteria.TenantCriteria;
 import com.runbotics.service.dto.TenantDTO;
+import com.runbotics.service.dto.TenantInviteCodeDTO;
 import com.runbotics.service.mapper.TenantMapper;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import com.runbotics.web.rest.errors.PreDatabaseErrorHandler;
@@ -48,6 +51,8 @@ public class TenantServiceImpl implements TenantService {
 
     private final UserRepository userRepository;
 
+    private final TenantInviteCodeRepository tenantInviteCodeRepository;
+
     private final PreDatabaseErrorHandler preDatabaseErrorHandler;
 
     public TenantServiceImpl(
@@ -55,12 +60,14 @@ public class TenantServiceImpl implements TenantService {
         TenantMapper tenantMapper,
         UserService userService,
         UserRepository userRepository,
+        TenantInviteCodeRepository tenantInviteCodeRepository,
         PreDatabaseErrorHandler preDatabaseErrorHandler
     ) {
         this.tenantRepository = tenantRepository;
         this.tenantMapper = tenantMapper;
         this.userService = userService;
         this.userRepository = userRepository;
+        this.tenantInviteCodeRepository = tenantInviteCodeRepository;
         this.preDatabaseErrorHandler = preDatabaseErrorHandler;
     }
 
@@ -155,5 +162,16 @@ public class TenantServiceImpl implements TenantService {
         } else {
             throw new BadRequestAlertException("Cannot find tenant with this ID", ENTITY_NAME, "tenantNotFound");
         }
+    }
+
+    public TenantInviteCodeDTO generateInviteCode() {
+        final User user = userService.getUserWithAuthorities().get();
+
+        TenantInviteCode newInviteCode = new TenantInviteCode();
+        newInviteCode.setTenantId(user.getTenant().getId());
+        newInviteCode.setCreationDate(ZonedDateTime.now());
+        newInviteCode.setActive(true);
+
+        return new TenantInviteCodeDTO(tenantInviteCodeRepository.save(newInviteCode));
     }
 }

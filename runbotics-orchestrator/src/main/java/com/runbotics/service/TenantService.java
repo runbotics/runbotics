@@ -5,6 +5,7 @@ import com.runbotics.service.criteria.TenantCriteria;
 import com.runbotics.service.dto.TenantDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.runbotics.service.dto.TenantInviteCodeDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,6 @@ public interface TenantService {
     Optional<TenantDTO> partialUpdate(TenantDTO tenantDTO);
 
     void delete(UUID id);
+
+    TenantInviteCodeDTO generateInviteCode();
 }
