@@ -137,8 +137,7 @@
     }
 
     .iconBackground {
-        width: 15%;
-        height: auto;
+        width: 100px;
         top: 45%;
     }
 
@@ -161,6 +160,15 @@
 }
 
 @media screen and (max-width: $breakpoint-sm) {
+
+    .section{
+        padding-left: $padding-6;
+        padding-right: $padding-6;
+    }
+
+    .team{
+        width: 100%;
+    }
     
     .team h3 {
         padding-bottom: $padding-2;
@@ -171,7 +179,7 @@
     }
 
     .photo {
-        width: 80%;
+        width: 100%;
         height: 420px;
     }
 
@@ -182,7 +190,7 @@
 
     .numbers {
         grid-row: 3;
-        padding: $padding-12 $padding-4 $padding-12 $padding-4;
+        padding: $padding-12 $padding-0 $padding-12 $padding-0;
     }
 }
 
