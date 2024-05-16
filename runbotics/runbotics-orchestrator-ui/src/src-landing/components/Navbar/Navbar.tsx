@@ -11,6 +11,7 @@ import {
     CONTACT_US_SECTION_ID,
     PROS_SECTION_ID,
     OPEN_SOURCE_SECTION_ID,
+    TEAM_SECTION_ID,
     BLOG_SECTION_ID,
 } from '#src-landing/utils/utils';
 
@@ -110,6 +111,16 @@ const Navbar: FC<NavbarProps> = ({
                         scroll={false}
                     >
                         {translate('Landing.Header.Nav.Option.Partners')}
+                    </Link>
+                </li>
+                <li className={styles.listItem}>
+                    <Link
+                        href={`/#${TEAM_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate('Landing.Header.Nav.Option.Team')}
                     </Link>
                 </li>
                 <li className={styles.listItem}>
