@@ -44,4 +44,14 @@ export interface EditCredentialDto {
     name: string;
     template: CredentialTemplate;
     description?: string
+    description: string,
+    collectionName: string,
+    collectionColor: CollectionColorName,
+    attributes?: Attribute[];
+    template?: CredentialTemplate;
+    tenantId?: string;
+    // createdOn: Date;
+    // createdBy: User; // userId
+    // modifiedOn: Date;
+    // modifiedBy: User; // userId
 }

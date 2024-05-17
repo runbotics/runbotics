@@ -21,5 +21,6 @@ export const CredentialCollection = styled(Typography)(
         text-transform: lowercase;
         display: flex;
     }
+
 `
 );

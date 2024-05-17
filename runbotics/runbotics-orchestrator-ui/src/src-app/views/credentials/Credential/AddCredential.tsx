@@ -7,21 +7,22 @@ import { useRouter } from 'next/router';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { Credential } from './Credential.types';
+import { getInitialCredentialData } from './EditCredential/EditCredential.utils';
 
 const AddCredential: FC = () => {
     const { translate } = useTranslations();
     const router = useRouter();
-
-    const createCredentialRedirect = (credential: Credential) => {
-        const credentialId = 'credentialId';
-        router.push(`/app/credentials/${credentialId}/create`);
+    
+    const createCredentialRedirect = () => {
+        const newCredential = getInitialCredentialData();
+        newCredential.id = 'newCredentialId';
+        router.push(`/app/credentials/${newCredential.id}`);
     };
 
     return (
         <>
             <Button
-                color="primary"
+                color="secondary"
                 variant="contained"
                 onClick={createCredentialRedirect}
                 startIcon={

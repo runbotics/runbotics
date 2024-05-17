@@ -18,7 +18,6 @@ import { EditCredentialProps } from './EditCredential.types';
 import GeneralInfo from './GeneralInfo/GeneralInfo';
 import Header from './Header/Header';
 import { tempCredentials } from '../../Credentials/Credentials.utils';
-import GeneralInfo from '../GeneralInfo/GeneralInfo';
 
 const StyledGrid = styled(Grid)(
     ({ theme }) => `

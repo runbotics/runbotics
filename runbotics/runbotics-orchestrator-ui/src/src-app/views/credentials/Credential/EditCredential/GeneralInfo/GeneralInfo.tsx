@@ -4,6 +4,8 @@ import { Grid, TextField, FormControl, InputLabel, Select, SelectChangeEvent, Ty
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import CredentialOptions from './CredentialOptions';
+
 const GeneralInfo = () => {
     const { translate } = useTranslations();
     const [credentialsCollection, setCredentialsCollection] = useState('collection');
@@ -59,6 +61,7 @@ const GeneralInfo = () => {
                         {translate('Credential.Details.Dislaimer.Text')}
                     </Typography>
                 </Grid>
+                <CredentialOptions/>
             </Grid>
         </Box>
     );

@@ -1,41 +1,31 @@
 /* eslint-disable max-lines-per-function */
-import React, { FC, useEffect, useState } from 'react';
+/* eslint-disable react/jsx-no-undef */
+import { FC, useEffect, useState } from 'react';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+
 import {
     Typography,
     TextField,
-    Divider,
     Grid,
-    Card,
-    Checkbox,
-    FormGroup,
-    FormControlLabel,
     Button,
     Fade,
     IconButton,
-    Popover
+    Divider,
 } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 
 import { grey } from '@mui/material/colors';
-import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { StyledAttributeCard, StyledGridContainer } from './CredentialAttribute.style';
 import { Attribute } from './CredentialAttribute.types';
-
-const StyledGridContainer = styled(Grid)(
-    ({ theme }) => `
-    padding: ${theme.spacing(2)};
-    margin-bottom: '8px'
-`
-);
+import CredentialDetails from './CredentialDetails/CredentialDetails';
 
 type CredentialAttributeProps = {
     attribute: Attribute;
@@ -47,19 +37,6 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
     const { translate } = useTranslations();
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentAttribute, setCurrentAttribute] = useState(attribute);
-    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-    const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
-
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, attributeId) => {
-        setAnchorEl(event.currentTarget);
-        setHoveredIndex(attributeId);
-    };
-
-    const handlePopoverClose = () => {
-        setAnchorEl(null);
-    };
-
-    const open = Boolean(anchorEl);
 
     useEffect(() => {
         setCurrentAttribute(attribute);
@@ -83,36 +60,40 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
         setCurrentAttribute({ ...currentAttribute, [fieldName]: value });
     };
 
-    const handleMaskChange = event => {
-        setCurrentAttribute({ ...currentAttribute, masked: event.target.checked });
-    };
+    // const handleMaskChange = event => {
+    //     setCurrentAttribute({ ...currentAttribute, masked: event.target.checked });
+    // };
 
     return (
-        <Grid item spacing={3}>
-            <Card sx={{ backgroundColor: grey[100], border: `1px solid ${grey[400]}`, minHeight:'420px'}}>
-                <StyledGridContainer container spacing={2}>
-                    <Grid item xs={6} alignSelf="center" marginBottom="8px">
-                        <Grid container alignItems="center">
-                            <Typography variant="h5" marginRight="4px">
-                                {translate('Credential.Attribute.Label')}
-                            </Typography>
-                            <IconButton sx={{ color: grey[400] }} onClick={() => deleteAttribute(currentAttribute)}>
-                                <DeleteOutlineOutlinedIcon />
-                            </IconButton>
+        <Grid item spacing={2}>
+            <StyledAttributeCard>
+                <StyledGridContainer container rowSpacing={2}>
+                    <Grid item xs={6} alignSelf="center">
+                        <Grid container alignItems="center" marginBottom="8px">
+                            <Grid item>
+                                <Typography variant="h5">
+                                    {translate('Credential.Attribute.Label')}
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <IconButton sx={{ color: grey[400]}} onClick={() => deleteAttribute(currentAttribute)}>
+                                    <DeleteOutlineOutlinedIcon />
+                                </IconButton>
+                            </Grid>
                         </Grid>
                     </Grid>
-                    <If condition={!isEditMode}>
-                        <Fade in={!isEditMode}>
-                            <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Button size="small" onClick={handleEdit} sx={{ padding: 0 }}>
+                    <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <If condition={!isEditMode}>
+                            <Fade in={!isEditMode}>
+                                <Button size="small" onClick={handleEdit} sx={{ marginRight: '4px' }}>
                                     <EditIcon sx={{ marginRight: '8px', color: grey[700] }} />
-                                    <Typography variant="h5" sx={{ color: grey[700] }}>
+                                    <Typography variant="h5" sx={{ color: grey[700]}}>
                                         {translate('Credential.Attribute.Edit.Edit').toUpperCase()}
                                     </Typography>
                                 </Button>
-                            </Grid>
-                        </Fade>
-                    </If>
+                            </Fade>
+                        </If>
+                    </Grid>
                     <Grid item xs={12}>
                         <TextField
                             disabled={!isEditMode}
@@ -122,7 +103,7 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
                             onChange={e => handleFieldChange('name', e.target.value)}
                         ></TextField>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} marginBottom="16px">
                         <TextField
                             disabled={!isEditMode}
                             fullWidth
@@ -131,90 +112,30 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
                             value={currentAttribute.description}
                         ></TextField>
                     </Grid>
-                    <Grid item xs={12}></Grid>
                 </StyledGridContainer>
-                <Divider variant="middle" />
-                <StyledGridContainer container marginBottom="0">
-                    <Grid item xs={12} sx={{ marginBottom: '8px' }}>
-                        <Grid container alignItems="center">
-                            <Typography variant="h5" marginRight="4px">
-                                {translate('Credential.Attribute.Details.Label')}
-                            </Typography>
-                            <IconButton color="secondary" 
-                                onMouseEnter={(event) => handlePopoverOpen(event, currentAttribute.id)}
-                                onMouseLeave={handlePopoverClose}
-                            >
-                                <HelpOutlineOutlinedIcon />
-                            </IconButton>
-                        </Grid>
-                        <Popover
-                            id={`mouse-over-popover-${currentAttribute.id}`}
-                            sx={{ mt: 1, pointerEvents: 'none'}}
-                            open={open}
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right'
-                            }}
-                            transformOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left'
-                            }}
-                            onClose={handlePopoverClose}
-                            disableRestoreFocus
-                        >
-                            <Typography variant="h6" fontWeight={400} maxWidth="280px" padding='8px' sx={{backgroundColor: grey[50]}}>
-                                {translate('Credential.Attribute.Details.Info')}
-                            </Typography>
-                        </Popover>
-                    </Grid>
-                    {/* <Grid item xs={12}>
-                        <Typography variant="h6" fontWeight={400} marginBottom={2}>
-                            {translate('Credential.Attribute.Details.Info')}
-                        </Typography>
-                    </Grid> */}
+                <Collapse in={isEditMode} orientation="vertical" sx={{width: '100%'}}>
                     <Grid item xs={12}>
-                        <TextField
-                            disabled={!isEditMode}
-                            fullWidth
-                            label={translate('Credential.Attribute.Value.Label')}
-                            value={currentAttribute.value}
-                            onChange={e => handleFieldChange('value', e.target.value)}
-                            InputProps={{ type: currentAttribute.masked ? 'password' : 'text' }}
-                        ></TextField>
+                        <Divider variant="middle" />
+                        <CredentialDetails currentAttribute={currentAttribute} handleFieldChange={handleFieldChange}/>
+                        <StyledGridContainer container justifyContent="space-between" sx={{ marginBottom: 0 }}>
+                            <Grid item>
+                                <Button size="small" onClick={handleCancel} sx={{padding: 0}}>
+                                    <ClearIcon sx={{ marginRight: '8px', color: grey[600] }} />
+                                    <Typography variant="h5" sx={{ color: grey[600] }}>
+                                        {translate('Credential.Attribute.Edit.Cancel').toUpperCase()}
+                                    </Typography>
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button size="small" color="secondary" onClick={handleConfirm} sx={{padding: 0}}>
+                                    <DoneIcon sx={{ marginRight: '8px' }} />
+                                    <Typography variant="h5">{translate('Credential.Attribute.Edit.Confirm').toUpperCase()}</Typography>
+                                </Button>
+                            </Grid>
+                        </StyledGridContainer>
                     </Grid>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    disabled={!isEditMode}
-                                    checked={currentAttribute.masked}
-                                    onChange={() => handleMaskChange(event)}
-                                />
-                            }
-                            label={translate('Credential.Attribute.Security.MaskValue')}
-                        />
-                    </FormGroup>
-                </StyledGridContainer>
-                <Collapse in={isEditMode} orientation="vertical">
-                    <StyledGridContainer container justifyContent="space-between" sx={{ marginBottom: 0 }}>
-                        <Grid item>
-                            <Button size="small" onClick={handleCancel}>
-                                <ClearIcon sx={{ marginRight: '8px', color: grey[600] }} />
-                                <Typography variant="h5" sx={{ color: grey[600] }}>
-                                    {translate('Credential.Attribute.Edit.Cancel').toUpperCase()}
-                                </Typography>
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button size="small" onClick={handleConfirm}>
-                                <DoneIcon sx={{ marginRight: '8px' }} />
-                                <Typography variant="h5">{translate('Credential.Attribute.Edit.Confirm').toUpperCase()}</Typography>
-                            </Button>
-                        </Grid>
-                    </StyledGridContainer>
                 </Collapse>
-            </Card>
+            </StyledAttributeCard>
         </Grid>
     );
 };
