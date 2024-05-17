@@ -11,18 +11,27 @@ import { translate } from '#src-app/hooks/useTranslations';
 import CredentialAttributesList from './CredentialAttributeList/CredentialAttributeList';
 import { EditCredentialProps } from './EditCredential.types';
 import GeneralInfo from './GeneralInfo/GeneralInfo';
-import CredentialOptions from './Header/CredentialOptions';
 import Header from './Header/Header';
 
 const StyledGrid = styled(Grid)(
     ({ theme }) => `
-    padding: ${theme.spacing(3)};
+    padding: ${theme.spacing(1)};
 `
 );
 
+const CredentialsInternalPage = styled(InternalPage)`
+    padding-top: 0;
+    padding-bottom: 0;
+
+    > [class*="MuiContainer"] {
+        padding-left: 0;
+        padding-right: 0;
+    }
+`;
+
 const EditCredential: FC<EditCredentialProps> = ({ credential, onAdd, onClose, open }) => (
-    <InternalPage title={translate('Credential.Add.Title')}>
-        <StyledGrid container justifyContent="space-between" spacing={3}>
+    <CredentialsInternalPage title={translate('Credential.Add.Title')}>
+        <StyledGrid container justifyContent="space-between" my={2} ml={2} display={'flex'} gap={2} >
             <Header />
             <GeneralInfo />
             <Grid container>
@@ -38,8 +47,7 @@ const EditCredential: FC<EditCredentialProps> = ({ credential, onAdd, onClose, o
             {/* list of attributes */}
             {/* add attribute */}
         </StyledGrid>
-        <CredentialOptions/>
-    </InternalPage>
+    </CredentialsInternalPage>
 );
 
 export default EditCredential;

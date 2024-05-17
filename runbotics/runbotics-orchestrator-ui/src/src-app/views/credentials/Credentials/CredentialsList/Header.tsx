@@ -26,31 +26,6 @@ const CredentialsHeader = () => {
                 {translate('Credentials.List.Header.Elements', { count: credentials.length })}
             </StyledTypography>
             <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem">
-                {/* <If condition={displayMode === ProcessListDisplayMode.GRID}>
-                    <TextField
-                        id="outlined-search"
-                        label={translate('Bot.Collection.Header.Search.Label')}
-                        onChange={onSearchChange}
-                        value={search}
-                        size="small"
-                        sx={{ width: '30%' }}
-                    />
-                </If>
-                <If condition={displayTableListView}>
-                    <ToggleButtonGroup
-                        exclusive
-                        onChange={(_, mode) => onDisplayModeChange(mode)}
-                        size="small"
-                        value={displayMode}
-                    >
-                        <ToggleButton value={ProcessListDisplayMode.GRID}>
-                            <ViewModuleIcon />
-                        </ToggleButton>
-                        <ToggleButton value={ProcessListDisplayMode.LIST}>
-                            <Toc />
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                </If> */}
             </Box>
         </Box>
     );

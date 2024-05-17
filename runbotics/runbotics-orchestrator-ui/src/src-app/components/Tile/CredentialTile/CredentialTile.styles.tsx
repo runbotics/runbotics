@@ -5,6 +5,11 @@ export const CredentialCard = styled(CardContent)<{ collectionColor: string }>(
     ({ theme, collectionColor }) => `
     && {
         border-left: 4px solid ${collectionColor || theme.palette.primary.light};
+        cursor: pointer;
+    }
+
+    &:hover {
+        background-color: ${theme.palette.action.hover};
     }
 `
 );
@@ -16,5 +21,6 @@ export const CredentialCollection = styled(Typography)(
         text-transform: lowercase;
         display: flex;
     }
+
 `
 );

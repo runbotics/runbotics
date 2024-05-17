@@ -13,11 +13,15 @@ import { CredentialTileProps } from './CredentialTile.types';
 import Tile from '../Tile';
 
 const CredentialTile: FC<CredentialTileProps> = ({credential}) => {
-    const router = useRouter;
+    const router = useRouter();
+
+    const handleClick = () => {
+        router.push(`/app/credentials/${credential.id}`);
+    };
 
     return (
-        <Tile minHeight="10rem">
-            <CredentialCard collectionColor={credential.collectionColor}>
+        <Tile minHeight="10rem" >
+            <CredentialCard collectionColor={credential.collectionColor} onClick={handleClick}>
                 <Typography variant="h4" sx={{paddingBottom: '8px' }}>
                     {credential.name}
                 </Typography>
@@ -26,7 +30,7 @@ const CredentialTile: FC<CredentialTileProps> = ({credential}) => {
                 </Typography>
                 <CredentialCollection>
                     <FolderOpenIcon sx={{paddingRight: '4px'}}/>
-                    {credential.collection}
+                    {credential.collectionName}
                 </CredentialCollection>
             </CredentialCard>
         </Tile>

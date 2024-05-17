@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import CredentialLocation from './CredentialLocation';
-import CredentialOptions from './CredentialOptions';
 
 const StyledGrid = styled(Grid)(({theme}) => `
     margin-bottom: ${theme.spacing(3)};
@@ -23,9 +22,6 @@ export const Header: React.FC<{}> = () => {
                 <CredentialLocation 
                 // collection={collection}
                 />
-            </Grid>
-            <Grid item>
-                <CredentialOptions/>
             </Grid>
         </StyledGrid>
     );

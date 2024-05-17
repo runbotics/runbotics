@@ -1,6 +1,10 @@
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { Credential } from '../Credential.types';
+import { DEFAULT_COLLECTION_COLOR } from '../../CredentialsCollection/EditCredentialsCollection/EditCredentialsCollection.utils';
+
+import { Credential, CredentialTemplate } from '../Credential.types';
+
+
 
 export enum InputErrorType {
     NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
@@ -20,8 +24,11 @@ export const getInitialCredentialData = () => {
     const initialCredentialData: Credential = {
         name: '',
         description: '',
-        collection: '',
-        collectionColor: null,
+        collectionName: '',
+        collectionColor: DEFAULT_COLLECTION_COLOR,
+        attributes: null,
+        template: CredentialTemplate.CUSTOM,
+        tenantId: null
     };
 
     return initialCredentialData;

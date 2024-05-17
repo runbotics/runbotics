@@ -40,7 +40,7 @@ const CredentialAttributesList = () => {
     ));
 
     return (
-        <Grid container spacing={2} sx={{ marginTop: '16px' }}>
+        <Grid container spacing={2} sx={{ marginTop: '8px' }}>
             {attributesCards}
             {/* created attributes */}
             {/* add attribute card */}

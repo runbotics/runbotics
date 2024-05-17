@@ -1,32 +1,29 @@
-import { Attribute } from './CredentialAttribute.types';
+import { CreateAttributeDto } from './CredentialAttribute.types';
 
-export const initialAttributeValues: Attribute = {
-    id: '',
+export const initialAttributeValues: CreateAttributeDto = {
     name:'',
     value: '',
+    tenantId: 'jakisTenantID',
     description: '',
-    masked: false,
+    masked: true,
     credentialId: '',
-    collectionId: '',
 };
 
-export const initialAttributes: Attribute[] = [
+export const initialAttributes: CreateAttributeDto[] = [
     {
-        id: 'test_1',
         name: 'Atrybucik testowy',
-        value: 'test',
         description: 'Do testowanka',
+        value: '',
         masked: true,
         credentialId: '',
-        collectionId: ''
+        tenantId: 'jakisTenantID',
     },
     {
-        id: 'test_2',
         name: 'SharePoint login',
-        value: 'loginek',
         description: 'Na potrzebny testowania',
-        masked: false,
+        value: '',
+        masked: true,
         credentialId: '',
-        collectionId: ''
+        tenantId: 'jakisTenantID',
     }
 ];

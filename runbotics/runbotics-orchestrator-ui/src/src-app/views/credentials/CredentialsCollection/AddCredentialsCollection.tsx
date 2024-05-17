@@ -18,7 +18,7 @@ const AddCredentialsCollection: FC = () => {
     return (
         <>
             <Button
-                color="primary"
+                color="secondary"
                 variant="contained"
                 onClick={() => setShowDialog(true)}
                 startIcon={

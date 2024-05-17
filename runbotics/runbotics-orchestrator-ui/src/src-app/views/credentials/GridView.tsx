@@ -25,7 +25,7 @@ const GridView: VFC = () => (
                     credential={{
                         id: 'jakies_id',
                         name: 'Jakas Nazwa',
-                        collection: 'Jakas kolekcja',
+                        collectionName: 'Jakas kolekcja',
                         description: 'Jakies description',
                         collectionColor: CollectionColors.LIGHT_ORANGE.hex
                     }}
@@ -34,7 +34,7 @@ const GridView: VFC = () => (
                     credential={{
                         id: 'tymczasowe_id',
                         name: 'Tymczasowa Nazwa',
-                        collection: 'Tymczasowa kolekcja',
+                        collectionName: 'Tymczasowa kolekcja',
                         description: 'Tymczasowe description',
                         collectionColor: CollectionColors.DARK_ORANGE.hex
                     }}
@@ -43,7 +43,7 @@ const GridView: VFC = () => (
                     credential={{
                         id: 'zmyslone_id',
                         name: 'Zmyslona Nazwa',
-                        collection: 'Zmyslona kolekcja',
+                        collectionName: 'Zmyslona kolekcja',
                         description: 'Zmyslone description',
                         collectionColor: CollectionColors.LIGHT_GREEN.hex
                     }}
@@ -52,7 +52,7 @@ const GridView: VFC = () => (
                     credential={{
                         id: 'nowe_id',
                         name: 'Nowa Nazwa',
-                        collection: 'Nowa kolekcja',
+                        collectionName: 'Nowa kolekcja',
                         description: 'Jakies description',
                         collectionColor: CollectionColors.DARK_GREEN.hex
                     }}
@@ -61,7 +61,7 @@ const GridView: VFC = () => (
                     credential={{
                         id: 'unikalne_id',
                         name: 'Unikalna Nazwa',
-                        collection: 'Unikalna kolekcja',
+                        collectionName: 'Unikalna kolekcja',
                         description: 'Unikalne description',
                         collectionColor: CollectionColors.LIGHT_BLUE.hex
                     }}
@@ -70,7 +70,7 @@ const GridView: VFC = () => (
                     credential={{
                         id: 'ciemne_niebieskie_id',
                         name: 'Ciemna Niebieska Nazwa',
-                        collection: 'Ciemna niebieska kolekcja',
+                        collectionName: 'Ciemna niebieska kolekcja',
                         description: 'Ciemne niebieska description',
                         collectionColor: CollectionColors.DARK_BLUE.hex
                     }}
@@ -79,7 +79,7 @@ const GridView: VFC = () => (
                     credential={{
                         id: 'szare_id',
                         name: 'Szara Nazwa',
-                        collection: 'Szara kolekcja',
+                        collectionName: 'Szara kolekcja',
                         description: 'Szare description',
                         collectionColor: CollectionColors.LIGHT_GREY.hex
                     }}
@@ -88,7 +88,7 @@ const GridView: VFC = () => (
                     credential={{
                         id: 'ciemne_szare_id',
                         name: 'Ciemna Szara Nazwa',
-                        collection: 'Ciemna szara kolekcja',
+                        collectionName: 'Ciemna szara kolekcja',
                         description: 'Ciemne szare description',
                         collectionColor: CollectionColors.DARK_GREY.hex
                     }}

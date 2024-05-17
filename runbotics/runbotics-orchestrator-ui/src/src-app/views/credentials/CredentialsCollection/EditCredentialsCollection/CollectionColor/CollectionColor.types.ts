@@ -6,10 +6,10 @@ interface ICollectionColor {
     hex: string
 }
 
-export type ColorName =
+export type CollectionColorName =
  'LIGHT_ORANGE' | 'DARK_ORANGE' | 'LIGHT_GREEN' | 'DARK_GREEN' | 'LIGHT_BLUE' | 'DARK_BLUE' | 'LIGHT_GREY' | 'DARK_GREY'
 
-export const CollectionColors: {[key in ColorName]: ICollectionColor} = {
+export const CollectionColors: {[key in CollectionColorName]: ICollectionColor} = {
     LIGHT_ORANGE: {name: 'light orange', hex: orange[300]},
     DARK_ORANGE: {name: 'dark orange', hex: orange[600]},
     LIGHT_GREEN: {name: 'light green', hex: green.A200},

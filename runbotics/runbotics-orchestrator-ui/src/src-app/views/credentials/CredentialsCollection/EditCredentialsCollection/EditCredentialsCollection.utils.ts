@@ -1,7 +1,9 @@
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { CredentialsCollection } from '../CredentialsCollection.types';
+import { CreateCredentialsCollectionDto } from '../CredentialsCollection.types';
+
+export const DEFAULT_COLLECTION_COLOR = 'DARK_ORANGE';
 
 export enum InputErrorType {
     NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
@@ -16,13 +18,12 @@ export const inputErrorMessages: Record<InputErrorType, string> = {
 export const initialFormValidationState = true;
 
 export const getInitialCredentialsCollectionData = () => {
-    const initialCredentialsCollectionData: CredentialsCollection = {
+    const initialCredentialsCollectionData: CreateCredentialsCollectionDto = {
         name: '',
         description: '',
-        collectionColor: null,
-        access: 'public', // to update
-        location: 'home', // to update
-        sharedWith: []
+        color: DEFAULT_COLLECTION_COLOR,
+        tenantId: '', // to update
+        users: []
     };
 
     return initialCredentialsCollectionData;
