@@ -1,13 +1,8 @@
 package com.runbotics.service;
 
 import com.runbotics.config.Constants;
-import com.runbotics.domain.Authority;
-import com.runbotics.domain.FeatureKey;
-import com.runbotics.domain.Tenant;
-import com.runbotics.domain.User;
-import com.runbotics.repository.AuthorityRepository;
-import com.runbotics.repository.ProcessRepository;
-import com.runbotics.repository.UserRepository;
+import com.runbotics.domain.*;
+import com.runbotics.repository.*;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
 import com.runbotics.service.criteria.UserCriteria;
@@ -20,6 +15,7 @@ import com.runbotics.service.mapper.UserMapper;
 import com.runbotics.utils.Utils;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,6 +48,10 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final TenantInviteCodeRepository tenantInviteCodeRepository;
+
+    private final TenantRepository tenantRepository;
+
     private final AccountPartialUpdateMapper accountPartialUpdateMapper;
 
     private final AdminUserMapper adminUserMapper;
@@ -63,6 +63,8 @@ public class UserService {
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         ProcessRepository processRepository,
+        TenantInviteCodeRepository tenantInviteCodeRepository,
+        TenantRepository tenantRepository,
         UserMapper userMapper,
         AccountPartialUpdateMapper accountPartialUpdateMapper,
         AdminUserMapper adminUserMapper
@@ -71,6 +73,8 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.processRepository = processRepository;
+        this.tenantInviteCodeRepository = tenantInviteCodeRepository;
+        this.tenantRepository = tenantRepository;
         this.userMapper = userMapper;
         this.accountPartialUpdateMapper = accountPartialUpdateMapper;
         this.adminUserMapper = adminUserMapper;
@@ -119,7 +123,8 @@ public class UserService {
             );
     }
 
-    public User registerUser(AdminUserDTO userDTO, String password) {
+    @Transactional(noRollbackFor = BadRequestAlertException.class)
+    public User registerUser(AdminUserDTO userDTO, String password, UUID inviteCode) {
         userRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
             .ifPresent(
@@ -160,8 +165,28 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
 
-        // Temporary solution for keeping tenant id not null
-        newUser.setTenant(Utils.getDefaultTenant());
+        if (inviteCode != null) {
+            TenantInviteCode tenantInviteCode = tenantInviteCodeRepository
+                .findById(inviteCode)
+                .orElseThrow(() -> new BadRequestAlertException("Bad invite code", ENTITY_NAME, "badInviteCode"));
+
+            if (!tenantInviteCode.isActive()) {
+                throw new BadRequestAlertException("Invite code is not active", ENTITY_NAME, "notActiveInviteCode");
+            }
+
+            if (!tenantInviteCode.getCreationDate().plusDays(3).isAfter(ZonedDateTime.now())) {
+                tenantInviteCode.setIsActive(false);
+                tenantInviteCodeRepository.save(tenantInviteCode);
+                throw new BadRequestAlertException("Invite code has expired", ENTITY_NAME, "expiredInviteCode");
+            }
+
+            Tenant foundTenant = tenantRepository
+                .findByInviteCode(inviteCode).get();
+
+            newUser.setTenant(foundTenant);
+        } else {
+            newUser.setTenant(Utils.getDefaultTenant());
+        }
 
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);

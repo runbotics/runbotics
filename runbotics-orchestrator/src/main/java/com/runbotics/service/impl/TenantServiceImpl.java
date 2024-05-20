@@ -170,7 +170,7 @@ public class TenantServiceImpl implements TenantService {
         TenantInviteCode newInviteCode = new TenantInviteCode();
         newInviteCode.setTenantId(user.getTenant().getId());
         newInviteCode.setCreationDate(ZonedDateTime.now());
-        newInviteCode.setActive(true);
+        newInviteCode.setIsActive(true);
 
         return new TenantInviteCodeDTO(tenantInviteCodeRepository.save(newInviteCode));
     }
