@@ -20,7 +20,6 @@ export const updateOrchestratorProcessInstanceIdMap = (state: ProcessInstanceSta
         processInstance: null,
         orchestratorProcessInstanceId: action.payload.orchestratorProcessInstanceId
     };
-
 };
 
 export const updateActiveProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
