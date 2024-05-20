@@ -1,5 +1,7 @@
 package com.runbotics.service.dto;
 
+import com.runbotics.domain.Tenant;
+
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -16,6 +18,15 @@ public class TenantDTO {
     private ZonedDateTime updated;
 
     private String lastModifiedBy;
+    public TenantDTO() {}
+
+    public TenantDTO(Tenant tenant) {
+        this.id = tenant.getId();
+        this.name = tenant.getName();
+        this.createdById = tenant.getCreatedBy().getId();
+        this.created = tenant.getCreated();
+        this.updated = tenant.getUpdated();
+    }
 
     public UUID getId() {
         return this.id;
