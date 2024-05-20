@@ -1,4 +1,5 @@
 import { CollectionColorName } from './EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import { Credential } from '../Credential/Credential.types';
 
 export enum AccessType { 
     ADMIN = 'ADMIN',

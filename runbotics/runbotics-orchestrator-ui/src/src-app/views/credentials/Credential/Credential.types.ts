@@ -46,7 +46,7 @@ export interface EditCredentialDto {
     description?: string
     description: string,
     collectionName: string,
-    collectionColor: CollectionColorName,
+    collectionColor: CollectionColorHex,
     attributes?: Attribute[];
     template?: CredentialTemplate;
     tenantId?: string;
