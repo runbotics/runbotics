@@ -449,22 +449,48 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable, UserCriteria criteria) {
-        if (criteria.getEmail() == null) {
-            return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+        if (criteria.getTenantId() == null) {
+            if (criteria.getEmail() == null) {
+                return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+            }
+            return userRepository
+                .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+                .map(AdminUserDTO::new);
         }
-        return userRepository
-            .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
-            .map(AdminUserDTO::new);
+
+        Tenant tenant = tenantRepository.findById(criteria.getTenantId().getEquals()).orElseThrow(
+            () -> new BadRequestAlertException("Cannot find tenant", ENTITY_NAME, "tenantNotFound")
+        );
+
+        return fetchAllNotActivatedUsersByTenant(pageable, criteria, tenant);
     }
 
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllActivatedUsers(Pageable pageable, UserCriteria criteria) {
-        if (criteria.getEmail() == null) {
-            return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
+        if (criteria.getTenantId() == null) {
+            if (criteria.getEmail() == null) {
+                return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
+            }
+            return userRepository
+                .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+                .map(AdminUserDTO::new);
         }
-        return userRepository
-            .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
-            .map(AdminUserDTO::new);
+
+        Tenant tenant = tenantRepository.findById(criteria.getTenantId().getEquals()).orElseThrow(
+            () -> new BadRequestAlertException("Cannot find tenant", ENTITY_NAME, "tenantNotFound")
+        );
+
+        return fetchAllActivatedUsersByTenant(pageable, criteria, tenant);
+    }
+
+    public Page<AdminUserDTO> getAllActivatedUsersByTenant(Pageable pageable, UserCriteria criteria) {
+        Tenant tenant = getUserWithAuthorities().get().getTenant();
+        return fetchAllActivatedUsersByTenant(pageable, criteria, tenant);
+    }
+
+    public Page<AdminUserDTO> getAllNotActivatedUsersByTenant(Pageable pageable, UserCriteria criteria) {
+        Tenant tenant = getUserWithAuthorities().get().getTenant();
+        return fetchAllNotActivatedUsersByTenant(pageable, criteria, tenant);
     }
 
     /**
@@ -535,5 +561,31 @@ public class UserService {
         if (adminUserDTO.getFeatureKeys() != null) {
             throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "featureKeys");
         }
+    }
+
+    private Page<AdminUserDTO> fetchAllNotActivatedUsersByTenant(Pageable pageable, UserCriteria criteria, Tenant tenant) {
+        if (criteria.getEmail() == null) {
+            return userRepository
+                .findAllByActivatedIsFalseAndTenant(pageable, tenant)
+                .map(AdminUserDTO::new);
+        }
+
+        return userRepository
+            .findAllByActivatedIsFalseAndEmailIsContainingAndTenant(
+                pageable, criteria.getEmail().getContains(), tenant
+            ).map(AdminUserDTO::new);
+    }
+
+    private Page<AdminUserDTO> fetchAllActivatedUsersByTenant(Pageable pageable, UserCriteria criteria, Tenant tenant) {
+        if (criteria.getEmail() == null) {
+            return userRepository
+                .findAllByActivatedIsTrueAndTenant(pageable, tenant)
+                .map(AdminUserDTO::new);
+        }
+
+        return userRepository
+            .findAllByActivatedIsTrueAndEmailIsContainingAndTenant(
+                pageable, criteria.getEmail().getContains(), tenant
+            ).map(AdminUserDTO::new);
     }
 }

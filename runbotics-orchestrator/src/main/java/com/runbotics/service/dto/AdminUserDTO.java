@@ -220,7 +220,7 @@ public class AdminUserDTO {
             ", lastModifiedDate=" + lastModifiedDate +
             ", roles=" + roles +
             ", featureKeys=" + featureKeys +
-            ", tenantId=" + tenant.getId() +
+            ", tenantId=" + (tenant != null ? tenant.getId() : null) +
             "}";
     }
 }

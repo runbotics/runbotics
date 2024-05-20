@@ -289,6 +289,46 @@ public class UserResource {
     }
 
     /**
+     * {@code GET /admin/users/activated-tenant} : get all activated users by tenant with all the details
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users in tenant.
+     */
+    @GetMapping("/users/not-activated-tenant")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT + "')")
+    public ResponseEntity<Page<AdminUserDTO>> getAllNotActivatedUsersByTenant(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all by tenant activated User: {}, by criteria: {}", pageable, criteria);
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<AdminUserDTO> page = userService.getAllNotActivatedUsersByTenant(pageable, criteria);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
+    }
+
+    /**
+     * {@code GET /admin/users/not-activated-tenant} : get all not activated users by tenant with all the details
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users in tenant.
+     */
+    @GetMapping("/users/activated-tenant")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT + "')")
+    public ResponseEntity<Page<AdminUserDTO>> getAllActivatedUsersByTenant(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all by tenant activated User: {}, by criteria: {}", pageable, criteria);
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<AdminUserDTO> page = userService.getAllActivatedUsersByTenant(pageable, criteria);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
+    }
+
+    /**
      * {@code DELETE /admin/users/:id} : delete the User based on id.
      *
      * @param id the id of the user to delete.

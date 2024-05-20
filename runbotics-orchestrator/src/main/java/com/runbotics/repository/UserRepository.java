@@ -1,5 +1,6 @@
 package com.runbotics.repository;
 
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import java.time.Instant;
 import java.util.List;
@@ -44,11 +45,19 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Page<User> findAllByActivatedIsTrue(Pageable pageable);
 
+    Page<User> findAllByActivatedIsTrueAndTenant(Pageable pageable, Tenant tenant);
+
     Page<User> findAllByActivatedIsFalse(Pageable pageable);
+
+    Page<User> findAllByActivatedIsFalseAndTenant(Pageable pageable, Tenant tenant);
 
     Page<User> findAllByActivatedIsTrueAndEmailIsContaining(Pageable pageable, String email);
 
+    Page<User> findAllByActivatedIsTrueAndEmailIsContainingAndTenant(Pageable pageable, String email, Tenant tenant);
+
     Page<User> findAllByActivatedIsFalseAndEmailIsContaining(Pageable pageable, String email);
+
+    Page<User> findAllByActivatedIsFalseAndEmailIsContainingAndTenant(Pageable pageable, String email, Tenant tenant);
 
     @Query(
         value = "SELECT * " +
