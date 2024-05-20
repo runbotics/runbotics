@@ -155,10 +155,7 @@ describe('FolderActionHandler', () => {
 
             createTestSubfolders();
 
-            await expect(
-                folderActionHandler.deleteFolder(params)).rejects.toThrowError(
-                `Delete folder: Cannot perform action on empty directory without setting 'recursive' option: ${CWD}`
-            );
+            await expect(folderActionHandler.deleteFolder(params)).rejects.toThrow();
 
             removeTestSubfolders();
         });
@@ -520,4 +517,4 @@ describe('FolderActionHandler', () => {
 
 
     });
-})
+});

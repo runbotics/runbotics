@@ -76,14 +76,15 @@ export default class FolderActionHandler extends StatelessActionHandler {
             throw new Error('Cannot rename folder if new name is not provided');
         }
 
-        const parentPath = this.extractParentPath(path);
-        const newPath = `${parentPath}${pathPackage.sep}${newName}`;
+        this.checkIfNameIsValid(newName);
+
+        const { dir } = pathPackage.parse(path);
+        const newPath = `${dir}${pathPackage.sep}${newName}`;
 
         if (path === newPath || fs.existsSync(newPath)) {
             throw new Error('Cannot perform action - folder with this name already exists in the provided folder path');
         }
 
-        this.checkIfNameIsValid(newName);
 
         try {
             fs.renameSync(path, newPath);
@@ -112,31 +113,25 @@ export default class FolderActionHandler extends StatelessActionHandler {
     handleFolderActionError(actionName: string, e: any, folderPath: string) {
         switch (e.code) {
             case 'ENOENT':
-                throw new Error(`${actionName}: Directory not found: ${folderPath}`);
+                throw new Error(`${actionName}: Directory not found: ${folderPath}. ${e.message}`);
             case 'EACCES':
             case 'EPERM':
-                throw new Error(`${actionName}: Directory permission denied: ${folderPath}`);
+                throw new Error(`${actionName}: Directory permission denied. ${e.message}`);
             case 'EEXIST':
-                throw new Error(`${actionName}: Cannot perform action - folder with this name already exists in the provided folder path`);
+                throw new Error(`${actionName}: Cannot perform action - folder with this name already exists in the provided folder path. ${e.message}`);
             case 'ENOTEMPTY':
-                throw new Error(`${actionName}: Cannot perform action on empty directory without setting 'recursive' option: ${folderPath}`);
+                throw new Error(`${actionName}: Cannot perform action on empty directory without setting 'recursive' option. ${e.message}`);
             default:
-                throw new Error(`${actionName}: Action could not be performed ${e}`);
+                throw new Error(`${actionName}: Action could not be performed. ${e.message}`);
         }
-    }
-
-    extractParentPath(path: string) {
-        const lastSlashOccuranceIndex = path.lastIndexOf('\\');
-
-        return path.substring(0, lastSlashOccuranceIndex); 
     }
 
     checkIfNameIsValid(name: string) {
         const dirNameValidationRegex = new RegExp(ActionRegex.DIRECTORY_NAME);
-        
+
         if (!dirNameValidationRegex.test(name)) {
             throw new Error('Folder name cannot include the following characters: \\ / : * ? < > |');
-        }    
+        }
 
         return true;
     }
