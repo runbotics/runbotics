@@ -67,6 +67,10 @@ public class BotCollection implements Serializable {
     @BatchSize(size = 20)
     private Set<User> users = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "tenant_id", nullable = false)
+    private Tenant tenant;
+
     public UUID getId() {
         return id;
     }
@@ -139,6 +143,14 @@ public class BotCollection implements Serializable {
         this.users = users;
     }
 
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -176,6 +188,7 @@ public class BotCollection implements Serializable {
             bots +
             ", users=" +
             users +
+            (tenant != null ? tenant.getId() : "") +
             '}'
         );
     }

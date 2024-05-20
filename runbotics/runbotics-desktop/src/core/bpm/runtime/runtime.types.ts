@@ -34,7 +34,7 @@ export interface DesktopTask extends BpmnExecutionEventMessageContent {
     };
     output?: Record<string, string> & {
         script: string;
-    };
+    } | BpmnExecutionEventMessageContentError;
 }
 
 export interface RunBoticsExecutionEnvironment extends BpmnEngineExecutionEnvironment {
@@ -52,6 +52,7 @@ export interface IProcessParams {
 export interface IStartProcessInstance extends IProcessParams, Omit<StartProcessMessageBody, 'processId' | 'input'> {
     process: IProcess;
     rootProcessInstanceId?: string;
+    parentProcessInstanceId?: string;
 }
 
 export interface BpmnExecutionEventMessageContentError {

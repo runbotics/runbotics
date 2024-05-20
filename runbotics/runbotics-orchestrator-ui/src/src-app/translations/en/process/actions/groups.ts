@@ -12,6 +12,7 @@ const actionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.JiraServer': 'Jira Server',
     'Process.Details.Modeler.ActionsGroup.File': 'File',
     'Process.Details.Modeler.ActionsGroup.Folder': 'Folder',
+    'Process.Details.Modeler.ActionsGroup.Zip': 'Zip',
     'Process.Details.Modeler.ActionsGroup.Csv': 'CSV',
     'Process.Details.Modeler.ActionsGroup.Excel': 'Excel',
     'Process.Details.Modeler.ActionsGroup.Powerpoint': 'Power Point',
@@ -24,6 +25,7 @@ const actionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.Desktop': 'Desktop',
     'Process.Details.Modeler.ActionsGroup.Image': 'Image',
     'Process.Details.Modeler.ActionsGroup.External': 'External',
+    'Process.Details.Modeler.ActionsGroup.Windows': 'Windows',
 };
 
 export default actionsGroupsTranslations;

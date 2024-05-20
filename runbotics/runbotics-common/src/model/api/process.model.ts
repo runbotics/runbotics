@@ -4,6 +4,7 @@ import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
 import { ProcessOutput } from './process-output.model';
+import { ProcessCollection } from './process-collection.model';
 
 export interface IProcess {
     id?: number;
@@ -21,6 +22,7 @@ export interface IProcess {
     createdBy?: IUser | null;
     schedules?: Omit<IScheduleProcess, 'process'>[] | null;
     botCollection?: IBotCollection | null;
+    processCollection?: ProcessCollection | null;
     editor?: IUser | null;
     tags?: Tag[];
     subscribers?: IUser[];

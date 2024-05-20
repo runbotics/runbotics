@@ -20,10 +20,17 @@ const useProcessInstanceMapSocket = () => {
 
     useEffect(() => {
         socket.on(WsMessage.PROCESS, (processInstance: IProcessInstance) => {
+            const processId = processInstance?.process?.id;
+            const isAdminOrOwner =
+                user.roles.includes(Role.ROLE_ADMIN) ||
+                processInstance.user.id === user.id;
+            const canUpdateProcessInstance =
+                !allActiveMap[processId] ||
+                allActiveMap[processId]?.processInstance?.id === processInstance?.id ||
+                allActiveMap[processId]?.processInstance?.status !== ProcessInstanceStatus.IN_PROGRESS;
+
             if (
-                allActiveMap[processInstance.id]?.processInstance.status
-                !== ProcessInstanceStatus.IN_PROGRESS
-                &&
+                allActiveMap[processId]?.processInstance?.status !== ProcessInstanceStatus.IN_PROGRESS &&
                 processInstance.status === ProcessInstanceStatus.IN_PROGRESS
             ) {
                 const lastRun = (new Date()).toISOString();
@@ -33,17 +40,16 @@ const useProcessInstanceMapSocket = () => {
                 }));
             }
 
-            if (user.roles.includes(Role.ROLE_ADMIN)
-                || processInstance.user.id === user.id
-            ) dispatch(processInstanceActions.updateActiveProcessInstanceMap(processInstance));
-
+            if (canUpdateProcessInstance && isAdminOrOwner) {
+                dispatch(processInstanceActions.updateActiveProcessInstanceMap(processInstance));
+            }
         });
 
         return () => {
             socket.off(WsMessage.PROCESS);
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [socket]);
+
+    }, [socket, allActiveMap, user, dispatch]);
 };
 
 export default useProcessInstanceMapSocket;

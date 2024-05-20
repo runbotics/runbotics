@@ -3,6 +3,7 @@ import Axios from 'axios';
 
 import { IProcess, Tag, NotificationProcess, IUser } from 'runbotics-common';
 
+import { Socket } from 'socket.io-client';
 
 import { RootState } from '#src-app/store';
 import LoadingType from '#src-app/types/loading';
@@ -16,6 +17,9 @@ import { StartProcessResponse, UpdateDiagramRequest } from './Process.state';
 
 const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
     .url('/api/processes-page').param('sort', 'updated,desc').params(params).build();
+
+const processPageByCollectionURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
+    .url('/api/processes-page-collection').param('sort', 'updated,desc').params(params).build();
 
 const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
@@ -123,9 +127,9 @@ export const createGuestProcess = createAsyncThunk<IProcess>(
         }),
 );
 
-export const startProcess = createAsyncThunk<StartProcessResponse, { processId: IProcess['id'], executionInfo?: Record<string, any> }>(
+export const startProcess = createAsyncThunk<StartProcessResponse, { processId: IProcess['id'], clientId: Socket['id'], executionInfo?: Record<string, any> }>(
     'processes/startProcess',
-    ({ processId, executionInfo }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, { variables: executionInfo })
+    ({ processId, clientId, executionInfo }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, { clientId, variables: executionInfo })
         .then((response) => response.data)
         .catch((error) => {
             const message = error.response.status === 504 ? { message: 'Process start failed' } : error.response.data;
@@ -141,6 +145,11 @@ export const getProcesses = createAsyncThunk<IProcess[]>('processes/getAll', () 
 export const getProcessesPage = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
     'processes/getPage',
     (params) => Axios.get<Page<IProcess>>(processPageURL(params)).then((response) => response.data),
+);
+
+export const getProcessesPageByCollection = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
+    'processes/getPageByCollection',
+    (params) => Axios.get<Page<IProcess>>(processPageByCollectionURL(params)).then((response) => response.data)
 );
 
 export const deleteProcess = createAsyncThunk<void, { processId: number }>(

@@ -25,17 +25,17 @@ import { ProcessModule } from '#/database/process/process.module';
         QueueModule,
         MicrosoftModule,
         MailModule,
-        ProcessModule,
+        ProcessModule
     ],
     providers: [
-        BotWebSocketGateway, 
-        UiGateway, 
-        BotLogService, 
-        BotProcessService, 
-        BotProcessEventService, 
-        WebsocketService, 
-        BotLifecycleService, 
-        Logger
+        BotWebSocketGateway,
+        UiGateway,
+        BotLogService,
+        BotProcessService,
+        BotProcessEventService,
+        WebsocketService,
+        BotLifecycleService,
+        Logger,
     ],
     exports: [
         BotWebSocketGateway, UiGateway, BotLogService, WebsocketService,

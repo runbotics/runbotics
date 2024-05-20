@@ -4,9 +4,11 @@ import { Box, Typography, Divider } from '@mui/material';
 
 import { IProcessInstanceEvent } from 'runbotics-common';
 
+import { checkJobStatus } from '#src-app/components/utils/checkJobStatus';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
+import { processSelector } from '#src-app/store/slices/Process';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import {
     EventMapTypes,
@@ -24,7 +26,6 @@ interface ProcessInstanceEventsDetailsProps {
     processInstanceId: string;
 }
 
-
 const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
     processInstanceId,
 }) => {
@@ -40,6 +41,9 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         all: { events, eventsBreadcrumbTrail, nestedEvents: loopEvents },
     } = useSelector(processInstanceEventSelector);
     const { active } = useSelector(processInstanceSelector);
+    const { draft: { process } } = useSelector(processSelector);
+    const processId = process?.id;
+    const isProcessQueuedOrFailed = checkJobStatus(processId, active);
 
     useEffect(() => {
         if (processInstanceId === active.processInstance?.id) {
@@ -106,6 +110,8 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processInstanceId]);
+
+    if (isProcessQueuedOrFailed) return null;
 
     if (!processInstanceId && !active.orchestratorProcessInstanceId) {
         return (

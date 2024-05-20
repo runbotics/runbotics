@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.9.4",
+    "version": "2.10.0",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@azure/msal-node": "^1.15.0",
-        "@runbotics/nut-js": "^3.1.2",
+        "@runbotics/nut-js": "3.1.2",
         "@microsoft/microsoft-graph-client": "^3.0.5",
         "@nestjs-modules/mailer": "1.8.1",
         "@nestjs/common": "^9.2.1",
@@ -73,7 +73,9 @@
         "winston": "^3.4.0",
         "winston-daily-rotate-file": "^4.6.0",
         "ws": "^7.4.5",
-        "zod": "~3.22.4"
+        "zod": "~3.22.4",
+        "adm-zip": "~0.5.10",
+        "obj-walker": "1.10.0"
     },
     "build": {
         "productName": "RunBotics",
@@ -82,7 +84,7 @@
         "asar": true,
         "asarUnpack": [
             "node_modules/tesseract.js/**/*",
-            "node_modules/@runbotics/nut-js/**/*"
+            "node_modules/@runbotics/**/*"
         ],
         "mac": {
             "category": "utility"

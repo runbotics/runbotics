@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { BotWsMessage, IBot, InstantProcess } from 'runbotics-common';
 
 import { Logger } from '#/utils/logger';
@@ -17,9 +16,7 @@ export class ProcessSchedulerService {
     ) {
     }
 
-    async startProcess(instantProcess: InstantProcess, bot: IBot) {
-        const orchestratorProcessInstanceId = randomUUID();
-
+    async startProcess(instantProcess: InstantProcess, bot: IBot, orchestratorProcessInstanceId: string) {
         const fileVariables = await this.processInputService.uploadAttendedFiles(instantProcess.process, instantProcess.input, orchestratorProcessInstanceId);
 
         const mergedInstantProcess = this.processInputService.mergeInputVariables(instantProcess, fileVariables);

@@ -61,12 +61,14 @@ export default class GeneralActionHandler extends StatelessActionHandler {
             const processInstanceId = await this.runtimeService.startProcessInstance({
                 process: process,
                 variables: request.input.variables,
+                parentProcessInstanceId: request.processInstanceId,
                 userId: request.userId,
                 orchestratorProcessInstanceId: null,
                 rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
                 trigger: request.trigger as ITriggerEvent,
                 triggerData: request.triggerData,
             });
+
             const subscription = this.runtimeService.processChange().subscribe((data) => {
                 if (data.processInstanceId === processInstanceId) {
                     switch (data.eventType) {

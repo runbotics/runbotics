@@ -1,10 +1,10 @@
-import { FC, useEffect, useState, useMemo, MouseEvent } from 'react';
+import { FC, useEffect, useState, useMemo, MouseEvent, useContext } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LoadingButton } from '@mui/lab';
 import { IconButton, SvgIcon, Tooltip, Menu, MenuItem } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Play as PlayIcon, X as XIcon } from 'react-feather';
@@ -15,18 +15,19 @@ import {
     IProcessInstance,
     ProcessInstanceStatus,
     isProcessInstanceFinished,
+    WsMessage,
+    WsQueueMessage,
 } from 'runbotics-common';
 import styled from 'styled-components';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import { SocketContext } from '#src-app/providers/Socket.provider';
 import { useDispatch, useSelector } from '#src-app/store';
 import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
-import {
-    processActions,
-    StartProcessResponse,
-} from '#src-app/store/slices/Process';
+import { processActions } from '#src-app/store/slices/Process/Process.slice';
+import { StartProcessResponse } from '#src-app/store/slices/Process/Process.state';
 import {
     processInstanceActions,
     processInstanceSelector,
@@ -41,7 +42,8 @@ import { isJsonValid } from '#src-app/utils/utils';
 import { AttendedProcessModal } from './AttendedProcessModal';
 import If from './utils/If';
 
-const BOT_SEARCH_TOAST_KEY = 'bot-search-toast';
+const JOB_CREATING_TOAST_KEY = 'job-creating-toast';
+const RESET_ACTIVE_TIMEOUT = 5000;
 
 const isProcessActive = (
     processId: number,
@@ -90,6 +92,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     variant = 'text',
 }) => {
     const dispatch = useDispatch();
+    const socket = useContext(SocketContext);
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [started, setStarted] = useState(
         setInitialState(rerunProcessInstance)
@@ -107,7 +110,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const { pathname } = useRouter();
 
     const processInstances = useSelector(processInstanceSelector);
-    const { processInstance, eventsMap } = processInstances.active;
+    const { processInstance, jobsMap } = processInstances.active;
     const currentProcessInstance = rerunProcessInstance ?? processInstance;
     const isProcessAttended =
         process?.isAttended && Boolean(process?.executionInfo);
@@ -117,10 +120,10 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         started || isSubmitting || !process.system || !process.botCollection || guestExecutionLimitExceeded;
     const isRerunButtonDisabled =
         started || isSubmitting || isProcessActive(processId, processInstance);
-
-    useEffect(() => {
-        setStarted(isProcessActive(processId, currentProcessInstance));
-    }, [processId, currentProcessInstance]);
+    const isJobQueued =
+        jobsMap &&
+        jobsMap[processId] &&
+        jobsMap[processId].eventType === WsMessage.JOB_WAITING;
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -133,8 +136,6 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     };
 
     const handleTerminate = () => {
-        if (!started) return;
-
         dispatch(schedulerActions.terminateActiveJob({ jobId: processInstance?.id }))
             .then(() => {
                 setStarted(false);
@@ -158,18 +159,58 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                         variant: 'error',
                     }
                 );
+            })
+            .finally(() => {
+                dispatch(processInstanceActions.removeFromJobsMap({ processId }));
             });
+    };
+
+    const handleRemoveJob = () => {
+        const jobPayload = { ...jobsMap[processId] };
+        if (!jobPayload) return;
+
+        const eventType = jobPayload?.eventType;
+        if (eventType === WsMessage.JOB_WAITING) {
+            dispatch(schedulerActions.removeWaitingJob({ jobId: String(jobPayload.jobId) }))
+                .then(() => {
+                    enqueueSnackbar(translate(
+                        'Component.BotProcessRunner.Success.RemovedJob',
+                        { processName: process.name }
+                    ), {
+                        variant: 'success',
+                    });
+                })
+                .catch(() => {
+                    enqueueSnackbar(
+                        translate('Scheduler.ActiveProcess.Terminate.Failed', {
+                            processName,
+                        }), {
+                            variant: 'error',
+                        }
+                    );
+                })
+                .finally(() => {
+                    dispatch(processInstanceActions.removeFromJobsMap({ processId }));
+                    dispatch(processInstanceActions.resetActive());
+
+                    setStarted(false);
+                    setSubmitting(false);
+                    setLoading(false);
+                    closeSnackbar(JOB_CREATING_TOAST_KEY);
+                });
+        }
     };
 
     const handleRun = (executionInfo?: Record<string, any>) => {
         recordItemClick({ itemName: CLICKABLE_ITEM.RUN_BUTTON, sourcePage: identifyPageByUrl(pathname) });
         if (started) return;
+        dispatch(processInstanceActions.removeFromJobsMap({ processId }));
         dispatch(processInstanceActions.resetActiveProcessInstanceAndEvents());
         dispatch(processInstanceEventActions.resetAll());
 
-        enqueueSnackbar(translate('Component.BotProcessRunner.Warning'), {
+        enqueueSnackbar(translate('Component.BotProcessRunner.Warning.CreatingJob'), {
             variant: 'warning',
-            key: BOT_SEARCH_TOAST_KEY,
+            key: JOB_CREATING_TOAST_KEY,
         });
 
         setLoading(true);
@@ -177,6 +218,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
 
         dispatch(processActions.startProcess({
             processId: process.id,
+            clientId: socket.id,
             ...((isProcessAttended || rerunProcessInstance) && {
                 executionInfo,
             }),
@@ -188,10 +230,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                         response.orchestratorProcessInstanceId
                     )
                 );
-                isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
-
                 onRunClick?.();
-                setStarted(true);
                 closeModal();
                 recordProcessRunSuccess({
                     processName,
@@ -200,38 +239,77 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
                 });
             })
             .catch((error) => {
-                setStarted(false);
-                const translationKeyPrefix = 'Component.BotProcessRunner.Error';
-                const guestMessage = 'ServersAreOverloaded';
-
-                const basicErrorMessage =
-                    isGuest
-                        ? translate(`${translationKeyPrefix}.${guestMessage}`)
-                        : translate(translationKeyPrefix);
-
-                const message = error?.message ?? basicErrorMessage;
-                const capitalizeMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
-
-                const translationKey =
-                    (isGuest && capitalizeMessage === 'AllBotsAreDisconnected')
-                        ? `${translationKeyPrefix}.${guestMessage}`
-                        : `${translationKeyPrefix}.${capitalizeMessage}`;
-
-                const errorMessage = checkIfKeyExists(translationKey)
-                    ? translate(translationKey)
-                    : message;
-                enqueueSnackbar(
-                    errorMessage,
-                    { variant: 'error' }
-                );
-                recordProcessRunFail({ processName, processId: String(processId), reason: errorMessage });
-            })
-            .finally(() => {
-                setSubmitting(false);
-                setLoading(false);
-                closeSnackbar(BOT_SEARCH_TOAST_KEY);
+                handleRunFailed({
+                    processId: process.id,
+                    errorMessage: error?.message
+                });
             });
     };
+
+    const handleRunCompleted = () => {
+        dispatch(processInstanceActions.removeFromJobsMap({ processId }));
+
+        isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
+
+        setStarted(true);
+        setSubmitting(false);
+        setLoading(false);
+        closeSnackbar(JOB_CREATING_TOAST_KEY);
+    };
+
+    const handleRunFailed = (payload: WsQueueMessage[WsMessage.JOB_FAILED]) => {
+        setStarted(false);
+        const translationKeyPrefix = 'Component.BotProcessRunner.Error';
+        const defaultGuestTranslationKey = 'ServersOverloaded';
+
+        const defaultErrorMessage =
+            isGuest
+                ? translate(`${translationKeyPrefix}.${defaultGuestTranslationKey}`)
+                : translate(translationKeyPrefix);
+
+        const message = payload.errorMessage ?? defaultErrorMessage;
+        const translationKeyFromMessage = capitalizeFirstLetter({ text: message, delimiter: ' ' });
+
+        const translationKey =
+            (isGuest && translationKeyFromMessage === 'AllBotsAreDisconnected')
+                ? `${translationKeyPrefix}.${defaultGuestTranslationKey}`
+                : `${translationKeyPrefix}.${translationKeyFromMessage}`;
+
+        const errorMessage = checkIfKeyExists(translationKey)
+            ? translate(translationKey)
+            : message;
+        enqueueSnackbar(errorMessage, { variant: 'error' });
+        recordProcessRunFail({ processName, processId: String(processId), reason: errorMessage });
+        setSubmitting(false);
+        setLoading(false);
+        closeSnackbar(JOB_CREATING_TOAST_KEY);
+        setTimeout(() => {
+            dispatch(processInstanceActions.resetActive());
+        }, RESET_ACTIVE_TIMEOUT);
+    };
+
+    useEffect(() => {
+        setStarted(isProcessActive(processId, currentProcessInstance));
+    }, [processId, currentProcessInstance]);
+
+    useEffect(() => {
+        const jobPayload = { ...jobsMap[processId] };
+        if (!jobPayload) return;
+        if (rerunProcessInstance &&
+            processInstance?.id !== rerunProcessInstance?.id
+        ) return;
+
+        switch (jobPayload.eventType) {
+            case WsMessage.PROCESS_STARTED:
+                handleRunCompleted();
+                break;
+            case WsMessage.JOB_FAILED:
+                handleRunFailed(jobPayload);
+                break;
+            default:
+                break;
+        }
+    }, [jobsMap]);
 
     const rerunInput = useMemo(() => {
         if (!isJsonValid(rerunProcessInstance?.input)) return null;
@@ -296,6 +374,23 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         </StyledActionButton>
     );
 
+    const removeJobButton = (
+        <StyledActionButton
+            className={className}
+            onClick={handleRemoveJob}
+            color={color}
+            loadingPosition="start"
+            startIcon={
+                <SvgIcon fontSize="small">
+                    <XIcon />
+                </SvgIcon>
+            }
+            variant={variant}
+        >
+            {translate('Component.BotProcessRunner.Terminate')}
+        </StyledActionButton>
+    );
+
     const rerunMenu = (
         <>
             <IconButton sx={{ width: '40px' }} onClick={toggleMenu}>
@@ -314,6 +409,24 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         </>
     );
 
+    const runProcessPanel = (
+        <>
+            <If
+                condition={hasRunProcessAccess && Boolean(rerunProcessInstance)}
+                else={runButton}
+            >
+                { rerunMenu }
+            </If>
+            <AttendedProcessModal
+                open={modalOpen}
+                process={process}
+                setOpen={setModalOpen}
+                onSubmit={handleRun}
+                rerunInput={rerunInput}
+            />
+        </>
+    );
+
     if (
         rerunProcessInstance &&
         (!isProcessAttended ||
@@ -323,23 +436,17 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
         return null;
     }
 
-    const hasEventStarted = eventsMap && Object.keys(eventsMap).length > 0;
-
     return (
         <If
-            condition={hasRunProcessAccess && (!started || !hasEventStarted)}
-            else={terminateButton}
+            condition={hasRunProcessAccess && (started || isJobQueued)}
+            else={runProcessPanel}
         >
-            <If condition={Boolean(rerunProcessInstance)} else={runButton}>
-                {rerunMenu}
+            <If
+                condition={isJobQueued}
+                else={terminateButton}
+            >
+                { removeJobButton }
             </If>
-            <AttendedProcessModal
-                open={modalOpen}
-                process={process}
-                setOpen={setModalOpen}
-                onSubmit={handleRun}
-                rerunInput={rerunInput}
-            />
         </If>
     );
 };

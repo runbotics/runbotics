@@ -10,7 +10,7 @@ export class ScheduleProcessEntity implements IScheduleProcess {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
         id: number;
 
-    @Column()
+    @Column({ type: 'varchar' })
         cron: string;
 
     @ManyToOne(() => ProcessEntity)
@@ -21,4 +21,6 @@ export class ScheduleProcessEntity implements IScheduleProcess {
     @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
         user: IUser;
 
+    @Column({ name: 'input_variables', type: 'varchar' })
+        inputVariables: string;
 }

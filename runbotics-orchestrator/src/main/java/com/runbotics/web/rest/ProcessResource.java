@@ -12,6 +12,13 @@ import com.runbotics.service.criteria.ProcessCriteria;
 import com.runbotics.service.dto.*;
 import com.runbotics.service.exception.ProcessInstanceAccessDenied;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,22 +26,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * REST controller for managing {@link com.runbotics.domain.Process}.
@@ -49,6 +48,7 @@ public class ProcessResource {
     private final ProcessRepository processRepository;
     private final ProcessQueryService processQueryService;
     private final UserService userService;
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
@@ -77,7 +77,7 @@ public class ProcessResource {
         log.debug("REST request to save Process : {}", processDTO);
         boolean canBeCreated = processService.hasRequesterCreateProcessAccess();
 
-        if(!canBeCreated) {
+        if (!canBeCreated) {
             throw new AccessDeniedException("Guest can create only one process");
         }
 
@@ -104,7 +104,7 @@ public class ProcessResource {
         log.debug("REST request to create Guest Process");
         boolean canBeCreated = processService.hasRequesterCreateProcessAccess();
 
-        if(!canBeCreated) {
+        if (!canBeCreated) {
             throw new AccessDeniedException("Guest can create only one process");
         }
         ProcessDTO result = processService.createGuestProcess();
@@ -126,8 +126,12 @@ public class ProcessResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PreAuthorize(
-        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_EDIT_INFO + "')" +
-        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isProcessOwner(#id))"
+        "@securityService.checkFeatureKeyAccess('" +
+        FeatureKeyConstants.PROCESS_EDIT_INFO +
+        "')" +
+        "and (hasAuthority(\"" +
+        AuthoritiesConstants.ADMIN +
+        "\") or @securityService.isProcessOwner(#id))"
     )
     @PutMapping("/processes/{id}")
     public ResponseEntity<ProcessDTO> updateProcess(
@@ -135,6 +139,7 @@ public class ProcessResource {
         @Valid @RequestBody ProcessDTO processDTO
     ) throws URISyntaxException {
         log.debug("REST request to update Process : {}, {}", id, processDTO);
+        log.debug("ProcessCollection.id: {}", processDTO.getProcessCollection());
         if (processDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -189,13 +194,12 @@ public class ProcessResource {
         log.debug("REST request to update diagram in Process: {}", id);
         checkProcessForEdit(id, processDiagramDTO);
 
-        processService.updateGlobalVariables(id, processDiagramDTO.getGlobalVariableIds());
-        Optional<ProcessDTO> result = processService.updateDiagram(processDiagramDTO);
+        ProcessDTO result = processService.updateDiagram(id, processDiagramDTO);
 
-        return ResponseUtil.wrapOrNotFound(
-            result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, processDiagramDTO.getId().toString())
-        );
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_IS_ATTENDED_EDIT + "')")
@@ -293,7 +297,10 @@ public class ProcessResource {
             .getUserWithAuthorities()
             .orElseThrow(() -> new UsernameNotFoundException("Could not found current user with authorities in the database"));
         List<ProcessDTO> processes = processQueryService.findByCriteria(criteria);
-        List<ProcessDTO> filteredProcesses = processQueryService.filterGuestProcessesByUserRole(processes, requester.getAuthorities().toString());
+        List<ProcessDTO> filteredProcesses = processQueryService.filterGuestProcessesByUserRole(
+            processes,
+            requester.getAuthorities().toString()
+        );
         return ResponseEntity.ok().body(filteredProcesses);
     }
 
@@ -311,6 +318,24 @@ public class ProcessResource {
 
         User requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
         Page<ProcessDTO> page = processQueryService.findBySearchField(criteria, pageable, requester);
+        HttpHeaders header = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(header).body(page);
+    }
+
+    /**
+     * {@code GET  /processes-page-collection} : get page of the processes in collection.
+     *
+     * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of processes in body.
+     */
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_LIST_READ + "')")
+    @GetMapping("/processes-page-collection")
+    public ResponseEntity<Page<ProcessDTO>> getAllProcessesByPageInCollection(ProcessCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Processes by criteria: {}", criteria);
+
+        User requester = userService.getUserWithAuthorities().orElseThrow(ProcessInstanceAccessDenied::new);
+        Page<ProcessDTO> page = processQueryService.findBySearchFieldAndCollection(criteria, pageable, requester);
         HttpHeaders header = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(header).body(page);
     }
@@ -349,8 +374,12 @@ public class ProcessResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @PreAuthorize(
-        "@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_DELETE + "')" +
-        "and (hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\") or @securityService.isProcessOwner(#id))"
+        "@securityService.checkFeatureKeyAccess('" +
+        FeatureKeyConstants.PROCESS_DELETE +
+        "')" +
+        "and (hasAuthority(\"" +
+        AuthoritiesConstants.ADMIN +
+        "\") or @securityService.isProcessOwner(#id))"
     )
     @DeleteMapping("/processes/{id}")
     public ResponseEntity<Void> deleteProcess(@PathVariable Long id) {

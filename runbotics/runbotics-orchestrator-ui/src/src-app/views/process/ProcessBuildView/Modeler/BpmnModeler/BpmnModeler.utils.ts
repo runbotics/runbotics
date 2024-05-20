@@ -32,7 +32,7 @@ export const copy = (modeler: any, elementId: any) => {
     const copied = clipboard.get();
 
     // persist in local storage, encoded as json
-    localStorage.setItem('bpmnClipboard', JSON.stringify(copied));
+    localStorage.setItem('bpmn_clipboard', JSON.stringify(copied));
 };
 
 /**
@@ -99,7 +99,7 @@ export const paste = (modeler, targetId) => {
     const moddle = modeler.get('moddle');
 
     // retrieve from local storage
-    const serializedCopy = localStorage.getItem('bpmnClipboard');
+    const serializedCopy = localStorage.getItem('bpmn_clipboard');
 
     // parse tree, reinstantiating contained objects
     const parsedCopy = JSON.parse(serializedCopy, createReviver(moddle));

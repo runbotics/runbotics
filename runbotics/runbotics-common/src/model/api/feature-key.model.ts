@@ -1,27 +1,30 @@
 export enum FeatureKey {
-    // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
-    PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW', 
+     // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
+     PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW',
+
+    // CRUD access to every process for admins -> in the future can be extended for starting, stopping, etc.
+    PROCESS_ALL_ACCESS = 'PROCESS_ALL_ACCESS',
 
     // Show details on process tile (like: date created, author, time updated, is scheduled, etc.) [ Processes page ]
-    PROCESS_LIST_DETAIL_VIEW = 'PROCESS_LIST_DETAIL_VIEW', 
+    PROCESS_LIST_DETAIL_VIEW = 'PROCESS_LIST_DETAIL_VIEW',
 
     // Allow to GET single process by id [ Processes page -> process ]
-    PROCESS_READ = 'PROCESS_READ', 
-    
+    PROCESS_READ = 'PROCESS_READ',
+
     // Allow to GET list of all processes & GET single process by id [ Processes page ]
     PROCESS_LIST_READ = 'PROCESS_LIST_READ',
 
     // Show "ADD NEW PROCESS" button [ Processes page ]
-    PROCESS_ADD = 'PROCESS_ADD', 
+    PROCESS_ADD = 'PROCESS_ADD',
 
     // Action "Edit" on process tile -> 3 vertical dots (like: edit name, description, etc.) [ Processes page ]
-    PROCESS_EDIT_INFO = 'PROCESS_EDIT_INFO', 
+    PROCESS_EDIT_INFO = 'PROCESS_EDIT_INFO',
 
     // Action "Delete" on process tile -> 3 vertical dots [ Processes page ]
-    PROCESS_DELETE = 'PROCESS_DELETE', 
+    PROCESS_DELETE = 'PROCESS_DELETE',
 
     // Show "RUN" button & RUN tab [ Processes page -> process -> BUILD, RUN tabs ]
-    PROCESS_START = 'PROCESS_START', 
+    PROCESS_START = 'PROCESS_START',
 
     // Allow editing process structure in modeler (without it - only viewer mode & no access to panel info actions) [ Processes page -> process -> BUILD tab ]
     PROCESS_EDIT_STRUCTURE = 'PROCESS_EDIT_STRUCTURE',
@@ -34,19 +37,19 @@ export enum FeatureKey {
 
     // Allow to display templates list at the process build page [ Processes page -> process -> BUILD tab ]
     PROCESS_TEMPLATES_LIST = 'PROCESS_TEMPLATES_LIST',
-    
+
     // Allow to switch state "attended" to "not attended" [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_ATTENDED_EDIT = 'PROCESS_IS_ATTENDED_EDIT',
 
     // Show "Is process attended" switcher [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_ATTENDED_READ = 'PROCESS_IS_ATTENDED_READ',
-    
+
     // Allow to execute triggerable proces by url /scheduler/trigger/:processInfo [ ? Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_EXECUTE = 'PROCESS_IS_TRIGGERABLE_EXECUTE',
-    
+
     // Show "Is process triggerable" switcher [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_READ = 'PROCESS_IS_TRIGGERABLE_READ',
-    
+
     // Allow to switch state "triggerable" to "not triggerable" [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_EDIT = 'PROCESS_IS_TRIGGERABLE_EDIT',
 
@@ -107,6 +110,9 @@ export enum FeatureKey {
     // Allow to delete bot [ Bots page -> 3 vertical dots ]
     BOT_DELETE = 'BOT_DELETE',
 
+    // Read/write access to every collection
+    BOT_COLLECTION_ALL_ACCESS = 'BOT_COLLECTION_ALL_ACCESS',
+
     // Show "COLLECTIONS" tab [ Bots page ]
     BOT_COLLECTION_READ = 'BOT_COLLECTION_READ',
 
@@ -133,29 +139,29 @@ export enum FeatureKey {
 
     // Show "Global variables" page & allow to GET all global variables & GET single global variable by id [ Global variables page]
     GLOBAL_VARIABLE_READ = 'GLOBAL_VARIABLE_READ',
-   
+
     // Allow to edit global variable [ Global variables page -> 3 vertical dots ]
     GLOBAL_VARIABLE_EDIT = 'GLOBAL_VARIABLE_EDIT',
-    
+
     // Allow to add global variable [ Global variables page -> "ADD GLOBAL VARIABLE" button ]
     GLOBAL_VARIABLE_ADD = 'GLOBAL_VARIABLE_ADD',
-        
+
     // Allow to delete global variable [ Global variables page -> 3 vertical dots ]
-    GLOBAL_VARIABLE_DELETE = 'GLOBAL_VARIABLE_DELETE', 
+    GLOBAL_VARIABLE_DELETE = 'GLOBAL_VARIABLE_DELETE',
 
     // Show "Scheduler" page & allow to GET scheduler/scheduled-jobs, scheduler/jobs/waiting, scheduler/scheduled-jobs/count [ Scheduler page]
     SCHEDULER_PAGE_READ = 'SCHEDULER_PAGE_READ',
-        
+
     // Allow to GET scheduler/jobs (bez wplywu na FE)
     SCHEDULER_JOBS_READ = 'SCHEDULER_JOBS_READ',
-        
+
     // Delete job from scheduler queue
     SCHEDULER_JOBS_DELETE = 'SCHEDULER_JOBS_DELETE',
 
     // Show "History" page [ History page ]
-    HISTORY_READ = 'HISTORY_READ', 
+    HISTORY_READ = 'HISTORY_READ',
 
-    // ???
+    // used for api/admin/users/limited
     BASIC_USER_READ = 'BASIC_USER_READ',
 
     // Access to users page, manage users
@@ -165,7 +171,30 @@ export enum FeatureKey {
     PROCESS_OUTPUT_TYPE_READ = 'PROCESS_OUTPUT_TYPE_READ',
 
     // Allow to edit process output types
-    PROCESS_OUTPUT_TYPE_EDIT = 'PROCESS_OUTPUT_TYPE_EDIT'
+    PROCESS_OUTPUT_TYPE_EDIT = 'PROCESS_OUTPUT_TYPE_EDIT',
+
+    PROCESS_COLLECTION_READ = 'PROCESS_READ',
+
+    // Read/write access to every collection
+    PROCESS_COLLECTION_ALL_ACCESS = 'PROCESS_COLLECTION_ALL_ACCESS',
+
+    // Show "CREATE NEW COLLECTION" button on processes page in COLLECTIONS tab
+    PROCESS_COLLECTION_ADD = 'PROCESS_COLLECTION_ADD',
+
+    // Allow for editing properties of the existing collection (processes page -> COLLECTIONS tab -> 3 vertical dots -> "modify" option)
+    PROCESS_COLLECTION_EDIT = 'PROCESS_COLLECTION_EDIT',
+
+    // Allow to delete collection of processes (processes page -> COLLECTIONS tab -> 3 vertical dots -> "delete" option)
+    PROCESS_COLLECTION_DELETE = 'PROCESS_COLLECTION_DELETE',
+
+    // Read/write access to every tenant resource
+    TENANT_ALL_ACCESS = 'TENANT_ALL_ACCESS',
+
+    // Allows to read the resources assigned to the tenant
+    TENANT_READ = 'TENANT_READ',
+
+    // Allows to edit the resources assigned to the tenant
+    TENANT_EDIT = 'TENANT_EDIT',
 }
 
 export interface IFeatureKey {

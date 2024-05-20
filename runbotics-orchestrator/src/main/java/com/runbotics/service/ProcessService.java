@@ -30,7 +30,7 @@ public interface ProcessService {
      */
     Optional<ProcessDTO> partialUpdate(ProcessDTO processDTO);
 
-    Optional<ProcessDTO> updateDiagram(ProcessDiagramUpdateDTO processDiagramDTO);
+    ProcessDTO updateDiagram(Long processId, ProcessDiagramUpdateDTO processDiagramDTO);
 
     Optional<ProcessDTO> updateIsAttended(ProcessAttendedUpdateDTO processAttendedDTO);
 

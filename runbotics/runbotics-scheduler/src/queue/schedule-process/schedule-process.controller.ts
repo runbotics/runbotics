@@ -21,6 +21,7 @@ import { ProcessService } from '#/database/process/process.service';
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, TriggerEvent } from 'runbotics-common';
+import { randomUUID } from 'crypto';
 
 @Controller('scheduler/schedule-processes')
 export class ScheduleProcessController {
@@ -40,18 +41,20 @@ export class ScheduleProcessController {
         @Request() request: AuthRequest,
     ) {
         this.logger.log(`=> Creating schedule for process ${scheduleProcess.process.id}`);
-
+        const orchestratorProcessInstanceId = randomUUID();
         const process = await this.processService.findById(scheduleProcess.process.id);
         if (!process) {
             throw new BadRequestException('Wrong process id');
         }
-
         const scheduleProcessWithUser = { ...scheduleProcess, user: request.user, process };
         const newScheduleProcess = await this.scheduleProcessService.save(scheduleProcessWithUser);
+
         await this.queueService.createScheduledJob({
             ...newScheduleProcess,
+            orchestratorProcessInstanceId,
             trigger: { name: TriggerEvent.SCHEDULER },
-            triggerData: { userEmail: request.user.email }
+            triggerData: { userEmail: request.user.email },
+            input: { variables: newScheduleProcess?.inputVariables ? JSON.parse(newScheduleProcess.inputVariables) : null }
         });
 
         this.logger.log(`<= Creation successful: schedule process ${newScheduleProcess.id}`);

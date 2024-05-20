@@ -10,6 +10,7 @@ import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstan
 import ProcessEventBreadcrumbs from './ProcessEventBreadcrumbs';
 import ProcessInstanceDetails from './ProcessInstanceDetails/ProcessInstanceDetails';
 import ProcessInstanceEventsDetails from './ProcessInstanceEventsDetails';
+import ProcessQueueDetails from './ProcessQueueDetails/ProcessQueueDetails';
 import If from '../utils/If';
 
 interface InfoPanelProps {
@@ -58,7 +59,8 @@ const InfoPanel: VFC<InfoPanelProps> = ({
                     overflowX: 'hidden',
                 }}
             >
-                <ProcessInstanceDetails processInstanceId={processInstanceId} />
+                <ProcessQueueDetails />
+                <ProcessInstanceDetails processInstanceId={processInstanceId} onClose={onClose}/>
                 <ProcessInstanceEventsDetails
                     processInstanceId={processInstanceId}
                 />

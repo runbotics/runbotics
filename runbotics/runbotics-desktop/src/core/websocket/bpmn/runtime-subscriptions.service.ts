@@ -17,6 +17,9 @@ import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { Message } from '../queue/message-queue.service';
 import { WebsocketService } from '../websocket.service';
 import { StorageService } from '#config';
+import { truncateStructure } from '#utils/structureTruncator';
+
+const MAX_STRUCTURE_SIZE = 100_000;
 
 @Injectable()
 export class RuntimeSubscriptionsService {
@@ -25,7 +28,7 @@ export class RuntimeSubscriptionsService {
         private readonly websocketService: WebsocketService,
         private readonly runtimeService: RuntimeService,
         private readonly loopHandlerService: LoopHandlerService,
-        private readonly storageService: StorageService
+        private readonly storageService: StorageService,
     ) {}
 
     private readonly logger = new RunboticsLogger(
@@ -43,7 +46,7 @@ export class RuntimeSubscriptionsService {
                         created: dayjs().toISOString(),
                         processInstance: event.processInstance,
                         executionId: event.activity.executionId,
-                        input: this.sanitizeVariable({ ...desktopTask?.input }),
+                        input: this.sanitizeStructure({ ...desktopTask?.input }),
                         status: event.eventType,
                         error: event.activity.content.error?.description,
                         script: desktopTask.input?.script,
@@ -55,6 +58,10 @@ export class RuntimeSubscriptionsService {
                     ).behaviour;
                     switch (event.activity.content.type) {
                         case BpmnElementType.ERROR_EVENT_DEFINITION:
+                            const variables = {};
+                            variables['caughtErrorMessage'] = desktopTask.output.description;
+                            const setVariables = { ...event.activity.environment.variables, ...variables };
+                            event.activity.environment.assignVariables(setVariables);
                             processInstanceEvent.log = `ErrorEventDefinition: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
                             break;
@@ -157,7 +164,7 @@ export class RuntimeSubscriptionsService {
                         case ProcessInstanceEventStatus.STOPPED:
                         case ProcessInstanceEventStatus.ERRORED:
                             if (!this.isLoopSubprocess(event.activity, eventBehavior)) {
-                                processInstanceEvent.output = this.sanitizeVariable({ ...desktopTask?.output });
+                                processInstanceEvent.output = this.sanitizeStructure({ ...desktopTask?.output });
                             }
                             processInstanceEvent.finished =
                                 dayjs().toISOString();
@@ -209,6 +216,7 @@ export class RuntimeSubscriptionsService {
                 triggerData: event.processInstance.triggerData,
                 error: event.processInstance.error,
                 callbackUrl: event.processInstance.callbackUrl,
+                parentProcessInstanceId: event.processInstance.parentProcessInstanceId,
             };
             switch (event.eventType) {
                 case ProcessInstanceStatus.INITIALIZING:
@@ -216,7 +224,7 @@ export class RuntimeSubscriptionsService {
                     break;
                 case ProcessInstanceStatus.IN_PROGRESS:
                     try {
-                        processInstance.input = this.sanitizeVariable(
+                        processInstance.input = this.sanitizeStructure(
                             { variables: event.processInstance.variables }
                         );
                     } catch (e) {
@@ -241,7 +249,7 @@ export class RuntimeSubscriptionsService {
                     }
 
                     try {
-                        processInstance.output = this.sanitizeVariable({
+                        processInstance.output = this.sanitizeStructure({
                             processOutput: event.processInstance?.processOutput ?? {},
                             variables,
                         });
@@ -264,12 +272,13 @@ export class RuntimeSubscriptionsService {
         });
     }
 
-    private sanitizeVariable(variable: any): string {
+    private sanitizeStructure(variable: object): string {
         const variableToCheck: string = JSON.stringify(variable);
-        if (variableToCheck && variableToCheck.length > 100_000)
-            return JSON.stringify(
-                { message: 'Exceeded max length', partialResponse: variableToCheck.slice(0, 100_000)}
-            );
+        if (variableToCheck && variableToCheck.length > MAX_STRUCTURE_SIZE)
+            return JSON.stringify({
+                message: 'Exceeded max length. Result is truncated.',
+                partialResponse: truncateStructure({ originalObject: variable, maxSize: MAX_STRUCTURE_SIZE })
+            });
         return variableToCheck;
     }
 

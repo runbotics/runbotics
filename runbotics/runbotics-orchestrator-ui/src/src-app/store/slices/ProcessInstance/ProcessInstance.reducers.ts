@@ -1,9 +1,9 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import union from 'lodash/union';
-import { IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
+import { IProcess, IProcessInstance, IProcessInstanceEvent } from 'runbotics-common';
 
 import { initialState } from './ProcessInstance.slice';
-import { ProcessInstanceState } from './ProcessInstance.state';
+import { ProcessInstanceState, WsQueueMessageValues } from './ProcessInstance.state';
 import { updateProcessInstanceProps } from './ProcessInstance.utils';
 
 interface MapOrchestrator {
@@ -20,7 +20,6 @@ export const updateOrchestratorProcessInstanceIdMap = (state: ProcessInstanceSta
         processInstance: null,
         orchestratorProcessInstanceId: action.payload.orchestratorProcessInstanceId
     };
-
 };
 
 export const updateActiveProcessInstance = (state: ProcessInstanceState, action: PayloadAction<IProcessInstance>) => {
@@ -94,4 +93,24 @@ export const insert = (state: ProcessInstanceState, action: PayloadAction<IProce
     else
     { state.all.page?.content.unshift(action.payload); }
 
+};
+
+export const updateJobsMap = (state: ProcessInstanceState, action: PayloadAction<WsQueueMessageValues>) => {
+    const { processId, ...data } = action.payload;
+    state.active.jobsMap = {
+        ...state.active.jobsMap,
+        [processId]: {
+            processId,
+            ...data,
+        },
+    };
+};
+
+export const removeFromJobsMap = (state: ProcessInstanceState, action: PayloadAction<{ processId: IProcess['id'] }>) => {
+    const processId = action.payload.processId;
+    delete state.active.jobsMap[processId];
+};
+
+export const resetJobsMap = (state: ProcessInstanceState) => {
+    state.active.jobsMap = {};
 };

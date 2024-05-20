@@ -17,7 +17,7 @@ import { Footer, IconsWrapper, StyledBox, StyledIconsBox } from './ProcessTileFo
 import { ProcessTileFooterProps } from './ProcessTileFooter.types';
 import ProcessTileActions from '../ProcessTileActions';
 
-const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process, processInstance }) => {
+const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process, processInstance, isJobWaiting, isJobCreating }) => {
     const { translate } = useTranslations();
     const formattedStatus = processInstance && capitalizeFirstLetter({
         text: processInstance.status,
@@ -32,14 +32,14 @@ const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process,
                     condition={process.isPublic}
                     else={
                         <Tooltip title={translate('Component.Tile.Process.Footer.Icon.Tooltip.Private')}>
-                            <StyledIconsBox color='grey'>
+                            <StyledIconsBox $bgcolor='grey'>
                                 <Image src={PrivateIcon} alt='Private icon'/>
                             </StyledIconsBox>
                         </Tooltip>
                     }
                 >
                     <Tooltip title={translate('Component.Tile.Process.Footer.Icon.Tooltip.Public')}>
-                        <StyledIconsBox color='primary'>
+                        <StyledIconsBox $bgcolor='primary'>
                             <Image src={PublicIcon} alt='Public icon'/>
                         </StyledIconsBox>
                     </Tooltip>
@@ -48,21 +48,37 @@ const ProcessTileFooter: FunctionComponent<ProcessTileFooterProps> = ({ process,
                     condition={process.schedules && process.schedules.length > 0}
                 >
                     <Tooltip title={translate('Component.Tile.Process.Footer.Icon.Tooltip.Scheduled')}>
-                        <StyledIconsBox color='success'>
+                        <StyledIconsBox $bgcolor='success'>
                             <Image src={ScheduleIcon} alt='Calendar icon'/>
                         </StyledIconsBox>
                     </Tooltip>
                 </If>
             </IconsWrapper>
             <StyledBox>
-                {processInstance &&
-                    <Label
-                        color={getProcessInstanceStatusColor(processInstance.status)}
-                    >
-                        {/*@ts-ignore*/}
-                        {translate(`Process.Instance.Status.${formattedStatus}`)}
-                    </Label>
-                }
+                <If
+                    condition={isJobWaiting || isJobCreating}
+                    else={
+                        <If condition={!!processInstance}>
+                            <Label
+                                color={getProcessInstanceStatusColor(processInstance?.status)}
+                            >
+                                {/*@ts-ignore*/}
+                                {translate(`Process.Instance.Status.${formattedStatus}`)}
+                            </Label>
+                        </If>
+                    }
+                >
+                    <If condition={isJobWaiting}>
+                        <Label color='warning'>
+                            {translate('Process.Instance.Status.Queued')}
+                        </Label>
+                    </If>
+                    <If condition={isJobCreating}>
+                        <Label color='warning'>
+                            {translate('Process.Instance.Status.Pending')}
+                        </Label>
+                    </If>
+                </If>
                 <ProcessTileActions process={process} />
             </StyledBox>
         </Footer>

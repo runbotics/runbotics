@@ -28,34 +28,34 @@ export class ProcessEntity implements IProcess {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
 
-    @Column({ unique: true })
+    @Column({ unique: true, type: 'varchar' })
     name: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     description: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     definition: string;
 
-    @Column({ transformer: dateTransformer })
+    @Column({ transformer: dateTransformer, type: 'varchar' })
     created: string;
 
-    @Column({ transformer: dateTransformer })
+    @Column({ transformer: dateTransformer, type: 'varchar' })
     updated: string;
 
-    @Column({ name: 'is_public' })
+    @Column({ name: 'is_public', type: 'boolean' })
     isPublic: boolean;
 
-    @Column({ name: 'is_attended' })
+    @Column({ name: 'is_attended', type: 'boolean' })
     isAttended?: boolean;
 
-    @Column({ name: 'is_triggerable' })
+    @Column({ name: 'is_triggerable', type: 'boolean' })
     isTriggerable?: boolean;
 
-    @Column({ name: 'last_run' })
+    @Column({ name: 'last_run', type: 'varchar' })
     lastRun?: string;
 
-    @Column({ name: 'execution_info' })
+    @Column({ name: 'execution_info', type: 'varchar' })
     executionInfo: string;
 
     @ManyToOne(() => BotSystemEntity)

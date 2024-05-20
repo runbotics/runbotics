@@ -9,6 +9,7 @@ import { FeatureKey } from 'runbotics-common';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessInstanceSocket from '#src-app/hooks/useProcessInstanceSocket';
+import { useProcessQueueSocket } from '#src-app/hooks/useProcessQueueSocket';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
@@ -40,6 +41,7 @@ const ProcessMainViewManager: VFC = () => {
     const processInstance = useSelector(processInstanceSelector);
     const { orchestratorProcessInstanceId } = processInstance.active;
     useProcessInstanceSocket({ orchestratorProcessInstanceId });
+    useProcessQueueSocket();
 
     useEffect(() => {
         if (!hasViewAccess) {

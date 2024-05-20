@@ -1,0 +1,260 @@
+@import '#src-landing/scss/main';
+
+.background {
+    width: 100%;
+    background: linear-gradient(
+        to bottom,
+        $palette-white 65%,
+        $palette-accent-primary 65%
+    );
+}
+
+.section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 65% 35%;
+    width: 100%;
+    max-width: 1672px;
+    margin: 0 auto;
+    min-height: 950px;
+}
+
+.description {
+    font-weight: $font-weight-medium;
+}
+
+.team,
+.numbers {
+    grid-column: 1;
+}
+
+.team {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+    margin-top: $margin-16;
+    margin-bottom: $margin-5;
+    margin-left: $margin-10;
+    font-family: 'Montserrat';
+}
+
+.content {
+    width: 75%;
+}
+
+.iconBackground {
+    position: absolute;
+    width: 26%;
+    height: auto;
+    z-index: -1;
+    right: $margin-10;
+    top: 30%;
+}
+
+.manager {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 70%;
+}
+
+.manager img {
+    margin-right: $margin-3;
+    padding: 4px;
+    border: 1px solid $palette-black;
+    border-radius: 305px;
+}
+
+.numberText {
+    margin-top: $margin-2;
+    font-weight: $font-weight-medium;
+}
+
+.photo {
+    grid-column: 2;
+    grid-row: span 2;
+    height: 786px;
+    margin: auto;
+    margin-left: 0;
+    margin-right: $margin-3;
+    border-radius: 20px 20px 150px 20px;
+    object-fit: cover;
+}
+
+.numbers {
+    display: flex;
+    justify-content: space-between;
+    padding: $padding-12 $padding-10 $padding-12 $padding-3;
+    font-family: 'Montserrat';
+}
+
+@media screen and (max-width: $breakpoint-lg) {
+    .section {
+        min-height: 930px;
+    }
+    .content {
+        width: 75%;
+    }
+
+    .iconBackground {
+        right: $margin-6;
+    }
+
+    .manager {
+        width: 80%;
+        margin-right: $margin-2;
+    }
+
+    .photo {
+        height: 700px;
+        max-width: 95%;
+    }
+
+    .numbers {
+        padding: $padding-12 $padding-4 $padding-12 $padding-4;
+    }
+}
+
+@media screen and (max-width: $breakpoint-md) {
+    .section {
+        height: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .team {
+        width: 72%;
+        min-height: 406px;
+        margin-top: $margin-12;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .content {
+        width: 80%;
+    }
+
+    .iconBackground {
+        width: 100px;
+        top: 45%;
+    }
+
+    .photo {
+        grid-column: 1;
+        grid-row: 2;
+        width: 72%;
+        height: 550px;
+        margin: auto;
+    }
+
+    .manager {
+        width: 70%;
+    }
+
+    .numbers {
+        grid-row: 3;
+        padding: $padding-12 14% $padding-12 $padding-4;
+    }
+}
+
+@media screen and (max-width: $breakpoint-sm) {
+
+    .section{
+        padding-left: $padding-6;
+        padding-right: $padding-6;
+    }
+
+    .team{
+        width: 100%;
+    }
+    
+    .team h3 {
+        padding-bottom: $padding-2;
+    }
+
+    .iconBackground {
+        top: 50%;
+    }
+
+    .photo {
+        width: 100%;
+        height: 420px;
+    }
+
+    .manager {
+        width: 80%;
+        padding-top: $padding-2;
+    }
+
+    .numbers {
+        grid-row: 3;
+        padding: $padding-12 $padding-0 $padding-12 $padding-0;
+    }
+}
+
+@media screen and (max-width: $breakpoint-xs) {
+    .section {
+        width: 100%;
+        padding: $padding-9 $padding-3;
+    }
+
+    .team {
+        width: 100%;
+        min-height: 400px;
+        margin-top: $margin-0;
+    }
+
+    .team h3 {
+        font-size: $font-size-h4;
+    }
+
+    .content {
+        width: 100%;
+        font-size: $font-size-body4;
+    }
+
+    .iconBackground {
+        height: 110px;
+        width: auto;
+        top: 50%;
+        right: $padding-0;
+    }
+
+    .photo {
+        width: 100%;
+        height: 330px;
+    }
+
+    .manager {
+        width: 100%;
+        height: 95px;
+        margin-right: $margin-0;
+    }
+
+    .manager img {
+        height: 95px;
+        margin-right: $margin-2;
+    }
+
+    .manager div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100%;
+    }
+
+    .manager h6 {
+        font-size: $font-size-body3;
+    }
+
+    .manager p {
+        font-size: $font-size-body4;
+    }
+
+    .numbers {
+        flex-direction: column;
+        padding: $padding-0;
+    }
+}

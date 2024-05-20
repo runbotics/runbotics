@@ -37,6 +37,7 @@ export interface ModelerState {
     passedInVariables?: string[];
     commandStack: CommandStackInfo;
     imported: boolean;
+    activeDrag: boolean;
 }
 
 export interface ProcessState {
@@ -61,6 +62,7 @@ export interface UpdateDiagramRequest {
     id?: number;
     definition?: string | null;
     globalVariableIds?: string[];
+    executionInfo?: string | null;
 }
 
 export type StartProcessResponse = Pick<

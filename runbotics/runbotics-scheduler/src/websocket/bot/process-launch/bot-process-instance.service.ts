@@ -95,6 +95,7 @@ export class BotProcessService {
 
     async notifyAboutProcessInstanceStatus(processInstance: IProcessInstance) {
         const statusList = [
+            ProcessInstanceStatus.IN_PROGRESS,
             ProcessInstanceStatus.COMPLETED,
             ProcessInstanceStatus.TERMINATED,
             ProcessInstanceStatus.ERRORED,
@@ -102,11 +103,13 @@ export class BotProcessService {
 
         if (statusList.includes(processInstance.status)) {
             const processInstanceNotification: ProcessInstanceNotification = {
+                processId: processInstance?.process?.id,
+                processInstanceId: processInstance?.id,
                 status: processInstance?.status,
+                input: processInstance?.input,
+                output: processInstance?.output,
                 started: processInstance?.created,
                 finished: processInstance?.updated,
-                output: processInstance?.output,
-                process: processInstance?.process,
                 error: processInstance?.error,
             };
 
@@ -131,6 +134,7 @@ export class BotProcessService {
         instanceToSave.user = processInstance.user;
         instanceToSave.trigger = processInstance.trigger;
         instanceToSave.triggerData = processInstance.triggerData;
+        instanceToSave.parentProcessInstanceId = processInstance.parentProcessInstanceId;
         return instanceToSave;
     }
 

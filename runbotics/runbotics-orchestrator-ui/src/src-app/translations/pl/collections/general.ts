@@ -1,0 +1,42 @@
+import englishGeneral from '#src-app/translations/en/collections/general';
+
+const general: typeof englishGeneral = {
+    'Process.Collection.Dialog.Modify.Create.Title': 'Utwórz zbiór',
+    'Process.Collection.Dialog.Modify.Edit.Title': 'Edytuj zbiór',
+    'Process.Collection.Add.Button': 'Dodaj nowy zbiór',
+    'Proces.Collection.Dialog.Modify.Form.IsPublic.True': 'Publiczna',
+    'Proces.Collection.Dialog.Modify.Form.IsPublic.True.Tooltip': 'Ten zbiór oraz jego zawartość (nie licząc prywatnych procesów) jest widoczna dla każdego.',
+    'Proces.Collection.Dialog.Modify.Form.IsPublic.False': 'Prywatna',
+    'Proces.Collection.Dialog.Modify.Form.IsPublic.False.Tooltip': 'Ta zbiór oraz jego zawartość jest widoczna tylko dla ciebie oraz osób, którym go udostępniasz.',
+    'Proces.Collection.Dialog.Modify.Form.Users.Placeholder': 'Użytkownicy',
+    'Proces.Collection.Dialog.Modify.Form.Users.Tooltip': 'Udostępnij zbiór oraz znajdujące się w nim publiczne procesy konkretnym użytkownikom.',
+    'Process.Collection.Dialog.Modify.Form.Name.Label': 'Nazwa',
+    'Process.Collection.Dialog.Modify.Form.Description.Label': 'Opis',
+    'Proces.Collection.Dialog.Modify.Form.Access.Label': 'Dostęp',
+    'Process.Collection.List.IsPrivate.Tooltip': 'Prywatny zbiór',
+    'Process.Collection.List.Alt.PrivateIcon': 'Ikona zamkniętej kłódki',
+    'Process.Collection.List.Expand.Label': 'rozwiń',
+    'Process.Collection.List.Collapse.Label': 'zwiń',
+    'Process.Collection.Tile.MenuItem.Move': 'Przenieś',
+    'Process.Collection.Tile.MenuItem.Delete': 'Usuń',
+    'Process.Collection.Tile.MenuItem.Delete.Success': 'Pomyślnie usunięto zbiór "{{ name }}"',
+    'Process.Collection.Tile.MenuItem.Delete.Fail': 'Nie masz uprawnień do usunięcia zbioru "{{ name }}"',
+    'Process.Collection.Tile.MenuItem.Delete.Info': 'Tylko twórca zbioru może go usunąć',
+    'Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title': 'Czy na pewno chcesz usunąć zbiór "{{ name }}"?',
+    'Process.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning': 'Spowoduje to usunięcie wszystkich zbiorów i procesów w środku!',
+    'Process.Collection.Tile.MenuItem.Edit': 'Edytuj',
+    'Process.Collection.Navigation.Processes.Label': 'Procesy',
+    'Process.Collection.Navigation.Collections.Label': 'Zbiory',
+    'Process.Collection.Ancestors.Error': 'Nieoczekiwany błąd - nie można załadować nawigacji',
+    'Process.Collection.Structure.Title': 'Lokalizacja',
+    'Process.Collection.Structure.Title.Info': 'Wybierz zbiór, w którym ma się znaleźć obecny zbiór',
+    'Process.Collection.Structure.Icon.Private.Tooltip': 'Prywatna',
+    'Process.Collection.Structure.Icon.Users.Tooltip': 'Udostępniona wybranym użytkownikom',
+    'Process.Collection.Structure.Icon.Public.Tooltip': 'Publiczna',
+    'Process.Collection.Structure.Icon.Home.Tooltip': 'Nadrzędny zbiór',
+    'Process.Collection.Structure.NoCollections': 'Nowy zbiór zostanie utworzony w',
+    'Process.Collection.Structure.Root': 'Home',
+};
+
+export default general;
+
