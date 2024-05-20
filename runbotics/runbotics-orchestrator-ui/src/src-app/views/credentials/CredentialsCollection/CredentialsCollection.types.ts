@@ -1,6 +1,7 @@
 import { CollectionColorName } from './EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import { Credential } from '../Credential/Credential.types';
 
-enum AccessType { 
+export enum AccessType { 
     ADMIN = 'ADMIN',
     USER = 'USER'
 }
@@ -8,14 +9,16 @@ enum AccessType {
 export interface BasicCredentialsCollectionDto {
     id: string;
     name: string;
-    description: string;
     color: CollectionColorName;
+    isPrivate: boolean;
     tenantId: string;
     createdOn: string;
     createdBy: string;
     modifiedOn: string;
     modifiedBy: string;
-    users: CredentialsCollectionUser[];
+    credentials: Credential[]
+    description?: string;
+    users?: CredentialsCollectionUser[];
 }
 
 export interface CredentialsCollectionUser {
@@ -26,16 +29,23 @@ export interface CredentialsCollectionUser {
 
 export interface CreateCredentialsCollectionDto {
     name: string;
-    description: string;
     color: CollectionColorName;
     tenantId: string;
+    credentials: Credential[];
+    isPrivate: boolean;
+    description?: string;
     users?: CredentialsCollectionUser[];
 }
 
 export interface EditCredentialsCollectionDto {
     name: string;
-    description: string;
     color: CollectionColorName;
+    credentials: Credential[];
+    isPrivate: boolean;
+    description?: string;
     users: CredentialsCollectionUser[];
 }
 
+export type CredentialsCollectionKeys = { [Key in keyof BasicCredentialsCollectionDto]: Key }[keyof BasicCredentialsCollectionDto];
+
+export type CredenitalsCollectionValues = BasicCredentialsCollectionDto[CredentialsCollectionKeys];

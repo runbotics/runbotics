@@ -1,146 +1,67 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
-import { useSnackbar } from 'notistack';
-
-import CustomDialog from '#src-app/components/CustomDialog';
-import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
-
-import { useDispatch } from '#src-app/store';
-
-import { capitalizeFirstLetter } from '#src-app/utils/text';
+import useTranslations from '#src-app/hooks/useTranslations';
 
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import CollectionColorSelect from './CollectionColor/CollectionColorSelect';
 import { EditCredentialsCollectionProps } from './EditCredentialCollection.types';
-import { InputErrorType, initialFormValidationState, inputErrorMessages } from './EditCredentialsCollection.utils';
+import { InputErrorType, getInitialCredentialsCollectionData, initialFormValidationState } from './EditCredentialsCollection.utils';
 import { GeneralOptions } from './GeneralOptions/GeneralOptions';
-import { CredentialsCollection } from '../CredentialsCollection.types';
+import { CreateCredentialsCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
 
-const EditCredentialsCollection: FC<EditCredentialsCollectionProps> = ({
-    collection, onAdd, onClose, open,
-}) => {
+const EditCredentialsCollection: FC<EditCredentialsCollectionProps> = ({ collection,  onSubmit }) => {
+    const { translate } = useTranslations();
+    const [credentialsCollectionFormState, setCredentialsCollectionFormState] = useState<CreateCredentialsCollectionDto | EditCredentialsCollectionDto>(getInitialCredentialsCollectionData(collection));
     const [formValidationState, setFormValidationState] = useState(initialFormValidationState);
     const [inputErrorType, setInputErrorType] = useState<InputErrorType>(null);
-    const [credentialsCollectionFormState, setCredentialsCollectionFormState] = useState<CredentialsCollection>({...collection });
-    const [isNameDirty, setIsNameDirty] = useState<boolean>(false);
+    // const { enqueueSnackbar } = useSnackbar();
+    // const dispatch = useDispatch();
 
-    const resetState = () => {
-        setCredentialsCollectionFormState(collection);
-        setFormValidationState(initialFormValidationState);
-        setInputErrorType(null);
-        setIsNameDirty(false);
-    };
-
-    const handleClose = () => {
-        onClose();
-        resetState();
-    };
-
-    const { enqueueSnackbar } = useSnackbar();
-    const { translate } = useTranslations();
+    // const { activated: { nonAdmins } } = useSelector((state) => state.users);
     // const { user: currentUser } = useSelector((state) => state.auth);
 
-    // const isOwner = !process || currentUser.login === process?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
+    // // modify to check if access type is admin or user
+    // const canEdit = true; 
+   
+    // const [initialCollectionData, setInitialCollectionData] = useState<CreateCredentialsCollectionDto>(prepareIncompleteCollectionEntity(currentUser, collection));
+    // const [collectionData, setCollectionData] = useState<CreateCredentialsCollectionDto>(initialCollectionData);
 
-    const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
-    const dispatch = useDispatch();
+    // const shareableUsers = useMemo(() => ({
+    //     loading: nonAdmins.loading,
+    //     all: nonAdmins.all.filter(user => user.email !== currentUser.email)
+    // }), [nonAdmins, currentUser.email]);
 
-    useEffect(() => {
-        setFormValidationState(initialFormValidationState);
-    }, [collection]);
+    // const closeDialog = () => {
+    //     onClose();
+    //     setTimeout(() => clearForm(), 1000);
+    // };
 
-    useEffect(() => {
-        if (credentialsCollectionFormState.name) {
-            setIsNameDirty(true);
-        }
-        if (isNameDirty && (!credentialsCollectionFormState.name || !credentialsCollectionFormState.name.trim())) {
-            setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
-            setFormValidationState(false);
-            return;
-        }
-        setFormValidationState(true);
-        setInputErrorType(null);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [credentialsCollectionFormState.name]);
-
-    const handleSubmit = () => {
-        try {
-            if (!checkIsFormValid()) {
-                enqueueSnackbar(inputErrorMessages[inputErrorType], { variant: 'error' });
-                return;
-            }
-            // if (!credential.id) {
-            //     const credentialInfo: Credential = { ...credential };
-            //     dispatch(
-            //         credentialActions.createCredential(credentialInfo)
-            //     ).then((res) => onAdd(res.payload));
-            //     return;
-            // }
-            // if (credentialFormState.collection?.id === null) {
-            //     const { collection: _collection, ...rest } = credentialFormState;
-            //     onAdd(rest);
-            // }
-            onAdd(credentialsCollectionFormState);
-        } catch (error) {
-            const message = error?.message ?? translate('Credentials.Collection.Add.Form.Error.General');
-            const translationKey = `Credentials.Collection.Add.Form.Error.${capitalizeFirstLetter({ text: error.message, delimiter: ' ' })}`;
-            checkIfKeyExists(translationKey)
-                ? enqueueSnackbar(
-                    translate(translationKey), {
-                        variant: 'error'
-                    }
-                )
-                : enqueueSnackbar(
-                    message, {
-                        variant: 'error'
-                    }
-                );
-        }
-    };
-
-    useEffect(() => {
-        setCredentialsCollectionFormState(collection);
-    }, [collection]);
+    // const clearForm = () => { console.log('clearForm'); };
+    // const handleSubmit = () => { console.log('submit'); };
+    // const handleClose = () => { console.log('close'); };
 
     return (
-        <CustomDialog
-            isOpen={open}
-            onClose={handleClose}
-            title={collection.id ? translate('Credentials.Collection.Edit.Title') : translate('Credentials.Collection.Add')}
-            confirmButtonOptions={{
-                label: translate('Common.Save'),
-                onClick: handleSubmit,
-                isDisabled: !checkIsFormValid(),
-            }}
-            cancelButtonOptions={{
-                label: translate('Common.Cancel'),
-                onClick: handleClose,
-            }}
-        >
-            <Content sx={{ overflowX: 'hidden' }}>
-                <Form $gap={0}>
-                    <GeneralOptions
-                        credentialsCollectionData={credentialsCollectionFormState}
-                        setCredentialsCollectionData={setCredentialsCollectionFormState}
-                        formValidationState={formValidationState}
-                        setFormValidationState={setFormValidationState}
-                        inputErrorType={inputErrorType}
+        <Content sx={{ overflowX: 'hidden' }}>
+            <Form $gap={0}>
+                <GeneralOptions
+                    credentialsCollectionData={credentialsCollectionFormState}
+                    // setCredentialsCollectionData={setCredentialsCollectionFormState}
+                    formValidationState={formValidationState}
+                    // setFormValidationState={setFormValidationState}
+                    inputErrorType={inputErrorType}
+                    // formState={credentialsCollectionFormState}
+                    // setFormState={setCredentialsCollectionFormState}
+                    // isOwner={isOwner}
+                />
+                {/* <SharedWithOptions
+                        collectionData={credentialsCollectionFormState}
+                        handleChange={handleFormPropertyChange}
+                        shareableUsers={shareableUsers}
+                        canEdit={canEdit}
                         isEditDialogOpen={open}
-                        formState={credentialsCollectionFormState}
-                        setFormState={setCredentialsCollectionFormState}
-                        // isOwner={isOwner}
-                    />
-                    {/* <AccessOptions
-                        processData={processFormState}
-                        setProcessData={setProcessFormState}
-                        isEditDialogOpen={open}
-                        isOwner={isOwner}
                     /> */}
-                    
-                </Form>
-            </Content>
-        </CustomDialog>
+            </Form>
+        </Content>
     );
 };
 

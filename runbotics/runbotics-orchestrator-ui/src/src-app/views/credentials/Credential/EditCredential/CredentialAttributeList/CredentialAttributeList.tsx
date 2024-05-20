@@ -4,6 +4,8 @@ import { Grid } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { useSelector } from '#src-app/store';
+
 import { AddAttribute } from '../CredentialAttribute/AddAttribute';
 import CredentialAttribute from '../CredentialAttribute/CredentialAttribute';
 import { Attribute } from '../CredentialAttribute/CredentialAttribute.types';
@@ -12,9 +14,10 @@ import { initialAttributeValues, initialAttributes } from '../CredentialAttribut
 const CredentialAttributesList = () => {
     const { translate } = useTranslations();
     const [attributes, setAttributes] = useState<Attribute[]>(initialAttributes);
+    const { user: currentUser } = useSelector((state) => state.auth);
 
     const handleAddAttribute = () => {
-        const newAttribute = {...initialAttributeValues, id: `${attributes.length + 1}` };
+        const newAttribute = {...initialAttributeValues, id: undefined, createdOn: new Date().toDateString(), createdBy: currentUser.email };
         setAttributes([...attributes, newAttribute]);
     };
 

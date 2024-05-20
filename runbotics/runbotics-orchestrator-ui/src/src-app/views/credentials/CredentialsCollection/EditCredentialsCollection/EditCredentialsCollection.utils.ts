@@ -1,7 +1,7 @@
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { CreateCredentialsCollectionDto } from '../CredentialsCollection.types';
+import { CreateCredentialsCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
 
 export const DEFAULT_COLLECTION_COLOR = 'DARK_ORANGE';
 
@@ -17,14 +17,30 @@ export const inputErrorMessages: Record<InputErrorType, string> = {
 
 export const initialFormValidationState = true;
 
-export const getInitialCredentialsCollectionData = () => {
-    const initialCredentialsCollectionData: CreateCredentialsCollectionDto = {
-        name: '',
-        description: '',
-        color: DEFAULT_COLLECTION_COLOR,
-        tenantId: '', // to update
-        users: []
+const initialCredentialsCollectionData: CreateCredentialsCollectionDto = {
+    name: '',
+    description: '',
+    color: DEFAULT_COLLECTION_COLOR,
+    tenantId: '', // to update
+    users: [],
+    isPrivate: true,
+    credentials: []
+};
+
+export const getInitialCredentialsCollectionData = (collection: null | EditCredentialsCollectionDto): CreateCredentialsCollectionDto | EditCredentialsCollectionDto => {
+    if (!collection) {
+        return initialCredentialsCollectionData;
+    }
+
+    const editCredentialInitialData: EditCredentialsCollectionDto = {
+        name: collection.name,
+        description: collection.description,
+        color: collection.color,
+        isPrivate: collection.isPrivate,
+        credentials: collection.credentials,
+        users: collection.users
     };
 
-    return initialCredentialsCollectionData;
+    return editCredentialInitialData;
+
 };

@@ -4,20 +4,20 @@ import { FormControl, InputLabel, MenuItem, Typography } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import { ColorDot } from './CollectionColor.styled';
-import { CollectionColors, ColorName } from './CollectionColor.types';
+import { CollectionColorName, collectionColors } from './CollectionColor.types';
 
-const CollectionColorSelect = () => {
-    const [collectionColor, setCollectionColor] = useState(CollectionColors.DARK_ORANGE.hex);
+const CollectionColorSelect = ({currentColor}) => {
+    const [collectionColor, setCollectionColor] = useState(currentColor ? collectionColors[currentColor].hex : collectionColors.DARK_ORANGE.hex);
 
     const handleChange = (event: SelectChangeEvent) => {
         setCollectionColor(event.target.value);
     };
 
-    const colorsToChoose = Object.keys(CollectionColors).map((colorName: ColorName) => (
-        <MenuItem key={CollectionColors[colorName].hex} value={CollectionColors[colorName].hex}>
-            <ColorDot collectionColor={CollectionColors[colorName].hex}/>
+    const colorsToChoose = Object.keys(collectionColors).map((colorName: CollectionColorName) => (
+        <MenuItem key={collectionColors[colorName].hex} value={collectionColors[colorName].hex}>
+            <ColorDot collectionColor={collectionColors[colorName].hex}/>
             <Typography>
-                {CollectionColors[colorName].name}
+                {collectionColors[colorName].name}
             </Typography>
         </MenuItem>
     ));

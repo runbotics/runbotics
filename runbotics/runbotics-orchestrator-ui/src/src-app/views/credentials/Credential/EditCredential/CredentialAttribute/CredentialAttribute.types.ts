@@ -37,4 +37,4 @@ export interface MaskedAttribute extends BasicAttributeDto {
     masked: true;
 }
 
-export type Attribute = UnmaskedAttribute | MaskedAttribute;
+export type Attribute = UnmaskedAttribute | MaskedAttribute

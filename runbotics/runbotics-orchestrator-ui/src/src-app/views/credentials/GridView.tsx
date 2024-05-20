@@ -2,11 +2,19 @@ import React, { VFC } from 'react';
 
 import { Pagination, Box } from '@mui/material';
 
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
+import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 
-import { CollectionColors } from './CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import If from '#src-app/components/utils/If';
+
+import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
+
+import { getCredentials } from './Credentials/Credentials.utils';
+import { getCredentialsCollections } from './CredentialsCollection/CredenitlaCollection.utils';
+import { CredentialsTabs } from './Header';
 import { CollectionsRoot } from '../bot/BotCollectionView/BotCollectionView.styles';
 
 const TileGrid = styled.div`
@@ -17,87 +25,33 @@ const TileGrid = styled.div`
     gap: 1rem;
 `;
 
-const GridView: VFC = () => (
-    <>
-        <CollectionsRoot>
-            <TileGrid>
-                <CredentialTile
-                    credential={{
-                        id: 'jakies_id',
-                        name: 'Jakas Nazwa',
-                        collectionName: 'Jakas kolekcja',
-                        description: 'Jakies description',
-                        collectionColor: CollectionColors.LIGHT_ORANGE.hex
-                    }}
-                />
-                <CredentialTile
-                    credential={{
-                        id: 'tymczasowe_id',
-                        name: 'Tymczasowa Nazwa',
-                        collectionName: 'Tymczasowa kolekcja',
-                        description: 'Tymczasowe description',
-                        collectionColor: CollectionColors.DARK_ORANGE.hex
-                    }}
-                />
-                <CredentialTile
-                    credential={{
-                        id: 'zmyslone_id',
-                        name: 'Zmyslona Nazwa',
-                        collectionName: 'Zmyslona kolekcja',
-                        description: 'Zmyslone description',
-                        collectionColor: CollectionColors.LIGHT_GREEN.hex
-                    }}
-                />
-                <CredentialTile
-                    credential={{
-                        id: 'nowe_id',
-                        name: 'Nowa Nazwa',
-                        collectionName: 'Nowa kolekcja',
-                        description: 'Jakies description',
-                        collectionColor: CollectionColors.DARK_GREEN.hex
-                    }}
-                />
-                <CredentialTile
-                    credential={{
-                        id: 'unikalne_id',
-                        name: 'Unikalna Nazwa',
-                        collectionName: 'Unikalna kolekcja',
-                        description: 'Unikalne description',
-                        collectionColor: CollectionColors.LIGHT_BLUE.hex
-                    }}
-                />
-                <CredentialTile
-                    credential={{
-                        id: 'ciemne_niebieskie_id',
-                        name: 'Ciemna Niebieska Nazwa',
-                        collectionName: 'Ciemna niebieska kolekcja',
-                        description: 'Ciemne niebieska description',
-                        collectionColor: CollectionColors.DARK_BLUE.hex
-                    }}
-                />
-                <CredentialTile
-                    credential={{
-                        id: 'szare_id',
-                        name: 'Szara Nazwa',
-                        collectionName: 'Szara kolekcja',
-                        description: 'Szare description',
-                        collectionColor: CollectionColors.LIGHT_GREY.hex
-                    }}
-                />
-                <CredentialTile
-                    credential={{
-                        id: 'ciemne_szare_id',
-                        name: 'Ciemna Szara Nazwa',
-                        collectionName: 'Ciemna szara kolekcja',
-                        description: 'Ciemne szare description',
-                        collectionColor: CollectionColors.DARK_GREY.hex
-                    }}
-                />
-            </TileGrid>
-        </CollectionsRoot>
-        <Box mt={6} display="flex" justifyContent="center">
-            <Pagination count={1} />
-        </Box>
-    </>
-);
+const GridView: VFC = () => {
+    const allCredentials = getCredentials();
+    const allCollections = getCredentialsCollections();
+    const router = useRouter();
+    const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
+    
+    const credentialsTiles = allCredentials.map(credential => <CredentialTile key={credential.id} credential={credential}/>);
+
+    const collectionsTiles = allCollections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection}/>);
+
+    return (
+        <>
+            <CollectionsRoot>
+                <TileGrid>
+                    <If condition={!isCollectionsTab}>
+                        {credentialsTiles}
+                    </If>
+                    <If condition={isCollectionsTab}>
+                        {collectionsTiles}
+                    </If>
+                </TileGrid>
+            </CollectionsRoot>
+            <Box mt={6} display="flex" justifyContent="center">
+                <Pagination count={1} />
+            </Box>
+        </>
+    );
+};
 export default GridView;
+

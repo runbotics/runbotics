@@ -40,19 +40,7 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({cre
                     variant="outlined"
                     InputLabelProps={{ shrink: true }}
                 />
-                {/* <TagsInput
-                    selected={selectedTagsNames}
-                    setSelected={setSelectedTagsNames}
-                    formState={formState}
-                    setFormState={setFormState}
-                    search={search}
-                    setSearch={setSearch}
-                    autocompleteList={autocompleteTagList}
-                    setAutocompleteList={setAutocompleteTagList}
-                    maxAmount={MAX_NUMBER_OF_TAGS}
-                    isOwner={isOwner}
-                /> */}
-                <CollectionColorSelect/>
+                <CollectionColorSelect currentColor={credentialsCollectionData.color}/>
             </Box>
         </Accordion>
     );

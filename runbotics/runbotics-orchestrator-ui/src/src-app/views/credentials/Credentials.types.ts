@@ -6,3 +6,7 @@ export interface CredentialsMetadataDTO {
     modifiedOn?: Date;
     modifiedBy?: User;
 }
+
+export interface GridViewProps {
+    isCollectionsTab: boolean;
+}

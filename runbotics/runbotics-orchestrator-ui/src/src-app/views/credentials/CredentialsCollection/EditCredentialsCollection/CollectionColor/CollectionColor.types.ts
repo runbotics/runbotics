@@ -6,10 +6,12 @@ interface ICollectionColor {
     hex: string
 }
 
-export type CollectionColorName =
+export const DEFAULT_CREDENTIALS_COLLECTION_COLOR = 'DARK_ORANGE';
+
+export type ColorNames =
  'LIGHT_ORANGE' | 'DARK_ORANGE' | 'LIGHT_GREEN' | 'DARK_GREEN' | 'LIGHT_BLUE' | 'DARK_BLUE' | 'LIGHT_GREY' | 'DARK_GREY'
 
-export const CollectionColors: {[key in CollectionColorName]: ICollectionColor} = {
+export const collectionColors: {[key in ColorNames]: ICollectionColor} = {
     LIGHT_ORANGE: {name: 'light orange', hex: orange[300]},
     DARK_ORANGE: {name: 'dark orange', hex: orange[600]},
     LIGHT_GREEN: {name: 'light green', hex: green.A200},
@@ -19,3 +21,9 @@ export const CollectionColors: {[key in CollectionColorName]: ICollectionColor} 
     LIGHT_GREY: {name: 'light grey', hex: blueGrey[200]},
     DARK_GREY: {name: 'dark grey', hex: blueGrey[300]},
 };
+
+export type CollectionColorHex = (typeof collectionColors)[ColorNames]['hex'];
+
+export type CollectionColorName = (typeof collectionColors)[ColorNames]['hex'];
+
+

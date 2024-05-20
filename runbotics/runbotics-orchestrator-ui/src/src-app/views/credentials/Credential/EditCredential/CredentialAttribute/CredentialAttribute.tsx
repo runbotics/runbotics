@@ -35,7 +35,8 @@ type CredentialAttributeProps = {
 
 const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttribute, deleteAttribute }) => {
     const { translate } = useTranslations();
-    const [isEditMode, setIsEditMode] = useState(false);
+    const isNewAttribute = attribute.id === undefined;
+    const [isEditMode, setIsEditMode] = useState(isNewAttribute);
     const [currentAttribute, setCurrentAttribute] = useState(attribute);
 
     useEffect(() => {

@@ -5,14 +5,12 @@ import { Button, SvgIcon } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import EditCredentialsCollection from './EditCredentialsCollection/EditCredentialsCollection';
-import { getInitialCredentialsCollectionData } from './EditCredentialsCollection/EditCredentialsCollection.utils';
+import CredentialsCollectionModifyDialog from './CredentialsCollectionModifyDialog';
 
 const AddCredentialsCollection: FC = () => {
     const { translate } = useTranslations();
     const [showDialog, setShowDialog] = useState(false);
 
-    const initialCredentialsCollectionInfo = getInitialCredentialsCollectionData();
     const handleAdd = () => {};
 
     return (
@@ -29,11 +27,10 @@ const AddCredentialsCollection: FC = () => {
             >
                 {translate('Credentials.Collection.Add')}
             </Button>
-            <EditCredentialsCollection
+            <CredentialsCollectionModifyDialog
                 open={showDialog}
                 onClose={() => setShowDialog(false)}
-                onAdd={handleAdd}
-                collection={initialCredentialsCollectionInfo}
+                collection={null}
             />
         </>
     );
