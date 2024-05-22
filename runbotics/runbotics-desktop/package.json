@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.10.0-SNAPSHOT.71",
+    "version": "2.11.0-SNAPSHOT.0",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@azure/msal-node": "^1.15.0",
-        "@runbotics/nut-js": "^3.1.2",
+        "@runbotics/nut-js": "3.1.2",
         "@microsoft/microsoft-graph-client": "^3.0.5",
         "@nestjs-modules/mailer": "1.8.1",
         "@nestjs/common": "^9.2.1",
@@ -32,7 +32,6 @@
         "@nestjs/core": "^9.2.1",
         "@nestjs/microservices": "^9.2.1",
         "@nestjs/schedule": "^3.0.3",
-        "@runbotics/nut-js": "3.1.2",
         "@stomp/stompjs": "^6.1.0",
         "arch": "^2.1.1",
         "asana": "^0.18.6",

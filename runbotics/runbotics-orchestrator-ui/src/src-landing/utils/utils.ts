@@ -8,6 +8,7 @@ export const RPA_SECTION_ID = 'rpa';
 export const BLOG_SECTION_ID = 'blog';
 export const OPEN_SOURCE_SECTION_ID = 'open-source';
 export const PARTNER_SECTION_ID = 'partners';
+export const TEAM_SECTION_ID = 'team';
 export const TEMPLATE_SECTION_ID = 'resources';
 export const CONTACT_US_SECTION_ID = 'contact-us';
 

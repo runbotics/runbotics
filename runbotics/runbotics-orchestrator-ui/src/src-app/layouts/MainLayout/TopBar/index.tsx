@@ -106,7 +106,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     {isGuest ? (
                         <Logo white />
                     ) : (
-                        <RouterLink href="/app/processes">
+                        <RouterLink href="/app/processes/collections">
                             <Logo white />
                         </RouterLink>
                     )}

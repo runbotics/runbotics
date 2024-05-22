@@ -33,6 +33,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    z-index: 1;
     margin-top: $margin-16;
     margin-bottom: $margin-5;
     margin-left: $margin-10;
@@ -47,6 +48,7 @@
     position: absolute;
     width: 26%;
     height: auto;
+    z-index: -1;
     right: $margin-10;
     top: 30%;
 }
@@ -125,6 +127,7 @@
     .team {
         width: 72%;
         min-height: 406px;
+        margin-top: $margin-12;
         margin-left: auto;
         margin-right: auto;
     }
@@ -134,8 +137,7 @@
     }
 
     .iconBackground {
-        width: 15%;
-        height: auto;
+        width: 100px;
         top: 45%;
     }
 
@@ -158,22 +160,37 @@
 }
 
 @media screen and (max-width: $breakpoint-sm) {
+
+    .section{
+        padding-left: $padding-6;
+        padding-right: $padding-6;
+    }
+
+    .team{
+        width: 100%;
+    }
+    
+    .team h3 {
+        padding-bottom: $padding-2;
+    }
+
     .iconBackground {
         top: 50%;
     }
 
     .photo {
-        width: 74%;
-        height: 450px;
+        width: 100%;
+        height: 420px;
     }
 
     .manager {
         width: 80%;
+        padding-top: $padding-2;
     }
 
     .numbers {
         grid-row: 3;
-        padding: $padding-12 $padding-4 $padding-12 $padding-4;
+        padding: $padding-12 $padding-0 $padding-12 $padding-0;
     }
 }
 

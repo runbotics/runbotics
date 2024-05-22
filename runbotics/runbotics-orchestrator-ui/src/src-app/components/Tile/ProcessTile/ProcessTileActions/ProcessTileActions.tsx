@@ -3,6 +3,7 @@ import React, { useState, VFC, useContext } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { FeatureKey, IProcess, Role } from 'runbotics-common';
@@ -10,7 +11,6 @@ import { FeatureKey, IProcess, Role } from 'runbotics-common';
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { useOwner } from '#src-app/hooks/useOwner';
-import useProcessCollection from '#src-app/hooks/useProcessCollection';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
@@ -30,7 +30,8 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const { page, pageSize, search } = useContext(ProcessPageContext);
-    const { currentCollectionId: collectionId } = useProcessCollection();
+    const searchParams = useSearchParams();
+    const collectionId = searchParams.get('collectionId');
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
 

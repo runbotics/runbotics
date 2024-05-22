@@ -40,7 +40,7 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Name.Info'),
                         }
                     },
-                    zipPath: {
+                    path: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Path.Info'),
                         },
