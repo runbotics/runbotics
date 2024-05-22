@@ -16,6 +16,10 @@ import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
+import { TenantModule } from '#/database/tenant/tenant.module';
+import { ProcessContextModule } from '#/database/process-context/process-context.module';
+import { ProcessContextSecretModule } from '#/database/process-context-secret/process-context-secret.module';
+import { SecretModule } from '#/database/secret/secret.module';
 
 @Module({
     imports: [
@@ -49,6 +53,10 @@ import { GuestModule } from './guest/guest.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
+        TenantModule,
+        ProcessContextModule,
+        ProcessContextSecretModule,
+        SecretModule,
     ],
     exports: [
         AuthorityModule,
@@ -65,6 +73,10 @@ import { GuestModule } from './guest/guest.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
+        TenantModule,
+        ProcessContextModule,
+        ProcessContextSecretModule,
+        SecretModule,
     ],
 })
 export class DatabaseModule { }

@@ -64,7 +64,9 @@
         "mime-types": "~2.1.35",
         "@nestjs/schedule": "^2.1.0",
         "cross-fetch": "^3.1.5",
-        "@nestjs-modules/mailer": "1.8.1"
+        "@nestjs-modules/mailer": "1.8.1",
+        "zod": "~3.23.8",
+        "unplugin-swc": "~1.4.5"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",

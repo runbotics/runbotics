@@ -1,13 +1,13 @@
 export interface DecryptedProcessContextDto {
-    id: number;
+    id: string;
     
-    processId: string;
+    processId: number;
 
     secrets: DecryptedProcessContextDtoSecret[];
 }
 
 export interface DecryptedProcessContextDtoSecret {
-    id: number;
+    id: string;
 
     name: string;
     
@@ -21,7 +21,7 @@ export interface DecryptedProcessContextDtoSecret {
 interface SecretDto {
     id: string;
 
-    tenantId: number;
+    tenantId: string;
 
     data: string;
 }
