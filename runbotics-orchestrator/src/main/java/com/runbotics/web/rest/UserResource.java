@@ -188,6 +188,22 @@ public class UserResource {
         );
     }
 
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
+    @PatchMapping("/users/tenant/{id}")
+    public ResponseEntity<AdminUserDTO> partialUpdateInTenant(
+        @PathVariable(value = "id", required = true) Long id,
+        @NotNull @RequestBody AdminUserDTO adminUserDTO
+    ) {
+        log.debug("REST request to partial update User in tenant partially : {}, {}", id, adminUserDTO);
+
+        Optional<AdminUserDTO> result = userService.partialUpdateInTenant(adminUserDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, adminUserDTO.getId().toString())
+        );
+    }
+
     /**
      * {@code GET /admin/users} : get all users with all the details - calling this are only allowed for the administrators.
      *

@@ -364,9 +364,64 @@ public class UserService {
                             }
                         );
 
+                    Tenant newTenant = tenantRepository.findById(adminUserDTO.getTenant().getId()).orElseThrow(
+                        () -> new BadRequestAlertException("Tenant not found", ENTITY_NAME, "tenantNotFound")
+                    );
+                    adminUserDTO.setTenant(null);
+                    adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+                    existingUser.setTenant(newTenant);
+
+                    if (adminUserDTO.getRoles() != null) {
+                        Set<Authority> managedAuthorities = existingUser.getAuthorities();
+                        managedAuthorities.clear();
+                        adminUserDTO
+                            .getRoles()
+                            .stream()
+                            .map(authorityRepository::findById)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .forEach(managedAuthorities::add);
+                    }
+
+                    return existingUser;
+                }
+            )
+            .map(userRepository::save)
+            .map(userMapper::userToAdminUserDTO);
+    }
+
+    public Optional<AdminUserDTO> partialUpdateInTenant(AdminUserDTO adminUserDTO) {
+        User requester = getUserWithAuthorities().get();
+
+        adminUserDTO.setTenant(null);
+        excludeAdminUserDTOFields(adminUserDTO);
+        return userRepository
+            .findById(adminUserDTO.getId())
+            .map(
+                existingUser -> {
+                    if (!requester.getTenant().getId().equals(existingUser.getTenant().getId())) {
+                        throw new BadRequestAlertException("Edited user is not from the same tenant", ENTITY_NAME, "notValidTenant");
+                    }
+
+                    userRepository
+                        .findOtherUserByLoginOrEmail(adminUserDTO.getId(), adminUserDTO.getEmail(), adminUserDTO.getLogin())
+                        .ifPresent(
+                            user -> {
+                                if (user.getEmail().equals(adminUserDTO.getEmail())) {
+                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
+                                } else {
+                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
+                                }
+                            }
+                        );
+
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
 
                     if (adminUserDTO.getRoles() != null) {
+                        if (!checkTenantAllowedRoles(adminUserDTO.getRoles())) {
+                            throw new BadRequestAlertException("Not allowed role", ENTITY_NAME, "badRole");
+                        }
+
                         Set<Authority> managedAuthorities = existingUser.getAuthorities();
                         managedAuthorities.clear();
                         adminUserDTO
@@ -561,6 +616,15 @@ public class UserService {
         if (adminUserDTO.getFeatureKeys() != null) {
             throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "featureKeys");
         }
+    }
+
+    private boolean checkTenantAllowedRoles(Set<String> userRoles) {
+        Set<String> allowedRoles = new HashSet<>();
+        allowedRoles.add(AuthoritiesConstants.USER);
+        allowedRoles.add(AuthoritiesConstants.EXTERNAL_USER);
+        allowedRoles.add(AuthoritiesConstants.TENANT_ADMIN);
+
+        return userRoles.stream().allMatch(allowedRoles::contains);
     }
 
     private Page<AdminUserDTO> fetchAllNotActivatedUsersByTenant(Pageable pageable, UserCriteria criteria, Tenant tenant) {

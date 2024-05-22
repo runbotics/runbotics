@@ -49,7 +49,8 @@
 
         <sql>
             INSERT INTO feature_key(name) VALUES
-            ('TENANT_CREATE_INVITE_CODE')
+            ('TENANT_CREATE_INVITE_CODE'),
+            ('TENANT_EDIT_USER')
             ON CONFLICT DO NOTHING;
         </sql>
     </changeSet>
@@ -62,7 +63,9 @@
         <sql>
             INSERT INTO authority_feature_key(authority, feature_key) VALUES
             ('ROLE_ADMIN', 'TENANT_CREATE_INVITE_CODE'),
-            ('ROLE_TENANT_ADMIN', 'TENANT_CREATE_INVITE_CODE')
+            ('ROLE_ADMIN', 'TENANT_EDIT_USER'),
+            ('ROLE_TENANT_ADMIN', 'TENANT_CREATE_INVITE_CODE'),
+            ('ROLE_TENANT_ADMIN', 'TENANT_EDIT_USER')
             ON CONFLICT DO NOTHING;
         </sql>
     </changeSet>

@@ -199,7 +199,7 @@ public class AdminUserDTO {
         return tenant;
     }
 
-    public void setTenantId(TenantDTO tenant) {
+    public void setTenant(TenantDTO tenant) {
         this.tenant = tenant;
     }
 

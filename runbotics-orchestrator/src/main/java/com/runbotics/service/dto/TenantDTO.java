@@ -23,7 +23,11 @@ public class TenantDTO {
     public TenantDTO(Tenant tenant) {
         this.id = tenant.getId();
         this.name = tenant.getName();
-        this.createdById = tenant.getCreatedBy().getId();
+        if (tenant.getCreated() == null) {
+            this.createdById = null;
+        } else {
+            this.createdById = tenant.getCreatedBy().getId();
+        }
         this.created = tenant.getCreated();
         this.updated = tenant.getUpdated();
     }
