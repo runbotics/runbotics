@@ -9,9 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name= "tenant_invite_code")
-public class TenantInviteCode implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class TenantInviteCode {
 
     @Id
     @GeneratedValue(generator = "UUID")

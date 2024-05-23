@@ -357,19 +357,23 @@ public class UserService {
                         .ifPresent(
                             user -> {
                                 if (user.getEmail().equals(adminUserDTO.getEmail())) {
-                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
+                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "AlreadyUsedEmail");
                                 } else {
-                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
+                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "AlreadyUsedLogin");
                                 }
                             }
                         );
 
-                    Tenant newTenant = tenantRepository.findById(adminUserDTO.getTenant().getId()).orElseThrow(
-                        () -> new BadRequestAlertException("Tenant not found", ENTITY_NAME, "tenantNotFound")
-                    );
-                    adminUserDTO.setTenant(null);
-                    adminUserMapper.partialUpdate(existingUser, adminUserDTO);
-                    existingUser.setTenant(newTenant);
+                    if (adminUserDTO.getTenant() != null) {
+                        Tenant newTenant = tenantRepository.findById(adminUserDTO.getTenant().getId()).orElseThrow(
+                            () -> new BadRequestAlertException("Tenant not found", ENTITY_NAME, "TenantNotFound")
+                        );
+                        adminUserDTO.setTenant(null);
+                        adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+                        existingUser.setTenant(newTenant);
+                    } else {
+                        adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+                    }
 
                     if (adminUserDTO.getRoles() != null) {
                         Set<Authority> managedAuthorities = existingUser.getAuthorities();
@@ -400,7 +404,7 @@ public class UserService {
             .map(
                 existingUser -> {
                     if (!requester.getTenant().getId().equals(existingUser.getTenant().getId())) {
-                        throw new BadRequestAlertException("Edited user is not from the same tenant", ENTITY_NAME, "notValidTenant");
+                        throw new BadRequestAlertException("Edited user is not from the same tenant", ENTITY_NAME, "NotValidTenant");
                     }
 
                     userRepository
@@ -408,9 +412,9 @@ public class UserService {
                         .ifPresent(
                             user -> {
                                 if (user.getEmail().equals(adminUserDTO.getEmail())) {
-                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
+                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "AlreadyUsedEmail");
                                 } else {
-                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
+                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "AlreadyUsedLogin");
                                 }
                             }
                         );
@@ -419,7 +423,7 @@ public class UserService {
 
                     if (adminUserDTO.getRoles() != null) {
                         if (!checkTenantAllowedRoles(adminUserDTO.getRoles())) {
-                            throw new BadRequestAlertException("Not allowed role", ENTITY_NAME, "badRole");
+                            throw new BadRequestAlertException("Not allowed role", ENTITY_NAME, "NotAllowedRole");
                         }
 
                         Set<Authority> managedAuthorities = existingUser.getAuthorities();
@@ -504,10 +508,11 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable, UserCriteria criteria) {
-        if (criteria.getTenantId() == null) {
-            if (criteria.getEmail() == null) {
-                return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
-            }
+        if (criteria.getTenantId() == null && criteria.getEmail() == null) {
+            return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
+        }
+
+        if (criteria.getTenantId() == null && criteria.getEmail() != null) {
             return userRepository
                 .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
                 .map(AdminUserDTO::new);
@@ -522,10 +527,10 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllActivatedUsers(Pageable pageable, UserCriteria criteria) {
-        if (criteria.getTenantId() == null) {
-            if (criteria.getEmail() == null) {
-                return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
-            }
+        if (criteria.getTenantId() == null && criteria.getEmail() == null) {
+            return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
+        }
+        if (criteria.getTenantId() == null && criteria.getEmail() != null) {
             return userRepository
                 .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
                 .map(AdminUserDTO::new);
