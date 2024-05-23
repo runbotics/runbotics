@@ -9,7 +9,7 @@ import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
 import {
     CreateFolderParams, DownloadFileParams, GetFileByPathParams,
     Site, UploadFileParams, MoveFileParams, DeleteItemParams,
-    CreateShareLinkParams
+    CreateShareLinkParams, ODataCollection, SharepointListItem,
 } from './share-point.types';
 import { Drive, DriveItem, Permission } from '../common.types';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
@@ -21,6 +21,12 @@ export class SharePointService {
     constructor(
         private readonly microsoftGraphService: MicrosoftGraphService,
     ) {}
+    
+    async getListItems (siteId: string, listName: string): Promise<SharepointListItem[]> {
+        const result = await this.microsoftGraphService
+            .get(`/sites/${siteId}/lists/${listName}/items?expand=fields`) as ODataCollection<SharepointListItem>;
+        return result.value;
+    }
 
     async downloadFileByPath({
         siteId, driveId, filePath, localDirectory,

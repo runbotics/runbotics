@@ -8,10 +8,14 @@ import { SharePointService } from '#action/microsoft/share-point';
 import { RunboticsLogger } from '#logger';
 
 import {
-    CloudFileActionRequest, CloudFileCreateFolderActionInput,
-    CloudFileDownloadFileActionInput, CloudFileMoveFileActionInput,
-    CloudFileUploadFileActionInput, SharePointDownloadFileActionInput,
-    CloudFileDeleteItemActionInput, CloudFileCreateShareLink
+    CloudFileActionRequest,
+    CloudFileCreateFolderActionInput,
+    CloudFileCreateShareLink,
+    CloudFileDeleteItemActionInput,
+    CloudFileDownloadFileActionInput,
+    CloudFileMoveFileActionInput,
+    CloudFileUploadFileActionInput,
+    SharePointDownloadFileActionInput, SharepointGetListItems,
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
 import { readFileSync } from 'fs';
@@ -178,6 +182,8 @@ export class CloudFileActionHandler extends StatelessActionHandler {
                 return this.deleteItem(request.input);
             case CloudFileAction.CREATE_SHARE_LINK:
                 return this.createShareLink(request.input);
+            case CloudFileAction.GET_SHAREPOINT_LIST_ITEMS:
+                return this.getSharepointListItems(request.input);
             default:
                 throw new Error('Action not found');
         }
@@ -212,5 +218,11 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             content,
             contentType: mime,
         };
+    }
+    
+    private async getSharepointListItems({ listName, siteName }: SharepointGetListItems){
+        const site = (await this.sharePointService.getSitesByName(siteName)).value[0];
+        
+        return this.sharePointService.getListItems(site.id, listName);
     }
 }
