@@ -12,10 +12,6 @@ import { ServerConfigService } from '#config';
                     port: Number(serverConfigService.mailPort),
                     secure: false, // upgrade later with STARTTLS
                     tls: { rejectUnauthorized: false },
-                    auth: {
-                        user: serverConfigService.mailUsername,
-                        pass: serverConfigService.mailPassword,
-                    },
                 },
                 defaults: {
                     from: 'runbotics',

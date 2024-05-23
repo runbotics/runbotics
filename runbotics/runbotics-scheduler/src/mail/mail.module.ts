@@ -17,10 +17,6 @@ import { ProcessModule } from '#/database/process/process.module';
                     port: Number(config.mailConfig.mailPort),
                     secure: false,
                     tls: { rejectUnauthorized: false },
-                    auth: {
-                        user: config.mailConfig.mailUsername,
-                        pass: config.mailConfig.mailPassword,
-                    },
                 },
                 defaults: {
                     from: config.mailConfig.mailUsername,
