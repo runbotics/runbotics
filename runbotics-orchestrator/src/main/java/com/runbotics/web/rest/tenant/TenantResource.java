@@ -4,6 +4,9 @@ import com.runbotics.security.FeatureKeyConstants;
 import com.runbotics.service.TenantService;
 import com.runbotics.service.dto.TenantDTO;
 import java.util.Optional;
+import java.util.UUID;
+
+import com.runbotics.service.dto.TenantInviteCodeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,4 +52,13 @@ public class TenantResource {
     //            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, tenantDTO.getId().toString())
     //        );
     //    }
+
+    @GetMapping("/invite-code")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_CREATE_INVITE_CODE + "')")
+    public ResponseEntity<TenantInviteCodeDTO> getNewInviteCode() {
+        log.debug("REST request to get new tenant invite code");
+
+        TenantInviteCodeDTO newInviteCode = tenantService.generateInviteCode();
+        return ResponseEntity.ok().body(newInviteCode);
+    }
 }

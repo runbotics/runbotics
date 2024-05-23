@@ -195,6 +195,12 @@ export enum FeatureKey {
 
     // Allows to edit the resources assigned to the tenant
     TENANT_EDIT = 'TENANT_EDIT',
+
+    // Allows to edit users assigned to the tenant
+    TENANT_EDIT_USER = 'TENANT_EDIT_USER',
+
+    // Allows to create invite code for tenant
+    TENANT_CREATE_INVITE_CODE = 'TENANT_CREATE_INVITE_CODE',
 }
 
 export interface IFeatureKey {
