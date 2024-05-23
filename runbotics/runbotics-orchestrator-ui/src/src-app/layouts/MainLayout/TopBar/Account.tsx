@@ -130,6 +130,11 @@ const Account: FC = () => {
                         </MenuLink>
                     </MenuItem>
                     <MenuItem>
+                        <MenuLink href='/app/tenants'>
+                            {translate('Account.Tenants')}
+                        </MenuLink>
+                    </MenuItem>
+                    <MenuItem>
                         <MenuLink href='/monitoring/grafana'>
                             {translate('Account.Monitoring')}
                         </MenuLink>

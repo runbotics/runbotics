@@ -14,8 +14,8 @@ import { Role } from 'runbotics-common';
 import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { IGlobalVariable, UserDTO } from '#src-app/types/model/global-variable.model';
-import { IUser } from '#src-app/types/model/user.model';
+import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
+import { IUser, UserDTO } from '#src-app/types/model/user.model';
 
 interface ColumnsActions {
     onDelete: (globalVariable: IGlobalVariable) => void;

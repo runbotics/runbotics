@@ -1,7 +1,11 @@
 package com.runbotics.service;
 
 import com.runbotics.domain.Tenant;
+import com.runbotics.service.criteria.TenantCriteria;
 import com.runbotics.service.dto.TenantDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,6 +15,8 @@ import java.util.UUID;
  */
 public interface TenantService {
     List<TenantDTO> getAll();
+
+    Page<TenantDTO> getAllByPage(Pageable pageable, TenantCriteria tenantCriteria);
 
     Optional<TenantDTO> getById(UUID id);
 

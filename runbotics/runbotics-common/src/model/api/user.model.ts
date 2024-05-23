@@ -15,3 +15,5 @@ export interface IUser {
     lastModifiedDate?: string | null;
     password?: string;
 }
+
+export type UserDTO = Pick<IUser, 'id' | 'login'>;
