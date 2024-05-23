@@ -26,7 +26,7 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
 
     const { refreshSearch } = useTenantSearch();
     const [name, setName] = useState('');
-    const isFieldEmpty = !(name.trim() !== '');
+    const isFieldEmpty = name.trim() === '';
 
     const handleNameInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -78,7 +78,7 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
                     <Button
                         onClick={handleClose}
                     >
-                        {translate('Tenants.Actions.Modals.CreateModal.Button.Close')}
+                        {translate('Common.Close')}
                     </Button>
                     <Button
                         variant='contained'

@@ -37,20 +37,20 @@ const TenantsListView: VFC = () => {
     const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
     const [isCreateDialogVisible, setIsCreateDialogVisible] = useState(false);
 
-    const handleOpenEditDialog = (rowData) => {
+    const openEditDialog = (rowData) => {
         setIsEditDialogVisible(true);
         setTenantData(rowData);
     };
 
-    const handleCloseEditDialog = () => {
+    const closeEditDialog = () => {
         setIsEditDialogVisible(false);
     };
 
-    const handleOpenCreateDialog = () => {
+    const openCreateDialog = () => {
         setIsCreateDialogVisible(true);
     };
 
-    const handleCloseCreateDialog = () => {
+    const closeCreateDialog = () => {
         setIsCreateDialogVisible(false);
     };
 
@@ -72,11 +72,11 @@ const TenantsListView: VFC = () => {
         <>
             <CreateTenantDialog
                 open={isCreateDialogVisible}
-                onClose={handleCloseCreateDialog}
+                onClose={closeCreateDialog}
             />
             <TenantsListEditDialog
                 open={isEditDialogVisible}
-                onClose={handleCloseEditDialog}
+                onClose={closeEditDialog}
                 tenantData={tenantData}
             />
             <StyledActionsContainer>
@@ -90,7 +90,7 @@ const TenantsListView: VFC = () => {
                 <StyledButton
                     variant='contained'
                     color='primary'
-                    onClick={handleOpenCreateDialog}
+                    onClick={openCreateDialog}
                 >
                     {translate('Tenants.List.View.Button.CreateTenant')}
                 </StyledButton>
@@ -100,7 +100,7 @@ const TenantsListView: VFC = () => {
                 onPageChange={setPage}
                 pageSize={limit}
                 onPageSizeChange={setLimit}
-                openTenantEditDialog={handleOpenEditDialog}
+                openTenantEditDialog={openEditDialog}
             />
         </>
     );

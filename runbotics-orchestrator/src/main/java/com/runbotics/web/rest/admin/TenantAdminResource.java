@@ -112,7 +112,7 @@ public class TenantAdminResource {
     ) {
         log.debug("REST request to partial update tenant by id: {}", id);
         if (!Objects.equals(id, tenantDTO.getId())) {
-            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "InvalidId");
         }
 
         Optional<TenantDTO> tenant = tenantService.partialUpdate(tenantDTO);

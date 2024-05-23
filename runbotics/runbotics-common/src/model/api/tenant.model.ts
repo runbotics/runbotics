@@ -1,6 +1,4 @@
-import { IUser } from './user.model';
-
-export type UserDTO = Pick<IUser, 'id' | 'login'>;
+import { UserDTO } from "./user.model";
 
 export interface Tenant {
     id?: string;

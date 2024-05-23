@@ -11,6 +11,7 @@ import useTenantSearch from '#src-app/hooks/useTenantSearch';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
+import englishEditListTranslations from '#src-app/translations/en/tenants/list/edit';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
 
 import { DeleteButton, StyledButton, StyledDialogActions } from './TenantListEdit.styles';
@@ -66,10 +67,12 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                 );
                 refreshSearch();
             })
-            .catch(() => {
+            .catch(({ errorKey }) => {
                 handleClose();
                 enqueueSnackbar(
-                    translate('Tenants.List.Edit.Form.Event.Error'),
+                    translate(
+                        `Tenants.List.Edit.Form.Event.Error${errorKey ? `.${errorKey}` : ''}` as keyof typeof englishEditListTranslations
+                    ),
                     { variant: 'error' }
                 );
             });
@@ -108,14 +111,14 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                             onClick={handleOpenDeleteDialog}
                             loading={loading}
                         >
-                            {translate('Tenants.List.Edit.Form.Button.Delete')}
+                            {translate('Common.Delete')}
                         </DeleteButton>
                         <Box>
                             <StyledButton
                                 onClick={handleClose}
                                 disabled={loading}
                             >
-                                {translate('Tenants.List.Edit.Form.Button.Cancel')}
+                                {translate('Common.Cancel')}
                             </StyledButton>
                             <LoadingButton
                                 variant='contained'
@@ -123,7 +126,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                                 loading={loading}
                                 disabled={!checkFormFieldsValidation()}
                             >
-                                {translate('Tenants.List.Edit.Form.Button.Save')}
+                                {translate('Common.Save')}
                             </LoadingButton>
                         </Box>
                     </StyledDialogActions>

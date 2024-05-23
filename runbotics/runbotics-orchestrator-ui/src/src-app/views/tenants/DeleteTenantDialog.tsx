@@ -63,12 +63,12 @@ const DeleteTenantDialog: VFC<DeleteTenantDialogProps> = ({
             title={translate('Tenants.Actions.Modals.DeleteModal.TitleMessage')}
             cancelButtonOptions={{
                 isDisabled: loading,
-                label: translate('Tenants.Actions.Modals.DeleteModal.Button.Cancel'),
+                label: translate('Common.Cancel'),
                 onClick: onClose
             }}
             confirmButtonOptions={{
                 isLoading: loading,
-                label: translate('Tenants.Actions.Modals.DeleteModal.Button.Delete'),
+                label: translate('Common.Delete'),
                 onClick: handleSubmit
             }}
         >

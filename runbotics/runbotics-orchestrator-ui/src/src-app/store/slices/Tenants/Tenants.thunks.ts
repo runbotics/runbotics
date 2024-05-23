@@ -30,8 +30,9 @@ export const createOne = createAsyncThunk<Tenant, Tenant>(
 
 export const partialUpdate = createAsyncThunk<Tenant, Tenant>(
     'tenants/partialUpdate',
-    (tenant) => axios.patch<Tenant>(`/api/admin/tenants/${tenant.id}`, tenant)
+    (tenant, { rejectWithValue }) => axios.patch<Tenant>(`/api/admin/tenants/${tenant.id}`, tenant)
         .then(response => response.data)
+        .catch(error => rejectWithValue(error.response.data))
 );
 
 export const deleteOne = createAsyncThunk<void, number>(

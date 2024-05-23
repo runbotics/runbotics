@@ -117,13 +117,9 @@ public class TenantServiceImpl implements TenantService {
     public Optional<TenantDTO> partialUpdate(TenantDTO tenantDTO) {
         log.debug("Request to partial update Tenant: {}", tenantDTO);
 
-        if (tenantDTO.getId() == null) {
-            throw new BadRequestAlertException("ID is not provided", ENTITY_NAME, "idNotProvided");
-        }
-
         tenantRepository.findByName(tenantDTO.getName()).ifPresent(tenant -> {
             if (!tenant.getId().equals(tenantDTO.getId())) {
-                throw new BadRequestAlertException("Name is already used", ENTITY_NAME, "nameNotAvailable");
+                throw new BadRequestAlertException("Name is already used", ENTITY_NAME, "NameNotAvailable");
             }
         });
 
@@ -134,7 +130,7 @@ public class TenantServiceImpl implements TenantService {
             .map(tenant -> {
                 if (tenantDTO.getCreatedBy() != null) {
                     final User updatedUser = userRepository.findById(tenantDTO.getCreatedBy().getId()).orElseThrow(
-                        () -> new BadRequestAlertException("Could not found user while updating", ENTITY_NAME, "userNotFound")
+                        () -> new BadRequestAlertException("Could not found user while updating", ENTITY_NAME, "UserNotFound")
                     );
                     tenant.setCreatedBy(updatedUser);
                 }
