@@ -37,6 +37,6 @@ export enum UserField {
     LAST_MODIFIED_DATE = 'lastModifiedDate',
 };
 
-export const formatUserRoles = (roles: Role[]) => roles.map((role) => role.split('_')[1]);
+export const formatUserRoles = (roles: Role[]) => roles.map((role) => role.match(/^ROLE_(.*)/)[1]);
 
 export const getAllUserRoles = (): Role[] => Object.values(Role);
