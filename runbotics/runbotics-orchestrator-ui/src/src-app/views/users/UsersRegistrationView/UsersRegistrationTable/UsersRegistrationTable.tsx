@@ -19,6 +19,7 @@ interface UsersRegistrationTableProps {
     selections: GridInputSelectionModel;
     handleSelectionChange: (selection: object) => void;
     handleSelectedRolesChange: (id: number, value: string) => void;
+    handleSelectedTenantsChange: (id: number, value: string) => void;
     isTenantSelected: boolean;
 }
 
@@ -30,9 +31,13 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
     selections,
     handleSelectionChange,
     handleSelectedRolesChange,
+    handleSelectedTenantsChange,
     isTenantSelected
 }) => {
-    const userRegistrationColumns = useUsersRegistrationColumns(handleSelectedRolesChange);
+    const userRegistrationColumns = useUsersRegistrationColumns(
+        handleSelectedRolesChange,
+        handleSelectedTenantsChange
+    );
     const { notActivated } = useSelector(usersSelector);
     const { translate } = useTranslations();
 

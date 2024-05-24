@@ -5,12 +5,12 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
-import { Role, IUser } from 'runbotics-common';
+import { Role, IUser, Tenant } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
 import { useDispatch } from '#src-app/store';
-import { tenantsSelector } from '#src-app/store/slices/Tenants';
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
 import UsersRegistrationTable from './UsersRegistrationTable';
@@ -27,10 +27,14 @@ import DeleteUserDialog from '../DeleteUserDialog';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
 interface SelectedRoles { [id: number]: Role };
+
+interface SelectedTenants { [id:number]: string };
+
 interface MapActivatedUserParams {
     id: number;
     email: string;
     roles: Role[];
+    tenant: Tenant;
     activated: boolean;
 }
 
@@ -63,10 +67,14 @@ const UsersRegistrationView: FC = () => {
 
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
+    const [selectedTenants, setSelectedTenants] = useState<SelectedTenants>({});
     const [selections, setSelections] = useState<number[]>([]);
 
     const handleSelectedRolesChange = (id: number, value: Role) =>
         setSelectedRoles((prevState) => ({ ...prevState, [id]: value }));
+
+    const handleSelectedTenantsChange = (id: number, value: string) =>
+        setSelectedTenants((prevState) => ({ ...prevState, [id]: value }));
 
     const handleSelectionChange = (selection) => setSelections(selection);
 
@@ -81,15 +89,16 @@ const UsersRegistrationView: FC = () => {
 
         const payload = selections.map((userId) => {
             const role = selectedRoles[userId];
-            return mapUserActivateRequest(userId, role);
+            const tenantId = selectedTenants[userId];
+            return mapUserActivateRequest(userId, role, tenantId);
         });
 
         handleSubmit(payload);
     };
 
-    const mapUserActivateRequest = (id: number, role: Role): MapActivatedUserParams => {
+    const mapUserActivateRequest = (id: number, role: Role, tenantId: string): MapActivatedUserParams => {
         const { email } = notActivated.allByPage.content.find((row) => row.id === id);
-        return { id, email, roles: [role], activated: true };
+        return { id, email, roles: [role], activated: true, ...(tenantId && { tenant: { id: tenantId } }) };
     };
 
     const handleSubmit = (usersData: IUser[]) =>
@@ -120,6 +129,7 @@ const UsersRegistrationView: FC = () => {
 
     useEffect(() => {
         refreshSearchNotActivated();
+        dispatch(tenantsActions.getAll());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -183,6 +193,7 @@ const UsersRegistrationView: FC = () => {
                 selections={selections}
                 handleSelectionChange={handleSelectionChange}
                 handleSelectedRolesChange={handleSelectedRolesChange}
+                handleSelectedTenantsChange={handleSelectedTenantsChange}
                 isTenantSelected={!!tenantSelection}
             />
         </>
