@@ -29,6 +29,7 @@ export const useUsersTabs = (): UsersTabsHookProps[]  => {
 
 export enum UserField {
     EMAIL = 'email',
+    TENANT = 'tenant',
     ROLE = 'role',
     CREATED_BY = 'createdBy',
     CREATED_DATE = 'createdDate',

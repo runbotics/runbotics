@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Select, Box } from '@mui/material';
 import styled from 'styled-components';
 
 export const StyledActionsContainer = styled.div`
@@ -46,3 +46,13 @@ export const DeleteButton = styled(Button)(({theme}) => `
         }
     }
 `);
+
+export const StyledSelect = styled(Select)`
+    width: 300px;
+    height: 40px;
+`;
+
+export const StyledSearchFilterBox = styled(Box)`
+    display: flex;
+    gap: 20px;
+`;

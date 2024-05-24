@@ -19,6 +19,7 @@ interface UsersRegistrationTableProps {
     selections: GridInputSelectionModel;
     handleSelectionChange: (selection: object) => void;
     handleSelectedRolesChange: (id: number, value: string) => void;
+    isTenantSelected: boolean;
 }
 
 const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
@@ -28,7 +29,8 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
     onPageSizeChange,
     selections,
     handleSelectionChange,
-    handleSelectedRolesChange
+    handleSelectedRolesChange,
+    isTenantSelected
 }) => {
     const userRegistrationColumns = useUsersRegistrationColumns(handleSelectedRolesChange);
     const { notActivated } = useSelector(usersSelector);
@@ -41,6 +43,7 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
                     <DataGrid
                         sx={DataGridStyle}
                         autoHeight
+                        columnVisibilityModel={{ tenant: !isTenantSelected }}
                         columns={userRegistrationColumns}
                         rows={notActivated.allByPage?.content ?? []}
                         rowCount={notActivated.allByPage?.totalElements ?? 0}

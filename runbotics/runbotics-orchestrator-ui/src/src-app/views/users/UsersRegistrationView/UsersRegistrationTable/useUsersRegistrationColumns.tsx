@@ -1,5 +1,6 @@
 import { MenuItem } from '@mui/material';
 import { GridColDef, GridValidRowModel, GridValueFormatterParams } from '@mui/x-data-grid';
+import { Tenant } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { formatDate } from '#src-app/utils/dateFormat';
@@ -32,6 +33,13 @@ const useUsersRegistrationColumns = (handleSelectChange): GridColDef[] => {
             headerName: translate('Users.Registration.Table.Columns.Email'),
             filterable: false,
             flex: 0.6
+        },
+        {
+            field: UserField.TENANT,
+            headerName: translate('Users.Registration.Table.Columns.Tenant'),
+            filterable: false,
+            flex: 0.5,
+            valueFormatter: (params: GridValueFormatterParams<Tenant>) => params.value?.name
         },
         {
             field: UserField.CREATED_DATE,

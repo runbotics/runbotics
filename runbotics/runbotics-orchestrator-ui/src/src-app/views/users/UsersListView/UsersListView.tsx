@@ -1,5 +1,6 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 
+import { FormControl, InputLabel, MenuItem } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -7,14 +8,17 @@ import { IUser } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
+import { useDispatch } from '#src-app/store';
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 import { usersSelector } from '#src-app/store/slices/Users';
 
 import UsersListEditDialog from './UsersListEdit';
 import UsersListTable from './UsersListTable';
-import { StyledActionsContainer, StyledTextField } from './UsersListView.styles';
+import { StyledActionsContainer, StyledSelect, StyledTextField } from './UsersListView.styles';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
 const UsersListView: FC = () => {
+    const dispatch = useDispatch();
     const { translate } = useTranslations();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -27,10 +31,14 @@ const UsersListView: FC = () => {
             ? pageSizeFromUrl
             : DefaultPageValue.PAGE_SIZE
     );
+    const tenantParam = searchParams.get('tenantId');
+    const [tenantSelection, setTenantSelection] = useState(tenantParam);
+    const { all: allTenants } = useSelector(tenantsSelector);
 
     const { activated } = useSelector(usersSelector);
     const { search, handleSearch, refreshSearch: refreshSearchActivated } = useUserSearch({
         isActivatedUsersOnly: true,
+        tenantId: tenantSelection,
         pageSize: limit,
         page
     });
@@ -59,6 +67,7 @@ const UsersListView: FC = () => {
 
     useEffect(() => {
         refreshSearchActivated();
+        dispatch(tenantsActions.getAll());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -77,6 +86,21 @@ const UsersListView: FC = () => {
                     value={search}
                     onChange={handleSearch}
                 />
+                <FormControl size='small'>
+                    <InputLabel>{translate('Users.List.View.Select.Label')}</InputLabel>
+                    <StyledSelect
+                        label={translate('Users.List.View.Select.Label')}
+                        value={tenantSelection}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            setTenantSelection(e.target.value);
+                        }}
+                    >
+                        <MenuItem value=''>{translate('Users.List.View.Select.NoneTenant')}</MenuItem>
+                        {allTenants.map(tenant => (
+                            <MenuItem value={tenant.id} key={tenant.name}>{tenant.name}</MenuItem>
+                        ))}
+                    </StyledSelect>
+                </FormControl>
             </StyledActionsContainer>
             <UsersListTable
                 page={page}
@@ -84,6 +108,7 @@ const UsersListView: FC = () => {
                 pageSize={limit}
                 onPageSizeChange={setLimit}
                 openUserEditDialog={handleOpenEditDialog}
+                isTenantSelected={!!tenantSelection}
             />
         </>
     );

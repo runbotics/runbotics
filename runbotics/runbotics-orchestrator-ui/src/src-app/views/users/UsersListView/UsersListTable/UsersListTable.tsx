@@ -17,6 +17,7 @@ interface UsersListTableProps {
     pageSize: number;
     onPageSizeChange: (pageSize: number) => void;
     openUserEditDialog: (row) => void;
+    isTenantSelected: boolean;
 }
 
 const UsersListTable: FC<UsersListTableProps> = ({
@@ -24,7 +25,8 @@ const UsersListTable: FC<UsersListTableProps> = ({
     onPageChange,
     pageSize,
     onPageSizeChange,
-    openUserEditDialog
+    openUserEditDialog,
+    isTenantSelected
 }) => {
     const usersListColumns = useUsersListColumns();
     const { activated } = useSelector(usersSelector);
@@ -37,6 +39,7 @@ const UsersListTable: FC<UsersListTableProps> = ({
                     <DataGrid
                         sx={DataGridStyle}
                         autoHeight
+                        columnVisibilityModel={{ tenant: !isTenantSelected }}
                         columns={usersListColumns}
                         rows={activated.allByPage?.content ?? []}
                         rowCount={activated.allByPage?.totalElements ?? 0}

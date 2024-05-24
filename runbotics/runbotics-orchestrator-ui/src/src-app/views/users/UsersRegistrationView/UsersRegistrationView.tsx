@@ -1,5 +1,6 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 
+import { FormControl, InputLabel, MenuItem } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -9,10 +10,19 @@ import { Role, IUser } from 'runbotics-common';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch from '#src-app/hooks/useUserSearch';
 import { useDispatch } from '#src-app/store';
+import { tenantsSelector } from '#src-app/store/slices/Tenants';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
 import UsersRegistrationTable from './UsersRegistrationTable';
-import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContainer, StyledTextField } from './UsersRegistrationView.styles';
+import {
+    StyledButtonsContainer,
+    StyledButton,
+    DeleteButton,
+    StyledActionsContainer,
+    StyledSearchFilterBox,
+    StyledTextField,
+    StyledSelect
+} from './UsersRegistrationView.styles';
 import DeleteUserDialog from '../DeleteUserDialog';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
@@ -24,6 +34,7 @@ interface MapActivatedUserParams {
     activated: boolean;
 }
 
+// eslint-disable-next-line max-lines-per-function
 const UsersRegistrationView: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -39,9 +50,16 @@ const UsersRegistrationView: FC = () => {
             ? pageSizeFromUrl
             : DefaultPageValue.PAGE_SIZE
     );
+    const tenantParam = searchParams.get('tenantId');
+    const [tenantSelection, setTenantSelection] = useState(tenantParam);
+    const { all: allTenants } = useSelector(tenantsSelector);
 
     const { notActivated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearch: refreshSearchNotActivated } = useUserSearch({ pageSize: limit, page });
+    const { search, handleSearch, refreshSearch: refreshSearchNotActivated } = useUserSearch({
+        tenantId: tenantSelection,
+        pageSize: limit,
+        page
+    });
 
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
@@ -113,13 +131,30 @@ const UsersRegistrationView: FC = () => {
                 getSelectedUsers={getSelectedUsers}
             />
             <StyledActionsContainer>
-                <StyledTextField
-                    margin='dense'
-                    placeholder={translate('Users.Registration.View.SearchBarPlaceholder')}
-                    size='small'
-                    value={search}
-                    onChange={handleSearch}
-                />
+                <StyledSearchFilterBox>
+                    <StyledTextField
+                        margin='dense'
+                        placeholder={translate('Users.Registration.View.SearchBarPlaceholder')}
+                        size='small'
+                        value={search}
+                        onChange={handleSearch}
+                    />
+                    <FormControl size='small'>
+                        <InputLabel>{translate('Users.Registration.View.Select.Label')}</InputLabel>
+                        <StyledSelect
+                            label={translate('Users.Registration.View.Select.Label')}
+                            value={tenantSelection}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                setTenantSelection(e.target.value);
+                            }}
+                        >
+                            <MenuItem value=''>{translate('Users.Registration.View.Select.NoneTenant')}</MenuItem>
+                            {allTenants.map(tenant => (
+                                <MenuItem value={tenant.id} key={tenant.name}>{tenant.name}</MenuItem>
+                            ))}
+                        </StyledSelect>
+                    </FormControl>
+                </StyledSearchFilterBox>
                 <StyledButtonsContainer>
                     <StyledButton
                         type='submit'
@@ -148,6 +183,7 @@ const UsersRegistrationView: FC = () => {
                 selections={selections}
                 handleSelectionChange={handleSelectionChange}
                 handleSelectedRolesChange={handleSelectedRolesChange}
+                isTenantSelected={!!tenantSelection}
             />
         </>
     );

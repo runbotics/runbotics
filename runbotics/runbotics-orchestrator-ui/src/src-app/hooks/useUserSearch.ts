@@ -17,18 +17,21 @@ interface UseUserSearchProps {
     isActivatedUsersOnly?: boolean;
     pageSize?: number;
     page?: number;
+    tenantId: string;
 }
 
 const useUserSearchDefault = {
     isActivatedUsersOnly: false,
     pageSize: 10,
-    page: 0
+    page: 0,
+    tenantId: ''
 };
 
 const useUserSearch = ({
     isActivatedUsersOnly,
     pageSize,
-    page
+    page,
+    tenantId
 }: UseUserSearchProps = { ...useUserSearchDefault }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -49,7 +52,8 @@ const useUserSearch = ({
             query: {
                 page: newPage,
                 pageSize,
-                ...(search && { search })
+                ...(search && { search }),
+                ...(tenantId && { tenantId })
             }
         });
 
@@ -60,6 +64,7 @@ const useUserSearch = ({
                     size: pageSize,
                     filter: {
                         contains: { 'email': debouncedValue },
+                        ...(tenantId && { equals: { 'tenantId': tenantId } })
                     },
                 })
             )
@@ -75,6 +80,7 @@ const useUserSearch = ({
                     size: pageSize,
                     filter: {
                         contains: { 'email': debouncedValue },
+                        ...(tenantId && { equals: { 'tenantId': tenantId } })
                     },
                 })
             )
@@ -85,7 +91,19 @@ const useUserSearch = ({
                 );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedValue, pageSize, page, refreshTrigger]);
+    }, [debouncedValue, pageSize, page, refreshTrigger, tenantId]);
+
+    useEffect(() => {
+        router.replace({
+            pathname: router.pathname,
+            query: {
+                page,
+                pageSize,
+                ...(search && { search }),
+                ...(tenantId && { tenantId })
+            }
+        });
+    }, [tenantId]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (search !== event.target.value) setSearch(event.target.value);
