@@ -311,7 +311,7 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users in tenant.
      */
     @GetMapping("/users/not-activated-tenant")
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT + "')")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
     public ResponseEntity<Page<AdminUserDTO>> getAllNotActivatedUsersByTenant(UserCriteria criteria, Pageable pageable) {
         log.debug("REST request to get all by tenant activated User: {}, by criteria: {}", pageable, criteria);
         if (!onlyContainsAllowedProperties(pageable)) {
@@ -331,7 +331,7 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users in tenant.
      */
     @GetMapping("/users/activated-tenant")
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT + "')")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
     public ResponseEntity<Page<AdminUserDTO>> getAllActivatedUsersByTenant(UserCriteria criteria, Pageable pageable) {
         log.debug("REST request to get all by tenant activated User: {}, by criteria: {}", pageable, criteria);
         if (!onlyContainsAllowedProperties(pageable)) {

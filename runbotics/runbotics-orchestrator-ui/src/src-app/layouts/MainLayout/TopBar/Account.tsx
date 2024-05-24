@@ -5,11 +5,12 @@ import { useTheme } from '@mui/material/styles';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { Role } from 'runbotics-common';
+import { FeatureKey, Role } from 'runbotics-common';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
@@ -60,6 +61,8 @@ const Account: FC = () => {
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
+    const hasUserEditAccess = useFeatureKey([FeatureKey.TENANT_EDIT_USER, FeatureKey.BASIC_USER_READ], { oneOf: true });
+
     const { pathname } = useRouter();
 
     const handleOpen = (): void => {
@@ -123,12 +126,14 @@ const Account: FC = () => {
                 anchorEl={ref.current}
                 open={isOpen}
             >
-                <If condition={hasAdminAccess}>
+                <If condition={hasUserEditAccess}>
                     <MenuItem>
                         <MenuLink href='/app/users'>
                             {translate('Account.Users')}
                         </MenuLink>
                     </MenuItem>
+                </If>
+                <If condition={hasAdminAccess}>
                     <MenuItem>
                         <MenuLink href='/app/tenants'>
                             {translate('Account.Tenants')}
