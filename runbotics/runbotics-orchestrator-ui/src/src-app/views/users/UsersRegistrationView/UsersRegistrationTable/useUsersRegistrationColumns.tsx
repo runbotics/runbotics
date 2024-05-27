@@ -7,11 +7,12 @@ import { tenantsSelector } from '#src-app/store/slices/Tenants';
 import { formatDate } from '#src-app/utils/dateFormat';
 
 import { StyledSelect } from './UsersRegistrationTable.styles';
-import { UserField, getAllUserRoles, formatUserRoles } from '../../UsersBrowseView/UsersBrowseView.utils';
+import { UserField, getAllUserRoles, formatUserRoles, getTenantAllowedRoles } from '../../UsersBrowseView/UsersBrowseView.utils';
 
-const useUsersRegistrationColumns = (handleSelectRoleChange, handleSelectTenantChange): GridColDef[] => {
+const useUsersRegistrationColumns = (handleSelectRoleChange, handleSelectTenantChange, isForAdmin): GridColDef[] => {
     const { translate } = useTranslations();
-    const roles = getAllUserRoles();
+
+    const roles = isForAdmin ? getAllUserRoles() : getTenantAllowedRoles();
     const formattedRoles = formatUserRoles(roles);
     const { all: allTenants } = useSelector(tenantsSelector);
 

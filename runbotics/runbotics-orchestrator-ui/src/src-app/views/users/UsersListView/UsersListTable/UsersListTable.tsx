@@ -17,6 +17,7 @@ interface UsersListTableProps {
     pageSize: number;
     onPageSizeChange: (pageSize: number) => void;
     openUserEditDialog: (row) => void;
+    isForAdmin: boolean;
     isTenantSelected: boolean;
 }
 
@@ -26,11 +27,14 @@ const UsersListTable: FC<UsersListTableProps> = ({
     pageSize,
     onPageSizeChange,
     openUserEditDialog,
+    isForAdmin,
     isTenantSelected
 }) => {
     const usersListColumns = useUsersListColumns();
-    const { activated } = useSelector(usersSelector);
+    const { activated, tenantActivated } = useSelector(usersSelector);
     const { translate } = useTranslations();
+
+    const userData = isForAdmin ? activated : tenantActivated;
 
     return (
         <Card>
@@ -41,9 +45,9 @@ const UsersListTable: FC<UsersListTableProps> = ({
                         autoHeight
                         columnVisibilityModel={{ tenant: !isTenantSelected }}
                         columns={usersListColumns}
-                        rows={activated.allByPage?.content ?? []}
-                        rowCount={activated.allByPage?.totalElements ?? 0}
-                        loading={activated.loading}
+                        rows={userData.allByPage?.content ?? []}
+                        rowCount={userData.allByPage?.totalElements ?? 0}
+                        loading={userData.loading}
                         page={page}
                         onPageChange={(newPage) => onPageChange(newPage)}
                         pageSize={pageSize}

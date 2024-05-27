@@ -7,8 +7,10 @@ import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
 import { Role, IUser, Tenant } from 'runbotics-common';
 
+import If from '#src-app/components/utils/If';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
-import useUserSearch from '#src-app/hooks/useUserSearch';
+import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { useDispatch } from '#src-app/store';
 import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
@@ -45,6 +47,7 @@ const UsersRegistrationView: FC = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
 
     const currentPage = parseInt(searchParams.get('page'));
     const pageSizeFromUrl = parseInt(searchParams.get('pageSize'));
@@ -58,8 +61,9 @@ const UsersRegistrationView: FC = () => {
     const [tenantSelection, setTenantSelection] = useState(tenantParam);
     const { all: allTenants } = useSelector(tenantsSelector);
 
-    const { notActivated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearch: refreshSearchNotActivated } = useUserSearch({
+    const { notActivated, tenantNotActivated } = useSelector(usersSelector);
+    const { search, handleSearch, refreshSearch } = useUserSearch({
+        searchType: hasAdminAccess ? UserSearchType.ALL_NOT_ACTIVATED : UserSearchType.TENANT_NOT_ACTIVATED,
         tenantId: tenantSelection,
         pageSize: limit,
         page
@@ -97,17 +101,22 @@ const UsersRegistrationView: FC = () => {
     };
 
     const mapUserActivateRequest = (id: number, role: Role, tenantId: string): MapActivatedUserParams => {
-        const { email } = notActivated.allByPage.content.find((row) => row.id === id);
+        const { email } = hasAdminAccess
+            ? notActivated.allByPage.content.find((row) => row.id === id)
+            : tenantNotActivated.allByPage.content.find((row) => row.id === id);
         return { id, email, roles: [role], activated: true, ...(tenantId && { tenant: { id: tenantId } }) };
     };
 
     const handleSubmit = (usersData: IUser[]) =>
         Promise
             .allSettled(
-                usersData.map((user) => dispatch(usersActions.updateNotActivated(user))))
+                hasAdminAccess
+                    ? usersData.map((user) => dispatch(usersActions.updateNotActivated(user)))
+                    : usersData.map((user) => dispatch(usersActions.updateNotActivatedByTenant(user)))
+            )
             .then(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Success.AcceptingUser'), { variant: 'success' });
-                refreshSearchNotActivated();
+                refreshSearch();
             })
             .catch(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Error.AcceptFailed'), { variant: 'error' });
@@ -118,18 +127,21 @@ const UsersRegistrationView: FC = () => {
     const getSelectedUsers = (): IUser[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
 
     useEffect(() => {
-        const isPageNotAvailable = notActivated.allByPage?.totalPages && page >= notActivated.allByPage?.totalPages;
+        const allUsers = hasAdminAccess ? notActivated.allByPage : tenantNotActivated.allByPage;
+
+        const isPageNotAvailable = allUsers?.totalPages && page >= allUsers?.totalPages;
         if (isPageNotAvailable) {
             router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit } });
             setPage(0);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [notActivated.allByPage]);
+    }, [notActivated.allByPage, tenantNotActivated.allByPage]);
 
     useEffect(() => {
-        refreshSearchNotActivated();
-        dispatch(tenantsActions.getAll());
+        refreshSearch();
+
+        if (hasAdminAccess) dispatch(tenantsActions.getAll());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -149,21 +161,23 @@ const UsersRegistrationView: FC = () => {
                         value={search}
                         onChange={handleSearch}
                     />
-                    <FormControl size='small'>
-                        <InputLabel>{translate('Users.Registration.View.Select.Label')}</InputLabel>
-                        <StyledSelect
-                            label={translate('Users.Registration.View.Select.Label')}
-                            value={tenantSelection}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                setTenantSelection(e.target.value);
-                            }}
-                        >
-                            <MenuItem value=''>{translate('Users.Registration.View.Select.NoneTenant')}</MenuItem>
-                            {allTenants.map(tenant => (
-                                <MenuItem value={tenant.id} key={tenant.name}>{tenant.name}</MenuItem>
-                            ))}
-                        </StyledSelect>
-                    </FormControl>
+                    <If condition={hasAdminAccess}>
+                        <FormControl size='small'>
+                            <InputLabel>{translate('Users.Registration.View.Select.Label')}</InputLabel>
+                            <StyledSelect
+                                label={translate('Users.Registration.View.Select.Label')}
+                                value={tenantSelection}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                    setTenantSelection(e.target.value);
+                                }}
+                            >
+                                <MenuItem value=''>{translate('Users.Registration.View.Select.NoneTenant')}</MenuItem>
+                                {allTenants.map(tenant => (
+                                    <MenuItem value={tenant.id} key={tenant.name}>{tenant.name}</MenuItem>
+                                ))}
+                            </StyledSelect>
+                        </FormControl>
+                    </If>
                 </StyledSearchFilterBox>
                 <StyledButtonsContainer>
                     <StyledButton
@@ -194,7 +208,8 @@ const UsersRegistrationView: FC = () => {
                 handleSelectionChange={handleSelectionChange}
                 handleSelectedRolesChange={handleSelectedRolesChange}
                 handleSelectedTenantsChange={handleSelectedTenantsChange}
-                isTenantSelected={!!tenantSelection}
+                isForAdmin={hasAdminAccess}
+                isTenantSelected={!!tenantSelection  || !hasAdminAccess}
             />
         </>
     );
