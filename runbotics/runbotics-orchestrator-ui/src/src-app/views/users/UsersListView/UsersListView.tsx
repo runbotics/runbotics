@@ -84,6 +84,7 @@ const UsersListView: FC = () => {
                 open={isEditDialogVisible}
                 onClose={handleCloseEditDialog}
                 userData={userData}
+                isForAdmin={hasAdminAccess}
             />
             <StyledActionsContainer>
                 <StyledTextField
