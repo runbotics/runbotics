@@ -1,10 +1,10 @@
-import { Select, TextField } from '@mui/material';
+import { Box, Select, TextField } from '@mui/material';
 import styled from 'styled-components';
 
 export const StyledActionsContainer = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 20px;
     align-items: center;
     margin: 20px 0;
@@ -20,4 +20,9 @@ export const StyledTextField = styled(TextField)`
 export const StyledSelect = styled(Select)`
     width: 300px;
     height: 40px;
+`;
+
+export const StyledSearchFilterBox = styled(Box)`
+    display: flex;
+    gap: 10px;
 `;

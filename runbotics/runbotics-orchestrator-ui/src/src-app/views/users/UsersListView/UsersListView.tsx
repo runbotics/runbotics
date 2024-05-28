@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 
-import { FormControl, InputLabel, MenuItem } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Box, Button } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import { usersSelector } from '#src-app/store/slices/Users';
 
 import UsersListEditDialog from './UsersListEdit';
 import UsersListTable from './UsersListTable';
-import { StyledActionsContainer, StyledSelect, StyledTextField } from './UsersListView.styles';
+import { StyledActionsContainer, StyledSearchFilterBox, StyledSelect, StyledTextField } from './UsersListView.styles';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
 const UsersListView: FC = () => {
@@ -49,6 +49,7 @@ const UsersListView: FC = () => {
 
     const [userData, setUserData] = useState<IUser>();
     const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
+    const [inviteCode, setInviteCode] = useState('');
 
     const handleOpenEditDialog = (rowData) => {
         setIsEditDialogVisible(true);
@@ -58,6 +59,33 @@ const UsersListView: FC = () => {
     const handleCloseEditDialog = () => {
         setIsEditDialogVisible(false);
     };
+
+    const fetchInviteCode = () => {
+        dispatch(tenantsActions.getInviteCode()).unwrap()
+            .then(res => {
+                setInviteCode(res.inviteCode);
+            });
+    };
+
+    const clipboardInviteCode = (e) => {
+        navigator.clipboard.writeText(`${window.location.origin}/register?inviteCode=${inviteCode}`);
+        e.target.innerText = translate('Users.List.View.Button.InviteCode.Copied');
+    };
+
+    const inviteButton = inviteCode
+        ? <Button
+            variant='outlined'
+            onClick={clipboardInviteCode}
+            onBlur={(e) => e.target.innerText=translate('Users.List.View.Button.InviteCode.Copy')}
+        >
+            {translate('Users.List.View.Button.InviteCode.Copy')}
+        </Button>
+        : <Button
+            variant='contained'
+            onClick={fetchInviteCode}
+        >
+            {translate('Users.List.View.Button.InviteCode.Generate')}
+        </Button>;
 
     useEffect(() => {
         const allUsers = hasAdminAccess ? activated.allByPage : tenantActivated.allByPage;
@@ -87,29 +115,34 @@ const UsersListView: FC = () => {
                 isForAdmin={hasAdminAccess}
             />
             <StyledActionsContainer>
-                <StyledTextField
-                    margin='dense'
-                    placeholder={translate('Users.List.View.SearchBarPlaceholder')}
-                    size='small'
-                    value={search}
-                    onChange={handleSearch}
-                />
-                <If condition={hasAdminAccess}>
-                    <FormControl size='small'>
-                        <InputLabel>{translate('Users.List.View.Select.Label')}</InputLabel>
-                        <StyledSelect
-                            label={translate('Users.List.View.Select.Label')}
-                            value={tenantSelection}
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                setTenantSelection(e.target.value);
-                            }}
-                        >
-                            <MenuItem value=''>{translate('Users.List.View.Select.NoneTenant')}</MenuItem>
-                            {allTenants.map(tenant => (
-                                <MenuItem value={tenant.id} key={tenant.name}>{tenant.name}</MenuItem>
-                            ))}
-                        </StyledSelect>
-                    </FormControl>
+                <StyledSearchFilterBox>
+                    <StyledTextField
+                        margin='dense'
+                        placeholder={translate('Users.List.View.SearchBarPlaceholder')}
+                        size='small'
+                        value={search}
+                        onChange={handleSearch}
+                    />
+                    <If condition={hasAdminAccess}>
+                        <FormControl size='small'>
+                            <InputLabel>{translate('Users.List.View.Select.Label')}</InputLabel>
+                            <StyledSelect
+                                label={translate('Users.List.View.Select.Label')}
+                                value={tenantSelection}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                    setTenantSelection(e.target.value);
+                                }}
+                            >
+                                <MenuItem value=''>{translate('Users.List.View.Select.NoneTenant')}</MenuItem>
+                                {allTenants.map(tenant => (
+                                    <MenuItem value={tenant.id} key={tenant.name}>{tenant.name}</MenuItem>
+                                ))}
+                            </StyledSelect>
+                        </FormControl>
+                    </If>
+                </StyledSearchFilterBox>
+                <If condition={!hasAdminAccess}>
+                    <Box>{inviteButton}</Box>
                 </If>
             </StyledActionsContainer>
             <UsersListTable

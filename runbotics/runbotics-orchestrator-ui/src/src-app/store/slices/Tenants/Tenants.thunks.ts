@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Tenant } from 'runbotics-common';
+import { Tenant, TenantInviteCode } from 'runbotics-common';
 
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
@@ -38,4 +38,10 @@ export const partialUpdate = createAsyncThunk<Tenant, Tenant>(
 export const deleteOne = createAsyncThunk<void, number>(
     'tenants/delete',
     (id) => axios.delete(`/api/admin/tenants/${id}`)
+);
+
+export const getInviteCode = createAsyncThunk<TenantInviteCode, void>(
+    'tenants/getInviteCode',
+    () => axios.get('/api/tenant/tenants/invite-code')
+        .then(response => response.data)
 );

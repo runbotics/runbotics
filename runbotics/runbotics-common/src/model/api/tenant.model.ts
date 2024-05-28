@@ -8,3 +8,7 @@ export interface Tenant {
     updated?: string | null;
     lastModifiedBy?: string | null;
 }
+
+export interface TenantInviteCode {
+    inviteCode: string;
+}
