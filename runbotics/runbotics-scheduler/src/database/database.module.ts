@@ -33,7 +33,7 @@ import { SecretModule } from '#/database/secret/secret.module';
                     username: serverConfigService.dbSettings.username,
                     password: serverConfigService.dbSettings.password,
                     database: serverConfigService.dbSettings.database,
-                    entities: ['dist/**/*.entity{.ts,.js}'],
+                    entities: ['dist/src/database/**/*.entity{.ts,.js}'],
                     synchronize: false,
                 };
             },

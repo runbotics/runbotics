@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.11.0-SNAPSHOT.3",
+    "version": "2.11.0-SNAPSHOT.4",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -18,7 +18,8 @@
         "test": "vitest",
         "test:watch": "vitest dev",
         "test:cov": "vitest run --coverage",
-        "test:debug": "vitest --inspect-brk --threads false"
+        "test:debug": "vitest --inspect-brk --threads false",
+        "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/ormconfig.ts"
     },
     "dependencies": {
         "@azure/msal-node": "^1.15.0",
@@ -94,8 +95,8 @@
         "supertest": "^6.1.3",
         "ts-jest": "^27.0.3",
         "ts-loader": "^9.3.0",
-        "ts-node": "^10.9.1",
-        "tsconfig-paths": "^3.10.1",
+        "ts-node": "~10.9.2",
+        "tsconfig-paths": "~4.2.0",
         "typescript": "^5.0.3"
     },
     "files": [
