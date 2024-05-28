@@ -14,13 +14,13 @@ import {
     IBot,
     IUser,
     IBotCollection,
-    IBotSystem, Role,
+    IBotSystem,
 } from 'runbotics-common';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 
-@Entity({ name: 'bot' })
+@Entity({ name: 'bot', synchronize: false })
 export class BotEntity implements IBot {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })

@@ -4,8 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 
 import { ServerConfigService } from '#/config/server-config';
-import { SecretService } from '#/database/secret/secret.service';
-import { Secret } from '#/database/secret/secret.entity';
+import { SecretService } from '#/scheduler-database/secret/secret.service';
+import { Secret } from '#/scheduler-database/secret/secret.entity';
 
 const DATA = 'dpa';
 

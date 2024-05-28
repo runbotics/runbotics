@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ServerConfigService } from '../config/server-config/server-config.service';
-import { ConfigModule } from '../config/config.module';
+import { ServerConfigService } from '#/config/server-config';
+import { ConfigModule } from '#/config/config.module';
 import { AuthorityModule } from './authority/authority.module';
 import { UserModule } from './user/user.module';
 import { BotModule } from './bot/bot.module';
@@ -17,9 +17,6 @@ import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
 import { TenantModule } from '#/database/tenant/tenant.module';
-import { ProcessContextModule } from '#/database/process-context/process-context.module';
-import { ProcessContextSecretModule } from '#/database/process-context-secret/process-context-secret.module';
-import { SecretModule } from '#/database/secret/secret.module';
 
 @Module({
     imports: [
@@ -33,7 +30,7 @@ import { SecretModule } from '#/database/secret/secret.module';
                     username: serverConfigService.dbSettings.username,
                     password: serverConfigService.dbSettings.password,
                     database: serverConfigService.dbSettings.database,
-                    entities: ['dist/src/database/**/*.entity{.ts,.js}'],
+                    entities: ['dist/src/**/*.entity{.ts,.js}'],
                     synchronize: false,
                 };
             },
@@ -54,9 +51,6 @@ import { SecretModule } from '#/database/secret/secret.module';
         TriggerEventModule,
         GuestModule,
         TenantModule,
-        ProcessContextModule,
-        ProcessContextSecretModule,
-        SecretModule,
     ],
     exports: [
         AuthorityModule,
@@ -74,9 +68,6 @@ import { SecretModule } from '#/database/secret/secret.module';
         TriggerEventModule,
         GuestModule,
         TenantModule,
-        ProcessContextModule,
-        ProcessContextSecretModule,
-        SecretModule,
     ],
 })
 export class DatabaseModule { }

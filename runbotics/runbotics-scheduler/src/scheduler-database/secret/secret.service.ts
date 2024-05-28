@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Secret } from '#/database/secret/secret.entity';
+import { Secret } from '#/scheduler-database/secret/secret.entity';
 import * as crypto from 'crypto';
 import { ServerConfigService } from '#/config/server-config';
 
@@ -25,16 +25,15 @@ export class SecretService {
     }
 
     encrypt(data: string, tenantId: string): Secret {
-        const iv = crypto.randomBytes(16);
-        const cipher = crypto.createCipheriv(ALGORITHM, this.serverConfigService.encryptionKey, iv.toString('hex')
-            .slice(0, 16));
+        const iv = crypto.randomBytes(16).toString('hex').slice(16);
+        const cipher = crypto.createCipheriv(ALGORITHM, this.serverConfigService.encryptionKey, iv);
 
         const encryptedData = Buffer.from(
             cipher.update(data, 'utf8', 'hex') + cipher.final('hex'),
         ).toString('utf-8');
 
         const secret = new Secret();
-        secret.iv = iv.toString('hex').slice(0, 16);
+        secret.iv = iv;
         secret.tenantId = tenantId;
         secret.data = encryptedData;
 

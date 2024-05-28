@@ -3,7 +3,7 @@ import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, Generated } from 
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { UserEntity } from '../user/user.entity';
 
-@Entity({ name: 'global_variable' })
+@Entity({ name: 'global_variable', synchronize: false })
 export class GlobalVariableEntity implements IGlobalVariable {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })

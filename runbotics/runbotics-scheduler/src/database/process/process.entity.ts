@@ -21,9 +21,9 @@ import { ScheduleProcessEntity } from '../schedule-process/schedule-process.enti
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
-import { ProcessContext } from '#/database/process-context/process-context.entity';
+import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 
-@Entity({ name: 'process' })
+@Entity({ name: 'process', synchronize: false })
 export class ProcessEntity implements IProcess {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })

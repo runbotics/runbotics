@@ -1,19 +1,19 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProcessContext } from '#/database/process-context/process-context.entity';
+import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import {
     DecryptedProcessContextDto,
     DecryptedProcessContextDtoSecret,
-} from '#/database/process-context/dto/decrypted-process-context.dto';
-import { SecretService } from '#/database/secret/secret.service';
-// import { Secret } from '#/database/secret/secret.entity';
-// import { ProcessContextSecret } from '#/database/process-context-secret/process-context-secret.entity';
+} from '#/scheduler-database/process-context/dto/decrypted-process-context.dto';
+import { SecretService } from '#/scheduler-database/secret/secret.service';
+// import { Secret } from '#/scheduler-database/secret/secret.entity';
+// import { ProcessContextSecret } from '#/scheduler-database/process-context-secret/process-context-secret.entity';
 // import * as util from 'util';
 
 @Injectable()
 export class ProcessContextService implements OnModuleInit {
-    
+
     constructor(
         @InjectRepository(ProcessContext)
         private readonly processContextRepository: Repository<ProcessContext>,
@@ -23,7 +23,7 @@ export class ProcessContextService implements OnModuleInit {
 
     async onModuleInit() {
         // example
-        
+
         // const secret = this.secretService.encrypt('dupa', 'b7f9092f-5973-c781-08db-4d6e48f78e98');
         // await this.processContextRepository.manager.save(Secret, secret);
         // const ctx = new ProcessContext();
@@ -57,6 +57,13 @@ export class ProcessContextService implements OnModuleInit {
                         secret: true,
                     },
                 },
+                order: {
+                    secrets: {
+                        order: {
+                            direction: 'ASC',
+                        },
+                    },
+                },
             },
         );
 
@@ -70,14 +77,14 @@ export class ProcessContextService implements OnModuleInit {
                     tenantId: processSecret.secret.tenantId,
                     data: this.secretService.decrypt(processSecret.secret),
                 },
-                secretId: processSecret.secretId
+                secretId: processSecret.secretId,
             };
         });
 
         return {
             id: processContext.id,
             processId,
-            secrets
-        }
+            secrets,
+        };
     }
 }

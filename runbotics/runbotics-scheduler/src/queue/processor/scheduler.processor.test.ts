@@ -28,12 +28,13 @@ import { BotSchedulerService } from '#/queue/bot/bot.scheduler.service';
 import { ServerConfigService } from '#/config/server-config';
 import { WsBotJwtGuard } from '#/auth/guards';
 import { CanActivate } from '@nestjs/common';
+import { SchedulerService } from '#/queue/scheduler/scheduler.service';
 
 const PROCESS_ID = 2137;
 const JOB_ID = 7312;
 const ORCHESTRATOR_INSTANCE_ID = 'tEsT-InStAnCe-iD';
 
-const mock_ForceFailGuard: CanActivate = { canActivate: vi.fn(() => true) };
+const mockForceActivateGuard: CanActivate = { canActivate: vi.fn(() => true) };
 
 const PROCESS: IProcess = {
     id: PROCESS_ID,
@@ -156,11 +157,12 @@ describe('SchedulerProcessor', () => {
                     emit: vi.fn(),
                 },
                 emitAll: vi.fn(),
+                emitClient: vi.fn(),
             })
-            .overrideGuard(WsBotJwtGuard).useValue(mock_ForceFailGuard)
+            .overrideGuard(WsBotJwtGuard).useValue(mockForceActivateGuard)
             .compile();
 
-        schedulerProcessor = moduleRef.get(SchedulerProcessor); //todo: use it instead of constructor
+        schedulerProcessor = moduleRef.get(SchedulerProcessor);
         processService = moduleRef.get(ProcessService);
         processSchedulerService = moduleRef.get(ProcessSchedulerService);
         botService = moduleRef.get(BotService);

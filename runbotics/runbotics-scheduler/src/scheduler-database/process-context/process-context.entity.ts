@@ -1,9 +1,9 @@
 import { PrimaryColumn, Entity, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
 import { ProcessEntity } from '#/database/process/process.entity';
-import { ProcessContextSecret } from '#/database/process-context-secret/process-context-secret.entity';
+import { ProcessContextSecret } from '#/scheduler-database/process-context-secret/process-context-secret.entity';
 import { Tenant } from '#/database/tenant/tenant.entity';
 
-@Entity()
+@Entity({ schema: 'scheduler' })
 export class ProcessContext {
     @PrimaryColumn({ type: 'uuid', generated: 'uuid' })
     id: string;

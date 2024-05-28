@@ -1,9 +1,9 @@
 import { PrimaryColumn, Entity, Column, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
-import { ProcessContext } from '#/database/process-context/process-context.entity';
-import { Secret } from '#/database/secret/secret.entity';
+import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
+import { Secret } from '#/scheduler-database/secret/secret.entity';
 import { Tenant } from '#/database/tenant/tenant.entity';
 
-@Entity()
+@Entity({schema: 'scheduler'})
 export class ProcessContextSecret {
     @PrimaryColumn({ type: 'uuid', generated: 'uuid' })
     id: string;
@@ -12,14 +12,14 @@ export class ProcessContextSecret {
     name: string;
 
     @ManyToOne(() => Tenant, tenant => tenant.processContextSecrets)
-    @JoinColumn({ name: 'tenant_id', referencedColumnName: 'id' })
+    @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 
     @Column('uuid', { name: 'tenant_id' })
     tenantId: string;
 
     @ManyToOne(() => ProcessContext, processContext => processContext.secrets)
-    @JoinColumn({ name: 'process_context_id', referencedColumnName: 'id' })
+    @JoinColumn({ name: 'process_context_id' })
     processContext: ProcessContext;
 
     @Column('uuid', { name: 'process_context_id' })
@@ -31,4 +31,7 @@ export class ProcessContextSecret {
 
     @Column('uuid', { name: 'secret_id' })
     secretId: string;
+    
+    @Column('int')
+    order: number;
 }

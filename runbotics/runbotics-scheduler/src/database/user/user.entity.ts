@@ -4,7 +4,7 @@ import { AuthorityEntity } from '../authority/authority.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { Tenant } from '#/database/tenant/tenant.entity';
 
-@Entity({ name: 'jhi_user' })
+@Entity({ name: 'jhi_user', synchronize: false })
 export class UserEntity implements IUser {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
         id: number;
