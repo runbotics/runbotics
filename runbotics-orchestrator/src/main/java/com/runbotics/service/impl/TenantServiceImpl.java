@@ -165,13 +165,46 @@ public class TenantServiceImpl implements TenantService {
         }
     }
 
-    public TenantInviteCodeDTO generateInviteCode() {
+    public Optional<TenantInviteCodeDTO> getActiveInviteCode(UUID tenantId) {
         final User user = userService.getUserWithAuthorities().get();
 
+        if (userService.hasAdminRole(user)) {
+            if (tenantId == null) {
+                throw new BadRequestAlertException("Tenant is not defined by ID", ENTITY_NAME, "idNotFound");
+            }
+            return tenantInviteCodeRepository
+                .findByTenantIdAndExpirationDateBefore(
+                    tenantId, ZonedDateTime.now()
+                ).map(TenantInviteCodeDTO::new);
+        }
+
+        return tenantInviteCodeRepository
+            .findByTenantIdAndExpirationDateBefore(
+                user.getTenant().getId(), ZonedDateTime.now()
+            ).map(TenantInviteCodeDTO::new);
+    }
+
+    public TenantInviteCodeDTO generateInviteCode(UUID tenantId) {
+        final User user = userService.getUserWithAuthorities().get();
         TenantInviteCode newInviteCode = new TenantInviteCode();
-        newInviteCode.setTenantId(user.getTenant().getId());
-        newInviteCode.setCreationDate(ZonedDateTime.now());
-        newInviteCode.setIsActive(true);
+
+        if (userService.hasAdminRole(user)) {
+            if (tenantId == null) {
+                throw new BadRequestAlertException("Tenant is not defined by ID", ENTITY_NAME, "idNotFound");
+            }
+
+            Tenant tenant = tenantRepository.findById(tenantId).orElseThrow(
+                () -> new BadRequestAlertException("Cannot find tenant by ID", ENTITY_NAME, "tenantNotFound")
+            );
+
+            newInviteCode.setTenantId(tenantId);
+        } else {
+            newInviteCode.setTenantId(user.getTenant().getId());
+        }
+
+        ZonedDateTime actualTime = ZonedDateTime.now();
+        newInviteCode.setCreationDate(actualTime);
+        newInviteCode.setExpirationDate(actualTime.plusWeeks(1));
 
         return new TenantInviteCodeDTO(tenantInviteCodeRepository.save(newInviteCode));
     }

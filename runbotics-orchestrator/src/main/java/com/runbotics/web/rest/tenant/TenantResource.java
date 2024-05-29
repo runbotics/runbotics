@@ -53,12 +53,25 @@ public class TenantResource {
     //        );
     //    }
 
-    @GetMapping("/invite-code")
+    @GetMapping(value = { "/invite-code/{id}", "/invite-code" })
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_GET_INVITE_CODE + "')")
+    public ResponseEntity<TenantInviteCodeDTO> getInviteCode(
+        @PathVariable(value = "id", required = false) UUID tenantId
+    ) {
+        log.debug("REST request to get actual tenant invite code");
+
+        Optional<TenantInviteCodeDTO> inviteCode = tenantService.getActiveInviteCode(tenantId);
+        return ResponseUtil.wrapOrNotFound(inviteCode);
+    }
+
+    @PostMapping(value = { "/invite-code/{id}", "/invite-code" })
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_CREATE_INVITE_CODE + "')")
-    public ResponseEntity<TenantInviteCodeDTO> getNewInviteCode() {
+    public ResponseEntity<TenantInviteCodeDTO> getNewInviteCode(
+        @PathVariable(value = "id", required = false) UUID tenantId
+    ) {
         log.debug("REST request to get new tenant invite code");
 
-        TenantInviteCodeDTO newInviteCode = tenantService.generateInviteCode();
+        TenantInviteCodeDTO newInviteCode = tenantService.generateInviteCode(tenantId);
         return ResponseEntity.ok().body(newInviteCode);
     }
 }
