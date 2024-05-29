@@ -1,5 +1,5 @@
 import { IAuthority, IUser } from 'runbotics-common';
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { AuthorityEntity } from '../authority/authority.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { Tenant } from '#/database/tenant/tenant.entity';
@@ -62,6 +62,6 @@ export class UserEntity implements IUser {
     })
         authorities: IAuthority[];
     
-    @OneToMany(() => Tenant, tenant => tenant.createdBy)
+    @ManyToOne(() => Tenant, tenant => tenant.createdBy)
     tenants: Tenant[];
 }
