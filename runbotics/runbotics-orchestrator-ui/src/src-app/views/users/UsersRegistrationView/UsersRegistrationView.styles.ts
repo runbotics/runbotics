@@ -1,4 +1,4 @@
-import { Button, TextField, Select, Box } from '@mui/material';
+import { Button, TextField, Select, Box, InputLabel } from '@mui/material';
 import styled from 'styled-components';
 
 export const StyledActionsContainer = styled.div`
@@ -54,5 +54,11 @@ export const StyledSelect = styled(Select)`
 
 export const StyledSearchFilterBox = styled(Box)`
     display: flex;
-    gap: 20px;
+    gap: 10px;
 `;
+
+export const StyledInputLabel = styled(InputLabel)(({ theme }) => `
+    && {
+        color: ${theme.palette.grey[700]};
+    }
+`);

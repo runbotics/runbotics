@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 
-import { FormControl, InputLabel, MenuItem } from '@mui/material';
+import { FormControl, MenuItem } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -23,7 +23,8 @@ import {
     StyledActionsContainer,
     StyledSearchFilterBox,
     StyledTextField,
-    StyledSelect
+    StyledSelect,
+    StyledInputLabel
 } from './UsersRegistrationView.styles';
 import DeleteUserDialog from '../DeleteUserDialog';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
@@ -163,7 +164,7 @@ const UsersRegistrationView: FC = () => {
                     />
                     <If condition={hasAdminAccess}>
                         <FormControl size='small'>
-                            <InputLabel>{translate('Users.Registration.View.Select.Label')}</InputLabel>
+                            <StyledInputLabel>{translate('Users.Registration.View.Select.Label')}</StyledInputLabel>
                             <StyledSelect
                                 label={translate('Users.Registration.View.Select.Label')}
                                 value={tenantSelection}

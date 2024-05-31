@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 
-import { FormControl, InputLabel, MenuItem } from '@mui/material';
+import { FormControl, MenuItem } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ import { usersSelector } from '#src-app/store/slices/Users';
 
 import UsersListEditDialog from './UsersListEdit';
 import UsersListTable from './UsersListTable';
-import { StyledActionsContainer, StyledSearchFilterBox, StyledSelect, StyledTextField } from './UsersListView.styles';
+import { StyledActionsContainer, StyledInputLabel, StyledSearchFilterBox, StyledSelect, StyledTextField } from './UsersListView.styles';
 import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
 const UsersListView: FC = () => {
@@ -102,7 +102,7 @@ const UsersListView: FC = () => {
                     />
                     <If condition={hasAdminAccess}>
                         <FormControl size='small'>
-                            <InputLabel>{translate('Users.List.View.Select.Label')}</InputLabel>
+                            <StyledInputLabel>{translate('Users.List.View.Select.Label')}</StyledInputLabel>
                             <StyledSelect
                                 label={translate('Users.List.View.Select.Label')}
                                 value={tenantSelection}
