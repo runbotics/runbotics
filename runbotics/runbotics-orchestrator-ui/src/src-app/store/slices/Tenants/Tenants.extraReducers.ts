@@ -1,7 +1,15 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { TenantsState } from './Tenants.state';
-import { createOne, deleteOne, getAll, getAllByPage, partialUpdate } from './Tenants.thunks';
+import {
+    createOne,
+    deleteOne,
+    generateInviteCode,
+    getAll,
+    getAllByPage,
+    getInviteCode,
+    partialUpdate
+} from './Tenants.thunks';
 
 const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState>) => {
     builder
@@ -60,6 +68,19 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
         })
         .addCase(deleteOne.rejected, (state) => {
             state.loading = false;
+        })
+
+        // GET INVITE CODE
+        .addCase(getInviteCode.fulfilled, (state, action) => {
+            state.inviteCode = action.payload.inviteCode;
+        })
+        .addCase(getInviteCode.rejected, (state) => {
+            state.inviteCode = null;
+        })
+
+        // GENERATE INVITE CODE
+        .addCase(generateInviteCode.fulfilled, (state, action) => {
+            state.inviteCode = action.payload.inviteCode;
         });
 };
 

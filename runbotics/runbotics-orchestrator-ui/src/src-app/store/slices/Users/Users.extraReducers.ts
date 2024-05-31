@@ -1,7 +1,20 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { UsersState } from './Users.state';
-import { getAll, getAllNotActivatedByPage, getAllActivatedByPage, updateNotActivated, updateActivated, partialUpdate, deleteUser, getActiveNonAdmins } from './Users.thunks';
+import {
+    getAll,
+    getAllNotActivatedByPage,
+    getAllActivatedByPage,
+    getAllActivatedByPageAndTenant,
+    getAllNotActivatedByPageAndTenant,
+    updateNotActivated,
+    updateActivated,
+    partialUpdate,
+    deleteUser,
+    getActiveNonAdmins,
+    updateNotActivatedByTenant,
+    updateActivatedByTenant,
+} from './Users.thunks';
 
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
@@ -52,6 +65,18 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.activated.nonAdmins.loading = false;
         })
 
+        // GET ALL ACTIVATED BY TENANT
+        .addCase(getAllActivatedByPageAndTenant.pending, (state) => {
+            state.tenantActivated.loading = true;
+        })
+        .addCase(getAllActivatedByPageAndTenant.fulfilled, (state, action) => {
+            state.tenantActivated.loading = false;
+            state.tenantActivated.allByPage = { ...action.payload };
+        })
+        .addCase(getAllActivatedByPageAndTenant.rejected, (state) => {
+            state.tenantActivated.loading = false;
+        })
+
         // GET ALL NOT ACTIVATED
         .addCase(getAllNotActivatedByPage.pending, (state) => {
             state.notActivated.loading = true;
@@ -62,6 +87,18 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(getAllNotActivatedByPage.rejected, (state) => {
             state.notActivated.loading = false;
+        })
+
+        // GET ALL NOT ACTIVATED BY TENANT
+        .addCase(getAllNotActivatedByPageAndTenant.pending, (state) => {
+            state.tenantNotActivated.loading = true;
+        })
+        .addCase(getAllNotActivatedByPageAndTenant.fulfilled, (state, action) => {
+            state.tenantNotActivated.loading = false;
+            state.tenantNotActivated.allByPage = { ...action.payload };
+        })
+        .addCase(getAllNotActivatedByPageAndTenant.rejected, (state) => {
+            state.tenantNotActivated.loading = false;
         })
 
         // PATCH UPDATE NOT ACTIVATED USERS
@@ -84,6 +121,28 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(updateActivated.rejected, (state) => {
             state.activated.loading = false;
+        })
+
+        // PATCH UPDATE NOT ACTIVATED USERS BY TENANT
+        .addCase(updateNotActivatedByTenant.pending, (state) => {
+            state.tenantNotActivated.loading = true;
+        })
+        .addCase(updateNotActivatedByTenant.fulfilled, (state) => {
+            state.tenantNotActivated.loading = false;
+        })
+        .addCase(updateNotActivatedByTenant.rejected, (state) => {
+            state.tenantNotActivated.loading = false;
+        })
+
+        // PATCH UPDATE ACTIVATED USERS BY TENANT
+        .addCase(updateActivatedByTenant.pending, (state) => {
+            state.tenantActivated.loading = true;
+        })
+        .addCase(updateActivatedByTenant.fulfilled, (state) => {
+            state.tenantActivated.loading = false;
+        })
+        .addCase(updateActivatedByTenant.rejected, (state) => {
+            state.tenantActivated.loading = false;
         })
 
         // DELETE USER

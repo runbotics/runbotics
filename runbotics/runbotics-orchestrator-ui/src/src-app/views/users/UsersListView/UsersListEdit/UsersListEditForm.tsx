@@ -4,6 +4,7 @@ import { TextField, MenuItem, Switch, Typography } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { languages } from '#src-app/translations/translations';
+import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 import { emailRegex } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
 
 import { UsersListEditFormProps } from './UsersListEdit.types';
@@ -89,6 +90,9 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
             <Typography>
                 {translate('Users.List.Edit.Form.Switch.Activated')}
                 <Switch checked={user.activated} onChange={handleActivatedSwitchChange} />
+                <InfoButtonTooltip
+                    message={translate('Users.List.Edit.Form.Switch.InfoTooltip')}
+                />
             </Typography>
         </>
     );

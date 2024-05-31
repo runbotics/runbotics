@@ -42,6 +42,6 @@ public class ManagedUserVM extends AdminUserDTO {
     // prettier-ignore
     @Override
     public String toString() {
-        return "ManagedUserVM{" + super.toString() + "} ";
+        return "ManagedUserVM{" + super.toString() + ", inviteCode=" + inviteCode + "} ";
     }
 }

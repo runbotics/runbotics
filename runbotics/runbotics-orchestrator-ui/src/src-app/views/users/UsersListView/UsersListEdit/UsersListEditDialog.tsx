@@ -7,7 +7,7 @@ import { IUser } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
-import useUserSearch from '#src-app/hooks/useUserSearch';
+import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { useDispatch, useSelector } from '#src-app/store';
 import { usersSelector, usersActions } from '#src-app/store/slices/Users';
 import englishEditListTranslations from '#src-app/translations/en/users/list/edit';
@@ -22,14 +22,17 @@ import DeleteUserDialog from '../../DeleteUserDialog';
 const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     open,
     onClose,
-    userData
+    userData,
+    isForAdmin
 }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
 
-    const { refreshSearch: refreshSearchActivated } = useUserSearch({ isActivatedUsersOnly: true });
+    const searchType = isForAdmin ? UserSearchType.ALL_ACTIVATED : UserSearchType.TENANT_ACTIVATED;
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType });
     const { activated } = useSelector(usersSelector);
+
     const [user, setUser] = useState<IUser>(userData);
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
@@ -52,7 +55,10 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         if (!checkFormFieldsValidation()) return;
 
         const dataPayload: IUser = getUserDataWithoutEmptyStrings(user);
-        dispatch(usersActions.updateActivated(dataPayload)).unwrap()
+        const updateAction = isForAdmin
+            ? usersActions.updateActivated(dataPayload)
+            : usersActions.updateActivatedByTenant(dataPayload);
+        dispatch(updateAction).unwrap()
             .then(() => {
                 handleClose();
                 enqueueSnackbar(
@@ -80,12 +86,14 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
 
     return (
         <>
-            <DeleteUserDialog
-                open={isDeleteDialogVisible}
-                onClose={handleCloseDeleteDialog}
-                onDelete={handleClose}
-                getSelectedUsers={() => [user]}
-            />
+            <If condition={isForAdmin}>
+                <DeleteUserDialog
+                    open={isDeleteDialogVisible}
+                    onClose={handleCloseDeleteDialog}
+                    onDelete={handleClose}
+                    getSelectedUsers={() => [user]}
+                />
+            </If>
             <If condition={open}>
                 <Dialog open>
                     <Title>
@@ -102,13 +110,17 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
                         </Form>
                     </Content>
                     <StyledDialogActions>
-                        <DeleteButton
-                            onClick={handleOpenDeleteDialog}
-                            variant='contained'
-                            loading={activated.loading}
-                        >
-                            {translate('Users.List.Edit.Form.Button.Delete')}
-                        </DeleteButton>
+                        <Box>
+                            <If condition={isForAdmin}>
+                                <DeleteButton
+                                    onClick={handleOpenDeleteDialog}
+                                    variant='contained'
+                                    loading={activated.loading}
+                                >
+                                    {translate('Users.List.Edit.Form.Button.Delete')}
+                                </DeleteButton>
+                            </If>
+                        </Box>
                         <Box>
                             <StyledButton
                                 onClick={handleClose}

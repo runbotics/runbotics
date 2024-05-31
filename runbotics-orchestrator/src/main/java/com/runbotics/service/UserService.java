@@ -124,7 +124,7 @@ public class UserService {
     }
 
     @Transactional(noRollbackFor = BadRequestAlertException.class)
-    public User registerUser(AdminUserDTO userDTO, String password, UUID inviteCode) {
+    public User registerUser(AdminUserDTO userDTO, String password, UUID inviteCodeId) {
         userRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
             .ifPresent(
@@ -165,23 +165,17 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
 
-        if (inviteCode != null) {
+        if (inviteCodeId != null) {
             TenantInviteCode tenantInviteCode = tenantInviteCodeRepository
-                .findById(inviteCode)
+                .findById(inviteCodeId)
                 .orElseThrow(() -> new BadRequestAlertException("Bad invite code", ENTITY_NAME, "badInviteCode"));
 
-            if (!tenantInviteCode.isActive()) {
-                throw new BadRequestAlertException("Invite code is not active", ENTITY_NAME, "notActiveInviteCode");
-            }
-
-            if (!tenantInviteCode.getCreationDate().plusDays(3).isAfter(ZonedDateTime.now())) {
-                tenantInviteCode.setIsActive(false);
-                tenantInviteCodeRepository.save(tenantInviteCode);
+            if (tenantInviteCode.getExpirationDate().isBefore(ZonedDateTime.now())) {
                 throw new BadRequestAlertException("Invite code has expired", ENTITY_NAME, "expiredInviteCode");
             }
 
             Tenant foundTenant = tenantRepository
-                .findByInviteCode(inviteCode).get();
+                .findByInviteCode(inviteCodeId).get();
 
             newUser.setTenant(foundTenant);
         } else {
