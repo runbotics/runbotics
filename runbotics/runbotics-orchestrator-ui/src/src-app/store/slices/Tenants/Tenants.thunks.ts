@@ -40,8 +40,14 @@ export const deleteOne = createAsyncThunk<void, number>(
     (id) => axios.delete(`/api/admin/tenants/${id}`)
 );
 
-export const getInviteCode = createAsyncThunk<TenantInviteCode, void>(
+export const getInviteCode = createAsyncThunk<TenantInviteCode, string | void>(
     'tenants/getInviteCode',
-    () => axios.get('/api/tenant/tenants/invite-code')
+    (id) => axios.get(`/api/tenant/tenants/invite-code/${id}`)
+        .then(response => response.data)
+);
+
+export const generateInviteCode = createAsyncThunk<TenantInviteCode, string | void>(
+    'tenants/generateInviteCode',
+    (id) => axios.post(`/api/tenant/tenants/invite-code/${id}`)
         .then(response => response.data)
 );

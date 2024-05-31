@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.runbotics.service.dto.TenantInviteCodeDTO;
+import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +71,10 @@ public class TenantResource {
         @PathVariable(value = "id", required = false) UUID tenantId
     ) {
         log.debug("REST request to get new tenant invite code");
+
+       if (tenantService.getActiveInviteCode(tenantId).isPresent()) {
+           throw new BadRequestAlertException("Valid code exists for the tenant", ENTITY_NAME, "codeExist");
+       }
 
         TenantInviteCodeDTO newInviteCode = tenantService.generateInviteCode(tenantId);
         return ResponseEntity.ok().body(newInviteCode);

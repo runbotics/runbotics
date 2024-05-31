@@ -2,6 +2,7 @@ import { ChangeEvent, FC } from 'react';
 
 import { TextField } from '@mui/material';
 
+import InviteCodeButton from '#src-app/components/InviteCodeButton';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { TenantsListEditFormProps } from './TenantsListEdit.types';
@@ -33,6 +34,7 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
                 error={!formValidationState.name}
                 {...(!formValidationState.name && { helperText: translate('Tenants.List.Edit.Form.Error.FieldRequired') })}
             />
+            <InviteCodeButton tenantId={tenant.id}/>
         </>
     );
 };

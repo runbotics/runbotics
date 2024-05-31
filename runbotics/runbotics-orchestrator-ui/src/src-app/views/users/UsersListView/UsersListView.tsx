@@ -1,11 +1,12 @@
 import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 
-import { FormControl, InputLabel, MenuItem, Box, Button } from '@mui/material';
+import { FormControl, InputLabel, MenuItem } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { IUser, Role } from 'runbotics-common';
 
+import InviteCodeButton from '#src-app/components/InviteCodeButton';
 import If from '#src-app/components/utils/If';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -49,7 +50,6 @@ const UsersListView: FC = () => {
 
     const [userData, setUserData] = useState<IUser>();
     const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
-    const [inviteCode, setInviteCode] = useState('');
 
     const handleOpenEditDialog = (rowData) => {
         setIsEditDialogVisible(true);
@@ -59,33 +59,6 @@ const UsersListView: FC = () => {
     const handleCloseEditDialog = () => {
         setIsEditDialogVisible(false);
     };
-
-    const fetchInviteCode = () => {
-        dispatch(tenantsActions.getInviteCode()).unwrap()
-            .then(res => {
-                setInviteCode(res.inviteCode);
-            });
-    };
-
-    const clipboardInviteCode = (e) => {
-        navigator.clipboard.writeText(`${window.location.origin}/register?inviteCode=${inviteCode}`);
-        e.target.innerText = translate('Users.List.View.Button.InviteCode.Copied');
-    };
-
-    const inviteButton = inviteCode
-        ? <Button
-            variant='outlined'
-            onClick={clipboardInviteCode}
-            onBlur={(e) => e.target.innerText=translate('Users.List.View.Button.InviteCode.Copy')}
-        >
-            {translate('Users.List.View.Button.InviteCode.Copy')}
-        </Button>
-        : <Button
-            variant='contained'
-            onClick={fetchInviteCode}
-        >
-            {translate('Users.List.View.Button.InviteCode.Generate')}
-        </Button>;
 
     useEffect(() => {
         const allUsers = hasAdminAccess ? activated.allByPage : tenantActivated.allByPage;
@@ -102,7 +75,11 @@ const UsersListView: FC = () => {
     useEffect(() => {
         refreshSearch();
 
-        if (hasAdminAccess) dispatch(tenantsActions.getAll());
+        if (hasAdminAccess) {
+            dispatch(tenantsActions.getAll());
+        } else {
+            dispatch(tenantsActions.getInviteCode());
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -142,7 +119,7 @@ const UsersListView: FC = () => {
                     </If>
                 </StyledSearchFilterBox>
                 <If condition={!hasAdminAccess}>
-                    <Box>{inviteButton}</Box>
+                    <InviteCodeButton/>
                 </If>
             </StyledActionsContainer>
             <UsersListTable

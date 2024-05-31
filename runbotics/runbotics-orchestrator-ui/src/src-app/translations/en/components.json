@@ -183,5 +183,9 @@
 
     "Component.NotificationTable.View.Header": "Subscribers",
     "Component.NotificationTable.View.SearchBarPlaceholder": "Search",
-    "Component.NotificationTable.Results.Error": "No subscribers found"
+    "Component.NotificationTable.Results.Error": "No subscribers found",
+
+    "Component.InviteCodeButton.Generate": "Generate invite link",
+    "Component.InviteCodeButton.Copy": "Click to copy invite link",
+    "Component.InviteCodeButton.Copied": "Invite link copied!"
 }
