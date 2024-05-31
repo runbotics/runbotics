@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="gasiorowskaa" id="20240531702705-1">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'</sqlCheck>
+        </preConditions>
+
+        <update tableName="tenant">
+            <column name="created" value="2024-01-01"/>
+            <column name="updated" value="2024-01-01"/>
+            <where>id='b7f9092f-5973-c781-08db-4d6e48f78e98'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>
