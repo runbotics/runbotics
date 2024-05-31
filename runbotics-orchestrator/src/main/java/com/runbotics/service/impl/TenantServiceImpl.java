@@ -115,7 +115,7 @@ public class TenantServiceImpl implements TenantService {
 
         Tenant tenant = tenantMapper.toEntity(tenantDTO);
         tenant.setCreatedBy(currentUser);
-        tenant.setLastModifiedBy("system");
+        tenant.setLastModifiedBy(currentUser.getEmail());
         tenant.setUpdated(ZonedDateTime.now());
         tenant.setCreated(ZonedDateTime.now());
 

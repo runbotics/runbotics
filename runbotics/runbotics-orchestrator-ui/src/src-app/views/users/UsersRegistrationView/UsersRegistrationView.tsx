@@ -105,7 +105,14 @@ const UsersRegistrationView: FC = () => {
         const { email } = hasAdminAccess
             ? notActivated.allByPage.content.find((row) => row.id === id)
             : tenantNotActivated.allByPage.content.find((row) => row.id === id);
-        return { id, email, roles: [role], activated: true, ...(tenantId && { tenant: { id: tenantId } }) };
+
+        return {
+            id,
+            email,
+            roles: [role],
+            activated: true,
+            ...(tenantId && { tenant: { id: tenantId } })
+        };
     };
 
     const handleSubmit = (usersData: IUser[]) =>

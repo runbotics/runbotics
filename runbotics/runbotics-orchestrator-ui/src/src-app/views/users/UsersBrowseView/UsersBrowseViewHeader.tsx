@@ -16,7 +16,7 @@ const UsersBrowseViewHeader: FC = () => {
 
     const header = hasAdminAccess
         ? translate('Users.Browse.Header.Title')
-        : `${translate('Users.Browse.Header.Title')} - ${user.tenant.name}`;
+        : `${translate('Users.Browse.Header.Title')} | ${user.tenant.name}`;
 
     return (
         <StyledHeaderGrid

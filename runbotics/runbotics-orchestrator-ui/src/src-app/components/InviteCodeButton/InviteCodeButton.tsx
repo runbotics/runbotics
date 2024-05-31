@@ -8,9 +8,10 @@ import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 
 interface InviteCodeButtonProps {
     tenantId?: string;
+    fullWidth?: boolean | null;
 }
 
-const InviteCodeButton: VFC<InviteCodeButtonProps> = ({ tenantId }) => {
+const InviteCodeButton: VFC<InviteCodeButtonProps> = ({ tenantId, fullWidth }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
 
@@ -21,8 +22,14 @@ const InviteCodeButton: VFC<InviteCodeButtonProps> = ({ tenantId }) => {
         e.target.innerText = translate('Component.InviteCodeButton.Copied');
     };
 
-    const generateInviteCode = () => {
-        dispatch(tenantsActions.generateInviteCode(tenantId ?? ''));
+    const generateInviteCode = (e) => {
+        dispatch(tenantsActions.generateInviteCode(tenantId ?? ''))
+            .unwrap()
+            .then(({ inviteCode: code }) => {
+                navigator.clipboard.writeText(`${window.location.origin}/register?inviteCode=${code}`);
+                e.target.innerText = translate('Component.InviteCodeButton.Copied');
+            })
+        ;
     };
 
     useEffect(() => {
@@ -32,6 +39,7 @@ const InviteCodeButton: VFC<InviteCodeButtonProps> = ({ tenantId }) => {
 
     const inviteButton = inviteCode
         ? <Button
+            fullWidth={fullWidth}
             variant='outlined'
             onClick={clipboardInviteCode}
             onBlur={(e) => e.target.innerText=translate('Component.InviteCodeButton.Copy')}
@@ -39,6 +47,7 @@ const InviteCodeButton: VFC<InviteCodeButtonProps> = ({ tenantId }) => {
             {translate('Component.InviteCodeButton.Copy')}
         </Button>
         : <Button
+            fullWidth={fullWidth}
             variant='contained'
             onClick={generateInviteCode}
         >
