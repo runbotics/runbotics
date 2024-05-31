@@ -61,7 +61,7 @@ const Account: FC = () => {
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
-    const hasUserEditAccess = useFeatureKey([FeatureKey.TENANT_EDIT_USER, FeatureKey.BASIC_USER_READ], { oneOf: true });
+    const hasUserEditAccess = useFeatureKey([FeatureKey.TENANT_EDIT_USER, FeatureKey.USERS_PAGE_READ], { oneOf: true });
 
     const { pathname } = useRouter();
 
