@@ -864,11 +864,6 @@ packages:
     resolution: {integrity: sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==}
     dev: true
 
-  /@0dep/piso@0.1.4:
-    resolution: {integrity: sha512-OacZIA+gerIn0puKddoUb25UutSAy42Enq/nodiaabWD4Sq1i1CM+vsKZdxDRmcTcP9uygKo9D1ua6BRVXrloQ==}
-    engines: {node: '>=14'}
-    dev: false
-
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
@@ -4345,7 +4340,7 @@ packages:
       nodemailer: ^6.4.6
     dependencies:
       '@nestjs/common': 9.4.3(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@nestjs/core': 9.4.3(@nestjs/common@9.4.3)(@nestjs/platform-express@9.4.3)(@nestjs/websockets@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@nestjs/core': 9.4.3(@nestjs/common@9.4.3)(@nestjs/microservices@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       glob: 8.0.3
       inline-css: 4.0.1
       mjml: 4.14.1
@@ -7348,13 +7343,6 @@ packages:
   /boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
 
-  /bpmn-elements@14.1.0:
-    resolution: {integrity: sha512-nDMJEDtkqyK4mi9mkpwjNObsLug0JzRVm4JnxArA1vgEPm2BcQNu5es9JSSdz2fHqn6m/5TkVm6Ka99Zh3WTFQ==}
-    dependencies:
-      '@0dep/piso': 0.1.4
-      smqp: 8.2.4
-    dev: false
-
   /bpmn-elements@5.2.0:
     resolution: {integrity: sha512-R3gl0N0+NZo9IB06jbBOOVK3x06cDPcLUyGcvBHsiqApa+7icey7/4EmADn0PAoY9bNrcG39uygcpWf9yWiBvA==}
     dependencies:
@@ -7372,19 +7360,6 @@ packages:
       smqp: 5.1.3
     transitivePeerDependencies:
       - supports-color
-
-  /bpmn-engine@21.1.0:
-    resolution: {integrity: sha512-vE5YzovQvQZc7xW4AQ0aXRdItZOjtO6JuwciIMYKyNbuTNUwzeHqIWkUU1OWgDKUafeqhpXa/4RHP2Gz8mZ2fA==}
-    engines: {node: '>=14'}
-    dependencies:
-      bpmn-elements: 14.1.0
-      bpmn-moddle: 9.0.1
-      debug: 4.3.4(supports-color@5.5.0)
-      moddle-context-serializer: 4.2.0(bpmn-moddle@9.0.1)
-      smqp: 8.2.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
 
   /bpmn-js-properties-panel@0.42.0(bpmn-js@8.10.0):
     resolution: {integrity: sha512-RkKIRIrFZa2J0nzh9mCiDxICHwYveB0gdcwrI2fNvQlO5jf3+y0SJhqwU1fnei8J1EbZcw9ENhMH5UyJjL6tSQ==}
@@ -7424,15 +7399,6 @@ packages:
       min-dash: 3.8.1
       moddle: 5.0.4
       moddle-xml: 9.0.6
-
-  /bpmn-moddle@9.0.1:
-    resolution: {integrity: sha512-jO2P5RBx0cZCCd+imqhpNE5anttaYuGd71u76NEA/qMZwJSW1t5ETAtw9/E2InfiPU2w0TR8oxPyopJXRc9VQg==}
-    engines: {node: '>= 18'}
-    dependencies:
-      min-dash: 4.2.1
-      moddle: 7.0.0
-      moddle-xml: 11.0.0(moddle@7.0.0)
-    dev: false
 
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -12963,10 +12929,6 @@ packages:
   /min-dash@3.8.1:
     resolution: {integrity: sha512-evumdlmIlg9mbRVPbC4F5FuRhNmcMS5pvuBUbqb1G9v09Ro0ImPEgz5n3khir83lFok1inKqVDjnKEg3GpDxQg==}
 
-  /min-dash@4.2.1:
-    resolution: {integrity: sha512-to+unsToePnm7cUeR9TrMzFlETHd/UXmU+ELTRfWZj5XGT41KF6X3L233o3E/GdEs3sk2Tbw/lOLD1avmWkg8A==}
-    dev: false
-
   /min-document@2.19.0:
     resolution: {integrity: sha512-9Wy1B3m3f66bPPmU5hdA4DR4PB2OfDU/+GS3yAB7IQozE3tqXaVv2zOjgla7MEGSRv95+ILmOuvhLkOK6wJtCQ==}
     dependencies:
@@ -13457,25 +13419,6 @@ packages:
     dependencies:
       bpmn-moddle: 7.1.3
 
-  /moddle-context-serializer@4.2.0(bpmn-moddle@9.0.1):
-    resolution: {integrity: sha512-aQwn5bWR59CjRcgAFURrCd4+YepwNQDpktUyc6T09OPHsxkeYdwwDjge7kbaCg2T6Gy3PtK/qsuK/tVwtivubw==}
-    peerDependencies:
-      bpmn-moddle: '>=6'
-    dependencies:
-      bpmn-moddle: 9.0.1
-    dev: false
-
-  /moddle-xml@11.0.0(moddle@7.0.0):
-    resolution: {integrity: sha512-L3Sseepfcq9Uy0iIfqEDTXSoYLva1Y/JGbN/4AMOeQ6cqbu8Ma/SDJIdOFm7smsAa64j2z3SwCGG3FIilQVnUg==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      moddle: '>= 6.2.0'
-    dependencies:
-      min-dash: 4.2.1
-      moddle: 7.0.0
-      saxen: 10.0.0
-    dev: false
-
   /moddle-xml@9.0.6:
     resolution: {integrity: sha512-tl0reHpsY/aKlLGhXeFlQWlYAQHFxTkFqC8tq8jXRYpQSnLVw13T6swMaourLd7EXqHdWsc+5ggsB+fEep6xZQ==}
     dependencies:
@@ -13487,12 +13430,6 @@ packages:
     resolution: {integrity: sha512-Kjb+hjuzO+YlojNGxEUXvdhLYTHTtAABDlDcJTtTcn5MbJF9Zkv4I1Fyvp3Ypmfgg1EfHDZ3PsCQTuML9JD6wg==}
     dependencies:
       min-dash: 3.8.1
-
-  /moddle@7.0.0:
-    resolution: {integrity: sha512-Hpte2hfKDwoZWPvDngsEHjloPnO+sKMUVkAPc0r9PrpnVLqsyPUTV0ZQU8CAp87YmRZ9QzeQMJxdKbaP9vEIKA==}
-    dependencies:
-      min-dash: 4.2.1
-    dev: false
 
   /module-details-from-path@1.0.3:
     resolution: {integrity: sha512-ySViT69/76t8VhE1xXHK6Ch4NcDd26gx0MzKXLO+F7NOtnqH68d9zF94nT8ZWSxXh8ELOERsnJO/sWt1xZYw5A==}
@@ -16478,11 +16415,6 @@ packages:
   /sax@1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
 
-  /saxen@10.0.0:
-    resolution: {integrity: sha512-RXsmWok/SAWqOG/f5ADEz51DN9WtZEzqih3e08ranldcaXekxjx8NBKjGh/y5hlowjo0JH/LekBu6gtPFD1G6g==}
-    engines: {node: '>= 18'}
-    dev: false
-
   /saxen@8.1.2:
     resolution: {integrity: sha512-xUOiiFbc3Ow7p8KMxwsGICPx46ZQvy3+qfNVhrkwfz3Vvq45eGt98Ft5IQaA1R/7Tb5B5MKh9fUR9x3c3nDTxw==}
 
@@ -16711,10 +16643,6 @@ packages:
   /smqp@5.1.3:
     resolution: {integrity: sha512-gnV9u3w8nZFWmXxDCuAtIVqfhS+KiGOKSpS//Enrqpxczl7+2c5shZ23xNaI5YYwWArzWuAYEyySWi+QZUSnAA==}
     engines: {node: '>=10'}
-
-  /smqp@8.2.4:
-    resolution: {integrity: sha512-qwh1tjKp0C5jZTjdrNAVtp7avt0JU6cxZyVqCN3vOANKJgSGbKluXvc4upcmPF8lsOkBkDHERIRHrAuDqDlp8w==}
-    dev: false
 
   /socket.io-adapter@2.5.2:
     resolution: {integrity: sha512-87C3LO/NOMc+eMcpcxUBebGjkpMDkNBS9tf7KJqcDsmL936EChtVva71Dw2q4tQcuVC+hAUy4an2NO/sYXmwRA==}
