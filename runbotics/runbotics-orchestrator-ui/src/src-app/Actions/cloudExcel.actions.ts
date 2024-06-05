@@ -1,13 +1,15 @@
 import { CloudExcelAction, ActionRegex, MicrosoftPlatform } from 'runbotics-common';
 
+import { ActionCredentialType } from '#src-app/Actions/action-credential-type';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
-const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
+const getCloudExcelActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
     [CloudExcelAction.OPEN_FILE]: {
         id: CloudExcelAction.OPEN_FILE,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.OpenFile.Label'),
         script: CloudExcelAction.OPEN_FILE,
         runner: Runner.DESKTOP_SCRIPT,
@@ -109,6 +111,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.CREATE_WORKSHEET]: {
         id: CloudExcelAction.CREATE_WORKSHEET,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label'),
         script: CloudExcelAction.CREATE_WORKSHEET,
         runner: Runner.DESKTOP_SCRIPT,
@@ -179,6 +182,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.GET_CELL]: {
         id: CloudExcelAction.GET_CELL,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.GetCell.Label'),
         script: CloudExcelAction.GET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
@@ -251,6 +255,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.GET_CELLS]: {
         id: CloudExcelAction.GET_CELLS,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.GetCells.Label'),
         script: CloudExcelAction.GET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -332,6 +337,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.GET_WORKSHEET_CONTENT]: {
         id: CloudExcelAction.GET_WORKSHEET_CONTENT,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.GetWorksheetContent.Label'),
         script: CloudExcelAction.GET_WORKSHEET_CONTENT,
         runner: Runner.DESKTOP_SCRIPT,
@@ -398,6 +404,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.SET_CELL]: {
         id: CloudExcelAction.SET_CELL,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.SetCell.Label'),
         script: CloudExcelAction.SET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
@@ -433,6 +440,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.SET_CELLS]: {
         id: CloudExcelAction.SET_CELLS,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.SetCells.Label'),
         script: CloudExcelAction.SET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -512,6 +520,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.DELETE_WORKSHEET]: {
         id: CloudExcelAction.DELETE_WORKSHEET,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.Label'),
         script: CloudExcelAction.DELETE_WORKSHEET,
         runner: Runner.DESKTOP_SCRIPT,
@@ -552,6 +561,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.DELETE_COLUMNS]: {
         id: CloudExcelAction.DELETE_COLUMNS,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.Label'),
         script: CloudExcelAction.DELETE_COLUMNS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -599,6 +609,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.DELETE_ROWS]: {
         id: CloudExcelAction.DELETE_ROWS,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Label'),
         script: CloudExcelAction.DELETE_ROWS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -646,6 +657,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.CLOSE_SESSION]: {
         id: CloudExcelAction.CLOSE_SESSION,
+        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label'),
         script: CloudExcelAction.CLOSE_SESSION,
         runner: Runner.DESKTOP_SCRIPT,

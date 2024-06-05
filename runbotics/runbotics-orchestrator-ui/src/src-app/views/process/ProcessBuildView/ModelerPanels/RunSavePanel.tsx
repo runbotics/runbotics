@@ -14,6 +14,7 @@ import { ModelerErrorType } from '#src-app/store/slices/Process';
 import { StyledBotProcessRunner } from './ModelerPanels.styled';
 import TooltipError from './TooltipError';
 import FloatingGroup from '../FloatingGroup';
+import { getProcessRequiredCredentials } from '#src-app/views/process/ProcessBuildView/getProcessRequiredCredentials';
 
 interface RunSavePanelProps {
     process: IProcess;
@@ -30,6 +31,8 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
     const { isSaveDisabled, errors, customValidationErrors } = useSelector(
         (state) => state.process.modeler
     );
+    getProcessRequiredCredentials();
+
     const getTooltip = () => {
         const {
             formErrorElementsNames,
