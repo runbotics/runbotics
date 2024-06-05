@@ -1,5 +1,5 @@
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useSelector } from '#src-app/store';
 import { getRequiredCredentialsTypesInProcess } from '#src-app/credentials/getRequiredCredentialsTypesInProcess';
 
