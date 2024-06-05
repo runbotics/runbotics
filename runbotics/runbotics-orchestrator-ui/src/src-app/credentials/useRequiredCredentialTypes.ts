@@ -1,5 +1,5 @@
 import { useModelerContext } from '#src-app/hooks/useModelerContext';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector } from '#src-app/store';
 import { getRequiredCredentialsTypesInProcess } from '#src-app/credentials/getRequiredCredentialsTypesInProcess';
 
@@ -7,9 +7,10 @@ export const useRequiredCredentialTypes = () => {
     const draftProcess = useSelector((state) => state.process.draft.process);
     const { modeler } = useModelerContext();
 
-    useEffect(() => {
+    return useMemo(() => {
         if(modeler && draftProcess){
-            getRequiredCredentialsTypesInProcess(modeler);
+            return getRequiredCredentialsTypesInProcess(modeler);
         }
+        return null;
     }, [draftProcess, modeler]);
 }
