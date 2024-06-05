@@ -2,9 +2,11 @@ import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
+import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 
-export const deleteCloudItemAction: IBpmnAction = {
+export const deleteCloudItemAction = {
     id: CloudFileAction.DELETE_ITEM,
+    credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.DeleteItem.Label'),
     script: CloudFileAction.DELETE_ITEM,
     runner: Runner.DESKTOP_SCRIPT,
@@ -82,4 +84,4 @@ export const deleteCloudItemAction: IBpmnAction = {
             }
         }
     }
-};
+} satisfies IBpmnAction;

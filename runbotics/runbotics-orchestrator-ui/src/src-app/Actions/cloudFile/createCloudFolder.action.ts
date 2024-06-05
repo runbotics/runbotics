@@ -2,9 +2,11 @@ import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
+import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 
-export const createCloudFolderAction: IBpmnAction = {
+export const createCloudFolderAction = {
     id: CloudFileAction.CREATE_FOLDER,
+    credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.CreateFolder.Label'),
     script: CloudFileAction.CREATE_FOLDER,
     runner: Runner.DESKTOP_SCRIPT,
@@ -94,4 +96,4 @@ export const createCloudFolderAction: IBpmnAction = {
             },
         },
     },
-};
+} satisfies IBpmnAction;

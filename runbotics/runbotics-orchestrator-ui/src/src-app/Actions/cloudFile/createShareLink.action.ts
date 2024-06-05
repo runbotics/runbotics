@@ -2,9 +2,11 @@ import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
+import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 
-export const createShareLinkAction: IBpmnAction = {
+export const createShareLinkAction = {
     id: CloudFileAction.CREATE_SHARE_LINK,
+    credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.CreateShareLink.Label'),
     script: CloudFileAction.CREATE_SHARE_LINK,
     runner: Runner.DESKTOP_SCRIPT,
@@ -116,4 +118,4 @@ export const createShareLinkAction: IBpmnAction = {
             },
         },
     },
-};
+} satisfies IBpmnAction;

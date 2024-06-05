@@ -11,7 +11,7 @@ import { uploadCloudFileAction } from '#src-app/Actions/cloudFile/uploadCloudFil
 import { IBpmnAction } from '../types';
 
 // eslint-disable-next-line max-lines-per-function
-const getCloudFileActions: () => Record<string, IBpmnAction> = () => ({
+const getCloudFileActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
     [CloudFileAction.DOWNLOAD_FILE]: downloadCloudFileAction,
     [CloudFileAction.UPLOAD_FILE]: uploadCloudFileAction,
     [CloudFileAction.CREATE_FOLDER]: createCloudFolderAction,
