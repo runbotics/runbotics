@@ -333,9 +333,6 @@ importers:
       axios:
         specifier: ^0.21.1
         version: 0.21.4
-      bpmn-engine:
-        specifier: ~21.1.0
-        version: 21.1.0
       bpmn-js:
         specifier: ^8.3.0
         version: 8.10.0
