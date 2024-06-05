@@ -183,5 +183,9 @@
 
     "Component.NotificationTable.View.Header": "Subskrybenci",
     "Component.NotificationTable.View.SearchBarPlaceholder": "Szukaj",
-    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów"
+    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów",
+
+    "Component.InviteCodeButton.Generate": "Wygeneruj link zaproszenia",
+    "Component.InviteCodeButton.Copy": "Kliknij aby skopiować link zaproszenia",
+    "Component.InviteCodeButton.Copied": "Link skopiowany!"
 }

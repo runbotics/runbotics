@@ -15,6 +15,7 @@ import {
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
 import RouterLink from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import styled from 'styled-components';
@@ -72,6 +73,7 @@ interface RegisterFormState {
     passwordConfirmation: string;
     submit: null | boolean;
     langKey: Language;
+    inviteCode?: string;
 }
 
 const initialValues: RegisterFormState = {
@@ -89,6 +91,9 @@ const RegisterPage: FC = () => {
     const { translate } = useTranslations();
     const registerValidationSchema = useRegisterValidationSchema();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const inviteCodeURL = searchParams.get('inviteCode');
+
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
 
@@ -183,7 +188,7 @@ const RegisterPage: FC = () => {
             <RouterLink href="/privacy-policy" target="blank">
                 <Link>{translate('Landing.Policy.Info.Link')}</Link>
             </RouterLink>
-        </> 
+        </>
     , [translate]);
 
     const renderForm = ({
@@ -239,6 +244,19 @@ const RegisterPage: FC = () => {
                 onChange={handleChange}
                 type="password"
                 value={values.passwordConfirmation}
+                variant="outlined"
+            />
+            <TextField
+                fullWidth
+                label={translate(
+                    'Register.Form.Fields.InviteCode.Label'
+                )}
+                margin="normal"
+                name="inviteCode"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                type="text"
+                value={values.inviteCode}
                 variant="outlined"
             />
             <Box my={3}>
@@ -298,7 +316,7 @@ const RegisterPage: FC = () => {
                         </Box>
                         <Box flexGrow={1} mt={3}>
                             <Formik
-                                initialValues={initialValues}
+                                initialValues={{ ...initialValues, inviteCode: inviteCodeURL ?? '' }}
                                 validationSchema={registerValidationSchema}
                                 onSubmit={handleFormSubmit}
                             >

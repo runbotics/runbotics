@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.runbotics.service.dto.TenantInviteCodeDTO;
+import com.runbotics.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,12 +54,29 @@ public class TenantResource {
     //        );
     //    }
 
-    @GetMapping("/invite-code")
+    @GetMapping(value = { "/invite-code/{id}", "/invite-code" })
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_GET_INVITE_CODE + "')")
+    public ResponseEntity<TenantInviteCodeDTO> getInviteCode(
+        @PathVariable(value = "id", required = false) UUID tenantId
+    ) {
+        log.debug("REST request to get actual tenant invite code");
+
+        Optional<TenantInviteCodeDTO> inviteCode = tenantService.getActiveInviteCode(tenantId);
+        return ResponseUtil.wrapOrNotFound(inviteCode);
+    }
+
+    @PostMapping(value = { "/invite-code/{id}", "/invite-code" })
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_CREATE_INVITE_CODE + "')")
-    public ResponseEntity<TenantInviteCodeDTO> getNewInviteCode() {
+    public ResponseEntity<TenantInviteCodeDTO> getNewInviteCode(
+        @PathVariable(value = "id", required = false) UUID tenantId
+    ) {
         log.debug("REST request to get new tenant invite code");
 
-        TenantInviteCodeDTO newInviteCode = tenantService.generateInviteCode();
+       if (tenantService.getActiveInviteCode(tenantId).isPresent()) {
+           throw new BadRequestAlertException("Valid code exists for the tenant", ENTITY_NAME, "codeExist");
+       }
+
+        TenantInviteCodeDTO newInviteCode = tenantService.generateInviteCode(tenantId);
         return ResponseEntity.ok().body(newInviteCode);
     }
 }

@@ -1,0 +1,90 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="gasiorowskaa" id="20240531702705-1">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">SELECT COUNT(*) FROM tenant WHERE id = 'b7f9092f-5973-c781-08db-4d6e48f78e98'</sqlCheck>
+        </preConditions>
+
+        <update tableName="tenant">
+            <column name="created" value="2024-01-01"/>
+            <column name="updated" value="2024-01-01"/>
+            <where>id='b7f9092f-5973-c781-08db-4d6e48f78e98'</where>
+        </update>
+    </changeSet>
+
+    <!-- Missing feature keys for TENANT_ADMIN -->
+    <changeSet author="gasiorowskaa" id="20240531702705-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_TENANT_ADMIN', 'BOT_READ'),
+            ('ROLE_TENANT_ADMIN', 'SCHEDULE_DELETE'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_INSTANCE_HISTORY_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_BOT_SYSTEM_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_DELETE'),
+            ('ROLE_TENANT_ADMIN', 'BOT_COLLECTION_DELETE'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_IS_TRIGGERABLE_EXECUTE'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_LIST_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_INSTANCE_EVENT_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_COLLECTION_EDIT'),
+            ('ROLE_TENANT_ADMIN', 'BOT_HISTORY_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_OUTPUT_TYPE_EDIT'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_START'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_COLLECTION_ADD'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_CONFIGURE_VIEW'),
+            ('ROLE_TENANT_ADMIN', 'BOT_COLLECTION_EDIT'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_RUN_VIEW'),
+            ('ROLE_TENANT_ADMIN', 'GLOBAL_VARIABLE_DELETE'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_TEMPLATES_LIST'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_ADD'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_LIST_TABLE_VIEW'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_ACTIONS_LIST'),
+            ('ROLE_TENANT_ADMIN', 'GLOBAL_VARIABLE_ADD'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_ACTIONS_LIST_ADVANCED'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_BUILD_VIEW'),
+            ('ROLE_TENANT_ADMIN', 'GLOBAL_VARIABLE_READ'),
+            ('ROLE_TENANT_ADMIN', 'SCHEDULE_ADD'),
+            ('ROLE_TENANT_ADMIN', 'BASIC_USER_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_EDIT_INFO'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_IS_ATTENDED_READ'),
+            ('ROLE_TENANT_ADMIN', 'BOT_DELETE'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_BOT_SYSTEM_EDIT'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_COLLECTION_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_IS_ATTENDED_EDIT'),
+            ('ROLE_TENANT_ADMIN', 'BOT_COLLECTION_ADD'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_READ'),
+            ('ROLE_TENANT_ADMIN', 'BOT_COLLECTION_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_LIST_DETAIL_VIEW'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_EDIT_STRUCTURE'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_BOT_COLLECTION_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_COLLECTION_DELETE'),
+            ('ROLE_TENANT_ADMIN', 'BOT_LOG_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_INSTANCE_HISTORY_DETAIL_VIEW'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_INSTANCE_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_OUTPUT_TYPE_READ'),
+            ('ROLE_TENANT_ADMIN', 'SCHEDULE_READ'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_BOT_COLLECTION_EDIT'),
+            ('ROLE_TENANT_ADMIN', 'GLOBAL_VARIABLE_EDIT'),
+            ('ROLE_TENANT_ADMIN', 'PROCESS_INSTANCE_TERMINATE')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+
+    <!-- Missing feature keys for ADMIN -->
+    <changeSet author="gasiorowskaa" id="20240531702705-3">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_ADMIN', 'TENANT_READ'),
+            ('ROLE_ADMIN', 'TENANT_EDIT')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

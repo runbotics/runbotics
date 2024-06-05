@@ -29,5 +29,7 @@ public interface TenantService {
 
     void delete(UUID id);
 
-    TenantInviteCodeDTO generateInviteCode();
+    Optional<TenantInviteCodeDTO> getActiveInviteCode(UUID tenantId);
+
+    TenantInviteCodeDTO generateInviteCode(UUID tenantId);
 }
