@@ -57,7 +57,7 @@ const ProcessBuildView: FC = () => {
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, hasAdvancedActionsAccess]);
-
+    
     useEffect(() => {
         if (!process) return;
 

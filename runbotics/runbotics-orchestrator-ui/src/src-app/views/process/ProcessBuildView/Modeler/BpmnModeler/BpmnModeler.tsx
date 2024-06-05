@@ -58,6 +58,7 @@ const initialCommandStackInfo: CommandStackInfo = {
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     // eslint-disable-next-line max-lines-per-function
     ({ definition, offsetTop, onSave, onImport, onExport, process }, ref) => {
+        
         const dispatch = useDispatch();
         const { translate } = useTranslations();
         const [modeler, setModeler] = useState<BpmnIoModeler>(null);
