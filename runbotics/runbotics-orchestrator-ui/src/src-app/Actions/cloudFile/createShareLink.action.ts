@@ -2,6 +2,7 @@ import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
+import { listNameUI, siteNameUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 
 export const createShareLinkAction: IBpmnAction = {
     id: CloudFileAction.CREATE_SHARE_LINK,
@@ -104,7 +105,12 @@ export const createShareLinkAction: IBpmnAction = {
                 },
             },
         },
-        uiSchema: {},
+        uiSchema: {
+            input: {
+                siteName: siteNameUI,
+                listName: listNameUI,
+            },
+        },
         formData: {
             input: {
                 siteName: undefined,

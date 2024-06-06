@@ -2,6 +2,7 @@ import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
+import { listNameUI, siteNameUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 
 export const uploadCloudFileAction: IBpmnAction = {
     id: CloudFileAction.UPLOAD_FILE,
@@ -84,7 +85,12 @@ export const uploadCloudFileAction: IBpmnAction = {
                 },
             },
         },
-        uiSchema: {},
+        uiSchema: {
+            input: {
+                siteName: siteNameUI,
+                listName: listNameUI,
+            },
+        },
         formData: {
             input: {
                 siteName: undefined,
