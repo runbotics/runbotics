@@ -10,8 +10,8 @@ import { RunboticsLogger } from '#logger';
 import {
     CloudFileActionRequest, CloudFileCreateFolderActionInput,
     CloudFileDownloadFileActionInput, CloudFileMoveFileActionInput,
-    CloudFileUploadFileActionInput, SharePointDownloadFileActionInput,
-    CloudFileDeleteItemActionInput, CloudFileCreateShareLink
+    CloudFileUploadFileActionInput, CloudFileDeleteItemActionInput,
+    CloudFileCreateShareLink, SharePointCommon,
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
 import { readFileSync } from 'fs';
@@ -38,7 +38,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
 
         const { site, drive } = await this.getSharePointListInfo({
             listName: input.listName,
-            siteName: input.siteName,
+            siteRelativePath: input.siteRelativePath,
         });
 
         return this.sharePointService.downloadFileByPath({
@@ -66,7 +66,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
 
         const { site, drive } = await this.getSharePointListInfo({
             listName: input.listName,
-            siteName: input.siteName,
+            siteRelativePath: input.siteRelativePath,
         });
 
         await this.sharePointService.uploadFile({
@@ -86,7 +86,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
 
         const { site, drive } = await this.getSharePointListInfo({
             listName: input.listName,
-            siteName: input.siteName,
+            siteRelativePath: input.siteRelativePath,
         });
 
         return this.sharePointService.createFolder({
@@ -106,7 +106,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         } else {
             const { site, drive } = await this.getSharePointListInfo({
                 listName: input.listName,
-                siteName: input.siteName
+                siteRelativePath: input.siteRelativePath,
             });
 
             await this.sharePointService.moveFile({
@@ -127,7 +127,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
 
         const { site, drive } = await this.getSharePointListInfo({
             listName: input.listName,
-            siteName: input.siteName
+            siteRelativePath: input.siteRelativePath,
         });
 
         return this.sharePointService.deleteItem({
@@ -150,7 +150,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
 
         const { site, drive } = await this.getSharePointListInfo({
             listName: input.listName,
-            siteName: input.siteName
+            siteRelativePath: input.siteRelativePath,
         });
 
         const response = await this.sharePointService.createShareLink({
@@ -183,11 +183,10 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         }
     }
 
-    private async getSharePointListInfo({ listName, siteName }: Pick<SharePointDownloadFileActionInput, 'siteName' | 'listName'>) {
-        const site = await this.sharePointService.getSitesByName(siteName)
-            .then(response => response.value[0]);
+    private async getSharePointListInfo({ listName, siteRelativePath }: Omit<SharePointCommon, 'platform'>) {
+        const site = await this.sharePointService.getSiteByRelativePath(siteRelativePath);
         if (!site) {
-            throw new Error(`Site ${siteName} not found`);
+            throw new Error(`Site for provided path "${siteRelativePath}" not found`);
         }
 
         const drive = await this.sharePointService.getSiteDrives(site.id)
@@ -195,7 +194,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             .then(drives => drives.find(drive => drive.name === listName));
 
         if (!drive) {
-            throw new Error(`Site ${siteName} does not contain "${listName}" list or "${listName}" is not a list of type "Document library"`);
+            throw new Error(`Provided site path "${siteRelativePath}" does not contain "${listName}" list or "${listName}" is not a list of type "Document library"`);
         }
 
         return {
