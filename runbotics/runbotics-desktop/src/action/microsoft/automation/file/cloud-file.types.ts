@@ -9,10 +9,10 @@ export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>
     | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>;
 
-interface SharePointCommon {
+export interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
     listName: string;
-    siteName: string;
+    siteRelativePath: string;
 }
 
 // DOWNLOAD FILE
