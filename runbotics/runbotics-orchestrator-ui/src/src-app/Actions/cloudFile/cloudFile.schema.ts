@@ -1,5 +1,6 @@
-import { translate } from '#src-app/hooks/useTranslations';
 import { UiSchema } from '@rjsf/core';
+
+import { translate } from '#src-app/hooks/useTranslations';
 
 export const siteNameUI: UiSchema = {
     title: translate('Process.Details.Modeler.Actions.Microsoft.SiteName'),
