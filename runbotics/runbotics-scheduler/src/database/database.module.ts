@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ServerConfigService } from '../config/server-config/server-config.service';
-import { ConfigModule } from '../config/config.module';
+import { ServerConfigService } from '#/config/server-config';
+import { ConfigModule } from '#/config/config.module';
 import { AuthorityModule } from './authority/authority.module';
 import { UserModule } from './user/user.module';
 import { BotModule } from './bot/bot.module';
@@ -16,6 +16,7 @@ import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
+import { TenantModule } from '#/database/tenant/tenant.module';
 
 @Module({
     imports: [
@@ -29,7 +30,7 @@ import { GuestModule } from './guest/guest.module';
                     username: serverConfigService.dbSettings.username,
                     password: serverConfigService.dbSettings.password,
                     database: serverConfigService.dbSettings.database,
-                    entities: ['dist/**/*.entity{.ts,.js}'],
+                    entities: ['dist/src/**/*.entity{.ts,.js}'],
                     synchronize: false,
                 };
             },
@@ -49,6 +50,7 @@ import { GuestModule } from './guest/guest.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
+        TenantModule,
     ],
     exports: [
         AuthorityModule,
@@ -65,6 +67,7 @@ import { GuestModule } from './guest/guest.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
+        TenantModule,
     ],
 })
 export class DatabaseModule { }

@@ -7,7 +7,7 @@ import {
     Generated,
     PrimaryColumn,
     ManyToMany,
-    JoinTable,
+    JoinTable, OneToOne,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import {
@@ -21,8 +21,9 @@ import { ScheduleProcessEntity } from '../schedule-process/schedule-process.enti
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
+import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 
-@Entity({ name: 'process' })
+@Entity({ name: 'process', synchronize: false })
 export class ProcessEntity implements IProcess {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
@@ -87,4 +88,7 @@ export class ProcessEntity implements IProcess {
         inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
     })
     subscribers: IUser[];
+    
+    @OneToOne(() => ProcessContext, processContext => processContext.process)
+    context: ProcessContext | null;
 }

@@ -18,15 +18,23 @@ import {
     IProcess,
     ProcessInput,
     ScheduledProcess,
-    TriggerEvent, WsMessage
+    TriggerEvent, WsMessage,
 } from 'runbotics-common';
 import { Job } from '#/utils/process';
 import { ProcessSchedulerService } from '#/queue/process/process-scheduler.service';
 import { QueueMessageService } from '../queue-message.service';
+import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
+import { BotSchedulerService } from '#/queue/bot/bot.scheduler.service';
+import { ServerConfigService } from '#/config/server-config';
+import { WsBotJwtGuard } from '#/auth/guards';
+import { CanActivate } from '@nestjs/common';
+import { SchedulerService } from '#/queue/scheduler/scheduler.service';
 
 const PROCESS_ID = 2137;
 const JOB_ID = 7312;
 const ORCHESTRATOR_INSTANCE_ID = 'tEsT-InStAnCe-iD';
+
+const mockForceActivateGuard: CanActivate = { canActivate: vi.fn(() => true) };
 
 const PROCESS: IProcess = {
     id: PROCESS_ID,
@@ -45,13 +53,13 @@ const INSTANT_PROCESS: InstantProcess = {
         name: TriggerEvent.MANUAL,
     },
     input: PROCESS_INPUT,
-    orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID
+    orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID,
 };
 
 const SCHEDULED_PROCESS: ScheduledProcess = {
     ...INSTANT_PROCESS,
     trigger: {
-        name: TriggerEvent.SCHEDULER
+        name: TriggerEvent.SCHEDULER,
     },
     id: 1232,
     cron: '* * * * *',
@@ -90,6 +98,15 @@ describe('SchedulerProcessor', () => {
                 ProcessInstanceSchedulerService,
                 QueueService,
                 QueueMessageService,
+                BotSchedulerService,
+                {
+                    provide: ServerConfigService,
+                    useValue: {},
+                },
+                {
+                    provide: ScheduleProcessService,
+                    useValue: {},
+                },
                 {
                     provide: getRepositoryToken(BotEntity),
                     useValue: {
@@ -106,43 +123,46 @@ describe('SchedulerProcessor', () => {
                 },
                 {
                     provide: getQueueToken('scheduler'),
-                    useValue: {
-
-                    },
-                }
+                    useValue: {},
+                },
             ],
         })
             .overrideProvider(BotService)
             .useValue({
-                findAvailableCollection: vi.fn().mockReturnValue([ {status: BotStatus.CONNECTED} as IBot ])
+                findAvailableCollection: vi.fn().mockReturnValue([{ status: BotStatus.CONNECTED } as IBot]),
             })
             .overrideProvider(ProcessService)
             .useValue({
-                findById: vi.fn().mockReturnValue(PROCESS)
+                findById: vi.fn().mockReturnValue(PROCESS),
             })
             .overrideProvider(ProcessSchedulerService)
             .useValue({
-                startProcess: vi.fn().mockReturnValue({ orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID })
+                startProcess: vi.fn().mockReturnValue({ orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID }),
             })
             .overrideProvider(BotWebSocketGateway)
             .useValue({
-                setBotStatusBusy: vi.fn()
+                setBotStatusBusy: vi.fn(),
             })
             .overrideProvider(ProcessInstanceSchedulerService)
             .useValue({
-                saveFailedProcessInstance: vi.fn()
+                saveFailedProcessInstance: vi.fn(),
+            })
+            .overrideProvider(SchedulerService)
+            .useValue({
+                getJobById: vi.fn().mockResolvedValue(JOB),
             })
             .overrideProvider(UiGateway)
             .useValue({
                 server: {
-                    emit: vi.fn()
+                    emit: vi.fn(),
                 },
                 emitAll: vi.fn(),
                 emitClient: vi.fn(),
             })
+            .overrideGuard(WsBotJwtGuard).useValue(mockForceActivateGuard)
             .compile();
 
-        // schedulerProcessor = moduleRef.get(SchedulerProcessor); //todo: use it instead of constructor
+        schedulerProcessor = moduleRef.get(SchedulerProcessor);
         processService = moduleRef.get(ProcessService);
         processSchedulerService = moduleRef.get(ProcessSchedulerService);
         botService = moduleRef.get(BotService);
@@ -151,7 +171,6 @@ describe('SchedulerProcessor', () => {
         processInstanceSchedulerService = moduleRef.get(ProcessInstanceSchedulerService);
         queueService = moduleRef.get(QueueService);
         queueMessageService = moduleRef.get(QueueMessageService);
-        schedulerProcessor = new SchedulerProcessor(processSchedulerService, botService, processService, uiGateway, botWebSocketGateway, processInstanceSchedulerService, queueService, queueMessageService);
     });
 
     it('should be defined', () => {
@@ -184,7 +203,7 @@ describe('SchedulerProcessor', () => {
                 sleep: vi.fn().mockResolvedValue(undefined),
                 SECOND: 1,
             }));
-            vi.spyOn(botService, 'findAvailableCollection').mockResolvedValue([ {status: BotStatus.BUSY} as IBot ]);
+            vi.spyOn(botService, 'findAvailableCollection').mockResolvedValue([{ status: BotStatus.BUSY } as IBot]);
             await expect(schedulerProcessor.process(SCHEDULED_JOB)).rejects.toThrowError('Timeout: all bots are busy');
         });
 
@@ -197,7 +216,7 @@ describe('SchedulerProcessor', () => {
     describe('onActive', () => {
         it('should emit WsMessage.ADD_WAITING_SCHEDULE with correct job data', async () => {
             vi.spyOn(processService, 'findById').mockResolvedValue({ id: PROCESS_ID } as any);
-            vi.spyOn(queueService, 'getActiveJobs').mockResolvedValue([ JOB ] as any);
+            vi.spyOn(queueService, 'getActiveJobs').mockResolvedValue([JOB] as any);
             vi.spyOn(queueService, 'getWaitingJobs').mockResolvedValue([] as any);
             await schedulerProcessor.onActive(JOB as Job);
 
