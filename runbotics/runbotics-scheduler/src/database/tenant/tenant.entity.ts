@@ -4,6 +4,7 @@ import { UserEntity } from '#/database/user/user.entity';
 import { Secret } from '#/scheduler-database/secret/secret.entity';
 import { ProcessContextSecret } from '#/scheduler-database/process-context-secret/process-context-secret.entity';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
+import { Attribute } from '#/scheduler-database/attribute/entities/attribute.entity';
 
 @Entity({ synchronize: false })
 export class Tenant {
@@ -37,4 +38,7 @@ export class Tenant {
 
     @OneToMany(() => ProcessContext, processContext => processContext.tenant)
     processContexts: ProcessContext[];
+
+    @OneToMany(() => Attribute, attribute => attribute.tenant)
+    attributes: Attribute[];
 }
