@@ -23,8 +23,8 @@ public class TenantInviteCode {
     @Column(name = "creation_date", nullable = false)
     private ZonedDateTime creationDate;
 
-    @Column(name = "is_active")
-    private boolean isActive;
+    @Column(name = "expiration_date", nullable = false)
+    private ZonedDateTime expirationDate;
 
     public TenantInviteCode() {}
 
@@ -52,12 +52,12 @@ public class TenantInviteCode {
         this.creationDate = creationDate;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public ZonedDateTime getExpirationDate() {
+        return expirationDate;
     }
 
-    public void setIsActive(boolean active) {
-        isActive = active;
+    public void setExpirationDate(ZonedDateTime expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class TenantInviteCode {
             "id=" + id +
             ", tenantId=" + tenantId +
             ", creationDate=" + creationDate +
-            ", isActive=" + isActive +
+            ", expirationDate=" + expirationDate +
             "}"
         );
     }

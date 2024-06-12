@@ -13,22 +13,32 @@ import useTranslations from './useTranslations';
 
 const DEBOUNCE_TIME = 250;
 
+export enum UserSearchType {
+    ALL_ACTIVATED = 'ALL_ACTIVATED',
+    ALL_NOT_ACTIVATED = 'ALL_NOT_ACTIVATED',
+    TENANT_ACTIVATED = 'TENANT_ACTIVATED',
+    TENANT_NOT_ACTIVATED = 'TENANT_NOT_ACTIVATED'
+};
+
 interface UseUserSearchProps {
-    isActivatedUsersOnly?: boolean;
+    searchType?: UserSearchType
     pageSize?: number;
     page?: number;
+    tenantId?: string;
 }
 
 const useUserSearchDefault = {
-    isActivatedUsersOnly: false,
+    searchType: UserSearchType.ALL_ACTIVATED,
     pageSize: 10,
-    page: 0
+    page: 0,
+    tenantId: ''
 };
 
 const useUserSearch = ({
-    isActivatedUsersOnly,
+    searchType,
     pageSize,
-    page
+    page,
+    tenantId
 }: UseUserSearchProps = { ...useUserSearchDefault }) => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -49,43 +59,95 @@ const useUserSearch = ({
             query: {
                 page: newPage,
                 pageSize,
-                ...(search && { search })
+                ...(search && { search }),
+                ...(tenantId && { tenantId })
             }
         });
 
-        if (!isActivatedUsersOnly) {
-            dispatch(
-                usersActions.getAllNotActivatedByPage({
-                    page: newPage,
-                    size: pageSize,
-                    filter: {
-                        contains: { 'email': debouncedValue },
-                    },
-                })
-            )
-                .catch(() =>
-                    enqueueSnackbar(
-                        translate('Users.Registration.View.Events.Error.FindingUsers'),
-                        { variant: 'error' })
-                );
-        } else {
-            dispatch(
-                usersActions.getAllActivatedByPage({
-                    page: newPage,
-                    size: pageSize,
-                    filter: {
-                        contains: { 'email': debouncedValue },
-                    },
-                })
-            )
-                .catch(() =>
-                    enqueueSnackbar(
-                        translate('Users.List.View.Events.Error.FindingUsers'),
-                        { variant: 'error' })
-                );
-        }
+        switch (searchType) {
+            case UserSearchType.ALL_ACTIVATED:
+                dispatch(
+                    usersActions.getAllActivatedByPage({
+                        page: newPage,
+                        size: pageSize,
+                        filter: {
+                            contains: { 'email': debouncedValue },
+                            ...(tenantId && { equals: { 'tenantId': tenantId } })
+                        },
+                    })
+                )
+                    .catch(() =>
+                        enqueueSnackbar(
+                            translate('Users.List.View.Events.Error.FindingUsers'),
+                            { variant: 'error' })
+                    );
+                break;
+            case UserSearchType.ALL_NOT_ACTIVATED:
+                dispatch(
+                    usersActions.getAllNotActivatedByPage({
+                        page: newPage,
+                        size: pageSize,
+                        filter: {
+                            contains: { 'email': debouncedValue },
+                            ...(tenantId && { equals: { 'tenantId': tenantId } })
+                        },
+                    })
+                )
+                    .catch(() =>
+                        enqueueSnackbar(
+                            translate('Users.Registration.View.Events.Error.FindingUsers'),
+                            { variant: 'error' })
+                    );
+                break;
+            case UserSearchType.TENANT_ACTIVATED:
+                dispatch(
+                    usersActions.getAllActivatedByPageAndTenant({
+                        page: newPage,
+                        size: pageSize,
+                        filter: {
+                            contains: { 'email': debouncedValue },
+                        },
+                    })
+                )
+                    .catch(() =>
+                        enqueueSnackbar(
+                            translate('Users.List.View.Events.Error.FindingUsers'),
+                            { variant: 'error' })
+                    );
+                break;
+            case UserSearchType.TENANT_NOT_ACTIVATED:
+                dispatch(
+                    usersActions.getAllNotActivatedByPageAndTenant({
+                        page: newPage,
+                        size: pageSize,
+                        filter: {
+                            contains: { 'email': debouncedValue },
+                        },
+                    })
+                )
+                    .catch(() =>
+                        enqueueSnackbar(
+                            translate('Users.Registration.View.Events.Error.FindingUsers'),
+                            { variant: 'error' })
+                    );
+                break;
+            default: break;
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedValue, pageSize, page, refreshTrigger]);
+    }, [debouncedValue, pageSize, page, refreshTrigger, tenantId]);
+
+    useEffect(() => {
+        router.replace({
+            pathname: router.pathname,
+            query: {
+                page,
+                pageSize,
+                ...(search && { search }),
+                ...(tenantId && { tenantId })
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [tenantId]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (search !== event.target.value) setSearch(event.target.value);

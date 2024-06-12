@@ -9,7 +9,8 @@ import * as tenantsThunks from './Tenants.thunks';
 const initialState: TenantsState = {
     loading: false,
     all: [],
-    allByPage: null
+    allByPage: null,
+    inviteCode: null,
 };
 
 export const slice = createSlice({
