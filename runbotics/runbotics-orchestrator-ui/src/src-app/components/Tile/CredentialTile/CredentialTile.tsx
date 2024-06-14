@@ -30,7 +30,7 @@ const CredentialTile: FC<CredentialTileProps> = ({credential}) => {
                 </Typography>
                 <CredentialCollection>
                     <FolderOpenIcon sx={{paddingRight: '4px'}}/>
-                    {credential.collectionName}
+                    {credential.collectionId}
                 </CredentialCollection>
             </CredentialCard>
         </Tile>

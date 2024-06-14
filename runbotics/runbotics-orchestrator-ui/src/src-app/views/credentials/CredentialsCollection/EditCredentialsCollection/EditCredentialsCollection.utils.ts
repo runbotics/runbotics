@@ -24,7 +24,6 @@ const initialCredentialsCollectionData: CreateCredentialsCollectionDto = {
     tenantId: '', // to update
     users: [],
     isPrivate: true,
-    credentials: []
 };
 
 export const getInitialCredentialsCollectionData = (collection: null | EditCredentialsCollectionDto): CreateCredentialsCollectionDto | EditCredentialsCollectionDto => {
@@ -33,11 +32,11 @@ export const getInitialCredentialsCollectionData = (collection: null | EditCrede
     }
 
     const editCredentialInitialData: EditCredentialsCollectionDto = {
+        id: collection.id,
         name: collection.name,
         description: collection.description,
         color: collection.color,
         isPrivate: collection.isPrivate,
-        credentials: collection.credentials,
         users: collection.users
     };
 

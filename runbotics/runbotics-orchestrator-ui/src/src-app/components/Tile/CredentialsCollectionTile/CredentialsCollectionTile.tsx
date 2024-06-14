@@ -103,7 +103,6 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collect
                 collection={{
                     name: collection.name,
                     color: collection.color,
-                    credentials: collection.credentials,
                     isPrivate: collection.isPrivate,
                     description: collection.description,
                     users: collection.users

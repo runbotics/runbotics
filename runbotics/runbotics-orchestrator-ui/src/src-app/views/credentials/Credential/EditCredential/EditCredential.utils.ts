@@ -2,7 +2,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { DEFAULT_COLLECTION_COLOR } from '../../CredentialsCollection/EditCredentialsCollection/EditCredentialsCollection.utils';
 
-import { Credential, CredentialTemplate } from '../Credential.types';
+import { CreateCredentialDto, CredentialTemplate } from '../Credential.types';
 
 
 
@@ -21,14 +21,12 @@ export const inputErrorMessages: Record<InputErrorType, string> = {
 export const initialFormValidationState = true;
 
 export const getInitialCredentialData = () => {
-    const initialCredentialData: Credential = {
+    const initialCredentialData: CreateCredentialDto = {
         name: '',
         description: '',
-        collectionName: '',
+        collectionId: '',
         collectionColor: DEFAULT_COLLECTION_COLOR,
-        attributes: null,
         template: CredentialTemplate.CUSTOM,
-        tenantId: null
     };
 
     return initialCredentialData;

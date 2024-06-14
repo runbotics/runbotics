@@ -53,5 +53,6 @@ const GridView: VFC = () => {
         </>
     );
 };
+
 export default GridView;
 

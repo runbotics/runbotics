@@ -6,7 +6,7 @@ const INITIAL_CREDENTIAL_COLLECTION_VALUES: CreateCredentialsCollectionDto = {
     description: '',
     color: DEFAULT_CREDENTIALS_COLLECTION_COLOR,
     tenantId: '',
-    credentials: [],
+    // credentials: [],
     isPrivate: true
 };
 
@@ -21,7 +21,7 @@ export const prepareIncompleteCollectionEntity = (
     users: collection ? collection.users : INITIAL_CREDENTIAL_COLLECTION_VALUES.users,
     color: collection ? collection.color : INITIAL_CREDENTIAL_COLLECTION_VALUES.color,
     tenantId: collection ? collection.tenantId : INITIAL_CREDENTIAL_COLLECTION_VALUES.tenantId,
-    credentials: collection ? collection.credentials : INITIAL_CREDENTIAL_COLLECTION_VALUES.credentials
+    // credentials: collection ? collection.credentials : INITIAL_CREDENTIAL_COLLECTION_VALUES.credentials
 });
 
 const tempCredentialsCollections: BasicCredentialsCollectionDto[] = [
@@ -36,7 +36,7 @@ const tempCredentialsCollections: BasicCredentialsCollectionDto[] = [
         createdBy: 'asia@email',
         modifiedOn: null,
         modifiedBy: null,
-        credentials: []
+        // credentials: []
     },
     {
         id: 'kolekcja_basi',
@@ -49,7 +49,7 @@ const tempCredentialsCollections: BasicCredentialsCollectionDto[] = [
         createdBy: 'basia@email',
         modifiedOn: '2024-05-02',
         modifiedBy: 'string',
-        credentials: []
+        // credentials: []
     },
     {
         id: 'kolekcja_stasia',
@@ -62,7 +62,7 @@ const tempCredentialsCollections: BasicCredentialsCollectionDto[] = [
         createdBy: 'stasiu@email',
         modifiedOn: null,
         modifiedBy: null,
-        credentials: []
+        // credentials: []
     },
     {
         id: 'kolekcja_ady',
@@ -75,7 +75,7 @@ const tempCredentialsCollections: BasicCredentialsCollectionDto[] = [
         createdBy: 'ada@email',
         modifiedOn: null,
         modifiedBy: null,
-        credentials: []
+        // credentials: []
     }
 ];
 

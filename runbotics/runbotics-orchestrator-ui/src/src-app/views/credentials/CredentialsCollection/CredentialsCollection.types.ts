@@ -1,5 +1,4 @@
 import { CollectionColorName } from './EditCredentialsCollection/CollectionColor/CollectionColor.types';
-import { Credential } from '../Credential/Credential.types';
 
 export enum AccessType { 
     ADMIN = 'ADMIN',
@@ -16,7 +15,7 @@ export interface BasicCredentialsCollectionDto {
     createdBy: string;
     modifiedOn: string;
     modifiedBy: string;
-    credentials: Credential[]
+    // credentials: BasicCredentialDto[]
     description?: string;
     users?: CredentialsCollectionUser[];
 }
@@ -31,16 +30,17 @@ export interface CreateCredentialsCollectionDto {
     name: string;
     color: CollectionColorName;
     tenantId: string;
-    credentials: Credential[];
+    // credentials: BasicCredentialDto[];
     isPrivate: boolean;
     description?: string;
     users?: CredentialsCollectionUser[];
 }
 
 export interface EditCredentialsCollectionDto {
+    id: string;
     name: string;
     color: CollectionColorName;
-    credentials: Credential[];
+    // credentials: BasicCredentialDto[];
     isPrivate: boolean;
     description?: string;
     users: CredentialsCollectionUser[];

@@ -1,54 +1,79 @@
+import { BasicCredentialDto, CredentialTemplate } from '../Credential/Credential.types';
 import { collectionColors } from '../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 
-const tempCredentials = [{
+const tempCredentials: BasicCredentialDto[] = [{
     id: 'jakies_id',
     name: 'Jakas Nazwa',
-    collectionName: 'Jakas kolekcja',
+    collectionId: 'Jakas kolekcja',
     description: 'Jakies description',
-    collectionColor: collectionColors.LIGHT_ORANGE.hex
+    collectionColor: collectionColors.LIGHT_ORANGE.hex,
+    createdBy: 'userId',
+    createdOn:'2024-05-05',
+    template: CredentialTemplate.CUSTOM
 }, {
     id: 'tymczasowe_id',
     name: 'Tymczasowa Nazwa',
-    collectionName: 'Tymczasowa kolekcja',
+    collectionId: 'Tymczasowa kolekcja',
     description: 'Tymczasowe description',
-    collectionColor: collectionColors.DARK_ORANGE.hex
+    collectionColor: collectionColors.DARK_ORANGE.hex,
+    createdBy: 'userId',
+    createdOn:'2024-05-05',
+    template: CredentialTemplate.CUSTOM
 }, {
     id: 'zmyslone_id',
     name: 'Zmyslona Nazwa',
-    collectionName: 'Zmyslona kolekcja',
+    collectionId: 'Zmyslona kolekcja',
     description: 'Zmyslone description',
-    collectionColor: collectionColors.LIGHT_GREEN.hex
+    collectionColor: collectionColors.LIGHT_GREEN.hex,
+    createdBy: 'userId',
+    createdOn:'2024-05-05',
+    template: CredentialTemplate.CUSTOM
 }, {
     id: 'nowe_id',
     name: 'Nowa Nazwa',
-    collectionName: 'Nowa kolekcja',
+    collectionId: 'Nowa kolekcja',
     description: 'Jakies description',
-    collectionColor: collectionColors.DARK_GREEN.hex
+    collectionColor: collectionColors.DARK_GREEN.hex,
+    createdBy: 'userId',
+    createdOn:'2024-05-05',
+    template: CredentialTemplate.CUSTOM
 }, {
     id: 'unikalne_id',
     name: 'Unikalna Nazwa',
-    collectionName: 'Unikalna kolekcja',
+    collectionId: 'Unikalna kolekcja',
     description: 'Unikalne description',
-    collectionColor: collectionColors.LIGHT_BLUE.hex
+    collectionColor: collectionColors.LIGHT_BLUE.hex,
+    createdBy: 'userId',
+    createdOn:'2024-05-05',
+    template: CredentialTemplate.CUSTOM
 },
 {
     id: 'ciemne_niebieskie_id',
     name: 'Ciemna Niebieska Nazwa',
-    collectionName: 'Ciemna niebieska kolekcja',
+    collectionId: 'Ciemna niebieska kolekcja',
     description: 'Ciemne niebieska description',
-    collectionColor: collectionColors.DARK_BLUE.hex
+    collectionColor: collectionColors.DARK_BLUE.hex,
+    createdBy: 'userId',
+    createdOn:'2024-05-05',
+    template: CredentialTemplate.CUSTOM
 }, {
     id: 'szare_id',
     name: 'Szara Nazwa',
-    collectionName: 'Szara kolekcja',
+    collectionId: 'Szara kolekcja',
     description: 'Szare description',
-    collectionColor: collectionColors.LIGHT_GREY.hex
+    collectionColor: collectionColors.LIGHT_GREY.hex,
+    createdBy: 'userId',
+    createdOn:'2024-05-05',
+    template: CredentialTemplate.CUSTOM
 }, {
     id: 'ciemne_szare_id',
     name: 'Ciemna Szara Nazwa',
-    collectionName: 'Ciemna szara kolekcja',
+    collectionId: 'Ciemna szara kolekcja',
     description: 'Ciemne szare description',
-    collectionColor: collectionColors.DARK_GREY.hex
+    collectionColor: collectionColors.DARK_GREY.hex,
+    createdBy: 'userId',
+    createdOn:'2024-05-05',
+    template: CredentialTemplate.CUSTOM
 }];
 
 export const getCredentials = () => tempCredentials;

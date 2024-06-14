@@ -2,26 +2,27 @@ import { useState } from 'react';
 
 import { Grid } from '@mui/material';
 
-import useTranslations from '#src-app/hooks/useTranslations';
-
 import { useSelector } from '#src-app/store';
 
 import { AddAttribute } from '../CredentialAttribute/AddAttribute';
 import CredentialAttribute from '../CredentialAttribute/CredentialAttribute';
-import { Attribute } from '../CredentialAttribute/CredentialAttribute.types';
+import { EditAtributeDto } from '../CredentialAttribute/CredentialAttribute.types';
 import { initialAttributeValues, initialAttributes } from '../CredentialAttribute/CredentialAttribute.utils';
 
 const CredentialAttributesList = () => {
-    const { translate } = useTranslations();
-    const [attributes, setAttributes] = useState<Attribute[]>(initialAttributes);
+    const [attributes, setAttributes] = useState<EditAtributeDto[]>(initialAttributes);
     const { user: currentUser } = useSelector((state) => state.auth);
 
     const handleAddAttribute = () => {
+        // below needs to go to the confirm button on attribute
+        // send attribute to the database (CreateAttributeDto)
+        // get attrbiute from the database with (EditAtributeDto)
+        // add to the state
         const newAttribute = {...initialAttributeValues, id: undefined, createdOn: new Date().toDateString(), createdBy: currentUser.email };
         setAttributes([...attributes, newAttribute]);
     };
 
-    const handleAttributeChange = (updatedAttribute: Attribute) => {
+    const handleAttributeChange = (updatedAttribute: EditAtributeDto) => {
         const foundAttribute = attributes.find(attribute => attribute.id === updatedAttribute.id);
         if (foundAttribute) {
             const updatedAttributes = attributes.map(attribute => (attribute.id === updatedAttribute.id ? updatedAttribute : attribute));
@@ -29,7 +30,7 @@ const CredentialAttributesList = () => {
         }
     };
 
-    const handleAttributeDelete = (deletedAttribute: Attribute) => {
+    const handleAttributeDelete = (deletedAttribute: EditAtributeDto) => {
         const updatedAttributes = attributes.filter(attribute => attribute.id !== deletedAttribute.id);
         
         setAttributes(updatedAttributes);
@@ -45,8 +46,6 @@ const CredentialAttributesList = () => {
     return (
         <Grid container spacing={2} sx={{ marginTop: '8px' }}>
             {attributesCards}
-            {/* created attributes */}
-            {/* add attribute card */}
             <Grid item xs={3}>
                 <AddAttribute onClick={handleAddAttribute}/>
             </Grid>

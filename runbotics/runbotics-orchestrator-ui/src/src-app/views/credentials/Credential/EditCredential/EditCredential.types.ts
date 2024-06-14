@@ -1,9 +1,9 @@
-import { Credential } from '../Credential.types';
+import { BasicCredentialDto } from '../Credential.types';
 
 export interface EditCredentialProps {
     credential: Credential
     onClose: () => void;
-    onAdd: (credential: Credential) => void;
+    onAdd: (credential: BasicCredentialDto) => void;
     open?: boolean;
 }
 
