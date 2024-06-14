@@ -13,5 +13,5 @@ export interface Credential {
 }
 
 export interface CredentialTileProps {
-    credential: Credential
+    credential: BasicCredentialDto
 }

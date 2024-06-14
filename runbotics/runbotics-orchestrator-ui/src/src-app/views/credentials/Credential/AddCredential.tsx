@@ -14,9 +14,13 @@ const AddCredential: FC = () => {
     const router = useRouter();
     
     const createCredentialRedirect = () => {
-        const newCredential = getInitialCredentialData();
-        newCredential.id = 'newCredentialId';
-        router.push(`/app/credentials/${newCredential.id}`);
+        const initialCredentialData = getInitialCredentialData();
+        // use initialCredentialData add a new object in database
+        // dispatch(createUser(initialCollectionData))
+        // const newCredential: BasicCredentialDto = {...initialCredentialData, id: 'newCredentialId'}
+        // get object from the database with added properties handled by backend (id, createdBy, createdOn)
+        // go to utl dedicated to this credential (/:id)
+        // router.push(`/app/credentials/${newCredential.id}`);
     };
 
     return (

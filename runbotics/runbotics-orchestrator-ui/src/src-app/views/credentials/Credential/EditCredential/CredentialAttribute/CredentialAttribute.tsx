@@ -24,13 +24,13 @@ import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledAttributeCard, StyledGridContainer } from './CredentialAttribute.style';
-import { Attribute } from './CredentialAttribute.types';
+import { EditAtributeDto } from './CredentialAttribute.types';
 import CredentialDetails from './CredentialDetails/CredentialDetails';
 
 type CredentialAttributeProps = {
-    attribute: Attribute;
-    setAttribute(currentAttribute: Attribute): void;
-    deleteAttribute(attributeToDelete: Attribute): void;
+    attribute: EditAtributeDto;
+    setAttribute(currentAttribute: EditAtributeDto): void;
+    deleteAttribute(attributeToDelete: EditAtributeDto): void;
 };
 
 const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttribute, deleteAttribute }) => {

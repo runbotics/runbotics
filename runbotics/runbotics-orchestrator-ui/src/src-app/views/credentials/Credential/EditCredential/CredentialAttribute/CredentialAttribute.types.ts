@@ -4,7 +4,7 @@ export interface BasicAttributeDto {
     masked: boolean;
     value: string;
     credentialId: string,
-    tenantId: string;
+    // tenantId: string;
     createdOn: string;
     createdBy: string;
     modifiedOn?: string;
@@ -17,13 +17,14 @@ export interface CreateAttributeDto {
     masked: boolean;
     value: string;
     credentialId: string,
-    tenantId: string;
+    // tenantId: string;
     description?: string;
 }
 
 export interface EditAtributeDto {
+    id: string;
     name: string;
-    masked: string;
+    masked: boolean;
     value: string;
     description?: string;
 }
