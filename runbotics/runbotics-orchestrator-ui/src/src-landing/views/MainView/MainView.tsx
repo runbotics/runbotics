@@ -4,6 +4,7 @@ import { useEffect, type VFC } from 'react';
 import { BlogPost } from '#contentful/common';
 import { ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
 import { recordPageEntrance } from '#src-app/utils/Mixpanel/utils';
+import { AiPluginFAB } from '#src-landing/components/AiPluginFAB/AiPluginFAB';
 import Layout from '#src-landing/components/Layout';
 import AboutTeamSection from '#src-landing/views/sections/AboutTeamSection';
 import BenefitsSection from '#src-landing/views/sections/BenefitsSection';
@@ -27,17 +28,19 @@ const MainView: VFC<Props> = ({ blogPosts }) => {
 
     return (
         <Layout>
-            <HeroSection />
-            <BenefitsSection />
-            <RPASection />
-            <ProsSection />
-            <OpenSourceSection />
-            {/* <TemplatesSection /> */}
-            <IntegrationSection />
-            <PartnerSection />
-            <AboutTeamSection />
-            <BlogSection posts={blogPosts} />
-            <ContactSection />
+            <AiPluginFAB>
+                <HeroSection />
+                <BenefitsSection />
+                <RPASection />
+                <ProsSection />
+                <OpenSourceSection />
+                {/* <TemplatesSection /> */}
+                <IntegrationSection />
+                <PartnerSection />
+                <AboutTeamSection />
+                <BlogSection posts={blogPosts} />
+                <ContactSection />
+            </AiPluginFAB>
         </Layout> );
 };
 

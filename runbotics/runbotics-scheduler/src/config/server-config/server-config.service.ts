@@ -114,6 +114,14 @@ export class ServerConfigService {
         return this.configService.get('ENCRYPTION_KEY');
     }
 
+    get chatbotConfig() {
+        return {
+            uri: this.configService.get('CHATBOT_URI'),
+            apiKey: this.configService.get('CHATBOT_API_KEY'),
+            applicationId: this.configService.get('CHATBOT_APP_ID'),
+        };
+    }
+
     private convertNumber(variable: string | undefined): number | undefined {
         const numericVariable = Number(variable);
         return Number.isNaN(numericVariable) ? undefined : numericVariable;

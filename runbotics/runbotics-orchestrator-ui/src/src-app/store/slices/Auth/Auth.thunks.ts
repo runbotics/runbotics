@@ -14,6 +14,67 @@ export const setAccessToken = (accessToken: string | null): void => {
     }
 };
 
+export const getChatAccessToken = async () => {
+    const chatAccessToken = window.localStorage.getItem('chat_access_token');
+    if (!chatAccessToken || !isValidToken(chatAccessToken)) {
+        await Axios
+            .get<{ chatAccessToken: string }>('/scheduler/chatbot/GenerateToken')
+            .then(res => {
+                window.localStorage.setItem('chat_access_token', res.data.chatAccessToken);
+            })
+            .catch(error => {
+                console.error(error.message);
+
+                window.localStorage.removeItem('chat_access_token');
+            });
+    }
+    return window.localStorage.getItem('chat_access_token') ?? '';
+};
+
+export const setChatAccessTokenRefresher = (token: string, updateToken: (token: string) => void) => {
+    if (!isValidToken(token)) return;
+
+    let decoded: any = jwtDecode(token);
+    let expTime = decoded.exp * 1000;
+    let currentTime = Date.now();
+
+    let intervalTime = expTime - currentTime;
+    let currentInterval;
+
+    const logMessage = async () => {
+        console.log(
+            'Logging message with interval:',
+            intervalTime,
+            'ms'
+        );
+
+        clearInterval(currentInterval);
+
+        const newToken = await Axios
+            .get<{ chatAccessToken: string }>('/scheduler/chatbot/GenerateToken')
+            .then(res => {
+                window.localStorage.setItem('chat_access_token', res.data.chatAccessToken);
+                return res.data.chatAccessToken;
+            })
+            .catch(error => {
+                console.error(error);
+                window.localStorage.removeItem('chat_access_token');
+                return '';
+            });
+
+        updateToken(newToken);
+        decoded = jwtDecode(newToken);
+        expTime = decoded.exp * 1000;
+        currentTime = Date.now();
+
+        intervalTime = intervalTime = expTime - currentTime;
+
+        currentInterval = setInterval(logMessage, intervalTime);
+    };
+
+    currentInterval = setInterval(logMessage, intervalTime);
+};
+
 export const login = createAsyncThunk(
     'auth/login',
     async (

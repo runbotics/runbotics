@@ -9,6 +9,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 import { MAIN_CONTENT_ID } from '#src-landing/utils/utils';
 
+import { ChatThemeToggle } from './ChatThemeToggle/ChatThemeToggle';
 import styles from './Header.module.scss';
 import LoginLink from './LoginLink';
 import LanguageSwitcher from '../LanguageSwitcher';
@@ -64,6 +65,7 @@ const Header = () => {
                     isMobileVisible={false}
                 />
                 <div className={styles.buttonGroup}>
+                    <ChatThemeToggle />
                     <LanguageSwitcher />
                     <button
                         className={`${styles.menuIcon} ${iconMobileStyle}`}
