@@ -53,6 +53,12 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
         label: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Label'),
         script: FolderAction.DISPLAY_FILES,
         runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
         form: {
             schema: {
                 type: 'object',
@@ -70,16 +76,38 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                                 type: 'string',
                             },
                         },
-                    }
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                        required: ['variableName'],
+                    },
                 }
             },
             uiSchema: {
-                'ui:order': ['input'],
+                'ui:order': ['input', 'output'],
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                        },
+                    },
+                },
             },
             formData: {
                 input: {
                     path: undefined,
                     name: undefined,
+                },
+                output: {
+                    variableName: undefined,
                 },
             }
         }
