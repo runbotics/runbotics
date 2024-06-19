@@ -70,6 +70,7 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
                             name: {
                                 title: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Name'),
                                 type: 'string',
+                                pattern: ActionRegex.DIRECTORY_NAME,
                             },
                             path: {
                                 title: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Path'),
@@ -93,6 +94,18 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    name: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Name.Info'),
+                        },
+                    },
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Path.Info'),
+                        },
+                    },
+                },
                 output: {
                     variableName: {
                         'ui:options': {
