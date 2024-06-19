@@ -93,6 +93,18 @@ const getFolderActions = (): Record<string, IBpmnAction> => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    name: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Name.Info'),
+                        },
+                    },
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Folder.DisplayFiles.Path.Info'),
+                        },
+                    },
+                },
                 output: {
                     variableName: {
                         'ui:options': {
