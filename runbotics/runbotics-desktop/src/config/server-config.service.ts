@@ -49,12 +49,11 @@ export class ServerConfigService {
     }
 
     get credentials(): Credentials {
-        const username = this.argumentsService.getFlagValue(flagNames.USERNAME) || this.getEnvValue('RUNBOTICS_BOT_USERNAME');
-        const password = this.argumentsService.getFlagValue(flagNames.PASSWORD) || this.getEnvValue('RUNBOTICS_BOT_PASSWORD');
+        const username = this.argumentsService.getFlagValue(flagNames.USERNAME) || this.getEnvValue('RUNBOTICS_USERNAME');
+        const password = this.argumentsService.getFlagValue(flagNames.PASSWORD) || this.getEnvValue('RUNBOTICS_PASSWORD');
 
         if (!username || !password) {
-            this.runboticsLogger.error('Bot username or password not provided, try e.g. "./RunBotics.exe -u=yourUsername -p=yourPassword"');
-            throw new Error('Bot username or password not provided - specify them as parameters or in .env file');
+            throw new Error('Bot username or password not provided, try e.g. "./RunBotics.exe -- -u=myUsername -p=myPassword" or specify RUNBOTICS_USERNAME and RUNBOTICS_PASSWORD in .env file');
         }
 
         return {
