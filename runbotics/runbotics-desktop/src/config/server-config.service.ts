@@ -1,8 +1,14 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-// @ts-ignore
 import { version } from '../../package.json';
 import { decrypt } from '#utils/decryptor';
+import { ArgumentsService } from './arguments.service';
+import { RunboticsLogger } from '#logger';
+
+enum flagNames {
+    USERNAME = 'u',
+    PASSWORD = 'p',
+}
 
 export interface MicrosoftAuth {
     tenantId: string | undefined;
@@ -19,7 +25,12 @@ export interface Credentials {
 
 @Injectable()
 export class ServerConfigService {
-    constructor(private configService: ConfigService) {}
+    private readonly runboticsLogger = new RunboticsLogger(ServerConfigService.name);
+
+    constructor(
+        private configService: ConfigService,
+        private argumentsService: ArgumentsService,
+    ) {}
 
     get extensionsDirPath(): string {
         return this.getEnvValue('RUNBOTICS_EXTENSION_DIR');
@@ -38,9 +49,17 @@ export class ServerConfigService {
     }
 
     get credentials(): Credentials {
+        const username = this.argumentsService.getFlagValue(flagNames.USERNAME) || this.getEnvValue('RUNBOTICS_BOT_USERNAME');
+        const password = this.argumentsService.getFlagValue(flagNames.PASSWORD) || this.getEnvValue('RUNBOTICS_BOT_PASSWORD');
+
+        if (!username || !password) {
+            this.runboticsLogger.error('Bot username or password not provided, try e.g. "./RunBotics.exe -u=yourUsername -p=yourPassword"');
+            throw new Error('Bot username or password not provided - specify them as parameters or in .env file');
+        }
+
         return {
-            username: this.getEnvValue('RUNBOTICS_USERNAME'),
-            password: this.getEnvValue('RUNBOTICS_PASSWORD'),
+            username: username,
+            password: password,
         };
     }
 
