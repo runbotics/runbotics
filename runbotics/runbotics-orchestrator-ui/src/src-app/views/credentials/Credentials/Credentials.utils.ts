@@ -1,10 +1,10 @@
 import { BasicCredentialDto, CredentialTemplate } from '../Credential/Credential.types';
 import { collectionColors } from '../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 
-const tempCredentials: BasicCredentialDto[] = [{
+export const tempCredentials: BasicCredentialDto[] = [{
     id: 'jakies_id',
     name: 'Jakas Nazwa',
-    collectionId: 'Jakas kolekcja',
+    collectionId: 'kolekcja_asi',
     description: 'Jakies description',
     collectionColor: collectionColors.LIGHT_ORANGE.hex,
     createdBy: 'userId',
@@ -13,7 +13,7 @@ const tempCredentials: BasicCredentialDto[] = [{
 }, {
     id: 'tymczasowe_id',
     name: 'Tymczasowa Nazwa',
-    collectionId: 'Tymczasowa kolekcja',
+    collectionId: 'kolekcja_asi',
     description: 'Tymczasowe description',
     collectionColor: collectionColors.DARK_ORANGE.hex,
     createdBy: 'userId',
@@ -22,7 +22,7 @@ const tempCredentials: BasicCredentialDto[] = [{
 }, {
     id: 'zmyslone_id',
     name: 'Zmyslona Nazwa',
-    collectionId: 'Zmyslona kolekcja',
+    collectionId: 'kolekcja_asi',
     description: 'Zmyslone description',
     collectionColor: collectionColors.LIGHT_GREEN.hex,
     createdBy: 'userId',
@@ -31,7 +31,7 @@ const tempCredentials: BasicCredentialDto[] = [{
 }, {
     id: 'nowe_id',
     name: 'Nowa Nazwa',
-    collectionId: 'Nowa kolekcja',
+    collectionId: 'kolekcja_stasia',
     description: 'Jakies description',
     collectionColor: collectionColors.DARK_GREEN.hex,
     createdBy: 'userId',
@@ -40,7 +40,7 @@ const tempCredentials: BasicCredentialDto[] = [{
 }, {
     id: 'unikalne_id',
     name: 'Unikalna Nazwa',
-    collectionId: 'Unikalna kolekcja',
+    collectionId: 'kolekcja_basi',
     description: 'Unikalne description',
     collectionColor: collectionColors.LIGHT_BLUE.hex,
     createdBy: 'userId',
@@ -50,7 +50,7 @@ const tempCredentials: BasicCredentialDto[] = [{
 {
     id: 'ciemne_niebieskie_id',
     name: 'Ciemna Niebieska Nazwa',
-    collectionId: 'Ciemna niebieska kolekcja',
+    collectionId: 'kolekcja_basi',
     description: 'Ciemne niebieska description',
     collectionColor: collectionColors.DARK_BLUE.hex,
     createdBy: 'userId',
@@ -59,7 +59,7 @@ const tempCredentials: BasicCredentialDto[] = [{
 }, {
     id: 'szare_id',
     name: 'Szara Nazwa',
-    collectionId: 'Szara kolekcja',
+    collectionId: 'kolekcja_basi',
     description: 'Szare description',
     collectionColor: collectionColors.LIGHT_GREY.hex,
     createdBy: 'userId',
@@ -68,7 +68,7 @@ const tempCredentials: BasicCredentialDto[] = [{
 }, {
     id: 'ciemne_szare_id',
     name: 'Ciemna Szara Nazwa',
-    collectionId: 'Ciemna szara kolekcja',
+    collectionId: 'kolekcja_ady',
     description: 'Ciemne szare description',
     collectionColor: collectionColors.DARK_GREY.hex,
     createdBy: 'userId',

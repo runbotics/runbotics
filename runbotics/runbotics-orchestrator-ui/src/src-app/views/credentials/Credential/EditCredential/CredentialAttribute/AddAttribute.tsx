@@ -43,5 +43,3 @@ export const AddAttribute = ({ onClick }) => {
         </StyledAddCard>
     );
 };
-
-// style={{ cursor: 'pointer', minHeight: '480px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}

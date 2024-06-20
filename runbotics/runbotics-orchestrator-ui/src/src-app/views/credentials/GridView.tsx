@@ -1,8 +1,9 @@
-import React, { VFC } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import { Pagination, Box } from '@mui/material';
 
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
@@ -10,10 +11,12 @@ import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTi
 
 import If from '#src-app/components/utils/If';
 
+import { useSelector } from '#src-app/store';
+import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
+import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
-import { getCredentials } from './Credentials/Credentials.utils';
-import { getCredentialsCollections } from './CredentialsCollection/CredenitlaCollection.utils';
+import { GridViewProps } from './GridView.types';
 import { CredentialsTabs } from './Header';
 import { CollectionsRoot } from '../bot/BotCollectionView/BotCollectionView.styles';
 
@@ -25,15 +28,29 @@ const TileGrid = styled.div`
     gap: 1rem;
 `;
 
-const GridView: VFC = () => {
-    const allCredentials = getCredentials();
-    const allCollections = getCredentialsCollections();
+const GridView: FC<GridViewProps> = () => {
+    const dispatch = useDispatch();
+    const credentials = useSelector(state => state.credentials.all);
+    const collections = useSelector(state => state.credentialCollections.data);
+    // const allCredentials = getCredentials();
+    // const allCollections = getCredentialsCollections();
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
-    
-    const credentialsTiles = allCredentials.map(credential => <CredentialTile key={credential.id} credential={credential}/>);
+    console.log('credentials', credentials);
+    console.log('collections', collections);
 
-    const collectionsTiles = allCollections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection}/>);
+    useEffect(() => {
+        dispatch(fetchAllCredentials());
+        // dispatch(fetchCollectionCredentials('kolekcja_basi'));
+    }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(fetchAllCredentialCollections());
+    }, [dispatch]);
+    
+    const credentialsTiles = credentials.map(credential => <CredentialTile key={credential.id} credential={credential}/>);
+
+    const collectionsTiles = collections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection}/>);
 
     return (
         <>

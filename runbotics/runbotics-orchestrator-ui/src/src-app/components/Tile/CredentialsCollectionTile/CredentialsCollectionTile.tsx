@@ -28,6 +28,8 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collect
         setShowCollectionDialog(true);
     };
 
+    console.log(collection);
+
     return (
         <>
             <Tile>

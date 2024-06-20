@@ -24,7 +24,7 @@ export const prepareIncompleteCollectionEntity = (
     // credentials: collection ? collection.credentials : INITIAL_CREDENTIAL_COLLECTION_VALUES.credentials
 });
 
-const tempCredentialsCollections: BasicCredentialsCollectionDto[] = [
+export const tempCredentialsCollections: BasicCredentialsCollectionDto[] = [
     {
         id: 'kolekcja_asi',
         name: 'Kolekcja Asi',
