@@ -46,7 +46,6 @@ const rootReducer = combineReducers({
     credentialAttributes,
     credentialCollections,
     credentialTemplates
-
 });
 
 export default rootReducer;

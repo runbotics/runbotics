@@ -39,3 +39,11 @@ export interface MaskedAttribute extends BasicAttributeDto {
 }
 
 export type Attribute = UnmaskedAttribute | MaskedAttribute
+
+export const initialCredentialAttributeValues: CreateAttributeDto = {
+    name: '',
+    value: '',
+    description: '',
+    masked: true,
+    credentialId: ''
+};

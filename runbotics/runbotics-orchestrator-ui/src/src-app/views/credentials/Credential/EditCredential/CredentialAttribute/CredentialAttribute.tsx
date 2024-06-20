@@ -23,8 +23,9 @@ import { grey } from '@mui/material/colors';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { EditAtributeDto } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
+
 import { StyledAttributeCard, StyledGridContainer } from './CredentialAttribute.style';
-import { EditAtributeDto } from './CredentialAttribute.types';
 import CredentialDetails from './CredentialDetails/CredentialDetails';
 
 type CredentialAttributeProps = {
