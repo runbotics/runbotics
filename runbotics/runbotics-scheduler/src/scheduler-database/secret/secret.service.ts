@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Secret } from '#/scheduler-database/secret/secret.entity';
 import * as crypto from 'crypto';
 import { ServerConfigService } from '#/config/server-config';
@@ -15,12 +15,12 @@ export class SecretService {
         public readonly serverConfigService: ServerConfigService,
     ) {
     }
-    
+
     decrypt(secret: Secret) {
         const decipher = crypto.createDecipheriv(ALGORITHM, this.serverConfigService.encryptionKey, secret.iv);
         const secretData = decipher.update(secret.data, 'hex', 'utf8') +
                            decipher.final('utf8');
-        
+
         return secretData;
     }
 
@@ -38,5 +38,21 @@ export class SecretService {
         secret.data = encryptedData;
 
         return secret;
+    }
+
+    async save(secret: Secret): Promise<Secret> {
+        return this.secretRepository.save(secret);
+    }
+
+    async update(secret: Secret): Promise<UpdateResult> {
+        return this.secretRepository.update(secret.id, secret);
+    }
+
+    async delete(secret: Secret): Promise<DeleteResult> {
+        return this.secretRepository.delete(secret);
+    }
+
+    async deleteById(id: string): Promise<DeleteResult> {
+        return this.secretRepository.delete(id);
     }
 }

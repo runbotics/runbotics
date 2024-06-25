@@ -1,8 +1,9 @@
 import { IAuthority, IUser } from 'runbotics-common';
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
 import { AuthorityEntity } from '../authority/authority.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { Tenant } from '#/database/tenant/tenant.entity';
+import { Attribute } from '#/scheduler-database/attribute/attribute.entity';
 
 @Entity({ name: 'jhi_user', synchronize: false })
 export class UserEntity implements IUser {
@@ -61,7 +62,20 @@ export class UserEntity implements IUser {
         inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' }
     })
         authorities: IAuthority[];
-    
+
     @OneToMany(() => Tenant, tenant => tenant.createdBy)
     tenants: Tenant[];
+
+    @OneToMany(() => Attribute, attribute => attribute.createdBy)
+    createdAttributes: Attribute[];
+
+    @OneToMany(() => Attribute, attribute => attribute.updatedBy)
+    updatedAttributes: Attribute[];
+
+    @JoinColumn({ name: 'tenant_id' })
+    @ManyToOne(() => Tenant, tenant => tenant.users)
+    tenant: Tenant;
+
+    @Column({ type: 'varchar', name: 'tenant_id' })
+    tenantId: string;
 }
