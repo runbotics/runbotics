@@ -1,19 +1,19 @@
-import { PrimaryColumn, Entity, Column, OneToOne, JoinColumn, OneToMany, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany } from 'typeorm';
-import { Tenant } from '../../database/tenant/tenant.entity';
-import { Secret } from '#/scheduler-database/secret/secret.entity';
+import { Tenant } from '#/database/tenant/tenant.entity';
 import { UserEntity } from '#/database/user/user.entity';
+import { Attribute } from '#/scheduler-database/attribute/attribute.entity';
+import { Secret } from '#/scheduler-database/secret/secret.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
-import { CredentialTemplateAttributeType } from 'runbotics-common';
+import { Collection, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ schema: 'scheduler' })
-export class Attribute {
+export class CredentialCollection {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ name: 'name'  })
+    @Column({ name: 'name' })
     name: string;
 
-    @ManyToOne(() => Tenant, tenant => tenant.attributes)
+    @ManyToOne(() => Tenant, tenant => tenant.credentialCollections)
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 
@@ -22,19 +22,6 @@ export class Attribute {
 
     @Column({ name: 'description', nullable: true })
     description: string;
-
-    @Column({ name: 'masked' })
-    masked: boolean;
-
-    @Column({ name: 'type '})
-    type: CredentialTemplateAttributeType;
-
-    @OneToOne(() => Secret, secret => secret.attribute, { cascade: true, onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'secret_id' })
-    secret: Secret;
-
-    @Column({ name: 'secret_id' })
-    secretId: string;
 
     @CreateDateColumn({ name: 'created_at', type: 'timestamp without time zone'})
     createdAt: Date;
@@ -56,10 +43,15 @@ export class Attribute {
     @Column({ name: 'updated_by_id' })
     updatedById: number;
 
-    @ManyToOne(() => Credential, credential => credential.attributes, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'credential_id' })
-    credential: Credential;
+    @ManyToMany(() => UserEntity)
+    @JoinTable({
+        name: 'credential_collection_user',
+        joinColumn: { name: 'collection_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    })
+    users: UserEntity[];
 
-    @Column({ name: 'credential_id' })
-    credentialId: string;
+    @OneToMany(() => Credential, credential => credential.collection)
+    @JoinColumn({ name: 'collection_id' })
+    credentials: Credential[];
 }

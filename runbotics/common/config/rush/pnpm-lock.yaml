@@ -643,6 +643,9 @@ importers:
       '@nestjs/jwt':
         specifier: ^9.0.0
         version: 9.0.0(@nestjs/common@9.4.3)
+      '@nestjs/mapped-types':
+        specifier: ~2.0.5
+        version: 2.0.5(@nestjs/common@9.4.3)(reflect-metadata@0.1.13)
       '@nestjs/passport':
         specifier: ^9.0.0
         version: 9.0.3(@nestjs/common@9.4.3)(passport@0.5.3)
@@ -4521,6 +4524,23 @@ packages:
       '@nestjs/common': 9.4.3(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@types/jsonwebtoken': 8.5.8
       jsonwebtoken: 8.5.1
+    dev: false
+
+  /@nestjs/mapped-types@2.0.5(@nestjs/common@9.4.3)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-bSJv4pd6EY99NX9CjBIyn4TVDoSit82DUZlL4I3bqNfy5Gt+gXTa86i3I/i0iIV9P4hntcGM5GyO+FhZAhxtyg==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
+      class-transformer: ^0.4.0 || ^0.5.0
+      class-validator: ^0.13.0 || ^0.14.0
+      reflect-metadata: ^0.1.12 || ^0.2.0
+    peerDependenciesMeta:
+      class-transformer:
+        optional: true
+      class-validator:
+        optional: true
+    dependencies:
+      '@nestjs/common': 9.4.3(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      reflect-metadata: 0.1.13
     dev: false
 
   /@nestjs/microservices@9.4.3(@nestjs/common@9.4.3)(@nestjs/core@9.4.3)(reflect-metadata@0.1.13)(rxjs@7.8.1):

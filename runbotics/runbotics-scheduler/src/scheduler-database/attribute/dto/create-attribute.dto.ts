@@ -1,6 +1,5 @@
 export class CreateAttributeDto {
-    name: string;
     value: string;
-    description?: string;
+    credentialId: string;
     masked?: boolean;
 }
