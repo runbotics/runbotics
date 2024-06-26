@@ -46,12 +46,12 @@ export const AiPluginFAB = ({ children }: { children: React.ReactNode }) => {
         <>
             <Script
                 id='AiChatScript'
-                src="ai-plugin/ai-plugin.js"
+                src="https://a41-assistant.clouddc.eu/ai-plugin/ai-plugin.js"
                 strategy="lazyOnload"
                 onLoad={async () => {
                     const token = await getChatAccessToken();
                     window.AiChatExtension.init(
-                        'https://crq0fd1c-9000.euw.devtunnels.ms',
+                        'https://a41-assistant.clouddc.eu',
                         {
                             token,
                             theme: mockedThemes.lightTheme,

@@ -49,7 +49,7 @@ services:
       - MAIL_PORT=
       - MAIL_USERNAME=
       - MAIL_PASSWORD=
-      - CHATBOT_URI=
+      - CHATBOT_URI=https://a41-assistant.clouddc.eu
       - CHATBOT_API_KEY=
       - CHATBOT_APP_ID=
     ports:
