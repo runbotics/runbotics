@@ -61,7 +61,10 @@ export class UserEntity implements IUser {
         inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' }
     })
         authorities: IAuthority[];
-    
+
     @OneToMany(() => Tenant, tenant => tenant.createdBy)
     tenants: Tenant[];
+
+    @Column({ name: 'tenant_id', type: 'varchar' })
+        tenantId: string;
 }
