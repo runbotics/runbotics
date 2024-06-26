@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, ParseUUIDPipe, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { FeatureKey, Tenant } from 'runbotics-common';
 
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -6,6 +6,8 @@ import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User } from '#/utils/decorators/user.decorator';
 import { UserEntity } from '#/database/user/user.entity';
 import { Logger } from '#/utils/logger';
+
+import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { TenantService } from './tenant.service';
 import { CreateTenantDto, createTenantSchema } from './dto/create-tenant.dto';
 import { UpdateTenantDto, updateTenantSchema } from './dto/update-tenant.dto';
@@ -18,7 +20,8 @@ export class TenantController {
         private readonly tenantService: TenantService
     ) { }
 
-    @Get()
+    @Get('/:tenantId/me')
+    @UseInterceptors(TenantInterceptor)
     @FeatureKeys(FeatureKey.TENANT_READ)
     async getTenantByUser(@User('tenantId') tenantId: string) {
         this.logger.log('REST request to get user tenant with id: ', tenantId);
@@ -32,18 +35,14 @@ export class TenantController {
         return tenant;
     }
 
-    @Get('all')
+    @Get() // TODO: pagination & filtering
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     getAllTenants() {
         this.logger.log('REST request to get all tenants');
         return this.tenantService.getAllTenants();
     }
 
-    @Get('all-page')
-    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
-    getAllTenantsByPage() { }
-
-    @Get(':id')
+    @Get('/:id')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     async getTenantById(
         @Param('id', ParseUUIDPipe) id: Tenant['id']
@@ -69,7 +68,7 @@ export class TenantController {
         return this.tenantService.createTenant(tenantDto, user);
     }
 
-    @Patch(':id')
+    @Patch('/:id')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     updateTenant(
         @Param('id', ParseUUIDPipe) id: Tenant['id'],
