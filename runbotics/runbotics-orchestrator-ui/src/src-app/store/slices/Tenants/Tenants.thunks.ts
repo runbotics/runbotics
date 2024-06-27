@@ -12,10 +12,11 @@ const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
 
 export const getAll = createAsyncThunk<Tenant[], void>(
     'tenants/getAll',
-    () => axios.get<Tenant[]>('/api/admin/tenants/all')
+    () => axios.get<Tenant[]>('/api/scheduler/tenants')
         .then(response => response.data)
 );
 
+// TODO: change to scheduler after endpoint will be ready
 export const getAllByPage = createAsyncThunk<Page<Tenant>, PageRequestParams>(
     'tenants/getAllByPage',
     (params) => axios.get<Page<Tenant>>(buildPageURL(params, '/api/admin/tenants/all-page'))
@@ -24,13 +25,13 @@ export const getAllByPage = createAsyncThunk<Page<Tenant>, PageRequestParams>(
 
 export const createOne = createAsyncThunk<Tenant, Tenant>(
     'tenants/create',
-    (tenant) => axios.post<Tenant>('/api/admin/tenants', tenant)
+    (tenant) => axios.post<Tenant>('/api/scheduler/tenants', tenant)
         .then(response => response.data)
 );
 
 export const partialUpdate = createAsyncThunk<Tenant, Tenant>(
     'tenants/partialUpdate',
-    (tenant, { rejectWithValue }) => axios.patch<Tenant>(`/api/admin/tenants/${tenant.id}`, tenant)
+    (tenant, { rejectWithValue }) => axios.patch<Tenant>(`/api/scheduler/tenants/${tenant.id}`, tenant)
         .then(response => response.data)
         .catch(error => rejectWithValue(error.response.data))
 );
