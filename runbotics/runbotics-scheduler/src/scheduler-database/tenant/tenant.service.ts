@@ -1,12 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 
 import { UserEntity } from '#/database/user/user.entity';
 import { Tenant } from './tenant.entity';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { Logger } from '#/utils/logger';
+import { TenantInviteCode } from './tenant-invite-code.entity';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class TenantService {
@@ -14,7 +16,9 @@ export class TenantService {
 
     constructor(
         @InjectRepository(Tenant)
-        private readonly tenantRepository: Repository<Tenant>
+        private readonly tenantRepository: Repository<Tenant>,
+        @InjectRepository(TenantInviteCode)
+        private readonly inviteCodeRepository: Repository<TenantInviteCode>
     ) {}
 
     getTenantById(id: string) {
@@ -31,8 +35,8 @@ export class TenantService {
 
         const newTenant = {
             ...tenantDto,
-            created: new Date(),
-            updated: new Date(),
+            created: dayjs(),
+            updated: dayjs(),
             createdById: requester.id,
             lastModifiedBy: requester.email
         };
@@ -53,7 +57,7 @@ export class TenantService {
             .then(tenant => ({
                 ...tenant,
                 ...tenantDto,
-                updated: new Date(),
+                updated: dayjs(),
                 lastModifiedBy: requester.email
             })).catch(() => {
                 this.logger.error('Cannot find tenant with id: ', id);
@@ -61,5 +65,28 @@ export class TenantService {
             });
 
         return this.tenantRepository.save(updatedTenant);
+    }
+
+    getActiveInviteCodeByTenantId(tenantId: string) {
+        return this.inviteCodeRepository.findOneBy({
+            tenantId,
+            expirationDate: MoreThanOrEqual(new Date())
+        }).then(inviteCode => inviteCode && ({ inviteCode: inviteCode.inviteId }));
+    }
+
+    async createInviteCodeByTenantId(tenantId: string) {
+        const tenant = await this.tenantRepository
+            .findOneByOrFail({ id: tenantId })
+            .catch(() => {
+                throw new NotFoundException('Cannot find tenant with id: ', tenantId);
+            });
+
+        const newInviteCode = {
+            tenantId: tenant.id,
+            creationDate: dayjs(),
+            expirationDate: dayjs().add(7, 'days')
+        };
+
+        return this.inviteCodeRepository.save(newInviteCode);
     }
 }

@@ -199,11 +199,17 @@ export enum FeatureKey {
     // Allows to edit users assigned to the tenant
     TENANT_EDIT_USER = 'TENANT_EDIT_USER',
 
-    // Allows to get invite code for specific tenant
+    // Allows to get invite code for admin of specific tenant
     TENANT_GET_INVITE_CODE = 'TENANT_GET_INVITE_CODE',
 
-    // Allows to create invite code for tenant
+    // Allows to get invite code for every tenant
+    TENANT_GET_ALL_INVITE_CODE = 'TENANT_GET_ALL_INVITE_CODE',
+
+    // Allows to create invite code for admin of specific tenant
     TENANT_CREATE_INVITE_CODE = 'TENANT_CREATE_INVITE_CODE',
+
+    // Allows to create invite code for all tenants
+    TENANT_CREATE_ALL_INVITE_CODE = 'TENANT_CREATE_ALL_INVITE_CODE',
 }
 
 export interface IFeatureKey {
