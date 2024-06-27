@@ -4,7 +4,7 @@ import { CreateAttributeDto } from './dto/create-attribute.dto';
 import { UpdateAttributeDto } from './dto/update-attribute.dto';
 import { AuthRequest } from '#/types';
 
-@Controller('attribute')
+@Controller('credential-attributes')
 export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
 

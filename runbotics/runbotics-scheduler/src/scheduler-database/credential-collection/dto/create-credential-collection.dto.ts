@@ -1,1 +1,1 @@
-export class CreateCredentialCollectionDto {}
+export interface CreateCredentialCollectionDto {}

@@ -7,7 +7,7 @@ import { CredentialCollection } from '../credential-collection/credential-collec
 
 @Entity({ schema: 'scheduler' })
 export class Credential {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn('uuid')a;
     id: string;
 
     @Column({ name: 'name' })

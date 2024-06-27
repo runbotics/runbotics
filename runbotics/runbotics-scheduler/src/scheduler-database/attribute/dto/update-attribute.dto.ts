@@ -1,4 +1,9 @@
-import { PickType } from '@nestjs/mapped-types';
-import { CreateAttributeDto } from './create-attribute.dto';
+import { z } from 'zod';
+import { createAttributeSchema } from './create-attribute.dto';
 
-export class UpdateAttributeDto extends PickType(CreateAttributeDto, ['value', 'masked'] as const) {}
+export const updateAttributeSchema = createAttributeSchema.pick({
+    value: true,
+    masked: true,
+});
+
+export type UpdateAttributeDto = z.infer<typeof updateAttributeSchema>;

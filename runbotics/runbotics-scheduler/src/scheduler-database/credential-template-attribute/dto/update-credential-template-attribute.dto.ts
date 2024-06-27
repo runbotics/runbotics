@@ -1,7 +1,10 @@
-import { PickType } from '@nestjs/mapped-types';
-import { CreateCredentialTemplateAttributeDto } from './create-credential-template-attribute.dto';
+import { z } from 'zod';
+import { createCredentialTemplateAttributeSchema } from './create-credential-template-attribute.dto';
 
-export class UpdateCredentialTemplateAttributeDto extends PickType(
-    CreateCredentialTemplateAttributeDto,
-    ['name', 'description', 'type'] as const
-) {}
+export const updateCredentialTemplateAttributeSchema = createCredentialTemplateAttributeSchema.pick({
+    name: true,
+    description: true,
+    type: true,
+});
+
+export type UpdateCredentialTemplateAttributeDto = z.infer<typeof updateCredentialTemplateAttributeSchema>;

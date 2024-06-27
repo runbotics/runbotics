@@ -1,8 +1,11 @@
-import { CredentialTemplateAttribute } from '#/scheduler-database/credential-template-attribute/credential-template-attribute.entity';
+import { z } from 'zod';
+import { createCredentialTemplateAttributeSchema } from '#/scheduler-database/credential-template-attribute/dto/create-credential-template-attribute.dto';
 
-export class CreateCredentialTemplateDto {
-    name: string;
-    description: string;
-    attributes: CredentialTemplateAttribute[];
-    tenantId?: string;
-}
+export const createCredentialTemplateSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  attributes: z.array(createCredentialTemplateAttributeSchema),
+  isForTenantOnly: z.boolean(),
+}).strict();
+
+export type CreateCredentialTemplateDto = z.infer<typeof createCredentialTemplateSchema>;

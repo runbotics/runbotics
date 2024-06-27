@@ -3,7 +3,7 @@ import { CredentialTemplateService } from './credential-template.service';
 import { CreateCredentialTemplateDto } from './dto/create-credential-template.dto';
 import { UpdateCredentialTemplateDto } from './dto/update-credential-template.dto';
 
-@Controller('credential-template')
+@Controller('credential-templates')
 export class CredentialTemplateController {
   constructor(private readonly credentialTemplateService: CredentialTemplateService) {}
 

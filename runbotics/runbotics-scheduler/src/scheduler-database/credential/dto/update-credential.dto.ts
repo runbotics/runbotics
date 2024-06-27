@@ -1,4 +1,9 @@
-import { PickType } from '@nestjs/mapped-types';
-import { CreateCredentialDto } from './create-credential.dto';
+import { z } from 'zod';
+import { createCredentialSchema } from './create-credential.dto';
 
-export class UpdateCredentialDto extends PickType(CreateCredentialDto, ['name', 'description'] as const) {}
+export const updateCredentialSchema = createCredentialSchema.pick({
+    name: true,
+    description: true,
+});
+
+export type UpdateCredentialDto = z.infer<typeof updateCredentialSchema>;

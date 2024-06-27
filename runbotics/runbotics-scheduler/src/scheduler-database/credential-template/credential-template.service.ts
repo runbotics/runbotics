@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCredentialTemplateDto } from './dto/create-credential-template.dto';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { CreateCredentialTemplateDto, createCredentialTemplateSchema } from './dto/create-credential-template.dto';
 import { UpdateCredentialTemplateDto } from './dto/update-credential-template.dto';
 import { Repository } from 'typeorm';
 import { CredentialTemplate } from './credential-template.entity';
@@ -18,11 +18,21 @@ export class CredentialTemplateService {
   ) {}
 
   async create(templateDto: CreateCredentialTemplateDto) {
+    const parsedTemplateDto = createCredentialTemplateSchema.safeParse(templateDto);
+
+    if (!parsedTemplateDto.success) {
+      throw new BadRequestException(parsedTemplateDto.error.format());
+    }
+
     const template = await this.templateRepo.create({
-      ...templateDto,
+      ...parsedTemplateDto.data,
     });
 
-    return this.templateRepo.save(template);
+    return this.templateRepo.save(template)
+      .then((savedTemplate) => savedTemplate)
+      .catch((error) => {
+        throw new BadRequestException(error.message);
+      });
   }
 
   findAll() {

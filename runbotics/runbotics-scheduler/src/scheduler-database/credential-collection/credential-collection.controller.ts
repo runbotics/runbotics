@@ -3,7 +3,7 @@ import { CredentialCollectionService } from './credential-collection.service';
 import { CreateCredentialCollectionDto } from './dto/create-credential-collection.dto';
 import { UpdateCredentialCollectionDto } from './dto/update-credential-collection.dto';
 
-@Controller('credential-collection')
+@Controller('credential-collections')
 export class CredentialCollectionController {
   constructor(private readonly credentialCollectionService: CredentialCollectionService) {}
 
