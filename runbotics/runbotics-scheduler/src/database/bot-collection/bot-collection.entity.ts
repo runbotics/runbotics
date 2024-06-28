@@ -13,7 +13,7 @@ import { UserEntity } from '../user/user.entity';
 import { BotEntity } from '../bot/bot.entity';
 import { dateTransformer } from '../database.utils';
 
-@Entity({ name: 'bot_collection' })
+@Entity({ name: 'bot_collection', synchronize: false })
 export class BotCollectionEntity implements IBotCollection {
     @PrimaryGeneratedColumn('uuid')
         id: string;

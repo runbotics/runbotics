@@ -38,6 +38,8 @@ export default class VariableActionHandler extends StatelessActionHandler {
     ): Promise<AssignVariableActionOutput> {
         const variables = {};
         variables[input.variable] = input.value;
+        const setVariables = { ...request.executionContext.environment.variables, ...variables };
+        request.executionContext.environment.assignVariables(setVariables);
 
         await this.runtimeService.assignVariables(request.processInstanceId, variables);
         return {};
