@@ -43,7 +43,7 @@ export interface EditCredentialsCollectionDto {
     // credentials: BasicCredentialDto[];
     isPrivate: boolean;
     description?: string;
-    users: CredentialsCollectionUser[];
+    users?: CredentialsCollectionUser[];
 }
 
 export type CredentialsCollectionKeys = { [Key in keyof BasicCredentialsCollectionDto]: Key }[keyof BasicCredentialsCollectionDto];

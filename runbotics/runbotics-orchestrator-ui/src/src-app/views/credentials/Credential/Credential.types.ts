@@ -12,7 +12,7 @@ export interface BasicCredentialDto {
     // attributes?: Attribute[];
     template: CredentialTemplate;
     description?: string;
-    // tenantId?: string;
+    tenantId?: string;
     createdOn: string;
     createdBy: string;
     modifiedOn?: string;

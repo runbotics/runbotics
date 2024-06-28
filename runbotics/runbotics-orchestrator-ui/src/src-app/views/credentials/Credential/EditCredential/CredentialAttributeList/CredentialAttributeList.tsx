@@ -5,7 +5,7 @@ import { Grid } from '@mui/material';
 
 import { useDispatch, useSelector } from '#src-app/store';
 
-import { fetchAttributes } from '#src-app/store/slices/CredentialAttributes/CredentialAttributes.thunks';
+import { addAttribute, fetchAllAttributes } from '#src-app/store/slices/CredentialAttributes/CredentialAttributes.thunks';
 import { EditAtributeDto, initialCredentialAttributeValues } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
 
 import { AddAttribute } from '../CredentialAttribute/AddAttribute';
@@ -20,16 +20,20 @@ const CredentialAttributesList = () => {
     // has to provide credentialId in props and use it in dispatch
 
     useEffect(() => {
-        dispatch(fetchAttributes('credId1'));
+        dispatch(fetchAllAttributes());
     }, [dispatch]);
 
+    useEffect(() => {
+        console.log('Attributes:', attributes);
+    }, [attributes]);
+      
     const handleAddAttribute = () => {
         // below needs to go to the confirm button on attribute
         // send attribute to the database (CreateAttributeDto)
         // get attrbiute from the database with (EditAtributeDto)
         // add to the state
-        const newAttribute = {...initialCredentialAttributeValues, id: undefined, createdOn: new Date().toDateString(), createdBy: currentUser.email };
-        // setAttributes([...attributes, newAttribute]);
+        const newAttribute = {...initialCredentialAttributeValues, id: 'undefined', createdOn: new Date().toDateString(), createdBy: currentUser.email };
+        dispatch(addAttribute(newAttribute));
     };
 
     const handleAttributeChange = (updatedAttribute: EditAtributeDto) => {
