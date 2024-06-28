@@ -4,7 +4,7 @@ import { createCloudFolderAction } from '#src-app/Actions/cloudFile/createCloudF
 import { createShareLinkAction } from '#src-app/Actions/cloudFile/createShareLink.action';
 import { deleteCloudItemAction } from '#src-app/Actions/cloudFile/deleteCloudItem.action';
 import { downloadCloudFileAction } from '#src-app/Actions/cloudFile/downloadCloudFile.action';
-import { getSharepointListItemsAction } from '#src-app/Actions/cloudFile/getSharepointListItemsAction';
+import { getSharepointListItemsAction } from '#src-app/Actions/cloudFile/getSharepointListItems.action';
 import { moveCloudFileAction } from '#src-app/Actions/cloudFile/moveCloudFile.action';
 import { uploadCloudFileAction } from '#src-app/Actions/cloudFile/uploadCloudFile.action';
 

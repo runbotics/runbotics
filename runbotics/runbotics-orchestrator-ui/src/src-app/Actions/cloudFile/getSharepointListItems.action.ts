@@ -1,5 +1,6 @@
-import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
+import { CloudFileAction } from 'runbotics-common';
 
+import { listNameUI, siteNameUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -22,33 +23,17 @@ export const getSharepointListItemsAction: IBpmnAction = {
                     title: translate('Process.Details.Modeler.Actions.Common.Input'),
                     type: 'object',
                     properties: {
-                        platform: {
-                            title: translate('Process.Details.Modeler.Actions.Microsoft.Platform'),
+                        siteName: {
+                            title: translate(
+                                'Process.Details.Modeler.Actions.Microsoft.SiteName',
+                            ),
                             type: 'string',
-                            enum: [MicrosoftPlatform.SharePoint],
-                            default: MicrosoftPlatform.SharePoint,
                         },
-                    },
-                    dependencies: {
-                        platform: {
-                            properties: {
-                                platform: {
-                                    enum: [MicrosoftPlatform.SharePoint],
-                                },
-                                siteName: {
-                                    title: translate(
-                                        'Process.Details.Modeler.Actions.Microsoft.SiteName',
-                                    ),
-                                    type: 'string',
-                                },
-                                listName: {
-                                    title: translate(
-                                        'Process.Details.Modeler.Actions.Microsoft.ListName',
-                                    ),
-                                    type: 'string',
-                                },
-                            },
-                            required: ['siteName', 'listName'],
+                        listName: {
+                            title: translate(
+                                'Process.Details.Modeler.Actions.Microsoft.ListName',
+                            ),
+                            type: 'string',
                         },
                     },
                 },
@@ -65,6 +50,10 @@ export const getSharepointListItemsAction: IBpmnAction = {
             },
         },
         uiSchema: {
+            input: {
+                siteName: siteNameUI,
+                listName: listNameUI,
+            },
             output: {
                 variableName: {
                     'ui:options': {

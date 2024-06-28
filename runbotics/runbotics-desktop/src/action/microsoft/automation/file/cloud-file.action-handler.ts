@@ -223,6 +223,10 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     private async getSharepointListItems({ listName, siteName }: SharepointGetListItems){
         const site = (await this.sharePointService.getSitesByName(siteName)).value[0];
         
+        if(!site){
+            throw new Error(`Site "${siteName}" wasn't found`);
+        }
+        
         return this.sharePointService.getListItems(site.id, listName);
     }
 }

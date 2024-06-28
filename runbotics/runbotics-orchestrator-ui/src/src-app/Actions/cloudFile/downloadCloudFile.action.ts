@@ -1,5 +1,6 @@
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
+import { listNameUI, siteNameUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -101,6 +102,10 @@ export const downloadCloudFileAction: IBpmnAction = {
             },
         },
         uiSchema: {
+            input: {
+                siteName: siteNameUI,
+                listName: listNameUI,
+            },
             output: {
                 variableName: {
                     'ui:options': {
