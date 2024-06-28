@@ -9,6 +9,7 @@ import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { Logger } from '#/utils/logger';
 import { TenantInviteCode } from './tenant-invite-code.entity';
 import dayjs from 'dayjs';
+import { TenantInviteCodeDto } from './dto/invite-code.dto';
 
 @Injectable()
 export class TenantService {
@@ -67,11 +68,11 @@ export class TenantService {
         return this.tenantRepository.save(updatedTenant);
     }
 
-    getActiveInviteCodeByTenantId(tenantId: string) {
+    getActiveInviteCodeByTenantId(tenantId: string): Promise<TenantInviteCodeDto | null> {
         return this.inviteCodeRepository.findOneBy({
             tenantId,
             expirationDate: MoreThanOrEqual(new Date())
-        }).then(inviteCode => inviteCode && ({ inviteCode: inviteCode.inviteId }));
+        }).then(inviteCode => inviteCode ? ({ inviteCode: inviteCode.inviteId }) : null);
     }
 
     async createInviteCodeByTenantId(tenantId: string) {

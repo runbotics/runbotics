@@ -10,8 +10,8 @@ import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User } from '#/utils/decorators/user.decorator';
 import { UserEntity } from '#/database/user/user.entity';
 import { Logger } from '#/utils/logger';
-
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
+
 import { TenantService } from './tenant.service';
 import { CreateTenantDto, createTenantSchema } from './dto/create-tenant.dto';
 import { UpdateTenantDto, updateTenantSchema } from './dto/update-tenant.dto';
@@ -43,7 +43,7 @@ export class TenantController {
     @UseInterceptors(TenantInterceptor)
     @FeatureKeys(FeatureKey.TENANT_GET_INVITE_CODE)
     async getActiveInviteCode(@User('tenantId') id: Tenant['id']) {
-        this.logger.log('REST request to get active tenant invite code for user tenant with id: ', id);
+        this.logger.log('REST request to get active invite code for user tenant with id: ', id);
         const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(id);
 
         if (!inviteCodeDto) {
@@ -58,7 +58,7 @@ export class TenantController {
     @UseInterceptors(TenantInterceptor)
     @FeatureKeys(FeatureKey.TENANT_CREATE_INVITE_CODE)
     async createInviteCode(@User('tenantId') id: Tenant['id']) {
-        this.logger.log('REST request to create tenant invite code for user tenant with id: ', id);
+        this.logger.log('REST request to create invite code for user tenant with id: ', id);
 
         if (await this.tenantService.getActiveInviteCodeByTenantId(id)) {
             this.logger.error('Valid code exists for tenant with id: ', id);
