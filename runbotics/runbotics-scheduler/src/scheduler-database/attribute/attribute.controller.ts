@@ -1,16 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, ParseUUIDPipe, BadRequestException } from '@nestjs/common';
 import { AttributeService } from './attribute.service';
-import { CreateAttributeDto } from './dto/create-attribute.dto';
-import { UpdateAttributeDto } from './dto/update-attribute.dto';
+import { CreateAttributeDto, createAttributeSchema } from './dto/create-attribute.dto';
+import { UpdateAttributeDto, updateAttributeSchema } from './dto/update-attribute.dto';
 import { AuthRequest } from '#/types';
+import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
+import { Tenant } from 'runbotics-common';
 
-@Controller('credential-attributes')
+@Controller('api/scheduler/tenants/:tenantId/credential-attributes')
 export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
 
   @Post()
-  create(@Body() createAttributeDto: CreateAttributeDto, @Req() request: AuthRequest) {
-    return this.attributeService.create(createAttributeDto, request);
+  create(
+    @Body(new ZodValidationPipe(createAttributeSchema)) attributeDto: CreateAttributeDto,
+    @Req() request: AuthRequest
+  ) {
+    return this.attributeService.create(attributeDto, request);
   }
 
   @Get()
@@ -25,8 +30,8 @@ export class AttributeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAttributeDto: UpdateAttributeDto, @Req() request: AuthRequest) {
-    return this.attributeService.update(id, updateAttributeDto, request);
+  update(@Param('id') id: string, @Body(new ZodValidationPipe(updateAttributeSchema)) attributeDto: UpdateAttributeDto, @Req() request: AuthRequest) {
+    return this.attributeService.update(id, attributeDto, request);
   }
 
   @Delete(':id')

@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { CredentialTemplateService } from './credential-template.service';
-import { CreateCredentialTemplateDto } from './dto/create-credential-template.dto';
-import { UpdateCredentialTemplateDto } from './dto/update-credential-template.dto';
+import { CreateCredentialTemplateDto, createCredentialTemplateSchema } from './dto/create-credential-template.dto';
+import { UpdateCredentialTemplateDto, updateCredentialTemplateSchema } from './dto/update-credential-template.dto';
+import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
+import { AuthRequest } from '#/types';
 
-@Controller('credential-templates')
+@Controller('api/scheduler/tenants/:tenantId/credential-templates')
 export class CredentialTemplateController {
   constructor(private readonly credentialTemplateService: CredentialTemplateService) {}
 
   @Post()
-  create(@Body() templateDto: CreateCredentialTemplateDto) {
-    return this.credentialTemplateService.create(templateDto);
+  create(@Body(new ZodValidationPipe(createCredentialTemplateSchema)) templateDto: CreateCredentialTemplateDto, @Req() request: AuthRequest) {
+    return this.credentialTemplateService.create(templateDto, request);
   }
 
   @Get()
@@ -23,8 +25,8 @@ export class CredentialTemplateController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() templateDto: UpdateCredentialTemplateDto) {
-    return this.credentialTemplateService.updateById(id, templateDto);
+  update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialTemplateSchema)) templateDto: UpdateCredentialTemplateDto, @Req() request: AuthRequest) {
+    return this.credentialTemplateService.updateById(id, templateDto, request);
   }
 
   @Delete(':id')

@@ -8,7 +8,7 @@ export class CredentialTemplate {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ name: 'name' })
+    @Column({ name: 'name', unique: true })
     name: string;
 
     @ManyToOne(() => Tenant, tenant => tenant.credentials)

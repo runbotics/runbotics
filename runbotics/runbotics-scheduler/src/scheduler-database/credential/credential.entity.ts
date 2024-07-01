@@ -7,7 +7,7 @@ import { CredentialCollection } from '../credential-collection/credential-collec
 
 @Entity({ schema: 'scheduler' })
 export class Credential {
-    @PrimaryGeneratedColumn('uuid')a;
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column({ name: 'name' })
@@ -23,12 +23,12 @@ export class Credential {
     @Column({ name: 'description', nullable: true })
     description: string;
 
-    @ManyToOne(() => CredentialCollection, collection => collection.credentials)
-    @JoinColumn({ name: 'collection_id' })
-    collection: CredentialCollection;
+    // @ManyToOne(() => CredentialCollection, collection => collection.credentials)
+    // @JoinColumn({ name: 'collection_id' })
+    // collection: CredentialCollection;
 
-    @Column({ name: 'collection_id' })
-    collectionId: string;
+    // @Column({ name: 'collection_id' })
+    // collectionId: string;
 
     @CreateDateColumn({ name: 'created_at', type: 'timestamp without time zone'})
     createdAt: Date;

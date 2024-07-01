@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAttributeDto } from './dto/create-attribute.dto';
 import { UpdateAttributeDto } from './dto/update-attribute.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,10 +20,10 @@ export class AttributeService {
     private readonly secretService: SecretService,
   ) { }
 
-  async create(createAttributeDto: CreateAttributeDto, request: AuthRequest): Promise<Attribute> {
+  async create(attributeDto: CreateAttributeDto, request: AuthRequest): Promise<Attribute> {
     const { user: { tenantId, id: userId } } = request;
 
-    const encryptedValue = this.secretService.encrypt(createAttributeDto.value, tenantId);
+    const encryptedValue = this.secretService.encrypt(attributeDto.value, tenantId);
 
     const secretEntity = {
       ...encryptedValue,
@@ -34,18 +34,26 @@ export class AttributeService {
     };
 
     const secret = await this.secretService.save(secretEntity);
+      // .catch((error) => {
+      //   this.logger.error(error);
+      //   throw new BadRequestException(`Failed to save secret: ${error.message}`);
+      // });
     const secretId = secret.id;
 
     const attribute = {
-      ...createAttributeDto,
+      ...attributeDto,
       secretId: secretId,
       tenantId,
       createdById: userId,
       updatedById: userId,
-      masked: createAttributeDto.masked || true,
+      masked: attributeDto.masked || true,
     };
 
-    return this.attributeRepository.manager.save(Attribute, attribute);
+    return this.attributeRepository.manager.save(Attribute, attribute)
+      .catch((error) => {
+        this.logger.error(error);
+        throw new BadRequestException(`Failed to save attribute: ${error.message}`);
+      });
   }
 
   async findAll(): Promise<Attribute[]> {
@@ -91,9 +99,9 @@ export class AttributeService {
     const { user: { id: userId, tenantId } } = request;
     const attribute = await this.findByIdAndTenantId(id, tenantId);
 
-    if (!attribute) {
-      throw new NotFoundException(`Attribute with id: ${id} not found`);
-    }
+    // if (!attribute) {
+    //   throw new NotFoundException(`Attribute with id: ${id} not found`);
+    // }
 
     const newSecret = await this.secretService.encrypt(updateAttributeDto.value, tenantId);
     await this.secretService.update({ ...newSecret, id: attribute.secretId });

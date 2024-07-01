@@ -15,17 +15,13 @@ export class CredentialService {
   ) {}
 
   create(credentialDto: CreateCredentialDto, request: AuthRequest) {
-    const { user: { id: userId } } = request;
-
-    const parsedCredentialDto = createCredentialSchema.safeParse(credentialDto);
-
-    if(!parsedCredentialDto.success) {
-      throw new BadRequestException(parsedCredentialDto.error.format());
-    }
+    const { user: { id: userId, tenantId } } = request;
 
     const credential = {
-      ...parsedCredentialDto.data,
-      createdById: userId
+      ...credentialDto,
+      createdById: userId,
+      updatedById: userId,
+      tenantId
     };
 
     return this.credentialRepo.save(credential)
@@ -45,13 +41,13 @@ export class CredentialService {
     });
   }
 
-  findAllByCollectionId(collectionId: string) {
-    return this.credentialRepo.find({
-      where: {
-        collectionId
-      }
-    });
-  }
+  // findAllByCollectionId(collectionId: string) {
+  //   return this.credentialRepo.find({
+  //     where: {
+  //       collectionId
+  //     }
+  //   });
+  // }
 
   findOneById(id: string) {
     return this.credentialRepo.findOne({
@@ -61,14 +57,12 @@ export class CredentialService {
     });
   }
 
-  updateById(id: string, credentialDto: UpdateCredentialDto) {
-    const parsedCredentialDto = updateCredentialSchema.parse(credentialDto);
+  updateById(id: string, credentialDto: UpdateCredentialDto, request: AuthRequest) {
+    const { user: { id: userId, tenantId }} = request;
 
-    if (!parsedCredentialDto) {
-        throw new BadRequestException(`Invalid credential data. Allowed properties: ${updateCredentialSchema.shape}`);
-    }
+    const credentialToUpdate = { ...credentialDto, updatedById: userId };
 
-    return this.credentialRepo.update(id, parsedCredentialDto);
+    return this.credentialRepo.update(id, credentialDto);
   }
 
   async removeById(id: string) {

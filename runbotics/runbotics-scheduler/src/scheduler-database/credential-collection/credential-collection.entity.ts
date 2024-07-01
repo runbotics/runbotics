@@ -51,7 +51,7 @@ export class CredentialCollection {
     })
     users: UserEntity[];
 
-    @OneToMany(() => Credential, credential => credential.collection)
-    @JoinColumn({ name: 'collection_id' })
-    credentials: Credential[];
+    // @OneToMany(() => Credential, credential => credential.collection)
+    // @JoinColumn({ name: 'collection_id' })
+    // credentials: Credential[];
 }

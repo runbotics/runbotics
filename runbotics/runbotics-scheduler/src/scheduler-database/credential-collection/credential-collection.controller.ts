@@ -1,15 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CredentialCollectionService } from './credential-collection.service';
-import { CreateCredentialCollectionDto } from './dto/create-credential-collection.dto';
-import { UpdateCredentialCollectionDto } from './dto/update-credential-collection.dto';
+import { CreateCredentialCollectionDto, createCredentialCollectionSchema } from './dto/create-credential-collection.dto';
+import { UpdateCredentialCollectionDto, updateCredentialCollectionSchema } from './dto/update-credential-collection.dto';
+import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 
 @Controller('credential-collections')
 export class CredentialCollectionController {
   constructor(private readonly credentialCollectionService: CredentialCollectionService) {}
 
   @Post()
-  create(@Body() createCredentialCollectionDto: CreateCredentialCollectionDto) {
-    return this.credentialCollectionService.create(createCredentialCollectionDto);
+  create(@Body(new ZodValidationPipe(createCredentialCollectionSchema)) collectionDto: CreateCredentialCollectionDto) {
+    return this.credentialCollectionService.create(collectionDto);
   }
 
   @Get()
@@ -23,8 +24,8 @@ export class CredentialCollectionController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCredentialCollectionDto: UpdateCredentialCollectionDto) {
-    return this.credentialCollectionService.update(+id, updateCredentialCollectionDto);
+  update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialCollectionSchema)) collectionDto: UpdateCredentialCollectionDto) {
+    return this.credentialCollectionService.update(+id, collectionDto);
   }
 
   @Delete(':id')

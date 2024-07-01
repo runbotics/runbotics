@@ -3,8 +3,9 @@ import { createCredentialTemplateAttributeSchema } from './create-credential-tem
 
 export const updateCredentialTemplateAttributeSchema = createCredentialTemplateAttributeSchema.pick({
     name: true,
-    description: true,
     type: true,
+    required: true,
+    description: true,
 });
 
 export type UpdateCredentialTemplateAttributeDto = z.infer<typeof updateCredentialTemplateAttributeSchema>;

@@ -1,3 +1,9 @@
-import { CreateCredentialCollectionDto } from './create-credential-collection.dto';
+import { z } from 'zod';
+import { createCredentialCollectionSchema } from './create-credential-collection.dto';
 
-export type UpdateCredentialCollectionDto = CreateCredentialCollectionDto;
+export const updateCredentialCollectionSchema = createCredentialCollectionSchema.pick({
+    name: true,
+    description: true,
+});
+
+export type UpdateCredentialCollectionDto = z.infer<typeof updateCredentialCollectionSchema>;
