@@ -30,6 +30,9 @@ import { TenantModule } from '#/database/tenant/tenant.module';
                     username: serverConfigService.dbSettings.username,
                     password: serverConfigService.dbSettings.password,
                     database: serverConfigService.dbSettings.database,
+                    migrationsRun: true,
+                    migrationsTableName: 'rb_migrations.migration',
+                    migrations: ['dist/src/migrations/*.js'],
                     entities: ['dist/src/**/*.entity{.ts,.js}'],
                     synchronize: false,
                 };
@@ -68,6 +71,7 @@ import { TenantModule } from '#/database/tenant/tenant.module';
         TriggerEventModule,
         GuestModule,
         TenantModule,
+        TypeOrmModule
     ],
 })
 export class DatabaseModule { }

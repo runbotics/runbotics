@@ -1,5 +1,5 @@
 import { ArgumentMetadata, BadRequestException, PipeTransform } from '@nestjs/common';
-import { ZodSchema } from 'zod';
+import { ZodError, ZodSchema } from 'zod';
 import { Logger } from '#/utils/logger';
 
 export class ZodValidationPipe implements PipeTransform {
@@ -11,8 +11,11 @@ export class ZodValidationPipe implements PipeTransform {
         try {
             return this.schema.parse(value);
         } catch (error) {
-            this.logger.log(error);
-            throw new BadRequestException('Validation failed');
+            if (error instanceof ZodError) {
+                this.logger.log();
+                throw new BadRequestException(error, { description: 'Validation error', cause: new Error('validation error') });
+            }
+            throw new BadRequestException('Unexpected validation error: ' + String(error));
         }
     }
 }
