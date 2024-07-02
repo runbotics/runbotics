@@ -57,6 +57,15 @@ export class CredentialService {
     });
   }
 
+  findOneByIdAndTenantId(id: string, tenantId: string) {
+    return this.credentialRepo.findOne({
+      where: {
+        id,
+        tenantId
+      }
+    });
+  }
+
   updateById(id: string, credentialDto: UpdateCredentialDto, request: AuthRequest) {
     const { user: { id: userId, tenantId }} = request;
 

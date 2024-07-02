@@ -21,7 +21,7 @@ export class CredentialTemplate {
     @Column({ name: 'description', nullable: true })
     description: string;
 
-    @OneToMany(() => CredentialTemplateAttribute, attribute => attribute.template)
+    @OneToMany(() => CredentialTemplateAttribute, attribute => attribute.template, { cascade: true })
     attributes: CredentialTemplateAttribute[];
 
     @ManyToOne(() => Credential, credential => credential.template)

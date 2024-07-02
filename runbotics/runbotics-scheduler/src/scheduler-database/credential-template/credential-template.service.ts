@@ -73,6 +73,16 @@ export class CredentialTemplateService {
     return template;
   }
 
+  async findOneByIdAndTenantId(id: string, tenantId: string) {
+    return this.templateRepo.findOne({
+      relations,
+      where: {
+        id,
+        tenantId
+      }
+    });
+  }
+
   async updateById(id: string, templateDto: UpdateCredentialTemplateDto, request: AuthRequest) {
     const template = await this.findOneById(id);
 

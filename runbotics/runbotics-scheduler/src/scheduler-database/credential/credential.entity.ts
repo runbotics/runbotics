@@ -54,7 +54,9 @@ export class Credential {
     @JoinColumn({ name: 'template_id' })
     template: CredentialTemplate;
 
+    @Column({ name: 'template_id' })
+    templateId: string;
+
     @OneToMany(() => Attribute, attribute => attribute.credential)
-    @JoinColumn({ name: 'credential_id' })
     attributes: Attribute[];
 }
