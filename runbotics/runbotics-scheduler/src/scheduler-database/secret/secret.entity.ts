@@ -1,6 +1,6 @@
 import { PrimaryColumn, Entity, Column, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
 import { ProcessContextSecret } from '#/scheduler-database/process-context-secret/process-context-secret.entity';
-import { Tenant } from '#/database/tenant/tenant.entity';
+import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 
 @Entity({ name: 'secret', schema: 'scheduler' })
 export class Secret {

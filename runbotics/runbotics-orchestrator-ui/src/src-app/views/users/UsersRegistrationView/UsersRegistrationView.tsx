@@ -149,7 +149,7 @@ const UsersRegistrationView: FC = () => {
     useEffect(() => {
         refreshSearch();
 
-        if (hasAdminAccess) dispatch(tenantsActions.getAll());
+        if (hasAdminAccess) dispatch(tenantsActions.getAll({}));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

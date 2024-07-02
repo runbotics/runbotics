@@ -78,7 +78,7 @@ const UsersListView: FC = () => {
         if (hasAdminAccess) {
             dispatch(tenantsActions.getAll());
         } else {
-            dispatch(tenantsActions.getInviteCode());
+            dispatch(tenantsActions.getInviteCode({}));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

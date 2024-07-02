@@ -1,7 +1,7 @@
 import { PrimaryColumn, Entity, Column, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import { Secret } from '#/scheduler-database/secret/secret.entity';
-import { Tenant } from '#/database/tenant/tenant.entity';
+import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 
 @Entity({schema: 'scheduler'})
 export class ProcessContextSecret {
@@ -31,7 +31,7 @@ export class ProcessContextSecret {
 
     @Column('uuid', { name: 'secret_id' })
     secretId: string;
-    
+
     @Column('int')
     order: number;
 }
