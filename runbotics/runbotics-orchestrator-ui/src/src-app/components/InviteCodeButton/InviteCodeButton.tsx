@@ -23,7 +23,7 @@ const InviteCodeButton: VFC<InviteCodeButtonProps> = ({ tenantId, fullWidth }) =
     };
 
     const generateInviteCode = (e) => {
-        dispatch(tenantsActions.generateInviteCode(tenantId ?? ''))
+        dispatch(tenantsActions.generateInviteCode({ resourceId: tenantId }))
             .unwrap()
             .then(({ inviteCode: code }) => {
                 navigator.clipboard.writeText(`${window.location.origin}/register?inviteCode=${code}`);
@@ -33,7 +33,9 @@ const InviteCodeButton: VFC<InviteCodeButtonProps> = ({ tenantId, fullWidth }) =
     };
 
     useEffect(() => {
-        dispatch(tenantsActions.getInviteCode(tenantId ?? ''));
+        if (tenantId) {
+            dispatch(tenantsActions.getInviteCode({ resourceId: tenantId }));
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tenantId]);
 
