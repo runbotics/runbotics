@@ -1,15 +1,43 @@
-// import { Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
-// import { CredentialCollection } from '../credential-collection/credential-collection.entity';
-// import { UserEntity } from '#/database/user/user.entity';
+import { UserEntity } from '#/database/user/user.entity';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
+import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 
-// @Entity({ name: 'credential_collection_user' })
-// export class CredentialCollectionUser {
-//     @PrimaryColumn({ type: 'uuid' })
-//     credentialCollection: CredentialCollection;
-//     @ManyToMany(() => CredentialCollection, { eager: true })
-//     @JoinTable({
-//         joinColumn: { name: 'credential_collection', referencedColumnName: 'id' },
-//         inverseJoinColumn: { name: 'jhi_user', referencedColumnName: 'id' }
-//     })
-//         users: UserEntity[];
-// }
+export enum PrivilegeType {
+    READ = 'READ',
+    WRITE = 'WRITE',
+}
+
+@Entity({
+    name: 'credential_collection_user',
+    schema: 'scheduler',
+    synchronize: false,
+})
+export class CredentialCollectionUser {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @ManyToOne(() => CredentialCollection, (collection) => collection, {
+        onDelete: 'CASCADE',
+    })
+    @JoinColumn({ name: 'collection_id' })
+    credentialCollection: CredentialCollection;
+
+    @Column('uuid', { name: 'collection_id' })
+    credentialCollectionId: string;
+
+    @ManyToOne(() => UserEntity, (user) => user, { onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'user_id' })
+    user: UserEntity;
+
+    @Column('number', { name: 'user_id' })
+    userId: number;
+
+    @Column('enum', { enum: PrivilegeType, default: PrivilegeType.WRITE })
+    privilegeType: PrivilegeType;
+}

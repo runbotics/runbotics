@@ -1,7 +1,16 @@
 import { Tenant } from '#/database/tenant/tenant.entity';
 import { UserEntity } from '#/database/user/user.entity';
 import { Attribute } from '#/scheduler-database/attribute/attribute.entity';
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 
@@ -13,7 +22,7 @@ export class Credential {
     @Column({ name: 'name' })
     name: string;
 
-    @ManyToOne(() => Tenant, tenant => tenant.credentials)
+    @ManyToOne(() => Tenant, (tenant) => tenant.credentials)
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 
@@ -23,14 +32,20 @@ export class Credential {
     @Column({ name: 'description', nullable: true })
     description: string;
 
-    // @ManyToOne(() => CredentialCollection, collection => collection.credentials)
-    // @JoinColumn({ name: 'collection_id' })
-    // collection: CredentialCollection;
+    @ManyToOne(
+        () => CredentialCollection,
+        (collection) => collection.credentials
+    )
+    @JoinColumn({ name: 'collection_id' })
+    collection: CredentialCollection;
 
-    // @Column({ name: 'collection_id' })
-    // collectionId: string;
+    @Column({ name: 'collection_id' })
+    collectionId: string;
 
-    @CreateDateColumn({ name: 'created_at', type: 'timestamp without time zone'})
+    @CreateDateColumn({
+        name: 'created_at',
+        type: 'timestamp without time zone',
+    })
     createdAt: Date;
 
     @ManyToOne(() => UserEntity)
@@ -40,21 +55,27 @@ export class Credential {
     @Column({ name: 'created_by_id' })
     createdById: number;
 
-    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp without time zone'})
+    @UpdateDateColumn({
+        name: 'updated_at',
+        type: 'timestamp without time zone',
+    })
     updatedAt: Date;
 
-    @ManyToOne(() => UserEntity, user => user.updatedAttributes)
+    @ManyToOne(() => UserEntity, (user) => user.updatedAttributes)
     @JoinColumn({ name: 'updated_by_id' })
     updatedBy: UserEntity;
 
     @Column({ name: 'updated_by_id' })
     updatedById: number;
 
-    @ManyToOne(() => CredentialTemplate, credentialTemplate => credentialTemplate.credentials)
+    @ManyToOne(
+        () => CredentialTemplate,
+        (credentialTemplate) => credentialTemplate.credentials
+    )
     @JoinColumn({ name: 'template_id' })
     template: CredentialTemplate;
 
-    @OneToMany(() => Attribute, attribute => attribute.credential)
+    @OneToMany(() => Attribute, (attribute) => attribute.credential)
     @JoinColumn({ name: 'credential_id' })
     attributes: Attribute[];
 }
