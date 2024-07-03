@@ -21,10 +21,10 @@ export class Tenant {
     @JoinColumn({ name: 'created_by' })
     createdBy: UserEntity;
 
-    @Column('timestamp with time zone')
+    @Column('timestamp without time zone')
     created: Date;
 
-    @Column('timestamp with time zone')
+    @Column('timestamp without time zone')
     updated: Date;
 
     @Column({ type: 'varchar', name: 'last_modified_by' })

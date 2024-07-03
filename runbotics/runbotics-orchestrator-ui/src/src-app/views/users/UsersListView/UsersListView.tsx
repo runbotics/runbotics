@@ -76,7 +76,7 @@ const UsersListView: FC = () => {
         refreshSearch();
 
         if (hasAdminAccess) {
-            dispatch(tenantsActions.getAll());
+            dispatch(tenantsActions.getAll({}));
         } else {
             dispatch(tenantsActions.getInviteCode({}));
         }

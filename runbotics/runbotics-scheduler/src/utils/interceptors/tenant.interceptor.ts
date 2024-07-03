@@ -1,4 +1,4 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor, UnauthorizedException } from '@nestjs/common' ;
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor, NotFoundException } from '@nestjs/common' ;
 import { Observable } from 'rxjs' ;
 
 import { AuthRequest } from '#/types';
@@ -12,7 +12,7 @@ export class TenantInterceptor implements NestInterceptor {
         const regexUUIDmatch = request.url.match(API_URL_UUID_REGEX);
 
         if (!regexUUIDmatch || request.user.tenantId !== regexUUIDmatch[1]) {
-            throw new UnauthorizedException('Cannot access destination resource');
+            throw new NotFoundException('Cannot access destination resource');
         }
 
         return next.handle();

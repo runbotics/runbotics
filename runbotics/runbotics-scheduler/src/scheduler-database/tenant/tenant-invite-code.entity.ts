@@ -5,12 +5,12 @@ export class TenantInviteCode {
     @PrimaryGeneratedColumn('uuid', { name: 'invite_id' })
     inviteId: string;
 
-    @Column({ type: 'uuid', name: 'tenant_id', nullable: false })
+    @Column({ type: 'uuid', name: 'tenant_id' })
     tenantId: string;
 
-    @Column({ type: 'timestamp with time zone', name: 'creation_date', nullable: false })
+    @Column({ type: 'timestamp without time zone', name: 'creation_date', nullable: false })
     creationDate: Date;
 
-    @Column({ type: 'timestamp with time zone', name: 'expiration_date', nullable: false })
+    @Column({ type: 'timestamp without time zone', name: 'expiration_date', nullable: false })
     expirationDate: Date;
 }
