@@ -62,7 +62,7 @@ export class UserEntity implements IUser {
     })
         authorities: IAuthority[];
 
-    @OneToMany(() => Tenant, tenant => tenant.createdBy)
+    @OneToMany(() => Tenant, tenant => tenant.createdByUser)
     tenants: Tenant[];
 
     @Column({ name: 'tenant_id', type: 'varchar' })

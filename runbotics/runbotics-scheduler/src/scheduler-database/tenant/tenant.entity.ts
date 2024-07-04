@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { UserEntity } from '#/database/user/user.entity';
 
@@ -6,28 +6,28 @@ import { Secret } from '../secret/secret.entity';
 import { ProcessContextSecret } from '../process-context-secret/process-context-secret.entity';
 import { ProcessContext } from '../process-context/process-context.entity';
 
-@Entity({ schema: 'public' })
+@Entity()
 export class Tenant {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'varchar', unique: true, nullable: false })
+    @Column({ type: 'varchar', length: 255, unique: true })
     name: string;
-
-    @Column({ type: 'bigint', name: 'created_by' })
-    createdById: number;
 
     @ManyToOne(() => UserEntity, user => user.tenants)
     @JoinColumn({ name: 'created_by' })
-    createdBy: UserEntity;
+    createdByUser: UserEntity;
 
-    @Column('timestamp without time zone')
+    @Column({ name: 'created_by' })
+    createdBy: number;
+
+    @CreateDateColumn()
     created: Date;
 
-    @Column('timestamp without time zone')
+    @UpdateDateColumn()
     updated: Date;
 
-    @Column({ type: 'varchar', name: 'last_modified_by' })
+    @Column({ type: 'varchar', name: 'last_modified_by', length: 50, nullable: true })
     lastModifiedBy: string;
 
     @OneToMany(() => Secret, secret => secret.tenant)

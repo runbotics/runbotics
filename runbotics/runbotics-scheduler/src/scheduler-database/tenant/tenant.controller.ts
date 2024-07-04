@@ -29,7 +29,7 @@ export class TenantController {
     @FeatureKeys(FeatureKey.TENANT_READ)
     async getTenantByUser(@User('tenantId') id: Tenant['id']) {
         this.logger.log('REST request to get user tenant with id: ', id);
-        const tenant = await this.tenantService.getTenantById(id);
+        const tenant = await this.tenantService.getById(id);
 
         if (!tenant) {
             this.logger.error('Cannot find tenant with id: ', id);
@@ -74,7 +74,7 @@ export class TenantController {
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     getAllTenants() {
         this.logger.log('REST request to get all tenants');
-        return this.tenantService.getAllTenants();
+        return this.tenantService.getAll();
     }
 
     @Get('/invite-code/:tenantId')
@@ -97,7 +97,7 @@ export class TenantController {
         @Param('id', ParseUUIDPipe) id: Tenant['id']
     ) {
         this.logger.log('REST request to get tenant by id: ', id);
-        const tenant = await this.tenantService.getTenantById(id);
+        const tenant = await this.tenantService.getById(id);
 
         if (!tenant) {
             this.logger.error('Cannot find tenant with id: ', id);
@@ -114,7 +114,7 @@ export class TenantController {
         @User() user: UserEntity
     ) {
         this.logger.log('REST request to create tenant by user with id: ', user.id);
-        return this.tenantService.createTenant(tenantDto, user);
+        return this.tenantService.create(tenantDto, user);
     }
 
     @Post('/invite-code/:tenantId')
@@ -138,6 +138,6 @@ export class TenantController {
         @User() user: UserEntity
     ) {
         this.logger.log(`REST request to update tenant with id ${id} by user with id: ${user.id}`);
-        return this.tenantService.updateTenant(tenantDto, id, user);
+        return this.tenantService.update(tenantDto, id, user);
     }
 }

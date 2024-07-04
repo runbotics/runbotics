@@ -1,15 +1,18 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual, Repository } from 'typeorm';
+import dayjs from 'dayjs';
 
 import { UserEntity } from '#/database/user/user.entity';
+import { Logger } from '#/utils/logger';
+
 import { Tenant } from './tenant.entity';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { Logger } from '#/utils/logger';
 import { TenantInviteCode } from './tenant-invite-code.entity';
-import dayjs from 'dayjs';
 import { TenantInviteCodeDto } from './dto/invite-code.dto';
+
+const relations = ['createdByUser'];
 
 @Injectable()
 export class TenantService {
@@ -22,30 +25,35 @@ export class TenantService {
         private readonly inviteCodeRepository: Repository<TenantInviteCode>
     ) {}
 
-    getTenantById(id: string) {
+    getById(id: string) {
         return this.tenantRepository.findOneBy({ id });
     }
 
-    getAllTenants() {
-        return this.tenantRepository.find();
+    getAll() {
+        return this.tenantRepository.find({ relations })
+            .then((tenants) => tenants.map(tenant => ({
+                ...tenant,
+                createdByUser: {
+                    id: tenant.createdByUser.id,
+                    login: tenant.createdByUser.login
+                }
+            })));
     }
 
-    async createTenant(tenantDto: CreateTenantDto, requester: UserEntity): Promise<Tenant> {
+    async create(tenantDto: CreateTenantDto, requester: UserEntity): Promise<Tenant> {
         const tenantByName = await this.tenantRepository.findOneBy({ name: tenantDto.name });
         if (tenantByName) throw new BadRequestException('Name already exist', 'NameExist');
 
-        const newTenant = {
-            ...tenantDto,
-            created: dayjs(),
-            updated: dayjs(),
-            createdById: requester.id,
-            lastModifiedBy: requester.email
-        };
+
+        const newTenant = new Tenant();
+        newTenant.name = tenantDto.name;
+        newTenant.createdBy = requester.id;
+        newTenant.lastModifiedBy = requester.email;
 
         return this.tenantRepository.save(newTenant);
     }
 
-    async updateTenant(
+    async update(
         tenantDto: UpdateTenantDto,
         id: string,
         requester: UserEntity
@@ -58,7 +66,6 @@ export class TenantService {
             .then(tenant => ({
                 ...tenant,
                 ...tenantDto,
-                updated: dayjs(),
                 lastModifiedBy: requester.email
             })).catch(() => {
                 this.logger.error('Cannot find tenant with id: ', id);
