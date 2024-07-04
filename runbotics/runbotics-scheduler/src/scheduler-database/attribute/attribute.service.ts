@@ -25,11 +25,11 @@ export class AttributeService {
     private readonly credentialService: CredentialService
   ) { }
 
-  async create(attributeDto: CreateAttributeDto, request: AuthRequest): Promise<Attribute> {
+  async create(attributeDto: CreateAttributeDto, request: AuthRequest) {
     const { user: { tenantId, id: userId } } = request;
 
     const credential = await this.credentialService.findOneByIdAndTenantId(attributeDto.credentialId, tenantId);
-    const template = await this.templateService.findOneByIdAndTenantId(credential.templateId, tenantId);
+    const template = await this.templateService.findOneById(credential.templateId);
 
     if (!template.attributes.map(attribute => attribute.name).includes(attributeDto.name)) {
       throw new BadRequestException(`Attribute name: ${attributeDto.name} not found in template: ${template.name}`);
@@ -46,16 +46,17 @@ export class AttributeService {
       });
 
     const secretId = secret.id;
-    const attribute = {
+    const attribute = this.attributeRepo.create({
       ...attributeDto,
       secretId: secretId,
       tenantId,
       createdById: userId,
       updatedById: userId,
       masked: attributeDto.masked || true,
-    };
+      type: template.attributes.find(attribute => attribute.name === attributeDto.name).type,
+    });
 
-    return this.attributeRepo.manager.save(Attribute, attribute)
+    return this.attributeRepo.save(attribute)
       .catch((error) => {
         throw new BadRequestException(`Failed to save attribute: ${error.message}`);
       });
@@ -77,10 +78,6 @@ export class AttributeService {
       relations,
     });
 
-    if (!attribute) {
-      throw new NotFoundException(`Attribute with id: ${id} not found`);
-    }
-
     return attribute;
   }
 
@@ -93,20 +90,12 @@ export class AttributeService {
       relations,
     });
 
-    if (!attribute) {
-      throw new NotFoundException(`Attribute with id: ${id} not found`);
-    }
-
     return attribute;
   }
 
   async update(id: string, updateAttributeDto: UpdateAttributeDto, request: AuthRequest): Promise<UpdateResult> {
     const { user: { id: userId, tenantId } } = request;
     const attribute = await this.findByIdAndTenantId(id, tenantId);
-
-    if (!attribute) {
-      throw new NotFoundException(`Attribute with id: ${id} not found`);
-    }
 
     const newSecret = await this.secretService.encrypt(updateAttributeDto.value, tenantId);
     await this.secretService.update({ ...newSecret, id: attribute.secretId });

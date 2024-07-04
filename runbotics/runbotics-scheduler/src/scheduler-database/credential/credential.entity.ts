@@ -1,9 +1,8 @@
 import { Tenant } from '#/database/tenant/tenant.entity';
 import { UserEntity } from '#/database/user/user.entity';
 import { Attribute } from '#/scheduler-database/attribute/attribute.entity';
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
-import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 
 @Entity({ schema: 'scheduler' })
 export class Credential {
@@ -57,6 +56,6 @@ export class Credential {
     @Column({ name: 'template_id' })
     templateId: string;
 
-    @OneToMany(() => Attribute, attribute => attribute.credential)
+    @OneToMany(() => Attribute, attribute => attribute.credential, { cascade: true })
     attributes: Attribute[];
 }

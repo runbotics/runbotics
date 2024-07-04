@@ -1,11 +1,12 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCredentialDto, createCredentialSchema } from './dto/create-credential.dto';
-import { UpdateCredentialDto, updateCredentialSchema } from './dto/update-credential.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { CreateCredentialDto } from './dto/create-credential.dto';
+import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
 import { Repository } from 'typeorm';
 import { AuthRequest } from '#/types';
-import { z } from 'zod';
+
+const relations = ['attributes'];
 
 @Injectable()
 export class CredentialService {
@@ -17,43 +18,36 @@ export class CredentialService {
   create(credentialDto: CreateCredentialDto, request: AuthRequest) {
     const { user: { id: userId, tenantId } } = request;
 
-    const credential = {
+    const credential = this.credentialRepo.create({
       ...credentialDto,
       createdById: userId,
       updatedById: userId,
       tenantId
-    };
+    });
 
     return this.credentialRepo.save(credential)
-      .then((savedCredential) => savedCredential)
       .catch((error) => {
         throw new BadRequestException(error.message);
       });
   }
 
-  findAllUserAccessible(request: AuthRequest) {
+  findAllAccessibleByCollectionId(request: AuthRequest) {
     const { user: { id: userId, tenantId } } = request;
     return this.credentialRepo.find({
       where: {
         tenantId
         // @todo has access to by shared collection
-      }
+      },
+      relations
     });
   }
-
-  // findAllByCollectionId(collectionId: string) {
-  //   return this.credentialRepo.find({
-  //     where: {
-  //       collectionId
-  //     }
-  //   });
-  // }
 
   findOneById(id: string) {
     return this.credentialRepo.findOne({
       where: {
         id
-      }
+      },
+      relations
     });
   }
 
@@ -62,24 +56,21 @@ export class CredentialService {
       where: {
         id,
         tenantId
-      }
+      },
+      relations
     });
   }
 
   updateById(id: string, credentialDto: UpdateCredentialDto, request: AuthRequest) {
-    const { user: { id: userId, tenantId }} = request;
+    const { user: { id: userId }} = request;
 
-    const credentialToUpdate = { ...credentialDto, updatedById: userId };
+    const credentialToUpdate = this.credentialRepo.create({ ...credentialDto, id, updatedById: userId });
 
-    return this.credentialRepo.update(id, credentialDto);
+    return this.credentialRepo.save(credentialToUpdate);
   }
 
   async removeById(id: string) {
     const credential = await this.findOneById(id);
-
-    if (!credential) {
-      throw new NotFoundException(`Credential with id ${id} not found`);
-    }
 
     return this.credentialRepo.remove(credential);
   }
