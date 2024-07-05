@@ -5,7 +5,7 @@ import { Grid } from '@mui/material';
 
 import { useDispatch, useSelector } from '#src-app/store';
 
-import { addAttribute, fetchAllAttributes } from '#src-app/store/slices/CredentialAttributes/CredentialAttributes.thunks';
+import { addAttribute, deleteAttribute, fetchAttributes, updateAttribute } from '#src-app/store/slices/CredentialAttributes/CredentialAttributes.thunks';
 import { EditAtributeDto, initialCredentialAttributeValues } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
 
 import { AddAttribute } from '../CredentialAttribute/AddAttribute';
@@ -20,7 +20,7 @@ const CredentialAttributesList = () => {
     // has to provide credentialId in props and use it in dispatch
 
     useEffect(() => {
-        dispatch(fetchAllAttributes());
+        dispatch(fetchAttributes('tymczasowe_id'));
     }, [dispatch]);
 
     useEffect(() => {
@@ -32,35 +32,34 @@ const CredentialAttributesList = () => {
         // send attribute to the database (CreateAttributeDto)
         // get attrbiute from the database with (EditAtributeDto)
         // add to the state
-        const newAttribute = {...initialCredentialAttributeValues, id: 'undefined', createdOn: new Date().toDateString(), createdBy: currentUser.email };
+        const newAttribute = {...initialCredentialAttributeValues, id: 'siema', createdOn: new Date().toDateString(), createdBy: currentUser.email };
+        console.log(newAttribute);
         dispatch(addAttribute(newAttribute));
     };
 
     const handleAttributeChange = (updatedAttribute: EditAtributeDto) => {
         const foundAttribute = attributes.find(attribute => attribute.id === updatedAttribute.id);
         if (foundAttribute) {
-            const updatedAttributes = attributes.map(attribute => (attribute.id === updatedAttribute.id ? updatedAttribute : attribute));
-            // setAttributes(updatedAttributes);
+            dispatch(updateAttribute(updatedAttribute));
         }
     };
 
-    const handleAttributeDelete = (deletedAttribute: EditAtributeDto) => {
-        const updatedAttributes = attributes.filter(attribute => attribute.id !== deletedAttribute.id);
-        
-        // setAttributes(updatedAttributes);
-        
+    const handleAttributeDelete = (attributeToDelete: EditAtributeDto) => {
+        // const updatedAttributes = attributes.filter(attribute => attribute.id !== attributeToDelete.id);
+        console.log('attributeToDelete', attributeToDelete);
+        dispatch(deleteAttribute(attributeToDelete.id));
     };
 
     const attributesCards = attributes.map(attribute => (
-        <Grid item key={attribute.id} xs={3}>
+        <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12}>
             <CredentialAttribute attribute={attribute} setAttribute={handleAttributeChange} deleteAttribute={handleAttributeDelete} />
         </Grid>
     ));
 
     return (
-        <Grid container spacing={2} sx={{ marginTop: '8px' }}>
+        <Grid container spacing={2} sx={{ marginTop: '8px', width: 'calc(100% - 16px)' }}>
             {attributesCards}
-            <Grid item xs={3}>
+            <Grid item xl={3} lg={4} md={6} xs={12}>
                 <AddAttribute onClick={handleAddAttribute}/>
             </Grid>
         </Grid>

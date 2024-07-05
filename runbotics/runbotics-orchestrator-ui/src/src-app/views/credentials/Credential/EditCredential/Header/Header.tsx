@@ -4,7 +4,6 @@ import { Grid } from '@mui/material';
 
 import styled from 'styled-components';
 
-import useTranslations from '#src-app/hooks/useTranslations';
 
 import CredentialLocation from './CredentialLocation';
 
@@ -13,18 +12,18 @@ const StyledGrid = styled(Grid)(({theme}) => `
     spacing: ${theme.spacing(2)};
 `);
 
-export const Header: React.FC<{}> = () => {
-    const { translate } = useTranslations();
+interface HeaderProps {
+    credentialName: string
+}
 
-    return (
-        <StyledGrid container alignItems="center" justifyContent="space-between">
-            <Grid item>
-                <CredentialLocation 
-                // collection={collection}
-                />
-            </Grid>
-        </StyledGrid>
-    );
-};
+export const Header: React.FC<HeaderProps> = ({ credentialName }) => (
+    <StyledGrid container alignItems="center" justifyContent="space-between">
+        <Grid item>
+            <CredentialLocation 
+                credentialName={credentialName}
+            />
+        </Grid>
+    </StyledGrid>
+);
 
 export default Header;

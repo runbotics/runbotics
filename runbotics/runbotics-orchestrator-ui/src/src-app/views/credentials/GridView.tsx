@@ -16,6 +16,7 @@ import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialC
 import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
+import { getCredentials } from './Credentials/Credentials.utils';
 import { GridViewProps } from './GridView.types';
 import { CredentialsTabs } from './Header';
 import { CollectionsRoot } from '../bot/BotCollectionView/BotCollectionView.styles';
@@ -30,9 +31,9 @@ const TileGrid = styled.div`
 
 const GridView: FC<GridViewProps> = () => {
     const dispatch = useDispatch();
-    const credentials = useSelector(state => state.credentials.all);
+    // const credentials = useSelector(state => state.credentials.all);
     const collections = useSelector(state => state.credentialCollections.data);
-    // const allCredentials = getCredentials();
+    const credentials = getCredentials();
     // const allCollections = getCredentialsCollections();
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;

@@ -27,7 +27,7 @@ const CredentialDetails = ({ currentAttribute, handleFieldChange }) => {
 
     return (
         <StyledGridContainer spacing={1} xs={12}>
-            <Grid item xs={12} sx={{ marginBottom: '8px' }}>
+            <Grid item xs={12} sx={{ marginBottom: '24px' }}>
                 <Grid container alignItems="center">
                     <Grid item>
                         <Typography variant="h5">

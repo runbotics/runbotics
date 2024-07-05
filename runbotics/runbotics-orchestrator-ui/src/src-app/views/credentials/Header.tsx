@@ -6,9 +6,10 @@ import { useRouter } from 'next/router';
 
 import styled from 'styled-components';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import AddCredential from './Credential/AddCredential';
+import AddCredentialButton from './Credential/AddCredentialButton';
 import AddCredentialsCollection from './CredentialsCollection/AddCredentialsCollection';
 import { getLastParamOfUrl } from '../utils/routerUtils';
 
@@ -45,8 +46,8 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     // const currentPage = parseInt(searchParams.get('page')) ?? DefaultPageValue.PAGE;
     // const pageSize = parseInt(searchParams.get('pageSize')) ?? DefaultPageSize.GRID;
 
-    const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: CredentialsTabs) => {
-        if (value === CredentialsTabs.CREDENTIALS) {
+    const onTabChange = (event: ChangeEvent<HTMLInputElement>, tabValue: CredentialsTabs) => {
+        if (tabValue === CredentialsTabs.CREDENTIALS) {
             router.replace({
                 pathname: '/app/credentials',
                 // query: {
@@ -98,14 +99,16 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>
-                    <AddCredential/>
-                    <AddCredentialsCollection/>
-                    {/* <If condition={hasProcessAddAccess}>
-                        <AddProcess />
+                    <If condition={currentTab === CredentialsTabs.CREDENTIALS}>
+                        <AddCredentialButton/>
                     </If>
-                    <If condition={hasAddCollectionAccess}>
-                        <AddCollectionButton />
-                    </If> */}
+                    <If condition={currentTab === CredentialsTabs.COLLECTIONS}>
+                        <AddCredentialsCollection/>
+                    </If>
+                    <If condition={currentTab !== CredentialsTabs.CREDENTIALS && currentTab !== CredentialsTabs.COLLECTIONS}>
+                        <AddCredentialButton/>
+                        <AddCredentialsCollection/>
+                    </If>
                 </Stack>
             </Grid>
         </StyledGrid>

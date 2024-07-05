@@ -1,17 +1,24 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import { Grid, Typography } from '@mui/material';
 
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { fetchOneCredential } from '#src-app/store/slices/Credentials/Credentials.thunks';
+import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
+
 import CredentialAttributesList from './CredentialAttributeList/CredentialAttributeList';
 import { EditCredentialProps } from './EditCredential.types';
-import GeneralInfo from './GeneralInfo/GeneralInfo';
 import Header from './Header/Header';
+import { tempCredentials } from '../../Credentials/Credentials.utils';
+import GeneralInfo from '../GeneralInfo/GeneralInfo';
+
 
 const StyledGrid = styled(Grid)(
     ({ theme }) => `
@@ -29,25 +36,47 @@ const CredentialsInternalPage = styled(InternalPage)`
     }
 `;
 
-const EditCredential: FC<EditCredentialProps> = ({ credential, onAdd, onClose, open }) => (
-    <CredentialsInternalPage title={translate('Credential.Add.Title')}>
-        <StyledGrid container justifyContent="space-between" my={2} ml={2} display={'flex'} gap={2} >
-            <Header />
-            <GeneralInfo />
-            <Grid container>
-                <Grid item xs={12}>
-                    <Typography variant="h5">
-                        {translate('Credential.Attributes.Title')} (3)
-                    </Typography>
+const EditCredential: FC<EditCredentialProps> = ({ }) => 
+
+{
+    const router = useRouter();
+    const credentialId = getLastParamOfUrl(router);
+    // const credentials = useSelector((state) => state.credentials.all);
+    const credentials = tempCredentials;
+    console.log(credentials);
+    const credential = credentials.find(cred => cred.id === credentialId);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (credentialId) {
+            dispatch(fetchOneCredential(credentialId));
+        }
+    }, [dispatch, credentialId]);
+
+    if (!credential) {
+        return <div>Loading...</div>;
+    }
+
+    return (
+
+        <CredentialsInternalPage title={translate('Credential.Add.Title')}>
+            <StyledGrid container justifyContent="space-between" my={2} ml={2} gap={2} >
+                <Header credentialName={credential.name}/>
+                <GeneralInfo credential={credential}/>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <Typography variant="h4">
+                            {translate('Credential.Attributes.Title')} (3)
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <CredentialAttributesList/>
+                    </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <CredentialAttributesList/>
-                </Grid>
-            </Grid>
-            {/* list of attributes */}
-            {/* add attribute */}
-        </StyledGrid>
-    </CredentialsInternalPage>
-);
+            </StyledGrid>
+        </CredentialsInternalPage>
+    );
+}
+;
 
 export default EditCredential;

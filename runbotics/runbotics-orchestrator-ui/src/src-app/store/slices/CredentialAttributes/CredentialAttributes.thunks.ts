@@ -11,7 +11,7 @@ import {
 import { initialAttributes } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.utils';
 
 const env = 'DEV';
-const PARENT_URL_PATH = 'api/scheduler/credential-attributes';
+const PARENT_URL_PATH = 'credentialId/credential-attributes';
 
 export const fetchAttributes = createAsyncThunk('attributes/fetchAttributes', (credentialId: string) => {
     if (env === 'DEV') {
@@ -23,9 +23,7 @@ export const fetchAttributes = createAsyncThunk('attributes/fetchAttributes', (c
 
 export const addAttribute = createAsyncThunk('attribute/create', (attribute: CreateAttributeDto, { rejectWithValue }) => {
     if (env === 'DEV') {
-        console.log(attribute);
-        const newAttribute: Attribute = { ...attribute, id: '', createdOn: '', createdBy: '' };
-        return new Promise<Attribute>(resolve => setTimeout(() => resolve(newAttribute), 500));
+        return new Promise<Attribute>(resolve => setTimeout(() => resolve(attribute as Attribute), 50));
     }
 
     return axios
@@ -46,7 +44,7 @@ export const updateAttribute = createAsyncThunk('attributes/update/:id', (attrib
 
 export const deleteAttribute = createAsyncThunk<string, string>('attributes/delete/:id', (attributeId, { rejectWithValue }) =>
     axios
-        .delete<Attribute>(`${PARENT_URL_PATH}/${attributeId}`)
+        .delete<string>(`${PARENT_URL_PATH}/${attributeId}`)
         .then(() => attributeId)
         .catch(error => rejectWithValue(error.response.data))
 );

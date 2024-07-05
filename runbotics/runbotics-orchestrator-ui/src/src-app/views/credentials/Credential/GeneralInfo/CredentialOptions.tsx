@@ -6,14 +6,14 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 const CredentialOptions: React.FC<{}> = () => (
 
-    <Grid container spacing={2} justifyContent="flex-end" marginTop='16px'>
-        <Grid item >
+    <Grid container spacing={2} justifyContent="flex-start" marginTop='16px' ml={3}>
+        {/* <Grid item >
             <Button
                 color="secondary"
                 variant="outlined">
                 {translate('Credential.Add.Cancel')}
             </Button>
-        </Grid>
+        </Grid> */}
         <Grid item >
             <Button
                 color="secondary"

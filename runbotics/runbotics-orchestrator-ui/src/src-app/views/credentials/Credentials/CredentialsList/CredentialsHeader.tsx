@@ -1,9 +1,10 @@
+import { FC } from 'react';
+
 import { Box, Typography } from '@mui/material';
 import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { getCredentials } from '../Credentials.utils';
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
     position: 'relative',
@@ -18,14 +19,17 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     },
 }));
 
-const CredentialsHeader = () => {
+interface CredentialsHeaderProps {
+    credentialCount: number
+}
+
+const CredentialsHeader: FC<CredentialsHeaderProps> = ({credentialCount}) => {
     const { translate } = useTranslations();
-    const credentialsCount = getCredentials().length;
 
     return (
         <Box display="flex" alignItems="center" justifyContent="space-between">
             <StyledTypography variant="h5" color="textPrimary">
-                {translate('Credentials.List.Header.Elements', { count: credentialsCount })}
+                {translate('Credentials.List.Header.Elements', { count: credentialCount })}
             </StyledTypography>
             <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem">
             </Box>

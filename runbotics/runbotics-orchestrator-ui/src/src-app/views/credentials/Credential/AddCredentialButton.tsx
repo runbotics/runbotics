@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { Button, SvgIcon } from '@mui/material';
@@ -7,28 +7,32 @@ import { useRouter } from 'next/router';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { getInitialCredentialData } from './EditCredential/EditCredential.utils';
+import { BasicCredentialDto, CreateCredentialDto } from './Credential.types';
+import { CreateGeneralInfo } from './GeneralInfo/CreateGeneralInfo';
 
-const AddCredential: FC = () => {
+const AddCredentialButton: FC = () => {
     const { translate } = useTranslations();
+    const [showDialog, setShowDialog] = useState(false);
     const router = useRouter();
+
+    const handleAdd = () => {};
     
-    const createCredentialRedirect = () => {
-        const initialCredentialData = getInitialCredentialData();
+    const createCredentialRedirect = (credential: CreateCredentialDto) => {
         // use initialCredentialData add a new object in database
         // dispatch(createUser(initialCollectionData))
-        // const newCredential: BasicCredentialDto = {...initialCredentialData, id: 'newCredentialId'}
+        const newCredential: Partial<BasicCredentialDto> = {...credential, id: 'jakies_id'};
         // get object from the database with added properties handled by backend (id, createdBy, createdOn)
         // go to utl dedicated to this credential (/:id)
-        // router.push(`/app/credentials/${newCredential.id}`);
+        console.log(newCredential);
+        router.push(`/app/credentials/${newCredential.id}`);
     };
 
     return (
         <>
             <Button
-                color="secondary"
+                color="primary"
                 variant="contained"
-                onClick={createCredentialRedirect}
+                onClick={() => setShowDialog(true)}
                 startIcon={
                     <SvgIcon fontSize="small">
                         <AddCircleOutlineIcon />
@@ -37,10 +41,10 @@ const AddCredential: FC = () => {
             >
                 {translate('Credentials.Add')}
             </Button>
-            {/* <EditCredential open={showDialog} onClose={() => setShowDialog(false)} onAdd={handleAdd} credential={initialCredentialInfo} /> */}
+            <CreateGeneralInfo open={showDialog} onClose={() => setShowDialog(false)} onAdd={createCredentialRedirect}/>
         </>
     );
 };
 
-export default AddCredential;
+export default AddCredentialButton;
 

@@ -24,7 +24,7 @@ const CredentialsCollectionModifyDialog = ({open: isOpen, onClose, collection}) 
         <CustomDialog
             isOpen={isOpen}
             onClose={closeDialog}
-            title={translate(`Process.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}
+            title={translate(`Credentials.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}
             confirmButtonOptions={{
                 label: translate('Common.Save'),
                 onClick: handleSubmit,
