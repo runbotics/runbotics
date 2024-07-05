@@ -52,20 +52,20 @@ const Table = <T extends object>({
         if (typeof tableData !== 'object' || tableData === null) {
             return tableData;
         }
-      
+
         if (Array.isArray(tableData)) {
             return tableData.map(item => replaceKeyRecursive(item, newKey));
         }
-      
+
         const newObj = {};
-      
+
         for (const key in tableData) {
             if (Object.hasOwnProperty.call(tableData, key)) {
                 const newKeyString = key === subRowProperty ? newKey : key;
                 newObj[newKeyString] = replaceKeyRecursive(tableData[key] as T[], newKey);
             }
         }
-      
+
         return newObj;
     };
 
@@ -146,7 +146,7 @@ const Table = <T extends object>({
     const rowLoader = (
         <TableRow>
             <TableCell colSpan={columns.length ?? 7} sx={{ height: `${TABLE_ROW_HEIGHT}px`}}>
-                <LoadingRow /> 
+                <LoadingRow />
             </TableCell>
         </TableRow>
     );

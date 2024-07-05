@@ -5,13 +5,14 @@ import { SxProps, Theme } from '@mui/system';
 import { Row } from 'react-table';
 
 import { InstanceExtendedWithSubprocesses, ProcessInstanceRequestCriteria } from '#src-app/store/slices/ProcessInstance';
-
-export interface getSubprocessesResponse { 
+export interface GetSubprocessesResponse {
     type: string;
     payload: InstanceExtendedWithSubprocesses[];
     meta: {
         arg: {
             processInstanceId: string;
+            page?: number;
+            size?: number;
         };
         requestId: string;
         requestStatus: 'fulfilled';

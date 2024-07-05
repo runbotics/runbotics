@@ -11,7 +11,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { ProcessInstanceRow, getSubprocessesResponse } from './HistoryTable.types';
+import { GetSubprocessesResponse, ProcessInstanceRow } from './HistoryTable.types';
 import { useDispatch, useSelector } from '../../../store';
 import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstanceStatusColor';
 import Label from '../../Label';
@@ -19,7 +19,8 @@ import { hasFeatureKeyAccess } from '../../utils/Secured';
 import { Column } from '../Table';
 import TableRowExpander from '../Table/TableRowExpander';
 
-
+const SUBPROCESSES_PAGE_SIZE = 5;
+const calcPage = (subprocessesNum: number, pageSize: number) => Math.floor(subprocessesNum / pageSize);
 
 const useProcessInstanceColumns = (
     rerunEnabled: boolean,
@@ -42,23 +43,29 @@ const useProcessInstanceColumns = (
         dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
     };
 
-    const handleRowExpand = (currRow: ProcessInstanceRow) => {
-        if (currRow.subRows.length > 0 || currRow.isExpanded) return;
-        dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id }))
-            .then((response: getSubprocessesResponse ) => {
-                if(response.payload.length === 0) handleNoSubprocessesFound(currRow);
+    const getSubprocessesPage = (currRow: ProcessInstanceRow, page: number, size: number) => {
+        dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id, page, size }))
+            .then((response) => {
+                if((response as GetSubprocessesResponse).payload.length === 0) handleNoSubprocessesFound(currRow);
             })
             .catch(() => { handleNoSubprocessesFound(currRow); });
+    };
+
+    const handleRowExpand = (currRow: ProcessInstanceRow) => {
+        const page = calcPage(currRow.subRows.length, SUBPROCESSES_PAGE_SIZE);
+        if (currRow.subRows.length > 0 || currRow.isExpanded) return;
+        getSubprocessesPage(currRow, page, SUBPROCESSES_PAGE_SIZE);
     };
 
     let columns = [
         {
             Header: ' ',
             id: 'expander',
-            Cell: ({ row }) =>
+            Cell: ({ row }) => (
                 row.original.hasSubprocesses ? (
                     <TableRowExpander row={row} handleClick={handleRowExpand} />
-                ) : null,
+                ) : null
+            ),
         },
         {
             Header: translate('Component.HistoryTable.Header.ProcessName'),
