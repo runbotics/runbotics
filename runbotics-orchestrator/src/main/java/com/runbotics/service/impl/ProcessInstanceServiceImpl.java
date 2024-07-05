@@ -109,9 +109,10 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     }
 
     @Override
-    public List<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId) {
-        log.debug("Request to get all subprocesses for ProcessInstance : {}", processInstanceId);
-        List<ProcessInstance> subprocesses = processInstanceRepository.findByParentId(processInstanceId);
-        return processInstanceMapper.toDto(subprocesses);
+    public Page<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId, Pageable pageable) {
+//        log.debug("$$$ Request to get all subprocesses for ProcessInstance : {}", processInstanceId);
+//        log.debug("$$$ Pagination used: {}", pageable);
+        Page<ProcessInstance> subprocesses = processInstanceRepository.findByParentId(processInstanceId, pageable);
+        return subprocesses.map(processInstanceMapper::toDto);
     }
 }

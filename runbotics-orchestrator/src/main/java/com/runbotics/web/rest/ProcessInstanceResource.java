@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -120,19 +121,31 @@ public class ProcessInstanceResource {
     }
 
     /**
-     * {@code GET /process-instances/{id}/subprocesses} : get all subprocesses for the processInstance of a particular ID.
+     * {@code GET /process-instances/{id}/subprocesses} : get all subprocesses for the processInstance of a particular ID by page.
      *
      * @param id the ID of the processInstance.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of subprocesses in the body,
+     * @param page the page number
+     * @param size the size of the page (how many instances fit one page)
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the page of subprocesses in the body,
      *         or with status {@code 404 (Not Found)} if the processInstance does not exist.
      */
     @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_INSTANCE_READ + "')")
     @GetMapping("/process-instances/{id}/subprocesses")
-    public ResponseEntity<List<ProcessInstanceDTO>> getProcessInstanceSubprocesses(@PathVariable UUID id) {
+    public ResponseEntity<List<ProcessInstanceDTO>> getProcessInstanceSubprocesses(
+        @PathVariable UUID id,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
         log.debug("REST request to get subprocesses for ProcessInstance: {}", id);
+//        log.debug("$$$ page: {}", page);
+//        log.debug("$$$ pagesize: {}", size);
         Optional<ProcessInstanceDTO> processInstanceDTO = processInstanceService.findOne(id);
         if (!processInstanceDTO.isPresent()) return ResponseEntity.notFound().build();
-        List<ProcessInstanceDTO> subprocesses = processInstanceService.findSubprocesses(id);
-        return ResponseEntity.ok().body(subprocesses);
+
+        Pageable pageable = PageRequest.of(page, size);
+//        log.debug("$$$ resource pageable: {}", pageable);
+        Page<ProcessInstanceDTO> subprocessesPage = processInstanceService.findSubprocesses(id, pageable);
+
+        return ResponseEntity.ok().body(subprocessesPage.getContent());
     }
 }
