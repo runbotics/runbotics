@@ -2,7 +2,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { DEFAULT_COLLECTION_COLOR } from '../../CredentialsCollection/EditCredentialsCollection/EditCredentialsCollection.utils';
 
-import { CreateCredentialDto, CredentialTemplate } from '../Credential.types';
+import { CreateCredentialDto, CredentialTemplateNames } from '../Credential.types';
 
 
 
@@ -26,7 +26,11 @@ export const getInitialCredentialData = () => {
         description: '',
         collectionId: '',
         collectionColor: DEFAULT_COLLECTION_COLOR,
-        template: CredentialTemplate.CUSTOM,
+        template: {
+            name: CredentialTemplateNames.CUSTOM,
+            id: 'custom',
+            attributes: []
+        }
     };
 
     return initialCredentialData;

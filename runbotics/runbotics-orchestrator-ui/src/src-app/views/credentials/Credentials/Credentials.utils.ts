@@ -1,4 +1,4 @@
-import { BasicCredentialDto, CredentialTemplate } from '../Credential/Credential.types';
+import { BasicCredentialDto, CredentialTemplateNames } from '../Credential/Credential.types';
 import { collectionColors } from '../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 
 export const tempCredentials: BasicCredentialDto[] = [{
@@ -9,7 +9,7 @@ export const tempCredentials: BasicCredentialDto[] = [{
     collectionColor: collectionColors.LIGHT_ORANGE.hex,
     createdBy: 'userId',
     createdOn:'2024-05-05',
-    template: CredentialTemplate.CUSTOM
+    template: {id: 'custom', name: CredentialTemplateNames.CUSTOM, attributes: []}
 }, {
     id: 'tymczasowe_id',
     name: 'Tymczasowa Nazwa',
@@ -18,7 +18,7 @@ export const tempCredentials: BasicCredentialDto[] = [{
     collectionColor: collectionColors.DARK_ORANGE.hex,
     createdBy: 'userId',
     createdOn:'2024-05-05',
-    template: CredentialTemplate.CUSTOM
+    template: {id: 'custom', name: CredentialTemplateNames.CUSTOM, attributes: []}
 }, {
     id: 'zmyslone_id',
     name: 'Zmyslona Nazwa',
@@ -27,7 +27,7 @@ export const tempCredentials: BasicCredentialDto[] = [{
     collectionColor: collectionColors.LIGHT_GREEN.hex,
     createdBy: 'userId',
     createdOn:'2024-05-05',
-    template: CredentialTemplate.CUSTOM
+    template: {id: 'custom', name: CredentialTemplateNames.CUSTOM, attributes: []}
 }, {
     id: 'nowe_id',
     name: 'Nowa Nazwa',
@@ -36,7 +36,7 @@ export const tempCredentials: BasicCredentialDto[] = [{
     collectionColor: collectionColors.DARK_GREEN.hex,
     createdBy: 'userId',
     createdOn:'2024-05-05',
-    template: CredentialTemplate.CUSTOM
+    template: {id: 'custom', name: CredentialTemplateNames.CUSTOM, attributes: []}
 }, {
     id: 'unikalne_id',
     name: 'Unikalna Nazwa',
@@ -45,7 +45,7 @@ export const tempCredentials: BasicCredentialDto[] = [{
     collectionColor: collectionColors.LIGHT_BLUE.hex,
     createdBy: 'userId',
     createdOn:'2024-05-05',
-    template: CredentialTemplate.CUSTOM
+    template: {id: 'custom', name: CredentialTemplateNames.CUSTOM, attributes: []}
 },
 {
     id: 'ciemne_niebieskie_id',
@@ -55,7 +55,7 @@ export const tempCredentials: BasicCredentialDto[] = [{
     collectionColor: collectionColors.DARK_BLUE.hex,
     createdBy: 'userId',
     createdOn:'2024-05-05',
-    template: CredentialTemplate.CUSTOM
+    template: {id: 'custom', name: CredentialTemplateNames.CUSTOM, attributes: []}
 }, {
     id: 'szare_id',
     name: 'Szara Nazwa',
@@ -64,7 +64,7 @@ export const tempCredentials: BasicCredentialDto[] = [{
     collectionColor: collectionColors.LIGHT_GREY.hex,
     createdBy: 'userId',
     createdOn:'2024-05-05',
-    template: CredentialTemplate.CUSTOM
+    template: {id: 'custom', name: CredentialTemplateNames.CUSTOM, attributes: []}
 }, {
     id: 'ciemne_szare_id',
     name: 'Ciemna Szara Nazwa',
@@ -73,7 +73,7 @@ export const tempCredentials: BasicCredentialDto[] = [{
     collectionColor: collectionColors.DARK_GREY.hex,
     createdBy: 'userId',
     createdOn:'2024-05-05',
-    template: CredentialTemplate.CUSTOM
+    template: {id: 'custom', name: CredentialTemplateNames.CUSTOM, attributes: []}
 }];
 
 export const getCredentials = () => tempCredentials;

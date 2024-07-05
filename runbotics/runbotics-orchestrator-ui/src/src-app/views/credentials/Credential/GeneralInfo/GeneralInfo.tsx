@@ -57,7 +57,7 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential }) => {
                             {translate('Credential.Details.Template.Label')}
                         </Typography>
                         <Typography variant="body2" ml={1}>
-                            {credential.template}
+                            {credential.template.name}
                         </Typography>
                     </Box>
                 </Grid>

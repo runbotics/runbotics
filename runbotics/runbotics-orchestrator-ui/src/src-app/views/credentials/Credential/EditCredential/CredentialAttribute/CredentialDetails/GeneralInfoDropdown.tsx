@@ -21,6 +21,8 @@ const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, select
         setAnchorEl(event.currentTarget);
     };
 
+    console.log(selectedValue);
+
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };

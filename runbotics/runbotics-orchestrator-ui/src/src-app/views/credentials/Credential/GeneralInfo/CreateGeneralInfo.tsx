@@ -9,7 +9,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import { CreateCredentialDto, CredentialTemplate } from '../Credential.types';
+import { CreateCredentialDto, CredentialTemplateNames } from '../Credential.types';
 import GeneralInfoDropdown from '../EditCredential/CredentialAttribute/CredentialDetails/GeneralInfoDropdown';
 import { getInitialCredentialData } from '../EditCredential/EditCredential.utils';
 
@@ -38,10 +38,6 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
     const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
     const { enqueueSnackbar } = useSnackbar();
 
-
-    console.log(formValidationState);
-    console.log(credentialFormState);
-
     const closeDialog = () => {
         onClose();
     };
@@ -61,10 +57,10 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
     const credentialsCollections = tempCollections;
 
     // get this from db
-    const templates = Object.values(CredentialTemplate);
+    const templates = Object.values(CredentialTemplateNames);
 
     const collectionsToChoose = credentialsCollections.map(collection => (
-        <MenuItem key={collection.id} value={collection.name}>
+        <MenuItem key={collection.id} value={collection.id}>
             <Typography>{collection.name}</Typography>
         </MenuItem>
     ));
@@ -91,9 +87,9 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
         let changeTo = value;
 
         if (name === 'collectionId') {
-            const foundCollection = credentialsCollections.find(collection => collection.name === value);
+            const foundCollection = credentialsCollections.find(collection => collection.id === value);
 
-            changeTo = foundCollection.id;
+            if (foundCollection) changeTo = foundCollection.id;
         }
         setCredentialFormState((prevState) => ({
             ...prevState,
@@ -103,6 +99,12 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
             ...prevState,
             [name]: changeTo !== ''
         }));
+    };
+
+    const getCollectionNameById = (id: string) => {
+        const collection = credentialsCollections.find(currentCollection => currentCollection.id === id);
+        console.log(collection.name);
+        return collection ? collection.name : '';
     };
 
     return (
@@ -160,7 +162,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
                                 selectLabel={translate('Credential.Details.Template.Label')}
                                 tooltipText={translate('Credential.Details.Template.Info')}
                                 selectOptions={templatesToChoose}
-                                selectedValue={credentialFormState.template}
+                                selectedValue={credentialFormState.template.name}
                                 handleChange={(event: SelectChangeEvent) => handleDropdownChange('template', event.target.value)}
                                 required
                             />

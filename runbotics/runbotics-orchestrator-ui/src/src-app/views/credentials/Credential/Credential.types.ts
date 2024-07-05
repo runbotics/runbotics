@@ -1,26 +1,11 @@
+import { CredentialTemplateAttribute } from './EditCredential/CredentialAttribute/CredentialAttribute.types';
 import { CollectionColorHex } from '../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 
-export enum CredentialTemplate {
+export enum CredentialTemplateNames {
     CUSTOM = 'Custom'
 }
 
-export interface CredentialTemplateAttribute {
-    id: string,
-    name: string,
-    description: string,
-    required: boolean,
-    templateId: string,
-    type: CredentialTemplateAttributeType
-
-}
-
-export enum CredentialTemplateAttributeType {
-    STRING = 'string',
-    NUMBER = 'number',
-    BOOLEAN = 'boolean',
-}
-
-export interface CredentialTemplateNew {
+export interface CredentialTemplate {
     id: string,
     name: string,
     tenantId?: string,

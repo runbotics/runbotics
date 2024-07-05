@@ -1,6 +1,6 @@
-import { Attribute } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
+import { DisplayAttribute } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
 
 export interface CredentialAttributesState {
-    data: Attribute[],
+    data: DisplayAttribute[],
     loading: boolean
 }
