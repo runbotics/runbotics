@@ -3,9 +3,11 @@ import { CloudFileAction } from 'runbotics-common';
 import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
+import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 
-export const getSharepointListItemsAction: IBpmnAction = {
+export const getSharepointListItemsAction = {
     id: CloudFileAction.GET_SHAREPOINT_LIST_ITEMS,
+    credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.GetSharePointListItems.Label'),
     script: CloudFileAction.GET_SHAREPOINT_LIST_ITEMS,
     runner: Runner.DESKTOP_SCRIPT,
@@ -70,4 +72,4 @@ export const getSharepointListItemsAction: IBpmnAction = {
             },
         },
     },
-};
+} satisfies IBpmnAction;
