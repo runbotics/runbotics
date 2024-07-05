@@ -29,6 +29,31 @@ export interface EditAtributeDto {
     description?: string;
 }
 
+export interface DisplayAttribute {
+    id: string,
+    name: string,
+    description?: string,
+    required?: boolean,
+    templateId?: string,
+    value?: string,
+    type?: CredentialTemplateAttributeType
+}
+
+export interface CredentialTemplateAttribute extends EditAtributeDto {
+    id: string,
+    name: string,
+    description?: string,
+    required: boolean,
+    templateId: string,
+    type: CredentialTemplateAttributeType
+}
+
+export enum CredentialTemplateAttributeType {
+    STRING = 'string',
+    NUMBER = 'number',
+    BOOLEAN = 'boolean',
+}
+
 export interface UnmaskedAttribute extends BasicAttributeDto {
     masked: false;
     value: string;
@@ -47,3 +72,7 @@ export const initialCredentialAttributeValues: CreateAttributeDto = {
     masked: true,
     credentialId: ''
 };
+
+export function isTemplateAttribute(obj: CredentialTemplateAttribute | EditAtributeDto): obj is CredentialTemplateAttribute {
+    return (obj as CredentialTemplateAttribute).required !== undefined;
+}

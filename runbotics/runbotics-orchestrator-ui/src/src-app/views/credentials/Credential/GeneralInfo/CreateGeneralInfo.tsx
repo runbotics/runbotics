@@ -104,6 +104,12 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
         }));
     };
 
+    const getCollectionNameById = (id: string) => {
+        const collection = credentialsCollections.find(currentCollection => currentCollection.id === id);
+        console.log(collection.name);
+        return collection ? collection.name : '';
+    };
+
     return (
         <CustomDialog
             isOpen={open}
