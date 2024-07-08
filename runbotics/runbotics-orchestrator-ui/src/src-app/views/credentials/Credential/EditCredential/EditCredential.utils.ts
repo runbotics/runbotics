@@ -30,7 +30,8 @@ export const getInitialCredentialData = () => {
             name: CredentialTemplateNames.CUSTOM,
             id: 'custom',
             attributes: []
-        }
+        },
+        templateId: 'custom'
     };
 
     return initialCredentialData;

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import React, { FC, useState } from 'react';
 
 import { Grid, TextField, Typography, MenuItem, SelectChangeEvent } from '@mui/material';
@@ -7,9 +8,10 @@ import { useSnackbar } from 'notistack';
 import CustomDialog from '#src-app/components/CustomDialog';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { useSelector } from '#src-app/store';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import { CreateCredentialDto, CredentialTemplateNames } from '../Credential.types';
+import { CreateCredentialDto } from '../Credential.types';
 import GeneralInfoDropdown from '../EditCredential/CredentialAttribute/CredentialDetails/GeneralInfoDropdown';
 import { getInitialCredentialData } from '../EditCredential/EditCredential.utils';
 
@@ -33,14 +35,23 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
         name: false,
         description: false,
         collectionId: false,
-        template: true
+        templateId: true
     });
     const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
     const { enqueueSnackbar } = useSnackbar();
+    // const dispatch = useDispatch();
+    const credentialTemplates = useSelector(state => state.credentialTemplates.data);
+
+    console.log(credentialTemplates);
+    console.log('credentialFormState', credentialFormState);
 
     const closeDialog = () => {
         onClose();
     };
+
+    // useEffect(() => {
+    //     dispatch(fetchAllTemplates());
+    // }, [dispatch]);
 
     const handleSubmit = () => {
         try {
@@ -57,7 +68,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
     const credentialsCollections = tempCollections;
 
     // get this from db
-    const templates = Object.values(CredentialTemplateNames);
+    const templates = credentialTemplates;
 
     const collectionsToChoose = credentialsCollections.map(collection => (
         <MenuItem key={collection.id} value={collection.id}>
@@ -66,8 +77,8 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
     ));
 
     const templatesToChoose = templates.map(template => (
-        <MenuItem key={template} value={template}>
-            <Typography>{template}</Typography>
+        <MenuItem key={template.id} value={template.id}>
+            <Typography>{template.name}</Typography>
         </MenuItem>
     ));
 
@@ -82,7 +93,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
             [name]: value.trim() !== ''
         }));
     };
-    
+
     const handleDropdownChange = (name: string, value: string) => {
         let changeTo = value;
 
@@ -91,20 +102,14 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
 
             if (foundCollection) changeTo = foundCollection.id;
         }
-        setCredentialFormState((prevState) => ({
+        setCredentialFormState(prevState => ({
             ...prevState,
             [name]: changeTo
         }));
-        setFormValidationState((prevState) => ({
+        setFormValidationState(prevState => ({
             ...prevState,
             [name]: changeTo !== ''
         }));
-    };
-
-    const getCollectionNameById = (id: string) => {
-        const collection = credentialsCollections.find(currentCollection => currentCollection.id === id);
-        console.log(collection.name);
-        return collection ? collection.name : '';
     };
 
     return (
@@ -162,8 +167,8 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
                                 selectLabel={translate('Credential.Details.Template.Label')}
                                 tooltipText={translate('Credential.Details.Template.Info')}
                                 selectOptions={templatesToChoose}
-                                selectedValue={credentialFormState.template.name}
-                                handleChange={(event: SelectChangeEvent) => handleDropdownChange('template', event.target.value)}
+                                selectedValue={credentialFormState.templateId}
+                                handleChange={(event: SelectChangeEvent) => handleDropdownChange('templateId', event.target.value)}
                                 required
                             />
                         </Grid>

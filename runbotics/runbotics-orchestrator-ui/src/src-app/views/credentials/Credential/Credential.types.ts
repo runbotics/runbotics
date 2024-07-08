@@ -20,6 +20,7 @@ export interface BasicCredentialDto {
     collectionColor: CollectionColorHex,
     // attributes?: Attribute[];
     template: CredentialTemplate;
+    templateId: string;
     description?: string;
     tenantId?: string;
     createdOn: string;
@@ -34,6 +35,7 @@ export interface CreateCredentialDto {
     collectionColor: CollectionColorHex,
     // attributes?: Attribute[];
     template: CredentialTemplate;
+    templateId: string;
     description?: string;
 }
 

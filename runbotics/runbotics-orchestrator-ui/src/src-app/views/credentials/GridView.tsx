@@ -14,6 +14,7 @@ import If from '#src-app/components/utils/If';
 import { useSelector } from '#src-app/store';
 import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
 import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentials.thunks';
+import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import { getCredentials } from './Credentials/Credentials.utils';
@@ -39,10 +40,14 @@ const GridView: FC<GridViewProps> = () => {
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
     console.log('credentials', credentials);
     console.log('collections', collections);
+    
+    const credentialTemplates = useSelector(state => state.credentialTemplates.data);
+    console.log('credential templates', credentialTemplates);
 
     useEffect(() => {
         dispatch(fetchAllCredentials());
         // dispatch(fetchCollectionCredentials('kolekcja_basi'));
+        dispatch(fetchAllTemplates());
     }, [dispatch]);
 
     useEffect(() => {
