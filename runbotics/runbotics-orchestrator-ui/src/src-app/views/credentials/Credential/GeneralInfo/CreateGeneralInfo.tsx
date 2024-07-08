@@ -45,6 +45,10 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
         onClose();
     };
 
+    // useEffect(() => {
+    //     dispatch(fetchAllTemplates());
+    // }, [dispatch]);
+
     const handleSubmit = () => {
         try {
             if (!checkIsFormValid()) {
@@ -102,12 +106,6 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
             ...prevState,
             [name]: changeTo !== ''
         }));
-    };
-
-    const getCollectionNameById = (id: string) => {
-        const collection = credentialsCollections.find(currentCollection => currentCollection.id === id);
-        console.log(collection.name);
-        return collection ? collection.name : '';
     };
 
     return (
