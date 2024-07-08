@@ -58,9 +58,9 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
 
         const dataPayload = getTenantDataWithoutEmptyStrings(tenant);
 
-        dispatch(tenantsActions.partialUpdate({
-            payload: dataPayload, resourceId: dataPayload.id
-        })).unwrap()
+        dispatch(tenantsActions.partialUpdate(
+            dataPayload
+        )).unwrap()
             .then(() => {
                 handleClose();
                 enqueueSnackbar(

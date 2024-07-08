@@ -38,7 +38,7 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
     };
 
     const handleSubmit = () => {
-        dispatch(tenantsActions.createOne({ payload: { name } }))
+        dispatch(tenantsActions.createOne({ name }))
             .unwrap()
             .then(() => {
                 handleClose();
