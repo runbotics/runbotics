@@ -1,7 +1,7 @@
 import {
     BadRequestException, Body, Controller, Get,
-    NotFoundException, Param, ParseUUIDPipe, Patch,
-    Post, UseInterceptors
+    NotFoundException, Param, ParseUUIDPipe,
+    Patch, Post
 } from '@nestjs/common';
 import { FeatureKey, Tenant } from 'runbotics-common';
 
@@ -10,11 +10,11 @@ import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User } from '#/utils/decorators/user.decorator';
 import { UserEntity } from '#/database/user/user.entity';
 import { Logger } from '#/utils/logger';
-import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 
 import { TenantService } from './tenant.service';
 import { CreateTenantDto, createTenantSchema } from './dto/create-tenant.dto';
 import { UpdateTenantDto, updateTenantSchema } from './dto/update-tenant.dto';
+import { GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
 
 @Controller('/api/scheduler/tenants')
 export class TenantController {
@@ -24,8 +24,7 @@ export class TenantController {
         private readonly tenantService: TenantService
     ) { }
 
-    @Get('/:tenantId/me')
-    @UseInterceptors(TenantInterceptor)
+    @GetWithTenant('me')
     @FeatureKeys(FeatureKey.TENANT_READ)
     async getTenantByUser(@User('tenantId') id: Tenant['id']) {
         this.logger.log('REST request to get user tenant with id: ', id);
@@ -39,8 +38,7 @@ export class TenantController {
         return tenant;
     }
 
-    @Get('/:tenantId/invite-code')
-    @UseInterceptors(TenantInterceptor)
+    @GetWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_GET_INVITE_CODE)
     async getActiveInviteCode(@User('tenantId') id: Tenant['id']) {
         this.logger.log('REST request to get active invite code for user tenant with id: ', id);
@@ -54,8 +52,7 @@ export class TenantController {
         return inviteCodeDto;
     }
 
-    @Post('/:tenantId/invite-code')
-    @UseInterceptors(TenantInterceptor)
+    @PostWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_CREATE_INVITE_CODE)
     async createInviteCode(@User('tenantId') id: Tenant['id']) {
         this.logger.log('REST request to create invite code for user tenant with id: ', id);
@@ -77,7 +74,7 @@ export class TenantController {
         return this.tenantService.getAll();
     }
 
-    @Get('/invite-code/:tenantId')
+    @Get('invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_GET_ALL_INVITE_CODE)
     async getActiveInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
         this.logger.log(`REST request to get tenant invite code for tenant with id: ${id}`);
@@ -91,7 +88,7 @@ export class TenantController {
         return inviteCodeDto;
     }
 
-    @Get('/:id')
+    @Get(':id')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     async getTenantById(
         @Param('id', ParseUUIDPipe) id: Tenant['id']
@@ -117,7 +114,7 @@ export class TenantController {
         return this.tenantService.create(tenantDto, user);
     }
 
-    @Post('/invite-code/:tenantId')
+    @Post('invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_CREATE_ALL_INVITE_CODE)
     async createInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
         this.logger.log('REST request to create tenant invite code for tenant with id: ', id);
@@ -130,7 +127,7 @@ export class TenantController {
         return this.tenantService.createInviteCodeByTenantId(id);
     }
 
-    @Patch('/:id')
+    @Patch(':id')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     updateTenant(
         @Param('id', ParseUUIDPipe) id: Tenant['id'],

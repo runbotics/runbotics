@@ -76,9 +76,9 @@ const UsersListView: FC = () => {
         refreshSearch();
 
         if (hasAdminAccess) {
-            dispatch(tenantsActions.getAll({}));
+            dispatch(tenantsActions.getAll());
         } else {
-            dispatch(tenantsActions.getInviteCode({}));
+            dispatch(tenantsActions.getInviteCode());
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

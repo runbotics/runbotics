@@ -12,7 +12,7 @@ export class TenantInterceptor implements NestInterceptor {
         const regexUUIDmatch = request.url.match(API_URL_UUID_REGEX);
 
         if (!regexUUIDmatch || request.user.tenantId !== regexUUIDmatch[1]) {
-            throw new NotFoundException('Cannot access destination resource');
+            throw new NotFoundException('Destination resource not found');
         }
 
         return next.handle();

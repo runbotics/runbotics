@@ -95,6 +95,7 @@ export class TenantService {
             expirationDate: dayjs().add(7, 'days')
         };
 
-        return this.inviteCodeRepository.save(newInviteCode);
+        return this.inviteCodeRepository.save(newInviteCode)
+            .then(inviteCode => ({ inviteCode: inviteCode.inviteId }));
     }
 }
