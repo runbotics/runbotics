@@ -72,6 +72,7 @@ import { TenantModule } from '#/database/tenant/tenant.module';
         TriggerEventModule,
         GuestModule,
         TenantModule,
+        TypeOrmModule,
     ],
 })
 export class DatabaseModule { }
