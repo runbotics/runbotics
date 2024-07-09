@@ -6,6 +6,7 @@ import com.runbotics.service.ProcessInstanceQueryService;
 import com.runbotics.service.ProcessInstanceService;
 import com.runbotics.service.criteria.ProcessInstanceCriteria;
 import com.runbotics.service.dto.ProcessInstanceDTO;
+import com.runbotics.service.dto.ProcessDTO;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -137,14 +138,19 @@ public class ProcessInstanceResource {
         @RequestParam(defaultValue = "10") int size
     ) {
         log.debug("REST request to get subprocesses for ProcessInstance: {}", id);
-//        log.debug("$$$ page: {}", page);
-//        log.debug("$$$ pagesize: {}", size);
         Optional<ProcessInstanceDTO> processInstanceDTO = processInstanceService.findOne(id);
         if (!processInstanceDTO.isPresent()) return ResponseEntity.notFound().build();
 
         Pageable pageable = PageRequest.of(page, size);
-//        log.debug("$$$ resource pageable: {}", pageable);
         Page<ProcessInstanceDTO> subprocessesPage = processInstanceService.findSubprocesses(id, pageable);
+
+        subprocessesPage.forEach(dto -> {
+            dto.setBot(null);
+            ProcessDTO process = dto.getProcess();
+            if (process != null) {
+                process.setBotCollection(null);
+            }
+        });
 
         return ResponseEntity.ok().body(subprocessesPage.getContent());
     }
@@ -162,13 +168,10 @@ public class ProcessInstanceResource {
         @PathVariable UUID id
     ) {
         log.debug("REST request to get count of subprocesses for ProcessInstance: {}", id);
-//        log.debug("$$$ page: {}", page);
-//        log.debug("$$$ pagesize: {}", size);
         Optional<ProcessInstanceDTO> processInstanceDTO = processInstanceService.findOne(id);
         if (!processInstanceDTO.isPresent()) return ResponseEntity.notFound().build();
 
         int subprocessesNum = processInstanceService.countSubprocesses(id);
-//        log.debug("$$$ subprocessesNum: {}", subprocessesNum);
 
         return ResponseEntity.ok().body(subprocessesNum);
     }
