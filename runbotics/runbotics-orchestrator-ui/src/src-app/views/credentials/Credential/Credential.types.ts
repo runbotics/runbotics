@@ -1,4 +1,4 @@
-import { CredentialTemplateAttribute } from './EditCredential/CredentialAttribute/CredentialAttribute.types';
+import { BasicAttributeDto, CredentialTemplateAttribute } from './EditCredential/CredentialAttribute/CredentialAttribute.types';
 import { CollectionColorHex } from '../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 
 export enum CredentialTemplateNames {
@@ -18,15 +18,15 @@ export interface BasicCredentialDto {
     name: string;
     collectionId: string;
     collectionColor: CollectionColorHex,
-    // attributes?: Attribute[];
-    template: CredentialTemplate;
+    // template: CredentialTemplate;
     templateId: string;
     description?: string;
     tenantId?: string;
-    createdOn: string;
-    createdBy: string;
-    modifiedOn?: string;
-    modifiedBy?: string;
+    createdAt: string;
+    createdById: string;
+    updatedAt?: string;
+    updatedById?: string;
+    attributes: BasicAttributeDto[]
 }
 
 export interface CreateCredentialDto {

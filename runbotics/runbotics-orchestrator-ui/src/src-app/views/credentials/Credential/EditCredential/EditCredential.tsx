@@ -40,7 +40,6 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
     const credentialId = getLastParamOfUrl(router);
     // const credentials = useSelector((state) => state.credentials.all);
     const credentials = tempCredentials;
-    console.log(credentials);
     const credential = credentials.find(cred => cred.id === credentialId);
     const dispatch = useDispatch();
 
@@ -49,10 +48,6 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
             dispatch(fetchOneCredential(credentialId));
         }
     }, [dispatch, credentialId]);
-
-    if (!credential) {
-        return <div>Loading...</div>;
-    }
 
     return (
         <CredentialsInternalPage title={translate('Credential.Add.Title')}>
@@ -64,7 +59,7 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
                         <Typography variant="h4">{translate('Credential.Attributes.Title')} (3)</Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <CredentialAttributesList template={credential.template} />
+                        <CredentialAttributesList templateId={credential.templateId} />
                     </Grid>
                 </Grid>
             </StyledGrid>

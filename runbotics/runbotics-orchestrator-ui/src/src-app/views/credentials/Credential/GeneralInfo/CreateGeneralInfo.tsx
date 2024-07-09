@@ -39,19 +39,11 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
     });
     const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
     const { enqueueSnackbar } = useSnackbar();
-    // const dispatch = useDispatch();
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
-
-    console.log(credentialTemplates);
-    console.log('credentialFormState', credentialFormState);
 
     const closeDialog = () => {
         onClose();
     };
-
-    // useEffect(() => {
-    //     dispatch(fetchAllTemplates());
-    // }, [dispatch]);
 
     const handleSubmit = () => {
         try {

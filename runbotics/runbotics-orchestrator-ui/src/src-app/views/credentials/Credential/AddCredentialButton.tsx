@@ -22,7 +22,7 @@ const AddCredentialButton: FC = () => {
         // dispatch(createUser(initialCollectionData))
         const newCredential: Partial<BasicCredentialDto> = {...credential, id: 'jakies_id'};
         // get object from the database with added properties handled by backend (id, createdBy, createdOn)
-        // go to utl dedicated to this credential (/:id)
+        // go to url dedicated to this credential (/:id)
         console.log(newCredential);
         router.push(`/app/credentials/${newCredential.id}`);
     };

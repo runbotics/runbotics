@@ -38,11 +38,8 @@ const GridView: FC<GridViewProps> = () => {
     // const allCollections = getCredentialsCollections();
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
-    console.log('credentials', credentials);
-    console.log('collections', collections);
     
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
-    console.log('credential templates', credentialTemplates);
 
     useEffect(() => {
         dispatch(fetchAllCredentials());

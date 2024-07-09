@@ -4,12 +4,21 @@ import axios from 'axios';
 
 import { CredentialTemplate } from '#src-app/views/credentials/Credential/Credential.types';
 
-
-
 const env = 'DEV';
 const PARENT_URL_PATH = 'credentialId/credential-attributes';
 
+// custom: 1v400222-5db2-4454-8df5-1ee0aa1e123d
+// Microsofta: 8e500566-5db2-4454-8df5-1ee0aa1e625e
+// Atlassian: 375ba506-de65-40b2-a751-614912075a2b
+
 const testTemplates: CredentialTemplate[] = JSON.parse(`[
+  {
+    "id": "1v400222-5db2-4454-8df5-1ee0aa1e123d",
+    "name": "Custom",
+    "tenantId": "b7f9092f-5973-c781-08db-4d6e48f78e98",
+    "description": "custom actions",
+    "attributes": []
+  },
   {
     "id": "8e500566-5db2-4454-8df5-1ee0aa1e625e",
     "name": "Microsofta",

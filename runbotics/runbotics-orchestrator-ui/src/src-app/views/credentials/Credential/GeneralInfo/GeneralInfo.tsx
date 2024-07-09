@@ -4,6 +4,10 @@ import { Grid, Typography, Box } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { useSelector } from '#src-app/store';
+
+
+
 import { ColorDot } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styled';
 import { BasicCredentialDto } from '../Credential.types';
 
@@ -12,7 +16,10 @@ interface GeneralInfoProps {
 }
 
 const GeneralInfo: FC<GeneralInfoProps> = ({ credential }) => {
+    const templateId = credential.templateId;
     const { translate } = useTranslations();
+    const templates = useSelector(state => state.credentialTemplates.data);
+    const credentialTemplate = templates.find(template => template.id === templateId);
 
     return (
         <Box sx={{ display: 'flex', width: '90%', justifyContent: 'flexStart', marginBottom: '80px' }}>
@@ -57,7 +64,7 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential }) => {
                             {translate('Credential.Details.Template.Label')}
                         </Typography>
                         <Typography variant="body2" ml={1}>
-                            {credential.template.name}
+                            {credentialTemplate ? credentialTemplate.name : credential.templateId}
                         </Typography>
                     </Box>
                 </Grid>
