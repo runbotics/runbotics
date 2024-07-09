@@ -1,14 +1,27 @@
+import { User } from '#src-app/types/user';
+
 export interface BasicAttributeDto {
-    id: string,
+    id: string;
     name: string;
+    tenantId: string;
     masked: boolean;
-    value: string;
-    credentialId: string,
-    // tenantId: string;
-    createdOn: string;
-    createdBy: string;
-    modifiedOn?: string;
-    modifiedBy?: string;
+    type: CredentialTemplateAttributeType;
+    secretId: string;
+    credentialId: string;
+    createdAt: string;
+    createdById: string;
+    tenant?: {
+        id: string,
+        name: string;
+        createdById: string;
+        created: string;
+        updated: string;
+        lastModifiedBy: string;
+    };
+    createdBy?: User;
+    updatedBy?: User;
+    updatedAt?: string;
+    updatedById?: string;
     description?: string;
 }
 
@@ -16,7 +29,7 @@ export interface CreateAttributeDto {
     name: string;
     masked: boolean;
     value: string;
-    credentialId: string,
+    credentialId: string;
     // tenantId: string;
     description?: string;
 }
@@ -40,19 +53,15 @@ export interface DisplayAttribute {
 }
 
 export interface CredentialTemplateAttribute extends EditAtributeDto {
-    id: string,
-    name: string,
-    description?: string,
-    required: boolean,
-    templateId: string,
-    type: CredentialTemplateAttributeType
+    id: string;
+    name: string;
+    description?: string;
+    required: boolean;
+    templateId: string;
+    type: CredentialTemplateAttributeType;
 }
 
-export enum CredentialTemplateAttributeType {
-    STRING = 'string',
-    NUMBER = 'number',
-    BOOLEAN = 'boolean',
-}
+export type CredentialTemplateAttributeType = 'string' | 'number' | 'boolean';
 
 export interface UnmaskedAttribute extends BasicAttributeDto {
     masked: false;
@@ -63,7 +72,7 @@ export interface MaskedAttribute extends BasicAttributeDto {
     masked: true;
 }
 
-export type Attribute = UnmaskedAttribute | MaskedAttribute
+export type Attribute = UnmaskedAttribute | MaskedAttribute;
 
 export const initialCredentialAttributeValues: CreateAttributeDto = {
     name: '',

@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { addAttribute, deleteAttribute, fetchAttributes, updateAttribute } from '#src-app/store/slices/CredentialAttributes/CredentialAttributes.thunks';
 import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
 
-import { CredentialTemplate, CredentialTemplateNames } from '../../Credential.types';
 import { AddAttribute } from '../CredentialAttribute/AddAttribute';
 import { DisplayAttribute, EditAtributeDto, initialCredentialAttributeValues } from '../CredentialAttribute/Attribute.types';
 

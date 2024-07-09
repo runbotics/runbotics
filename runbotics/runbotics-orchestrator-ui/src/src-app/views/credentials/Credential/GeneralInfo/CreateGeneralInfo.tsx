@@ -45,10 +45,6 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
         onClose();
     };
 
-    // useEffect(() => {
-    //     dispatch(fetchAllTemplates());
-    // }, [dispatch]);
-
     const handleSubmit = () => {
         try {
             if (!checkIsFormValid()) {

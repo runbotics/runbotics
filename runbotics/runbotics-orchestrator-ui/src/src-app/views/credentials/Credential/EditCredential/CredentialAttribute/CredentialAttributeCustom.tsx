@@ -3,30 +3,34 @@
 import { FC, useEffect, useState } from 'react';
 
 import ClearIcon from '@mui/icons-material/Clear';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Typography, Grid, Button, Fade, Divider, Chip } from '@mui/material';
+import { Typography, TextField, Grid, Button, Fade, IconButton, Divider } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
-import { red, grey } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { CredentialTemplate } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.state';
 import {
     DisplayAttribute,
     EditAtributeDto
 } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
 
-import { AttributeInfoNotEdiable, StyledAttributeCard, StyledGridContainer } from './CredentialAttribute.style';
+import { StyledCustomAttributeCard, StyledGridContainer } from './CredentialAttribute.style';
 import CredentialDetails from './CredentialDetails/CredentialDetails';
 
 type CredentialAttributeProps = {
     attribute: DisplayAttribute;
+    template: CredentialTemplate;
     setAttribute(currentAttribute: EditAtributeDto): void;
+    deleteAttribute(attributeToDelete: EditAtributeDto): void;
 };
 
-const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttribute}) => {
+const CredentialAttributeCustom: FC<CredentialAttributeProps> = ({ attribute, setAttribute, deleteAttribute, template }) => {
     const { translate } = useTranslations();
     const isNewAttribute = attribute.id === undefined;
     const [isEditMode, setIsEditMode] = useState(isNewAttribute);
@@ -63,15 +67,19 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
 
     return (
         <Grid item spacing={2}>
-            <StyledAttributeCard>
+            <StyledCustomAttributeCard>
                 <StyledGridContainer container rowSpacing={2}>
-                    <Grid item xs={6}>
-                        <If condition={attribute.required}>
-                            <Chip label="REQUIRED" color="warning" style={{ backgroundColor: red[400] }}></Chip>
-                        </If>
-                        <If condition={!attribute.required}>
-                            <Chip label="OPTIONAL" color="info" style={{ backgroundColor: grey[600] }}></Chip>
-                        </If>
+                    <Grid item xs={6} alignSelf="center">
+                        <Grid container alignItems="center" marginBottom="8px">
+                            <Grid item>
+                                <Typography variant="h5">{translate('Credential.Attribute.Label')}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <IconButton sx={{ color: grey[400] }} onClick={() => deleteAttribute(currentAttribute as EditAtributeDto)}>
+                                    <DeleteOutlineOutlinedIcon />
+                                </IconButton>
+                            </Grid>
+                        </Grid>
                     </Grid>
                     <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <If condition={!isEditMode}>
@@ -86,12 +94,22 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
                         </If>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="h6">{translate('Credential.Attribute.Name.Label')}</Typography>
-                        <AttributeInfoNotEdiable>{attribute.name}</AttributeInfoNotEdiable>
+                        <TextField
+                            disabled={!isEditMode}
+                            fullWidth
+                            label={translate('Credential.Attribute.Name.Label')}
+                            value={currentAttribute.name}
+                            onChange={e => handleFieldChange('name', e.target.value)}
+                        ></TextField>
                     </Grid>
                     <Grid item xs={12} marginBottom="16px">
-                        <Typography variant="h6">{translate('Credential.Attribute.Description.Label')}</Typography>
-                        <AttributeInfoNotEdiable>{attribute.description}</AttributeInfoNotEdiable>
+                        <TextField
+                            disabled={!isEditMode}
+                            fullWidth
+                            label={translate('Credential.Attribute.Description.Label')}
+                            onChange={e => handleFieldChange('description', e.target.value)}
+                            value={currentAttribute.description}
+                        ></TextField>
                     </Grid>
                 </StyledGridContainer>
                 <Collapse in={isEditMode} orientation="vertical" sx={{ width: '100%' }}>
@@ -116,9 +134,9 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
                         </StyledGridContainer>
                     </Grid>
                 </Collapse>
-            </StyledAttributeCard>
+            </StyledCustomAttributeCard>
         </Grid>
     );
 };
 
-export default CredentialAttribute;
+export default CredentialAttributeCustom;
