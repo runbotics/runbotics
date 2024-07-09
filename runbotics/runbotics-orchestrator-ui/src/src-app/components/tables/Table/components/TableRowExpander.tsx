@@ -5,8 +5,8 @@ import { IconButton } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { RowCustomExpandedSpan } from './Table.styles';
-import { TableRowExpanderProps } from './Table.types';
+import { RowCustomExpandedSpan } from '../Table.styles';
+import { TableRowExpanderProps } from '../Table.types';
 
 const TableRowExpander: VFC<TableRowExpanderProps> = ({ row, handleClick }) => {
     const { translate } = useTranslations();

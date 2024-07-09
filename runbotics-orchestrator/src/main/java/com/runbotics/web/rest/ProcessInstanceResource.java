@@ -148,4 +148,28 @@ public class ProcessInstanceResource {
 
         return ResponseEntity.ok().body(subprocessesPage.getContent());
     }
+
+    /**
+     * {@code GET /process-instances/{id}/subprocesses/count} : count all subprocesses for the processInstance.
+     *
+     * @param id the ID of the processInstance.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the number of subprocesses,
+     *         or with status {@code 404 (Not Found)} if the processInstance does not exist.
+     */
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.PROCESS_INSTANCE_READ + "')")
+    @GetMapping("/process-instances/{id}/subprocesses/count")
+    public ResponseEntity<Integer> getProcessInstanceSubprocesses(
+        @PathVariable UUID id
+    ) {
+        log.debug("REST request to get count of subprocesses for ProcessInstance: {}", id);
+//        log.debug("$$$ page: {}", page);
+//        log.debug("$$$ pagesize: {}", size);
+        Optional<ProcessInstanceDTO> processInstanceDTO = processInstanceService.findOne(id);
+        if (!processInstanceDTO.isPresent()) return ResponseEntity.notFound().build();
+
+        int subprocessesNum = processInstanceService.countSubprocesses(id);
+//        log.debug("$$$ subprocessesNum: {}", subprocessesNum);
+
+        return ResponseEntity.ok().body(subprocessesNum);
+    }
 }

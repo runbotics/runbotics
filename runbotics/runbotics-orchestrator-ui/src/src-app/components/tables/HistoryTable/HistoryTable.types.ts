@@ -37,3 +37,9 @@ export interface ProcessInstanceRow extends Omit<Row, 'subRows' | 'isExpanded'>{
     subRows?: ProcessInstanceRow[];
     isExpanded?: boolean;
 }
+
+export interface GetSubprocessesPageParams {
+    currRow: ProcessInstanceRow;
+    pageNum: number;
+    size: number;
+}

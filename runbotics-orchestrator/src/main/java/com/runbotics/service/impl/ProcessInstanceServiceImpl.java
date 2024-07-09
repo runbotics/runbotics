@@ -115,4 +115,11 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         Page<ProcessInstance> subprocesses = processInstanceRepository.findByParentId(processInstanceId, pageable);
         return subprocesses.map(processInstanceMapper::toDto);
     }
+     @Override
+    public int countSubprocesses(UUID processInstanceId) {
+//        log.debug("$$$ Request to get all subprocesses for ProcessInstance : {}", processInstanceId);
+//        log.debug("$$$ Pagination used: {}", pageable);
+         int subprocessesNum = processInstanceRepository.countChildrenByParentId(processInstanceId);
+         return subprocessesNum;
+     }
 }

@@ -2,41 +2,63 @@ import { ProcessInstanceState, InstanceExtendedWithSubprocesses } from './Proces
 
 const spreadIfArray = (array: unknown) => Array.isArray(array) ? array : [];
 
-const recursivelyInsertSubprocess = (
-    parentInstanceId: string,
-    currentNode: InstanceExtendedWithSubprocesses,
-    targetSubprocesses: InstanceExtendedWithSubprocesses[],
-) => {
+interface RecursivelyUpdateProcessInstanceSubprocessesParams {
+    parentInstanceId: string;
+    currentNode: InstanceExtendedWithSubprocesses;
+    targetSubprocesses?: InstanceExtendedWithSubprocesses[];
+    totalSubprocessesCount?: number;
+}
+
+
+const recursivelyUpdateProcessInstanceSubprocesses = ({
+    parentInstanceId,
+    currentNode,
+    targetSubprocesses,
+    totalSubprocessesCount,
+}: RecursivelyUpdateProcessInstanceSubprocessesParams) => {
     if (currentNode.id === parentInstanceId) {
         currentNode.subprocesses = [...spreadIfArray(currentNode.subprocesses), ...spreadIfArray(targetSubprocesses)];
+        currentNode.subprocessesCount = totalSubprocessesCount;
     }
 
     currentNode.subprocesses?.forEach(subprocess =>
-        recursivelyInsertSubprocess(parentInstanceId, subprocess, targetSubprocesses)
+        recursivelyUpdateProcessInstanceSubprocesses({
+            parentInstanceId,
+            currentNode: subprocess,
+            targetSubprocesses,
+            totalSubprocessesCount
+        })
     );
 };
 
 export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: InstanceExtendedWithSubprocesses) => {
-    const { id, subprocesses, hasSubprocesses, isLoadingSubprocesses } = processInstance;
+    const { id, subprocesses, hasSubprocesses, isLoadingSubprocesses, subprocessesCount } = processInstance;
 
     if (!state.all.page?.content) return;
 
     const pageContent =
-        state.all.page?.content
-            .map((instance: InstanceExtendedWithSubprocesses) => {
-                recursivelyInsertSubprocess(id, instance, subprocesses);
-                if (instance.id !== id) {
-                    return instance;
-                }
-
-                const updatedInstance = {
-                    ...instance,
-                    hasSubprocesses: hasSubprocesses !== undefined ? hasSubprocesses : instance.hasSubprocesses,
-                    isLoadingSubprocesses: isLoadingSubprocesses !== undefined ? isLoadingSubprocesses : instance.isLoadingSubprocesses,
-                };
-
-                return updatedInstance;
+    state.all.page?.content
+        .map((instance: InstanceExtendedWithSubprocesses) => {
+            recursivelyUpdateProcessInstanceSubprocesses({
+                parentInstanceId: id,
+                currentNode: instance,
+                targetSubprocesses: subprocesses,
+                totalSubprocessesCount: subprocessesCount
             });
+
+            if (instance.id !== id) {
+                return instance;
+            }
+
+            const updatedInstance = {
+                ...instance,
+                ...(hasSubprocesses !== undefined && { hasSubprocesses }),
+                ...(isLoadingSubprocesses !== undefined && { isLoadingSubprocesses }),
+                ...(subprocessesCount !== undefined && { subprocessesCount }),
+            };
+
+            return updatedInstance;
+        });
 
     state.all.page.content = pageContent;
 };
