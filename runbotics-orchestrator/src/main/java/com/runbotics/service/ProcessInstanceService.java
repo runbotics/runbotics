@@ -54,14 +54,6 @@ public interface ProcessInstanceService {
     Page<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId, Pageable pageable);
 
     /**
-     * Get the number of subprocesses for the given processInstance ID.
-     *
-     * @param processInstanceId the ID of the processInstance.
-     * @return the number of subprocesses.
-     */
-    int countSubprocesses(UUID processInstanceId);
-
-    /**
      * Delete the "id" processInstance.
      *
      * @param id the id of the entity.

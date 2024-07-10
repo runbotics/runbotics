@@ -21,7 +21,7 @@ import { calcPage, SUBPROCESSES_PAGE_SIZE } from '../Table/Table.utils';
 const useProcessInstanceColumns = (
     rerunEnabled: boolean,
     onRerunProcess: () => void,
-    firstSubprocessesLoad: (params: GetSubprocessesPageParams) => void
+    getSubprocessesPage: (params: GetSubprocessesPageParams) => void
 ): Column[] => {
     const { translate } = useTranslations();
     const { user: authUser } = useAuth();
@@ -33,7 +33,7 @@ const useProcessInstanceColumns = (
     const handleRowExpand = (currRow: ProcessInstanceRow) => {
         const page = calcPage(currRow.subRows.length, SUBPROCESSES_PAGE_SIZE);
         if (currRow.subRows.length > 0 || currRow.isExpanded) return;
-        firstSubprocessesLoad({ currRow, pageNum: page, size: SUBPROCESSES_PAGE_SIZE });
+        getSubprocessesPage({ currRow, pageNum: page, size: SUBPROCESSES_PAGE_SIZE });
     };
 
     let columns = [

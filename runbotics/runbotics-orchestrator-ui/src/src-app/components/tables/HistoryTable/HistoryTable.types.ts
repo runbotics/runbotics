@@ -5,9 +5,10 @@ import { SxProps, Theme } from '@mui/system';
 import { Row } from 'react-table';
 
 import { InstanceExtendedWithSubprocesses, ProcessInstanceRequestCriteria } from '#src-app/store/slices/ProcessInstance';
+import { Page } from '#src-app/utils/types/page';
 export interface GetSubprocessesResponse {
     type: string;
-    payload: InstanceExtendedWithSubprocesses[];
+    payload: Page<InstanceExtendedWithSubprocesses[]>
     meta: {
         arg: {
             processInstanceId: string;

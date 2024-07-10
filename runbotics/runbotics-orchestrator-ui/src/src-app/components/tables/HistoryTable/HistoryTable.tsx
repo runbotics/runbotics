@@ -17,6 +17,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
+
 import useProcessInstanceColumns from './HistoryTable.columns';
 import { Wrapper } from './HistoryTable.styles';
 import { GetSubprocessesPageParams, GetSubprocessesResponse, HistoryTableProps, PanelInfoState, ProcessInstanceRow } from './HistoryTable.types';
@@ -165,27 +166,15 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
     };
 
-    const getSubprocessesCount = (currRow: ProcessInstanceRow) => {
-        dispatch(processInstanceActions.getSubprocessesCount({ processInstanceId: currRow.original.id }))
-            .catch(() => { handleNoSubprocessesFound(currRow); });
-    };
-
     const getSubprocessesPage = ({ currRow, pageNum, size }: GetSubprocessesPageParams) => {
         dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id, page: pageNum, size }))
             .then((response) => {
-                if((response as GetSubprocessesResponse).payload.length === 0) handleNoSubprocessesFound(currRow);
-
-                dispatch(processInstanceActions.getSubprocessesCount({ processInstanceId: currRow.original.id }));
+                if((response as GetSubprocessesResponse)?.payload?.content?.length === 0) handleNoSubprocessesFound(currRow);
             })
             .catch(() => { handleNoSubprocessesFound(currRow); });
     };
 
-    const firstSubprocessesLoad = ({ currRow, pageNum, size }: GetSubprocessesPageParams) => {
-        getSubprocessesPage({ currRow, pageNum, size });
-        getSubprocessesCount(currRow);
-    };
-
-    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess, firstSubprocessesLoad);
+    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess, getSubprocessesPage);
 
     return (
         <Wrapper>

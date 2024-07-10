@@ -21,9 +21,10 @@ import { LoadMore } from './components/LoadMore';
 import DataTableFooter from './Table.footer';
 import { DataTableRow, DataTableWrapper, LoadingRow } from './Table.styles';
 import { DataTableProps, DataRow } from './Table.types';
-import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS, SUBPROCESSES_PAGE_SIZE, calcPage, getEndedBranches, getRowsToInsert, getNthId, getRowId, getSpecialRows } from './Table.utils';
+import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS, calcPage, getEndedBranches, getRowsToInsert, getNthId, getRowId, getSpecialRows, LOAD_MORE_SUBPROCESSES_PAGE_SIZE } from './Table.utils';
 import If from '../../utils/If';
 import { ProcessInstanceRow } from '../HistoryTable/HistoryTable.types';
+import { COLUMNS_NUMBER } from '../HistoryTable/HistoryTable.utils';
 
 
 const Table = <T extends object>({
@@ -147,7 +148,7 @@ const Table = <T extends object>({
 
     const rowLoader = (
         <TableRow>
-            <TableCell colSpan={columns.length ?? 7} sx={{ height: `${TABLE_ROW_HEIGHT}px`}}>
+            <TableCell colSpan={columns.length ?? COLUMNS_NUMBER} sx={{ height: `${TABLE_ROW_HEIGHT}px`}}>
                 <LoadingRow />
             </TableCell>
         </TableRow>
@@ -167,8 +168,8 @@ const Table = <T extends object>({
                     <LoadMore
                         row={row as ProcessInstanceRow}
                         getSubprocessesPage={getSubprocessesPage}
-                        pageNum={calcPage(row.subRows.length, SUBPROCESSES_PAGE_SIZE)}
-                        size={SUBPROCESSES_PAGE_SIZE}
+                        pageNum={calcPage(row.subRows.length, LOAD_MORE_SUBPROCESSES_PAGE_SIZE)}
+                        size={LOAD_MORE_SUBPROCESSES_PAGE_SIZE}
                         columnsNum={columns.length}
                     />;
 
@@ -223,7 +224,7 @@ const Table = <T extends object>({
 
     const emptyDataElement = (
         <TableRow>
-            <TableCell colSpan={columns.length ?? 7} align="center">
+            <TableCell colSpan={columns.length ?? COLUMNS_NUMBER} align="center">
                 <Grid item xs={12}>
                     {translate('Component.Table.NoDataFound')}
                 </Grid>
@@ -233,7 +234,7 @@ const Table = <T extends object>({
 
     const cellLoader = (
         <TableRow>
-            <TableCell colSpan={columns.length ?? 7} sx={{ verticalAlign: 'middle' }}>
+            <TableCell colSpan={columns.length ?? COLUMNS_NUMBER} sx={{ verticalAlign: 'middle' }}>
                 <Box width="100%" display="flex" justifyContent="center">
                     <CircularProgress color="secondary" />
                 </Box>

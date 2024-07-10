@@ -14,7 +14,6 @@ import {
     getProcessInstancePage,
     getProcessInstanceAndUpdatePage,
     getProcessInstancePageWithSpecificInstance,
-    getSubprocessesCount,
 } from './ProcessInstance.thunks';
 import { updateProcessInstanceProps } from './ProcessInstance.utils';
 
@@ -101,7 +100,8 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
                 {
                     id: action.meta.arg.processInstanceId,
                     isLoadingSubprocesses: false,
-                    subprocesses: action.payload
+                    subprocesses: action.payload.content,
+                    subprocessesCount: action.payload.totalElements,
                 }
             );
         })
@@ -111,35 +111,8 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
                 {
                     id: action.meta.arg.processInstanceId,
                     isLoadingSubprocesses: false,
-                    hasSubprocesses: false
-                }
-            );
-        })
-
-        // GET count subprocesses
-        .addCase(getSubprocessesCount.pending, (state, action) => {
-            updateProcessInstanceProps(
-                state,
-                {
-                    id: action.meta.arg.processInstanceId,
-                }
-            );
-        })
-        .addCase(getSubprocessesCount.fulfilled, (state, action) => {
-            updateProcessInstanceProps(
-                state,
-                {
-                    id: action.meta.arg.processInstanceId,
-                    subprocessesCount: action.payload
-                }
-            );
-        })
-        .addCase(getSubprocessesCount.rejected, (state, action) => {
-            updateProcessInstanceProps(
-                state,
-                {
-                    id: action.meta.arg.processInstanceId,
-                    subprocessesCount: 0
+                    hasSubprocesses: false,
+                    subprocessesCount: 0,
                 }
             );
         })

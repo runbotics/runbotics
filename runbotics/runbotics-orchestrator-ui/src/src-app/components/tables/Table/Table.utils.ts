@@ -7,7 +7,11 @@ export const TABLE_ROW_HEIGHT = 54;
 
 export const INTERACTIVE_COLUMNS = ['expander', 'button', 'rerun-menu'];
 
-export const SUBPROCESSES_PAGE_SIZE = 5;
+export const SUBPROCESSES_PAGE_SIZE = 2;
+
+export const LOAD_MORE_SUBPROCESSES_PAGE_SIZE = 100;
+
+export const SUBROW_INDENT_MULTIPLIER = 30;
 
 export const calcPage = (subprocessesNum: number, pageSize: number) => Math.floor(subprocessesNum / pageSize);
 

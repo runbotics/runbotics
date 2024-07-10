@@ -48,21 +48,20 @@ export const getProcessInstance = createAsyncThunk<IProcessInstance, {
     },
 );
 
-export const getSubprocesses = createAsyncThunk<IProcessInstance[], {
+export const getSubprocesses = createAsyncThunk<Page<IProcessInstance>, {
     processInstanceId: string;
-    page: number;
-    size: number;
+    page?: number;
+    size?: number;
 }>(
     'processInstances/getSubprocesses',
-    ({ processInstanceId, page, size }) =>
-        Axios.get<IProcessInstance[]>(`/api/process-instances/${processInstanceId}/subprocesses?page=${page}&size=${size}`)
-            .then((response) => response.data),
-);
-
-export const getSubprocessesCount = createAsyncThunk<number, { processInstanceId: string }>(
-    'processInstances/getSubprocessesCount',
-    ({ processInstanceId }) => Axios.get<number>(`/api/process-instances/${processInstanceId}/subprocesses/count`)
-        .then((response) => response.data),
+    ({ processInstanceId, page, size }, { rejectWithValue }) => Axios.get<Page<IProcessInstance>>(
+        URLBuilder
+            .url(`/api/process-instances/${processInstanceId}/subprocesses`)
+            .params({ page, size })
+            .build()
+    )
+        .then((response) => response.data)
+        .catch(error => rejectWithValue(error.response.data)),
 );
 
 export const getProcessInstanceAndUpdatePage = createAsyncThunk<IProcessInstance, { processInstanceId?: string }>(

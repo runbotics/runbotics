@@ -17,7 +17,7 @@ export const RowCustomExpandedSpan = styled.span<{ isExpanded: boolean, depth: n
         max-width: unset;
     }
 
-    padding-left: ${({ depth }) => `${depth * 25}px`};
+    padding-left: ${({ depthIndent }) => `${depthIndent}px`};
 `;
 
 export const DataTableWrapper = styled.div(({ theme }) => `

@@ -1,6 +1,6 @@
 import { ProcessInstanceState, InstanceExtendedWithSubprocesses } from './ProcessInstance.state';
 
-const spreadIfArray = (array: unknown) => Array.isArray(array) ? array : [];
+const spreadIfArray = (value: Array<unknown> | unknown) => Array.isArray(value) ? value : [];
 
 interface RecursivelyUpdateProcessInstanceSubprocessesParams {
     parentInstanceId: string;
