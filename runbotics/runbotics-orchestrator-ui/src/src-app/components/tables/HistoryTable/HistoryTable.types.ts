@@ -12,8 +12,6 @@ export interface GetSubprocessesResponse {
     meta: {
         arg: {
             processInstanceId: string;
-            page?: number;
-            size?: number;
         };
         requestId: string;
         requestStatus: 'fulfilled';

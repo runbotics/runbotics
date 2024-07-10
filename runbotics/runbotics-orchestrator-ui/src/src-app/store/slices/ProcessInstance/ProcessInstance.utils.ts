@@ -1,6 +1,6 @@
 import { ProcessInstanceState, InstanceExtendedWithSubprocesses } from './ProcessInstance.state';
 
-const spreadIfArray = (value: Array<unknown> | unknown) => Array.isArray(value) ? value : [];
+const returnAsArray = (value: Array<unknown> | unknown) => Array.isArray(value) ? value : [];
 
 interface RecursivelyUpdateProcessInstanceSubprocessesParams {
     parentInstanceId: string;
@@ -17,7 +17,7 @@ const recursivelyUpdateProcessInstanceSubprocesses = ({
     totalSubprocessesCount,
 }: RecursivelyUpdateProcessInstanceSubprocessesParams) => {
     if (currentNode.id === parentInstanceId) {
-        currentNode.subprocesses = [...spreadIfArray(currentNode.subprocesses), ...spreadIfArray(targetSubprocesses)];
+        currentNode.subprocesses = [...returnAsArray(currentNode.subprocesses), ...returnAsArray(targetSubprocesses)];
         currentNode.subprocessesCount = totalSubprocessesCount;
     }
 
@@ -46,9 +46,7 @@ export const updateProcessInstanceProps = (state: ProcessInstanceState, processI
                 totalSubprocessesCount: subprocessesCount
             });
 
-            if (instance.id !== id) {
-                return instance;
-            }
+            if (instance.id !== id) return instance;
 
             const updatedInstance = {
                 ...instance,
