@@ -16,7 +16,6 @@ import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
-import { TenantModule } from '#/database/tenant/tenant.module';
 
 @Module({
     imports: [
@@ -53,7 +52,6 @@ import { TenantModule } from '#/database/tenant/tenant.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
-        TenantModule,
         TypeOrmModule
     ],
     exports: [
@@ -71,7 +69,6 @@ import { TenantModule } from '#/database/tenant/tenant.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
-        TenantModule,
         TypeOrmModule,
     ],
 })

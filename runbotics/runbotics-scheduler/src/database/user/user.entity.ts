@@ -2,7 +2,7 @@ import { IAuthority, IUser } from 'runbotics-common';
 import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { AuthorityEntity } from '../authority/authority.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
-import { Tenant } from '#/database/tenant/tenant.entity';
+import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 
 @Entity({ name: 'jhi_user', synchronize: false })
 export class UserEntity implements IUser {
@@ -61,7 +61,10 @@ export class UserEntity implements IUser {
         inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' }
     })
         authorities: IAuthority[];
-    
-    @OneToMany(() => Tenant, tenant => tenant.createdBy)
+
+    @OneToMany(() => Tenant, tenant => tenant.createdByUser)
     tenants: Tenant[];
+
+    @Column({ name: 'tenant_id', type: 'varchar' })
+        tenantId: string;
 }

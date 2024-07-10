@@ -5,9 +5,11 @@ import {
     createOne,
     deleteOne,
     generateInviteCode,
+    generateInviteCodeByTenantId,
     getAll,
     getAllByPage,
     getInviteCode,
+    getInviteCodeByTenantId,
     partialUpdate
 } from './Tenants.thunks';
 
@@ -77,9 +79,18 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
         .addCase(getInviteCode.rejected, (state) => {
             state.inviteCode = null;
         })
+        .addCase(getInviteCodeByTenantId.fulfilled, (state, action) => {
+            state.inviteCode = action.payload.inviteCode;
+        })
+        .addCase(getInviteCodeByTenantId.rejected, (state) => {
+            state.inviteCode = null;
+        })
 
         // GENERATE INVITE CODE
         .addCase(generateInviteCode.fulfilled, (state, action) => {
+            state.inviteCode = action.payload.inviteCode;
+        })
+        .addCase(generateInviteCodeByTenantId.fulfilled, (state, action) => {
             state.inviteCode = action.payload.inviteCode;
         });
 };
