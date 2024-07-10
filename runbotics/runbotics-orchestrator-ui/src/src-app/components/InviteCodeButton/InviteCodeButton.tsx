@@ -23,17 +23,29 @@ const InviteCodeButton: VFC<InviteCodeButtonProps> = ({ tenantId, fullWidth }) =
     };
 
     const generateInviteCode = (e) => {
-        dispatch(tenantsActions.generateInviteCode(tenantId ?? ''))
-            .unwrap()
-            .then(({ inviteCode: code }) => {
-                navigator.clipboard.writeText(`${window.location.origin}/register?inviteCode=${code}`);
-                e.target.innerText = translate('Component.InviteCodeButton.Copied');
-            })
-        ;
+        if (tenantId) {
+            dispatch(tenantsActions.generateInviteCodeByTenantId(tenantId))
+                .unwrap()
+                .then(({ inviteCode: code }) => {
+                    navigator.clipboard.writeText(`${window.location.origin}/register?inviteCode=${code}`);
+                    e.target.innerText = translate('Component.InviteCodeButton.Copied');
+                });
+        } else {
+            dispatch(tenantsActions.generateInviteCode())
+                .unwrap()
+                .then(({ inviteCode: code }) => {
+                    navigator.clipboard.writeText(`${window.location.origin}/register?inviteCode=${code}`);
+                    e.target.innerText = translate('Component.InviteCodeButton.Copied');
+                });
+        }
     };
 
     useEffect(() => {
-        dispatch(tenantsActions.getInviteCode(tenantId ?? ''));
+        if (tenantId) {
+            dispatch(tenantsActions.getInviteCodeByTenantId(tenantId));
+        } else {
+            dispatch(tenantsActions.getInviteCode());
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tenantId]);
 
