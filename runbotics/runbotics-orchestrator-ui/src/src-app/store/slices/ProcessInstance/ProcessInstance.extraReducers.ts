@@ -91,7 +91,7 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
                 {
                     id: action.meta.arg.processInstanceId,
                     isLoadingSubprocesses: true,
-                }
+                },
             );
         })
         .addCase(getSubprocesses.fulfilled, (state, action) => {
@@ -102,7 +102,8 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
                     isLoadingSubprocesses: false,
                     subprocesses: action.payload.content,
                     subprocessesCount: action.payload.totalElements,
-                }
+                },
+                action.meta.arg?.page
             );
         })
         .addCase(getSubprocesses.rejected, (state, action) => {

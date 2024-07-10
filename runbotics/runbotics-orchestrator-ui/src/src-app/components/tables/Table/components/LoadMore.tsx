@@ -9,7 +9,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessInstanceRow } from '../../HistoryTable/HistoryTable.types';
 import { COLUMNS_NUMBER } from '../../HistoryTable/HistoryTable.utils';
 import { LoadMoreProps } from '../Table.types';
-import { SUBROW_INDENT_MULTIPLIER, TABLE_ROW_HEIGHT } from '../Table.utils';
+import { LOAD_MORE_SUBPROCESSES_PAGE_SIZE, SUBROW_INDENT_MULTIPLIER, TABLE_ROW_HEIGHT } from '../Table.utils';
 
 export const LoadMore = ({ row, pageNum, size, getSubprocessesPage, columnsNum }: LoadMoreProps) => {
     const { translate } = useTranslations();
@@ -17,7 +17,7 @@ export const LoadMore = ({ row, pageNum, size, getSubprocessesPage, columnsNum }
     const totalSubprocesses = row.original?.subprocessesCount;
     const subprocessesToLoad = totalSubprocesses - (row as ProcessInstanceRow)?.subRows?.length;
     const rowDepthIndent = (row.depth * SUBROW_INDENT_MULTIPLIER) + 15;
-    const displayLoadAll = totalSubprocesses - subprocessesToLoad > 0;
+    const displayLoadAll = subprocessesToLoad <= LOAD_MORE_SUBPROCESSES_PAGE_SIZE;
 
     return (
         <TableRow>

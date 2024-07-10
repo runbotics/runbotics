@@ -7,6 +7,7 @@ interface RecursivelyUpdateProcessInstanceSubprocessesParams {
     currentNode: InstanceExtendedWithSubprocesses;
     targetSubprocesses?: InstanceExtendedWithSubprocesses[];
     totalSubprocessesCount?: number;
+    page?: number;
 }
 
 
@@ -15,9 +16,10 @@ const recursivelyUpdateProcessInstanceSubprocesses = ({
     currentNode,
     targetSubprocesses,
     totalSubprocessesCount,
+    page,
 }: RecursivelyUpdateProcessInstanceSubprocessesParams) => {
     if (currentNode.id === parentInstanceId) {
-        currentNode.subprocesses = [...returnAsArray(currentNode.subprocesses), ...returnAsArray(targetSubprocesses)];
+        currentNode.subprocesses = [...(page === 0 ? [] : returnAsArray(currentNode.subprocesses)), ...returnAsArray(targetSubprocesses)];
         currentNode.subprocessesCount = totalSubprocessesCount;
     }
 
@@ -31,7 +33,7 @@ const recursivelyUpdateProcessInstanceSubprocesses = ({
     );
 };
 
-export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: InstanceExtendedWithSubprocesses) => {
+export const updateProcessInstanceProps = (state: ProcessInstanceState, processInstance: InstanceExtendedWithSubprocesses, page: number = 0) => {
     const { id, subprocesses, hasSubprocesses, isLoadingSubprocesses, subprocessesCount } = processInstance;
 
     if (!state.all.page?.content) return;
@@ -43,7 +45,8 @@ export const updateProcessInstanceProps = (state: ProcessInstanceState, processI
                 parentInstanceId: id,
                 currentNode: instance,
                 targetSubprocesses: subprocesses,
-                totalSubprocessesCount: subprocessesCount
+                totalSubprocessesCount: subprocessesCount,
+                page,
             });
 
             if (instance.id !== id) return instance;
