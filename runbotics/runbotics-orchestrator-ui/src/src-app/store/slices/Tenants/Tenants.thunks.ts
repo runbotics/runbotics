@@ -39,8 +39,9 @@ export const partialUpdate = createAsyncThunk<Tenant, Tenant>(
 
 export const deleteOne = createAsyncThunk<void, number>(
     'tenants/delete',
-    (id) => axios.delete(`/api/admin/tenants/${id}`)
+    (id) => axios.delete(`/api/scheduler/tenants/${id}`)
 );
+
 
 export const getInviteCode = ApiTenantResource
     .get<TenantInviteCode>('tenants/getInviteCode', 'invite-code');

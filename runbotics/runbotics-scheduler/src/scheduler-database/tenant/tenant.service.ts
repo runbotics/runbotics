@@ -98,4 +98,16 @@ export class TenantService {
         return this.inviteCodeRepository.save(newInviteCode)
             .then(inviteCode => ({ inviteCode: inviteCode.inviteId }));
     }
+
+    async delete(tenantId: string) {
+        await this.tenantRepository
+            .findOneByOrFail({ id: tenantId }).catch(() => {
+                throw new BadRequestException('Cannot find tenant with provided id');
+            });
+
+        await this.tenantRepository
+            .delete(tenantId).catch(() => {
+                throw new BadRequestException('Cannot delete tenant related to other resources');
+            });
+    }
 }

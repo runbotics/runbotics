@@ -1,5 +1,7 @@
 import {
-    BadRequestException, Body, Controller, Get,
+    BadRequestException, Body, Controller, Delete, Get,
+    HttpCode,
+    HttpStatus,
     NotFoundException, Param, ParseUUIDPipe,
     Patch, Post
 } from '@nestjs/common';
@@ -136,5 +138,13 @@ export class TenantController {
     ) {
         this.logger.log(`REST request to update tenant with id ${id} by user with id: ${user.id}`);
         return this.tenantService.update(tenantDto, id, user);
+    }
+
+    @Delete(':id')
+    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteTenant(@Param('id', ParseUUIDPipe) id: Tenant['id']) {
+        this.logger.log(`REST request to delete tenant with id ${id}`);
+        await this.tenantService.delete(id);
     }
 }
