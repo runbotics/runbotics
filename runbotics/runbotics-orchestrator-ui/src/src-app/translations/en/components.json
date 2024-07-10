@@ -89,6 +89,9 @@
     "Component.HistoryTable.Rows.Initiator.Api": "API({{ login }})",
     "Component.HistoryTable.Rows.Initiator.Email": "Email({{ email }})",
 
+    "Component.HistoryTable.Special.LoadMore": "Load {{ pageSize }} more ({{ count }} left)",
+    "Component.HistoryTable.Special.LoadAll": "Load all ({{ total }} total)",
+
     "Component.HistoryTable.Step.StartEvent": "Start event",
     "Component.HistoryTable.Step.EndEvent": "End event",
 

@@ -48,9 +48,10 @@ public interface ProcessInstanceService {
      * Get all the subprocesses for the given processInstance ID.
      *
      * @param processInstanceId the ID of the processInstance.
-     * @return the list of subprocesses.
+     * @param pageable the pagination info
+     * @return the page of subprocesses.
      */
-    List<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId);
+    Page<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId, Pageable pageable);
 
     /**
      * Delete the "id" processInstance.
