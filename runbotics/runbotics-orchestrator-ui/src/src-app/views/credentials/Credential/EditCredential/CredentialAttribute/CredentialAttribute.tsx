@@ -6,12 +6,14 @@ import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Typography, Grid, Button, Fade, Divider, Chip } from '@mui/material';
+import { Typography, Grid, Button, Fade, Divider } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
-import { red, grey } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 
+import Label from '#src-app/components/Label';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+
 
 import {
     DisplayAttribute,
@@ -20,6 +22,9 @@ import {
 
 import { AttributeInfoNotEdiable, StyledAttributeCard, StyledGridContainer } from './CredentialAttribute.style';
 import CredentialDetails from './CredentialDetails/CredentialDetails';
+
+
+
 
 type CredentialAttributeProps = {
     attribute: DisplayAttribute;
@@ -65,15 +70,17 @@ const CredentialAttribute: FC<CredentialAttributeProps> = ({ attribute, setAttri
         <Grid item spacing={2}>
             <StyledAttributeCard>
                 <StyledGridContainer container rowSpacing={2}>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} alignSelf='center'>
                         <If condition={attribute.required}>
-                            <Chip label="REQUIRED" color="warning" style={{ backgroundColor: red[400] }}></Chip>
+                            <Label color='error'>{translate('Credential.Attribute.Tag.Required')}</Label>
+                            {/* <Chip label="REQUIRED" color="warning" style={{ backgroundColor: red[400] }}></Chip> */}
                         </If>
                         <If condition={!attribute.required}>
-                            <Chip label="OPTIONAL" color="info" style={{ backgroundColor: grey[600] }}></Chip>
+                            {/* <Chip label="OPTIONAL" color="info" style={{ backgroundColor: grey[600] }}></Chip> */}
+                            <Label color='info'>{translate('Credential.Attribute.Tag.Optional')}</Label>
                         </If>
                     </Grid>
-                    <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end', alignSelf: 'center'}}>
                         <If condition={!isEditMode}>
                             <Fade in={!isEditMode}>
                                 <Button size="small" onClick={handleEdit} sx={{ marginRight: '4px' }}>
