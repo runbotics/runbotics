@@ -35,4 +35,6 @@ export const credentials = {
     'Credential.Attribute.Edit.Edit': 'Edit',
     'Credential.Attribute.Edit.Confirm': 'Confirm',
     'Credential.Attribute.Edit.Cancel': 'Cancel',
+    'Credential.Attribute.Tag.Required': 'Required',
+    'Credential.Attribute.Tag.Optional': 'Optional',
 };

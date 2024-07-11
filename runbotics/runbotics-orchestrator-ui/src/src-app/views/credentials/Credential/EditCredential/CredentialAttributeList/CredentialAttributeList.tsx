@@ -8,10 +8,10 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { addAttribute, deleteAttribute, fetchAttributes, updateAttribute } from '#src-app/store/slices/CredentialAttributes/CredentialAttributes.thunks';
 import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
-import { EditAtributeDto, initialCredentialAttributeValues } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
 
 import { AddAttribute } from '../CredentialAttribute/AddAttribute';
 import CredentialAttribute from '../CredentialAttribute/CredentialAttribute';
+import { EditAtributeDto, initialCredentialAttributeValues } from '../CredentialAttribute/CredentialAttribute.types';
 import CredentialAttributeCustom from '../CredentialAttribute/CredentialAttributeCustom';
 
 interface CredentialAttributesListProps {
