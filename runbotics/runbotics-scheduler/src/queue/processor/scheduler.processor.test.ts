@@ -52,8 +52,13 @@ const INSTANT_PROCESS: InstantProcess = {
     trigger: {
         name: TriggerEvent.MANUAL,
     },
+    triggerData: { userEmail: 'test@test' },
     input: PROCESS_INPUT,
     orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID,
+};
+
+const INSTANT_PROCESS_WITHOUT_USER: InstantProcess = {
+    ...INSTANT_PROCESS, triggerData: {}
 };
 
 const SCHEDULED_PROCESS: ScheduledProcess = {
@@ -73,6 +78,11 @@ const JOB: Job = {
 const SCHEDULED_JOB: Job = {
     data: SCHEDULED_PROCESS,
     id: JOB_ID,
+} as Job;
+
+const JOB_WITHOUT_USER: Job = {
+    data: INSTANT_PROCESS_WITHOUT_USER,
+    id: JOB_ID
 } as Job;
 
 describe('SchedulerProcessor', () => {
@@ -210,6 +220,10 @@ describe('SchedulerProcessor', () => {
         it('should not run process if it isn\'t any bot connected', async () => {
             vi.spyOn(botService, 'findAvailableCollection').mockResolvedValue([]);
             await expect(schedulerProcessor.process(SCHEDULED_JOB)).rejects.toThrowError('All bots are disconnected');
+        });
+
+        it('should not run process if user in trigger data is null', async () => {
+            await expect(schedulerProcessor.process(JOB_WITHOUT_USER)).rejects.toThrowError();
         });
     });
 
