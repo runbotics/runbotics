@@ -194,7 +194,7 @@ export class QueueService implements OnModuleInit {
                     ...process,
                     orchestratorProcessInstanceId,
                     trigger: { name: TriggerEvent.SCHEDULER },
-                    triggerData: { userEmail: process.user.email },
+                    triggerData: { userEmail: process?.user?.email },
                     input: { variables: JSON.parse(process.inputVariables) }
                 }))
         );

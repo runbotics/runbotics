@@ -12,7 +12,7 @@ import { SUBROW_INDENT_MULTIPLIER } from '../Table.utils';
 const TableRowExpander: VFC<TableRowExpanderProps> = ({ row, handleClick }) => {
     const { translate } = useTranslations();
     return (
-        <RowCustomExpandedSpan isExpanded={row.isExpanded} depthIndent={row.depth * SUBROW_INDENT_MULTIPLIER} onClick={() => handleClick(row)}>
+        <RowCustomExpandedSpan isExpanded={row.isExpanded} depthIndent={row.depth * SUBROW_INDENT_MULTIPLIER} onClick={() => handleClick?.(row)}>
             <IconButton {...row.getToggleRowExpandedProps()} sx={{ width: '36px' }} title={translate('History.Table.Expand')}>
                 <ArrowForwardIosIcon fontSize="small" />
             </IconButton>
