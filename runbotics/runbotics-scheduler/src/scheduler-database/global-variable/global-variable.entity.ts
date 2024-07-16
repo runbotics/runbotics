@@ -33,6 +33,9 @@ export class GlobalVariable {
     @JoinColumn({ name: 'creator_id' })
     creator: UserEntity;
 
+    @Column({ name: 'tenant_id', type: 'uuid' })
+    tenantId: string;
+
     @ManyToOne(() => Tenant, tenant => tenant.id, { nullable: false })
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
