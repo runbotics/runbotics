@@ -9,13 +9,13 @@ import URLBuilder from './URLBuilder';
 
 interface PayloadWrap<T> {
     payload?: T;
-    resourceId?: string;
+    resourceId?: string | number;
     pageParams?: PageRequestParams;
 }
 
 interface PathElements {
     resourcePath?: string;
-    resourceId?: string;
+    resourceId?: string | number;
     pageParams?: PageRequestParams;
 }
 

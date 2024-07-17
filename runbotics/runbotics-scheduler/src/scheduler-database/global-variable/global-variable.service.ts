@@ -107,7 +107,8 @@ export class GlobalVariableService {
             .findOneByOrFail(findOptions)
             .then(globalVariable => ({
                 ...globalVariable,
-                ...globalVariableDto
+                ...globalVariableDto,
+                user: user
             })).catch(() => {
                 this.logger.error('Cannot find global variable with id: ', id);
                 throw new BadRequestException('Global variable not found', 'NotFound');

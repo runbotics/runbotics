@@ -12,9 +12,9 @@ import { User } from '#/utils/decorators/user.decorator';
 import { UserEntity } from '#/database/user/user.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 
-import { CreateGlobalVariableDto, createGlobalVariableSchema } from './dto/create-global-variable.dto';
 import { GlobalVariableService } from './global-variable.service';
-import { updateGlobalVariableSchema } from './dto/update-global-variable.dto';
+import { CreateGlobalVariableDto, createGlobalVariableSchema } from './dto/create-global-variable.dto';
+import { UpdateGlobalVariableDto, updateGlobalVariableSchema } from './dto/update-global-variable.dto';
 
 
 @UseInterceptors(TenantInterceptor)
@@ -69,7 +69,7 @@ export class GlobalVariableController {
     @FeatureKeys(FeatureKey.GLOBAL_VARIABLE_EDIT)
     updateGlobalVariable(
         @Param('id', ParseIntPipe) id: number,
-        @Body(new ZodValidationPipe(updateGlobalVariableSchema)) globalVariableDto: CreateGlobalVariableDto,
+        @Body(new ZodValidationPipe(updateGlobalVariableSchema)) globalVariableDto: UpdateGlobalVariableDto,
         @Param('tenantId') tenantId: Tenant['id'],
         @User() user: UserEntity
     ) {

@@ -73,7 +73,7 @@ const DeleteGlobalVariableDialog:
         const handleDelete = () => {
             if (!globalVariable) return;
 
-            dispatch(globalVariableActions.deleteGlobalVariable({ id: globalVariable.id }))
+            dispatch(globalVariableActions.deleteGlobalVariable({ resourceId: globalVariable.id }))
                 .then((response) => {
                     const rejectResponse = response as DeleteRejectResponse;
                     if (rejectResponse.payload) {

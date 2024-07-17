@@ -34,9 +34,9 @@ const useGlobalVariablesColumns = ({
 }: ColumnsActions): GridEnrichedColDef[] => {
     const { translate } = useTranslations();
     const isGlobalVariableOwner = useOwner();
-    const isAdmin = useRole([Role.ROLE_ADMIN]);
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
     const isActionsColumnHidden = globalVariables.every(({ creator }) =>
-        !(isAdmin || isGlobalVariableOwner(creator.id))
+        !(isTenantAdmin || isGlobalVariableOwner(creator.id))
     );
 
     return [
@@ -110,7 +110,7 @@ const useGlobalVariablesColumns = ({
                         key="delete"
                     />,
                 ];
-                return (isAdmin || isGlobalVariableOwner(creator.id)) ? gridActions : [];
+                return (isTenantAdmin || isGlobalVariableOwner(creator.id)) ? gridActions : [];
             },
         },
     ];
