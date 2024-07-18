@@ -29,17 +29,8 @@ export class GlobalVariableService {
 
         return this.globalVariableRepository
             .find({ where: findOptions, relations })
-            .then(globalVariables => globalVariables.map(globalVariable => ({
-                ...globalVariable,
-                creator: {
-                    id: globalVariable.creator.id,
-                    login: globalVariable.creator.login
-                },
-                user: {
-                    id: globalVariable.user.id,
-                    login: globalVariable.user.login
-                }
-            })));
+            .then(globalVariables => globalVariables
+                .map(globalVariable => this.formatUserDTO(globalVariable)));
     }
 
     getById(tenantId: string, user: UserEntity, id: number) {
@@ -50,17 +41,7 @@ export class GlobalVariableService {
 
         return this.globalVariableRepository
             .findOne({ where: findOptions, relations })
-            .then(globalVariable => ({
-                ...globalVariable,
-                creator: {
-                    id: globalVariable.creator.id,
-                    login: globalVariable.creator.login
-                },
-                user: {
-                    id: globalVariable.user.id,
-                    login: globalVariable.user.login
-                }
-            }));
+            .then(this.formatUserDTO);
     }
 
     create(
@@ -79,17 +60,7 @@ export class GlobalVariableService {
 
         return this.globalVariableRepository
             .save(newGlobalVariable)
-            .then(globalVariable => ({
-                ...globalVariable,
-                creator: {
-                    id: globalVariable.creator.id,
-                    login: globalVariable.creator.login
-                },
-                user: {
-                    id: globalVariable.user.id,
-                    login: globalVariable.user.login
-                }
-            }));
+            .then(this.formatUserDTO);
     }
 
     async update(
@@ -114,7 +85,9 @@ export class GlobalVariableService {
                 throw new BadRequestException('Global variable not found', 'NotFound');
             });
 
-        return this.globalVariableRepository.save(updatedGlobalVariable);
+        return this.globalVariableRepository
+            .save(updatedGlobalVariable)
+            .then(this.formatUserDTO);
     }
 
     async delete(tenantId: string, user: UserEntity, id: number) {
@@ -129,5 +102,13 @@ export class GlobalVariableService {
             });
 
         await this.globalVariableRepository.delete(id);
+    }
+
+    private formatUserDTO(globalVariable: GlobalVariable) {
+        return {
+            ...globalVariable,
+            ...(globalVariable.user && { user: { id: globalVariable.user.id, login: globalVariable.user.login } }),
+            ...(globalVariable.creator && { creator: { id: globalVariable.creator.id, login: globalVariable.creator.login } })
+        };
     }
 }
