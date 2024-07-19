@@ -487,6 +487,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public boolean isUserActivated() {
+        return this.getUserWithAuthorities().get().isActivated();
+    }
+
+    @Transactional(readOnly = true)
     public List<String> findUserFeatureKeys() {
         User user = this.getUserWithAuthorities().orElseGet(User::new);
 
