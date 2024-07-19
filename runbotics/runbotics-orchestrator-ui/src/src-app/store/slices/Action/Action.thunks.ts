@@ -1,9 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import Axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 import { AppDispatch, RootState } from '#src-app/store';
 import { IAction } from '#src-app/types/model/action.model';
+import Axios from '#src-app/utils/axios';
 
 export const getActions = createAsyncThunk('actions/getActions', async () => {
     const response = await Axios.get<IAction[]>('/api/actions');

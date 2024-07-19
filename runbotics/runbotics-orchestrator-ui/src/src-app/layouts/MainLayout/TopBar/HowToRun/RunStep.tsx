@@ -1,13 +1,13 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 
 import { Box, Button, FormHelperText, Typography } from '@mui/material';
-import Axios from 'axios';
 import clsx from 'clsx';
 import { IProcess } from 'runbotics-common';
 import styled from 'styled-components';
 
 import BotProcessRunner from '#src-app/components/BotProcessRunner';
 import useTranslations from '#src-app/hooks/useTranslations';
+import Axios from '#src-app/utils/axios';
 
 const PREFIX = 'RunStep';
 
