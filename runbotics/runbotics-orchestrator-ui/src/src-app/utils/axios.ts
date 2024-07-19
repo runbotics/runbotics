@@ -21,7 +21,7 @@ axiosApi.interceptors.response.use((res) => res, (err) => {
         window.location.reload();
     }
 
-    return err;
+    return Promise.reject(err);
 });
 
 export default axiosApi;
