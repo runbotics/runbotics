@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react';
 
 import useTranslations from '#src-app/hooks/useTranslations';
-import axios from '#src-app/utils/axios';
+import { axiosInstance as axios } from '#src-app/utils/axios';
 import Typography from '#src-landing/components/Typography';
 
 import styles from './ContactForm.module.scss';

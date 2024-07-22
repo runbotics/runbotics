@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 
 import { RootState } from '#src-app/store';
 import { User } from '#src-app/types/user';
+import axios from '#src-app/utils/axios';
 
 import { PageRequestParams } from './types/page';
 import URLBuilder from './URLBuilder';

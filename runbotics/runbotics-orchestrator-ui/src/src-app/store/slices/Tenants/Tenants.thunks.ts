@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { Tenant, TenantInviteCode } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
+import axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 

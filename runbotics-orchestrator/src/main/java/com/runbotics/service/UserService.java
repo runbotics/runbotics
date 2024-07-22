@@ -129,20 +129,14 @@ public class UserService {
             .findOneByLogin(userDTO.getLogin().toLowerCase())
             .ifPresent(
                 existingUser -> {
-                    boolean removed = removeNonActivatedUser(existingUser);
-                    if (!removed) {
-                        throw new UsernameAlreadyUsedException();
-                    }
+                    throw new UsernameAlreadyUsedException();
                 }
             );
         userRepository
             .findOneByEmailIgnoreCase(userDTO.getEmail())
             .ifPresent(
                 existingUser -> {
-                    boolean removed = removeNonActivatedUser(existingUser);
-                    if (!removed) {
-                        throw new EmailAlreadyUsedException();
-                    }
+                    throw new EmailAlreadyUsedException();
                 }
             );
         User newUser = new User();
@@ -341,6 +335,11 @@ public class UserService {
     public Optional<AdminUserDTO> partialUpdate(AdminUserDTO adminUserDTO) {
         log.debug("Request to partially update User : {}", adminUserDTO);
 
+        User requester = getUserWithAuthorities().get();
+        if(!adminUserDTO.isActivated() && Objects.equals(requester.getId(), adminUserDTO.getId())) {
+            throw new BadRequestAlertException("User cannot deactivate itself", ENTITY_NAME, "SelfDeactivate");
+        }
+
         excludeAdminUserDTOFields(adminUserDTO);
         return userRepository
             .findById(adminUserDTO.getId())
@@ -390,6 +389,10 @@ public class UserService {
 
     public Optional<AdminUserDTO> partialUpdateInTenant(AdminUserDTO adminUserDTO) {
         User requester = getUserWithAuthorities().get();
+
+        if(!adminUserDTO.isActivated() && Objects.equals(requester.getId(), adminUserDTO.getId())) {
+            throw new BadRequestAlertException("User cannot deactivate itself", ENTITY_NAME, "SelfDeactivate");
+        }
 
         adminUserDTO.setTenant(null);
         excludeAdminUserDTOFields(adminUserDTO);
@@ -484,6 +487,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isUserActivated() {
+        return this.getUserWithAuthorities().get().isActivated();
     }
 
     @Transactional(readOnly = true)

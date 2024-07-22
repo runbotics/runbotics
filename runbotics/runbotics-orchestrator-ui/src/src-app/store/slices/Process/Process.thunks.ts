@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import Axios from 'axios';
 
 import { IProcess, Tag, NotificationProcess, IUser } from 'runbotics-common';
 
@@ -7,6 +6,7 @@ import { Socket } from 'socket.io-client';
 
 import { RootState } from '#src-app/store';
 import LoadingType from '#src-app/types/loading';
+import Axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
