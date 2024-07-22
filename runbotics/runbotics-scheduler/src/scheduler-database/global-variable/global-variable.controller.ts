@@ -78,6 +78,7 @@ export class GlobalVariableController {
     }
 
     @Delete(':id')
+    @FeatureKeys(FeatureKey.GLOBAL_VARIABLE_DELETE)
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteGlobalVariableBy(
         @Param('id', ParseIntPipe) id: number,

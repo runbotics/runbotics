@@ -6,6 +6,9 @@ import axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
+const INVITE_CODE_PATH = 'invite-code';
+
+
 const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
     .params(params)
@@ -44,7 +47,7 @@ export const deleteOne = createAsyncThunk<void, number>(
 
 
 export const getInviteCode = ApiTenantResource
-    .get<TenantInviteCode>('tenants/getInviteCode', 'invite-code');
+    .get<TenantInviteCode>('tenants/getInviteCode', INVITE_CODE_PATH);
 
 export const getInviteCodeByTenantId = createAsyncThunk<TenantInviteCode, string>(
     'tenants/getInviteCodeByTenantId',
@@ -53,7 +56,7 @@ export const getInviteCodeByTenantId = createAsyncThunk<TenantInviteCode, string
 );
 
 export const generateInviteCode = ApiTenantResource
-    .post<TenantInviteCode>('tenants/generateInviteCode', 'invite-code');
+    .post<TenantInviteCode>('tenants/generateInviteCode', INVITE_CODE_PATH);
 
 export const generateInviteCodeByTenantId = createAsyncThunk<TenantInviteCode, string>(
     'tenants/generateInviteCodeByTenantId',

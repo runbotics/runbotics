@@ -40,7 +40,12 @@ export class AuthService {
         schedulerAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
         this.storageService.setValue('token', token);
 
-        const authUser = (await orchestratorAxios.get('/api/account')).data;
+        const authUser = await orchestratorAxios.get<{ tenant: { id: string } }>('/api/account')
+            .then(res => res.data)
+            .catch((error) => {
+                this.logger.error('<= Error getting user from server: ' + this.serverConfigService.entrypointSchedulerUrl, error);
+                throw error;
+            });
         this.storageService.setValue('tenantId', authUser.tenant.id);
 
         const installationId = await this.getInstallationId();
