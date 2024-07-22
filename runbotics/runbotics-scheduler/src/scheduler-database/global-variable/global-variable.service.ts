@@ -44,7 +44,7 @@ export class GlobalVariableService {
 
         return this.globalVariableRepository
             .findOne({ where: findOptions, relations })
-            .then(this.formatUserDTO); // repair NULLLL
+            .then(this.formatUserDTO);
     }
 
     async create(
@@ -122,11 +122,11 @@ export class GlobalVariableService {
         await this.globalVariableRepository.delete(id);
     }
 
-    private formatUserDTO(globalVariable: GlobalVariable) {
-        return {
+    private formatUserDTO(globalVariable: GlobalVariable | null) {
+        return globalVariable ? {
             ...globalVariable,
             ...(globalVariable.user && { user: { id: globalVariable.user.id, login: globalVariable.user.login } }),
             ...(globalVariable.creator && { creator: { id: globalVariable.creator.id, login: globalVariable.creator.login } })
-        };
+        } : null;
     }
 }
