@@ -44,11 +44,18 @@ export class GlobalVariableService {
             .then(this.formatUserDTO);
     }
 
-    create(
+    async create(
         tenantId: string,
         user: UserEntity,
         globalVariableDto: CreateGlobalVariableDto
     ) {
+        const existingGlobalVariable = await this.globalVariableRepository
+            .findOneBy({ tenantId, name: globalVariableDto.name });
+
+        if (existingGlobalVariable) {
+            throw new BadRequestException('Global variable with that name exists', 'NameNotUnique');
+        }
+
         const newGlobalVariable = new GlobalVariable();
         newGlobalVariable.name = globalVariableDto.name;
         newGlobalVariable.description = globalVariableDto.description;

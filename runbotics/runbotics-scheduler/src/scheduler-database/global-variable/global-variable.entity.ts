@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 import { GlobalVariableType } from 'runbotics-common';
 
 import { UserEntity } from '#/database/user/user.entity';
@@ -6,6 +6,7 @@ import { UserEntity } from '#/database/user/user.entity';
 import { Tenant } from '../tenant/tenant.entity';
 
 @Entity({ name: 'global_variable' })
+@Unique(['name', 'tenantId'])
 export class GlobalVariable {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number;
