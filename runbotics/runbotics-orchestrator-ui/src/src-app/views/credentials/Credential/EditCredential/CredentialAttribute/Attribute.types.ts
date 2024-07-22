@@ -1,5 +1,8 @@
-import { User } from '#src-app/types/user';
+import { IUser } from 'runbotics-common';
 
+import { CredentialTemplateAttribute, CredentialTemplateAttributeType } from '#src-app/store/slices/CredentialTemplates';
+
+// TO_REVIEW
 export interface BasicAttributeDto {
     id: string;
     name: string;
@@ -18,8 +21,8 @@ export interface BasicAttributeDto {
         updated: string;
         lastModifiedBy: string;
     };
-    createdBy?: User;
-    updatedBy?: User;
+    createdBy?: IUser;
+    updatedBy?: IUser;
     updatedAt?: string;
     updatedById?: string;
     description?: string;
@@ -49,19 +52,10 @@ export interface DisplayAttribute {
     required?: boolean,
     templateId?: string,
     value?: string,
-    type?: CredentialTemplateAttributeType
+    type?: CredentialTemplateAttributeType;
+    credentialId: string;
+    masked?: boolean;
 }
-
-export interface CredentialTemplateAttribute extends EditAtributeDto {
-    id: string;
-    name: string;
-    description?: string;
-    required: boolean;
-    templateId: string;
-    type: CredentialTemplateAttributeType;
-}
-
-export type CredentialTemplateAttributeType = 'string' | 'number' | 'boolean';
 
 export interface UnmaskedAttribute extends BasicAttributeDto {
     masked: false;

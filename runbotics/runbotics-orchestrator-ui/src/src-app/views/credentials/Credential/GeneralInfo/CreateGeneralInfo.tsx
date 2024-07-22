@@ -11,8 +11,8 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
+import GeneralInfoDropdown from './GeneralInfoDropdown';
 import { CreateCredentialDto } from '../Credential.types';
-import GeneralInfoDropdown from '../EditCredential/CredentialAttribute/CredentialDetails/GeneralInfoDropdown';
 import { getInitialCredentialData } from '../EditCredential/EditCredential.utils';
 
 interface CreateGeneralInfoProps {

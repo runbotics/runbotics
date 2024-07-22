@@ -1,4 +1,4 @@
-import { Grid, Card, Typography } from '@mui/material';
+import { Grid, Card, Typography, IconButton } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import styled from 'styled-components';
 
@@ -33,5 +33,26 @@ export const AttributeInfoNotEdiable = styled(Typography)(
     }
     color: ${grey[600]};
     display: inline-block;
+`
+);
+
+export const StyledAddCard = styled(Card)`
+    cursor: pointer;
+    min-height: 260px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid ${grey[200]};
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: ${grey[100]};
+        border: 1px solid ${grey[400]};
+    }
+`;
+
+export const AttributeIcon = styled(IconButton)(
+    ({ theme }) => `
+    margin-right: ${theme.spacing(1)}
 `
 );

@@ -6,6 +6,7 @@ import Accordion from '#src-app/components/Accordion';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+
 import { CredentalsCollectionGeneralOptionsProps } from './GeneralOptions.types';
 import CollectionColorSelect from '../CollectionColor/CollectionColorSelect';
 import { inputErrorMessages } from '../EditCredentialsCollection.utils';

@@ -4,6 +4,7 @@ import { Grid, Button } from '@mui/material';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+// PROBABLY TO_REMOVE
 const CredentialOptions: React.FC<{}> = () => (
 
     <Grid container spacing={2} justifyContent="flex-start" marginTop='16px' ml={3}>

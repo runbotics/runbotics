@@ -16,7 +16,7 @@ export const CredentialsCollectionsView = () => {
         <InternalPage title={`Credentials ${translate('Credentials.Tab.Collections')}`}>
             <Header />
             <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
-                <GridView/>
+                <GridView credentials={[]}/>
             </Box>
         </InternalPage>
     ); };

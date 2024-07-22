@@ -7,6 +7,8 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
+import UsersBrowseView from '#src-app/views/users/UsersBrowseView';
+
 import { SharedWithOptionsProps } from './SharedWithOptions.types';
 
 const SharedWithOptions: FC<SharedWithOptionsProps> = ({ collectionData, canEdit, shareableUsers, isEditDialogOpen, handleChange }) => {
@@ -98,6 +100,7 @@ const SharedWithOptions: FC<SharedWithOptionsProps> = ({ collectionData, canEdit
                                 />
                             )}
                         /> */}
+                        <UsersBrowseView/>
                         <Box sx={{ flexShrink: 0 }}>
                             <InfoButtonTooltip message={translate('Credentials.Collection.Add.Form.ReadAccess.Tooltip')} />
                         </Box>

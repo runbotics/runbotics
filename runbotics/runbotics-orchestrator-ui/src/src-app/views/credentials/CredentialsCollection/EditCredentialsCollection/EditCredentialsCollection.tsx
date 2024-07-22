@@ -7,6 +7,7 @@ import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 import { EditCredentialsCollectionProps } from './EditCredentialCollection.types';
 import { InputErrorType, getInitialCredentialsCollectionData, initialFormValidationState } from './EditCredentialsCollection.utils';
 import { GeneralOptions } from './GeneralOptions/GeneralOptions';
+import { SharedWithUsers } from './SharedWithUsers/SharedWithUsers';
 import { CreateCredentialsCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
 
 const EditCredentialsCollection: FC<EditCredentialsCollectionProps> = ({ collection,  onSubmit }) => {
@@ -41,7 +42,7 @@ const EditCredentialsCollection: FC<EditCredentialsCollectionProps> = ({ collect
     // const handleClose = () => { console.log('close'); };
 
     return (
-        <Content sx={{ overflowX: 'hidden' }}>
+        <Content sx={{ overflowX: 'hidden', padding: 0 }}>
             <Form $gap={0}>
                 <GeneralOptions
                     credentialsCollectionData={credentialsCollectionFormState}
@@ -60,6 +61,7 @@ const EditCredentialsCollection: FC<EditCredentialsCollectionProps> = ({ collect
                         canEdit={canEdit}
                         isEditDialogOpen={open}
                     /> */}
+                <SharedWithUsers/>
             </Form>
         </Content>
     );

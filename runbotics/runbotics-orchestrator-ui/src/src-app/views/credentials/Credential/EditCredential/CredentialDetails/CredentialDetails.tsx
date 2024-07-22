@@ -7,7 +7,7 @@ import { grey } from '@mui/material/colors';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { StyledGridContainer } from '../CredentialAttribute.style';
+import { StyledGridContainer } from '../CredentialAttribute/Attribute.styles';
 
 const CredentialDetails = ({ currentAttribute, handleFieldChange }) => {
     const { translate } = useTranslations();

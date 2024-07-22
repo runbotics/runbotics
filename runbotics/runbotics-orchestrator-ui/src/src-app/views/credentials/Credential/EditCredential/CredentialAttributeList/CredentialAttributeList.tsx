@@ -10,9 +10,11 @@ import { addAttribute, deleteAttribute, fetchAttributes, updateAttribute } from 
 import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
 
 import { AddAttribute } from '../CredentialAttribute/AddAttribute';
-import CredentialAttribute from '../CredentialAttribute/CredentialAttribute';
-import { EditAtributeDto, initialCredentialAttributeValues } from '../CredentialAttribute/CredentialAttribute.types';
-import CredentialAttributeCustom from '../CredentialAttribute/CredentialAttributeCustom';
+import { DisplayAttribute, EditAtributeDto, initialCredentialAttributeValues } from '../CredentialAttribute/Attribute.types';
+
+import CustomAttribute from '../CredentialAttribute/CustomAttribute';
+import TemplateAttribute from '../CredentialAttribute/TemplateAttribute';
+
 
 interface CredentialAttributesListProps {
     templateId: string;
@@ -67,13 +69,13 @@ const CredentialAttributesList: FC<CredentialAttributesListProps> = ({templateId
 
     const templateAttributesCards = credentialTemplate.attributes.map(attribute => (
         <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12}>
-            <CredentialAttribute attribute={attribute} setAttribute={handleAttributeChange}/>
+            <TemplateAttribute attribute={attribute as DisplayAttribute} setAttribute={handleAttributeChange}/>
         </Grid>
     ));
 
     const customAttributesCards = attributes.map(attribute => (
         <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12}>
-            <CredentialAttributeCustom attribute={attribute} setAttribute={handleAttributeChange} deleteAttribute={handleAttributeDelete} template={credentialTemplate} />
+            <CustomAttribute attribute={attribute} setAttribute={handleAttributeChange} deleteAttribute={handleAttributeDelete} />
         </Grid>
     ));
 

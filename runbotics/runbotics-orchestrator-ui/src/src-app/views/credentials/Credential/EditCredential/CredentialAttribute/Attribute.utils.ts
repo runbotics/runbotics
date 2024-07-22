@@ -1,15 +1,14 @@
-import { Attribute } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
+import { DisplayAttribute } from './Attribute.types';
 
-export const initialAttributes: Attribute[] = [
+// TO_REMOVE
+export const initialAttributes: DisplayAttribute[] = [
     {
         id: 'a_1',
         name: 'Atrybucik testowy',
         description: 'Do testowanka',
         value: '',
         masked: true,
-        credentialId: 'credId1',
-        createdBy: 'createdBy@email',
-        createdOn: '2024-04-05'
+        credentialId: 'credId1'
     },
     {
         id: 'a_2',
@@ -17,9 +16,7 @@ export const initialAttributes: Attribute[] = [
         description: 'Na potrzebny testowania',
         value: '',
         masked: true,
-        credentialId: 'credId1',
-        createdBy: 'createdBy@email',
-        createdOn: '2024-04-05'
+        credentialId: 'credId1'
     },
     {
         id: 'a_2',
@@ -27,9 +24,7 @@ export const initialAttributes: Attribute[] = [
         description: 'Na potrzebny testowania',
         value: '',
         masked: true,
-        credentialId: 'credId1',
-        createdBy: 'createdBy@email',
-        createdOn: '2024-04-05'
+        credentialId: 'credId1'
     },
     {
         id: 'a_2',
@@ -37,9 +32,7 @@ export const initialAttributes: Attribute[] = [
         description: 'Na potrzebny testowania',
         value: '',
         masked: true,
-        credentialId: 'credId1',
-        createdBy: 'createdBy@email',
-        createdOn: '2024-04-05'
+        credentialId: 'credId1'
     },
     {
         id: 'a_2',
@@ -47,9 +40,7 @@ export const initialAttributes: Attribute[] = [
         description: 'Na potrzebny testowania',
         value: '',
         masked: true,
-        credentialId: 'credId1',
-        createdBy: 'createdBy@email',
-        createdOn: '2024-04-05'
+        credentialId: 'credId1'
     },
     {
         id: 'a_2',
@@ -57,9 +48,6 @@ export const initialAttributes: Attribute[] = [
         description: 'Na potrzebny testowania',
         value: '',
         masked: true,
-        credentialId: 'credId1',
-        createdBy: 'createdBy@email',
-        createdOn: '2024-04-05'
-    },
-    
+        credentialId: 'credId1'
+    }
 ];

@@ -4,11 +4,11 @@ import axios from 'axios';
 
 import {
     Attribute,
-    BasicAttributeDto,
     CreateAttributeDto,
+    DisplayAttribute,
     EditAtributeDto
-} from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.types';
-import { initialAttributes } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/CredentialAttribute.utils';
+} from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/Attribute.types';
+import { initialAttributes } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/Attribute.utils';
 
 const env = 'DEV';
 const PARENT_URL_PATH = 'credentialId/credential-attributes';
@@ -18,7 +18,7 @@ export const fetchAttributes = createAsyncThunk('attributes/fetchAttributes', (c
         return initialAttributes.filter(attr => attr.credentialId === credentialId);
     }
 
-    return axios.get<BasicAttributeDto[]>(PARENT_URL_PATH).then(response => response.data);
+    return axios.get<DisplayAttribute[]>(PARENT_URL_PATH).then(response => response.data);
 });
 
 export const addAttribute = createAsyncThunk('attribute/create', (attribute: CreateAttributeDto, { rejectWithValue }) => {
@@ -33,14 +33,13 @@ export const addAttribute = createAsyncThunk('attribute/create', (attribute: Cre
 });
 
 export const updateAttribute = createAsyncThunk('attributes/update/:id', (attribute: EditAtributeDto, { rejectWithValue }) => {
-    const {name, value, description} = attribute;
+    const { name, value, description } = attribute;
 
     return axios
-        .patch<Attribute>(`${PARENT_URL_PATH}/${attribute.id}`, {name, value, description})
+        .patch<Attribute>(`${PARENT_URL_PATH}/${attribute.id}`, { name, value, description })
         .then(response => response.data)
         .catch(error => rejectWithValue(error.response.data));
-}
-);
+});
 
 export const deleteAttribute = createAsyncThunk<string, string>('attributes/delete/:id', (attributeId, { rejectWithValue }) =>
     axios

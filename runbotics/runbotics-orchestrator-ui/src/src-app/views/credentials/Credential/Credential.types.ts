@@ -1,4 +1,4 @@
-import { BasicAttributeDto, CredentialTemplateAttribute } from './EditCredential/CredentialAttribute/CredentialAttribute.types';
+import { BasicAttributeDto, CredentialTemplateAttribute } from './EditCredential/CredentialAttribute/CredentiaAttribute.types';
 import { CollectionColorHex } from '../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 
 export enum CredentialTemplateNames {
