@@ -10,7 +10,6 @@ import styled from 'styled-components';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
-import { DeleteRejectResponse } from '#src-app/views/variable/Variable.types';
 
 import { DeleteDialogState } from './Table';
 
@@ -74,16 +73,12 @@ const DeleteGlobalVariableDialog:
             if (!globalVariable) return;
 
             dispatch(globalVariableActions.deleteGlobalVariable({ resourceId: globalVariable.id }))
-                .then((response) => {
-                    const rejectResponse = response as DeleteRejectResponse;
-                    if (rejectResponse.payload) {
-                        errorProcessUsesVariableSnackbar(rejectResponse.payload);
-                    } else {
-                        successSnackbar();
-                    }
+                .unwrap()
+                .then(() => {
+                    successSnackbar();
                 })
-                .catch(() => {
-                    errorSnackbar();
+                .catch((error: { message: string[] }) => {
+                    errorProcessUsesVariableSnackbar(error.message);
                 });
             onClose();
         };

@@ -22,6 +22,7 @@ import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
+import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 
 @Entity({ name: 'process', synchronize: false })
 export class ProcessEntity implements IProcess {
@@ -88,7 +89,15 @@ export class ProcessEntity implements IProcess {
         inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
     })
     subscribers: IUser[];
-    
+
     @OneToOne(() => ProcessContext, processContext => processContext.process)
     context: ProcessContext | null;
+
+    @ManyToMany(() => GlobalVariable)
+    @JoinTable({
+        name: 'process_global_variable',
+        joinColumn: { name: 'process_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'global_variable_id', referencedColumnName: 'id' }
+    })
+    globalVariables: GlobalVariable[];
 }

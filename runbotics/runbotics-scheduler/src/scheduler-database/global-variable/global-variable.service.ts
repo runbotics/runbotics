@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Logger } from '#/utils/logger';
 import { UserEntity } from '#/database/user/user.entity';
+import { ProcessEntity } from '#/database/process/process.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
 import { GlobalVariable } from './global-variable.entity';
@@ -19,6 +20,8 @@ export class GlobalVariableService {
     constructor(
         @InjectRepository(GlobalVariable)
         private readonly globalVariableRepository: Repository<GlobalVariable>,
+        @InjectRepository(ProcessEntity)
+        private readonly processRepository: Repository<ProcessEntity>,
     ) {}
 
     getAll(tenantId: string, user: UserEntity) {
@@ -41,7 +44,7 @@ export class GlobalVariableService {
 
         return this.globalVariableRepository
             .findOne({ where: findOptions, relations })
-            .then(this.formatUserDTO);
+            .then(this.formatUserDTO); // repair NULLLL
     }
 
     async create(
@@ -98,6 +101,14 @@ export class GlobalVariableService {
     }
 
     async delete(tenantId: string, user: UserEntity, id: number) {
+        const processesAssociatedWithGlobalVariable = await this.processRepository
+            .findBy({ globalVariables: { id } });
+
+        if (processesAssociatedWithGlobalVariable.length) {
+            const processNames = processesAssociatedWithGlobalVariable.map(process => process.name);
+            throw new BadRequestException(processNames, 'RelatedProcesses');
+        }
+
         const findOptions: FindOptionsWhere<GlobalVariable> = {
             tenantId, id,
             ...(!isTenantAdmin(user) && { creator: { id: user.id } })
