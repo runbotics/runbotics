@@ -5,7 +5,6 @@ import { ConfigModule } from '#/config/config.module';
 import { AuthorityModule } from './authority/authority.module';
 import { UserModule } from './user/user.module';
 import { BotModule } from './bot/bot.module';
-import { GlobalVariableModule } from './global-variable/global-variable.module';
 import { ProcessModule } from './process/process.module';
 import { ProcessInstanceModule } from './process-instance/process-instance.module';
 import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
@@ -44,7 +43,6 @@ import { GuestModule } from './guest/guest.module';
         BotModule,
         BotCollectionModule,
         BotSystemModule,
-        GlobalVariableModule,
         ProcessModule,
         ProcessInstanceModule,
         ProcessInstanceEventModule,
@@ -61,7 +59,6 @@ import { GuestModule } from './guest/guest.module';
         BotModule,
         BotCollectionModule,
         BotSystemModule,
-        GlobalVariableModule,
         ProcessModule,
         ProcessInstanceModule,
         ProcessInstanceEventModule,
