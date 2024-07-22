@@ -21,7 +21,6 @@ const buildCredentialAttributeExtraReducers =(builder:ActionReducerMapBuilder<Cr
         })
         .addCase(addAttribute.fulfilled, (state, action) => {
             state.loading = false;
-            console.log(action.payload);
             state.data.push(action.payload);
         })
         .addCase(addAttribute.rejected, (state) => {
@@ -43,7 +42,6 @@ const buildCredentialAttributeExtraReducers =(builder:ActionReducerMapBuilder<Cr
         })
         .addCase(deleteAttribute.fulfilled, (state, action) => {
             state.loading = false;
-            console.log('delete', action.payload);
             state.data = state.data.filter(attribute => attribute.id !== action.payload);
         })
         .addCase(deleteAttribute.rejected, (state) => {
