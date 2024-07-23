@@ -12,7 +12,6 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
-import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 
 @Entity({ schema: 'scheduler' })
 export class Credential {
@@ -75,7 +74,10 @@ export class Credential {
     @JoinColumn({ name: 'template_id' })
     template: CredentialTemplate;
 
-    @OneToMany(() => Attribute, (attribute) => attribute.credential)
+    @Column({ name: 'template_id' })
+    templateId: string;
+
+    @OneToMany(() => Attribute, attribute => attribute.credential, { cascade: true })
     @JoinColumn({ name: 'credential_id' })
     attributes: Attribute[];
 }

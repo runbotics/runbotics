@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateCredentialTemplateDto, createCredentialTemplateSchema } from './dto/create-credential-template.dto';
 import { UpdateCredentialTemplateDto } from './dto/update-credential-template.dto';
 import { Repository } from 'typeorm';
@@ -6,11 +6,14 @@ import { CredentialTemplate } from './credential-template.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CredentialTemplateAttributeService } from '../credential-template-attribute/credential-template-attribute.service';
 import { AuthRequest } from '#/types';
+import { CredentialTemplateAttribute } from '../credential-template-attribute/credential-template-attribute.entity';
 
 const relations = ['attributes'];
 
 @Injectable()
 export class CredentialTemplateService {
+  private readonly logger: Logger = new Logger(CredentialTemplateService.name);
+
   constructor(
     @InjectRepository(CredentialTemplate)
     private readonly templateRepo: Repository<CredentialTemplate>,
@@ -18,23 +21,22 @@ export class CredentialTemplateService {
   ) { }
 
   async create(templateDto: CreateCredentialTemplateDto, request: AuthRequest) {
-    const { isForTenantOnly, attributes, ...dto } = templateDto;
-    const template = await this.templateRepo.create({
-      ...dto,
-      tenantId: isForTenantOnly ? request.user.tenantId : null,
+    const template = new CredentialTemplate();
+
+    const attributes = templateDto.attributes.map(attributeDto => {
+      const attribute = new CredentialTemplateAttribute();
+      attribute.templateId = template.id;
+      attribute.name = attributeDto.name;
+      attribute.description = attributeDto.description;
+      attribute.type = attributeDto.type;
+      attribute.required = attributeDto.required;
+      return attribute;
     });
 
-    const savedTemplate = await this.templateRepo.save(template)
-      .catch((error) => {
-        throw new BadRequestException(error.message);
-      });
-
-    await Promise.all(
-      attributes.map(attribute => this.templateAttributeService.create({ ...attribute, templateId: savedTemplate.id }))
-    )
-      .catch((error) => {
-        throw new BadRequestException(error.message);
-      });
+    template.name = templateDto.name;
+    template.description = templateDto.description;
+    template.attributes = attributes;
+    template.tenantId = templateDto.isForTenantOnly ? request.user.tenantId : null;
 
     return this.templateRepo.save(template)
       .then((savedTemplate) => savedTemplate)
@@ -66,34 +68,42 @@ export class CredentialTemplateService {
       },
     });
 
-    if (!template) {
-      throw new NotFoundException('Template not found');
-    }
-
     return template;
+  }
+
+  async findOneByIdAndTenantId(id: string, tenantId: string) {
+    return this.templateRepo.findOne({
+      relations,
+      where: {
+        id,
+        tenantId: null
+      }
+    });
   }
 
   async updateById(id: string, templateDto: UpdateCredentialTemplateDto, request: AuthRequest) {
     const template = await this.findOneById(id);
 
-    const { isForTenantOnly: _, attributes: attributesToUpdate, ...templateToUpdate } = {
-      ...template,
-      ...templateDto,
-      tenantId: templateDto?.isForTenantOnly ? request.user.tenantId : null,
-    };
-
-    if (!template) {
-      throw new NotFoundException('Template not found');
-    }
-
-    const updatingPromises = attributesToUpdate.map((attribute) => {
-      return this.templateAttributeService.updateByNameAndTemplateId(attribute.name, id, attribute);
+    const attributesToUpdate = templateDto.attributes.map(attributeDto => {
+      const attribute = new CredentialTemplateAttribute();
+      attribute.templateId = template.id;
+      attribute.name = attributeDto.name;
+      attribute.description = attributeDto.description;
+      attribute.type = attributeDto.type;
+      attribute.required = attributeDto.required;
+      return attribute;
     });
 
-    const updatingResponses = await Promise.all(updatingPromises);
+    const templateToUpdate = new CredentialTemplate();
+    templateToUpdate.id = template.id;
+    templateToUpdate.name = templateDto.name;
+    templateToUpdate.description = templateDto.description;
+    templateToUpdate.tenantId = templateDto.isForTenantOnly ? request.user.tenantId : null;
+    templateToUpdate.attributes = attributesToUpdate;
 
-    return this.templateRepo.update({ id }, templateToUpdate)
-      .then((updatedTemplate) => ({ ...updatedTemplate, attributes: updatingResponses }))
+    // this.logger.debug('Template: ', templateToUpdate);
+
+    return this.templateRepo.save(templateToUpdate)
       .catch((error) => {
         throw new BadRequestException(error.message);
       });
@@ -101,10 +111,6 @@ export class CredentialTemplateService {
 
   async removeById(id: string) {
     const template = await this.findOneById(id);
-
-    if (!template) {
-      throw new NotFoundException('Template not found');
-    }
 
     return this.templateRepo.remove(template);
   }

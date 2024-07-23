@@ -21,7 +21,7 @@ export class CredentialController {
 
   @Get()
   findAllUserAccessible(@Req() request: AuthRequest) {
-    return this.credentialService.findAllUserAccessible(request);
+    return this.credentialService.findAllAccessibleByCollectionId(request);
   }
 
   @Get(':id')

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { CredentialTemplateService } from './credential-template.service';
 import { CredentialTemplateController } from './credential-template.controller';
 import { CredentialTemplate } from './credential-template.entity';

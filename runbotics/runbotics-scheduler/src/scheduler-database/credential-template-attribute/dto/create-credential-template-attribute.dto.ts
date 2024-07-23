@@ -6,6 +6,6 @@ export const createCredentialTemplateAttributeSchema = z.object({
     type: z.nativeEnum(CredentialTemplateAttributeType),
     required: z.boolean(),
     description: z.string().optional(),
-});
+}).strict();
 
 export type CreateCredentialTemplateAttributeDto = z.infer<typeof createCredentialTemplateAttributeSchema>;

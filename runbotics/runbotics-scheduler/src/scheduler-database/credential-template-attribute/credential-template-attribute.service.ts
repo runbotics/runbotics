@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CredentialTemplateAttribute } from './credential-template-attribute.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,16 +10,16 @@ const relations = ['template'];
 export class CredentialTemplateAttributeService {
     constructor(
         @InjectRepository(CredentialTemplateAttribute)
-        private readonly templateAttributeRepository: Repository<CredentialTemplateAttribute>,
+        private readonly templateAttributeRepo: Repository<CredentialTemplateAttribute>,
     ) {}
 
     async create(createData: Partial<CredentialTemplateAttribute>): Promise<CredentialTemplateAttribute> {
-        const newAttribute = this.templateAttributeRepository.create(createData);
-        return this.templateAttributeRepository.save(newAttribute);
+        const newAttribute = this.templateAttributeRepo.create(createData);
+        return this.templateAttributeRepo.save(newAttribute);
     }
 
     async findById(id: string): Promise<CredentialTemplateAttribute> {
-        return this.templateAttributeRepository.findOne({
+        return this.templateAttributeRepo.findOne({
             where: {
                 id,
             },
@@ -28,22 +28,20 @@ export class CredentialTemplateAttributeService {
     }
 
     async update(id: string, updateData: Partial<CredentialTemplateAttribute>): Promise<CredentialTemplateAttribute> {
-        await this.templateAttributeRepository.update(id, updateData);
-        return this.findById(id);
+        const attributeToUpdate = this.templateAttributeRepo.create({ ...updateData, id });
+
+        return this.templateAttributeRepo.save(attributeToUpdate);
     }
 
     async updateByNameAndTemplateId(name: string, templateId: string, updateData: UpdateCredentialTemplateAttributeDto): Promise<UpdateCredentialTemplateAttributeDto> {
-        await this.templateAttributeRepository.update({ name, templateId }, updateData);
-        return this.templateAttributeRepository.findOne({
-            where: {
-                name,
-                templateId,
-            },
-            relations
-        });
+        const attributeToUpdate = this.templateAttributeRepo.create({ ...updateData, name, templateId });
+
+        return this.templateAttributeRepo.save(attributeToUpdate);
     }
 
-    async deleteById(id: string): Promise<void> {
-        await this.templateAttributeRepository.delete(id);
+    async deleteById(id: string)  {
+        const attribute = await this.findById(id);
+
+        return this.templateAttributeRepo.remove(attribute);
     }
 }

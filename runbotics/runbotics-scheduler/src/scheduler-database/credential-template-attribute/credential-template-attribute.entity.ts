@@ -1,8 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
 import { CredentialTemplateAttributeType } from 'runbotics-common';
 
-@Entity()
+@Entity({ schema: 'scheduler' })
 export class CredentialTemplateAttribute {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -20,8 +20,9 @@ export class CredentialTemplateAttribute {
     type: CredentialTemplateAttributeType;
 
     @ManyToOne(() => CredentialTemplate, credentialTemplate => credentialTemplate.attributes)
+    @JoinColumn({ name: 'template_id' })
     template: CredentialTemplate;
 
-    @Column({ name: 'credential_template_id' })
+    @Column({ name: 'template_id' })
     templateId: string;
 }

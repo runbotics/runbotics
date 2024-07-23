@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { CredentialTemplateAttribute } from '../credential-template-attribute/credential-template-attribute.entity';
 import { Credential } from '../credential/credential.entity';
 
-@Entity()
+@Entity({ schema: 'scheduler' })
 export class CredentialTemplate {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -21,7 +21,7 @@ export class CredentialTemplate {
     @Column({ name: 'description', nullable: true })
     description: string;
 
-    @OneToMany(() => CredentialTemplateAttribute, attribute => attribute.template)
+    @OneToMany(() => CredentialTemplateAttribute, attribute => attribute.template, { cascade: true })
     attributes: CredentialTemplateAttribute[];
 
     @ManyToOne(() => Credential, credential => credential.template)
