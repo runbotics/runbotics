@@ -3,13 +3,13 @@
 ### Visual C++ Build Tools & Python
 
 ```bash
-$ choco install python visualcpp-build-tools
+choco install python visualcpp-build-tools
 ```
 
 ### @microsoft/rush
 
 ```bash
-$ npm install --global @microsoft/rush
+npm install --global @microsoft/rush
 ```
 
 ### Docker
@@ -20,13 +20,19 @@ Install docker on your environment in a way that suits you.
 Install all the required dependencies via
 
 ```bash
-$ rush install
+rush install
 ```
 
-Install tool to ease local development (running applications, bump version)
+Install [CLI](https://github.com/runbotics/runbotics/pkgs/npm/runbotics-cli) tool to ease local development (running applications, bump version)
 
 ```bash
-npm install -g @runbotics/runbotics-cli
+# Login to GitHub npm packages registry
+npm login --registry https://npm.pkg.github.com
+
+# Pass your GitHub login details. Instead of password use your personal access token
+
+# Install package globally
+npm install -g @runbotics/runbotics-cli --registry https://npm.pkg.github.com/runbotics
 ```
 
 # Docker environment
@@ -38,10 +44,10 @@ Docker compose [config](https://github.com/runbotics/runbotics/blob/master/runbo
 
 ```bash
 # Create containers
-$ docker-compose -f db.yml up -d
+docker-compose -f db.yml up -d
 
 # Kill all related containers
-$ docker-compose -f db.yml down
+docker-compose -f db.yml down
 ```
 
 ### Services as containers
@@ -49,13 +55,13 @@ Main docker compose [config](https://github.com/runbotics/runbotics/blob/master/
 
 ```bash
 # Create containers
-$ docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose.yml up -d
 
 # Kill all related containers
-$ docker-compose down
+docker-compose down
 
 # Pull the latest images 
-$ docker-compose pull
+docker-compose pull
 ```
 
 # Packages
