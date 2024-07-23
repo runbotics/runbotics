@@ -5,7 +5,6 @@ import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
-import { error } from 'console';
 
 const INVITE_CODE_PATH = 'invite-code';
 
