@@ -5,6 +5,7 @@ import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
+import { error } from 'console';
 
 const INVITE_CODE_PATH = 'invite-code';
 
@@ -42,9 +43,10 @@ export const partialUpdate = createAsyncThunk<Tenant, Tenant>(
 
 export const deleteOne = createAsyncThunk<void, number>(
     'tenants/delete',
-    (id) => axios.delete(`/api/scheduler/tenants/${id}`)
+    (id, { rejectWithValue }) => axios.delete(`/api/scheduler/tenants/${id}`)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data))
 );
-
 
 export const getInviteCode = ApiTenantResource
     .get<TenantInviteCode>('tenants/getInviteCode', INVITE_CODE_PATH);

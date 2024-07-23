@@ -102,12 +102,12 @@ export class TenantService {
     async delete(tenantId: string) {
         await this.tenantRepository
             .findOneByOrFail({ id: tenantId }).catch(() => {
-                throw new BadRequestException('Cannot find tenant with provided id');
+                throw new BadRequestException('Cannot find tenant with provided id', 'BadTenantID');
             });
 
         await this.tenantRepository
             .delete(tenantId).catch(() => {
-                throw new BadRequestException('Cannot delete tenant related to other resources');
+                throw new BadRequestException('Cannot delete tenant related to other resources', 'RelatedTenant');
             });
     }
 }
