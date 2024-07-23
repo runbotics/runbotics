@@ -16,6 +16,7 @@ export const updateCredentialCollectionSchema = z
             .array()
             .optional(),
     })
+    .strict()
     .required()
     .refine(
         (input) =>

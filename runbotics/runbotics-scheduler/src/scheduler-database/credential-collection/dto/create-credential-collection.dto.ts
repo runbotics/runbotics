@@ -5,7 +5,6 @@ import { PrivilegeType } from '#/scheduler-database/credential-collection-user/c
 export const createCredentialCollectionSchema = z
     .object({
         name: z.string(),
-        templateId: z.string(),
         description: z.string().optional().nullable(),
         accessType: z.nativeEnum(AccessType).optional(),
         color: z.nativeEnum(Color).optional(),

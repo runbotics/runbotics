@@ -12,6 +12,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
+import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 
 @Entity({ schema: 'scheduler' })
 export class Credential {
