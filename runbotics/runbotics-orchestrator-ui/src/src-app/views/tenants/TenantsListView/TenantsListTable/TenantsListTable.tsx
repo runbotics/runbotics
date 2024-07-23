@@ -28,7 +28,7 @@ const TenantsListTable: VFC<TenantListTableProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    const tenantsListColumns = useTenantsListColumns();
+    const tenantsListColumns = useTenantsListColumns(pageSize, openTenantEditDialog);
     const { loading, allByPage } = useSelector(tenantsSelector);
 
     return (
@@ -47,7 +47,6 @@ const TenantsListTable: VFC<TenantListTableProps> = ({
                         pageSize={pageSize}
                         onPageSizeChange={(newPageSize) => onPageSizeChange(newPageSize)}
                         disableSelectionOnClick
-                        onRowClick={({ row }) => openTenantEditDialog(row)}
                         paginationMode='server'
                         rowsPerPageOptions={ROWS_PER_PAGE}
                         localeText={{
