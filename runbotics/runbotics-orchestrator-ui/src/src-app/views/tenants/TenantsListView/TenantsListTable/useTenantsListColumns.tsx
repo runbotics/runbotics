@@ -1,5 +1,5 @@
-import { Link, IconButton } from '@mui/material';
 import EditOutlined from '@mui/icons-material/EditOutlined';
+import { Link, IconButton } from '@mui/material';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 import { UserDTO } from 'runbotics-common';
 
@@ -7,7 +7,6 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { formatDate } from '#src-app/utils/dateFormat';
 
 import { TenantField } from '../../TenantsBrowseView/TenantsBrowseView.utils';
-import { event } from 'min-dom';
 
 const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => {
     const { translate } = useTranslations();
