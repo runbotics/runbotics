@@ -4,6 +4,7 @@ const tableListTranslations = {
     'Tenants.List.Table.Columns.CreatedDate': 'Created date',
     'Tenants.List.Table.Columns.UpdatedDate': 'Updated date',
     'Tenants.List.Table.Columns.LastModifiedBy': 'Last modified by',
+    'Tenants.List.Table.Columns.Edit': 'Edit',
     'Tenants.List.Table.Error.Rows': 'No tenants found',
 };
 

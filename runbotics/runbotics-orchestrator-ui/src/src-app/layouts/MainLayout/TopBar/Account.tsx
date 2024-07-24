@@ -109,9 +109,14 @@ const Account: FC = () => {
                 sx={{ color: theme.palette.primary.contrastText }}
             >
                 <Hidden lgDown>
-                    <Typography variant="h5" sx={{ fontSize: '0.875rem' }}>
-                        {auth.user.email}
-                    </Typography>
+                    <Box display="flex" flexDirection="column" alignItems="flex-end">
+                        <Typography variant="h5" sx={{ fontSize: '0.875rem' }} align="right">
+                            {auth.user.email}
+                        </Typography>
+                        <Typography variant="subtitle1" sx={{ fontSize: '0.75rem' }}>
+                            {auth.user.tenant.name}
+                        </Typography>
+                    </Box>
                 </Hidden>
                 <Avatar alt={translate('Account.User')} className={classes.avatar} src={auth.user.avatar} />
             </Box>

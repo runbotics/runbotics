@@ -27,6 +27,7 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
     const { refreshSearch } = useTenantSearch();
     const [name, setName] = useState(undefined);
     const isFieldEmpty = name?.trim() === '';
+    const isNameTooShort = name?.length > 0 && name?.length < 2;
 
     const handleNameInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -69,8 +70,10 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
                             label={translate('Tenants.Actions.Modals.CreateModal.Field.Name')}
                             value={name}
                             onChange={handleNameInputChange}
-                            error={isFieldEmpty}
+                            error={isFieldEmpty || isNameTooShort}
                             {...(isFieldEmpty && { helperText: translate('Tenants.List.Edit.Form.Error.FieldRequired') })}
+                            {...(isNameTooShort && { helperText: translate('Tenants.List.Edit.Form.Error.FieldTooShort') })}
+
                         />
                     </Form>
                 </Content>

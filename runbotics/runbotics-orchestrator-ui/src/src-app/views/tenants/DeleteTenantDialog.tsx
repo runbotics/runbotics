@@ -9,6 +9,7 @@ import useTenantSearch from '#src-app/hooks/useTenantSearch';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
+import modalsActionsTranslations from '#src-app/translations/en/tenants/actions/modals';
 
 interface DeleteTenantDialogProps {
     open: boolean;
@@ -43,10 +44,12 @@ const DeleteTenantDialog: VFC<DeleteTenantDialogProps> = ({
                 );
                 refreshSearch();
             })
-            .catch(() => {
+            .catch(({ error }) => {
                 onClose();
                 enqueueSnackbar(
-                    translate('Tenants.Actions.Modals.DeleteModal.Message.Fail'),
+                    translate(
+                        `Tenants.Actions.Modals.DeleteModal.Message.Fail${error ? `.${error}` : ''}` as keyof typeof modalsActionsTranslations
+                    ),
                     { variant: 'error' }
                 );
             });

@@ -42,9 +42,10 @@ export const partialUpdate = createAsyncThunk<Tenant, Tenant>(
 
 export const deleteOne = createAsyncThunk<void, number>(
     'tenants/delete',
-    (id) => axios.delete(`/api/scheduler/tenants/${id}`)
+    (id, { rejectWithValue }) => axios.delete(`/api/scheduler/tenants/${id}`)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data))
 );
-
 
 export const getInviteCode = ApiTenantResource
     .get<TenantInviteCode>('tenants/getInviteCode', INVITE_CODE_PATH);

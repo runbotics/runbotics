@@ -1,3 +1,5 @@
+import EditOutlined from '@mui/icons-material/EditOutlined';
+import { Link, IconButton } from '@mui/material';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 import { UserDTO } from 'runbotics-common';
 
@@ -6,7 +8,7 @@ import { formatDate } from '#src-app/utils/dateFormat';
 
 import { TenantField } from '../../TenantsBrowseView/TenantsBrowseView.utils';
 
-const useTenantsListColumns = (): GridColDef[] => {
+const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => {
     const { translate } = useTranslations();
 
     return [
@@ -14,7 +16,15 @@ const useTenantsListColumns = (): GridColDef[] => {
             field: TenantField.NAME,
             headerName: translate('Tenants.List.Table.Columns.Name'),
             filterable: false,
-            flex: 0.6
+            flex: 0.6,
+            renderCell: (params) => (
+                <Link 
+                    href={`users?page=0&pageSize=${pageSize}&tenantId=${params.row.id}`}
+                    style={{ textDecoration: 'none' }}
+                >
+                    {params.value}
+                </Link>
+            )
         },
         {
             field: TenantField.CREATED_BY,
@@ -42,6 +52,17 @@ const useTenantsListColumns = (): GridColDef[] => {
             headerName: translate('Tenants.List.Table.Columns.LastModifiedBy'),
             filterable: false,
             flex: 0.5
+        },
+        {
+            field: TenantField.EDIT,
+            headerName: translate('Tenants.List.Table.Columns.Edit'),
+            filterable: false,
+            flex: 0.2,
+            renderCell: (params) => (
+                <IconButton onClick={() => openTenantEditDialog(params.row)} size="small">
+                    <EditOutlined style={{ fontSize: '22px' }} />
+                </IconButton>
+            )
         }
     ];
 };

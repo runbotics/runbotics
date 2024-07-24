@@ -4,9 +4,12 @@ export const DataGridStyle = {
         padding: 0
     },
     '& .MuiDataGrid-row:hover': {
-        cursor: 'pointer',
+        backgroundColor: 'transparent'
     },
     '& .MuiDataGrid-cell:focus': {
         outline: 0,
+    },
+    '& .MuiDataGrid-cell:focus-within': {
+        outline: 'none !important',
     }
 };
