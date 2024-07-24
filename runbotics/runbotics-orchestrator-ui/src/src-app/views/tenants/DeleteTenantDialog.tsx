@@ -45,7 +45,6 @@ const DeleteTenantDialog: VFC<DeleteTenantDialogProps> = ({
                 refreshSearch();
             })
             .catch(({ error }) => {
-                console.log(error)
                 onClose();
                 enqueueSnackbar(
                     translate(
