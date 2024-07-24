@@ -82,14 +82,6 @@ export class ProcessEntity implements IProcess {
     @JoinColumn({ name: 'editor_id', referencedColumnName: 'id' })
     editor: IUser;
 
-    @ManyToMany(() => UserEntity)
-    @JoinTable({
-        name: 'notification_process',
-        joinColumn: { name: 'process_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    })
-    subscribers: IUser[];
-
     @OneToOne(() => ProcessContext, processContext => processContext.process)
     context: ProcessContext | null;
 

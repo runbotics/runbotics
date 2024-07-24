@@ -5,8 +5,6 @@ import {
     ManyToOne,
     JoinColumn,
     Generated,
-    ManyToMany,
-    JoinTable,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import {
@@ -52,12 +50,4 @@ export class BotEntity implements IBot {
     @ManyToOne(() => BotCollectionEntity)
     @JoinColumn([{ name: 'collection_id', referencedColumnName: 'id' }])
     collection: IBotCollection;
-
-    @ManyToMany(() => UserEntity)
-    @JoinTable({
-        name: 'notification_bot',
-        joinColumn: { name: 'bot_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    })
-    subscribers: IUser[];
 }

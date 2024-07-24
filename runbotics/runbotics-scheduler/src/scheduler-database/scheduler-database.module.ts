@@ -5,6 +5,8 @@ import { ProcessContextSecretModule } from '#/scheduler-database/process-context
 import { DatabaseModule } from '#/database/database.module';
 import { TenantModule } from '#/scheduler-database/tenant/tenant.module';
 import { GlobalVariableModule } from './global-variable/global-variable.module';
+import { NotificationBotModule } from './notification-bot/notification-bot.module';
+import { NotificationProcessModule } from './notification-process/notification-process.module';
 
 @Module({
     imports: [
@@ -14,6 +16,8 @@ import { GlobalVariableModule } from './global-variable/global-variable.module';
         ProcessContextSecretModule,
         TenantModule,
         GlobalVariableModule,
+        NotificationBotModule,
+        NotificationProcessModule,
     ],
     exports: [],
 })
