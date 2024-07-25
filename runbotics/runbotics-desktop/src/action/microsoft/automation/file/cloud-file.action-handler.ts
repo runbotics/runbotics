@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
-import { fromFile } from 'file-type';
+import mimeTypes from 'mime-types';
 
 import { OneDriveService } from '#action/microsoft/one-drive';
 import { SharePointService } from '#action/microsoft/share-point';
@@ -210,23 +210,23 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         };
     }
 
-    private async readLocalFile(path: string) {
-        const content = readFileSync(path);
-        const { mime } = await fromFile(path);
+    private async readLocalFile(filePath: string) {
+        const content = readFileSync(filePath);
+        const mime = mimeTypes.lookup(filePath);
 
         return {
             content,
             contentType: mime,
         };
     }
-    
+
     private async getSharepointListItems({ listName, siteName }: SharepointGetListItems){
         const site = (await this.sharePointService.getSitesByName(siteName)).value[0];
-        
-        if(!site){
+
+        if (!site) {
             throw new Error(`Site "${siteName}" wasn't found`);
         }
-        
+
         return this.sharePointService.getListItems(site.id, listName);
     }
 }
