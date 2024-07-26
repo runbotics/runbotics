@@ -1,11 +1,12 @@
 import { NotificationBotType } from 'runbotics-common';
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 import { UserEntity } from '#/database/user/user.entity';
 import { BotEntity } from '#/database/bot/bot.entity';
 
 
 @Entity({ name: 'notification_bot' })
+@Unique(['user', 'bot', 'type'])
 export class NotificationBot {
     @PrimaryGeneratedColumn('uuid')
     id: string;

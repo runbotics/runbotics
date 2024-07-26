@@ -1,11 +1,12 @@
 import { NotificationProcessType } from 'runbotics-common';
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 import { ProcessEntity } from '#/database/process/process.entity';
 import { UserEntity } from '#/database/user/user.entity';
 
 
 @Entity({ name: 'notification_process' })
+@Unique(['user', 'process', 'type'])
 export class NotificationProcess {
     @PrimaryGeneratedColumn('uuid')
     id: string;
