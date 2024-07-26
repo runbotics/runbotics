@@ -55,7 +55,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
 
     async uploadFile(input: CloudFileUploadFileActionInput) {
         const fileName = input.filePath.split(path.sep).at(-1);
-        const { content, contentType } = await this.readLocalFile(input.filePath);
+        const { content, contentType } = this.readLocalFile(input.filePath);
 
         const cloudFilePath = `${input.cloudDirectoryPath}/${fileName}`;
 
@@ -210,9 +210,12 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         };
     }
 
-    private async readLocalFile(filePath: string) {
+    private readLocalFile(filePath: string) {
         const content = readFileSync(filePath);
         const mime = mimeTypes.lookup(filePath);
+        if (!mime) {
+            throw new Error('Unable to determine the mime type');
+        }
 
         return {
             content,
