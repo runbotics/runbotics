@@ -1,4 +1,4 @@
-import EditOutlined from '@mui/icons-material/EditOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 import { Link, IconButton } from '@mui/material';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 import { UserDTO } from 'runbotics-common';
@@ -60,7 +60,7 @@ const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => 
             flex: 0.2,
             renderCell: (params) => (
                 <IconButton onClick={() => openTenantEditDialog(params.row)} size="small">
-                    <EditOutlined style={{ fontSize: '22px' }} />
+                    <EditIcon style={{ fontSize: '22px' }} />
                 </IconButton>
             )
         }
