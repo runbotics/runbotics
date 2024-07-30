@@ -28,8 +28,6 @@ export class CredentialTemplateService {
       attribute.templateId = template.id;
       attribute.name = attributeDto.name;
       attribute.description = attributeDto.description;
-      attribute.type = attributeDto.type;
-      attribute.required = attributeDto.required;
       return attribute;
     });
 
@@ -89,8 +87,6 @@ export class CredentialTemplateService {
       attribute.templateId = template.id;
       attribute.name = attributeDto.name;
       attribute.description = attributeDto.description;
-      attribute.type = attributeDto.type;
-      attribute.required = attributeDto.required;
       return attribute;
     });
 
@@ -100,8 +96,6 @@ export class CredentialTemplateService {
     templateToUpdate.description = templateDto.description;
     templateToUpdate.tenantId = templateDto.isForTenantOnly ? request.user.tenantId : null;
     templateToUpdate.attributes = attributesToUpdate;
-
-    // this.logger.debug('Template: ', templateToUpdate);
 
     return this.templateRepo.save(templateToUpdate)
       .catch((error) => {

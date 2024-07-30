@@ -1,6 +1,6 @@
 import { Tenant } from '#/database/tenant/tenant.entity';
 import { UserEntity } from '#/database/user/user.entity';
-import { Attribute } from '#/scheduler-database/attribute/attribute.entity';
+import { CredentialAttribute } from '#/scheduler-database/credential-attribute/credential-attribute.entity';
 import { Secret } from '#/scheduler-database/secret/secret.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
 import { Collection, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
@@ -26,19 +26,11 @@ export class CredentialCollection {
     @CreateDateColumn({ name: 'created_at', type: 'timestamp without time zone'})
     createdAt: Date;
 
-    @ManyToOne(() => UserEntity, user => user.createdAttributes)
-    @JoinColumn({ name: 'created_by_id' })
-    createdBy: UserEntity;
-
     @Column({ name: 'created_by_id' })
     createdById: number;
 
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamp without time zone'})
     updatedAt: Date;
-
-    @ManyToOne(() => UserEntity, user => user.updatedAttributes)
-    @JoinColumn({ name: 'updated_by_id' })
-    updatedBy: UserEntity;
 
     @Column({ name: 'updated_by_id' })
     updatedById: number;

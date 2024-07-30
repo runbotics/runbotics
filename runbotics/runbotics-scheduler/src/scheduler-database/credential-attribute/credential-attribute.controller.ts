@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, ParseUUIDPipe, BadRequestException } from '@nestjs/common';
-import { AttributeService } from './attribute.service';
+import { CredentialAttributeService } from './credential-attribute.service';
 import { CreateAttributeDto, createAttributeSchema } from './dto/create-attribute.dto';
 import { UpdateAttributeDto, updateAttributeSchema } from './dto/update-attribute.dto';
 import { AuthRequest } from '#/types';
@@ -8,7 +8,7 @@ import { Tenant } from 'runbotics-common';
 
 @Controller('api/scheduler/tenants/:tenantId/credential-attributes')
 export class AttributeController {
-  constructor(private readonly attributeService: AttributeService) {}
+  constructor(private readonly attributeService: CredentialAttributeService) {}
 
   @Post()
   create(

@@ -1,10 +1,11 @@
 import { Tenant } from '#/database/tenant/tenant.entity';
 import { UserEntity } from '#/database/user/user.entity';
-import { Attribute } from '#/scheduler-database/attribute/attribute.entity';
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { CredentialAttribute } from '#/scheduler-database/credential-attribute/credential-attribute.entity';
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
 
 @Entity({ schema: 'scheduler' })
+@Unique(['createdById', 'name'])
 export class Credential {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -22,17 +23,10 @@ export class Credential {
     @Column({ name: 'description', nullable: true })
     description: string;
 
-    // @ManyToOne(() => CredentialCollection, collection => collection.credentials)
-    // @JoinColumn({ name: 'collection_id' })
-    // collection: CredentialCollection;
-
-    // @Column({ name: 'collection_id' })
-    // collectionId: string;
-
     @CreateDateColumn({ name: 'created_at', type: 'timestamp without time zone'})
     createdAt: Date;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity, user => user.createdCredentials)
     @JoinColumn({ name: 'created_by_id' })
     createdBy: UserEntity;
 
@@ -42,7 +36,7 @@ export class Credential {
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamp without time zone'})
     updatedAt: Date;
 
-    @ManyToOne(() => UserEntity, user => user.updatedAttributes)
+    @ManyToOne(() => UserEntity, user => user.updatedCredentials)
     @JoinColumn({ name: 'updated_by_id' })
     updatedBy: UserEntity;
 
@@ -56,6 +50,6 @@ export class Credential {
     @Column({ name: 'template_id' })
     templateId: string;
 
-    @OneToMany(() => Attribute, attribute => attribute.credential, { cascade: true })
-    attributes: Attribute[];
+    @OneToMany(() => CredentialAttribute, attribute => attribute.credential, { cascade: true })
+    attributes: CredentialAttribute[];
 }
