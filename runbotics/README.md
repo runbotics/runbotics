@@ -39,12 +39,18 @@ npm install -g @runbotics/runbotics-cli --registry https://npm.pkg.github.com/ru
 
 Depending on your preferences you can either launch all the apps yourself or let docker containers do it for you based on latest images available on [dockerhub](https://hub.docker.com/u/runbotics).
 
+### Managing containers
+All composes include additional container with **Portainer** image. It's a web replacement for Docker Desktop and it's available by default at port **9000**.
+After first install and once you've navigated to app, it will ask you to create initial admin account with custom password. Next, after login you just need to proceed with local docker environment by clicking 'Get started'.
+
+**In order to create all below composes you will need sudo privileges.**
+
 ### DIY
 Docker compose [config](https://github.com/runbotics/runbotics/blob/master/runbotics/db.yml) in `db.yml` provides only necessary database containers for the correct operation of the packages.
 
 ```bash
 # Create containers
-docker-compose -f db.yml up -d
+sudo docker-compose -f db.yml up -d
 
 # Kill all related containers
 docker-compose -f db.yml down
@@ -55,12 +61,12 @@ Main docker compose [config](https://github.com/runbotics/runbotics/blob/master/
 
 ```bash
 # Create containers
-docker-compose -f docker-compose.yml up -d
+sudo docker-compose -f docker-compose.yml up -d
 
 # Kill all related containers
 docker-compose down
 
-# Pull the latest images 
+# Pull the latest images
 docker-compose pull
 ```
 
