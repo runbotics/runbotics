@@ -4,7 +4,6 @@ import { createCredentialTemplateAttributeSchema } from './create-credential-tem
 export const updateCredentialTemplateAttributeSchema = createCredentialTemplateAttributeSchema.pick({
     name: true,
     type: true,
-    required: true,
     description: true,
 });
 

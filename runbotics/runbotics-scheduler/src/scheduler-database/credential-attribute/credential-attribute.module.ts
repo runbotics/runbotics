@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AttributeService } from './attribute.service';
-import { AttributeController } from './attribute.controller';
-import { Attribute } from './attribute.entity';
+import { CredentialAttributeService } from './credential-attribute.service';
+import { AttributeController } from './credential-attribute.controller';
+import { CredentialAttribute } from './credential-attribute.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Secret } from '../secret/secret.entity';
 import { SecretService } from '../secret/secret.service';
@@ -14,9 +14,9 @@ import { CredentialTemplateAttribute } from '../credential-template-attribute/cr
 import { CredentialTemplateAttributeService } from '../credential-template-attribute/credential-template-attribute.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Attribute, Secret, Credential, CredentialTemplate, CredentialTemplateAttribute]), SecretModule],
+  imports: [TypeOrmModule.forFeature([CredentialAttribute, Secret, Credential, CredentialTemplate, CredentialTemplateAttribute]), SecretModule],
   controllers: [AttributeController],
-  providers: [AttributeService, SecretService, CredentialTemplateService, CredentialService, CredentialTemplateAttributeService],
-  exports: [AttributeService],
+  providers: [CredentialAttributeService, SecretService, CredentialTemplateService, CredentialService, CredentialTemplateAttributeService],
+  exports: [CredentialAttributeService],
 })
-export class AttributeModule {}
+export class CredentialAttributeModule {}

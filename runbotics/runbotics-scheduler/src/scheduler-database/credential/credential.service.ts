@@ -1,37 +1,59 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
 import { Repository } from 'typeorm';
 import { AuthRequest } from '#/types';
+import { NotFoundError } from 'rxjs';
 
 const relations = ['attributes'];
 
 @Injectable()
 export class CredentialService {
+  private readonly logger = new Logger(CredentialService.name);
+
   constructor(
     @InjectRepository(Credential)
     private readonly credentialRepo: Repository<Credential>
-  ) {}
+  ) { }
 
-  create(credentialDto: CreateCredentialDto, request: AuthRequest) {
+  async checkIsNameTaken(name: string, userId: number) {
+    const result = await this.credentialRepo.findOne({
+      where: {
+        name,
+        createdById: userId,
+      }
+    });
+    return Boolean(result);
+  }
+
+  async validateName(name: string, userId: number) {
+    this.logger.debug(name, userId);
+    const isNameTaken = await this.checkIsNameTaken(name, userId);
+    if (isNameTaken) {
+      throw new BadRequestException('Name already taken. One user cannot have two credentials with the same name.');
+    }
+  }
+
+  async create(credentialDto: CreateCredentialDto, request: AuthRequest) {
     const { user: { id: userId, tenantId } } = request;
 
     const credential = this.credentialRepo.create({
       ...credentialDto,
       createdById: userId,
       updatedById: userId,
-      tenantId
+      tenantId,
     });
 
     return this.credentialRepo.save(credential)
-      .catch((error) => {
+      .catch(async (error) => {
+        await this.validateName(credentialDto.name, userId);
         throw new BadRequestException(error.message);
       });
   }
 
-  findAllAccessibleByCollectionId(request: AuthRequest) {
+  async findAllAccessibleByCollectionId(request: AuthRequest) {
     const { user: { id: userId, tenantId } } = request;
     return this.credentialRepo.find({
       where: {
@@ -42,16 +64,22 @@ export class CredentialService {
     });
   }
 
-  findOneById(id: string) {
-    return this.credentialRepo.findOne({
+  async findOneById(id: string) {
+    const result = await this.credentialRepo.findOne({
       where: {
         id
       },
       relations
     });
+
+    if (!result) {
+      throw new NotFoundException(`Could not find credential with id ${id}`);
+    }
+
+    return result;
   }
 
-  findOneByIdAndTenantId(id: string, tenantId: string) {
+  async findOneByIdAndTenantId(id: string, tenantId: string) {
     return this.credentialRepo.findOne({
       where: {
         id,
@@ -61,17 +89,26 @@ export class CredentialService {
     });
   }
 
-  updateById(id: string, credentialDto: UpdateCredentialDto, request: AuthRequest) {
-    const { user: { id: userId }} = request;
+  async updateById(id: string, credentialDto: UpdateCredentialDto, request: AuthRequest) {
+    const { user: { id: userId } } = request;
 
-    const credentialToUpdate = this.credentialRepo.create({ ...credentialDto, id, updatedById: userId });
+    const credential = await this.findOneById(id);
+    const credentialToUpdate = this.credentialRepo.create({
+      ...credentialDto,
+      id,
+      updatedById: userId,
+      tenantId: credential.tenantId,
+    });
 
-    return this.credentialRepo.save(credentialToUpdate);
+    return this.credentialRepo.save(credentialToUpdate)
+      .catch(async (error) => {
+        await this.validateName(credentialToUpdate.name, userId);
+        throw new BadRequestException(error.message);
+      });
   }
 
   async removeById(id: string) {
     const credential = await this.findOneById(id);
-
     return this.credentialRepo.remove(credential);
   }
 }

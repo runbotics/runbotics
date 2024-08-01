@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
-import { CredentialTemplateAttributeType } from 'runbotics-common';
+
 
 @Entity({ schema: 'scheduler' })
+@Unique(['name', 'templateId'])
 export class CredentialTemplateAttribute {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -12,12 +13,6 @@ export class CredentialTemplateAttribute {
 
     @Column({ name: 'description', nullable: true })
     description: string;
-
-    @Column({ name: 'required' })
-    required: boolean;
-
-    @Column({ name: 'type' })
-    type: CredentialTemplateAttributeType;
 
     @ManyToOne(() => CredentialTemplate, credentialTemplate => credentialTemplate.attributes)
     @JoinColumn({ name: 'template_id' })

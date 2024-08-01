@@ -4,7 +4,7 @@ import { UserEntity } from '#/database/user/user.entity';
 import { Secret } from '#/scheduler-database/secret/secret.entity';
 import { ProcessContextSecret } from '#/scheduler-database/process-context-secret/process-context-secret.entity';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
-import { Attribute } from '#/scheduler-database/attribute/attribute.entity';
+import { CredentialAttribute } from '#/scheduler-database/credential-attribute/credential-attribute.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
 import { CredentialCollection } from '#/scheduler-database/credential-collection/credential-collection.entity';
 
@@ -41,8 +41,8 @@ export class Tenant {
     @OneToMany(() => ProcessContext, processContext => processContext.tenant)
     processContexts: ProcessContext[];
 
-    @OneToMany(() => Attribute, attribute => attribute.tenant)
-    attributes: Attribute[];
+    @OneToMany(() => CredentialAttribute, attribute => attribute.tenant)
+    attributes: CredentialAttribute[];
 
     @OneToMany(() => Credential, credential => credential.tenant)
     credentials: Credential[];

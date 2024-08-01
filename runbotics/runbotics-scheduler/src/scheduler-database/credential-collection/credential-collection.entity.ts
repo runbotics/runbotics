@@ -1,5 +1,7 @@
 import { Tenant } from '#/database/tenant/tenant.entity';
 import { UserEntity } from '#/database/user/user.entity';
+import { CredentialAttribute } from '#/scheduler-database/credential-attribute/credential-attribute.entity';
+import { Secret } from '#/scheduler-database/secret/secret.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
 import {
     Column,

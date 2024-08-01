@@ -1,8 +1,7 @@
 import { PrimaryColumn, Entity, Column, OneToOne, ManyToOne, JoinColumn } from 'typeorm';
 import { ProcessContextSecret } from '#/scheduler-database/process-context-secret/process-context-secret.entity';
 import { Tenant } from '#/database/tenant/tenant.entity';
-import { Attribute } from '../attribute/attribute.entity';
-
+import { CredentialAttribute } from '../credential-attribute/credential-attribute.entity';
 @Entity({ name: 'secret', schema: 'scheduler' })
 export class Secret {
     @PrimaryColumn({ type: 'uuid', generated: 'uuid' })
@@ -24,6 +23,6 @@ export class Secret {
     @OneToOne(() => ProcessContextSecret, processContextSecret => processContextSecret.secret)
     processContextSecret: ProcessContextSecret | null;
 
-    @OneToOne(() => Attribute, attribute => attribute.secret)
-    attribute: Attribute;
+    @OneToOne(() => CredentialAttribute, attribute => attribute.secret)
+    attribute: CredentialAttribute;
 }

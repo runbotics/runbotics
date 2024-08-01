@@ -14,11 +14,6 @@ export class CredentialController {
     return this.credentialService.create(credentialDto, request);
   }
 
-  // @Get()
-  // findAllByCollectionId(@Param('collectionId') collectionId: string) {
-  //   return this.credentialService.findAllByCollectionId(collectionId);
-  // }
-
   @Get()
   findAllUserAccessible(@Req() request: AuthRequest) {
     return this.credentialService.findAllAccessibleByCollectionId(request);
@@ -31,6 +26,7 @@ export class CredentialController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialSchema)) credentialDto: UpdateCredentialDto, @Req() request: AuthRequest) {
+  console.log(id);
     return this.credentialService.updateById(id, credentialDto, request);
   }
 

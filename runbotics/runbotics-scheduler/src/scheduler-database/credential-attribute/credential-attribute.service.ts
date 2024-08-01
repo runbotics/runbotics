@@ -3,7 +3,7 @@ import { CreateAttributeDto } from './dto/create-attribute.dto';
 import { UpdateAttributeDto } from './dto/update-attribute.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { Attribute } from './attribute.entity';
+import { CredentialAttribute } from './credential-attribute.entity';
 import { AuthRequest } from '#/types';
 import { Logger } from '#/utils/logger';
 import { SecretService } from '../secret/secret.service';
@@ -14,19 +14,19 @@ import { CredentialTemplateService } from '../credential-template/credential-tem
 const relations = ['tenant', 'createdBy', 'updatedBy'];
 
 @Injectable()
-export class AttributeService {
-  private readonly logger = new Logger(AttributeService.name);
+export class CredentialAttributeService {
+  private readonly logger = new Logger(CredentialAttributeService.name);
 
   constructor(
-    @InjectRepository(Attribute)
-    private readonly attributeRepo: Repository<Attribute>,
+    @InjectRepository(CredentialAttribute)
+    private readonly attributeRepo: Repository<CredentialAttribute>,
     private readonly secretService: SecretService,
     private readonly templateService: CredentialTemplateService,
     private readonly credentialService: CredentialService
   ) { }
 
   async create(attributeDto: CreateAttributeDto, request: AuthRequest) {
-    const { user: { tenantId, id: userId } } = request;
+    const { user: { tenantId } } = request;
 
     const credential = await this.credentialService.findOneByIdAndTenantId(attributeDto.credentialId, tenantId);
     const template = await this.templateService.findOneById(credential.templateId);
@@ -50,10 +50,7 @@ export class AttributeService {
       ...attributeDto,
       secretId: secretId,
       tenantId,
-      createdById: userId,
-      updatedById: userId,
       masked: attributeDto.masked || true,
-      type: template.attributes.find(attribute => attribute.name === attributeDto.name).type,
     });
 
     return this.attributeRepo.save(attribute)
@@ -62,7 +59,7 @@ export class AttributeService {
       });
   }
 
-  async findAll(): Promise<Attribute[]> {
+  async findAll(): Promise<CredentialAttribute[]> {
     const attributes = await this.attributeRepo.find({
       relations,
     });
@@ -70,7 +67,7 @@ export class AttributeService {
     return attributes;
   }
 
-  async findOneById(id: string): Promise<Attribute> {
+  async findOneById(id: string): Promise<CredentialAttribute> {
     const attribute = this.attributeRepo.findOne({
       where: {
         id,
@@ -81,7 +78,7 @@ export class AttributeService {
     return attribute;
   }
 
-  async findByIdAndTenantId(id: string, tenantId: string): Promise<Attribute> {
+  async findByIdAndTenantId(id: string, tenantId: string): Promise<CredentialAttribute> {
     const attribute = await this.attributeRepo.findOne({
       where: {
         tenantId,
