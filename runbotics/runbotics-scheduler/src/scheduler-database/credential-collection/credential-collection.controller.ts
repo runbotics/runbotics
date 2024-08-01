@@ -1,35 +1,91 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    Request,
+} from '@nestjs/common';
 import { CredentialCollectionService } from './credential-collection.service';
-import { CreateCredentialCollectionDto, createCredentialCollectionSchema } from './dto/create-credential-collection.dto';
-import { UpdateCredentialCollectionDto, updateCredentialCollectionSchema } from './dto/update-credential-collection.dto';
+import {
+    CreateCredentialCollectionDto,
+    createCredentialCollectionSchema,
+} from './dto/create-credential-collection.dto';
+import {
+    UpdateCredentialCollectionDto,
+    updateCredentialCollectionSchema,
+} from './dto/update-credential-collection.dto';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
+import { Logger } from '#/utils/logger';
+import { AuthRequest } from '#/types';
 
 @Controller('credential-collections')
 export class CredentialCollectionController {
-  constructor(private readonly credentialCollectionService: CredentialCollectionService) {}
+    private readonly logger = new Logger(CredentialCollectionController.name);
+    constructor(
+        private readonly credentialCollectionService: CredentialCollectionService
+    ) {}
 
-  @Post()
-  create(@Body(new ZodValidationPipe(createCredentialCollectionSchema)) collectionDto: CreateCredentialCollectionDto) {
-    return this.credentialCollectionService.create(collectionDto);
-  }
+    @Post()
+    async createCredentialCollection(
+        @Body(new ZodValidationPipe(createCredentialCollectionSchema))
+        createCredentialCollectionDto: CreateCredentialCollectionDto,
+        @Request() request: AuthRequest
+    ) {
+        this.logger.log(
+            '=> Creating new credential collection: ',
+            createCredentialCollectionDto
+        );
 
-  @Get()
-  findAll() {
-    return this.credentialCollectionService.findAll();
-  }
+        const collection = await this.credentialCollectionService.create(
+            createCredentialCollectionDto,
+            request.user,
+        );
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.credentialCollectionService.findOne(+id);
-  }
+        this.logger.log('<= Created new credential collection: ', collection);
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialCollectionSchema)) collectionDto: UpdateCredentialCollectionDto) {
-    return this.credentialCollectionService.update(+id, collectionDto);
-  }
+        return collection;
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.credentialCollectionService.remove(+id);
-  }
+    @Get()
+    findAllCredentialCollections(@Request() request: AuthRequest) {
+        this.logger.log('=> Getting all credential collections');
+
+        return this.credentialCollectionService.findAll(request.user);
+    }
+
+    @Get(':id')
+    findOneCredentialCollection(
+        @Param('id') id: string,
+        @Request() request: AuthRequest
+    ) {
+        this.logger.log(`=> Getting credential collection with id (${id})`);
+
+        return this.credentialCollectionService.findOne(id, request.user);
+    }
+
+    @Patch(':id')
+    updateCredentialCollection(
+        @Param('id') id: string,
+        @Body(new ZodValidationPipe(updateCredentialCollectionSchema))
+        updateCredentialCollectionDto: UpdateCredentialCollectionDto,
+        @Request() request: AuthRequest
+    ) {
+        this.logger.log(`=> Updating credential collection with id (${id})`);
+
+        return this.credentialCollectionService.update(
+            id,
+            updateCredentialCollectionDto,
+            request.user,
+        );
+    }
+
+    @Delete(':id')
+    removeCredentialCollection(@Param('id') id: string) {
+        this.logger.log(`=> Deleting credential collection with id (${id})`);
+
+        return this.credentialCollectionService.remove(id);
+    }
 }
