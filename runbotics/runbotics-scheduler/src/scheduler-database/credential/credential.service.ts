@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
 import { Repository } from 'typeorm';
 import { AuthRequest } from '#/types';
-import { NotFoundError } from 'rxjs';
 
 const relations = ['attributes'];
 

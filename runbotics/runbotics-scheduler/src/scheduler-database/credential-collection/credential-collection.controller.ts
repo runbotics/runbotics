@@ -20,7 +20,6 @@ import {
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { Logger } from '#/utils/logger';
 import { AuthRequest } from '#/types';
-import { UserEntity } from '#/database/user/user.entity';
 
 @Controller('credential-collections')
 export class CredentialCollectionController {
@@ -42,7 +41,7 @@ export class CredentialCollectionController {
 
         const collection = await this.credentialCollectionService.create(
             createCredentialCollectionDto,
-            request.user as UserEntity
+            request.user,
         );
 
         this.logger.log('<= Created new credential collection: ', collection);
@@ -54,9 +53,7 @@ export class CredentialCollectionController {
     findAllCredentialCollections(@Request() request: AuthRequest) {
         this.logger.log('=> Getting all credential collections');
 
-        return this.credentialCollectionService.findAll(
-            request.user as UserEntity
-        );
+        return this.credentialCollectionService.findAll(request.user);
     }
 
     @Get(':id')
@@ -66,10 +63,7 @@ export class CredentialCollectionController {
     ) {
         this.logger.log(`=> Getting credential collection with id (${id})`);
 
-        return this.credentialCollectionService.findOne(
-            id,
-            request.user as UserEntity
-        );
+        return this.credentialCollectionService.findOne(id, request.user);
     }
 
     @Patch(':id')
@@ -84,7 +78,7 @@ export class CredentialCollectionController {
         return this.credentialCollectionService.update(
             id,
             updateCredentialCollectionDto,
-            request.user as UserEntity
+            request.user,
         );
     }
 

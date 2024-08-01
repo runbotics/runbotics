@@ -7,13 +7,12 @@ import {
     CredentialCollection,
 } from './credential-collection.entity';
 import { Repository } from 'typeorm';
-import { UserEntity } from '#/database/user/user.entity';
 import {
     CredentialCollectionUser,
     PrivilegeType,
 } from '../credential-collection-user/credential-collection-user.entity';
 import { UserService } from '#/database/user/user.service';
-import { Tenant } from '#/database/tenant/tenant.entity';
+import { IUser, Tenant } from 'runbotics-common';
 
 @Injectable()
 export class CredentialCollectionService {
@@ -27,11 +26,16 @@ export class CredentialCollectionService {
 
     async create(
         createCredentialCollectionDto: CreateCredentialCollectionDto,
-        user: UserEntity
+        user: IUser,
     ) {
-        const { name, description, accessType, color, sharedWith } =
-            createCredentialCollectionDto;
-        const { tenantId, tenant } = user;
+        const tenantId = user.tenantId;
+        const {
+            name,
+            description,
+            accessType,
+            color,
+            sharedWith,
+        } = createCredentialCollectionDto;
 
         const credentialCollection = this.credentialCollectionRepository.create(
             {
@@ -41,7 +45,7 @@ export class CredentialCollectionService {
                 color,
                 createdBy: user,
                 updatedBy: user,
-                tenant,
+                tenantId,
             }
         );
 
@@ -66,7 +70,7 @@ export class CredentialCollectionService {
                 sharedWith,
                 credentialCollection,
                 user,
-                tenantId
+                tenantId,
             );
 
         credentialCollection.credentialCollectionUser =
@@ -75,7 +79,7 @@ export class CredentialCollectionService {
         return this.credentialCollectionRepository.save(credentialCollection);
     }
 
-    findAll(user: UserEntity) {
+    findAll(user: IUser) {
         return this.credentialCollectionRepository.find({
             where: {
                 tenantId: user.tenantId,
@@ -86,7 +90,7 @@ export class CredentialCollectionService {
         });
     }
 
-    findOne(id: string, user: UserEntity) {
+    findOne(id: string, user: IUser) {
         return this.credentialCollectionRepository.findOne({
             where: {
                 id,
@@ -101,7 +105,7 @@ export class CredentialCollectionService {
     async update(
         id: string,
         updateCredentialCollectionDto: UpdateCredentialCollectionDto,
-        user: UserEntity
+        user: IUser,
     ) {
         const { sharedWith, ...dto } = updateCredentialCollectionDto;
         const { tenantId } = user;
@@ -139,8 +143,8 @@ export class CredentialCollectionService {
     private async getCredentialCollectionUserArrayWithPrivileges(
         sharedWith: UpdateCredentialCollectionDto['sharedWith'],
         credentialCollection: CredentialCollection,
-        user: UserEntity,
-        tenantId: Tenant['id']
+        user: IUser,
+        tenantId: Tenant['id'],
     ) {
         const userEmails = sharedWith
             .filter((item) => item.login !== user.login)
