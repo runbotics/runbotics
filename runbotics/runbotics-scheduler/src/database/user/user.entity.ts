@@ -59,7 +59,8 @@ export class UserEntity implements IUser {
     @JoinTable({
         name: 'jhi_user_authority',
         joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' }
+        inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' },
+        synchronize: false,
     })
         authorities: IAuthority[];
 
