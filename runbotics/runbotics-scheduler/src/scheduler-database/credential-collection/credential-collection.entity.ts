@@ -42,7 +42,7 @@ export class CredentialCollection {
     @Column('uuid', { name: 'tenant_id' })
     tenantId: string;
 
-    @Column({ name: 'description', nullable: true, default: () => 'SET_NULL' })
+    @Column({ name: 'description', nullable: true })
     description: string;
 
     @CreateDateColumn({

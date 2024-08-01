@@ -16,7 +16,6 @@ export enum PrivilegeType {
 @Entity({
     name: 'credential_collection_user',
     schema: 'scheduler',
-    synchronize: false,
 })
 export class CredentialCollectionUser {
     @PrimaryGeneratedColumn('uuid')

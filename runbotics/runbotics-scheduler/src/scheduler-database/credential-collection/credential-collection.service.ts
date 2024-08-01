@@ -21,7 +21,7 @@ export class CredentialCollectionService {
         private readonly credentialCollectionRepository: Repository<CredentialCollection>,
         @InjectRepository(CredentialCollectionUser)
         private readonly credentialCollectionUserRepository: Repository<CredentialCollectionUser>,
-        @Inject() private readonly userService: UserService
+        private readonly userService: UserService,
     ) {}
 
     async create(
