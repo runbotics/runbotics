@@ -38,10 +38,10 @@ Docker compose [config](https://github.com/runbotics/runbotics/blob/master/runbo
 
 ```bash
 # Create containers
-$ docker-compose -f db.yml up -d
+$ docker compose -f db.yml up -d
 
 # Kill all related containers
-$ docker-compose -f db.yml down
+$ docker compose -f db.yml down
 ```
 
 ### Services as containers
@@ -54,7 +54,7 @@ $ docker-compose -f docker-compose.yml up -d
 # Kill all related containers
 $ docker-compose down
 
-# Pull the latest images 
+# Pull the latest images
 $ docker-compose pull
 ```
 
