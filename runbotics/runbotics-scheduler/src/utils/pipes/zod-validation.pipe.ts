@@ -12,7 +12,6 @@ export class ZodValidationPipe implements PipeTransform {
             return this.schema.parse(value);
         } catch (error) {
             if (error instanceof ZodError) {
-                this.logger.log();
                 throw new BadRequestException(error, { description: 'Validation error', cause: new Error('validation error') });
             }
             throw new BadRequestException('Unexpected validation error: ' + String(error));

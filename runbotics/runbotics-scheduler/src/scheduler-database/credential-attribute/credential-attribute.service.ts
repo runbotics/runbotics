@@ -11,7 +11,7 @@ import { Secret } from '../secret/secret.entity';
 import { CredentialService } from '../credential/credential.service';
 import { CredentialTemplateService } from '../credential-template/credential-template.service';
 
-const relations = ['tenant', 'createdBy', 'updatedBy'];
+const relations = ['tenant', 'secret'];
 
 @Injectable()
 export class CredentialAttributeService {
@@ -28,11 +28,15 @@ export class CredentialAttributeService {
   async create(attributeDto: CreateAttributeDto, request: AuthRequest) {
     const { user: { tenantId } } = request;
 
-    const credential = await this.credentialService.findOneByIdAndTenantId(attributeDto.credentialId, tenantId);
+    const credential = await this.credentialService.findById(attributeDto.credentialId, tenantId);
     const template = await this.templateService.findOneById(credential.templateId);
 
     if (!template.attributes.map(attribute => attribute.name).includes(attributeDto.name)) {
       throw new BadRequestException(`Attribute name: ${attributeDto.name} not found in template: ${template.name}`);
+    }
+
+    if (credential.attributes.some(attribute => attribute.name === attributeDto.name)) {
+      throw new BadRequestException(`Attribute with name: ${attributeDto.name} already exists in template: ${template.name}`);
     }
 
     const encryptedValue = this.secretService.encrypt(attributeDto.value, tenantId);
@@ -64,16 +68,24 @@ export class CredentialAttributeService {
       relations,
     });
 
+    if (attributes.length === 0) {
+      throw new NotFoundException('No attributes found');
+    }
+
     return attributes;
   }
 
-  async findOneById(id: string): Promise<CredentialAttribute> {
-    const attribute = this.attributeRepo.findOne({
+  async findOneById(id: string) {
+    const attribute = await this.attributeRepo.findOne({
       where: {
         id,
       },
       relations,
     });
+
+    if (!attribute) {
+      throw new NotFoundException(`Attribute with id: ${id} not found`);
+    }
 
     return attribute;
   }
@@ -87,24 +99,35 @@ export class CredentialAttributeService {
       relations,
     });
 
+    if (!attribute) {
+      throw new NotFoundException(`Attribute with id: ${id} not found`);
+    }
+
     return attribute;
   }
 
-  async update(id: string, updateAttributeDto: UpdateAttributeDto, request: AuthRequest): Promise<UpdateResult> {
-    const { user: { id: userId, tenantId } } = request;
-    const attribute = await this.findByIdAndTenantId(id, tenantId);
-
-    const newSecret = await this.secretService.encrypt(updateAttributeDto.value, tenantId);
-    await this.secretService.update({ ...newSecret, id: attribute.secretId });
-
+  async update(id: string, updateAttributeDto: UpdateAttributeDto, request: AuthRequest) {
+    const { user: { tenantId } } = request;
     const { value: _value, ...updateAttributeFields } = updateAttributeDto;
-    const updatedAttribute = { ...updateAttributeFields, updatedById: userId, secretId: newSecret.id };
-    return this.attributeRepo.update(id, updatedAttribute);
+
+    const attribute = await this.findOneById(id);
+    const newSecret = await this.secretService.encrypt(updateAttributeDto.value, tenantId);
+
+    const secretToUpdate = { ...newSecret, id: attribute.secretId };
+    const attributeToUpdate = await this.attributeRepo.create({
+      ...attribute,
+      ...updateAttributeFields,
+      secret: secretToUpdate,
+      secretId: attribute.secretId,
+      id
+    });
+
+    return this.attributeRepo.save(attributeToUpdate);
   }
 
   async delete(id: string, request: AuthRequest): Promise<DeleteResult> {
     const { user: { tenantId } } = request;
-    const attribute = await this.findByIdAndTenantId(id, tenantId);
+    const attribute = await this.findOneById(id);
 
     if (!attribute) {
       throw new NotFoundException(`Attribute with id: ${id} not found`);

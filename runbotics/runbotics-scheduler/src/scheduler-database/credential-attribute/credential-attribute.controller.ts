@@ -4,7 +4,6 @@ import { CreateAttributeDto, createAttributeSchema } from './dto/create-attribut
 import { UpdateAttributeDto, updateAttributeSchema } from './dto/update-attribute.dto';
 import { AuthRequest } from '#/types';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
-import { Tenant } from 'runbotics-common';
 
 @Controller('api/scheduler/tenants/:tenantId/credential-attributes')
 export class AttributeController {
@@ -19,8 +18,8 @@ export class AttributeController {
   }
 
   @Get()
-  findAll() {
-    return this.attributeService.findAll();
+  async findAll() {
+    return await this.attributeService.findAll();
   }
 
   @Get(':id')

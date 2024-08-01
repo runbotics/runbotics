@@ -23,6 +23,6 @@ export class Secret {
     @OneToOne(() => ProcessContextSecret, processContextSecret => processContextSecret.secret)
     processContextSecret: ProcessContextSecret | null;
 
-    @OneToOne(() => CredentialAttribute, attribute => attribute.secret)
+    @OneToOne(() => CredentialAttribute, attribute => attribute.secret, { onDelete: 'CASCADE' })
     attribute: CredentialAttribute;
 }

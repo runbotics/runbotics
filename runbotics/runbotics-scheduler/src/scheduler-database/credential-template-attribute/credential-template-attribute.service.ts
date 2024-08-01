@@ -27,6 +27,27 @@ export class CredentialTemplateAttributeService {
         });
     }
 
+    async findByTemplateId(id: string) {
+        const attributes = await this.templateAttributeRepo.find({
+            relations,
+            where: {
+                templateId: id,
+            },
+        });
+
+        if (attributes.length === 0) {
+            throw new NotFoundException(`Could not find attributes of template with id ${id}`);
+        }
+
+        return attributes;
+    }
+
+    async removeByTemplateId(id: string) {
+        const attributes = await this.findByTemplateId(id);
+
+        return this.templateAttributeRepo.remove(attributes);
+    }
+
     async update(id: string, updateData: Partial<CredentialTemplateAttribute>): Promise<CredentialTemplateAttribute> {
         const attributeToUpdate = this.templateAttributeRepo.create({ ...updateData, id });
 

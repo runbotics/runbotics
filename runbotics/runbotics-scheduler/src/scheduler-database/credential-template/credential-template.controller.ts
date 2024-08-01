@@ -25,8 +25,8 @@ export class CredentialTemplateController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialTemplateSchema)) templateDto: UpdateCredentialTemplateDto, @Req() request: AuthRequest) {
-    return this.credentialTemplateService.updateById(id, templateDto, request);
+  update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialTemplateSchema)) templateDto: UpdateCredentialTemplateDto) {
+    return this.credentialTemplateService.updateById(id, templateDto);
   }
 
   @Delete(':id')

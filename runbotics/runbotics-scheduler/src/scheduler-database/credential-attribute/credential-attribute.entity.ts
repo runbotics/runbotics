@@ -25,9 +25,6 @@ export class CredentialAttribute {
     @Column({ name: 'masked' })
     masked: boolean;
 
-    @Column({ name: 'type'})
-    type: string;
-
     @OneToOne(() => Secret, secret => secret.attribute, { cascade: true, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'secret_id' })
     secret: Secret;

@@ -38,7 +38,8 @@ export class CredentialTemplateService {
 
     return this.templateRepo.save(template)
       .then((savedTemplate) => savedTemplate)
-      .catch((error) => {
+      .catch(async (error) => {
+        await this.validateName(templateDto.name);
         throw new BadRequestException(error.message);
       });
   }
@@ -66,39 +67,53 @@ export class CredentialTemplateService {
       },
     });
 
+    if (!template) {
+      throw new NotFoundException(`Could not find template with id ${id}`);
+    }
+
     return template;
   }
 
   async findOneByIdAndTenantId(id: string, tenantId: string) {
-    return this.templateRepo.findOne({
+    const template = this.templateRepo.findOne({
       relations,
       where: {
         id,
-        tenantId: null
+        tenantId,
       }
     });
+
+    if (!template) {
+      throw new NotFoundException(`Could not find template with id ${id}`);
+    }
+
+    return template;
   }
 
-  async updateById(id: string, templateDto: UpdateCredentialTemplateDto, request: AuthRequest) {
+  async updateById(id: string, templateDto: UpdateCredentialTemplateDto) {
     const template = await this.findOneById(id);
+
+    // const templateAttributes = this.templateAttributeService.findByTemplateId(template.id);
 
     const attributesToUpdate = templateDto.attributes.map(attributeDto => {
       const attribute = new CredentialTemplateAttribute();
-      attribute.templateId = template.id;
+      attribute.templateId = id;
       attribute.name = attributeDto.name;
       attribute.description = attributeDto.description;
       return attribute;
     });
 
     const templateToUpdate = new CredentialTemplate();
-    templateToUpdate.id = template.id;
+    templateToUpdate.id = id;
     templateToUpdate.name = templateDto.name;
     templateToUpdate.description = templateDto.description;
-    templateToUpdate.tenantId = templateDto.isForTenantOnly ? request.user.tenantId : null;
     templateToUpdate.attributes = attributesToUpdate;
 
+    await this.templateAttributeService.removeByTemplateId(id);
+    this.logger.debug('templateToUpdate', JSON.stringify(templateToUpdate, null, 2));
     return this.templateRepo.save(templateToUpdate)
-      .catch((error) => {
+      .catch(async (error) => {
+        await this.validateName(templateToUpdate.name);
         throw new BadRequestException(error.message);
       });
   }
@@ -107,5 +122,23 @@ export class CredentialTemplateService {
     const template = await this.findOneById(id);
 
     return this.templateRepo.remove(template);
+  }
+
+  private async checkIsNameTaken(name: string) {
+    const result = await this.templateRepo.findOne({
+      where: {
+        name,
+      }
+    });
+
+    return Boolean(result);
+  }
+
+  private async validateName(name: string) {
+    const isNameTaken = await this.checkIsNameTaken(name);
+
+    if (isNameTaken) {
+      throw new BadRequestException('Name already taken. One user cannot have two templates with the same name.');
+    }
   }
 }

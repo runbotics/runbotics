@@ -6,7 +6,6 @@ export const updateCredentialTemplateSchema = z.object({
     description: z.string().optional(),
     attributes: z.array(createCredentialTemplateAttributeSchema),
     isForTenantOnly: z.boolean(),
-    credentialTemplateId: z.string().optional(),
   });
 
 export type UpdateCredentialTemplateDto = z.infer<typeof updateCredentialTemplateSchema>;

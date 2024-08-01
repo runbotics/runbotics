@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
 import { Repository } from 'typeorm';
 import { AuthRequest } from '#/types';
-import { NotFoundError } from 'rxjs';
 
 const relations = ['attributes'];
 
@@ -15,26 +14,8 @@ export class CredentialService {
 
   constructor(
     @InjectRepository(Credential)
-    private readonly credentialRepo: Repository<Credential>
+    private readonly credentialRepo: Repository<Credential>,
   ) { }
-
-  async checkIsNameTaken(name: string, userId: number) {
-    const result = await this.credentialRepo.findOne({
-      where: {
-        name,
-        createdById: userId,
-      }
-    });
-    return Boolean(result);
-  }
-
-  async validateName(name: string, userId: number) {
-    this.logger.debug(name, userId);
-    const isNameTaken = await this.checkIsNameTaken(name, userId);
-    if (isNameTaken) {
-      throw new BadRequestException('Name already taken. One user cannot have two credentials with the same name.');
-    }
-  }
 
   async create(credentialDto: CreateCredentialDto, request: AuthRequest) {
     const { user: { id: userId, tenantId } } = request;
@@ -79,14 +60,20 @@ export class CredentialService {
     return result;
   }
 
-  async findOneByIdAndTenantId(id: string, tenantId: string) {
-    return this.credentialRepo.findOne({
+  async findById(id: string, tenantId: string) {
+    const credential = await this.credentialRepo.findOne({
       where: {
         id,
         tenantId
       },
       relations
     });
+
+    if (!credential) {
+      throw new NotFoundException(`Could not find credential with id ${id}`);
+    }
+
+    return credential;
   }
 
   async updateById(id: string, credentialDto: UpdateCredentialDto, request: AuthRequest) {
@@ -110,5 +97,23 @@ export class CredentialService {
   async removeById(id: string) {
     const credential = await this.findOneById(id);
     return this.credentialRepo.remove(credential);
+  }
+
+  async checkIsNameTaken(name: string, userId: number) {
+    const result = await this.credentialRepo.findOne({
+      where: {
+        name,
+        createdById: userId,
+      }
+    });
+    return Boolean(result);
+  }
+
+  private async validateName(name: string, userId: number) {
+    const isNameTaken = await this.checkIsNameTaken(name, userId);
+
+    if (isNameTaken) {
+      throw new BadRequestException('Name already taken. One user cannot have two credentials with the same name.');
+    }
   }
 }

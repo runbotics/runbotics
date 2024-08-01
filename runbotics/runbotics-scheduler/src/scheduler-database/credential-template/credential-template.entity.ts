@@ -1,5 +1,5 @@
 import { Tenant } from '#/database/tenant/tenant.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CredentialTemplateAttribute } from '../credential-template-attribute/credential-template-attribute.entity';
 import { Credential } from '../credential/credential.entity';
 
