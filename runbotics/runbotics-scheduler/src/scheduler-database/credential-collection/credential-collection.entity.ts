@@ -1,11 +1,33 @@
 import { Tenant } from '#/database/tenant/tenant.entity';
 import { UserEntity } from '#/database/user/user.entity';
-import { CredentialAttribute } from '#/scheduler-database/credential-attribute/credential-attribute.entity';
-import { Secret } from '#/scheduler-database/secret/secret.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
-import { Collection, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
+import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 
-@Entity({ schema: 'scheduler' })
+export enum AccessType {
+    PRIVATE = 'PRIVATE',
+    GROUP = 'GROUP',
+}
+
+export enum Color {
+    ORANGE = 'ORANGE',
+    YELLOW = 'YELLOW',
+    BLUE = 'BLUE',
+    GREEN = 'GREEN',
+    RED = 'RED',
+}
+
+@Entity({ schema: 'scheduler', name: 'credential_collection' })
 export class CredentialCollection {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -13,7 +35,7 @@ export class CredentialCollection {
     @Column({ name: 'name' })
     name: string;
 
-    @ManyToOne(() => Tenant, tenant => tenant.credentialCollections)
+    @ManyToOne(() => Tenant, (tenant) => tenant.credentialCollections)
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 
@@ -23,27 +45,47 @@ export class CredentialCollection {
     @Column({ name: 'description', nullable: true })
     description: string;
 
-    @CreateDateColumn({ name: 'created_at', type: 'timestamp without time zone'})
-    createdAt: Date;
+    @CreateDateColumn({
+        name: 'created_at',
+        type: 'timestamp without time zone',
+    })
+    createdAt: string;
+
+    @OneToOne(() => UserEntity)
+    @JoinColumn({ name: 'created_by_id' })
+    createdBy: UserEntity;
 
     @Column({ name: 'created_by_id' })
     createdById: number;
 
-    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp without time zone'})
-    updatedAt: Date;
+    @UpdateDateColumn({
+        name: 'updated_at',
+        type: 'timestamp without time zone',
+    })
+    updatedAt: string;
+
+    @OneToOne(() => UserEntity)
+    @JoinColumn({ name: 'updated_by_id' })
+    updatedBy: UserEntity;
 
     @Column({ name: 'updated_by_id' })
     updatedById: number;
 
-    @ManyToMany(() => UserEntity)
-    @JoinTable({
-        name: 'credential_collection_user',
-        joinColumn: { name: 'collection_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    })
-    users: UserEntity[];
+    @OneToMany(
+        () => CredentialCollectionUser,
+        (credentialCollectionUser) =>
+            credentialCollectionUser.credentialCollection,
+        { cascade: true }
+    )
+    credentialCollectionUser: CredentialCollectionUser[];
 
-    // @OneToMany(() => Credential, credential => credential.collection)
-    // @JoinColumn({ name: 'collection_id' })
-    // credentials: Credential[];
+    @OneToMany(() => Credential, (credential) => credential.collection)
+    @JoinColumn({ name: 'collection_id' })
+    credentials: Credential[];
+
+    @Column('enum', { enum: AccessType, default: AccessType.PRIVATE })
+    accessType: AccessType;
+
+    @Column('enum', { enum: Color, default: Color.ORANGE })
+    color: Color;
 }

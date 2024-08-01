@@ -9,6 +9,7 @@ import { CredentialTemplateModule } from './credential-template/credential-templ
 import { CredentialTemplateAttributeModule } from './credential-template-attribute/credential-template-attribute.module';
 import { CredentialModule } from './credential/credential.module';
 import { CredentialCollectionModule } from '#/scheduler-database/credential-collection/credential-collection.module';
+import { CredentialCollectionUserModule } from './credential-collection-user/credential-collection-user.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { CredentialCollectionModule } from '#/scheduler-database/credential-coll
         ProcessContextSecretModule,
         DatabaseModule,
         CredentialCollectionModule,
+        CredentialCollectionUserModule,
         CredentialAttributeModule,
         CredentialTemplateModule,
         CredentialTemplateAttributeModule,

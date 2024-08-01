@@ -10,7 +10,8 @@ export class AuthorityEntity implements IAuthority {
     @ManyToMany(() => FeatureKeyEntity, { eager: true })
     @JoinTable({
         joinColumn: { name: 'authority', referencedColumnName: 'name' },
-        inverseJoinColumn: { name: 'feature_key', referencedColumnName: 'name' }
+        inverseJoinColumn: { name: 'feature_key', referencedColumnName: 'name' },
+        synchronize: false,
     })
         featureKeys: IFeatureKey[];
 }

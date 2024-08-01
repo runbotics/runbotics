@@ -47,7 +47,11 @@ export class Tenant {
     @OneToMany(() => Credential, credential => credential.tenant)
     credentials: Credential[];
 
-    @OneToMany(() => CredentialCollection, credentialCollection => credentialCollection.tenant)
+    @OneToMany(
+        () => CredentialCollection,
+        credentialCollection =>
+            credentialCollection.tenant,
+    )
     credentialCollections: CredentialCollection[];
 
     @OneToMany(() => UserEntity, user => user.tenant)
