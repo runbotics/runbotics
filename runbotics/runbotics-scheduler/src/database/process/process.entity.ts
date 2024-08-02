@@ -30,6 +30,9 @@ export class ProcessEntity implements IProcess {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
 
+    @Column({ name: 'tenant_id' })
+    tenantId: string;
+
     @Column({ unique: true, type: 'varchar' })
     name: string;
 
