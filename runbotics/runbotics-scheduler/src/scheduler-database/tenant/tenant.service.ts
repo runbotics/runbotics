@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository } from 'typeorm';
+import { LessThan, MoreThanOrEqual, Repository } from 'typeorm';
 import dayjs from 'dayjs';
 
 import { UserEntity } from '#/database/user/user.entity';
@@ -102,6 +102,14 @@ export class TenantService {
             .catch(() => {
                 throw new NotFoundException('Cannot find tenant with id: ', tenantId);
             });
+
+        await this.inviteCodeRepository.findBy({
+            tenantId: tenant.id,
+            expirationDate: LessThan(new Date())
+        }).then(codes => {
+            this.inviteCodeRepository.delete([...codes.map(code => code.inviteId)]);
+            this.logger.log('Removed expired invite codes for tenant with id: ', tenant.id);
+        });
 
         const newInviteCode = {
             tenantId: tenant.id,
