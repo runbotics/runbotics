@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository } from 'typeorm';
+import { LessThan, MoreThanOrEqual, Repository } from 'typeorm';
 import dayjs from 'dayjs';
 
 import { UserEntity } from '#/database/user/user.entity';
@@ -75,6 +75,20 @@ export class TenantService {
         return this.tenantRepository.save(updatedTenant);
     }
 
+    async validateInviteCode(inviteCodeDto: TenantInviteCodeDto) {
+        const inviteCode = await this.inviteCodeRepository.findOneOrFail({
+            where: {
+                inviteId: inviteCodeDto.inviteCode,
+                expirationDate: MoreThanOrEqual(new Date())
+            },
+            relations: ['tenant']
+        }).catch(() => {
+            throw new BadRequestException('Invite code not valid or expired');
+        });
+
+        return { tenantName: inviteCode.tenant.name };
+    }
+
     getActiveInviteCodeByTenantId(tenantId: string): Promise<TenantInviteCodeDto | null> {
         return this.inviteCodeRepository.findOneBy({
             tenantId,
@@ -88,6 +102,14 @@ export class TenantService {
             .catch(() => {
                 throw new NotFoundException('Cannot find tenant with id: ', tenantId);
             });
+
+        await this.inviteCodeRepository.findBy({
+            tenantId: tenant.id,
+            expirationDate: LessThan(new Date())
+        }).then(codes => {
+            this.inviteCodeRepository.delete([...codes.map(code => code.inviteId)]);
+            this.logger.log('Removed expired invite codes for tenant with id: ', tenant.id);
+        });
 
         const newInviteCode = {
             tenantId: tenant.id,

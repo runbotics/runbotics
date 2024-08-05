@@ -165,6 +165,8 @@ public class UserService {
                 .orElseThrow(() -> new BadRequestAlertException("Bad invite code", ENTITY_NAME, "badInviteCode"));
 
             if (tenantInviteCode.getExpirationDate().isBefore(ZonedDateTime.now())) {
+                log.debug("Removed expired invite codes for tenant with id: {}", tenantInviteCode.getTenantId());
+                tenantInviteCodeRepository.delete(tenantInviteCode);
                 throw new BadRequestAlertException("Invite code has expired", ENTITY_NAME, "expiredInviteCode");
             }
 

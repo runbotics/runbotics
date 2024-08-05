@@ -12,11 +12,13 @@ import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User } from '#/utils/decorators/user.decorator';
 import { UserEntity } from '#/database/user/user.entity';
 import { Logger } from '#/utils/logger';
+import { Public } from '#/auth/guards';
+import { GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
 
 import { TenantService } from './tenant.service';
+import { TenantInviteCodeDto, tenantInviteCodeSchema } from './dto/invite-code.dto';
 import { CreateTenantDto, createTenantSchema } from './dto/create-tenant.dto';
 import { UpdateTenantDto, updateTenantSchema } from './dto/update-tenant.dto';
-import { GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
 
 @Controller('/api/scheduler/tenants')
 export class TenantController {
@@ -104,6 +106,16 @@ export class TenantController {
         }
 
         return tenant;
+    }
+
+    @Post('invite-code')
+    @Public()
+    @HttpCode(HttpStatus.OK)
+    validateInviteCode(
+        @Body(new ZodValidationPipe(tenantInviteCodeSchema)) inviteCodeDto: TenantInviteCodeDto
+    ) {
+        this.logger.log('REST request to validate invite code');
+        return this.tenantService.validateInviteCode(inviteCodeDto);
     }
 
     @Post()
