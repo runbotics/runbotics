@@ -10,7 +10,7 @@ const expressionPattern = /\${(.+?)}/;
 const jexlPattern = /#{(.+?)}/;
 const jexlServicePattern = /#{(.+?)\((.*)\)}/;
 const jexlServiceMethodPattern = /(.+?)\((.*)\)/;
-const jexlRecursivePattern = /#\{((?:[^{}]|#\{(?:[^{}]|#\{[^{}]*\})*\})*)\}/;
+const jexlMatchingBracketsPattern = /#\{((?:[^{}]|#\{(?:[^{}]|#\{[^{}]*\})*\})*)\}/;
 const digitPattern = /^-?\d+(\.?\d+)?$/;
 
 export class Expressions {
@@ -71,8 +71,8 @@ export class Expressions {
     }
 
     private static getFullServiceMethodCall(templatedString: string, context, expressionFnContext) {
-        const jexlRecursiveExp = new RegExp(jexlRecursivePattern, 'g');
-        const matches = templatedString.match(jexlRecursiveExp);
+        const jexlMatchingBracketsRegExp = new RegExp(jexlMatchingBracketsPattern, 'g');
+        const matches = templatedString.match(jexlMatchingBracketsRegExp);
         if (!matches) {
             return templatedString;
         }
@@ -80,16 +80,16 @@ export class Expressions {
         let result = templatedString;
         for (const expressionMatch of matches) {
             const recursivelyExtractedExpression =
-                jexlRecursiveExp.exec(templatedString);
+                jexlMatchingBracketsRegExp.exec(templatedString);
             if (!recursivelyExtractedExpression) continue;
 
             const extractedMethod =
                 jexlServiceMethodPattern.exec(recursivelyExtractedExpression[1]);
             if (!extractedMethod) continue;
 
-            const methodName = extractedMethod[1];
-            const args = extractedMethod[2].length
-                ? extractedMethod[2].trim().split(",")
+            const [_, methodName, methodArgs] = extractedMethod;
+            const args = methodArgs.length
+                ? methodArgs.trim().split(",")
                 : [];
 
             const mappedArgs = args.map((arg) => {
