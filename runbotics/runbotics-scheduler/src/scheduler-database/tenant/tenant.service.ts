@@ -75,6 +75,20 @@ export class TenantService {
         return this.tenantRepository.save(updatedTenant);
     }
 
+    async validateInviteCode(inviteCodeDto: TenantInviteCodeDto) {
+        const inviteCode = await this.inviteCodeRepository.findOneOrFail({
+            where: {
+                inviteId: inviteCodeDto.inviteCode,
+                expirationDate: MoreThanOrEqual(new Date())
+            },
+            relations: ['tenant']
+        }).catch(() => {
+            throw new BadRequestException('Invite code not valid or expired');
+        });
+
+        return { tenantName: inviteCode.tenant.name };
+    }
+
     getActiveInviteCodeByTenantId(tenantId: string): Promise<TenantInviteCodeDto | null> {
         return this.inviteCodeRepository.findOneBy({
             tenantId,

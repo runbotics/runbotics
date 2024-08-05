@@ -1,9 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Tenant } from './tenant.entity';
 
 @Entity()
 export class TenantInviteCode {
     @PrimaryGeneratedColumn('uuid', { name: 'invite_id' })
     inviteId: string;
+
+    @ManyToOne(() => Tenant)
+    @JoinColumn({ name: 'tenant_id', referencedColumnName: 'id' })
+    tenant: Tenant;
 
     @Column({ type: 'uuid', name: 'tenant_id' })
     tenantId: string;
