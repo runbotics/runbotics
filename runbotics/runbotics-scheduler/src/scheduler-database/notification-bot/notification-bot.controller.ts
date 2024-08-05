@@ -45,6 +45,6 @@ export class NotificationBotController {
         @User() user: UserEntity,
     ) {
         this.logger.log('REST request to delete bot notification by id: ', id);
-        await this.notificationBotService.delete(id, user.id);
+        await this.notificationBotService.delete(id, user);
     }
 }

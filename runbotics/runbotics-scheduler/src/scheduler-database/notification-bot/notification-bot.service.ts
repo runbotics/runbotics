@@ -8,6 +8,7 @@ import { CreateNotificationBotDto } from './dto/create-notification-bot.dto';
 
 import { UserEntity } from '#/database/user/user.entity';
 import { BotEntity } from '#/database/bot/bot.entity';
+import { isTenantAdmin } from '#/utils/authority.utils';
 
 
 @Injectable()
@@ -49,8 +50,11 @@ export class NotificationBotService {
             .then(this.formatToDTO);
     }
 
-    async delete(notificationBotId: string, userId: number) {
-        const findOptions = { id: notificationBotId, user: { id: userId } };
+    async delete(notificationBotId: string, user: UserEntity) {
+        const findOptions = {
+            id: notificationBotId,
+            ...(!isTenantAdmin(user) && { user: { id: user.id } })
+        };
 
         await this.notificationBotRepository
             .findOneByOrFail(findOptions).catch(() => {
