@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { Logger } from '#/utils/logger';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserEntity } from '#/database/user/user.entity';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './tag.entity';
@@ -17,7 +17,6 @@ export class TagService {
     ) {}
 
     async getAll(tenantId: string, searchPhrase?: string) {
-        console.log(typeof searchPhrase);
         const lookupPhrase = searchPhrase ? `%${searchPhrase}%` : '%%';
 
         return await this.tagRepository
