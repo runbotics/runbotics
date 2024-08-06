@@ -27,7 +27,7 @@ export class TagService {
     }
 
     getById(id: number, user: UserEntity) {
-        return this.tagRepository.findOneByOrFail({ id, tenantId: user.tenantId });
+        return this.tagRepository.findOneBy({ id, tenantId: user.tenantId });
     }
 
     async create(user: UserEntity, tagDto: CreateTagDto) {
