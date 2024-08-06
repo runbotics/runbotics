@@ -1,7 +1,6 @@
-/* eslint-disable quotes */
 import { MigrationInterface, QueryRunner } from "typeorm"
 
-export class NotificationColumnsRescue1721734638111 implements MigrationInterface {
+export class NotificationColumnsRescue1722934554465 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "notification_bot" DROP CONSTRAINT "FK_63e8bb25d071a7bbd6b80b2503a"`);

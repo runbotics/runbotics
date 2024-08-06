@@ -1,7 +1,6 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm"
 
-export class Notifications1721915715038 implements MigrationInterface {
-    name = 'Notifications1721915715038'
+export class Notifications1722934562965 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "notification_process" DROP CONSTRAINT "fk_user_id_notification_process"`);

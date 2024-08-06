@@ -1,7 +1,6 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm"
 
-export class GlobalVariablesProcess1721734304391 implements MigrationInterface {
-    name = 'GlobalVariablesProcess1721734304391'
+export class GlobalVariablesProcess1722934541675 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "process_global_variable" DROP CONSTRAINT "fk_process_global_variable_process_id"`);
