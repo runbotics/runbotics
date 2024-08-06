@@ -1,12 +1,13 @@
 import { z } from 'zod';
 import { AccessType, Color } from '../credential-collection.entity';
 import { PrivilegeType } from '#/scheduler-database/credential-collection-user/credential-collection-user.entity';
+import { Reveal } from '#/utils/generic.types';
 
 export const createCredentialCollectionSchema = z
     .object({
         name: z.string(),
+        accessType: z.nativeEnum(AccessType),
         description: z.string().optional().nullable(),
-        accessType: z.nativeEnum(AccessType).optional(),
         color: z.nativeEnum(Color).optional(),
         sharedWith: z
             .object({
@@ -17,7 +18,6 @@ export const createCredentialCollectionSchema = z
             .optional(),
     })
     .strict()
-    .required()
     .refine(
         (input) =>
             !(input.accessType === AccessType.GROUP && !input.sharedWith),
@@ -30,5 +30,7 @@ type CreateCredentialCollectionPartial = z.infer<
     typeof createCredentialCollectionSchema
 >;
 
-export type CreateCredentialCollectionDto = CreateCredentialCollectionPartial &
-    Required<Pick<CreateCredentialCollectionPartial, 'name' | 'accessType'>>;
+export type CreateCredentialCollectionDto = Reveal<
+    CreateCredentialCollectionPartial &
+    Required<Pick<CreateCredentialCollectionPartial, 'name' | 'accessType'>>
+>;

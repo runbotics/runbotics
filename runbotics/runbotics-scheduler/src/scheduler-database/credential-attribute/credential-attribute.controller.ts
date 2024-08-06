@@ -5,7 +5,7 @@ import { UpdateAttributeDto, updateAttributeSchema } from './dto/update-attribut
 import { AuthRequest } from '#/types';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 
-@Controller('api/scheduler/tenants/:tenantId/credential-attributes')
+@Controller('api/scheduler/tenants/:tenantId/credential-collections/:collectionId/credentials/:credentialId/attributes')
 export class AttributeController {
   constructor(private readonly attributeService: CredentialAttributeService) {}
 

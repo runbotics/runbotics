@@ -1,10 +1,16 @@
 import { z } from 'zod';
 import { createAttributeSchema } from './create-attribute.dto';
+import { Reveal } from '#/utils/generic.types';
 
 export const updateAttributeSchema = createAttributeSchema.pick({
     value: true,
-    masked: true,
     description: true,
+    masked: true,
 });
 
-export type UpdateAttributeDto = z.infer<typeof updateAttributeSchema>;
+type PartialUpdateAttributeDto = z.infer<typeof updateAttributeSchema>;
+
+export type UpdateAttributeDto = Reveal<
+    PartialUpdateAttributeDto &
+    Required<Pick<PartialUpdateAttributeDto, 'value'>>
+>;

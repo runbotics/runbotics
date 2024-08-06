@@ -17,7 +17,6 @@ export const updateCredentialCollectionSchema = z
             .optional(),
     })
     .strict()
-    .required()
     .refine(
         (input) =>
             !(input.accessType === AccessType.GROUP && !input.sharedWith),
@@ -26,8 +25,6 @@ export const updateCredentialCollectionSchema = z
         }
     );
 
-type UpdateCredentialCollectionPartial = z.infer<
+export type UpdateCredentialCollectionDto = z.infer<
     typeof updateCredentialCollectionSchema
 >;
-
-export type UpdateCredentialCollectionDto = UpdateCredentialCollectionPartial;

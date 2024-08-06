@@ -5,6 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
 import { Repository } from 'typeorm';
 import { AuthRequest } from '#/types';
+import { IUser } from 'runbotics-common';
+import { CredentialTemplateService } from '../credential-template/credential-template.service';
+import { SecretService } from '../secret/secret.service';
+import { Secret } from '../secret/secret.entity';
+import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 
 const relations = ['attributes'];
 
@@ -15,27 +20,59 @@ export class CredentialService {
   constructor(
     @InjectRepository(Credential)
     private readonly credentialRepo: Repository<Credential>,
+    private readonly templateService: CredentialTemplateService,
+    private readonly secretService: SecretService,
   ) { }
 
-  async create(credentialDto: CreateCredentialDto, request: AuthRequest) {
-    const { user: { id: userId, tenantId } } = request;
+  async create(credentialDto: CreateCredentialDto, collectionId: string, user: IUser) {
+    const template = await this.templateService.findOneById(credentialDto.templateId);
+
+    if (!template) {
+      throw new NotFoundException(`Could not find template with id ${credentialDto.templateId}`);
+    }
+
+    const tenantId = user.tenantId;
+
+    const attributes = await Promise.all(
+      template.attributes.map(async (attribute) => {
+        const encryptedValue = this.secretService.encrypt('', tenantId);
+        const secretEntity: Secret = {
+          ...encryptedValue,
+          tenantId,
+        };
+
+        const secret = await this.secretService.save(secretEntity)
+          .catch((error) => {
+            throw new BadRequestException(`Failed to save secret: ${error.message}`);
+          });
+
+        const secretId = secret.id;
+
+        return {
+          ...attribute,
+          secretId: secretId,
+          tenantId,
+          masked: true,
+        };
+      }));
 
     const credential = this.credentialRepo.create({
       ...credentialDto,
-      createdById: userId,
-      updatedById: userId,
+      createdById: user.id,
+      updatedById: user.id,
       tenantId,
+      collectionId,
+      attributes,
     });
 
     return this.credentialRepo.save(credential)
       .catch(async (error) => {
-        await this.validateName(credentialDto.name, userId);
+        await this.validateName(credentialDto.name, user.id);
         throw new BadRequestException(error.message);
       });
   }
 
-  async findAllAccessibleByCollectionId(request: AuthRequest) {
-    const { user: { id: userId, tenantId } } = request;
+  async findAllAccessibleByCollectionId(tenantId: string) {
     return this.credentialRepo.find({
       where: {
         tenantId
@@ -45,7 +82,7 @@ export class CredentialService {
     });
   }
 
-  async findOneById(id: string) {
+  async findOneAccessibleById(id: string) {
     const result = await this.credentialRepo.findOne({
       where: {
         id
@@ -76,36 +113,89 @@ export class CredentialService {
     return credential;
   }
 
-  async updateById(id: string, credentialDto: UpdateCredentialDto, request: AuthRequest) {
-    const { user: { id: userId } } = request;
+  async updateById(id: string, credentialDto: UpdateCredentialDto, user: IUser) {
+    const credential = await this.findOneAccessibleById(id);
 
-    const credential = await this.findOneById(id);
+    if (!credential) {
+      throw new NotFoundException(`Could not find credential with id ${id}`);
+    }
+
     const credentialToUpdate = this.credentialRepo.create({
+      ...credential,
       ...credentialDto,
       id,
-      updatedById: userId,
+      updatedById: user.id,
       tenantId: credential.tenantId,
     });
 
     return this.credentialRepo.save(credentialToUpdate)
       .catch(async (error) => {
-        await this.validateName(credentialToUpdate.name, userId);
+        await this.validateName(credentialToUpdate.name, user.id);
         throw new BadRequestException(error.message);
       });
   }
 
   async removeById(id: string) {
-    const credential = await this.findOneById(id);
+    const credential = await this.findOneAccessibleById(id);
     return this.credentialRepo.remove(credential);
   }
 
-  async checkIsNameTaken(name: string, userId: number) {
+  async updateAttribute(id: string, attributeName: string, attributeDto: UpdateAttributeDto, user: IUser) {
+    const credential = await this.findOneAccessibleById(id);
+
+    if (!credential) {
+      throw new NotFoundException(`Could not find credential with id ${id}`);
+    }
+
+    const attribute = credential.attributes.find((attr) => attr.name === attributeName);
+
+    const encryptedValue = this.secretService.encrypt('', user.tenantId);
+    const secretEntity: Secret = {
+      ...encryptedValue,
+      tenantId: user.tenantId,
+      id: attribute.secretId,
+    };
+
+    const secret = await this.secretService.save(secretEntity)
+      .catch((error) => {
+        throw new BadRequestException(`Failed to update secret: ${error.message}`);
+      });
+
+    if (!attribute) {
+      throw new NotFoundException(`Could not find attribute with name ${attributeName}`);
+    }
+
+    const updatedAttribute = {
+      ...attribute,
+      ...attributeDto,
+      secret,
+    };
+
+    const updatedAttributes = credential.attributes.map((item) => {
+      if (item.name === attributeName) {
+        return updatedAttribute;
+      }
+
+      return item;
+    });
+
+    const updatedCredential = this.credentialRepo.create({
+      ...credential,
+      attributes: updatedAttributes,
+      updatedById: user.id,
+    });
+
+    return this.credentialRepo.save(updatedCredential);
+  }
+
+    async checkIsNameTaken(name: string, userId: number) {
     const result = await this.credentialRepo.findOne({
       where: {
         name,
         createdById: userId,
       }
     });
+
     return Boolean(result);
   }
 

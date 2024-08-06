@@ -60,7 +60,6 @@ export class UserEntity implements IUser {
         name: 'jhi_user_authority',
         joinColumn: { name: 'user_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' },
-        synchronize: false,
     })
         authorities: IAuthority[];
 
@@ -83,7 +82,7 @@ export class UserEntity implements IUser {
     @OneToMany(
         () => CredentialCollectionUser,
         (credentialCollectionUser) =>
-            credentialCollectionUser.user
+            credentialCollectionUser.userId,
     )
     credentialCollectionUser: CredentialCollectionUser[];
 }

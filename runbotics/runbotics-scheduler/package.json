@@ -31,7 +31,6 @@
         "@nestjs/core": "^9.2.0",
         "@nestjs/jwt": "^9.0.0",
         "@nestjs/passport": "^9.0.0",
-        "@nestjs/mapped-types": "~2.0.5",
         "@nestjs/platform-express": "^9.2.0",
         "@nestjs/platform-socket.io": "^9.1.6",
         "@nestjs/schematics": "^9.0.3",

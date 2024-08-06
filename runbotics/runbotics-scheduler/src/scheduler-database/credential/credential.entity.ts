@@ -15,12 +15,12 @@ import { CredentialTemplate } from '../credential-template/credential-template.e
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 
 @Entity({ schema: 'scheduler' })
-@Unique(['createdById', 'name'])
+@Unique(['collectionId', 'name', 'tenantId'])
 export class Credential {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ name: 'name' })
+    @Column()
     name: string;
 
     @ManyToOne(() => Tenant, (tenant) => tenant.credentials)
@@ -30,7 +30,7 @@ export class Credential {
     @Column('uuid', { name: 'tenant_id' })
     tenantId: string;
 
-    @Column({ name: 'description', nullable: true })
+    @Column({ nullable: true })
     description: string;
 
     @ManyToOne(

@@ -8,8 +8,8 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
-    OneToOne,
     PrimaryGeneratedColumn,
+    Unique,
     UpdateDateColumn,
 } from 'typeorm';
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
@@ -18,7 +18,6 @@ export enum AccessType {
     PRIVATE = 'PRIVATE',
     GROUP = 'GROUP',
 }
-
 export enum Color {
     ORANGE = 'ORANGE',
     YELLOW = 'YELLOW',
@@ -28,6 +27,7 @@ export enum Color {
 }
 
 @Entity({ schema: 'scheduler', name: 'credential_collection' })
+@Unique(['name', 'tenantId', 'createdById'])
 export class CredentialCollection {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -51,7 +51,7 @@ export class CredentialCollection {
     })
     createdAt: string;
 
-    @OneToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity)
     @JoinColumn({ name: 'created_by_id' })
     createdBy: UserEntity;
 
@@ -64,26 +64,21 @@ export class CredentialCollection {
     })
     updatedAt: string;
 
-    @OneToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity)
     @JoinColumn({ name: 'updated_by_id' })
     updatedBy: UserEntity;
 
     @Column({ name: 'updated_by_id' })
     updatedById: number;
 
-    @OneToMany(
-        () => CredentialCollectionUser,
-        (credentialCollectionUser) =>
-            credentialCollectionUser.credentialCollection,
-        { cascade: true }
-    )
+    @OneToMany(() => CredentialCollectionUser, (credentialCollectionUser) => credentialCollectionUser.credentialCollection, { cascade: true })
     credentialCollectionUser: CredentialCollectionUser[];
 
     @OneToMany(() => Credential, (credential) => credential.collection)
     @JoinColumn({ name: 'collection_id' })
     credentials: Credential[];
 
-    @Column('enum', { enum: AccessType, default: AccessType.PRIVATE })
+    @Column('enum', { name: 'access_type', enum: AccessType, default: AccessType.PRIVATE })
     accessType: AccessType;
 
     @Column('enum', { enum: Color, default: Color.ORANGE })

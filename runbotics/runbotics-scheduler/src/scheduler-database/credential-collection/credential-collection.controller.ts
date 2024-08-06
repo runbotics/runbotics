@@ -20,8 +20,10 @@ import {
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { Logger } from '#/utils/logger';
 import { AuthRequest } from '#/types';
+import { User } from '#/utils/decorators/user.decorator';
+import { IUser } from 'runbotics-common';
 
-@Controller('credential-collections')
+@Controller('api/scheduler/tenants/:tenantId/credential-collections')
 export class CredentialCollectionController {
     private readonly logger = new Logger(CredentialCollectionController.name);
     constructor(
@@ -29,51 +31,51 @@ export class CredentialCollectionController {
     ) {}
 
     @Post()
-    async createCredentialCollection(
+    async create(
         @Body(new ZodValidationPipe(createCredentialCollectionSchema))
         createCredentialCollectionDto: CreateCredentialCollectionDto,
-        @Request() request: AuthRequest
+        @User() user: IUser,
     ) {
         this.logger.log(
-            '=> Creating new credential collection: ',
-            createCredentialCollectionDto
+            'Creating new credential collection: ',
+            JSON.stringify(createCredentialCollectionDto, null, 2)
         );
 
         const collection = await this.credentialCollectionService.create(
             createCredentialCollectionDto,
-            request.user,
+            user,
         );
 
-        this.logger.log('<= Created new credential collection: ', collection);
+        this.logger.log('Created new credential collection: ', JSON.stringify(collection, null, 2));
 
         return collection;
     }
 
     @Get()
-    findAllCredentialCollections(@Request() request: AuthRequest) {
-        this.logger.log('=> Getting all credential collections');
+    findAll(@Request() request: AuthRequest) {
+        this.logger.log('Getting all credential collections');
 
         return this.credentialCollectionService.findAll(request.user);
     }
 
     @Get(':id')
-    findOneCredentialCollection(
+    findOne(
         @Param('id') id: string,
         @Request() request: AuthRequest
     ) {
-        this.logger.log(`=> Getting credential collection with id (${id})`);
+        this.logger.log(`Getting credential collection with id (${id})`);
 
         return this.credentialCollectionService.findOne(id, request.user);
     }
 
     @Patch(':id')
-    updateCredentialCollection(
+    update(
         @Param('id') id: string,
         @Body(new ZodValidationPipe(updateCredentialCollectionSchema))
         updateCredentialCollectionDto: UpdateCredentialCollectionDto,
         @Request() request: AuthRequest
     ) {
-        this.logger.log(`=> Updating credential collection with id (${id})`);
+        this.logger.log(`Updating credential collection with id (${id})`);
 
         return this.credentialCollectionService.update(
             id,
@@ -83,8 +85,8 @@ export class CredentialCollectionController {
     }
 
     @Delete(':id')
-    removeCredentialCollection(@Param('id') id: string) {
-        this.logger.log(`=> Deleting credential collection with id (${id})`);
+    delete(@Param('id') id: string) {
+        this.logger.log(`Deleting credential collection with id (${id})`);
 
         return this.credentialCollectionService.remove(id);
     }

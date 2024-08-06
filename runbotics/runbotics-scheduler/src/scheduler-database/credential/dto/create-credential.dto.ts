@@ -1,3 +1,4 @@
+import { Reveal } from '#/utils/generic.types';
 import { z } from 'zod';
 
 export const createCredentialSchema = z.object({
@@ -6,4 +7,9 @@ export const createCredentialSchema = z.object({
     description: z.string().optional(),
 }).strict();
 
-export type CreateCredentialDto = z.infer<typeof createCredentialSchema>;
+type PartialCreateCredentialDto = z.infer<typeof createCredentialSchema>;
+
+export type CreateCredentialDto = Reveal<
+    PartialCreateCredentialDto &
+    Required<Pick<PartialCreateCredentialDto, 'name' | 'templateId'>>
+>;

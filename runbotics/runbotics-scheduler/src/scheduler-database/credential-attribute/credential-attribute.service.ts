@@ -126,7 +126,6 @@ export class CredentialAttributeService {
   }
 
   async delete(id: string, request: AuthRequest): Promise<DeleteResult> {
-    const { user: { tenantId } } = request;
     const attribute = await this.findOneById(id);
 
     if (!attribute) {

@@ -21,22 +21,20 @@ export class CredentialCollectionUser {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => CredentialCollection, (collection) => collection, {
-        onDelete: 'CASCADE',
-    })
+    @ManyToOne(() => CredentialCollection, (collection) => collection, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'collection_id' })
     credentialCollection: CredentialCollection;
 
-    @Column('uuid', { name: 'collection_id' })
+    @Column({ name: 'collection_id', type: 'uuid' })
     credentialCollectionId: string;
 
     @ManyToOne(() => UserEntity, (user) => user, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_id' })
     user: UserEntity;
 
-    @Column('number', { name: 'user_id' })
+    @Column({ name: 'user_id', type: 'bigint' })
     userId: number;
 
-    @Column('enum', { enum: PrivilegeType, default: PrivilegeType.WRITE })
+    @Column({ name: 'privilege_type', type: 'enum', enum: PrivilegeType, default: PrivilegeType.WRITE })
     privilegeType: PrivilegeType;
 }
