@@ -36,10 +36,7 @@ export class CredentialCollectionController {
         createCredentialCollectionDto: CreateCredentialCollectionDto,
         @User() user: IUser,
     ) {
-        this.logger.log(
-            'Creating new credential collection: ',
-            JSON.stringify(createCredentialCollectionDto, null, 2)
-        );
+        this.logger.log('Creating new credential collection');
 
         const collection = await this.credentialCollectionService.create(
             createCredentialCollectionDto,
@@ -65,7 +62,7 @@ export class CredentialCollectionController {
     ) {
         this.logger.log(`Getting credential collection with id (${id})`);
 
-        return this.credentialCollectionService.findOne(id, request.user);
+        return this.credentialCollectionService.findOneById(id, request.user);
     }
 
     @Patch(':id')

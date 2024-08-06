@@ -14,6 +14,8 @@ import {
 import { UserService } from '#/database/user/user.service';
 import { IUser, Tenant } from 'runbotics-common';
 
+const relations = ['credentials', 'credentialCollectionUser'];
+
 @Injectable()
 export class CredentialCollectionService {
     private readonly logger = new Logger(CredentialCollectionService.name);
@@ -30,7 +32,6 @@ export class CredentialCollectionService {
         createCredentialCollectionDto: CreateCredentialCollectionDto,
         user: IUser,
     ) {
-        this.logger.debug('createCredentialCollectionDto', JSON.stringify(createCredentialCollectionDto, null, 2));
         const tenantId = user.tenantId;
         const {
             name,
@@ -74,7 +75,6 @@ export class CredentialCollectionService {
             credentialCollection.credentialCollectionUser.push(
                 credentialCollectionCreator
             );
-            this.logger.debug('Creating private credential collection', JSON.stringify(credentialCollection, null, 2));
             return this.credentialCollectionRepository.save(
                 credentialCollection
             );
@@ -92,7 +92,6 @@ export class CredentialCollectionService {
             credentialCollection.credentialCollectionUser =
                 credentialCollectionUserArray;
         }
-        this.logger.debug('Creating group credential collection', JSON.stringify(credentialCollection, null, 2));
         return this.credentialCollectionRepository.save(credentialCollection);
     }
 
@@ -104,6 +103,7 @@ export class CredentialCollectionService {
                     userId: user.id,
                 },
             },
+            relations,
         });
 
         if (collections.length === 0) {
@@ -113,7 +113,7 @@ export class CredentialCollectionService {
         return collections;
     }
 
-    async findOne(id: string, user: IUser) {
+    async findOneById(id: string, user: IUser) {
         const collection = await this.credentialCollectionRepository.findOne({
             where: {
                 id,
@@ -122,6 +122,7 @@ export class CredentialCollectionService {
                     userId: user.id,
                 },
             },
+            relations,
         });
 
         if (!collection) {
@@ -181,7 +182,20 @@ export class CredentialCollectionService {
 
         return this.credentialCollectionRepository
             .save(credentialToUpdate)
-            .catch((error) => {
+            .catch(async (error) => {
+                const isNameTaken = Boolean(
+                    await this.findOneByCriteria(tenantId, {
+                        name: dto.name,
+                        createdById: user.id,
+                    })
+                );
+
+                if (isNameTaken) {
+                    throw new BadRequestException(
+                        `Collection with name "${dto.name}" already exists`
+                    );
+                }
+
                 throw new BadRequestException(error.message);
             });
     }

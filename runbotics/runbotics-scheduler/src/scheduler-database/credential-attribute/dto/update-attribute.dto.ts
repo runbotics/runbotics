@@ -4,7 +4,6 @@ import { Reveal } from '#/utils/generic.types';
 
 export const updateAttributeSchema = createAttributeSchema.pick({
     value: true,
-    description: true,
     masked: true,
 });
 

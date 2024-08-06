@@ -7,12 +7,14 @@ import { IUser } from 'runbotics-common';
 import { User } from '#/utils/decorators/user.decorator';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 
-@Controller('api/scheduler/tenants/:tenantId/credential-collections/:collectionId/credentials')
+const COLLECTION_URL_PARTIAL = 'credential-collections/:collectionId/credentials/';
+
+@Controller('api/scheduler/tenants/:tenantId')
 export class CredentialController {
   private readonly logger = new Logger(CredentialController.name);
   constructor(private readonly credentialService: CredentialService) {}
 
-  @Post()
+  @Post('credential-collections/:collectionId/credentials')
   create(
     @Body(new ZodValidationPipe(createCredentialSchema)) credentialDto: CreateCredentialDto,
     @Param('collectionId') collectionId,
@@ -21,28 +23,33 @@ export class CredentialController {
     return this.credentialService.create(credentialDto, collectionId, user);
   }
 
-  @Get()
-  findAllUserAccessible(@Param('tenantId') tenantId: string) {
-    return this.credentialService.findAllAccessibleByCollectionId(tenantId);
+  @Get('credential-collections/:collectionId/credentials')
+  findAllUserAccessible(@User() user: IUser, @Param('collectionId') collectionId: string) {
+    return this.credentialService.findAllAccessibleByCollectionId(user, collectionId);
   }
 
-  @Get(':id')
+  @Get('credential-collections/:collectionId/credentials/:id')
   findOneUserAccessible(@Param('id') id: string) {
     return this.credentialService.findOneAccessibleById(id);
   }
 
-  @Patch(':id')
+  @Patch('credential-collections/:collectionId/credentials/:id')
   update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialSchema)) credentialDto: UpdateCredentialDto, @User() user: IUser) {
     return this.credentialService.updateById(id, credentialDto, user);
   }
 
-  @Patch(':id/UpdateAttribute/:attributeName')
+  @Patch('credential-collections/:collectionId/credentials:id/UpdateAttribute/:attributeName')
   updateAttribute(@Param('id') id: string, @Param('attributeName') attributeName: string, @Body() attributeDto: UpdateAttributeDto, @User() user: IUser) {
     return this.credentialService.updateAttribute(id, attributeName, attributeDto, user);
   }
 
-  @Delete(':id')
+  @Delete('credential-collections/:collectionId/credentials/:id')
   remove(@Param('id') id: string) {
     return this.credentialService.removeById(id);
+  }
+
+  @Get('credentials')
+  findAllAccessible(@Param('tenantId') tenantId: string, @User() user: IUser) {
+    return this.credentialService.findAllAccessible(tenantId, user);
   }
 }

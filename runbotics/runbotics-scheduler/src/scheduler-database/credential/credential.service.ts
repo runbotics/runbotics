@@ -3,13 +3,13 @@ import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
-import { Repository } from 'typeorm';
-import { AuthRequest } from '#/types';
+import { In, Repository } from 'typeorm';
 import { IUser } from 'runbotics-common';
 import { CredentialTemplateService } from '../credential-template/credential-template.service';
 import { SecretService } from '../secret/secret.service';
 import { Secret } from '../secret/secret.entity';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
+import { CredentialCollectionService } from '../credential-collection/credential-collection.service';
 
 const relations = ['attributes'];
 
@@ -22,6 +22,7 @@ export class CredentialService {
     private readonly credentialRepo: Repository<Credential>,
     private readonly templateService: CredentialTemplateService,
     private readonly secretService: SecretService,
+    private readonly collectionService: CredentialCollectionService,
   ) { }
 
   async create(credentialDto: CreateCredentialDto, collectionId: string, user: IUser) {
@@ -72,14 +73,51 @@ export class CredentialService {
       });
   }
 
-  async findAllAccessibleByCollectionId(tenantId: string) {
-    return this.credentialRepo.find({
+  async findAllAccessible(tenantId: string, user: IUser) {
+    const accessibleCollections = await this.collectionService.findAll(user);
+
+    if (accessibleCollections.length === 0) {
+      throw new NotFoundException('Could not find any accessible collections');
+    }
+    return accessibleCollections.map((collection) => collection.credentials);
+
+    const collectionIds = accessibleCollections.map((collection) => collection.id);
+
+    const credentials = await this.credentialRepo.find({
       where: {
-        tenantId
-        // @todo has access to by shared collection
+        tenantId,
+        collectionId: In(collectionIds),
       },
       relations
     });
+
+    return credentials;
+  }
+
+  async findByCriteria(tenantId: string, criteria: Partial<Credential>) {
+    return this.credentialRepo.find({
+      where: {
+        tenantId,
+        ...criteria
+      },
+      relations
+    });
+  }
+
+  async findAllAccessibleByCollectionId(user: IUser, collectionId: string) {
+    const collection = await this.collectionService.findOneById(collectionId, user);
+
+    if (!collection) {
+      throw new NotFoundException(`Could not find collection with id ${collection}`);
+    }
+
+    const credentials = await this.findByCriteria(user.tenantId, { collectionId });
+
+    if (credentials.length === 0) {
+      throw new NotFoundException(`Could not find credentials for collection with id ${collectionId}`);
+    }
+
+    return credentials;
   }
 
   async findOneAccessibleById(id: string) {

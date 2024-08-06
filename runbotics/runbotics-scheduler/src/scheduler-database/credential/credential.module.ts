@@ -5,14 +5,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
 import { UserModule } from '#/database/user/user.module';
 import { CredentialTemplateModule } from '../credential-template/credential-template.module';
-import { CredentialAttributeModule } from '../credential-attribute/credential-attribute.module';
-import { SecretService } from '../secret/secret.service';
 import { SecretModule } from '../secret/secret.module';
+import { CredentialCollectionModule } from '../credential-collection/credential-collection.module';
+import { CredentialCollectionService } from '../credential-collection/credential-collection.service';
+import { CredentialCollection } from '../credential-collection/credential-collection.entity';
+import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Credential]), UserModule, CredentialAttributeModule, CredentialTemplateModule, SecretModule],
+  imports: [TypeOrmModule.forFeature([Credential, CredentialCollection, CredentialCollectionUser]), UserModule, CredentialTemplateModule, SecretModule, CredentialCollectionModule],
   controllers: [CredentialController],
-  providers: [CredentialService],
+  providers: [CredentialService, CredentialCollectionService],
   exports: [CredentialService]
 })
 export class CredentialModule {}
