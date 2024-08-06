@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, UseInterceptors } from '@nestjs/common';
 
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Logger } from '#/utils/logger';
@@ -26,12 +26,20 @@ export class TagController {
         return await this.tagService.getAll(tenantId, searchPhrase);
     }
 
-    @Get('/:id')
-    getTag(
+    @Get(':id')
+    async getTag(
         @Param('id', ParseIntPipe) id: number,
         @User() user: UserEntity
     ) {
         this.logger.log(`REST request to get one tag by id: ${id}`);
+
+        const foundTag = await this.tagService.getById(id, user);
+        
+        if (!foundTag) {
+            this.logger.log(`Tag with id ${id} not found`);
+            throw new BadRequestException(`Tag with id ${id} not found`);
+        }
+
         return this.tagService.getById(id, user);
     }
 
@@ -44,7 +52,7 @@ export class TagController {
         return this.tagService.create(user, tagDto);
     }
 
-    @Delete('/:id')
+    @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteTagById(
         @Param('id', ParseIntPipe) id: number,
