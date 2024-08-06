@@ -19,7 +19,7 @@ import { TagModule } from './tags/tag.module';
         GlobalVariableModule,
         NotificationBotModule,
         NotificationProcessModule,
-        TagModule
+        TagModule,
     ],
     exports: [],
 })

@@ -74,10 +74,11 @@ const TagsInput: FC<TagsInputProps> = ({
     const refreshTagList = (searchedValue: string) => {
         if (searchedValue === '') return;
 
-        dispatch(processActions.getTagsByName({pageParams:  { filter: { contains: { 'name': debouncedSearch } } }}
+        dispatch(processActions.getTagsByName({ 
+            pageParams: { filter: { contains: { name: debouncedSearch } } } }
         ))
             .then(unwrapResult)
-            .then((tags) => {
+            .then(tags => {
                 setAutocompleteList(tags);
             });
     };

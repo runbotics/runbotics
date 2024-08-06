@@ -159,7 +159,7 @@ export const deleteProcess = createAsyncThunk<void, { processId: number }>(
     },
 );
 
-export const getTagsByName = ApiTenantResource.get<Tag[]>('tags/getByName', TAGS_PATH);
+export const getTagsByName = ApiTenantResource.get<Tag[], PageRequestParams>('tags/getByName', TAGS_PATH);
 
 export const subscribeProcessNotifications = ApiTenantResource
     .post<NotificationProcess, { processId: number, type: NotificationProcessType }>
