@@ -39,7 +39,9 @@ export class Expressions {
         } else if (context.environment?.variables?.content?.type === 'bpmn:SubProcess') {
             const elementVariableName = context.environment.variables?.content?.input?.elementVariable;
             context.environment.variables[elementVariableName] = context.environment.variables?.content?.[elementVariableName];
-        } else if (jexlServicePattern.test(templatedString)) {
+        }
+
+        if (jexlServicePattern.test(templatedString)) {
             templatedString = Expressions.getFullServiceMethodCall(templatedString, context, expressionFnContext);
         }
 
