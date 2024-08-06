@@ -14,7 +14,7 @@ export class CredentialController {
   private readonly logger = new Logger(CredentialController.name);
   constructor(private readonly credentialService: CredentialService) {}
 
-  @Post('credential-collections/:collectionId/credentials')
+  @Post(COLLECTION_URL_PARTIAL)
   create(
     @Body(new ZodValidationPipe(createCredentialSchema)) credentialDto: CreateCredentialDto,
     @Param('collectionId') collectionId,
@@ -23,27 +23,27 @@ export class CredentialController {
     return this.credentialService.create(credentialDto, collectionId, user);
   }
 
-  @Get('credential-collections/:collectionId/credentials')
+  @Get(COLLECTION_URL_PARTIAL)
   findAllUserAccessible(@User() user: IUser, @Param('collectionId') collectionId: string) {
     return this.credentialService.findAllAccessibleByCollectionId(user, collectionId);
   }
 
-  @Get('credential-collections/:collectionId/credentials/:id')
+  @Get(COLLECTION_URL_PARTIAL + ':id')
   findOneUserAccessible(@Param('id') id: string) {
     return this.credentialService.findOneAccessibleById(id);
   }
 
-  @Patch('credential-collections/:collectionId/credentials/:id')
+  @Patch(COLLECTION_URL_PARTIAL + ':id')
   update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialSchema)) credentialDto: UpdateCredentialDto, @User() user: IUser) {
     return this.credentialService.updateById(id, credentialDto, user);
   }
 
-  @Patch('credential-collections/:collectionId/credentials:id/UpdateAttribute/:attributeName')
+  @Patch(COLLECTION_URL_PARTIAL + ':id/UpdateAttribute/:attributeName')
   updateAttribute(@Param('id') id: string, @Param('attributeName') attributeName: string, @Body() attributeDto: UpdateAttributeDto, @User() user: IUser) {
     return this.credentialService.updateAttribute(id, attributeName, attributeDto, user);
   }
 
-  @Delete('credential-collections/:collectionId/credentials/:id')
+  @Delete(COLLECTION_URL_PARTIAL + ':id')
   remove(@Param('id') id: string) {
     return this.credentialService.removeById(id);
   }
