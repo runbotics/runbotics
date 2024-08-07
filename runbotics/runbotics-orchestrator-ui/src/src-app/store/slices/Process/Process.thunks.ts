@@ -16,17 +16,15 @@ import IProcessWithFilters from '#src-app/views/process/ProcessBrowseView/Proces
 import { StartProcessResponse, UpdateDiagramRequest } from './Process.state';
 
 const PROCESS_NOTIFICATION_PATH = 'notifications-process';
+const TAGS_PATH = 'tags';
 
+// TODO and TO_REVIEW during processes migration
 const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
     .url('/api/processes-page').param('sort', 'updated,desc').params(params).build();
 
+// TODO and TO_REVIEW during process migration
 const processPageByCollectionURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
     .url('/api/processes-page-collection').param('sort', 'updated,desc').params(params).build();
-
-const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
-    .url(url)
-    .params(params)
-    .build();
 
 export const fetchProcessById = createAsyncThunk<
     IProcess,
@@ -161,11 +159,7 @@ export const deleteProcess = createAsyncThunk<void, { processId: number }>(
     },
 );
 
-export const getTagsByName = createAsyncThunk<Tag[], PageRequestParams>(
-    'tags/getByName',
-    (params) => Axios.get<Tag[]>(buildPageURL(params, '/api/tags'))
-        .then((response) => response.data)
-);
+export const getTagsByName = ApiTenantResource.get<Tag[]>('tags/getByName', TAGS_PATH);
 
 export const subscribeProcessNotifications = ApiTenantResource
     .post<NotificationProcess, { processId: number, type: NotificationProcessType }>
