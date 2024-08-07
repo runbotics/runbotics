@@ -33,6 +33,9 @@ export class BotCollectionEntity implements IBotCollection {
     @Column({ transformer: dateTransformer, type: 'varchar' })
         updated: string;
 
+    @Column({ name: 'tenant_id', type: 'uuid' })
+        tenantId: string;
+
     @ManyToOne(() => UserEntity)
     @JoinColumn([{ name: 'created_by', referencedColumnName: 'id' }])
         createdByUser: IUser;

@@ -16,6 +16,7 @@ import {
     IUser,
     IBotCollection,
     IBotSystem,
+    NotificationProcess,
 } from 'runbotics-common';
 import { ScheduleProcessEntity } from '../schedule-process/schedule-process.entity';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
@@ -23,12 +24,16 @@ import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
+import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-database/notification-process/notification-process.entity';
 
 @Entity({ name: 'process', synchronize: false })
 export class ProcessEntity implements IProcess {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
+
+    @Column({ name: 'tenant_id' })
+    tenantId: string;
 
     @Column({ unique: true, type: 'varchar' })
     name: string;
@@ -82,14 +87,6 @@ export class ProcessEntity implements IProcess {
     @JoinColumn({ name: 'editor_id', referencedColumnName: 'id' })
     editor: IUser;
 
-    @ManyToMany(() => UserEntity)
-    @JoinTable({
-        name: 'notification_process',
-        joinColumn: { name: 'process_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    })
-    subscribers: IUser[];
-
     @OneToOne(() => ProcessContext, processContext => processContext.process)
     context: ProcessContext | null;
 
@@ -100,4 +97,8 @@ export class ProcessEntity implements IProcess {
         inverseJoinColumn: { name: 'global_variable_id', referencedColumnName: 'id' }
     })
     globalVariables: GlobalVariable[];
+
+    @OneToMany(() => NotificationProcessEntity, (notificationProcess) => notificationProcess.process)
+    @JoinColumn({ name: 'process_id', referencedColumnName: 'id' })
+    notifications: NotificationProcess[];
 }

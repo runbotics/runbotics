@@ -70,7 +70,7 @@ export class MailService {
     public async sendBotDisconnectionNotificationMail(bot: IBot, installationId: string) {
         const disconnectedBot = await this.botService.findById(bot.id);
         const botAssignedUserEmail = disconnectedBot.user.email;
-        const subscribers = disconnectedBot.subscribers ?? [];
+        const subscribers = disconnectedBot.notifications.map(notification => notification.user);
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
@@ -96,7 +96,7 @@ export class MailService {
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
         const failedProcess = await this.processService.findById(process.id);
         const processCreatorEmail = failedProcess.createdBy.email;
-        const subscribers = failedProcess.subscribers ?? [];
+        const subscribers = failedProcess.notifications.map(notification => notification.user);
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
