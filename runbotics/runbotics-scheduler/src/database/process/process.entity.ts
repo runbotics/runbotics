@@ -16,6 +16,7 @@ import {
     IUser,
     IBotCollection,
     IBotSystem,
+    NotificationProcess,
 } from 'runbotics-common';
 import { ScheduleProcessEntity } from '../schedule-process/schedule-process.entity';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
@@ -23,6 +24,7 @@ import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
+import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-database/notification-process/notification-process.entity';
 
 @Entity({ name: 'process', synchronize: false })
 export class ProcessEntity implements IProcess {
@@ -95,4 +97,8 @@ export class ProcessEntity implements IProcess {
         inverseJoinColumn: { name: 'global_variable_id', referencedColumnName: 'id' }
     })
     globalVariables: GlobalVariable[];
+
+    @OneToMany(() => NotificationProcessEntity, (notificationProcess) => notificationProcess.process)
+    @JoinColumn({ name: 'process_id', referencedColumnName: 'id' })
+    notifications: NotificationProcess[];
 }

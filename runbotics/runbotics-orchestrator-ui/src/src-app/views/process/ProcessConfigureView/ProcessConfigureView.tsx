@@ -63,7 +63,7 @@ const ProcessConfigureView: VFC = () => {
         })), [processSubscriptions]);
 
     const handleGetProcessSubscribers = async () => {
-        await dispatch(processActions.getProcessSubscriptionInfo({ resourceId: `processes/${processId}` }));
+        await dispatch(processActions.getProcessSubscriptionInfo({ resourceId: processId }));
     };
 
     useEffect(() => {

@@ -5,6 +5,7 @@ import {
     ManyToOne,
     JoinColumn,
     Generated,
+    OneToMany,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import {
@@ -13,10 +14,12 @@ import {
     IUser,
     IBotCollection,
     IBotSystem,
+    NotificationBot,
 } from 'runbotics-common';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
+import { NotificationBot as NotificationBotEntity } from '#/scheduler-database/notification-bot/notification-bot.entity';
 
 @Entity({ name: 'bot', synchronize: false })
 export class BotEntity implements IBot {
@@ -50,4 +53,8 @@ export class BotEntity implements IBot {
     @ManyToOne(() => BotCollectionEntity)
     @JoinColumn([{ name: 'collection_id', referencedColumnName: 'id' }])
     collection: IBotCollection;
+
+    @OneToMany(() => NotificationBotEntity, (notificationBot) => notificationBot.bot)
+    @JoinColumn({ name: 'bot_id', referencedColumnName: 'id' })
+    notifications: NotificationBot[];
 }

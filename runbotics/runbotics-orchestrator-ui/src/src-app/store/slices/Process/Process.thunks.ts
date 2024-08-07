@@ -175,4 +175,4 @@ export const unsubscribeProcessNotifications = ApiTenantResource
     .delete<void>('processes/unsubscribeProcessNotifications', PROCESS_NOTIFICATION_PATH);
 
 export const getProcessSubscriptionInfo = ApiTenantResource
-    .get<NotificationProcess[]>('processes/getProcessSubscriptionInfo', PROCESS_NOTIFICATION_PATH);
+    .get<NotificationProcess[]>('processes/getProcessSubscriptionInfo', `${PROCESS_NOTIFICATION_PATH}/processes`);

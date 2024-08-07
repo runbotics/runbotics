@@ -38,7 +38,7 @@ const BotConfigure: FC = () => {
         })), [botSubscriptions]);
 
     const handleGetBotSubscribers = async () => {
-        await dispatch(botActions.getBotSubscriptionInfo({ resourceId: `bots/${botId}` }));
+        await dispatch(botActions.getBotSubscriptionInfo({ resourceId: botId }));
     };
 
     useEffect(() => {

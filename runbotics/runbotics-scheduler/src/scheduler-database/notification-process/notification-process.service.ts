@@ -74,6 +74,8 @@ export class NotificationProcessService {
 
     private async checkProcessAccessAndGetById(processId: number, user: UserEntity) {
         // TODO: to be updated after process migration to scheduler
+        // Explanation: Process privileges should be based on process collections
+        // and checking privileges should be adjusted
         return user.authorities.find(authority => authority.name === Role.ROLE_TENANT_ADMIN)
             ? this.processRepository.findOneByOrFail({ id: processId, tenantId: user.tenantId })
                 .catch(() => {

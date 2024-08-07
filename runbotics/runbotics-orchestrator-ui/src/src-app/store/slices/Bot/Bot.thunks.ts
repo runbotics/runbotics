@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IBot, IUser, NotificationBot, NotificationBotType } from 'runbotics-common';
+import { IBot, NotificationBot, NotificationBotType } from 'runbotics-common';
 
-import { IProcess } from '#src-app/types/model/process.model';
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import Axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
@@ -10,7 +9,7 @@ import URLBuilder from '#src-app/utils/URLBuilder';
 const BOT_NOTIFICATION_PATH = 'notifications-bot';
 
 
-const botPageURL = (params: PageRequestParams<IProcess>) => URLBuilder
+const botPageURL = (params: PageRequestParams<IBot>) => URLBuilder
     .url('/api/bots-page')
     .params(params)
     .build();
@@ -52,4 +51,4 @@ export const unsubscribeBotNotifications = ApiTenantResource
     .delete<void>('bot/unsubscribeBotNotifications', BOT_NOTIFICATION_PATH);
 
 export const getBotSubscriptionInfo = ApiTenantResource
-    .get<NotificationBot[]>('bot/getBotSubscriptionInfoByBotId', BOT_NOTIFICATION_PATH);
+    .get<NotificationBot[]>('bot/getBotSubscriptionInfoByBotId', `${BOT_NOTIFICATION_PATH}/bots`);
