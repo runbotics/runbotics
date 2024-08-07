@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   runbotics-portainer:
     container_name: runbotics-portainer

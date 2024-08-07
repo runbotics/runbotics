@@ -10,9 +10,11 @@ import { SecretService } from '#/scheduler-database/secret/secret.service';
 // import { Secret } from '#/scheduler-database/secret/secret.entity';
 // import { ProcessContextSecret } from '#/scheduler-database/process-context-secret/process-context-secret.entity';
 // import * as util from 'util';
+import { Logger } from '#/utils/logger';
 
 @Injectable()
 export class ProcessContextService implements OnModuleInit {
+    private readonly logger = new Logger(ProcessContextService.name);
 
     constructor(
         @InjectRepository(ProcessContext)
@@ -22,7 +24,7 @@ export class ProcessContextService implements OnModuleInit {
     }
 
     async onModuleInit() {
-        // example
+        // example;
 
         // const secret = this.secretService.encrypt('dupa', 'b7f9092f-5973-c781-08db-4d6e48f78e98');
         // await this.processContextRepository.manager.save(Secret, secret);
@@ -30,18 +32,19 @@ export class ProcessContextService implements OnModuleInit {
         // ctx.processId = 1001;
         // ctx.tenantId = 'b7f9092f-5973-c781-08db-4d6e48f78e98';
         // await this.processContextRepository.save(ctx);
-        //
+
         // const ctxSecret = new ProcessContextSecret();
-        //
+
         // ctxSecret.secretId = secret.id;
         // ctxSecret.tenantId = 'b7f9092f-5973-c781-08db-4d6e48f78e98';
         // ctxSecret.processContextId = ctx.id;
         // ctxSecret.name = 'dupa';
-        //
+        // ctxSecret.order = 1;
+
         // await this.processContextRepository.manager.save(ProcessContextSecret, ctxSecret);
-        //
+
         // const result = await this.getDecryptedContext(1001, 'b7f9092f-5973-c781-08db-4d6e48f78e98');
-        // console.log('decrypted data', util.inspect(result.secrets[0].secret));
+        // this.logger.debug('decrypted data', util.inspect(result.secrets[0].secret));
     }
 
     async getDecryptedContext(processId: number, tenantId: string): Promise<DecryptedProcessContextDto> {

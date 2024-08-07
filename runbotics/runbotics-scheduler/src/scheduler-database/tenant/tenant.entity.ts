@@ -5,6 +5,9 @@ import { UserEntity } from '#/database/user/user.entity';
 import { Secret } from '../secret/secret.entity';
 import { ProcessContextSecret } from '../process-context-secret/process-context-secret.entity';
 import { ProcessContext } from '../process-context/process-context.entity';
+import { CredentialAttribute } from '../credential-attribute/credential-attribute.entity';
+import { CredentialCollection } from '../credential-collection/credential-collection.entity';
+import { Credential } from '../credential/credential.entity';
 
 @Entity()
 export class Tenant {
@@ -38,4 +41,13 @@ export class Tenant {
 
     @OneToMany(() => ProcessContext, processContext => processContext.tenant)
     processContexts: ProcessContext[];
+
+    @OneToMany(() => CredentialAttribute, attribute => attribute.tenant)
+    attributes: CredentialAttribute[];
+
+    @OneToMany(() => Credential, credential => credential.tenant)
+    credentials: Credential[];
+
+    @OneToMany(() => CredentialCollection, credentialCollection => credentialCollection.tenant)
+    credentialCollections: CredentialCollection[];
 }
