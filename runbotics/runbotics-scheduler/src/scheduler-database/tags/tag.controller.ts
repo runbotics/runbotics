@@ -18,12 +18,12 @@ export class TagController {
     constructor(private readonly tagService: TagService) {}
     
     @Get()
-    async getAllTags(
+    getAllTags(
         @Param('tenantId', ParseUUIDPipe) tenantId: Tenant['id'],
         @Query('name.contains') searchPhrase: string | undefined
     ) {
         this.logger.log(`REST request to get all tags for the tenant: ${tenantId}`);
-        return await this.tagService.getAll(tenantId, searchPhrase);
+        return this.tagService.getAll(tenantId, searchPhrase);
     }
 
     @Get(':id')
@@ -35,10 +35,7 @@ export class TagController {
 
         const foundTag = await this.tagService.getById(id, user);
         
-        if (!foundTag) {
-            this.logger.log(`Tag with id ${id} not found`);
-            throw new BadRequestException(`Tag with id ${id} not found`);
-        }
+        if (!foundTag) throw new BadRequestException(`Tag with id ${id} not found`);
 
         return this.tagService.getById(id, user);
     }
