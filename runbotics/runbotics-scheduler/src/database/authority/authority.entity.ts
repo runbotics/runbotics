@@ -11,7 +11,7 @@ export class AuthorityEntity implements IAuthority {
     @JoinTable({
         name: 'authority_feature_key',
         joinColumn: { name: 'authority', referencedColumnName: 'name' },
-        inverseJoinColumn: { name: 'feature_key', referencedColumnName: 'name' }
+        inverseJoinColumn: { name: 'feature_key', referencedColumnName: 'name' },
     })
         featureKeys: IFeatureKey[];
 }
