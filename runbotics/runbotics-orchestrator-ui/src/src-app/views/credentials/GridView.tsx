@@ -8,22 +8,19 @@ import styled from 'styled-components';
 
 import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
+
 import If from '#src-app/components/utils/If';
+
 import { useSelector } from '#src-app/store';
-
-
 import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
 import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
+import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import { getCredentials } from './Credentials/Credentials.utils';
-import { GridViewProps } from './Credentials.types';
-
+import { GridViewProps } from './GridView.types';
 import { CredentialsTabs } from './Header';
 import { CollectionsRoot } from '../bot/BotCollectionView/BotCollectionView.styles';
-
-
-import { getLastParamOfUrl } from '../utils/routerUtils';
 
 const TileGrid = styled.div`
     display: grid;
@@ -42,6 +39,7 @@ const GridView: FC<GridViewProps> = () => {
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
     
+    const credentialTemplates = useSelector(state => state.credentialTemplates.data);
 
     useEffect(() => {
         dispatch(fetchAllCredentials());

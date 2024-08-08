@@ -1,4 +1,3 @@
-
 import { Box } from '@mui/material';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
