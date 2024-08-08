@@ -10,6 +10,7 @@ import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsColle
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 
 import If from '#src-app/components/utils/If';
+
 import { useSelector } from '#src-app/store';
 
 import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
