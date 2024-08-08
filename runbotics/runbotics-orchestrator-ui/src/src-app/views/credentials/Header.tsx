@@ -6,9 +6,15 @@ import { useRouter } from 'next/router';
 
 import styled from 'styled-components';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+// import { DefaultPageSize } from './ProcessList/ProcessList.utils';
+// import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
+import AddCollectionButton from '../process/ProcessCollectionView/AddCollection/AddCollectionButton';
 import { getLastParamOfUrl } from '../utils/routerUtils';
+// import AddProcess from '../AddProcess';
+// import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
 
 const PREFIX = 'Header';
 
@@ -95,8 +101,14 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>
-                    {/* <AddCredential/> */}
-                    {/* <AddCredentialsCollection/> */}
+                    {/* <AddNewCredentialButton/> */}
+                    <AddCollectionButton/>
+                    {/* <If condition={hasProcessAddAccess}>
+                        <AddProcess />
+                    </If>
+                    <If condition={hasAddCollectionAccess}>
+                        <AddCollectionButton />
+                    </If> */}
                 </Stack>
             </Grid>
         </StyledGrid>
