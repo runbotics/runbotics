@@ -212,10 +212,7 @@ export enum FeatureKey {
     TENANT_CREATE_ALL_INVITE_CODE = 'TENANT_CREATE_ALL_INVITE_CODE',
 
     // Allows to read credentials
-    CREDENTIALS_READ = 'CREDENTIALS_READ',
-    
-    // Allows to read credenitals collections
-    CREDENTIALS_COLLECTIONS_READ = 'CREDENTIALS_COLLECTIONS_READ'
+    CREDENTIALS_PAGE_READ = 'CREDENTIALS_PAGE_READ',
 }
 
 export interface IFeatureKey {

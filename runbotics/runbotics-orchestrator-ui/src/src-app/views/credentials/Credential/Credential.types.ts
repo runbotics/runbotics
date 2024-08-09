@@ -1,7 +1,7 @@
 
 import { CredentialTemplateAttribute } from '#src-app/store/slices/CredentialTemplates';
 
-import { BasicAttributeDto } from './EditCredential/CredentialAttribute/Attribute.types';
+import { Attribute, BasicAttributeDto } from './EditCredential/CredentialAttribute/Attribute.types';
 import { CollectionColorHex } from '../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 
 export enum CredentialTemplateNames {
