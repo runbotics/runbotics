@@ -17,6 +17,7 @@ import CredentialAttributesList from './CredentialAttributeList/CredentialAttrib
 import { EditCredentialProps } from './EditCredential.types';
 import Header from './Header/Header';
 import { tempCredentials } from '../../Credentials/Credentials.utils';
+import GeneralInfo from '../GeneralInfo/GeneralInfo';
 
 const StyledGrid = styled(Grid)(
     ({ theme }) => `
