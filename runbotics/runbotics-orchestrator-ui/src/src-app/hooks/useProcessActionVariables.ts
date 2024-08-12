@@ -44,41 +44,41 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
 
         return { localVarsAssigningActions, localLoops };
     };
-    
+
     const getVarsAssigningActions = (
-        elements: ModdleElement[], 
-        scopeId: string, 
+        elements: ModdleElement[],
+        scopeId: string,
         currScopeTree: Scope
     ): ActionsAssignedVars => {
         if (!elements) return ({ varsAssigningActions: [], updatedScopeTree: currScopeTree });
-        
+
         const { localVarsAssigningActions, localLoops } = extractElementsMatchingScope(elements, scopeId);
-        
+
         if (localLoops.length <= 0) {
-            return ({ 
+            return ({
                 varsAssigningActions: localVarsAssigningActions,
-                updatedScopeTree: currScopeTree 
+                updatedScopeTree: currScopeTree
             });
         };
-                
+
         const scopeLoopsActions = [];
-        
+
         const updatedScopeTree = localLoops
             .map(
                 scopeLoop => {
                     const loopScopeId = scopeLoop.id;
-                
-                    if (scopeLoop?.flowElements?.length <= 0) { 
+
+                    if (scopeLoop?.flowElements?.length <= 0) {
                         return getUpdatedScopeTree(
                             currScopeTree,
                             scopeId,
                             loopScopeId
-                        ); 
-                    } 
-                
-                    const { 
-                        varsAssigningActions, 
-                        updatedScopeTree: tempUpdatedScopeTree 
+                        );
+                    }
+
+                    const {
+                        varsAssigningActions,
+                        updatedScopeTree: tempUpdatedScopeTree
                     } = getVarsAssigningActions(
                         scopeLoop.flowElements,
                         loopScopeId,
@@ -90,10 +90,10 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
                     return tempUpdatedScopeTree;
                 })
             .reduce(
-                (acc: Scope, curr: Scope) => 
+                (acc: Scope, curr: Scope) =>
                     mergeTrees(acc, curr) as Scope
             );
-            
+
         return ({
             varsAssigningActions: [...localVarsAssigningActions, ...scopeLoopsActions, ...localLoops],
             updatedScopeTree
@@ -104,16 +104,16 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
         rootElement?.businessObject?.flowElements
     ), [rootElement]);
 
-    
+
     const allVarsActions = useMemo<ActionVariables>((): ActionVariables => {
-        const { varsAssigningActions: allVarsAssigningActions, updatedScopeTree } = 
+        const { varsAssigningActions: allVarsAssigningActions, updatedScopeTree } =
             getVarsAssigningActions(
-                allLocalVarsActions, 
-                rootElementScopeId, 
+                allLocalVarsActions,
+                rootElementScopeId,
                 { id: rootElementScopeId }
             );
 
-        
+
         if (!allLocalVarsActions || !canvas) {
             return { inputActionVariables: [], outputActionVariables: [], loopVariables: [], allActionVariables: [] };
         }
@@ -184,17 +184,17 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
             })
             .filter((item: ActionVariableObject[]) => item.length > 0)
             .flat();
-            
+
         const allActionVariables = [...inputActionVars, ...outputActionVars];
 
         if(!selectedElementParentId) return { inputActionVariables: inputActionVars, outputActionVariables: outputActionVars, loopVariables: [], allActionVariables };
-        
+
         const loopIds = allVarsAssigningActions
             .filter((element: ScopedModdleElement) => element.actionId === 'loop.loop')
             .map((element: ScopedModdleElement) => element.id);
-        
+
         const loopIterator = loopIds.includes(selectedElementParentId) ? [{ name: 'iterator', value: 'variable' }] : [];
-            
+
         const parentScopes = getParentScopes(updatedScopeTree, selectedElementParentId);
         if(!Array.isArray(parentScopes)) return { inputActionVariables: [], outputActionVariables: [], loopVariables: [], allActionVariables: [] };
 
@@ -204,12 +204,12 @@ const useProcessActionVariables = (selectedElementParentId?: string) => {
         return {
             inputActionVariables: localInputActionVars,
             outputActionVariables: localOutputActionVars,
-            loopVariables: [...loopIterator],
-            allActionVariables: [...allActionVariables, { name: 'iterator', value: 'variable' }],
+            loopVariables: loopIterator,
+            allActionVariables,
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allLocalVarsActions, canvas, selectedElementParentId]);
-    
+
     return allVarsActions;
 };
 
