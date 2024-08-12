@@ -132,23 +132,23 @@ const Account: FC = () => {
                 open={isOpen}
             >
                 <If condition={hasUserEditAccess}>
-                    <MenuItem>
-                        <MenuLink href='/app/users'>
+                    <MenuLink href='/app/users'>
+                        <MenuItem>
                             {translate('Account.Users')}
-                        </MenuLink>
-                    </MenuItem>
+                        </MenuItem>
+                    </MenuLink>
                 </If>
                 <If condition={hasAdminAccess}>
-                    <MenuItem>
-                        <MenuLink href='/app/tenants'>
+                    <MenuLink href='/app/tenants'>
+                        <MenuItem>
                             {translate('Account.Tenants')}
-                        </MenuLink>
-                    </MenuItem>
-                    <MenuItem>
-                        <MenuLink href='/monitoring/grafana'>
+                        </MenuItem>
+                    </MenuLink>
+                    <MenuLink href='/monitoring/grafana'>
+                        <MenuItem>
                             {translate('Account.Monitoring')}
-                        </MenuLink>
-                    </MenuItem>
+                        </MenuItem>
+                    </MenuLink>
                 </If>
                 <MenuItem onClick={handleLogout}>{translate('Account.Logout')}</MenuItem>
             </Menu>
