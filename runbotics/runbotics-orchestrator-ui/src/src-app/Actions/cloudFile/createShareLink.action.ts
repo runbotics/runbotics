@@ -1,6 +1,6 @@
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
-import { listNameUI, siteNameUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
+import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -9,6 +9,12 @@ export const createShareLinkAction: IBpmnAction = {
     label: translate('Process.Details.Modeler.Actions.CloudFile.CreateShareLink.Label'),
     script: CloudFileAction.CREATE_SHARE_LINK,
     runner: Runner.DESKTOP_SCRIPT,
+    output: {
+        assignVariables: true,
+        outputMethods: {
+            variableName: '${content.output[0]}',
+        },
+    },
     form: {
         schema: {
             type: 'object',
@@ -32,9 +38,9 @@ export const createShareLinkAction: IBpmnAction = {
                                         platform: {
                                             enum: [MicrosoftPlatform.SharePoint],
                                         },
-                                        siteName: {
+                                        siteRelativePath: {
                                             title: translate(
-                                                'Process.Details.Modeler.Actions.Microsoft.SiteName',
+                                                'Process.Details.Modeler.Actions.Microsoft.SiteRelativePath',
                                             ),
                                             type: 'string',
                                         },
@@ -67,7 +73,7 @@ export const createShareLinkAction: IBpmnAction = {
                                             type: 'string',
                                         },
                                     },
-                                    required: ['siteName', 'listName', 'shareType', 'shareScope', 'itemPath'],
+                                    required: ['siteRelativePath', 'listName', 'shareType', 'shareScope', 'itemPath'],
                                 },
                                 {
                                     properties: {
@@ -103,17 +109,35 @@ export const createShareLinkAction: IBpmnAction = {
                         },
                     },
                 },
+                output: {
+                    title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                    type: 'object',
+                    properties: {
+                        variableName: {
+                            title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                            type: 'string',
+                        },
+                    },
+                },
             },
         },
         uiSchema: {
+            'ui:order': ['input', 'output'],
             input: {
-                siteName: siteNameUI,
+                siteRelativePath: siteRelativePathUI,
                 listName: listNameUI,
+            },
+            output: {
+                variableName: {
+                    'ui:options': {
+                        info: translate('Process.Details.Modeler.Actions.Common.VariableName.Info'),
+                    },
+                },
             },
         },
         formData: {
             input: {
-                siteName: undefined,
+                siteRelativePath: undefined,
                 listName: undefined,
                 itemPath: undefined,
                 destinationFolderPath: undefined,
