@@ -80,5 +80,5 @@ export type CloudFileCreateShareLink = OneDriveCreateShareLink | SharePointCreat
 export interface SharepointGetListItems {
     platform: MicrosoftPlatform.SharePoint;
     listName: string;
-    siteName: string;
+    siteRelativePath: string;
 }

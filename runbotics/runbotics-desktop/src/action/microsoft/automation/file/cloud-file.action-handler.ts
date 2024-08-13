@@ -12,6 +12,7 @@ import {
     CloudFileDownloadFileActionInput, CloudFileMoveFileActionInput,
     CloudFileUploadFileActionInput, CloudFileDeleteItemActionInput,
     CloudFileCreateShareLink, SharePointCommon,
+    SharepointGetListItems,
 } from './cloud-file.types';
 import { ServerConfigService } from '#config';
 import { readFileSync } from 'fs';
@@ -218,11 +219,10 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         };
     }
 
-    private async getSharepointListItems({ listName, siteName }: SharepointGetListItems){
-        const site = (await this.sharePointService.getSitesByName(siteName)).value[0];
-
+    private async getSharepointListItems({ listName, siteRelativePath }: SharepointGetListItems){
+        const site = await this.sharePointService.getSiteByRelativePath(siteRelativePath);
         if (!site) {
-            throw new Error(`Site "${siteName}" wasn't found`);
+            throw new Error(`Site for provided path "${siteRelativePath}" not found`);
         }
 
         return this.sharePointService.getListItems(site.id, listName);
