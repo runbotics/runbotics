@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.10.1",
+    "version": "2.11.0-SNAPSHOT.27",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -18,7 +18,8 @@
         "test": "vitest",
         "test:watch": "vitest dev",
         "test:cov": "vitest run --coverage",
-        "test:debug": "vitest --inspect-brk --threads false"
+        "test:debug": "vitest --inspect-brk --threads false",
+        "typeorm": "rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/ormconfig.ts"
     },
     "dependencies": {
         "@azure/msal-node": "^1.15.0",
@@ -64,7 +65,9 @@
         "mime-types": "~2.1.35",
         "@nestjs/schedule": "^2.1.0",
         "cross-fetch": "^3.1.5",
-        "@nestjs-modules/mailer": "1.8.1"
+        "@nestjs-modules/mailer": "1.8.1",
+        "zod": "~3.23.8",
+        "unplugin-swc": "~1.4.5"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",
@@ -92,9 +95,10 @@
         "supertest": "^6.1.3",
         "ts-jest": "^27.0.3",
         "ts-loader": "^9.3.0",
-        "ts-node": "^10.9.1",
-        "tsconfig-paths": "^3.10.1",
-        "typescript": "^5.0.3"
+        "ts-node": "~10.9.2",
+        "tsconfig-paths": "~4.2.0",
+        "typescript": "^5.0.3",
+        "@types/mime-types": "~2.1.4"
     },
     "files": [
         "dist"

@@ -16,6 +16,7 @@ import { processInstanceEventReducer as processInstanceEvent } from './slices/Pr
 import { processOutputReducer as processOutput } from './slices/ProcessOutput';
 import { scheduleProcessReducer as scheduleProcess } from './slices/ScheduleProcess';
 import { schedulerReducer as scheduler } from './slices/Scheduler';
+import { tenantsReducer as tenants } from './slices/Tenants';
 import { usersReducer as users } from './slices/Users';
 
 const rootReducer = combineReducers({
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
     scheduler,
     users,
     processOutput,
+    tenants,
 });
 
 export default rootReducer;

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import Axios from 'axios';
 
 import { Guest } from '#src-app/types/guest';
+import Axios from '#src-app/utils/axios';
 
 export const getGuestExecutionCount = createAsyncThunk<Guest, { userId: number }>(
     'guests/getGuestExecutionCount',

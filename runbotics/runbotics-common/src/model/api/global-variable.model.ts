@@ -1,12 +1,10 @@
-import { IUser } from './user.model';
+import { IUser, UserDTO } from './user.model';
 
 export enum GlobalVariableType {
     LIST = 'LIST',
     STRING = 'STRING',
     BOOLEAN = 'BOOLEAN'
 }
-
-export type UserDTO = Pick<IUser, 'id' | 'login'>;
 
 export interface IGlobalVariable {
     id: number;

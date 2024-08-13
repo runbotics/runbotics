@@ -5,8 +5,7 @@ import {
     ManyToOne,
     JoinColumn,
     Generated,
-    ManyToMany,
-    JoinTable,
+    OneToMany,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import {
@@ -14,13 +13,15 @@ import {
     IBot,
     IUser,
     IBotCollection,
-    IBotSystem, Role,
+    IBotSystem,
+    NotificationBot,
 } from 'runbotics-common';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
+import { NotificationBot as NotificationBotEntity } from '#/scheduler-database/notification-bot/notification-bot.entity';
 
-@Entity({ name: 'bot' })
+@Entity({ name: 'bot', synchronize: false })
 export class BotEntity implements IBot {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
@@ -53,11 +54,7 @@ export class BotEntity implements IBot {
     @JoinColumn([{ name: 'collection_id', referencedColumnName: 'id' }])
     collection: IBotCollection;
 
-    @ManyToMany(() => UserEntity)
-    @JoinTable({
-        name: 'notification_bot',
-        joinColumn: { name: 'bot_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    })
-    subscribers: IUser[];
+    @OneToMany(() => NotificationBotEntity, (notificationBot) => notificationBot.bot)
+    @JoinColumn({ name: 'bot_id', referencedColumnName: 'id' })
+    notifications: NotificationBot[];
 }

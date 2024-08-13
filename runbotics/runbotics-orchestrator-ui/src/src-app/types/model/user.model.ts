@@ -15,6 +15,8 @@ export interface IUser {
     roles?: string[];
 }
 
+export type UserDTO = Pick<IUser, 'id' | 'login'>;
+
 export const defaultValue: Readonly<IUser> = {
     id: '',
     login: '',

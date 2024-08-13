@@ -24,7 +24,12 @@ function createReviver(moddle) {
      */
     return function (key, object) {
 
-        if (typeof object === 'object' && typeof object.$type === 'string') {
+        if (
+            object !== null &&
+            object !== undefined &&
+            typeof object === 'object' &&
+            typeof object.$type === 'string'
+        ) {
 
             const objectId = object.id;
 

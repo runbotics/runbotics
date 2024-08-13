@@ -47,7 +47,6 @@ export interface ProcessState {
         currentRequestId: any;
         error: any;
         processSubscriptions: NotificationProcess[];
-        currentProcessSubscription: NotificationProcess;
     };
     modeler: ModelerState;
     all: {

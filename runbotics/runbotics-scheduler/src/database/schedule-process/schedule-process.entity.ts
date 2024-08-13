@@ -4,7 +4,7 @@ import { numberTransformer } from '../database.utils';
 import { ProcessEntity } from '../process/process.entity';
 import { UserEntity } from '../user/user.entity';
 
-@Entity({ name: 'schedule_process' })
+@Entity({ name: 'schedule_process', synchronize: false })
 export class ScheduleProcessEntity implements IScheduleProcess {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })

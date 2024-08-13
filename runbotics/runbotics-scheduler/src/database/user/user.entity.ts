@@ -1,9 +1,11 @@
 import { IAuthority, IUser } from 'runbotics-common';
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { AuthorityEntity } from '../authority/authority.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
-
-@Entity({ name: 'jhi_user' })
+import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
+import { Credential } from '#/scheduler-database/credential/credential.entity';
+import { CredentialCollectionUser } from '#/scheduler-database/credential-collection-user/credential-collection-user.entity';
+@Entity({ name: 'jhi_user', synchronize: false })
 export class UserEntity implements IUser {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
         id: number;
@@ -57,7 +59,26 @@ export class UserEntity implements IUser {
     @JoinTable({
         name: 'jhi_user_authority',
         joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' }
+        inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' },
     })
         authorities: IAuthority[];
+
+    @OneToMany(() => Tenant, tenant => tenant.createdByUser)
+    tenants: Tenant[];
+
+    @Column({ type: 'varchar', name: 'tenant_id' })
+    tenantId: string;
+
+    @OneToMany(() => Credential, credential => credential.createdBy)
+    createdCredentials: Credential[];
+
+    @OneToMany(() => Credential, credential => credential.updatedBy)
+    updatedCredentials: Credential[];
+
+    @OneToMany(
+        () => CredentialCollectionUser,
+        (credentialCollectionUser) =>
+            credentialCollectionUser.userId,
+    )
+    credentialCollectionUser: CredentialCollectionUser[];
 }

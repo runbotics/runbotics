@@ -3,12 +3,12 @@ import React, { FC } from 'react';
 import {
     Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,
 } from '@mui/material';
-import Axios from 'axios';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { getActions } from '#src-app/store/slices/Action/Action.thunks';
 import { IAction } from '#src-app/types/model/action.model';
+import Axios from '#src-app/utils/axios';
 
 type DeleteActionDialogProps = {
     open?: boolean;

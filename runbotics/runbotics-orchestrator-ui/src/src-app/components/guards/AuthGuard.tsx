@@ -6,6 +6,7 @@ import { FeatureKey, Role } from 'runbotics-common';
 
 import { useDispatch, useSelector } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
+import { setAccessToken } from '#src-app/store/slices/Auth/Auth.thunks';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
 
 import useAuth from '../../hooks/useAuth';
@@ -36,6 +37,7 @@ export const withAuthGuard = ({
     const isAuthenticated = isInitialized && isBrowser && isAuthed;
 
     if (!isAuthenticated) {
+        setAccessToken(null);
         router.replace('/');
     }
 

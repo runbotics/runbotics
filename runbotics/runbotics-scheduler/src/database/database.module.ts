@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ServerConfigService } from '../config/server-config/server-config.service';
-import { ConfigModule } from '../config/config.module';
+import { ServerConfigService } from '#/config/server-config';
+import { ConfigModule } from '#/config/config.module';
 import { AuthorityModule } from './authority/authority.module';
 import { UserModule } from './user/user.module';
 import { BotModule } from './bot/bot.module';
-import { GlobalVariableModule } from './global-variable/global-variable.module';
 import { ProcessModule } from './process/process.module';
 import { ProcessInstanceModule } from './process-instance/process-instance.module';
 import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
@@ -29,7 +28,10 @@ import { GuestModule } from './guest/guest.module';
                     username: serverConfigService.dbSettings.username,
                     password: serverConfigService.dbSettings.password,
                     database: serverConfigService.dbSettings.database,
-                    entities: ['dist/**/*.entity{.ts,.js}'],
+                    migrationsRun: true,
+                    migrationsTableName: 'rb_migrations.migration',
+                    migrations: ['dist/src/migrations/*.js'],
+                    entities: ['dist/src/**/*.entity{.ts,.js}'],
                     synchronize: false,
                 };
             },
@@ -41,7 +43,6 @@ import { GuestModule } from './guest/guest.module';
         BotModule,
         BotCollectionModule,
         BotSystemModule,
-        GlobalVariableModule,
         ProcessModule,
         ProcessInstanceModule,
         ProcessInstanceEventModule,
@@ -49,6 +50,7 @@ import { GuestModule } from './guest/guest.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
+        TypeOrmModule
     ],
     exports: [
         AuthorityModule,
@@ -57,7 +59,6 @@ import { GuestModule } from './guest/guest.module';
         BotModule,
         BotCollectionModule,
         BotSystemModule,
-        GlobalVariableModule,
         ProcessModule,
         ProcessInstanceModule,
         ProcessInstanceEventModule,
@@ -65,6 +66,7 @@ import { GuestModule } from './guest/guest.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
+        TypeOrmModule,
     ],
 })
 export class DatabaseModule { }
