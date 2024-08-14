@@ -320,11 +320,10 @@ export class ExcelService {
     }
 
     private async gatherSharePointFileInfo(sessionInfo: SharePointSessionInfo): Promise<SharePointFileInfo> {
-        const site = await this.sharePointService.getSitesByName(sessionInfo.siteName)
-            .then(sites => sites.value[0]);
-
+        const site = await this.sharePointService
+            .getSiteByRelativePath(sessionInfo.siteRelativePath);
         if (!site) {
-            throw new Error(`Site ${sessionInfo.siteName} not found`);
+            throw new Error(`Site for provided path "${sessionInfo.siteRelativePath}" not found`);
         }
 
         const drive = await this.sharePointService.getSiteDrives(site.id)
@@ -334,7 +333,7 @@ export class ExcelService {
 
         if (!drive) {
             throw new Error(`
-                Site ${sessionInfo.siteName} does not contain "${sessionInfo.listName}" list or "${sessionInfo.listName}" is not a list of type 'Document library'
+                Provided site path "${sessionInfo.siteRelativePath}" does not contain "${sessionInfo.listName}" list or "${sessionInfo.listName}" is not a list of type 'Document library'
             `);
         }
 

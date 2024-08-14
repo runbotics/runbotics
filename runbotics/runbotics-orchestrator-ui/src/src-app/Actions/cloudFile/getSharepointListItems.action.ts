@@ -1,6 +1,6 @@
 import { CloudFileAction } from 'runbotics-common';
 
-import { listNameUI, siteNameUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
+import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -23,9 +23,9 @@ export const getSharepointListItemsAction: IBpmnAction = {
                     title: translate('Process.Details.Modeler.Actions.Common.Input'),
                     type: 'object',
                     properties: {
-                        siteName: {
+                        siteRelativePath: {
                             title: translate(
-                                'Process.Details.Modeler.Actions.Microsoft.SiteName',
+                                'Process.Details.Modeler.Actions.Microsoft.SiteRelativePath',
                             ),
                             type: 'string',
                         },
@@ -36,6 +36,7 @@ export const getSharepointListItemsAction: IBpmnAction = {
                             type: 'string',
                         },
                     },
+                    required: ['siteRelativePath', 'listName'],
                 },
                 output: {
                     title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -51,7 +52,7 @@ export const getSharepointListItemsAction: IBpmnAction = {
         },
         uiSchema: {
             input: {
-                siteName: siteNameUI,
+                siteRelativePath: siteRelativePathUI,
                 listName: listNameUI,
             },
             output: {
@@ -64,7 +65,7 @@ export const getSharepointListItemsAction: IBpmnAction = {
         },
         formData: {
             input: {
-                siteName: undefined,
+                siteRelativePath: undefined,
                 listName: undefined,
             },
         },
