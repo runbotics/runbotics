@@ -16,4 +16,12 @@ export const listNameUI: UiSchema = {
     'ui:options': {
         info: translate('Process.Details.Modeler.Actions.Microsoft.ListName.Info')
     }
-}; 
+};
+
+export const siteRelativePathUI: UiSchema = {
+    title: translate('Process.Details.Modeler.Actions.Microsoft.SiteRelativePath'),
+    type: 'string',
+    'ui:options': {
+        info: translate('Process.Details.Modeler.Actions.Microsoft.SiteRelativePath.Info')
+    }
+};

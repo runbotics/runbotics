@@ -57,8 +57,11 @@ export interface Site {
     createdDateTime: string;
     lastModifiedDateTime: string;
     webUrl: string;
-    parentReference: {
+    parentReference?: {
         siteId: string;
+    },
+    siteCollection?: {
+        hostname: string;
     }
 }
 

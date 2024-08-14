@@ -27,9 +27,9 @@ export interface OneDriveSessionInfo {
 }
 
 export interface SharePointSessionInfo extends Omit<OneDriveSessionInfo, 'platform'> {
-    platform: MicrosoftPlatform.SharePoint,
-    siteName: string,
-    listName: string
+    platform: MicrosoftPlatform.SharePoint;
+    siteRelativePath: string;
+    listName: string;
 }
 
 export type ExcelSessionInfo = OneDriveSessionInfo | SharePointSessionInfo;
