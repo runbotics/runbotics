@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class ProcessCredentials1723199153127 implements MigrationInterface {
-    name = 'ProcessCredentials1723199153127'
+export class ProcessCredentials1723636010549 implements MigrationInterface {
+    name = 'ProcessCredentials1723636010549'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "scheduler"."process_credential" ("process_id" bigint NOT NULL, "credential_id" uuid NOT NULL, CONSTRAINT "PK_c8c147a6db1c3b2dd7cf8d8c4b0" PRIMARY KEY ("process_id", "credential_id"))`);
