@@ -52,6 +52,12 @@ export class SharePointService {
         return this.microsoftGraphService.get<DriveItem>(url, options);
     }
 
+    async getSiteByRelativePath(siteRelativePath: string) {
+        const rootSite = await this.getRootSite();
+        return this.microsoftGraphService
+            .get<Site>(`/sites/${rootSite?.siteCollection?.hostname}:${siteRelativePath}`);
+    }
+
     getSitesByName(siteName: Site['name']) {
         return this.microsoftGraphService
             .get<CollectionResponse<Site>>('/sites', { search: siteName });
@@ -143,5 +149,10 @@ export class SharePointService {
                 type: shareType,
                 scope: shareScope
             });
+    }
+
+    private getRootSite() {
+        return this.microsoftGraphService
+            .get<Site>('/sites/root');
     }
 }

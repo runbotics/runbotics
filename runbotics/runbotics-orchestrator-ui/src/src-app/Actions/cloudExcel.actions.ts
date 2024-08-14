@@ -34,9 +34,9 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                             platform: {
                                                 enum: [MicrosoftPlatform.SharePoint],
                                             },
-                                            siteName: {
+                                            siteRelativePath: {
                                                 title: translate(
-                                                    'Process.Details.Modeler.Actions.Microsoft.SiteName',
+                                                    'Process.Details.Modeler.Actions.Microsoft.SiteRelativePath',
                                                 ),
                                                 type: 'string',
                                             },
@@ -59,7 +59,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                                 type: 'string',
                                             },
                                         },
-                                        required: ['siteName', 'listName', 'filePath'],
+                                        required: ['siteRelativePath', 'listName', 'filePath'],
                                     },
                                     {
                                         properties: {
@@ -96,11 +96,16 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.OpenFileFromRoot.FilePath.Info'),
                         },
                     },
+                    siteRelativePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Microsoft.SiteRelativePath.Info'),
+                        },
+                    },
                 },
             },
             formData: {
                 input: {
-                    siteName: undefined,
+                    siteRelativePath: undefined,
                     filePath: undefined,
                     listName: undefined,
                 },
