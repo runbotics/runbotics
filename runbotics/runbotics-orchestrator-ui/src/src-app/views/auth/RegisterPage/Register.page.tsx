@@ -25,7 +25,7 @@ import Logo from '#src-app/components/utils/Logo/Logo';
 import useTranslations, {
     checkIfKeyExists,
 } from '#src-app/hooks/useTranslations';
-import { useDispatch } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
 import { Language } from '#src-app/translations/translations';
 import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
@@ -37,6 +37,8 @@ import { FormCheckbox } from '#src-landing/views/sections/ContactSection/Contact
 import styles from './Register.module.scss';
 
 import useRegisterValidationSchema from './useRegisterValidationSchema';
+
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants/Tenants.slice';
 
 const PREFIX = 'RegisterView';
 
@@ -96,6 +98,23 @@ const RegisterPage: FC = () => {
 
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+
+    const invitingTenant = useSelector((state) => tenantsSelector(state).invitingTenant);
+
+    useEffect(() => {
+        dispatch(tenantsActions.fetchTenantNameByInviteCode(inviteCodeURL))
+            .unwrap()
+            .catch((error) => {
+                if (error.statusCode === 400) {
+                    router.replace('/404');
+                } else {
+                    enqueueSnackbar(
+                        translate('Register.Error.UnexpectedError'),
+                        { variant: 'error' }
+                    );
+                }
+            });
+    }, [inviteCodeURL, dispatch, router, enqueueSnackbar]);
 
     useEffect(() => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });
@@ -246,19 +265,6 @@ const RegisterPage: FC = () => {
                 value={values.passwordConfirmation}
                 variant="outlined"
             />
-            <TextField
-                fullWidth
-                label={translate(
-                    'Register.Form.Fields.InviteCode.Label'
-                )}
-                margin="normal"
-                name="inviteCode"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                type="text"
-                value={values.inviteCode}
-                variant="outlined"
-            />
             <Box my={3}>
                 <FormCheckbox
                     name="checkbox"
@@ -291,10 +297,14 @@ const RegisterPage: FC = () => {
             title={translate('Register.Meta.Title')}
         >
             <Container className={classes.container} maxWidth="sm">
-                <Box mb={6} display="flex" justifyContent="center">
+                <Box mb={6} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
                     <RouterLink href="/">
                         <Logo height={100} />
                     </RouterLink>
+                    <Typography  
+                        variant="h4">
+                            {invitingTenant}
+                    </Typography>
                 </Box>
                 <Card>
                     <CardContent className={classes.card}>

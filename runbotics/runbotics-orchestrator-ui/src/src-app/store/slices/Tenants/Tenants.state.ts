@@ -7,4 +7,5 @@ export interface TenantsState {
     all: Tenant[];
     allByPage: Page<Tenant> | null;
     inviteCode: string | null;
+    invitingTenant: string | null;
 }
