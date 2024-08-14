@@ -113,7 +113,7 @@ const RegisterPage: FC = () => {
                     );
                 }
             });
-    }, [inviteCodeURL, dispatch, router, enqueueSnackbar]);
+    }, [inviteCodeURL, dispatch, router, enqueueSnackbar, translate]);
 
     useEffect(() => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });
