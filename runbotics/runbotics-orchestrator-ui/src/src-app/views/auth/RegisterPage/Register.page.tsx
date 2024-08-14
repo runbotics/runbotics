@@ -301,8 +301,9 @@ const RegisterPage: FC = () => {
                         <Logo height={100} />
                     </RouterLink>
                     <Typography  
-                        variant="h4">
-                            {invitingTenant}
+                        variant="h4"
+                    >
+                        {invitingTenant}
                     </Typography>
                 </Box>
                 <Card>
