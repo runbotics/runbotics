@@ -1,8 +1,7 @@
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { DEFAULT_COLLECTION_COLOR } from '../../CredentialsCollection/EditCredentialsCollection/EditCredentialsCollection.utils';
 
-import { CreateCredentialDto, CredentialTemplateNames } from '../Credential.types';
+import { CreateCredentialDto } from '../Credential.types';
 
 
 
@@ -24,14 +23,8 @@ export const getInitialCredentialData = () => {
     const initialCredentialData: CreateCredentialDto = {
         name: '',
         description: '',
-        collectionId: '',
-        collectionColor: DEFAULT_COLLECTION_COLOR,
-        template: {
-            name: CredentialTemplateNames.CUSTOM,
-            id: 'custom',
-            attributes: []
-        },
-        templateId: 'custom'
+        // TODO need to setup default or remove it
+        templateId: 'ee6622df-d567-4a90-a69f-a0050d94f185'
     };
 
     return initialCredentialData;

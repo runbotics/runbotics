@@ -1,49 +1,52 @@
+import { User } from '#src-app/types/user';
+
 import { CollectionColorName } from './EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import { BasicCredentialDto } from '../Credential/Credential.types';
 
 export enum AccessType { 
-    ADMIN = 'ADMIN',
-    USER = 'USER'
+    PRIVATE = 'PRIVATE',
+    GROUP = 'GROUP'
+}
+
+export enum PrivilegeType {
+    READ = 'READ',
+    WRITE = 'WRITE',
 }
 
 export interface BasicCredentialsCollectionDto {
     id: string;
     name: string;
-    color: CollectionColorName;
-    isPrivate: boolean;
     tenantId: string;
-    createdOn: string;
-    createdBy: string;
-    modifiedOn: string;
-    modifiedBy: string;
-    // credentials: BasicCredentialDto[]
+    color: CollectionColorName;
+    createdAt: string;
+    createdById: string;
+    updatedAt: string;
+    updatedById: string;
+    accessType: AccessType;
+    credentials: BasicCredentialDto[]
     description?: string;
-    users?: CredentialsCollectionUser[];
+    credentialCollectionUser?: CredentialsCollectionUser[];
 }
 
 export interface CredentialsCollectionUser {
+    id: string;
     userId: string;
-    collectionId: string;
+    credentialCollectionId: string;
     accessType: AccessType;
-}
-
-export interface CreateCredentialsCollectionDto {
-    name: string;
-    color: CollectionColorName;
-    tenantId: string;
-    // credentials: BasicCredentialDto[];
-    isPrivate: boolean;
-    description?: string;
-    users?: CredentialsCollectionUser[];
+    privilegeType: PrivilegeType;
+    user: User;
 }
 
 export interface EditCredentialsCollectionDto {
-    id: string;
+    id?: string;
     name: string;
+    accessType: AccessType;
     color: CollectionColorName;
-    // credentials: BasicCredentialDto[];
-    isPrivate: boolean;
+    sharedWith: {
+        login: string;
+        privilegeType: PrivilegeType
+    }[]
     description?: string;
-    users?: CredentialsCollectionUser[];
 }
 
 export type CredentialsCollectionKeys = { [Key in keyof BasicCredentialsCollectionDto]: Key }[keyof BasicCredentialsCollectionDto];

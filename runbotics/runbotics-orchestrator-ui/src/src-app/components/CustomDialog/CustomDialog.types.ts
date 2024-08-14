@@ -1,6 +1,6 @@
 export interface CustomDialogProps {
     isOpen: boolean;
-    onClose: () => void;
+    onClose: (e?: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
     title: string;
     children?: React.ReactNode;
     confirmButtonOptions?: DialogButton;
@@ -9,7 +9,7 @@ export interface CustomDialogProps {
 
 export interface DialogButton {
     label?: string;
-    onClick?: () => void;
+    onClick?: (e?: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
     isDisabled?: boolean;
     isLoading?: boolean;
 }

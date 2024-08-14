@@ -25,4 +25,11 @@ export const credentialsCollectons = {
     'Credentials.Collection.Tile.ShareOption.Label': 'Share option',
     'Credentials.Collection.Tile.ShareOption.Private': 'private',
     'Credentials.Collection.Tile.ShareOption.GroupAccess': 'group access',
+    'Credentials.Collection.Tile.MenuItem.Edit': 'Edit',
+    'Credentials.Collection.Tile.MenuItem.Delete': 'Delete',
+    'Credentials.Collection.Tile.MenuItem.Delete.Info': 'Only credential owner can delete it',
+    'Credentials.Collection.Tile.MenuItem.Delete.Success': 'Credentials collection "{{ name }}" was successfully deleted',
+    'Credentials.Collection.Tile.MenuItem.Delete.Fail': 'Cannot delete credentials collection. Probably you do not have permission to do that',
+    'Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title': 'Are you sure you want to delete collection "{{ name }}"',
+    'Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning': 'Collection cannot be deleted in case there are credentials within it',
 };

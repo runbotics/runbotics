@@ -6,14 +6,12 @@ import { useRouter } from 'next/router';
 
 import styled from 'styled-components';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-// import { DefaultPageSize } from './ProcessList/ProcessList.utils';
-// import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
-import AddCollectionButton from '../process/ProcessCollectionView/AddCollection/AddCollectionButton';
+import AddCredentialButton from './Credential/AddCredentialButton';
+import AddCredentialsCollection from './CredentialsCollection/AddCredentialsCollection';
 import { getLastParamOfUrl } from '../utils/routerUtils';
-// import AddProcess from '../AddProcess';
-// import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
 
 const PREFIX = 'Header';
 
@@ -36,8 +34,6 @@ export enum CredentialsTabs {
 
 const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
-    // const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
-    // const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
 
     const router = useRouter();
     // const searchParams = useSearchParams();
@@ -100,14 +96,16 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>
-                    {/* <AddNewCredentialButton/> */}
-                    <AddCollectionButton/>
-                    {/* <If condition={hasProcessAddAccess}>
-                        <AddProcess />
+                    <If condition={currentTab === CredentialsTabs.CREDENTIALS}>
+                        <AddCredentialButton/>
                     </If>
-                    <If condition={hasAddCollectionAccess}>
-                        <AddCollectionButton />
-                    </If> */}
+                    <If condition={currentTab === CredentialsTabs.COLLECTIONS}>
+                        <AddCredentialsCollection/>
+                    </If>
+                    <If condition={currentTab !== CredentialsTabs.CREDENTIALS && currentTab !== CredentialsTabs.COLLECTIONS}>
+                        <AddCredentialButton/>
+                        <AddCredentialsCollection/>
+                    </If>
                 </Stack>
             </Grid>
         </StyledGrid>

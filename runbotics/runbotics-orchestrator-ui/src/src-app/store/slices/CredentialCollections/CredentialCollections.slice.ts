@@ -7,7 +7,7 @@ import { CredentialCollectionsState } from './CredentialCollections.state';
 import * as credentialCollectionThunks from './CredentialCollections.thunks';
 
 const initialState: CredentialCollectionsState = {
-    data: [],
+    credentialCollections: [],
     loading: false
 };
 

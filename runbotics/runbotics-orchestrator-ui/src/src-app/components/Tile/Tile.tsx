@@ -10,7 +10,7 @@ const Wrapper = styled(Card)<TileProps>(({ theme, minHeight }) => `
     box-sizing: border-box;
     height: 100%;
     min-height: ${minHeight} || 13.125rem;
-
+    
     && {
         box-shadow: ${theme.shadows[5]};
     }

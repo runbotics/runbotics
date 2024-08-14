@@ -15,12 +15,11 @@ import { useSelector } from '#src-app/store';
 import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
 import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
+import { usersActions } from '#src-app/store/slices/Users';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
-import { getCredentials } from './Credentials/Credentials.utils';
 import { GridViewProps } from './GridView.types';
 import { CredentialsTabs } from './Header';
-import { CollectionsRoot } from '../bot/BotCollectionView/BotCollectionView.styles';
 
 const TileGrid = styled.div`
     display: grid;
@@ -33,40 +32,34 @@ const TileGrid = styled.div`
 const GridView: FC<GridViewProps> = () => {
     const dispatch = useDispatch();
     // const credentials = useSelector(state => state.credentials.all);
-    const collections = useSelector(state => state.credentialCollections.data);
-    const credentials = getCredentials();
+    const collections = useSelector(state => state.credentialCollections.credentialCollections);
+    const credentials = useSelector(state => state.credentials.all);
     // const allCollections = getCredentialsCollections();
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
-    
-    const credentialTemplates = useSelector(state => state.credentialTemplates.data);
 
+    const credentialTemplates = useSelector(state => state.credentialTemplates.data);
+    
     useEffect(() => {
         dispatch(fetchAllCredentials());
-        // dispatch(fetchCollectionCredentials('kolekcja_basi'));
         dispatch(fetchAllTemplates());
+        if (isCollectionsTab) {
+            dispatch(fetchAllCredentialCollections());
+            dispatch(usersActions.getAllLimited());
+            dispatch(usersActions.getActiveNonAdmins());
+        }
     }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(fetchAllCredentialCollections());
-    }, [dispatch]);
-    
-    const credentialsTiles = credentials.map(credential => <CredentialTile key={credential.id} credential={credential}/>);
+    const credentialsTiles = credentials.map(credential => <CredentialTile key={credential.id} credential={credential} />);
 
-    const collectionsTiles = collections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection}/>);
+    const collectionTiles = collections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection} />);
 
     return (
         <>
-            <CollectionsRoot>
-                <TileGrid>
-                    <If condition={!isCollectionsTab}>
-                        {credentialsTiles}
-                    </If>
-                    <If condition={isCollectionsTab}>
-                        {collectionsTiles}
-                    </If>
-                </TileGrid>
-            </CollectionsRoot>
+            <TileGrid>
+                <If condition={!isCollectionsTab}>{credentialsTiles}</If>
+                <If condition={isCollectionsTab}>{collectionTiles}</If>
+            </TileGrid>
             <Box mt={6} display="flex" justifyContent="center">
                 <Pagination count={1} />
             </Box>
@@ -75,4 +68,3 @@ const GridView: FC<GridViewProps> = () => {
 };
 
 export default GridView;
-

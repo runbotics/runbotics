@@ -46,7 +46,7 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         })
         .addCase(updateCredential.fulfilled, (state, action) => {
             state.all = state.all.map(credential =>
-                credential.id === action.payload.id ? { ...credential, ...action.payload } : credential
+                credential.id === action.meta.arg.resourceId ? { ...credential, ...action.meta.arg.payload} : credential
             );
             state.loading = false;
         })
@@ -58,7 +58,7 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
             state.loading = true;
         })
         .addCase(deleteCredential.fulfilled, (state, action) => {
-            state.all = state.all.filter(credential => credential.id !== action.payload);
+            state.all = state.all.filter(credential => credential.id !== action.meta.arg.resourceId);
             state.loading = false;
         })
         .addCase(deleteCredential.rejected, state => {

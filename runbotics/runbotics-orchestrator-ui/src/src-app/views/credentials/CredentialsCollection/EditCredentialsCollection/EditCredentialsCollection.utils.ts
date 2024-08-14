@@ -1,45 +1,61 @@
-
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { CreateCredentialsCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
+import { AccessType, BasicCredentialsCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
 
 export const DEFAULT_COLLECTION_COLOR = 'DARK_ORANGE';
 
 export enum InputErrorType {
     NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
-    NAME_IS_REQUIRED = 'NAME_IS_REQUIRED',
+    NAME_IS_REQUIRED = 'NAME_IS_REQUIRED'
 }
 
 export const inputErrorMessages: Record<InputErrorType, string> = {
     [InputErrorType.NAME_NOT_AVAILABLE]: translate('Credentials.Collection.Add.Form.Error.NameNotAvailable'),
-    [InputErrorType.NAME_IS_REQUIRED]: translate('Credentials.Collection.Add.Form.Error.NameIsRequired'),
+    [InputErrorType.NAME_IS_REQUIRED]: translate('Credentials.Collection.Add.Form.Error.NameIsRequired')
 };
 
 export const initialFormValidationState = true;
 
-const initialCredentialsCollectionData: CreateCredentialsCollectionDto = {
+export const initialCredentialsCollectionData: EditCredentialsCollectionDto = {
     name: '',
+    accessType: AccessType.PRIVATE,
     description: '',
     color: DEFAULT_COLLECTION_COLOR,
-    tenantId: '', // to update
-    users: [],
-    isPrivate: true,
+    sharedWith: []
 };
 
-export const getInitialCredentialsCollectionData = (collection: null | EditCredentialsCollectionDto): CreateCredentialsCollectionDto | EditCredentialsCollectionDto => {
+export const getInitialCredentialsCollectionData = (
+    collection: null | EditCredentialsCollectionDto
+): EditCredentialsCollectionDto => {
     if (!collection) {
         return initialCredentialsCollectionData;
     }
 
-    const editCredentialInitialData: EditCredentialsCollectionDto = {
-        id: collection.id,
+    return {
         name: collection.name,
-        description: collection.description,
+        accessType: collection.accessType,
         color: collection.color,
-        isPrivate: collection.isPrivate,
-        users: collection.users
+        sharedWith: collection.sharedWith,
+        description: collection.description
     };
+};
 
-    return editCredentialInitialData;
+export const mapToEditCredentialCollectionDto = (collection: BasicCredentialsCollectionDto): EditCredentialsCollectionDto => {
+    // TODO jakiś eager by się przydał, bo credentialCollectionUser powinien być obiektem usera a tego nie zwraca - portrzebuję się dostać do obiektu credentialUser.user i stamtąd wyciągnąć .email (cause login is optional)
+    const sharedWithUsers = collection.credentialCollectionUser
+        ? [...collection.credentialCollectionUser].filter(
+            credentialUser => credentialUser.userId !== collection.createdById
+        ).map((filteredUser => ({
+            login: filteredUser.userId,
+            privilegeType: filteredUser.privilegeType
+        })))
+        : [];
 
+    return {
+        name: collection.name,
+        accessType: collection.accessType,
+        color: collection.color,
+        sharedWith: sharedWithUsers,
+        description: collection.description ? collection.description : ''
+    };
 };

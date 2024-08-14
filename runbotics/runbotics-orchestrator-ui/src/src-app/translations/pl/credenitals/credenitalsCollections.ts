@@ -25,4 +25,11 @@ export const credentialsCollectons = {
     'Credentials.Collection.Tile.ShareOption.Label': 'Udostępnienie',
     'Credentials.Collection.Tile.ShareOption.Private': 'prywatna',
     'Credentials.Collection.Tile.ShareOption.GroupAccess': 'udostępniona grupie',
+    'Credentials.Collection.Tile.MenuItem.Edit': 'Edytuj',
+    'Credentials.Collection.Tile.MenuItem.Delete': 'Usuń',
+    'Credentials.Collection.Tile.MenuItem.Delete.Info': 'Tylko właściciel kolekcji może ją usunąć',
+    'Credentials.Collection.Tile.MenuItem.Delete.Success': 'Kolekcja danych dostępowych o nazwie "{{ name }}" została usunięta',
+    'Credentials.Collection.Tile.MenuItem.Delete.Fail': 'Nie można usunąć kolekcji. Najprawdopodobniej nie masz uprawnień, by to zrobić.',
+    'Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title': 'Czy na pewno chcesz usunąć kolekcję o nazwie "{{ name }}"',
+    'Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning': 'Nie można usunąć kolekcji jeśli znajdują się w niej dane dostępowe',
 };

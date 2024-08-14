@@ -18,40 +18,43 @@ const buildCredentialCollectionsExtraReducers = (builder: ActionReducerMapBuilde
             state.loading = true;
         })
         .addCase(fetchAllCredentialCollections.fulfilled, (state, action) => {
-            state.data = action.payload;
+            state.credentialCollections = action.payload;
             state.loading = false;
         })
         .addCase(fetchAllCredentialCollections.rejected, state => {
             state.loading = false;
         })
+
         // fetch one
         .addCase(fetchOneCredentialCollection.pending, state => {
             state.loading = true;
         })
         .addCase(fetchOneCredentialCollection.fulfilled, (state, action) => {
-            state.data = action.payload;
+            state.credentialCollections = [...state.credentialCollections, action.payload];
             state.loading = false;
         })
         .addCase(fetchOneCredentialCollection.rejected, state => {
             state.loading = false;
         })
+
         // create
         .addCase(createCredentialCollection.pending, state => {
             state.loading = true;
         })
         .addCase(createCredentialCollection.fulfilled, (state, action) => {
-            state.data.push(action.payload as BasicCredentialsCollectionDto);
+            state.credentialCollections.push(action.payload as BasicCredentialsCollectionDto);
             state.loading = false;
         })
         .addCase(createCredentialCollection.rejected, state => {
             state.loading = false;
         })
+
         // update
         .addCase(updateCredentialCollection.pending, state => {
             state.loading = true;
         })
         .addCase(updateCredentialCollection.fulfilled, (state, action) => {
-            state.data = state.data.map(collection =>
+            state.credentialCollections = state.credentialCollections.map(collection =>
                 collection.id === action.payload.id ? { ...collection, ...action.payload } : collection
             );
             state.loading = false;
@@ -59,12 +62,13 @@ const buildCredentialCollectionsExtraReducers = (builder: ActionReducerMapBuilde
         .addCase(updateCredentialCollection.rejected, state => {
             state.loading = false;
         })
+        
         // delete
         .addCase(deleteCredentialCollections.pending, state => {
             state.loading = true;
         })
         .addCase(deleteCredentialCollections.fulfilled, (state, action) => {
-            state.data = state.data.filter(credentialCollection => credentialCollection.id !== action.payload);
+            state.credentialCollections = state.credentialCollections.filter(credentialCollection => credentialCollection.id !== action.meta.arg.resourceId);
             state.loading = false;
         })
         .addCase(deleteCredentialCollections.rejected, state => {

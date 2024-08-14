@@ -7,6 +7,7 @@ import { collectionColors } from '#src-app/views/credentials/CredentialsCollecti
 export const CredentialCollectionCard = styled(CardContent)(
     ({ theme }) => `
     && {
+        padding-bottom: ${theme.spacing(1)} !important;
         cursor: pointer;
     }
 

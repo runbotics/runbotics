@@ -1,22 +1,4 @@
-
-export type CredentialTemplateAttributeType = 'string' | 'boolean' | 'number';
-
-export interface CredentialTemplateAttribute {
-    id: string;
-    name: string;
-    required: boolean;
-    type: CredentialTemplateAttributeType;
-    templateId: string;
-    description?: string;
-}
-
-export interface CredentialTemplate {
-    id: string,
-    name: string,
-    tenantId?: string;
-    attributes: CredentialTemplateAttribute[]
-    description?: string
-}
+import { CredentialTemplate } from '#src-app/views/credentials/Credential/Credential.types';
 
 export interface CredentialTemplatesState {
     data: CredentialTemplate[];

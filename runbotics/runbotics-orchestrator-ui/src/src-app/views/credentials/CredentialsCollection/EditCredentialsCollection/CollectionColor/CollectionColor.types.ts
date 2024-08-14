@@ -26,4 +26,12 @@ export type CollectionColorHex = (typeof collectionColors)[ColorNames]['hex'];
 
 export type CollectionColorName = (typeof collectionColors)[ColorNames]['hex'];
 
+const hexToColorName: { [hex: string]: ColorNames } = Object.keys(collectionColors).reduce((acc, colorName) => {
+    const key = colorName as ColorNames;
+    const hex = collectionColors[key].hex;
+    acc[hex] = key;
+    return acc;
+}, {} as { [hex: string]: ColorNames });
+  
+export const getColorNameByHex = (hex: string): ColorNames | undefined => hexToColorName[hex];
 
