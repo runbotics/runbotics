@@ -1,4 +1,5 @@
 import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
+import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 export interface CredentialTileProps {
     credential: BasicCredentialDto
@@ -13,5 +14,6 @@ export interface Credential {
 }
 
 export interface CredentialTileProps {
-    credential: BasicCredentialDto
+    credential: BasicCredentialDto;
+    collections: BasicCredentialsCollectionDto[];
 }

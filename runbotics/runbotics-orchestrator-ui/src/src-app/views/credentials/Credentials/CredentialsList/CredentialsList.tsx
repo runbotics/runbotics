@@ -6,10 +6,11 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 
 import { useSelector } from '#src-app/store';
-import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentials.thunks';
+import { fetchAllCredentialsAccessibleInTenant } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import CredentialsHeader from './CredentialsHeader';
+import GridView from '../../GridView';
 import { CredentialsTabs } from '../../Header';
 
 const CredentialsList: VFC = () => {
@@ -19,14 +20,13 @@ const CredentialsList: VFC = () => {
     const credentials = useSelector(state => state.credentials.all);
     
     useEffect(() => {
-        dispatch(fetchAllCredentials());
-        // dispatch(fetchCollectionCredentials('kolekcja_basi'));
+        dispatch(fetchAllCredentialsAccessibleInTenant());
     }, [dispatch]);
 
     return (
         <Box display="flex" flexDirection="column" gap="1.5rem">
             <CredentialsHeader credentialCount={credentials.length}/>
-            {/* <GridView credentials={credentials}/> */}
+            <GridView credentials={credentials}/>
         </Box>
     );
 };

@@ -10,13 +10,13 @@ import InternalPage from '#src-app/components/pages/InternalPage';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { useSelector } from '#src-app/store';
 import { fetchOneCredential } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import CredentialAttributesList from './CredentialAttributeList/CredentialAttributeList';
 import { EditCredentialProps } from './EditCredential.types';
 import Header from './Header/Header';
-import { tempCredentials } from '../../Credentials/Credentials.utils';
 import GeneralInfo from '../GeneralInfo/GeneralInfo';
 
 const StyledGrid = styled(Grid)(
@@ -38,14 +38,13 @@ const CredentialsInternalPage = styled(InternalPage)`
 const EditCredential: FC<EditCredentialProps> = ({}) => {
     const router = useRouter();
     const credentialId = getLastParamOfUrl(router);
-    // const credentials = useSelector((state) => state.credentials.all);
-    const credentials = tempCredentials;
+    const credentials = useSelector(state => state.credentials.all);
     const credential = credentials.find(cred => cred.id === credentialId);
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (credentialId) {
-            dispatch(fetchOneCredential(credentialId));
+            dispatch(fetchOneCredential({resourceId: credentialId}));
         }
     }, [dispatch, credentialId]);
 

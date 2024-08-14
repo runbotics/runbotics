@@ -13,8 +13,7 @@ import If from '#src-app/components/utils/If';
 
 import { useSelector } from '#src-app/store';
 import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
-import { fetchAllCredentials } from '#src-app/store/slices/Credentials/Credentials.thunks';
-import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
+import { fetchAllCredentialsAccessibleInTenant } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { usersActions } from '#src-app/store/slices/Users';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
@@ -39,18 +38,20 @@ const GridView: FC<GridViewProps> = () => {
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
 
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
+
+    console.log(credentials);
     
     useEffect(() => {
-        dispatch(fetchAllCredentials());
-        dispatch(fetchAllTemplates());
+        // dispatch(fetchAllTemplates());
+        dispatch(fetchAllCredentialsAccessibleInTenant());
+        dispatch(fetchAllCredentialCollections());
         if (isCollectionsTab) {
-            dispatch(fetchAllCredentialCollections());
             dispatch(usersActions.getAllLimited());
             dispatch(usersActions.getActiveNonAdmins());
         }
     }, [dispatch]);
 
-    const credentialsTiles = credentials.map(credential => <CredentialTile key={credential.id} credential={credential} />);
+    const credentialsTiles = credentials.map(credential => <CredentialTile key={credential.id} credential={credential} collections={collections}/>);
 
     const collectionTiles = collections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection} />);
 

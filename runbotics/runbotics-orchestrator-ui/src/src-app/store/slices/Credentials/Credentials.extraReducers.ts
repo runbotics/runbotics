@@ -3,19 +3,30 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 
 import { CredentialsState } from './Credentials.state';
-import { fetchAllCredentials, fetchOneCredential, createCredential, updateCredential, deleteCredential } from './Credentials.thunks';
+import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential } from './Credentials.thunks';
 
 const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<CredentialsState>) => {
     builder
-        // fetch all
-        .addCase(fetchAllCredentials.pending, state => {
+        // fetch all in collection
+        .addCase(fetchAllCredentialsInCollection.pending, state => {
             state.loading = true;
         })
-        .addCase(fetchAllCredentials.fulfilled, (state, action) => {
+        .addCase(fetchAllCredentialsInCollection.fulfilled, (state, action) => {
             state.loading = false;
             state.all = action.payload;
         })
-        .addCase(fetchAllCredentials.rejected, state => {
+        .addCase(fetchAllCredentialsInCollection.rejected, state => {
+            state.loading = false;
+        })
+        // fetch all user has access in tenant
+        .addCase(fetchAllCredentialsAccessibleInTenant.pending, state => {
+            state.loading = true;
+        })
+        .addCase(fetchAllCredentialsAccessibleInTenant.fulfilled, (state, action) => {
+            state.loading = false;
+            state.all = action.payload;
+        })
+        .addCase(fetchAllCredentialsAccessibleInTenant.rejected, state => {
             state.loading = false;
         })
         // fetch one
