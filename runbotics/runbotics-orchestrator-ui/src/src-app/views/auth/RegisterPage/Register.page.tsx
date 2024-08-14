@@ -27,6 +27,7 @@ import useTranslations, {
 } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants/Tenants.slice';
 import { Language } from '#src-app/translations/translations';
 import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
 
@@ -37,8 +38,6 @@ import { FormCheckbox } from '#src-landing/views/sections/ContactSection/Contact
 import styles from './Register.module.scss';
 
 import useRegisterValidationSchema from './useRegisterValidationSchema';
-
-import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants/Tenants.slice';
 
 const PREFIX = 'RegisterView';
 
