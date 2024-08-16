@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { Typography } from '@mui/material';
 import _ from 'lodash';
@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 
 import LockIcon from '#public/images/icons/lock.svg';
+import { useRequiredCredentialTypes } from '#src-app/credentials/useRequiredCredentialTypes';
 import useWindowSize from '#src-app/hooks/useWindowSize';
 
 import ActionCredential from './ActionCredential';
@@ -119,6 +120,7 @@ const ACTION_MIN_WIDTH = 400;
 const MARGIN_LIMIT = 800;
 
 const ProcessCredentials = () => {
+    const credentialTypes = useRequiredCredentialTypes();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const { width: windowWidth } = useWindowSize();

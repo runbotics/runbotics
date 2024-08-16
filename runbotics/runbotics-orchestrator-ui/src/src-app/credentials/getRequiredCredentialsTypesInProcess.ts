@@ -1,18 +1,15 @@
-import { BpmnElementType } from 'runbotics-common';
-import BpmnModelerType from 'bpmn-js/lib/Modeler';
-import { BPMNElementRegistry } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
+import { IProcess } from 'runbotics-common';
+
 import actions from '#src-app/Actions';
 import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 
-export const getRequiredCredentialsTypesInProcess = (modeler: BpmnModelerType): ActionCredentialType[] => {
-    const elements = modeler.get('elementRegistry')._elements as BPMNElementRegistry;
+const ACTION_ID_REGEX = /camunda:actionId="([a-zA-Z.]+)"/g;
 
-    const credentialTypesWithDuplicates = Object.values(elements)
-        .filter(element => element.element.type === BpmnElementType.SERVICE_TASK)
-        .map(serviceTask => {
-            return actions[serviceTask.element.businessObject.actionId].credentialType;
-        })
-        .filter(credentialType => !!credentialType);
-    
-    return Array.from(new Set(credentialTypesWithDuplicates));
-};
+export const getRequiredCredentialsTypesInProcess = (definition: IProcess['definition']): ActionCredentialType[] =>
+    [
+        ...Array.from(definition.matchAll(ACTION_ID_REGEX), m => m[1])
+            .reduce((set, actionId) =>
+                actions[actionId].credentialType
+                    ? set.add(actions[actionId].credentialType) : set
+            , new Set<ActionCredentialType>())
+    ];
