@@ -1,12 +1,11 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Role } from 'runbotics-common';
 
 import { UserEntity } from '#/database/user/user.entity';
 import { NotificationProcess } from './notification-process.entity';
-import { ProcessEntity } from '#/database/process/process.entity';
 import { CreateNotificationProcessDto } from './dto/create-notification-process.dto';
+import { ProcessService } from '#/database/process/process.service';
 
 
 @Injectable()
@@ -16,12 +15,11 @@ export class NotificationProcessService {
     constructor(
         @InjectRepository(NotificationProcess)
         private readonly notificationProcessRepository: Repository<NotificationProcess>,
-        @InjectRepository(ProcessEntity)
-        private readonly processRepository: Repository<ProcessEntity>,
+        private readonly processService: ProcessService,
     ) {}
 
     async getAllByProcessId(processId: number, user: UserEntity) {
-        const process = await this.checkProcessAccessAndGetById(
+        const process = await this.processService.checkAccessAndGetById(
             processId, user
         );
 
@@ -34,7 +32,7 @@ export class NotificationProcessService {
         createNotificationProcessDto: CreateNotificationProcessDto,
         user: UserEntity
     ) {
-        const process = await this.checkProcessAccessAndGetById(
+        const process = await this.processService.checkAccessAndGetById(
             createNotificationProcessDto.processId, user
         );
 
@@ -70,30 +68,5 @@ export class NotificationProcessService {
             },
             createdAt: notificationProcess.createdAt
         };
-    }
-
-    private async checkProcessAccessAndGetById(processId: number, user: UserEntity) {
-        // TODO: to be updated after process migration to scheduler
-        // Explanation: Process privileges should be based on process collections
-        // and checking privileges should be adjusted
-        return user.authorities.find(authority => authority.name === Role.ROLE_TENANT_ADMIN)
-            ? this.processRepository.findOneByOrFail({ id: processId, tenantId: user.tenantId })
-                .catch(() => {
-                    throw new NotFoundException();
-                })
-            : this.processRepository.findOneByOrFail([
-                {
-                    id: processId,
-                    tenantId: user.tenantId,
-                    isPublic: true
-                },
-                {
-                    id: processId,
-                    tenantId: user.tenantId,
-                    createdBy: { id: user.id }
-                }
-            ]).catch(() => {
-                throw new NotFoundException();
-            });
     }
 }

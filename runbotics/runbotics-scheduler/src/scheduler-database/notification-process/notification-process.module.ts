@@ -3,11 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationProcess } from './notification-process.entity';
 import { NotificationProcessController } from './notification-process.controller';
 import { NotificationProcessService } from './notification-process.service';
-import { ProcessEntity } from '#/database/process/process.entity';
+import { ProcessModule } from '#/database/process/process.module';
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([NotificationProcess, ProcessEntity])],
+    imports: [TypeOrmModule.forFeature([NotificationProcess]), ProcessModule],
     providers: [NotificationProcessService],
     controllers: [NotificationProcessController],
     exports: [NotificationProcessService]
