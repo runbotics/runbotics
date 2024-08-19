@@ -4,7 +4,7 @@ import { Role as RoleEnum } from 'runbotics-common';
 
 @Entity({ name: 'jhi_authority' })
 export class Authority {
-    @PrimaryColumn({ type: 'varchar', length: 50, enum: RoleEnum })
+    @PrimaryColumn({ type: 'varchar', length: 50 })
     name: RoleEnum;
 
     @OneToMany(() => FeatureKey, featureKey => featureKey.name, { eager: true })
