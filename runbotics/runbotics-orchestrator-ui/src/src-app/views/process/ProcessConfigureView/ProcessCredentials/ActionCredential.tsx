@@ -48,7 +48,10 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                 </List>
             </CredentialDetails>
             <CredentialDelete>
-                <DeleteOutlineIcon sx={{ [':hover']: { cursor: 'pointer' } }}/>
+                <DeleteOutlineIcon
+                    sx={{ [':hover']: { cursor: 'pointer' } }}
+                    color={isPrimary ? 'disabled' : 'error'}
+                />
             </CredentialDelete>
         </CredentialTile>
         <If condition={isPrimary}>

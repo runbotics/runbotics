@@ -44,13 +44,13 @@ export const CredentialDelete = styled.div`
 export const AddTile = styled.div(({ theme }) => ({
     display: 'flex',
     borderRadius: '10px',
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: theme.palette.grey[200],
     alignItems: 'center',
     justifyContent: 'center',
     height: '100px',
     transition: '.5s',
     [':hover']: {
         cursor: 'pointer',
-        backgroundColor: theme.palette.grey[200],
+        backgroundColor: theme.palette.grey[300],
     }
 }));

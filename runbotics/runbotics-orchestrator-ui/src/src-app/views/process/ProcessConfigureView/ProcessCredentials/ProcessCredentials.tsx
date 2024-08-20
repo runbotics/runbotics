@@ -86,7 +86,7 @@ const ProcessCredentials = () => {
                                         />
 
                                     ))}
-                                    <ActionCredentialAdd  handleClick={handleDialogOpen}/>
+                                    <ActionCredentialAdd handleClick={handleDialogOpen}/>
                                 </ActionBoxContent>
                             </ActionBox>
                         ))}
