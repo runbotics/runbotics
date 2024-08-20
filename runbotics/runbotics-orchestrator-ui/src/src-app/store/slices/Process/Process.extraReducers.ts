@@ -16,7 +16,8 @@ import {
     subscribeProcessNotifications,
     unsubscribeProcessNotifications,
     getProcessSubscriptionInfo,
-    getProcessesPageByCollection
+    getProcessesPageByCollection,
+    getProcessCredentials
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
@@ -159,6 +160,11 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(getProcessSubscriptionInfo.rejected, (state) => {
             state.all.loading = false;
+        })
+
+        // GET ALL PROCESS CREDENTIALS
+        .addCase(getProcessCredentials.fulfilled, (state, action) => {
+            state.draft.credentials = action.payload;
         });
 };
 

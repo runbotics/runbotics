@@ -10,56 +10,51 @@ import { CredentialDelete, CredentialDetails, CredentialSwipe, CredentialTile, C
 
 interface ActionCredentialProps {
     isPrimary: boolean;
-    isLast: boolean;
     collectionName: string;
     credentialName: string;
 };
 
 const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
-    isPrimary, isLast, collectionName, credentialName
-}) => {
-    const x = 1;
-
-    return (
-        <CredentialWrapper>
-            <If condition={isPrimary}>
-                <StyledTypography
-                    fontWeight={500}
-                    variant='caption'
-                >
-                    Primary
-                </StyledTypography>
-            </If>
-            <CredentialTile $isPrimary={isPrimary}>
-                <CredentialSwipe>
-                    <DragIndicatorIcon sx={{ fontSize: '30px', [':hover']: { cursor: 'pointer' } }}/>
-                </CredentialSwipe>
-                <CredentialDetails>
-                    <List sx={{ display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
-                        <ListItem>
-                            <Typography>{collectionName}</Typography>
-                        </ListItem>
-                        <Divider component='li' variant='middle'/>
-                        <ListItem>
-                            <Typography
-                                fontSize={18}
-                                fontWeight={500}
-                                textTransform='uppercase'
-                            >
-                                {credentialName}
-                            </Typography>
-                        </ListItem>
-                    </List>
-                </CredentialDetails>
-                <CredentialDelete>
-                    <DeleteOutlineIcon sx={{ [':hover']: { cursor: 'pointer' } }}/>
-                </CredentialDelete>
-            </CredentialTile>
-            <If condition={!isLast && isPrimary}>
-                <HorizontalLine/>
-            </If>
-        </CredentialWrapper>
-    );
-};
+    isPrimary, collectionName, credentialName
+}) => (
+    <CredentialWrapper>
+        <If condition={isPrimary}>
+            <StyledTypography
+                fontWeight={500}
+                variant='caption'
+            >
+                Primary
+            </StyledTypography>
+        </If>
+        <CredentialTile $isPrimary={isPrimary}>
+            <CredentialSwipe>
+                <DragIndicatorIcon sx={{ fontSize: '30px', [':hover']: { cursor: 'pointer' } }}/>
+            </CredentialSwipe>
+            <CredentialDetails>
+                <List sx={{ display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
+                    <ListItem>
+                        <Typography>{collectionName}</Typography>
+                    </ListItem>
+                    <Divider component='li' variant='middle'/>
+                    <ListItem>
+                        <Typography
+                            fontSize={18}
+                            fontWeight={500}
+                            textTransform='uppercase'
+                        >
+                            {credentialName}
+                        </Typography>
+                    </ListItem>
+                </List>
+            </CredentialDetails>
+            <CredentialDelete>
+                <DeleteOutlineIcon sx={{ [':hover']: { cursor: 'pointer' } }}/>
+            </CredentialDelete>
+        </CredentialTile>
+        <If condition={isPrimary}>
+            <HorizontalLine/>
+        </If>
+    </CredentialWrapper>
+);
 
 export default ActionCredential;

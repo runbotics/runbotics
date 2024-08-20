@@ -1,4 +1,4 @@
-import { IProcess, IProcessInstance, NotificationProcess } from 'runbotics-common';
+import { IProcess, IProcessInstance, NotificationProcess, ProcessCredential } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
 import { Options, Variable } from '#src-app/hooks/useOptions';
@@ -47,6 +47,7 @@ export interface ProcessState {
         currentRequestId: any;
         error: any;
         processSubscriptions: NotificationProcess[];
+        credentials: ProcessCredential[];
     };
     modeler: ModelerState;
     all: {

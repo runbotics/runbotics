@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Typography } from '@mui/material';
-import _ from 'lodash';
 import Image from 'next/image';
-
+import { useRouter } from 'next/router';
 
 import LockIcon from '#public/images/icons/lock.svg';
 import { useRequiredCredentialTypes } from '#src-app/credentials/useRequiredCredentialTypes';
 import useWindowSize from '#src-app/hooks/useWindowSize';
+import { useDispatch, useSelector } from '#src-app/store';
+import { processActions, processSelector } from '#src-app/store/slices/Process';
 
 import ActionCredential from './ActionCredential';
 import ActionCredentialAdd from './ActionCredentialAdd';
@@ -16,139 +17,51 @@ import {
     ActionBoxHeader, ActionsColumns,
     ActionsContainer, Container, Header
 } from './ProcessCredentials.styles';
+import { ActionSortedColumns, sortByActionCredentialType, sortByColumns } from './ProcessCredentials.utils';
 import { ProcessCredentialsAddDialog } from './ProcessCredentialsAddDialog';
-
-// TEMPORRARY DATA
-const data = [
-    {
-        actionName: 'ATLAS AND ASIAN',
-        credentials: [
-            {
-                collectionName: 'djhawlkdhawilhd',
-                name: 'dawdawdawdaw'
-            }
-        ]
-    },
-    {
-        actionName: 'RAEON ARC',
-        credentials: [
-            {
-                collectionName: 'Credential Collection 435',
-                name: 'Clientx'
-            },
-            {
-                collectionName: 'Credential Collection 3357',
-                name: 'Clienadt'
-            },
-            {
-                collectionName: 'Credential Collection 256',
-                name: 'Cliendwaygt'
-            },
-            {
-                collectionName: 'Credential Collection 8556',
-                name: 'Clisdfsefent'
-            }
-        ]
-    },
-    {
-        actionName: 'RADEON ARC 2',
-        credentials: [
-            {
-                collectionName: 'CrdAWdawd',
-                name: 'awdawdwad'
-            },
-            {
-                collectionName: 'Credential Collectafajtrufion 3',
-                name: 'Clieawdawdwadnt'
-            },
-            {
-                collectionName: 'Credentsetdrial seCollection 3',
-                name: 'Client'
-            },
-            {
-                collectionName: 'Credentwady44dgsial Collection 3',
-                name: 'Cl46dffdient'
-            }
-        ]
-    },
-    {
-        actionName: 'MICXRO NE SOFT',
-        credentials: []
-    },
-    {
-        actionName: 'RADXEON ARC ppp',
-        credentials: [
-            {
-                collectionName: 'Cre2365dential Collection 3',
-                name: 'Client'
-            },
-            {
-                collectionName: 'Credential 454Collection 3',
-                name: 'Cli45ent'
-            },
-            {
-                collectionName: 'Crede232ntial Collection 3',
-                name: 'Client'
-            },
-            {
-                collectionName: 'Credential Collec688tion 3',
-                name: 'Cli56ent'
-            }
-        ]
-    },
-    {
-        actionName: 'MICXRO NE SOFT XXX',
-        credentials: [
-            {
-                collectionName: 'Credentdawdial Collection 2',
-                name: 'Devedwalopment'
-            }
-        ]
-    },
-    {
-        actionName: 'MIFCRO NE SOFT bbb',
-        credentials: [
-            {
-                collectionName: 'Credential Colldawection 2',
-                name: 'Devedddddddlopment'
-            }
-        ]
-    },
-];
 
 const ACTION_MIN_WIDTH = 400;
 const MARGIN_LIMIT = 800;
 
 const ProcessCredentials = () => {
+    const dispatch = useDispatch();
+    const { id: processId } = useRouter().query;
+    const { draft: { credentials: processCredentials } } = useSelector(processSelector);
     const credentialTypes = useRequiredCredentialTypes();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const actionCredentials = useMemo(
+        () => credentialTypes ? sortByActionCredentialType(processCredentials, credentialTypes) : null,
+        [processCredentials, credentialTypes]
+    );
+
+    const [columns, setColumns] = useState<ActionSortedColumns>([]);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
     const { width: windowWidth } = useWindowSize();
     const rowCount = Math.ceil((Math.abs(windowWidth - MARGIN_LIMIT)) / ACTION_MIN_WIDTH);
 
-    const sortColumns = (actions) =>
-        actions.reduce((acc, item) => {
-            const minSize = Math.min(...acc.map(el => el.count));
-            const minIndex = acc.findIndex(el => el.count === minSize);
-            acc[minIndex].data.push(item);
-            acc[minIndex].count += item.credentials.length + 1;
-            return acc;
-        }, _.range(rowCount).map(() => ({ count: 0, data: [] })));
-
-    const test = sortColumns(data);
-
     const handleDialogOpen = () => {
-        setIsDialogOpen(true);
+        setIsEditDialogOpen(true);
     };
 
     const handleDialogClose = () => {
-        setIsDialogOpen(false);
+        setIsEditDialogOpen(false);
     };
+
+    useEffect(() => {
+        if (actionCredentials) {
+            const actionSortedColumns = sortByColumns(actionCredentials, rowCount);
+            setColumns(actionSortedColumns);
+        }
+    }, [windowWidth, actionCredentials]);
+
+    useEffect(() => {
+        dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
+    }, []);
 
     return (
         <Container>
             <ProcessCredentialsAddDialog
-                isOpen={isDialogOpen}
+                isOpen={isEditDialogOpen}
                 handleClose={handleDialogClose}
             />
             <Header>
@@ -156,27 +69,20 @@ const ProcessCredentials = () => {
                 <Typography>Credentials</Typography>
             </Header>
             <ActionsContainer $rowCount={rowCount}>
-                {test.map(column => (
-                    <ActionsColumns key={column.idx}>
-                        {column.data.map(el => (
-                            <ActionBox key={el.actionName}>
+                {columns.map((column, idx) => (
+                    <ActionsColumns key={column.count + String(idx)}>
+                        {column.actionCredentials.map(actionType => (
+                            <ActionBox key={actionType.name}>
                                 <ActionBoxHeader>
-                                    <Typography variant='h5'>{el.actionName}</Typography>
+                                    <Typography variant='h5' textTransform='uppercase'>{actionType.name}</Typography>
                                 </ActionBoxHeader>
                                 <ActionBoxContent>
-                                    <ActionCredential
-                                        isPrimary={true}
-                                        isLast={false}
-                                        credentialName='test2'
-                                        collectionName='test2'
-                                    />
-                                    {el.credentials.map((cred, idx) => (
+                                    {actionType.credentials.map(cred => (
                                         <ActionCredential
                                             key={cred.name}
-                                            isPrimary={false}
-                                            isLast={idx + 1 === el.credentials.length}
-                                            credentialName='test'
-                                            collectionName='test'
+                                            isPrimary={cred.order === 1}
+                                            credentialName={cred.name}
+                                            collectionName={cred.collectionName}
                                         />
 
                                     ))}
