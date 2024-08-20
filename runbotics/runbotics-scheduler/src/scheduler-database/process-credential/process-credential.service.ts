@@ -1,5 +1,5 @@
 import { UserEntity } from '#/database/user/user.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProcessCredential } from './process-credential.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -25,6 +25,20 @@ export class ProcessCredentialService {
             },
             relations: ['credential.template', 'credential.createdBy', 'credential.collection']
         }).then(this.formatProcessCredentials);
+    }
+
+    async delete(id: string, user: UserEntity) {
+        const processCredential = await this.processCredentialRepository.findOneOrFail({
+            where: { id, credential: { tenantId: user.tenantId } }, relations: ['process']
+        }).catch(() => {
+            throw new NotFoundException();
+        });
+
+        await this.processService.checkAccessAndGetById(
+            processCredential.process.id, user
+        );
+
+        await this.processCredentialRepository.delete(id);
     }
 
     private formatProcessCredentials(processCredentials: ProcessCredential[]) {
