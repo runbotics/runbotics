@@ -13,7 +13,6 @@ import { CredentialCollectionModule } from '#/scheduler-database/credential-coll
 import { CredentialCollectionUserModule } from './credential-collection-user/credential-collection-user.module';
 import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { AuthorityModule } from './authority/authority.module';
-import { AuthorityFeatureKeyModule } from './authority-feature-key/authority-feature-key.module';
 
 @Module({
     imports: [
@@ -31,7 +30,6 @@ import { AuthorityFeatureKeyModule } from './authority-feature-key/authority-fea
         CredentialModule,
         FeatureKeyModule,
         AuthorityModule,
-        AuthorityFeatureKeyModule,
     ],
     exports: [],
 })
