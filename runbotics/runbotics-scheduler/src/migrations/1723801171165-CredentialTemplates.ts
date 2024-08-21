@@ -11,27 +11,17 @@ const TEMPLATES = [
         description: 'Among others for Jira Server and Jira Cloud actions',
         attributes: [
             {
-                name: 'usernameEnv', // @todo do we keep 'Env' in the name?
-                description: 'Username of the account to use for the action', // @todo what with polish translations? maybe another value - translateKeyCode? -> or lets use this name as translation key! - because english names should start with capital letter too!
+                name: 'usernameEnv',
+                description: 'Username of the account to use for the action', // @todo what with polish translations? lets use this name as translation key! - because english names should start with capital letter too!
             },
             {
                 name: 'passwordEnv',
                 description: 'Password of the account to use for the action',
             },
             {
-                name: 'originEnv', // @todo origin or url/instance?
+                name: 'originEnv',
                 description: 'URL of the Jira instance to connect to',
             }
-            // @todo anything else?
-            // [jiraCloud.getUserWorklogs] Running desktop script {
-            //     script: 'jiraCloud.getUserWorklogs',
-            //     mode: 'date',
-            //     originEnv: 'origin-environment-variableeee',
-            //     usernameEnv: 'username-environment-variableee',
-            //     passwordEnv: 'password-env--varrrrrr',
-            //     email: 'emaillll',
-            //     date: 'dateeeeee'
-            // }
         ],
     },
     {
@@ -45,7 +35,7 @@ const TEMPLATES = [
             },
             {
                 name: 'logsys',
-                description: '', // @todo fill
+                description: 'Organization name - on login page an input right below password field, e.g. "my-company"',
             },
             {
                 name: 'url',
