@@ -25,23 +25,35 @@ import {
 import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
 import { CloudExcelErrorMessage } from '../automation/excel/cloud-excel.error-message';
+import { MicrosoftAuthService } from '../microsoft-auth.service';
+import { MicrosoftAuth } from '#config';
+import { MicrosoftCredential } from '../common.types';
+// import { MicrosoftAuthService } from '../microsoft-auth.service';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 @Injectable()
 export class ExcelService {
     private readonly logger = new RunboticsLogger(ExcelService.name);
+    private microsoftGraphService: MicrosoftGraphService = null;
+    private sharePointService: SharePointService = null;
+    private oneDriveService: OneDriveService = null;
 
-    constructor(
-        private readonly microsoftGraphService: MicrosoftGraphService,
-        private readonly sharePointService: SharePointService,
-        private readonly oneDriveService: OneDriveService,
-    ) { }
+    constructor() { }
 
     /**
      * @see https://learn.microsoft.com/en-us/graph/api/workbook-createsession?view=graph-rest-1.0&tabs=javascript
      */
-    async createSession(fileInfo: ExcelSessionInfo): Promise<ExcelSession> {
+    async createSession(fileInfo: ExcelSessionInfo, authInfo: MicrosoftCredential): Promise<ExcelSession> {
+        this.microsoftGraphService = new MicrosoftGraphService(
+            new MicrosoftAuthService(
+                authInfo,
+            )
+        );
+
+        this.sharePointService = new SharePointService(this.microsoftGraphService);
+        this.oneDriveService = new OneDriveService(this.microsoftGraphService);
+
         const session = fileInfo.platform === MicrosoftPlatform.SharePoint
             ? await this.gatherSharePointFileInfo(fileInfo)
             : await this.gatherOneDriveFileInfo(fileInfo);
@@ -62,6 +74,8 @@ export class ExcelService {
             ...session,
             worksheetName: worksheet.name,
             workbookSessionId: workbookSessionInfo.id,
+            credentialId: fileInfo.credentialId,
+            templateName: fileInfo.templateName,
         };
     }
 
@@ -102,8 +116,7 @@ export class ExcelService {
      * @see https://learn.microsoft.com/en-us/graph/api/worksheet-cell?view=graph-rest-1.0&tabs=http
      */
     async getCell(session: ExcelSession, cellCoordinates: WorkbookCellCoordinates, isStringExpected: boolean) {
-        const url = `/worksheets/${session.worksheetName}/cell(row=${Number(cellCoordinates.row) - 1},column=${
-            this.getColumnNumber(cellCoordinates.column) - 1
+        const url = `/worksheets/${session.worksheetName}/cell(row=${Number(cellCoordinates.row) - 1},column=${this.getColumnNumber(cellCoordinates.column) - 1
         })`;
 
         const response = await this.microsoftGraphService.get<Range>(

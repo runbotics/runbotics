@@ -11,7 +11,7 @@ import { DriveItem, Permission } from '../common.types';
 import { RequestOptions } from '../microsoft-graph';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
-@Injectable()
+// @Injectable()
 export class OneDriveService {
     private readonly logger = new RunboticsLogger(OneDriveService.name);
 

@@ -21,14 +21,16 @@ import {
 import { ServerConfigService } from '#config';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { MicrosoftGraphService } from '#action/microsoft/microsoft-graph';
+import { MicrosoftAuthService } from '#action/microsoft/microsoft-auth.service';
 
-@Injectable()
 export class CloudFileActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(CloudFileActionHandler.name);
+    private microsoftGraphService: MicrosoftGraphService = null;
+    private oneDriveService: OneDriveService = null;
+    private sharePointService: SharePointService = null;
 
     constructor(
-        private readonly oneDriveService: OneDriveService,
-        private readonly sharePointService: SharePointService,
         private readonly serverConfigService: ServerConfigService,
     ) {
         super();
@@ -170,6 +172,22 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     run(request: CloudFileActionRequest) {
+        const matchedCredentials = { // @todo here method for matching credentialId (templateName) from action input to decrypted credential (default for the template), e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
+            config: {
+                auth: {
+                    clientId: ,
+                    authority: ,
+                    clientSecret: ,
+                }
+            },
+            loginCredential: {
+                username:
+                password:
+            }
+        };
+
+        this.createSession(request, matchedCredentials);
+
         switch (request.script) {
             case CloudFileAction.DOWNLOAD_FILE:
                 return this.downloadFile(request.input);
@@ -188,6 +206,23 @@ export class CloudFileActionHandler extends StatelessActionHandler {
             default:
                 throw new Error('Action not found');
         }
+    }
+
+    private createSession( // @todo here in the future method for matching decrypted credential should be used here to convert credentialId (templateName) from input to decrypted credential (default for the template) from initial process execution bot's list with decrypted credentials -> e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
+        request, matchedCredentials
+    ) {
+        if (!request.input) { // @todo check if includes both CredentialData and list including MicrosoftCredential
+            throw new Error('Auth is required for that action');
+        }
+
+        this.microsoftGraphService = new MicrosoftGraphService(
+            new MicrosoftAuthService(
+                matchedCredentials,
+            )
+        );
+
+        this.sharePointService = new SharePointService(this.microsoftGraphService);
+        this.oneDriveService = new OneDriveService(this.microsoftGraphService);
     }
 
     private async getSharePointListInfo({ listName, siteRelativePath }: Omit<SharePointCommon, 'platform'>) {
@@ -223,7 +258,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         };
     }
 
-    private async getSharepointListItems({ listName, siteRelativePath }: SharepointGetListItems){
+    private async getSharepointListItems({ listName, siteRelativePath }: SharepointGetListItems) {
         const site = await this.sharePointService.getSiteByRelativePath(siteRelativePath);
         if (!site) {
             throw new Error(`Site for provided path "${siteRelativePath}" not found`);

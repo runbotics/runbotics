@@ -8,6 +8,7 @@ import * as CloudExcelTypes from './cloud-excel.types';
 import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
 import { sortNumbersDescending } from '#action/microsoft/excel/excel.utils';
+import { MicrosoftCredential } from '#action/microsoft/common.types';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
@@ -17,8 +18,8 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         super();
     }
 
-    async openFile(input: ExcelSessionInfo) {
-        this.session = await this.excelService.createSession(input);
+    async openFile(input: ExcelSessionInfo, auth: MicrosoftCredential) {
+        this.session = await this.excelService.createSession(input, auth);
     }
 
     async closeSession() {
@@ -125,7 +126,25 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     run(request: CloudExcelTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
-                return this.openFile(request.input);
+                if (!request.input) { // @todo check if includes both CredentialData and list including MicrosoftCredential
+                    throw new Error('Auth is required for that action');
+                }
+
+                const matchedCredentials = { // @todo here in the future method for matching decrypted credential should be used here to convert credentialId (templateName) from input to decrypted credential (default for the template) from initial process execution bot's list with decrypted credentials -> e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
+                    config: {
+                        auth: {
+                            clientId: ,
+                            authority:,
+                            clientSecret:,
+                        }
+                    },
+                    loginCredential: {
+                        username: ,
+                        password: ,
+                    }
+                };
+
+                return this.openFile(request.input, matchedCredentials);
             case CloudExcelAction.GET_WORKSHEET_CONTENT:
                 this.checkSession();
                 return this.getWorksheetContent(request.input);
