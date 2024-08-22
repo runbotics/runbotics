@@ -1,6 +1,6 @@
-import { ActionCredentialType, MicrosoftPlatform } from 'runbotics-common';
+import { MicrosoftPlatform } from 'runbotics-common';
 
-import { CredentialData, Drive, DriveItem, MicrosoftCredential } from '../common.types';
+import { CredentialData, Drive, DriveItem } from '../common.types';
 import { Site } from '../share-point/share-point.types';
 
 // Session
