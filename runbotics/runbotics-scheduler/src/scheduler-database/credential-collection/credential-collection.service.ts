@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreateCredentialCollectionDto } from './dto/create-credential-collection.dto';
 import { UpdateCredentialCollectionDto } from './dto/update-credential-collection.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,7 +14,7 @@ import {
 import { UserService } from '#/database/user/user.service';
 import { IUser, Tenant } from 'runbotics-common';
 
-const relations = ['credentials', 'credentialCollectionUser', 'credentialCollectionUser.user'];
+const relations = ['credentialCollectionUser', 'credentialCollectionUser.user', 'credentialCollectionUser.credentialCollection', 'createdBy', 'credentials'];
 
 @Injectable()
 export class CredentialCollectionService {
@@ -41,21 +41,22 @@ export class CredentialCollectionService {
             sharedWith,
         } = createCredentialCollectionDto;
 
+        const { authorities, ...userDto } = user;
         const credentialCollection = await this.credentialCollectionRepository.save(
             {
                 name,
                 description,
                 accessType,
                 color,
-                createdBy: user,
-                updatedBy: user,
+                createdBy: userDto,
+                updatedBy: userDto,
                 tenantId,
                 credentialCollectionUser: [],
             }
         )
             .catch(
                 async (error) => {
-                    const isNameTaken = Boolean(await this.findOneByCriteria(user.tenantId, { name, createdById: user.id }));
+                    const isNameTaken = Boolean(await this.findOneByCriteria(userDto.tenantId, { name, createdById: userDto.id }));
 
                     if (isNameTaken) {
                         throw new BadRequestException(`Credential collection with name "${name}" already exists`);
@@ -69,7 +70,7 @@ export class CredentialCollectionService {
             const credentialCollectionCreator =
                 this.credentialCollectionUserRepository.create({
                     credentialCollectionId: credentialCollection.id,
-                    userId: user.id,
+                    userId: userDto.id,
                 });
 
             credentialCollection.credentialCollectionUser.push(
@@ -81,56 +82,82 @@ export class CredentialCollectionService {
         }
 
         if (sharedWith && sharedWith.length > 0) {
-            const credentialCollectionUserArray =
-            await this.getCollectionUserArrayWithPrivileges(
-                    sharedWith,
-                    credentialCollection,
-                    user,
-                    tenantId,
-                );
+            const credentialCollectionUserArrayToSave =
+                await this.getCollectionUserArrayWithPrivileges(
+                        sharedWith,
+                        credentialCollection,
+                        userDto,
+                        tenantId,
+                    );
 
-                credentialCollection.credentialCollectionUser =
-                credentialCollectionUserArray;
-            }
+            credentialCollection.credentialCollectionUser =
+                credentialCollectionUserArrayToSave;
+        }
+
         return this.credentialCollectionRepository.save(credentialCollection);
     }
 
-    async findAllAccessible(user: IUser) {
-        const collections = await this.credentialCollectionRepository.find({
-            where: {
-                tenantId: user.tenantId,
-                credentialCollectionUser: {
-                    userId: user.id,
-                    privilegeType: PrivilegeType.WRITE,
-                },
-            },
-            relations,
-        });
-
-        if (collections.length === 0) {
-            throw new NotFoundException('Could not find any credential collections');
-        }
-
-        return collections;
+    findAllAccessible(user: IUser) {
+        return this.credentialCollectionRepository
+            .createQueryBuilder('credentialCollectionEntity')
+            .innerJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
+            .innerJoin(
+                'credentialCollectionEntity.credentialCollectionUser',
+                'filteredCredentialCollectionUsers',
+            )
+            .where(
+                'credentialCollectionEntity.tenantId = :tenantId',
+                { tenantId: user.tenantId },
+            )
+            .andWhere(
+                'filteredCredentialCollectionUsers.user.id = :userId',
+                { userId: user.id },
+            )
+            .andWhere(
+                'filteredCredentialCollectionUsers.privilegeType = :privilegeType',
+                { privilegeType: PrivilegeType.WRITE },
+            )
+            .innerJoinAndSelect(
+                'credentialCollectionEntity.credentialCollectionUser',
+                'allCredentialCollectionUsers',
+            )
+            .innerJoinAndSelect('allCredentialCollectionUsers.user', 'allUsers')
+            .getMany();
     }
 
     async findOneAccessibleById(id: string, user: IUser) {
-        const collection = await this.credentialCollectionRepository.findOne({
-            where: {
-                id,
-                tenantId: user.tenantId,
-            },
-            relations,
-        });
+        const collection = await this.credentialCollectionRepository
+            .createQueryBuilder('credentialCollectionEntity')
+            .innerJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
+            .innerJoin(
+                'credentialCollectionEntity.credentialCollectionUser',
+                'filteredCredentialCollectionUsers',
+            )
+            .where(
+                'credentialCollectionEntity.id = :id',
+                { id },
+            )
+            .andWhere(
+                'credentialCollectionEntity.tenantId = :tenantId',
+                { tenantId: user.tenantId },
+            )
+            .andWhere(
+                'filteredCredentialCollectionUsers.user.id = :userId',
+                { userId: user.id },
+            )
+            .andWhere(
+                'filteredCredentialCollectionUsers.privilegeType = :privilegeType',
+                { privilegeType: PrivilegeType.WRITE },
+            )
+            .innerJoinAndSelect(
+                'credentialCollectionEntity.credentialCollectionUser',
+                'allCredentialCollectionUsers',
+            )
+            .innerJoinAndSelect('allCredentialCollectionUsers.user', 'allUsers')
+            .getOne();
 
         if (!collection) {
-            throw new NotFoundException('Could not find credential collection wit id: ' + id);
-        }
-
-        if (
-            collection.credentialCollectionUser.some((item) => item.userId === user.id && item.privilegeType === PrivilegeType.WRITE)
-        ) {
-            throw new ForbiddenException('You do not have access to this collection');
+            throw new NotFoundException('Could not find credential collection with id: ' + id);
         }
 
         return collection;
@@ -174,29 +201,39 @@ export class CredentialCollectionService {
             throw new NotFoundException(`Could not find collection with id ${id}`);
         }
 
-        const collectionUserArray = await this.credentialCollectionUserRepository.find({
-            where: {
-                credentialCollectionId: id,
-            },
-        });
+        if (sharedWith && sharedWith.length > 0) {
+            const credentialCollectionUserArray = await this.credentialCollectionUserRepository.find({
+                where: {
+                    credentialCollectionId: id,
+                },
+            });
 
-        const updatedCollectionUserArray =
-            await this.getCollectionUserArrayWithPrivileges(
-                sharedWith,
-                credentialCollection,
-                user,
-                tenantId
-            );
+            const credentialCollectionUserArrayToSave =
+                await this.getCollectionUserArrayWithPrivileges(
+                    sharedWith,
+                    credentialCollection,
+                    user,
+                    tenantId
+                );
 
-        await collectionUserArray.forEach((item) => {
-            this.credentialCollectionUserRepository.remove(item);
-        });
+            await Promise
+                .all(credentialCollectionUserArray.map((ccu =>
+                    this.credentialCollectionUserRepository.remove(ccu)
+                )))
+                .catch(error => {
+                    throw new InternalServerErrorException(error);
+                });
 
-        await updatedCollectionUserArray.forEach((item) => {
-            this.credentialCollectionUserRepository.save(item);
-        });
+            await Promise
+                .all(credentialCollectionUserArrayToSave.map(ccu =>
+                    this.credentialCollectionUserRepository.save(ccu)
+                ))
+                .catch(error => {
+                    throw new InternalServerErrorException(error);
+                });
+        }
 
-        return this.credentialCollectionRepository
+        await this.credentialCollectionRepository
             .update(id, dto)
             .catch(async (error) => {
                 const isNameTaken = await this.credentialCollectionRepository.findOne({
@@ -213,10 +250,36 @@ export class CredentialCollectionService {
 
                 throw new BadRequestException(error.message);
             });
+
+        return this.credentialCollectionRepository.findOne({
+            where: { id },
+            relations,
+        });
     }
 
-    remove(id: string) {
-        return this.credentialCollectionRepository.delete(id);
+    async delete(id: string, user: IUser) {
+        const collection = await this.credentialCollectionRepository
+            .findOne({
+                relations,
+                where: {
+                    id,
+                    tenantId: user.tenantId,
+                    credentialCollectionUser: {
+                        userId: user.id,
+                        privilegeType: PrivilegeType.WRITE,
+                    },
+                },
+            });
+
+        if (!collection) {
+            throw new NotFoundException('Could not find credential collection with id: ' + id);
+        }
+
+        if (collection.credentials.length > 0) {
+            throw new ConflictException('Collection cannot be deleted, there are credentials related to this collection');
+        }
+
+        await this.credentialCollectionRepository.delete(collection.id);
     }
 
     private async getCollectionUserArrayWithPrivileges(
@@ -226,10 +289,10 @@ export class CredentialCollectionService {
         tenantId: Tenant['id'],
     ) {
         const userEmails = sharedWith
-            .filter((item) => item.login !== user.login)
-            .map((item) => item.login);
+            .filter((item) => item.email !== user.email)
+            .map((item) => item.email);
 
-        const grantAccessUsers = await this.userService.findAllByLogins(
+        const grantAccessUsers = await this.userService.findAllByEmails(
             userEmails,
             tenantId
         );
@@ -244,7 +307,7 @@ export class CredentialCollectionService {
         const credentialCollectionUserArray = grantAccessUsers.map(
             (grantedUser) => {
                 const privilegeType =
-                    sharedWith.find((item) => item.login === grantedUser.login)
+                    sharedWith.find((item) => item.email === grantedUser.email)
                         ?.privilegeType ?? PrivilegeType.READ;
 
                 return this.credentialCollectionUserRepository.create({
