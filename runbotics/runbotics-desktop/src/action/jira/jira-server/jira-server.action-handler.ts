@@ -9,11 +9,21 @@ dayjs.extend(customParseFormat);
 import { RunboticsLogger } from '#logger';
 
 import {
-    AVAILABLE_FORMATS, getDatesCollectionBoundaries, getIssueWorklogs,
-    getJiraUser, getUserIssueWorklogs, getWorklogInputSchema, groupByDay,
-    isAllowedDate, isWorklogCollection, isWorklogDay, isWorklogPeriod, sortAscending
+    AVAILABLE_FORMATS,
+    getDatesCollectionBoundaries,
+    getIssueWorklogs,
+    getIssueWorklogsByParam,
+    getJiraUser,
+    getUserWorklogInputSchema,
+    groupByDay,
+    isAllowedDate,
+    isJiraDatesCollection,
+    isWorklogCreator,
+    isJiraSingleDay,
+    isJiraDatesPeriod,
+    sortAscending
 } from '../jira.utils';
-import { GetWorklogInput, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
+import { GetUserWorklogInput, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
 import { JiraActionRequest, ServerJiraUser, SimpleServerJiraUser } from './jira-server.types';
 
 /**
@@ -27,10 +37,10 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         super();
     }
 
-    async getWorklog(rawInput: GetWorklogInput) {
+    async getWorklog(rawInput: GetUserWorklogInput) {
         let startDate, endDate, datesCollectionObjects;
 
-        const input = await getWorklogInputSchema.parseAsync(rawInput)
+        const input = await getUserWorklogInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
                 const fieldErrors = error.formErrors.fieldErrors;
                 if (Object.keys(fieldErrors).length > 0) {
@@ -40,17 +50,17 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                 }
             });
 
-        if (isWorklogDay(input)) {
+        if (isJiraSingleDay(input)) {
             startDate = dayjs(input.date, AVAILABLE_FORMATS).startOf('day');
             endDate = dayjs(input.date, AVAILABLE_FORMATS).endOf('day');
             this.logger.log(`Gathering worklogs for single date: ${input.date}`);
         }
-        if (isWorklogPeriod(input)) {
+        if (isJiraDatesPeriod(input)) {
             startDate = dayjs(input.startDate, AVAILABLE_FORMATS).startOf('day');
             endDate = dayjs(input.endDate, AVAILABLE_FORMATS).endOf('day');
             this.logger.log(`Gathering worklogs for date period: ${input.startDate} - ${input.endDate}`);
         }
-        if (isWorklogCollection(input)) {
+        if (isJiraDatesCollection(input)) {
             const { min, max, datesObjects } = getDatesCollectionBoundaries(input.dates);
             startDate = min.startOf('day');
             endDate = max.endOf('day');
@@ -59,7 +69,10 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         }
 
         const jiraUser = await getJiraUser<ServerJiraUser>({ input, isServer: true });
-        const issues = await getUserIssueWorklogs<ServerJiraUser>(jiraUser.name, input);
+        const issues = await getIssueWorklogsByParam<ServerJiraUser>(
+            { param: 'worklogAuthor',author: jiraUser.name },
+            input,
+        );
         this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
 
         const worklogs = (await Promise.all(issues
@@ -73,9 +86,11 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                         return getIssueWorklogs<ServerJiraUser>(issue.key, input);
                     })();
                 return worklogs
-                    .filter(worklog => isAllowedDate<ServerJiraUser>({
-                        worklog, startDate, endDate, jiraUser, dates: datesCollectionObjects
-                    }))
+                    .filter(worklog =>
+                        isWorklogCreator<ServerJiraUser>({ worklog, jiraUser }) &&
+                        isAllowedDate<ServerJiraUser>({
+                            worklog, startDate, endDate, dates: datesCollectionObjects
+                        }))
                     .map(worklog => this.mapWorklogOutput(worklog, issue));
             })
         )).flatMap(w => w);

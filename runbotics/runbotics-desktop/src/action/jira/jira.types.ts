@@ -1,14 +1,33 @@
 import z from 'zod';
-import { getWorklogInputBaseSchema, getWorklogInputSchema, worklogCollectionSchema, worklogDaySchema, worklogPeriodSchema } from './jira.utils';
+import {
+    getProjectWorklogInputBaseSchema,
+    getProjectWorklogInputSchema,
+    getUserWorklogInputBaseSchema,
+    getUserWorklogInputSchema,
+    getJiraInputBaseSchema,
+    jiraDatesCollectionSchema,
+    jiraSingleDaySchema,
+    jiraDatesPeriodSchema,
+    getProjectSprintsInputSchema,
+    getSprintTasksInputSchema
+} from './jira.utils';
 import { CloudJiraUser, SimpleCloudJiraUser } from './jira-cloud/jira-cloud.types';
 import { ServerJiraUser, SimpleServerJiraUser } from './jira-server/jira-server.types';
 import { Dayjs } from 'dayjs';
+import { JiraSprintState } from 'runbotics-common';
 
-export type GetWorklogBase = z.infer<typeof getWorklogInputBaseSchema>
-export type WorklogDay = GetWorklogBase & z.infer<typeof worklogDaySchema>
-export type WorklogPeriod = GetWorklogBase & z.infer<typeof worklogPeriodSchema>
-export type WorklogCollection = GetWorklogBase & z.infer<typeof worklogCollectionSchema>
-export type GetWorklogInput = z.infer<typeof getWorklogInputSchema>
+export type GetJiraInputBase = z.infer<typeof getJiraInputBaseSchema>
+export type GetUserWorklogBase = z.infer<typeof getUserWorklogInputBaseSchema>
+export type GetProjectWorklogBase = z.infer<typeof getProjectWorklogInputBaseSchema>
+export type JiraSingleDay = GetJiraInputBase & z.infer<typeof jiraSingleDaySchema>
+export type JiraDatesPeriod = GetJiraInputBase & z.infer<typeof jiraDatesPeriodSchema>
+export type JiraDatesCollection = GetJiraInputBase & z.infer<typeof jiraDatesCollectionSchema>
+export type GetWorklogInput = GetUserWorklogInput & GetProjectWorklogInput;
+export type GetJiraDatesInput = JiraSingleDay | JiraDatesPeriod | JiraDatesCollection;
+export type GetUserWorklogInput = z.infer<typeof getUserWorklogInputSchema>;
+export type GetProjectWorklogInput = z.infer<typeof getProjectWorklogInputSchema>;
+export type GetProjectSprintsInput = z.infer<typeof getProjectSprintsInputSchema>;
+export type GetSprintTasksInput = z.infer<typeof getSprintTasksInputSchema>;
 
 export interface Page {
     maxResults: number;
@@ -72,6 +91,43 @@ export interface Status {
     };
 }
 
+export interface Board {
+    id: number;
+    self: string;
+    name: string;
+    type: 'scrum' | 'kanban' | 'simple';
+    location: {
+        projectId: number;
+        displayName: string;
+        projectName: string;
+        projectKey: string;
+        projectTypeKey: string;
+        avatarURI: string;
+        name: string;
+    }
+}
+
+export interface BoardResponse extends Page {
+    isLast: boolean;
+    values: Board[];
+}
+
+export interface Sprint {
+    id: number;
+    self: string;
+    state: JiraSprintState;
+    name: string;
+    startDate: string;
+    endDate: string;
+    completeDate: string;
+    originBoardId: number;
+}
+
+export interface SprintResponse extends Page {
+    isLast: boolean;
+    values: Sprint[];
+}
+
 export interface WorklogResponse<User extends object> extends Page {
     worklogs: Worklog<User>[];
 }
@@ -129,6 +185,23 @@ export interface WorklogAllowedDateParams<T extends CloudJiraUser | ServerJiraUs
     worklog: Worklog<T>;
     startDate: Dayjs,
     endDate: Dayjs,
-    jiraUser: T,
     dates?: Dayjs[],
 }
+
+export interface WorklogIsCreatorParams<T extends CloudJiraUser | ServerJiraUser> {
+    worklog: Worklog<T>;
+    jiraUser: T,
+}
+
+interface GetIssueWorklogsByParamCommon {
+    param: 'project' | 'worklogAuthor'
+}
+interface GetIssueWorklogsByAuthorParam extends GetIssueWorklogsByParamCommon {
+    param: 'worklogAuthor';
+    author: string;
+}
+interface GetIssueWorklogsByProjectParam extends GetIssueWorklogsByParamCommon {
+    param: 'project';
+    project: string;
+}
+export type GetIssueWorklogsByParam = GetIssueWorklogsByAuthorParam | GetIssueWorklogsByProjectParam;
