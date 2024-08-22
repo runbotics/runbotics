@@ -210,7 +210,7 @@ export const getJiraAllSprintTasks = async <T extends CloudJiraUser>(
         dateCondition = `AND statusCategoryChangedDate in (${mappedDates})`;
     }
     const assignee = input?.email ? `AND assignee="${input.email}"` : '';
-    const status = input?.status ? `AND status="${input.status}"` : '';
+    const status = input?.status ? `AND statusCategory="${input.status}"` : '';
     const jql = `sprint="${input.sprint}" ${assignee} ${status} ${dateCondition}`.trim();
 
     let startAt = 0;
