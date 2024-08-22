@@ -1,13 +1,13 @@
 import { Test } from '@nestjs/testing';
 import JiraCloudActionHandler from './jira-cloud.action-handler';
-import { GetWorklogInput, IssueWorklogResponse, SearchIssue, WorklogResponse } from '../jira.types';
+import { GetUserWorklogInput, SearchIssue, WorklogResponse } from '../jira.types';
 import { CloudJiraUser } from './jira-cloud.types';
 import * as jiraUtils from '../jira.utils';
 
 describe('JiraCloudActionHandler', () => {
     let jiraCloudActionHandler: JiraCloudActionHandler;
 
-    const getWorklogInputDate: GetWorklogInput = {
+    const getWorklogInputDate: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
@@ -15,7 +15,7 @@ describe('JiraCloudActionHandler', () => {
         mode: 'date',
         date: '2023-11-12',
     };
-    const getWorklogInputPeriod: GetWorklogInput = {
+    const getWorklogInputPeriod: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
@@ -24,7 +24,7 @@ describe('JiraCloudActionHandler', () => {
         startDate: '2023-11-12',
         endDate: '2023-11-14'
     };
-    const getWorklogInputCollection: GetWorklogInput = {
+    const getWorklogInputCollection: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
@@ -192,24 +192,24 @@ describe('JiraCloudActionHandler', () => {
         });
 
         it('should return empty worklog list', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(emptyUserIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(emptyUserIssuesWorklogs);
 
-            await expect(() => jiraCloudActionHandler.getWorklog(getWorklogInputDate))
+            await expect(() => jiraCloudActionHandler.getUserWorklog(getWorklogInputDate))
                 .toHaveLength(0);
         });
 
         it('should return list with single worklog', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(userIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(userIssuesWorklogs);
 
-            const worklogs = await jiraCloudActionHandler.getWorklog(getWorklogInputDate);
+            const worklogs = await jiraCloudActionHandler.getUserWorklog(getWorklogInputDate);
             expect(worklogs).toHaveLength(1);
             expect(worklogs[0].timeSpentHours).toBe(4);
         });
 
         it('should return single worklog map', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(userIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(userIssuesWorklogs);
 
-            const worklogs = await jiraCloudActionHandler.getWorklog({ ...getWorklogInputDate, groupByDay: true });
+            const worklogs = await jiraCloudActionHandler.getUserWorklog({ ...getWorklogInputDate, groupByDay: true });
             expectTypeOf(worklogs).toBeObject();
             expectTypeOf(Object.keys(worklogs)[0]).toBeString();
             expectTypeOf(Object.values(worklogs)[0]).toBeArray();
@@ -217,16 +217,16 @@ describe('JiraCloudActionHandler', () => {
         });
 
         it('should return worklog list', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(userIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(userIssuesWorklogs);
 
-            const worklogs = await jiraCloudActionHandler.getWorklog(getWorklogInputPeriod);
+            const worklogs = await jiraCloudActionHandler.getUserWorklog(getWorklogInputPeriod);
             expect(worklogs).toHaveLength(2);
             expect(worklogs[0].timeSpentHours).toBe(4);
             expect(worklogs[1].timeSpentHours).toBe(4);
         });
 
         it('should call getIssueWorklogs', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(partialUserIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(partialUserIssuesWorklogs);
             const getIssueWorklogsSpy = vi.spyOn(jiraUtils, 'getIssueWorklogs').mockResolvedValue({
                 worklogs: userIssuesWorklogs[0].fields.worklog.worklogs,
                 maxResults: userIssuesWorklogs[0].fields.worklog.maxResults,
@@ -234,37 +234,37 @@ describe('JiraCloudActionHandler', () => {
                 startAt: userIssuesWorklogs[0].fields.worklog.startAt,
             } satisfies WorklogResponse<CloudJiraUser>);
 
-            await jiraCloudActionHandler.getWorklog(getWorklogInputDate);
+            await jiraCloudActionHandler.getUserWorklog(getWorklogInputDate);
             expect(getIssueWorklogsSpy).toHaveBeenCalledOnce();
         });
 
         it('should return worklog list based on collection', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(userIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(userIssuesWorklogs);
 
-            const worklogs = await jiraCloudActionHandler.getWorklog(getWorklogInputCollection);
+            const worklogs = await jiraCloudActionHandler.getUserWorklog(getWorklogInputCollection);
             expect(worklogs).toHaveLength(2);
         });
 
         it('should throw wrong date property', async () => {
-            await expect(() => jiraCloudActionHandler.getWorklog({
+            await expect(() => jiraCloudActionHandler.getUserWorklog({
                 ...getWorklogInputDate, date: ''
             })).rejects.toThrowError();
         });
 
         it('should throw wrong datePeriod properties', async () => {
-            await expect(() => jiraCloudActionHandler.getWorklog({
+            await expect(() => jiraCloudActionHandler.getUserWorklog({
                 ...getWorklogInputPeriod, startDate: '',
             })).rejects.toThrowError();
-            await expect(() => jiraCloudActionHandler.getWorklog({
+            await expect(() => jiraCloudActionHandler.getUserWorklog({
                 ...getWorklogInputPeriod, startDate: undefined,
             })).rejects.toThrowError();
-            await expect(() => jiraCloudActionHandler.getWorklog({
+            await expect(() => jiraCloudActionHandler.getUserWorklog({
                 ...getWorklogInputPeriod, endDate: '',
             })).rejects.toThrowError();
-            await expect(() => jiraCloudActionHandler.getWorklog({
+            await expect(() => jiraCloudActionHandler.getUserWorklog({
                 ...getWorklogInputPeriod, endDate: undefined,
             })).rejects.toThrowError();
-            await expect(() => jiraCloudActionHandler.getWorklog({
+            await expect(() => jiraCloudActionHandler.getUserWorklog({
                 ...getWorklogInputPeriod, startDate: '', endDate: '',
             })).rejects.toThrowError();
         });

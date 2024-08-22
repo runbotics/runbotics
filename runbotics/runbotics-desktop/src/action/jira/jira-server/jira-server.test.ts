@@ -1,13 +1,13 @@
 import { Test } from '@nestjs/testing';
 import JiraServerActionHandler from './jira-server.action-handler';
-import { GetWorklogInput, SearchIssue, IssueWorklogResponse, WorklogResponse } from '../jira.types';
+import { SearchIssue, WorklogResponse, GetUserWorklogInput } from '../jira.types';
 import { ServerJiraUser } from './jira-server.types';
 import * as jiraUtils from '../jira.utils';
 
 describe('JiraServerActionHandler', () => {
     let jiraServerActionHandler: JiraServerActionHandler;
 
-    const getWorklogInputDate: GetWorklogInput = {
+    const getWorklogInputDate: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
@@ -15,7 +15,7 @@ describe('JiraServerActionHandler', () => {
         mode: 'date',
         date: '2023-11-12',
     };
-    const getWorklogInputPeriod: GetWorklogInput = {
+    const getWorklogInputPeriod: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
@@ -24,7 +24,7 @@ describe('JiraServerActionHandler', () => {
         startDate: '2023-11-12',
         endDate: '2023-11-14'
     };
-    const getWorklogInputCollection: GetWorklogInput = {
+    const getWorklogInputCollection: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
         originEnv: 'JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
@@ -192,7 +192,7 @@ describe('JiraServerActionHandler', () => {
         });
 
         it('should return empty worklog list', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(emptyUserIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(emptyUserIssuesWorklogs);
 
 
             await expect(() => jiraServerActionHandler.getWorklog(getWorklogInputDate))
@@ -200,7 +200,7 @@ describe('JiraServerActionHandler', () => {
         });
 
         it('should return list with single worklog', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(userIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(userIssuesWorklogs);
 
 
             const worklogs = await jiraServerActionHandler.getWorklog(getWorklogInputDate);
@@ -209,7 +209,7 @@ describe('JiraServerActionHandler', () => {
         });
 
         it('should return single worklog map', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(userIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(userIssuesWorklogs);
 
 
             const worklogs = await jiraServerActionHandler.getWorklog({ ...getWorklogInputDate, groupByDay: true });
@@ -220,7 +220,7 @@ describe('JiraServerActionHandler', () => {
         });
 
         it('should return worklog list', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(userIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(userIssuesWorklogs);
 
 
             const worklogs = await jiraServerActionHandler.getWorklog(getWorklogInputPeriod);
@@ -230,7 +230,7 @@ describe('JiraServerActionHandler', () => {
         });
 
         it('should call getIssueWorklogs', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(partialUserIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(partialUserIssuesWorklogs);
             const getIssueWorklogsSpy = vi.spyOn(jiraUtils, 'getIssueWorklogs').mockResolvedValue({
                 worklogs: userIssuesWorklogs[0].fields.worklog.worklogs,
                 maxResults: userIssuesWorklogs[0].fields.worklog.maxResults,
@@ -243,7 +243,7 @@ describe('JiraServerActionHandler', () => {
         });
 
         it('should return worklog list based on collection', async () => {
-            vi.spyOn(jiraUtils, 'getUserIssueWorklogs').mockResolvedValue(userIssuesWorklogs);
+            vi.spyOn(jiraUtils, 'getIssueWorklogsByParam').mockResolvedValue(userIssuesWorklogs);
 
             const worklogs = await jiraServerActionHandler.getWorklog(getWorklogInputCollection);
             expect(worklogs).toHaveLength(2);
