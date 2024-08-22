@@ -230,7 +230,10 @@ export const getJiraAllSprintTasks = async <T extends CloudJiraUser>(
         startAt = response.startAt + response.maxResults;
     }
 
-    return issues;
+    return {
+        total: response.total,
+        issues,
+    };
 };
 
 const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
@@ -245,7 +248,7 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
                 jql,
                 maxResults: 100, // 100 is max value
                 startAt,
-                fields: 'customfield_10016',
+                fields: 'customfield_10016,timespent,duedate,statuscategorychangedate',
             },
             headers: getBasicAuthHeader(input),
             maxRedirects: 0,
