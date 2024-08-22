@@ -106,6 +106,21 @@ export enum GoogleAction {
 
 export enum JiraCloudAction {
     GET_USER_WORKLOGS = 'jiraCloud.getUserWorklogs',
+    GET_PROJECT_WORKLOGS = 'jiraCloud.getProjectWorklogs',
+    GET_PROJECT_SPRINTS = 'jiraCloud.getProjectSprints',
+    GET_SPRINT_TASKS = 'jiraCloud.getSprintTasks',
+}
+
+export enum JiraSprintState {
+    ACTIVE = 'active',
+    FUTURE = 'future',
+    CLOSED = 'closed',
+}
+
+export enum JiraTaskStatus {
+    DONE = 'done',
+    IN_PROGRESS = 'in progress',
+    TO_DO = 'to do',
 }
 
 export enum JiraServerAction {
