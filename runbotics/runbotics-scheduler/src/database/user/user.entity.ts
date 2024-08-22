@@ -1,5 +1,5 @@
 import { IAuthority, IUser } from 'runbotics-common';
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
@@ -78,7 +78,7 @@ export class UserEntity implements IUser {
     @OneToMany(
         () => CredentialCollectionUser,
         (credentialCollectionUser) =>
-            credentialCollectionUser.userId,
+            credentialCollectionUser.user,
     )
     credentialCollectionUser: CredentialCollectionUser[];
 }
