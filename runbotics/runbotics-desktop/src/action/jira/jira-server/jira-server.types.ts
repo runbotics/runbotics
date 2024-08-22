@@ -1,9 +1,9 @@
 import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { JiraServerAction } from 'runbotics-common';
-import { GetWorklogInput } from '../jira.types';
+import { GetUserWorklogInput } from '../jira.types';
 
 export type JiraActionRequest =
-    | DesktopRunRequest<JiraServerAction.GET_USER_WORKLOGS, GetWorklogInput>;
+    | DesktopRunRequest<JiraServerAction.GET_USER_WORKLOGS, GetUserWorklogInput>;
 
 
 export interface ServerJiraUser {

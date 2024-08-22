@@ -2,39 +2,51 @@ import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 import {
-    GetWorklogBase, GetWorklogInput, IssueWorklogResponse, WorklogCollection,
-    WorklogDay, WorklogOutput, WorklogPeriod, WorklogResponse,
-    WorklogAllowedDateParams, Worklog, SearchIssue
+    GetJiraInputBase, GetWorklogInput, IssueWorklogResponse, JiraDatesCollection,
+    JiraSingleDay, WorklogOutput, JiraDatesPeriod, WorklogResponse,
+    WorklogAllowedDateParams, Worklog, SearchIssue,
+    WorklogIsCreatorParams,
+    GetUserWorklogInput,
+    GetProjectWorklogInput,
+    GetIssueWorklogsByParam,
+    Project,
+    GetProjectSprintsInput,
+    BoardResponse,
+    Board,
+    SprintResponse,
+    Sprint,
+    Page,
+    GetSprintTasksInput
 } from './jira.types';
 import { CloudJiraUser } from './jira-cloud/jira-cloud.types';
 import { ServerJiraUser } from './jira-server/jira-server.types';
 import { externalAxios } from '#config';
 import _ from 'lodash';
 import z from 'zod';
+import { JiraSprintState, JiraTaskStatus } from 'runbotics-common';
 
-export const isWorklogBase = (
+export const isJiraInputBase = (
     data: unknown
-): data is GetWorklogBase => data
+): data is GetJiraInputBase => data
 && typeof data === 'object'
 && 'originEnv' in data && typeof data.originEnv === 'string'
 && 'usernameEnv' in data && typeof data.usernameEnv === 'string'
-&& 'passwordEnv' in data && typeof data.passwordEnv === 'string'
-&& 'email' in data && typeof data.email === 'string';
+&& 'passwordEnv' in data && typeof data.passwordEnv === 'string';
 
-export const isWorklogPeriod = (
+export const isJiraDatesPeriod = (
     data: unknown
-): data is WorklogPeriod => isWorklogBase(data)
+): data is JiraDatesPeriod => isJiraInputBase(data)
 && 'startDate' in data && typeof data.startDate === 'string'
 && 'endDate' in data && typeof data.endDate === 'string';
 
-export const isWorklogDay = (
+export const isJiraSingleDay = (
     data: unknown
-): data is WorklogDay => isWorklogBase(data)
+): data is JiraSingleDay => isJiraInputBase(data)
 && 'date' in data && typeof data.date === 'string';
 
-export const isWorklogCollection = (
+export const isJiraDatesCollection = (
     data: unknown
-): data is WorklogCollection => isWorklogBase(data)
+): data is JiraDatesCollection => isJiraInputBase(data)
 && 'dates' in data && Array.isArray(data.dates) && typeof data.dates[0] === 'string';
 
 export const isCloudJiraUser = (
@@ -63,35 +75,68 @@ export const AVAILABLE_FORMATS = [
     'D.M.YYYY', 'DD.MM.YYYY', 'D-M-YYYY', 'DD-MM-YYYY', 'D/M/YYYY', 'DD/MM/YYYY',
     'YYYY.M.D', 'YYYY.MM.DD', 'YYYY-M-D', 'YYYY-MM-DD', 'YYYY/M/D', 'YYYY/MM/DD'];
 
-export const getWorklogInputBaseSchema = z.object({
+export const getJiraInputBaseSchema = z.object({
     originEnv: envValidator('Origin'),
     usernameEnv: envValidator('Username'),
     passwordEnv: envValidator('Password'),
+});
+
+export const getUserWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object({
     email: z.string({ required_error: 'Email property is missing' }).email(),
     groupByDay: z.boolean().optional(),
-});
+}));
 
-export const worklogDaySchema = z.object({
+export const getProjectWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object({
+    project: z.string({ required_error: 'Project key is missing' }),
+    groupByDay: z.boolean().optional(),
+}));
+
+export const jiraSingleDaySchema = z.object({
     mode: z.literal('date').optional(),
-    date: dateValidator('Date'),
+    date: dateValidator('Date').optional(),
 });
 
-export const worklogPeriodSchema = z.object({
+export const jiraDatesPeriodSchema = z.object({
     mode: z.literal('period').optional(),
-    startDate: dateValidator('Start Date'),
-    endDate: dateValidator('End Date'),
+    startDate: dateValidator('Start Date').optional(),
+    endDate: dateValidator('End Date').optional(),
 });
 
-export const worklogCollectionSchema = z.object({
+export const jiraDatesCollectionSchema = z.object({
     mode: z.literal('collection').optional(),
-    dates: z.array(dateValidator('Dates')),
+    dates: z.array(dateValidator('Dates')).optional(),
 });
 
-export const getWorklogInputSchema = getWorklogInputBaseSchema.and(worklogDaySchema)
-    .or(getWorklogInputBaseSchema.and(worklogPeriodSchema))
-    .or(getWorklogInputBaseSchema.and(worklogCollectionSchema));
+export const getUserWorklogInputSchema = getUserWorklogInputBaseSchema.and(z.union([
+    jiraSingleDaySchema.required({ date: true }),
+    jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
+    jiraDatesCollectionSchema.required({ dates: true }),
+]));
 
-export const getBasicAuthHeader = (data: Pick<GetWorklogBase, 'passwordEnv' | 'usernameEnv'>) => {
+export const getProjectWorklogInputSchema = getProjectWorklogInputBaseSchema.and(z.union([
+    jiraSingleDaySchema.required({ date: true }),
+    jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
+    jiraDatesCollectionSchema.required({ dates: true }),
+]));
+
+export const getProjectSprintsInputSchema = getJiraInputBaseSchema.and(z.object({
+    project: z.string({ required_error: 'Project key is missing' }),
+    state: z.nativeEnum(JiraSprintState).optional(),
+}));
+
+export const getSprintTasksInputBaseSchema = getJiraInputBaseSchema.and(z.object({
+    sprint: z.string({ required_error: 'Sprint name is missing' }),
+    email: z.string().email().optional(),
+    status: z.nativeEnum(JiraTaskStatus).optional(),
+}));
+
+export const getSprintTasksInputSchema = getSprintTasksInputBaseSchema.and(z.union([
+    jiraSingleDaySchema,
+    jiraDatesPeriodSchema,
+    jiraDatesCollectionSchema,
+]));
+
+export const getBasicAuthHeader = (data: Pick<GetJiraInputBase, 'passwordEnv' | 'usernameEnv'>) => {
     return {
         Authorization: 'Basic ' + Buffer.from(
             `${process.env[data.usernameEnv]}:${process.env[data.passwordEnv]}`
@@ -100,7 +145,7 @@ export const getBasicAuthHeader = (data: Pick<GetWorklogBase, 'passwordEnv' | 'u
 };
 
 interface GetJiraUserParams {
-    input: GetWorklogBase;
+    input: GetUserWorklogInput;
     isServer?: boolean;
 }
 
@@ -131,27 +176,175 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
     return data[0];
 };
 
+export const getJiraProject = async (input: GetProjectWorklogInput) => {
+    const { data } = await externalAxios.get<Project>(
+        `${process.env[input.originEnv]}/rest/api/2/project/${input.project}`,
+        {
+            headers: getBasicAuthHeader(input),
+            maxRedirects: 0,
+        },
+    );
+
+    if (!data) {
+        throw new Error(`Project ${input.project} not found`);
+    }
+
+    return data;
+};
+
+export const getJiraAllSprintTasks = async <T extends CloudJiraUser>(
+    input: GetSprintTasksInput,
+) => {
+    let dateCondition = '';
+    if (isJiraSingleDay(input)) {
+        const date = dayjs(input.date, AVAILABLE_FORMATS).format('YYYY-MM-DD');
+        dateCondition = `AND statusCategoryChangedDate=${date}`;
+    } else if (isJiraDatesPeriod(input)) {
+        const start = dayjs(input.startDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
+        const end = dayjs(input.endDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
+        dateCondition = `AND statusCategoryChangedDate>=${start} AND statusCategoryChangedDate<=${end}`;
+    } else if (isJiraDatesCollection(input)) {
+        const mappedDates = input.dates
+            .map(date => dayjs(date, AVAILABLE_FORMATS).format('YYYY-MM-DD'))
+            .join(',');
+        dateCondition = `AND statusCategoryChangedDate in (${mappedDates})`;
+    }
+    const assignee = input?.email ? `AND assignee="${input.email}"` : '';
+    const status = input?.status ? `AND status="${input.status}"` : '';
+    const jql = `sprint="${input.sprint}" ${assignee} ${status} ${dateCondition}`.trim();
+
+    let startAt = 0;
+    const issues: SearchIssue<T>[] = [];
+
+    const response = await getJiraSprintTasksPage<T>(input, jql, startAt);
+    if (!response || !response.issues.length) {
+        throw new Error(`Tasks for sprint ${input.sprint} not found`);
+    }
+
+    startAt = response.maxResults;
+    issues.push(...response.issues);
+
+    while (response.total > startAt) {
+        const response = await getJiraSprintTasksPage<T>(input, jql, startAt);
+        issues.push(...response.issues);
+        startAt = response.startAt + response.maxResults;
+    }
+
+    return issues;
+};
+
+const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
+    input: GetSprintTasksInput,
+    jql: string,
+    startAt: Page['startAt'],
+) => {
+    const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
+        `${process.env[input.originEnv]}/rest/api/2/search`,
+        {
+            params: {
+                jql,
+                maxResults: 100, // 100 is max value
+                startAt,
+                fields: 'customfield_10016',
+            },
+            headers: getBasicAuthHeader(input),
+            maxRedirects: 0,
+        },
+    );
+
+    return data;
+};
+
+export const getJiraBoard = async (input: GetProjectSprintsInput) => {
+    const { data } =  await externalAxios.get<BoardResponse>(
+        `${process.env[input.originEnv]}/rest/agile/1.0/board`,
+        {
+            params: {
+                projectKeyOrId: input.project,
+                maxResults: 1,
+                startAt: 0,
+            },
+            headers: getBasicAuthHeader(input),
+            maxRedirects: 0,
+        },
+    );
+
+    if (!data || !data.values.length) {
+        throw new Error(`Board for project key or ID ${input.project} not found`);
+    }
+
+    return data.values[0];
+};
+
+export const getJiraAllBoardSprints = async (
+    boardId: Board['id'],
+    input: GetProjectSprintsInput,
+) => {
+    let startAt = 0;
+    const sprints: Sprint[] = [];
+
+    const response = await getJiraSprintPage(boardId, input, startAt);
+    if (!response || !response.values.length) {
+        throw new Error(`Sprints for board ID ${boardId} not found`);
+    }
+
+    startAt = response.maxResults;
+    sprints.push(...response.values);
+
+    while (response.total > startAt) {
+        const response = await getJiraSprintPage(boardId, input, startAt);
+        sprints.push(...response.values);
+        startAt = response.startAt + response.maxResults;
+    }
+
+    return sprints.filter(sprint => boardId === sprint.originBoardId);
+};
+
+const getJiraSprintPage = async (
+    boardId: Board['id'],
+    input: GetProjectSprintsInput,
+    startAt: Page['startAt'],
+) => {
+    const { data } =  await externalAxios.get<SprintResponse>(
+        `${process.env[input.originEnv]}/rest/agile/1.0/board/${boardId}/sprint`,
+        {
+            params: {
+                ...(input?.state && { state: input.state }),
+                maxResults: 50, // 50 is max value
+                startAt,
+            },
+            headers: getBasicAuthHeader(input),
+            maxRedirects: 0,
+        },
+    );
+
+    return data;
+};
+
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issue-search/#api-rest-api-2-search-get
  */
-export const getUserIssueWorklogs = async <T extends CloudJiraUser | ServerJiraUser>(
-    author: string, input: GetWorklogInput
+export const getIssueWorklogsByParam = async <T extends CloudJiraUser | ServerJiraUser>(
+    searchParam: GetIssueWorklogsByParam, input: GetWorklogInput
 ) => {
     let dateCondition = '';
-    if (isWorklogDay(input)) {
+    if (isJiraSingleDay(input)) {
         const date = dayjs(input.date, AVAILABLE_FORMATS).format('YYYY-MM-DD');
         dateCondition = `worklogDate=${date}`;
-    } else if (isWorklogPeriod(input)) {
+    } else if (isJiraDatesPeriod(input)) {
         const start = dayjs(input.startDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
         const end = dayjs(input.endDate, AVAILABLE_FORMATS).format('YYYY-MM-DD');
         dateCondition = `worklogDate>=${start} AND worklogDate<=${end}`;
-    } else if (isWorklogCollection(input)) {
+    } else if (isJiraDatesCollection(input)) {
         const mappedDates = input.dates
             .map(date => dayjs(date, AVAILABLE_FORMATS).format('YYYY-MM-DD'))
             .join(',');
         dateCondition = `worklogDate in (${mappedDates})`;
     }
-    const jql = `${dateCondition} AND worklogAuthor=${author}`;
+    const jqlSearchParam = searchParam.param === 'worklogAuthor'
+        ? `worklogAuthor=${searchParam.author}`
+        : `project=${searchParam.project}`;
+    const jql = `${dateCondition} AND ${jqlSearchParam}`;
     let startAt = 0;
     const issues: SearchIssue<T>[] = [];
 
@@ -209,17 +402,17 @@ export const getDatesCollectionBoundaries = (dates: string[]) => {
 
 export const getIssueWorklogs = <T extends CloudJiraUser | ServerJiraUser>(issueKey: string, input: GetWorklogInput) => {
     let timeParam: { startedBefore: number; startedAfter: number; isCollection?: boolean; dates?: Dayjs[] };
-    if (isWorklogDay(input)) {
+    if (isJiraSingleDay(input)) {
         timeParam = {
             startedBefore: dayjs(input.date, AVAILABLE_FORMATS).endOf('day').valueOf(),
             startedAfter: dayjs(input.date, AVAILABLE_FORMATS).startOf('day').valueOf(),
         };
-    } else if (isWorklogPeriod(input)) {
+    } else if (isJiraDatesPeriod(input)) {
         timeParam = {
             startedBefore: dayjs(input.endDate, AVAILABLE_FORMATS).endOf('day').valueOf(),
             startedAfter: dayjs(input.startDate, AVAILABLE_FORMATS).startOf('day').valueOf(),
         };
-    } else if (isWorklogCollection(input)) {
+    } else if (isJiraDatesCollection(input)) {
         const { datesObjects, min, max } = getDatesCollectionBoundaries(input.dates);
         timeParam = {
             startedBefore: max.endOf('day').valueOf(),
@@ -266,17 +459,18 @@ export const groupByDay = <T extends CloudJiraUser | ServerJiraUser>(worklogs: W
 };
 
 export const isAllowedDate = <T extends CloudJiraUser | ServerJiraUser>({
-    worklog, startDate, endDate, jiraUser, dates
+    worklog, startDate, endDate, dates
 }: WorklogAllowedDateParams<T>) => {
     const started = dayjs(worklog.started);
-    const isWorklogCreator = isCloudJiraUser(worklog.author) && isCloudJiraUser(jiraUser)
-        ? worklog.author.accountId === jiraUser.accountId
-        : (worklog.author as Worklog<ServerJiraUser>['author']).key === (jiraUser as ServerJiraUser).key;
 
-    if (!dates) return isWorklogCreator
-        && started.isAfter(startDate)
-        && started.isBefore(endDate);
+    if (!dates) return started.isAfter(startDate) && started.isBefore(endDate);
 
-    return isWorklogCreator
-        && dates.some(date => date.isSame(started, 'day'));
+    return dates.some(date => date.isSame(started, 'day'));
 };
+
+export const isWorklogCreator = <T extends CloudJiraUser | ServerJiraUser>({
+    worklog, jiraUser
+}: WorklogIsCreatorParams<T>) =>
+        isCloudJiraUser(worklog.author) && isCloudJiraUser(jiraUser)
+            ? worklog.author.accountId === jiraUser.accountId
+            : (worklog.author as Worklog<ServerJiraUser>['author']).key === (jiraUser as ServerJiraUser).key;
