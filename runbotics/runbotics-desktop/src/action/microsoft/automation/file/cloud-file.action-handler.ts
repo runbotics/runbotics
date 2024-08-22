@@ -172,21 +172,24 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     run(request: CloudFileActionRequest) {
+        if (!request.input) { // @todo check if includes both CredentialData and list including MicrosoftCredential
+            throw new Error('Auth is required for that action');
+        }
         const matchedCredentials = { // @todo here method for matching credentialId (templateName) from action input to decrypted credential (default for the template), e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
             config: {
                 auth: {
-                    clientId: ,
-                    authority: ,
-                    clientSecret: ,
+                    clientId: '',
+                    authority: '',
+                    clientSecret: '',
                 }
             },
             loginCredential: {
-                username:
-                password:
+                username: '',
+                password: '',
             }
         };
 
-        this.createSession(request, matchedCredentials);
+        this.createSession(matchedCredentials);
 
         switch (request.script) {
             case CloudFileAction.DOWNLOAD_FILE:
@@ -208,13 +211,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
         }
     }
 
-    private createSession( // @todo here in the future method for matching decrypted credential should be used here to convert credentialId (templateName) from input to decrypted credential (default for the template) from initial process execution bot's list with decrypted credentials -> e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
-        request, matchedCredentials
-    ) {
-        if (!request.input) { // @todo check if includes both CredentialData and list including MicrosoftCredential
-            throw new Error('Auth is required for that action');
-        }
-
+    private createSession(matchedCredentials) {
         this.microsoftGraphService = new MicrosoftGraphService(
             new MicrosoftAuthService(
                 matchedCredentials,
