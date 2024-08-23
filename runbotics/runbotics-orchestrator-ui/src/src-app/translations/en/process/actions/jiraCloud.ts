@@ -40,8 +40,10 @@ const jiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.DatesList': 'Dates List',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Sprint': 'Sprint name',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Email': 'Assignee email',
+    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Fields': 'Additional fields',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Status': 'Task status',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Output.Info': 'Array of sprint\'s tasks',
+    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Fields.Info': 'Each field should be separated with comma, e.g. "field_1,filed_2,field_3"',
 };
 
 export default jiraCloudActionsTranslations;

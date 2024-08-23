@@ -91,11 +91,17 @@ export interface Status {
     };
 }
 
+export enum BoardType {
+    SCRUM = 'scrum',
+    KANBAN = 'kanban',
+    SIMPLE = 'simple',
+}
+
 export interface Board {
     id: number;
     self: string;
     name: string;
-    type: 'scrum' | 'kanban' | 'simple';
+    type: BoardType;
     location: {
         projectId: number;
         displayName: string;
@@ -193,15 +199,20 @@ export interface WorklogIsCreatorParams<T extends CloudJiraUser | ServerJiraUser
     jiraUser: T,
 }
 
+export enum IssueWorklogsParam {
+    PROJECT = 'project',
+    WORKLOG_AUTHOR = 'worklogAuthor',
+}
+
 interface GetIssueWorklogsByParamCommon {
-    param: 'project' | 'worklogAuthor'
+    param: IssueWorklogsParam;
 }
 interface GetIssueWorklogsByAuthorParam extends GetIssueWorklogsByParamCommon {
-    param: 'worklogAuthor';
+    param: IssueWorklogsParam.WORKLOG_AUTHOR;
     author: string;
 }
 interface GetIssueWorklogsByProjectParam extends GetIssueWorklogsByParamCommon {
-    param: 'project';
+    param: IssueWorklogsParam.PROJECT;
     project: string;
 }
 export type GetIssueWorklogsByParam = GetIssueWorklogsByAuthorParam | GetIssueWorklogsByProjectParam;

@@ -42,8 +42,10 @@ const jiraCloudTranslations: typeof englishJiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.DatesList': 'Lista dat',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Sprint': 'Nazwa sprintu',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Email': 'Email przypisanej osoby',
+    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Fields': 'Dodatkowe pola',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Status': 'Status zadania',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Output.Info': 'Tablica z zadaniami sprintu',
+    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Fields.Info': 'Każde pole musi być oddzielone przecinkiem, np. "pole_1,pole_2,pole_3"',
 };
 
 export default jiraCloudTranslations;

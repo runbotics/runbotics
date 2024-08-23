@@ -23,8 +23,9 @@ import {
     isJiraDatesPeriod,
     sortAscending
 } from '../jira.utils';
-import { GetUserWorklogInput, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
+import { GetUserWorklogInput, IssueWorklogsParam, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
 import { JiraActionRequest, ServerJiraUser, SimpleServerJiraUser } from './jira-server.types';
+import { formatZodError } from '#utils/zodError';
 
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2
@@ -42,12 +43,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
 
         const input = await getUserWorklogInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
-                const fieldErrors = error.formErrors.fieldErrors;
-                if (Object.keys(fieldErrors).length > 0) {
-                    throw new Error(Object.values(fieldErrors)[0][0]);
-                } else {
-                    throw new Error(error.issues[0].message);
-                }
+                throw formatZodError(error);
             });
 
         if (isJiraSingleDay(input)) {
@@ -70,7 +66,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
 
         const jiraUser = await getJiraUser<ServerJiraUser>({ input, isServer: true });
         const issues = await getIssueWorklogsByParam<ServerJiraUser>(
-            { param: 'worklogAuthor',author: jiraUser.name },
+            { param: IssueWorklogsParam.WORKLOG_AUTHOR, author: jiraUser.name },
             input,
         );
         this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
@@ -87,9 +83,15 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                     })();
                 return worklogs
                     .filter(worklog =>
-                        isWorklogCreator<ServerJiraUser>({ worklog, jiraUser }) &&
+                        isWorklogCreator<ServerJiraUser>({
+                            worklog,
+                            jiraUser,
+                        }) &&
                         isAllowedDate<ServerJiraUser>({
-                            worklog, startDate, endDate, dates: datesCollectionObjects
+                            worklog,
+                            startDate,
+                            endDate,
+                            dates: datesCollectionObjects,
                         }))
                     .map(worklog => this.mapWorklogOutput(worklog, issue));
             })

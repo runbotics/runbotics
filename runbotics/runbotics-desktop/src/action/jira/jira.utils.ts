@@ -55,6 +55,12 @@ export const isCloudJiraUser = (
 && typeof data === 'object'
 && 'accountId' in data && typeof data.accountId === 'string';
 
+export const isServerJiraUser = (
+    data: unknown
+): data is ServerJiraUser => data
+&& typeof data === 'object'
+&& 'key' in data && typeof data.key === 'string';
+
 const dateValidator = (property: string) => z.string({
     required_error: `${property} property is missing`
 })
@@ -128,6 +134,7 @@ export const getSprintTasksInputBaseSchema = getJiraInputBaseSchema.and(z.object
     sprint: z.string({ required_error: 'Sprint name is missing' }),
     email: z.string().email().optional(),
     status: z.nativeEnum(JiraTaskStatus).optional(),
+    fields: z.string().optional(),
 }));
 
 export const getSprintTasksInputSchema = getSprintTasksInputBaseSchema.and(z.union([
@@ -173,7 +180,8 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
         throw new Error(`User ${input.email} not found`);
     }
 
-    return data[0];
+    const jiraUser = data[0];
+    return jiraUser;
 };
 
 export const getJiraProject = async (input: GetProjectWorklogInput) => {
@@ -189,7 +197,8 @@ export const getJiraProject = async (input: GetProjectWorklogInput) => {
         throw new Error(`Project ${input.project} not found`);
     }
 
-    return data;
+    const project = data;
+    return project;
 };
 
 export const getJiraAllSprintTasks = async <T extends CloudJiraUser>(
@@ -238,6 +247,19 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
     jql: string,
     startAt: Page['startAt'],
 ) => {
+    const baseFields = 'timespent,duedate,statuscategorychangedate,status';
+    const additionalFields = input?.fields
+        ? input?.fields
+            .split(',')
+            .map(field => field.trim())
+            .filter(field => !baseFields.split(',').includes(field))
+            .join(',')
+        : '';
+
+    const fields = additionalFields
+        ? `${baseFields},${additionalFields}`
+        : baseFields;
+
     const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
         `${process.env[input.originEnv]}/rest/api/2/search`,
         {
@@ -245,7 +267,7 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
                 jql,
                 maxResults: 100, // 100 is max value
                 startAt,
-                fields: 'customfield_10016,timespent,duedate,statuscategorychangedate,status',
+                fields,
             },
             headers: getBasicAuthHeader(input),
             maxRedirects: 0,
@@ -273,7 +295,8 @@ export const getJiraBoard = async (input: GetProjectSprintsInput) => {
         throw new Error(`Board for project key or ID ${input.project} not found`);
     }
 
-    return data.values[0];
+    const board = data.values[0];
+    return board;
 };
 
 export const getJiraAllBoardSprints = async (
@@ -468,6 +491,9 @@ export const isAllowedDate = <T extends CloudJiraUser | ServerJiraUser>({
 export const isWorklogCreator = <T extends CloudJiraUser | ServerJiraUser>({
     worklog, jiraUser
 }: WorklogIsCreatorParams<T>) =>
-        isCloudJiraUser(worklog.author) && isCloudJiraUser(jiraUser)
+        isCloudJiraUser(worklog.author) &&
+        isCloudJiraUser(jiraUser)
             ? worklog.author.accountId === jiraUser.accountId
-            : (worklog.author as Worklog<ServerJiraUser>['author']).key === (jiraUser as ServerJiraUser).key;
+            : isServerJiraUser(worklog.author) &&
+                isServerJiraUser(jiraUser) &&
+                worklog.author.key === jiraUser.key;

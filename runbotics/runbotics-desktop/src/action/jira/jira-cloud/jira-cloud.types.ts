@@ -24,7 +24,7 @@ export interface SimpleCloudJiraUser {
     emailAddress?: CloudJiraUser['emailAddress'];
 }
 
-export type FilterUserWorklogsParams = Partial<Omit<WorklogAllowedDateParams<CloudJiraUser> &
+export type FilteredUserWorklogsParams = Partial<Omit<WorklogAllowedDateParams<CloudJiraUser> &
     WorklogIsCreatorParams<CloudJiraUser>, 'worklog'>>;
 
-export type FilterProjectWorklogsParams = Partial<Omit<WorklogAllowedDateParams<CloudJiraUser>, 'worklog'>>;
+export type FilteredProjectWorklogsParams = Partial<Omit<WorklogAllowedDateParams<CloudJiraUser>, 'worklog'>>;

@@ -11,8 +11,8 @@ import {
     JiraActionRequest,
     CloudJiraUser,
     SimpleCloudJiraUser,
-    FilterUserWorklogsParams,
-    FilterProjectWorklogsParams
+    FilteredUserWorklogsParams,
+    FilteredProjectWorklogsParams
 } from './jira-cloud.types';
 import {
     AVAILABLE_FORMATS,
@@ -36,7 +36,20 @@ import {
     getJiraAllBoardSprints,
     getJiraAllSprintTasks
 } from '../jira.utils';
-import { GetJiraDatesInput, GetProjectSprintsInput, GetProjectWorklogInput, GetSprintTasksInput, GetUserWorklogInput, GetWorklogInput, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
+import {
+    GetJiraDatesInput,
+    GetProjectSprintsInput,
+    GetProjectWorklogInput,
+    GetSprintTasksInput,
+    GetUserWorklogInput,
+    GetWorklogInput,
+    IssueWorklogsParam,
+    SearchIssue,
+    SimpleWorklog,
+    Worklog,
+    WorklogOutput,
+} from '../jira.types';
+import { formatZodError } from '#utils/zodError';
 
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2
@@ -52,19 +65,14 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     async getUserWorklog(rawInput: GetUserWorklogInput) {
         const input = await getUserWorklogInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
-                const fieldErrors = error.formErrors.fieldErrors;
-                if (Object.keys(fieldErrors).length > 0) {
-                    throw new Error(Object.values(fieldErrors)[0][0]);
-                } else {
-                    throw new Error(error.issues[0].message);
-                }
+                throw formatZodError(error);
             });
 
         const { startDate, endDate, dates } = this.getJiraDates(input);
 
         const jiraUser = await getJiraUser<CloudJiraUser>({ input });
         const issues = await getIssueWorklogsByParam<CloudJiraUser>(
-            { param: 'worklogAuthor', author: jiraUser.accountId },
+            { param: IssueWorklogsParam.WORKLOG_AUTHOR, author: jiraUser.accountId },
             input,
         );
         this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
@@ -88,19 +96,14 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     async getProjectWorklog(rawInput: GetProjectWorklogInput) {
         const input = await getProjectWorklogInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
-                const fieldErrors = error.formErrors.fieldErrors;
-                if (Object.keys(fieldErrors).length > 0) {
-                    throw new Error(Object.values(fieldErrors)[0][0]);
-                } else {
-                    throw new Error(error.issues[0].message);
-                }
+                throw formatZodError(error);
             });
 
         const { startDate, endDate, dates } = this.getJiraDates(input);
 
         const jiraProject = await getJiraProject(input);
         const issues = await getIssueWorklogsByParam<CloudJiraUser>(
-            { param: 'project', project: jiraProject.key },
+            { param: IssueWorklogsParam.PROJECT, project: jiraProject.key },
             input,
         );
         this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
@@ -123,12 +126,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     async getProjectSprints(rawInput: GetProjectSprintsInput) {
         const input = await getProjectSprintsInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
-                const fieldErrors = error.formErrors.fieldErrors;
-                if (Object.keys(fieldErrors).length > 0) {
-                    throw new Error(Object.values(fieldErrors)[0][0]);
-                } else {
-                    throw new Error(error.issues[0].message);
-                }
+                throw formatZodError(error);
             });
 
         const board = await getJiraBoard(input);
@@ -140,12 +138,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     async getSprintTasks(rawInput: GetSprintTasksInput) {
         const input = await getSprintTasksInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
-                const fieldErrors = error.formErrors.fieldErrors;
-                if (Object.keys(fieldErrors).length > 0) {
-                    throw new Error(Object.values(fieldErrors)[0][0]);
-                } else {
-                    throw new Error(error.issues[0].message);
-                }
+                throw formatZodError(error);
             });
 
         const sprintTasks = await getJiraAllSprintTasks(input);
@@ -197,7 +190,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                         return getIssueWorklogs<CloudJiraUser>(issue.key, input);
                     })();
                 return worklogs
-                    .filter((worklog) => filterWorklogCb(worklog))
+                    .filter(filterWorklogCb)
                     .map(worklog => this.mapWorklogOutput(worklog, issue));
             })
         )).flatMap(w => w);
@@ -205,18 +198,30 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         return worklogs;
     }
 
-    private filterUserWorklogs(args: FilterUserWorklogsParams) {
-        const { startDate, endDate, dates, jiraUser } = args;
+    private filterUserWorklogs({ startDate, endDate, dates, jiraUser }: FilteredUserWorklogsParams) {
         return (worklog: Worklog<CloudJiraUser>) => {
-            return isWorklogCreator<CloudJiraUser>({ worklog, jiraUser }) &&
-                isAllowedDate<CloudJiraUser>({ worklog, startDate, endDate, dates });
+            return isWorklogCreator<CloudJiraUser>({
+                worklog,
+                jiraUser,
+            }) &&
+            isAllowedDate<CloudJiraUser>({
+                worklog,
+                startDate,
+                endDate,
+                dates,
+            });
         };
     }
 
-    private filterProjectWorklogs(args: FilterProjectWorklogsParams) {
-        const { startDate, endDate, dates } = args;
-        return (worklog: Worklog<CloudJiraUser>) =>
-            isAllowedDate<CloudJiraUser>({ worklog, startDate, endDate, dates });
+    private filterProjectWorklogs({ startDate, endDate, dates }: FilteredProjectWorklogsParams) {
+        return (worklog: Worklog<CloudJiraUser>) => {
+            return isAllowedDate<CloudJiraUser>({
+                worklog,
+                startDate,
+                endDate,
+                dates,
+            });
+        };
     }
 
     private getSimpleWorklog({

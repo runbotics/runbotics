@@ -368,6 +368,10 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Email'),
                                     type: 'string',
                                 },
+                                fields: {
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Fields'),
+                                    type: 'string',
+                                },
                                 status: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Status'),
                                     type: 'string',
@@ -442,11 +446,18 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                 },
                 uiSchema: {
                     'ui:order': ['input', 'output'],
+                    input: {
+                        fields: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Fields.Info'),
+                            },
+                        },
+                    },
                     output: {
                         variableName: {
                             'ui:options': {
                                 info: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Output.Info'),
-                            }
+                            },
                         },
                     }
                 },
