@@ -217,9 +217,6 @@ export const getJiraAllSprintTasks = async <T extends CloudJiraUser>(
     const issues: SearchIssue<T>[] = [];
 
     const response = await getJiraSprintTasksPage<T>(input, jql, startAt);
-    if (!response || !response.issues.length) {
-        throw new Error(`Tasks for sprint ${input.sprint} not found`);
-    }
 
     startAt = response.maxResults;
     issues.push(...response.issues);
@@ -287,9 +284,6 @@ export const getJiraAllBoardSprints = async (
     const sprints: Sprint[] = [];
 
     const response = await getJiraSprintPage(boardId, input, startAt);
-    if (!response || !response.values.length) {
-        throw new Error(`Sprints for board ID ${boardId} not found`);
-    }
 
     startAt = response.maxResults;
     sprints.push(...response.values);
