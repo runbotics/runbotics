@@ -245,7 +245,7 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
                 jql,
                 maxResults: 100, // 100 is max value
                 startAt,
-                fields: 'customfield_10016,timespent,duedate,statuscategorychangedate',
+                fields: 'customfield_10016,timespent,duedate,statusCategory,statuscategorychangedate',
             },
             headers: getBasicAuthHeader(input),
             maxRedirects: 0,
