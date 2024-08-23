@@ -79,7 +79,7 @@ const envValidator = (property: string) => z.string({
 
 export const AVAILABLE_FORMATS = [
     'D.M.YYYY', 'DD.MM.YYYY', 'D-M-YYYY', 'DD-MM-YYYY', 'D/M/YYYY', 'DD/MM/YYYY',
-    'YYYY.M.D', 'YYYY.MM.DD', 'YYYY-M-D', 'YYYY-MM-DD', 'YYYY/M/D', 'YYYY/MM/DD'].flatMap(date => [date, `${date} HH:mm:ss`]);
+    'YYYY.M.D', 'YYYY.MM.DD', 'YYYY-M-D', 'YYYY-MM-DD', 'YYYY/M/D', 'YYYY/MM/DD'].flatMap(date => [date, `${date} HH:mm`]);
 
 export const getJiraInputBaseSchema = z.object({
     originEnv: envValidator('Origin'),
