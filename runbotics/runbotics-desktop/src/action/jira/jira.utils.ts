@@ -207,13 +207,15 @@ export const getJiraAllSprintTasks = async <T extends CloudJiraUser>(
     let dateCondition = '';
     if (isJiraSingleDay(input)) {
         const date = input.date;
-        dateCondition = `AND statusCategoryChangedDate=${date}`;
+        dateCondition = `AND statusCategoryChangedDate="${date}"`;
     } else if (isJiraDatesPeriod(input)) {
         const start = input.startDate;
         const end = input.endDate;
-        dateCondition = `AND statusCategoryChangedDate>=${start} AND statusCategoryChangedDate<=${end}`;
+        dateCondition = `AND statusCategoryChangedDate>="${start}" AND statusCategoryChangedDate<="${end}"`;
     } else if (isJiraDatesCollection(input)) {
-        const mappedDates = input.dates.join(',');
+        const mappedDates = input.dates
+            .map(date => `"${date}"`)
+            .join(',');
         dateCondition = `AND statusCategoryChangedDate in (${mappedDates})`;
     }
     const assignee = input?.email ? `AND assignee="${input.email}"` : '';
