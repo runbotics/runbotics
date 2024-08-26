@@ -42,4 +42,5 @@ export interface InstanceExtendedWithSubprocesses extends IProcessInstance {
     hasSubprocesses?: boolean;
     isLoadingSubprocesses?: boolean;
     subprocesses?: InstanceExtendedWithSubprocesses[];
+    subprocessesCount?: number;
 }

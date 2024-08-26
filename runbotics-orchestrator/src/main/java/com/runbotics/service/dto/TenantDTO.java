@@ -1,5 +1,7 @@
 package com.runbotics.service.dto;
 
+import com.runbotics.domain.Tenant;
+
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -9,11 +11,22 @@ public class TenantDTO {
 
     private String name;
 
-    private Long createdById;
+    private UserDTO createdBy;
 
     private ZonedDateTime created;
 
     private ZonedDateTime updated;
+
+    private String lastModifiedBy;
+    public TenantDTO() {}
+
+    public TenantDTO(Tenant tenant) {
+        this.id = tenant.getId();
+        this.name = tenant.getName();
+        this.createdBy = new UserDTO(tenant.getCreatedBy());
+        this.created = tenant.getCreated();
+        this.updated = tenant.getUpdated();
+    }
 
     public UUID getId() {
         return this.id;
@@ -31,12 +44,12 @@ public class TenantDTO {
         this.name = name;
     }
 
-    public Long getCreatedById() {
-        return this.createdById;
+    public UserDTO getCreatedBy() {
+        return this.createdBy;
     }
 
-    public void setCreatedById(Long createdById) {
-        this.createdById = createdById;
+    public void setCreatedBy(UserDTO createdBy) {
+        this.createdBy = createdBy;
     }
 
     public ZonedDateTime getCreated() {
@@ -55,6 +68,14 @@ public class TenantDTO {
         this.updated = updated;
     }
 
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -68,20 +89,13 @@ public class TenantDTO {
 
     @Override
     public String toString() {
-        return (
-            "TenantDTO{" +
-            "id=" +
-            id +
-            ", name='" +
-            name +
-            '\'' +
-            ", createdById=" +
-            createdById +
-            ", created=" +
-            created +
-            ", updated=" +
-            updated +
-            "}"
-        );
+        return "TenantDTO{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", createdById=" + createdBy +
+            ", created=" + created +
+            ", updated=" + updated +
+            ", lastModifiedBy" + lastModifiedBy +
+            "}";
     }
 }

@@ -19,6 +19,9 @@ interface UsersRegistrationTableProps {
     selections: GridInputSelectionModel;
     handleSelectionChange: (selection: object) => void;
     handleSelectedRolesChange: (id: number, value: string) => void;
+    handleSelectedTenantsChange: (id: number, value: string) => void;
+    isForAdmin: boolean;
+    isTenantSelected: boolean;
 }
 
 const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
@@ -28,11 +31,20 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
     onPageSizeChange,
     selections,
     handleSelectionChange,
-    handleSelectedRolesChange
+    handleSelectedRolesChange,
+    handleSelectedTenantsChange,
+    isForAdmin,
+    isTenantSelected
 }) => {
-    const userRegistrationColumns = useUsersRegistrationColumns(handleSelectedRolesChange);
-    const { notActivated } = useSelector(usersSelector);
+    const userRegistrationColumns = useUsersRegistrationColumns(
+        handleSelectedRolesChange,
+        handleSelectedTenantsChange,
+        isForAdmin
+    );
+    const { notActivated, tenantNotActivated } = useSelector(usersSelector);
     const { translate } = useTranslations();
+
+    const userData = isForAdmin ? notActivated : tenantNotActivated;
 
     return (
         <Card>
@@ -41,10 +53,11 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
                     <DataGrid
                         sx={DataGridStyle}
                         autoHeight
+                        columnVisibilityModel={{ tenant: !isTenantSelected }}
                         columns={userRegistrationColumns}
-                        rows={notActivated.allByPage?.content ?? []}
-                        rowCount={notActivated.allByPage?.totalElements ?? 0}
-                        loading={notActivated.loading}
+                        rows={userData.allByPage?.content ?? []}
+                        rowCount={userData.allByPage?.totalElements ?? 0}
+                        loading={userData.loading}
                         page={page}
                         onPageChange={(newPage) => onPageChange(newPage)}
                         pageSize={pageSize}

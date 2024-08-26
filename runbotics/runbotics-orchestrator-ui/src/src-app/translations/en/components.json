@@ -89,6 +89,9 @@
     "Component.HistoryTable.Rows.Initiator.Api": "API({{ login }})",
     "Component.HistoryTable.Rows.Initiator.Email": "Email({{ email }})",
 
+    "Component.HistoryTable.Special.LoadMore": "Load {{ pageSize }} more ({{ count }} left)",
+    "Component.HistoryTable.Special.LoadAll": "Load all ({{ total }} total)",
+
     "Component.HistoryTable.Step.StartEvent": "Start event",
     "Component.HistoryTable.Step.EndEvent": "End event",
 
@@ -183,5 +186,9 @@
 
     "Component.NotificationTable.View.Header": "Subscribers",
     "Component.NotificationTable.View.SearchBarPlaceholder": "Search",
-    "Component.NotificationTable.Results.Error": "No subscribers found"
+    "Component.NotificationTable.Results.Error": "No subscribers found",
+
+    "Component.InviteCodeButton.Generate": "Generate invite link",
+    "Component.InviteCodeButton.Copy": "Click to copy invite link",
+    "Component.InviteCodeButton.Copied": "Invite link copied!"
 }

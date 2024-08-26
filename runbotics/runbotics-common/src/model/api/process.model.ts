@@ -5,6 +5,7 @@ import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
 import { ProcessOutput } from './process-output.model';
 import { ProcessCollection } from './process-collection.model';
+import { NotificationProcess } from './notification-process.model';
 
 export interface IProcess {
     id?: number;
@@ -25,7 +26,7 @@ export interface IProcess {
     processCollection?: ProcessCollection | null;
     editor?: IUser | null;
     tags?: Tag[];
-    subscribers?: IUser[];
+    notifications?: NotificationProcess[];
     outputType?: ProcessOutput;
 }
 

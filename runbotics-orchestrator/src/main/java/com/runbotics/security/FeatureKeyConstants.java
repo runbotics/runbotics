@@ -75,6 +75,9 @@ public final class FeatureKeyConstants {
     public static final String TENANT_ALL_ACCESS = "TENANT_ALL_ACCESS";
     public static final String TENANT_READ = "TENANT_READ";
     public static final String TENANT_EDIT = "TENANT_EDIT";
+    public static final String TENANT_EDIT_USER = "TENANT_EDIT_USER";
+    public static final String TENANT_GET_INVITE_CODE = "TENANT_GET_INVITE_CODE";
+    public static final String TENANT_CREATE_INVITE_CODE = "TENANT_CREATE_INVITE_CODE";
 
     FeatureKeyConstants() {}
 }

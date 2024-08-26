@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+
+import axios from '#src-app/utils/axios';
 
 import { ScheduledJob, QueueJob } from './Scheduler.state';
 

@@ -50,7 +50,7 @@ public class AdminUserDTO {
 
     private Set<String> featureKeys;
 
-    private UUID tenantId;
+    private TenantDTO tenant;
 
     public AdminUserDTO() {
         // Empty constructor needed for Jackson.
@@ -76,7 +76,7 @@ public class AdminUserDTO {
                 .stream()
                 .flatMap(authority -> authority.getFeatureKeys().stream().map(featureKey -> featureKey.getName()))
                 .collect(Collectors.toSet());
-        this.tenantId = user.getTenant().getId();
+        this.tenant = new TenantDTO(user.getTenant());
     }
 
     public AdminUserDTO(String login) {
@@ -195,12 +195,12 @@ public class AdminUserDTO {
         this.roles = roles;
     }
 
-    public UUID getTenantId() {
-        return tenantId;
+    public TenantDTO getTenant() {
+        return tenant;
     }
 
-    public void setTenantId(UUID tenantId) {
-        this.tenantId = tenantId;
+    public void setTenant(TenantDTO tenant) {
+        this.tenant = tenant;
     }
 
     // prettier-ignore
@@ -220,7 +220,7 @@ public class AdminUserDTO {
             ", lastModifiedDate=" + lastModifiedDate +
             ", roles=" + roles +
             ", featureKeys=" + featureKeys +
-            ", tenantId=" + tenantId +
+            ", tenantId=" + (tenant != null ? tenant.getId() : null) +
             "}";
     }
 }

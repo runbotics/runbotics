@@ -14,8 +14,8 @@ import { Role } from 'runbotics-common';
 import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { IGlobalVariable, UserDTO } from '#src-app/types/model/global-variable.model';
-import { IUser } from '#src-app/types/model/user.model';
+import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
+import { IUser, UserDTO } from '#src-app/types/model/user.model';
 
 interface ColumnsActions {
     onDelete: (globalVariable: IGlobalVariable) => void;
@@ -34,9 +34,9 @@ const useGlobalVariablesColumns = ({
 }: ColumnsActions): GridEnrichedColDef[] => {
     const { translate } = useTranslations();
     const isGlobalVariableOwner = useOwner();
-    const isAdmin = useRole([Role.ROLE_ADMIN]);
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
     const isActionsColumnHidden = globalVariables.every(({ creator }) =>
-        !(isAdmin || isGlobalVariableOwner(creator.id))
+        !(isTenantAdmin || isGlobalVariableOwner(creator.id))
     );
 
     return [
@@ -110,7 +110,7 @@ const useGlobalVariablesColumns = ({
                         key="delete"
                     />,
                 ];
-                return (isAdmin || isGlobalVariableOwner(creator.id)) ? gridActions : [];
+                return (isTenantAdmin || isGlobalVariableOwner(creator.id)) ? gridActions : [];
             },
         },
     ];

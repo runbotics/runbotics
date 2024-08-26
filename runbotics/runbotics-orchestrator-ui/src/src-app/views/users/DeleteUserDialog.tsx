@@ -13,7 +13,7 @@ import styled from 'styled-components';
 
 import CustomDialog from '#src-app/components/CustomDialog';
 import useTranslations from '#src-app/hooks/useTranslations';
-import useUserSearch from '#src-app/hooks/useUserSearch';
+import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
 const StyledList = styled(List)`
@@ -43,8 +43,8 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const dispatch = useDispatch();
 
     const { userDelete } = useSelector(usersSelector);
-    const { refreshSearch: refreshSearchNotActivated } = useUserSearch();
-    const { refreshSearch: refreshSearchActivated } = useUserSearch({ isActivatedUsersOnly: true });
+    const { refreshSearch: refreshSearchNotActivated } = useUserSearch({ searchType: UserSearchType.ALL_NOT_ACTIVATED });
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType: UserSearchType.ALL_ACTIVATED });
     const [usersData, setUsersData] = useState<IUser[]>([]);
 
     const handleSubmit = () => {
