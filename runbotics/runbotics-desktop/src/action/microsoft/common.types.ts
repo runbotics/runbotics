@@ -120,7 +120,7 @@ export interface MicrosoftCredential {
     loginCredential: LoginCredential;
 }
 
-export interface CredentialData {
+export interface ActionCredentialData {
     templateName: ActionCredentialType;
-    credentialId: string;
+    credentialId?: string | null | undefined; // string for custom, null for default, ?undefined for imported?
 }

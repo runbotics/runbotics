@@ -288,6 +288,7 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     }
 
     run(request: JiraActionRequest) {
+        // @todo method for matching credentialId (action template) with decrypted credential values and passing it further with input (there's no separation for input/credential)
         switch (request.script) {
             case JiraCloudAction.GET_USER_WORKLOGS:
                 return this.getUserWorklog(request.input);

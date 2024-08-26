@@ -214,3 +214,12 @@ export type IBeeOfficeActivity = {
     subtaskcategory_dic: any;
     subtaskcategory_dic_name: any;
 };
+
+export interface BeeOfficeCredential {
+    username: string;
+    password: string;
+    logsys: string;
+    url: string;
+}
+
+export type BeeOfficeAuth = Omit<BeeOfficeCredential, 'url'> & { grant_type: string }

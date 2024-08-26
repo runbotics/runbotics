@@ -1,7 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 
 import { CoreModule } from '#core';
-import { MailerModule } from '#mailer';
 
 import ApiRequestHandler from './api-request';
 import ApplicationActionHandler from './application';
@@ -30,6 +29,8 @@ import { SharePointService } from './microsoft/share-point';
 import { CloudFileActionHandler } from './microsoft/automation/file';
 import { ImageActionHandler } from './image';
 import FolderActionHandler from './folder/folder.action-handler';
+import { MailService } from '#mailer/mailer.service';
+import { MailerModule } from '#mailer';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -58,6 +59,7 @@ const ALL_ACTION_HANDLERS = [
     ImageActionHandler,
     FolderActionHandler,
     ZipActionHandler,
+    MailService,
 ];
 
 @Module({

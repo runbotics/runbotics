@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { MicrosoftPlatform, ActionRegex } from 'runbotics-common';
+import { MicrosoftPlatform, ActionRegex, ActionCredentialType } from 'runbotics-common';
 
 import { RunboticsLogger } from '#logger';
 
