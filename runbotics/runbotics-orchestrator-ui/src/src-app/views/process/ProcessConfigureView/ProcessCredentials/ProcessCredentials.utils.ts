@@ -7,6 +7,7 @@ export interface CredentialInAction {
     collectionName: string;
     name: string;
     order: number;
+    id: string;
 };
 
 export interface ActionCredentials extends Partial<Record<ActionCredentialType, CredentialInAction[]>> {};
@@ -29,6 +30,7 @@ export const sortByActionCredentialType = (
             collectionName: pc.credential.collection.name,
             name: pc.credential.name,
             order: pc.order,
+            id: pc.id
         });
     });
 

@@ -174,3 +174,6 @@ export const getProcessSubscriptionInfo = ApiTenantResource
 
 export const getProcessCredentials = ApiTenantResource
     .get<ProcessCredential[]>('processes/getProcessCredentials', `${PROCESS_CREDENTIALS_PATH}/processes`);
+
+export const deleteProcessCredential = ApiTenantResource
+    .delete<void>('processes/deleteProcessCredential', PROCESS_CREDENTIALS_PATH);

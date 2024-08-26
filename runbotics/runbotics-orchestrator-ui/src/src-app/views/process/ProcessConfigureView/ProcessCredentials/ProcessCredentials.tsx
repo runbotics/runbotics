@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Typography } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 
 import LockIcon from '#public/images/icons/lock.svg';
 import { useRequiredCredentialTypes } from '#src-app/credentials/useRequiredCredentialTypes';
@@ -19,11 +20,13 @@ import {
 } from './ProcessCredentials.styles';
 import { ActionSortedColumns, sortByActionCredentialType, sortByColumns } from './ProcessCredentials.utils';
 import { ProcessCredentialsAddDialog } from './ProcessCredentialsAddDialog';
+import { ProcessCredentialsDeleteDialog } from './ProcessCredentialsDeleteDialog';
 
 const ACTION_MIN_WIDTH = 400;
 const MARGIN_LIMIT = 800;
 
 const ProcessCredentials = () => {
+    const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
     const { id: processId } = useRouter().query;
     const { draft: { credentials: processCredentials } } = useSelector(processSelector);
@@ -35,16 +38,45 @@ const ProcessCredentials = () => {
 
     const [columns, setColumns] = useState<ActionSortedColumns>([]);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [currentCredentialId, setCurrentCredentialId] = useState(null);
 
     const { width: windowWidth } = useWindowSize();
     const rowCount = Math.ceil((Math.abs(windowWidth - MARGIN_LIMIT)) / ACTION_MIN_WIDTH);
 
-    const handleDialogOpen = () => {
+    const handleDelete = () => {
+        dispatch(processActions.deleteProcessCredential({ resourceId: currentCredentialId }))
+            .unwrap()
+            .then(() => {
+                enqueueSnackbar('Did it', {
+                    variant: 'success'
+                });
+                dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
+            })
+            .catch(() => {
+                enqueueSnackbar('not ;c Did it', {
+                    variant: 'error'
+                });
+            });
+
+        setIsDeleteDialogOpen(false);
+    };
+
+    const handleEditDialogOpen = () => {
         setIsEditDialogOpen(true);
     };
 
-    const handleDialogClose = () => {
+    const handleEditDialogClose = () => {
         setIsEditDialogOpen(false);
+    };
+
+    const handleDeleteDialogOpen = (credentialId: string) => {
+        setIsDeleteDialogOpen(true);
+        setCurrentCredentialId(credentialId);
+    };
+
+    const handleDeleteDialogClose = () => {
+        setIsDeleteDialogOpen(false);
     };
 
     useEffect(() => {
@@ -60,9 +92,14 @@ const ProcessCredentials = () => {
 
     return (
         <Container>
+            <ProcessCredentialsDeleteDialog
+                isOpen={isDeleteDialogOpen}
+                handleClose={handleDeleteDialogClose}
+                handleDelete={handleDelete}
+            />
             <ProcessCredentialsAddDialog
                 isOpen={isEditDialogOpen}
-                handleClose={handleDialogClose}
+                handleClose={handleEditDialogClose}
             />
             <Header>
                 <Image src={LockIcon} alt='lock icon' style={{ filter: 'brightness(0) saturate(100%)' }}/>
@@ -74,7 +111,9 @@ const ProcessCredentials = () => {
                         {column.actionCredentials.map(actionType => (
                             <ActionBox key={actionType.name}>
                                 <ActionBoxHeader>
-                                    <Typography variant='h5' textTransform='uppercase'>{actionType.name}</Typography>
+                                    <Typography variant='h5' textTransform='uppercase'>
+                                        {actionType.name}
+                                    </Typography>
                                 </ActionBoxHeader>
                                 <ActionBoxContent>
                                     {actionType.credentials.map(cred => (
@@ -82,11 +121,12 @@ const ProcessCredentials = () => {
                                             key={cred.name}
                                             isPrimary={cred.order === 1}
                                             credentialName={cred.name}
+                                            credentialId={cred.id}
                                             collectionName={cred.collectionName}
+                                            handleDeleteDialog={handleDeleteDialogOpen}
                                         />
-
                                     ))}
-                                    <ActionCredentialAdd handleClick={handleDialogOpen}/>
+                                    <ActionCredentialAdd handleClick={handleEditDialogOpen}/>
                                 </ActionBoxContent>
                             </ActionBox>
                         ))}

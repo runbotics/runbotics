@@ -12,10 +12,12 @@ interface ActionCredentialProps {
     isPrimary: boolean;
     collectionName: string;
     credentialName: string;
+    credentialId: string;
+    handleDeleteDialog: (credentialId: string) => void;
 };
 
 const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
-    isPrimary, collectionName, credentialName
+    isPrimary, collectionName, credentialName, credentialId, handleDeleteDialog
 }) => (
     <CredentialWrapper>
         <If condition={isPrimary}>
@@ -49,8 +51,9 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
             </CredentialDetails>
             <CredentialDelete>
                 <DeleteOutlineIcon
-                    sx={{ [':hover']: { cursor: 'pointer' } }}
+                    sx={{...(!isPrimary && { [':hover']: { cursor: 'pointer' } })}}
                     color={isPrimary ? 'disabled' : 'error'}
+                    {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
                 />
             </CredentialDelete>
         </CredentialTile>

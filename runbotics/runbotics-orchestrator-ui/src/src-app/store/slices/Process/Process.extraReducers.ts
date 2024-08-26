@@ -17,7 +17,7 @@ import {
     unsubscribeProcessNotifications,
     getProcessSubscriptionInfo,
     getProcessesPageByCollection,
-    getProcessCredentials
+    getProcessCredentials,
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
