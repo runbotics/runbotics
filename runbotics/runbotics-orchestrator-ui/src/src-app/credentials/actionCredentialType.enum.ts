@@ -5,4 +5,5 @@ export enum ActionCredentialType {
     GOOGLE = 'google',
     BEE_OFFICE = 'beeOffice',
     SAP = 'sap',
+    EMAIL = 'mail',
 }
