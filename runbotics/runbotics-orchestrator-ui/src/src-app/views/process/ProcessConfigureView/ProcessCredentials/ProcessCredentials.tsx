@@ -44,7 +44,7 @@ const ProcessCredentials = () => {
     const [currentCredentialId, setCurrentCredentialId] = useState(null);
 
     const { width: windowWidth } = useWindowSize();
-    const rowCount = Math.ceil((Math.abs(windowWidth - MARGIN_LIMIT)) / ACTION_MIN_WIDTH);
+    const rowCount = Math.max(Math.ceil((Math.abs(windowWidth - MARGIN_LIMIT)) / ACTION_MIN_WIDTH), 1);
 
     const handleDelete = () => {
         dispatch(processActions.deleteProcessCredential({ resourceId: currentCredentialId }))

@@ -1,10 +1,11 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent } from 'react';
 
-import { Dialog, DialogActions, DialogTitle, MenuItem, Typography } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, Typography } from '@mui/material';
 
+import CredentialSelectSet from '#src-app/components/CredentialSelectSet';
 import If from '#src-app/components/utils/If';
 
-import { Content, StyledButton, StyledSelect } from './ProcessCredentials.styles';
+import { AddDialogContent, StyledButton } from './ProcessCredentials.styles';
 
 
 interface ProcessCredentialsAddDialogProps {
@@ -15,7 +16,7 @@ interface ProcessCredentialsAddDialogProps {
 export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAddDialogProps> = ({
     isOpen, handleClose
 }) => {
-    const [isCollectionPicked, setIsCollectionPicked] = useState(false);
+    const x = 1;
 
     return (
         <If condition={isOpen}>
@@ -25,18 +26,12 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
                         Add new credential for action
                     </Typography>
                 </DialogTitle>
-                <Content>
-                    <StyledSelect
-
-                    >
-                        <MenuItem>1</MenuItem>
-                        <MenuItem>2</MenuItem>
-                    </StyledSelect>
-                    <StyledSelect disabled={isCollectionPicked}>
-                        <MenuItem>1</MenuItem>
-                        <MenuItem>2</MenuItem>
-                    </StyledSelect>
-                </Content>
+                <AddDialogContent>
+                    <CredentialSelectSet
+                        authors={[]}
+                        credentials={[]}
+                    />
+                </AddDialogContent>
                 <DialogActions>
                     <StyledButton onClick={handleClose}>Close</StyledButton>
                     <StyledButton variant='contained'>Add</StyledButton>

@@ -56,8 +56,11 @@ export const DeleteDialogContent = styled(DialogContent)`
     gap: 20px;
 `;
 
-export const StyledSelect = styled(Select)`
-    width: 400px;
+export const AddDialogContent = styled(DialogContent)`
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 `;
 
 export const StyledButton = styled(Button)`
