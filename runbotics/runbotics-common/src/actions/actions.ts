@@ -107,7 +107,7 @@ export enum GoogleAction {
 export enum JiraCloudAction {
     GET_USER_WORKLOGS = 'jiraCloud.getUserWorklogs',
     GET_PROJECT_WORKLOGS = 'jiraCloud.getProjectWorklogs',
-    GET_PROJECT_SPRINTS = 'jiraCloud.getProjectSprints',
+    GET_BOARD_SPRINTS = 'jiraCloud.getBoardSprints',
     GET_SPRINT_TASKS = 'jiraCloud.getSprintTasks',
 }
 

@@ -8,7 +8,7 @@ import {
     jiraDatesCollectionSchema,
     jiraSingleDaySchema,
     jiraDatesPeriodSchema,
-    getProjectSprintsInputSchema,
+    getBoardSprintsInputSchema,
     getSprintTasksInputSchema
 } from './jira.utils';
 import { CloudJiraUser, SimpleCloudJiraUser } from './jira-cloud/jira-cloud.types';
@@ -26,7 +26,7 @@ export type GetWorklogInput = GetUserWorklogInput & GetProjectWorklogInput;
 export type GetJiraDatesInput = JiraSingleDay | JiraDatesPeriod | JiraDatesCollection;
 export type GetUserWorklogInput = z.infer<typeof getUserWorklogInputSchema>;
 export type GetProjectWorklogInput = z.infer<typeof getProjectWorklogInputSchema>;
-export type GetProjectSprintsInput = z.infer<typeof getProjectSprintsInputSchema>;
+export type GetBoardSprintsInput = z.infer<typeof getBoardSprintsInputSchema>;
 export type GetSprintTasksInput = z.infer<typeof getSprintTasksInputSchema>;
 
 export interface Page {
@@ -111,11 +111,6 @@ export interface Board {
         avatarURI: string;
         name: string;
     }
-}
-
-export interface BoardResponse extends Page {
-    isLast: boolean;
-    values: Board[];
 }
 
 export interface Sprint {

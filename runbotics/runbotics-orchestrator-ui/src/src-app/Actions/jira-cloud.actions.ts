@@ -258,10 +258,10 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                 formData: {},
             },
         },
-        [JiraCloudAction.GET_PROJECT_SPRINTS]: {
-            id: JiraCloudAction.GET_PROJECT_SPRINTS,
-            label: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectSprints.Label'),
-            script: JiraCloudAction.GET_PROJECT_SPRINTS,
+        [JiraCloudAction.GET_BOARD_SPRINTS]: {
+            id: JiraCloudAction.GET_BOARD_SPRINTS,
+            label: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Label'),
+            script: JiraCloudAction.GET_BOARD_SPRINTS,
             runner: Runner.DESKTOP_SCRIPT,
             output: {
                 assignVariables: true,
@@ -278,30 +278,30 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                             type: 'object',
                             properties: {
                                 originEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectSprints.Origin'),
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Origin'),
                                     type: 'string',
                                 },
                                 usernameEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectSprints.Username'),
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Username'),
                                     type: 'string',
                                 },
                                 passwordEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectSprints.Password'),
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Password'),
                                     type: 'string',
                                 },
-                                project: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectSprints.Project'),
+                                boardId: {
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Board'),
                                     type: 'string',
                                 },
                                 state: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectSprints.State'),
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.State'),
                                     type: 'string',
                                     enum: [undefined, JiraSprintState.CLOSED, JiraSprintState.ACTIVE, JiraSprintState.FUTURE],
                                     enumNames: ['None', 'Closed', 'Active', 'Future'],
                                     default: undefined,
                                 },
                             },
-                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'project']
+                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'boardId']
                         },
                         output: {
                             title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -321,7 +321,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                     output: {
                         variableName: {
                             'ui:options': {
-                                info: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectSprints.Output.Info'),
+                                info: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Output.Info'),
                             }
                         },
                     }

@@ -2,17 +2,22 @@ import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 import {
-    GetJiraInputBase, GetWorklogInput, IssueWorklogResponse, JiraDatesCollection,
-    JiraSingleDay, WorklogOutput, JiraDatesPeriod, WorklogResponse,
-    WorklogAllowedDateParams, Worklog, SearchIssue,
+    GetJiraInputBase,
+    GetWorklogInput,
+    IssueWorklogResponse,
+    JiraDatesCollection,
+    JiraSingleDay,
+    WorklogOutput,
+    JiraDatesPeriod,
+    WorklogResponse,
+    WorklogAllowedDateParams,
+    SearchIssue,
     WorklogIsCreatorParams,
     GetUserWorklogInput,
     GetProjectWorklogInput,
     GetIssueWorklogsByParam,
     Project,
-    GetProjectSprintsInput,
-    BoardResponse,
-    Board,
+    GetBoardSprintsInput,
     SprintResponse,
     Sprint,
     Page,
@@ -125,8 +130,8 @@ export const getProjectWorklogInputSchema = getProjectWorklogInputBaseSchema.and
     jiraDatesCollectionSchema.required({ dates: true }),
 ]));
 
-export const getProjectSprintsInputSchema = getJiraInputBaseSchema.and(z.object({
-    project: z.string({ required_error: 'Project key is missing' }),
+export const getBoardSprintsInputSchema = getJiraInputBaseSchema.and(z.object({
+    boardId: z.string({ required_error: 'Board ID is missing' }),
     state: z.nativeEnum(JiraSprintState).optional(),
 }));
 
@@ -277,31 +282,9 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
     return data;
 };
 
-export const getJiraBoard = async (input: GetProjectSprintsInput) => {
-    const { data } =  await externalAxios.get<BoardResponse>(
-        `${process.env[input.originEnv]}/rest/agile/1.0/board`,
-        {
-            params: {
-                projectKeyOrId: input.project,
-                maxResults: 1,
-                startAt: 0,
-            },
-            headers: getBasicAuthHeader(input),
-            maxRedirects: 0,
-        },
-    );
-
-    if (!data || !data.values.length) {
-        throw new Error(`Board for project key or ID ${input.project} not found`);
-    }
-
-    const board = data.values[0];
-    return board;
-};
-
 export const getJiraAllBoardSprints = async (
-    boardId: Board['id'],
-    input: GetProjectSprintsInput,
+    boardId: string,
+    input: GetBoardSprintsInput,
 ) => {
     let startAt = 0;
     const sprints: Sprint[] = [];
@@ -317,12 +300,12 @@ export const getJiraAllBoardSprints = async (
         startAt = response.startAt + response.maxResults;
     }
 
-    return sprints.filter(sprint => boardId === sprint.originBoardId);
+    return sprints;
 };
 
 const getJiraSprintPage = async (
-    boardId: Board['id'],
-    input: GetProjectSprintsInput,
+    boardId: string,
+    input: GetBoardSprintsInput,
     startAt: Page['startAt'],
 ) => {
     const { data } =  await externalAxios.get<SprintResponse>(

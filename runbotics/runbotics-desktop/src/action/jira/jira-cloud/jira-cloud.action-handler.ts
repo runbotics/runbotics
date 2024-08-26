@@ -30,15 +30,14 @@ import {
     isJiraSingleDay,
     isJiraDatesPeriod,
     sortAscending,
-    getProjectSprintsInputSchema,
+    getBoardSprintsInputSchema,
     getSprintTasksInputSchema,
-    getJiraBoard,
     getJiraAllBoardSprints,
     getJiraAllSprintTasks
 } from '../jira.utils';
 import {
     GetJiraDatesInput,
-    GetProjectSprintsInput,
+    GetBoardSprintsInput,
     GetProjectWorklogInput,
     GetSprintTasksInput,
     GetUserWorklogInput,
@@ -123,14 +122,13 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
             : sortAscending(worklogs);
     }
 
-    async getProjectSprints(rawInput: GetProjectSprintsInput) {
-        const input = await getProjectSprintsInputSchema.parseAsync(rawInput)
+    async getBoardSprints(rawInput: GetBoardSprintsInput) {
+        const input = await getBoardSprintsInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
                 throw formatZodError(error);
             });
 
-        const board = await getJiraBoard(input);
-        const sprints = await getJiraAllBoardSprints(board.id, input);
+        const sprints = await getJiraAllBoardSprints(input.boardId, input);
 
         return sprints;
     }
@@ -295,8 +293,8 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                 return this.getUserWorklog(request.input);
             case JiraCloudAction.GET_PROJECT_WORKLOGS:
                 return this.getProjectWorklog(request.input);
-            case JiraCloudAction.GET_PROJECT_SPRINTS:
-                return this.getProjectSprints(request.input);
+            case JiraCloudAction.GET_BOARD_SPRINTS:
+                return this.getBoardSprints(request.input);
             case JiraCloudAction.GET_SPRINT_TASKS:
                 return this.getSprintTasks(request.input);
             default:
