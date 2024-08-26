@@ -120,6 +120,25 @@ export class CredentialCollectionService {
             .getMany();
     }
 
+    async findAllAccessibleForCredentials(user: IUser) {
+        const collections = await this.credentialCollectionRepository.find({
+            where: {
+                tenantId: user.tenantId,
+                credentialCollectionUser: {
+                    userId: user.id,
+                    privilegeType: PrivilegeType.WRITE,
+                },
+            },
+            relations: [...relations, 'credentials.createdBy', 'credentials.collection'],
+        });
+
+        if (collections.length === 0) {
+            throw new NotFoundException('Could not find any credential collections');
+        }
+
+        return collections;
+    }
+
     async findOneAccessibleById(id: string, user: IUser) {
         const collection = await this.credentialCollectionRepository
             .createQueryBuilder('credentialCollectionEntity')

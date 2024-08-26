@@ -71,10 +71,25 @@ export class CredentialService {
       });
   }
 
-  async findAllAccessible(user: IUser) {
-    const accessibleCollections = await this.collectionService.findAllAccessible(user);
+  async findAllAccessible(tenantId: string, user: IUser) {
+    const accessibleCollections = await this.collectionService.findAllAccessibleForCredentials(user);
 
-    const credentials = accessibleCollections.map((collection) => collection.credentials).flat();
+    if (accessibleCollections.length === 0) {
+      throw new NotFoundException('Could not find any accessible collections');
+    }
+
+    const credentials = accessibleCollections.map((collection) => collection.credentials)
+      .flat().map(credential => ({
+        ...credential,
+        createdBy: {
+          id: credential.createdBy.id,
+          login: credential.createdBy.login,
+        },
+        collection: {
+          id: credential.collection.id,
+          name: credential.collection.name
+        }
+      }));
 
     if (!credentials.some((credential) => Boolean(credential))) {
       return [];
