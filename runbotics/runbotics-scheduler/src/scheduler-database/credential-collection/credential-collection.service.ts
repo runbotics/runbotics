@@ -100,48 +100,37 @@ export class CredentialCollectionService {
     findAllAccessible(user: IUser) {
         return this.credentialCollectionRepository
             .createQueryBuilder('credentialCollectionEntity')
-            .innerJoinAndSelect('credentialCollectionEntity.createdBy', 'credentialCollectionEntity_createdBy')
+            .innerJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
             .innerJoinAndSelect(
                 'credentialCollectionEntity.credentialCollectionUser',
-                'credentialCollectionUserEntity',
+                'credentialCollectionUser',
                 `
-                    credentialCollectionEntity.tenantId = :tenantId AND
-                    credentialCollectionUserEntity.user.id = :userId AND
-                    credentialCollectionUserEntity.privilegeType = :privilegeType
+                    credentialCollectionEntity.tenantId = '${user.tenantId}' AND
+                    credentialCollectionUser.user.id = '${user.id}' AND
+                    credentialCollectionUser.privilegeType = '${PrivilegeType.WRITE}'
                 `,
-                {
-                    tenantId: user.tenantId,
-                    userId: user.id,
-                    privilegeType: PrivilegeType.WRITE,
-                },
             )
-            .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'credentialCollectionUsersAll')
-            .innerJoinAndSelect('credentialCollectionUsersAll.user', 'credentialCollectionUsersAll_user')
+            .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
+            .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
             .getMany();
     }
 
     async findOneAccessibleById(id: string, user: IUser) {
         const collection = await this.credentialCollectionRepository
             .createQueryBuilder('credentialCollectionEntity')
-            .innerJoinAndSelect('credentialCollectionEntity.createdBy', 'credentialCollectionEntity_createdBy')
+            .innerJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
             .innerJoinAndSelect(
                 'credentialCollectionEntity.credentialCollectionUser',
-                'credentialCollectionUserEntity',
+                'credentialCollectionUser',
                 `
-                    credentialCollectionEntity.id = :id AND
-                    credentialCollectionEntity.tenantId = :tenantId AND
-                    credentialCollectionUserEntity.user.id = :userId AND
-                    credentialCollectionUserEntity.privilegeType = :privilegeType
+                    credentialCollectionEntity.id = '${id}' AND
+                    credentialCollectionEntity.tenantId = '${user.tenantId}' AND
+                    credentialCollectionUser.user.id = '${user.id}' AND
+                    credentialCollectionUser.privilegeType = '${PrivilegeType.WRITE}'
                 `,
-                {
-                    id,
-                    tenantId: user.tenantId,
-                    userId: user.id,
-                    privilegeType: PrivilegeType.WRITE,
-                },
             )
-            .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'credentialCollectionUsersAll')
-            .innerJoinAndSelect('credentialCollectionUsersAll.user', 'credentialCollectionUsersAll_user')
+            .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
+            .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
             .getOne();
 
         if (!collection) {
