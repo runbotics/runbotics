@@ -50,10 +50,9 @@ export const ActionBoxContent = styled.div`
     gap: 8px;
 `;
 
-export const Content = styled(DialogContent)`
+export const DeleteDialogContent = styled(DialogContent)`
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 20px;
 `;
 

@@ -3,8 +3,9 @@ import { FunctionComponent } from 'react';
 import { Dialog, DialogActions, DialogTitle, Typography } from '@mui/material';
 
 import If from '#src-app/components/utils/If';
+import useTranslations from '#src-app/hooks/useTranslations';
 
-import { Content, StyledButton } from './ProcessCredentials.styles';
+import { DeleteDialogContent, StyledButton } from './ProcessCredentials.styles';
 
 
 interface ProcessCredentialsDeleteDialogProps {
@@ -16,22 +17,28 @@ interface ProcessCredentialsDeleteDialogProps {
 export const ProcessCredentialsDeleteDialog: FunctionComponent<ProcessCredentialsDeleteDialogProps> = ({
     isOpen, handleClose, handleDelete
 }) => {
-    const x = 1;
+    const { translate } = useTranslations();
 
     return (
         <If condition={isOpen}>
             <Dialog open fullWidth>
                 <DialogTitle>
                     <Typography variant='h5'>
-                        Delete process credential
+                        {translate('Process.Configure.Credentials.Modal.Delete.Title')}
                     </Typography>
                 </DialogTitle>
-                <Content>
-                    Delete credential in process
-                </Content>
+                <DeleteDialogContent>
+                    <Typography>
+                        {translate('Process.Configure.Credentials.Modal.Delete.Content')}
+                    </Typography>
+                </DeleteDialogContent>
                 <DialogActions>
-                    <StyledButton onClick={handleClose}>Close</StyledButton>
-                    <StyledButton onClick={handleDelete} variant='contained'>Delete</StyledButton>
+                    <StyledButton onClick={handleClose}>
+                        {translate('Process.Configure.Credentials.Modal.Delete.Button.Close')}
+                    </StyledButton>
+                    <StyledButton onClick={handleDelete} variant='contained'>
+                        {translate('Process.Configure.Credentials.Modal.Delete.Button.Delete')}
+                    </StyledButton>
                 </DialogActions>
             </Dialog>
         </If>

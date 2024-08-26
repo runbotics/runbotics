@@ -7,6 +7,7 @@ import { useSnackbar } from 'notistack';
 
 import LockIcon from '#public/images/icons/lock.svg';
 import { useRequiredCredentialTypes } from '#src-app/credentials/useRequiredCredentialTypes';
+import useTranslations from '#src-app/hooks/useTranslations';
 import useWindowSize from '#src-app/hooks/useWindowSize';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
@@ -27,6 +28,7 @@ const MARGIN_LIMIT = 800;
 
 const ProcessCredentials = () => {
     const { enqueueSnackbar } = useSnackbar();
+    const { translate }= useTranslations();
     const dispatch = useDispatch();
     const { id: processId } = useRouter().query;
     const { draft: { credentials: processCredentials } } = useSelector(processSelector);
@@ -48,15 +50,17 @@ const ProcessCredentials = () => {
         dispatch(processActions.deleteProcessCredential({ resourceId: currentCredentialId }))
             .unwrap()
             .then(() => {
-                enqueueSnackbar('Did it', {
-                    variant: 'success'
-                });
+                enqueueSnackbar(
+                    translate('Process.Configure.Credentials.Modal.Delete.Info.Success'),
+                    { variant: 'success' }
+                );
                 dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
             })
             .catch(() => {
-                enqueueSnackbar('not ;c Did it', {
-                    variant: 'error'
-                });
+                enqueueSnackbar(
+                    translate('Process.Configure.Credentials.Modal.Delete.Info.Error'),
+                    { variant: 'error' }
+                );
             });
 
         setIsDeleteDialogOpen(false);
@@ -103,7 +107,7 @@ const ProcessCredentials = () => {
             />
             <Header>
                 <Image src={LockIcon} alt='lock icon' style={{ filter: 'brightness(0) saturate(100%)' }}/>
-                <Typography>Credentials</Typography>
+                <Typography>{translate('Process.Configure.Credentials.Section.Title')}</Typography>
             </Header>
             <ActionsContainer $rowCount={rowCount}>
                 {columns.map((column, idx) => (
