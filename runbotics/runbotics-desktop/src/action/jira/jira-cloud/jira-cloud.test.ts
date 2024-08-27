@@ -3,13 +3,16 @@ import JiraCloudActionHandler from './jira-cloud.action-handler';
 import { GetUserWorklogInput, SearchIssue, WorklogResponse } from '../jira.types';
 import { CloudJiraUser } from './jira-cloud.types';
 import * as jiraUtils from '../jira.utils';
+import { ServerConfigService } from '#config';
+import { ConfigService } from '@nestjs/config';
+import { ArgumentsService } from '#config/arguments.service';
 
 describe('JiraCloudActionHandler', () => {
     let jiraCloudActionHandler: JiraCloudActionHandler;
 
     const getWorklogInputDate: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
+        originEnv: 'https://JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'date',
@@ -17,7 +20,7 @@ describe('JiraCloudActionHandler', () => {
     };
     const getWorklogInputPeriod: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
+        originEnv: 'https://JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'period',
@@ -26,7 +29,7 @@ describe('JiraCloudActionHandler', () => {
     };
     const getWorklogInputCollection: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
+        originEnv: 'https://JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'collection',
@@ -37,6 +40,9 @@ describe('JiraCloudActionHandler', () => {
         const module = await Test.createTestingModule({
             providers: [
                 JiraCloudActionHandler,
+                ServerConfigService,
+                ConfigService,
+                ArgumentsService,
             ],
         }).compile();
         jiraCloudActionHandler = module.get(JiraCloudActionHandler);

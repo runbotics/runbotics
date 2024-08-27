@@ -9,7 +9,7 @@ describe('JiraServerActionHandler', () => {
 
     const getWorklogInputDate: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
+        originEnv: 'https://JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'date',
@@ -17,7 +17,7 @@ describe('JiraServerActionHandler', () => {
     };
     const getWorklogInputPeriod: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
+        originEnv: 'https://JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'period',
@@ -26,7 +26,7 @@ describe('JiraServerActionHandler', () => {
     };
     const getWorklogInputCollection: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
+        originEnv: 'https://JIRA_CLOUD_URL',
         passwordEnv: 'JIRA_CLOUD_PASSWORD',
         usernameEnv: 'JIRA_CLOUD_USERNAME',
         mode: 'collection',
