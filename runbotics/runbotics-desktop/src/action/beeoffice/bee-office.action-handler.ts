@@ -81,7 +81,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         credential: BeeOfficeCredential,
     ): Promise<BeeOfficeGetEmployeeByIdActionOutput> {
         const response = await externalAxios.get<IBeeOfficeEmployee[]>(
-            `${this.serverConfigService.beeUrl}/api/employees/ID;ADD;eq;${input.id}`,
+            `${credential.url}/api/employees/ID;ADD;eq;${input.id}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
@@ -103,7 +103,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         };
         const method = input.method ? methods[input.method] : 'ct';
         const response = await externalAxios.get<IBeeOfficeActivity[]>(
-            `${this.serverConfigService.beeUrl}/api/activity/name%3BADD%3B${method}%3B${input.query}/1`,
+            `${credential.url}/api/activity/name%3BADD%3B${method}%3B${input.query}/1`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
@@ -168,7 +168,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
             leaveConfig_id: null,
         };
 
-        const response = await externalAxios.post(`${this.serverConfigService.beeUrl}/api/timetableactivity`, requestBody, {
+        const response = await externalAxios.post(`${credential.url}/api/timetableactivity`, requestBody, {
             headers: {
                 Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
             },
@@ -184,7 +184,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     ): Promise<BeeOfficeGetScheduleActionOutput> {
         const limit = input.limit ? input.limit : 100;
         const response = await externalAxios.get<IBeeOfficeActivity[]>(
-            `${this.serverConfigService.beeUrl}/api/timetableactivity/employee_id%3BADD%3Beq%3B${input.employee.ID}%7Ctimetabledate%3BADD%3Beq%3B${input.date}/${limit}`,
+            `${credential.url}/api/timetableactivity/employee_id%3BADD%3Beq%3B${input.employee.ID}%7Ctimetabledate%3BADD%3Beq%3B${input.date}/${limit}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
@@ -201,7 +201,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         credential: BeeOfficeCredential,
     ): Promise<BeeOfficeDeleteTimeTableActionOutput> {
         const response = await externalAxios.delete<any>(
-            `${this.serverConfigService.beeUrl}/api/timetableactivity/${input.timeTableActivity.ID}`,
+            `${credential.url}/api/timetableactivity/${input.timeTableActivity.ID}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
@@ -218,7 +218,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         credential: BeeOfficeCredential,
     ): Promise<BeeOfficeGetActivityGroupsActionOutput> {
         const response = await externalAxios.get<IBeeOfficeActivity[]>(
-            `${this.serverConfigService.beeUrl}/api/activitygroup/name;ADD;eq;${input.group}`,
+            `${credential.url}/api/activitygroup/name;ADD;eq;${input.group}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
@@ -235,7 +235,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         credential: BeeOfficeCredential,
     ): Promise<BeeOfficeGetActivitiesByURLParametersActionOutput> {
         const response = await externalAxios.get<IBeeOfficeActivity[]>(
-            `${this.serverConfigService.beeUrl}/api/activity/${input.query}`,
+            `${credential.url}/api/activity/${input.query}`,
             {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
@@ -258,7 +258,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         }
 
         const matchedLeaveConfig = await externalAxios.get(
-            `${this.serverConfigService.beeUrl}/api/leaveconfig`, {
+            `${credential.url}/api/leaveconfig`, {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
@@ -278,7 +278,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         };
 
         const response = await externalAxios.post(
-            `${this.serverConfigService.beeUrl}/api/leaves`,
+            `${credential.url}/api/leaves`,
             requestBody, {
                 headers: {
                     Authorization: 'Bearer ' + (await this.getBearerToken(credential)),

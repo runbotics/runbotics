@@ -1,6 +1,7 @@
 import { CredentialTemplate } from '#/scheduler-database/credential-template/credential-template.entity';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { ActionCredentialType } from 'runbotics-common';
+import { CredentialTemplateAttribute } from '#/scheduler-database/credential-template-attribute/credential-template-attribute.entity';
 
 const TEMPLATES = [
     {
@@ -12,7 +13,7 @@ const TEMPLATES = [
         attributes: [
             {
                 name: 'usernameEnv',
-                description: 'Username of the account to use for the action', // @todo what with polish translations? lets use this name as translation key! - because english names should start with capital letter too!
+                description: 'Username of the account to use for the action', // @todo what with polish translations? how about using this name as translation key?
             },
             {
                 name: 'passwordEnv',
@@ -113,6 +114,6 @@ export class CredentialTemplates1723801171165 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.manager.delete(CredentialTemplate, TEMPLATES);
+        await queryRunner.manager.delete(CredentialTemplate, { name: TEMPLATES.map(t => t.name) });
     }
 }
