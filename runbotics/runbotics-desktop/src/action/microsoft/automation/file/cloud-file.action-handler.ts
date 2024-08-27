@@ -24,8 +24,8 @@ import path from 'path';
 import { MicrosoftGraphService } from '#action/microsoft/microsoft-graph';
 import { MicrosoftAuthService } from '#action/microsoft/microsoft-auth.service';
 
+@Injectable()
 export class CloudFileActionHandler extends StatelessActionHandler {
-    private readonly logger = new RunboticsLogger(CloudFileActionHandler.name);
     private microsoftGraphService: MicrosoftGraphService = null;
     private oneDriveService: OneDriveService = null;
     private sharePointService: SharePointService = null;
@@ -172,20 +172,23 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     run(request: CloudFileActionRequest) {
-        if (!request.input) { // @todo check if includes both CredentialData and list including MicrosoftCredential
+        if (!request.input) { // @todo check if includes both CredentialData and MicrosoftCredential
             throw new Error('Auth is required for that action');
         }
+
+        const authData = this.serverConfigService.microsoftAuth;
+
         const matchedCredentials = { // @todo here method for matching credentialId (templateName) from action input to decrypted credential (default for the template), e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
             config: {
                 auth: {
-                    clientId: '',
-                    authority: '',
-                    clientSecret: '',
+                    clientId: authData.clientId,
+                    authority: authData.tenantId,
+                    clientSecret: authData.clientSecret,
                 }
             },
             loginCredential: {
-                username: '',
-                password: '',
+                username: authData.username,
+                password: authData.password,
             }
         };
 

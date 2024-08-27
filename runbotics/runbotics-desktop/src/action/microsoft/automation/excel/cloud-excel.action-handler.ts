@@ -9,12 +9,16 @@ import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
 import { sortNumbersDescending } from '#action/microsoft/excel/excel.utils';
 import { MicrosoftCredential } from '#action/microsoft/common.types';
+import { ServerConfigService } from '#config';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
     private session: ExcelSession = null;
 
-    constructor(private readonly excelService: ExcelService) {
+    constructor(
+        private readonly excelService: ExcelService,
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
 
@@ -130,18 +134,22 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
                     throw new Error('Auth is required for that action');
                 }
 
+                // eslint-disable-next-line no-case-declarations
+                const authData = this.serverConfigService.microsoftAuth;
+
+                // eslint-disable-next-line no-case-declarations
                 const matchedCredentials = { // @todo here method for matching credentialId (templateName) from action input to decrypted credential (default for the template), e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
                     config: {
                         auth: {
-                            clientId: '',
-                            authority: '',
-                            clientSecret: '',
+                            clientId: authData.clientId,
+                            authority: authData.tenantId,
+                            clientSecret: authData.clientSecret,
                         }
                     },
                     loginCredential: {
-                        username: '',
-                        password: '',
-                    },
+                        username: authData.username,
+                        password: authData.password,
+                    }
                 };
 
                 return this.openFile(request.input, matchedCredentials);

@@ -30,7 +30,6 @@ import { CloudFileActionHandler } from './microsoft/automation/file';
 import { ImageActionHandler } from './image';
 import FolderActionHandler from './folder/folder.action-handler';
 import { MailService } from '#mailer/mailer.service';
-import { MailerModule } from '#mailer';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -64,7 +63,6 @@ const ALL_ACTION_HANDLERS = [
 
 @Module({
     imports: [
-        MailerModule,
         MicrosoftModule,
         forwardRef(() => CoreModule),
     ],

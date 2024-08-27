@@ -3,14 +3,15 @@ import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { ActionCredentialData } from '#action/microsoft/common.types';
 
 export type CloudFileActionRequest =
-    | DesktopRunRequest<CloudFileAction.DOWNLOAD_FILE, CloudFileDownloadFileActionInput & ActionCredentialData>
-    | DesktopRunRequest<CloudFileAction.UPLOAD_FILE, CloudFileUploadFileActionInput & ActionCredentialData>
-    | DesktopRunRequest<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput & ActionCredentialData>
-    | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput & ActionCredentialData>
-    | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput & ActionCredentialData>
-    | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink & ActionCredentialData>
-    | DesktopRunRequest<CloudFileAction.GET_SHAREPOINT_LIST_ITEMS, SharepointGetListItems & ActionCredentialData>;
+    | DesktopRunRequestWithCredentials<CloudFileAction.DOWNLOAD_FILE, CloudFileDownloadFileActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.UPLOAD_FILE, CloudFileUploadFileActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>
+    | DesktopRunRequestWithCredentials<CloudFileAction.GET_SHAREPOINT_LIST_ITEMS, SharepointGetListItems>;
 
+type DesktopRunRequestWithCredentials<S extends string, I> = DesktopRunRequest<S, I> & ActionCredentialData;
 export interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
     listName: string;

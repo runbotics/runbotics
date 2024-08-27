@@ -111,6 +111,10 @@ export const jiraDatesCollectionSchema = z.object({
     dates: z.array(dateValidator('Dates')).optional(),
 });
 
+const jiraProjectSchema = z.object({
+    project: z.string()
+});
+
 export const getUserWorklogInputSchema = getUserWorklogInputBaseSchema.and(z.union([
     jiraSingleDaySchema.required({ date: true }),
     jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
@@ -121,6 +125,7 @@ export const getProjectWorklogInputSchema = getProjectWorklogInputBaseSchema.and
     jiraSingleDaySchema.required({ date: true }),
     jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
     jiraDatesCollectionSchema.required({ dates: true }),
+    jiraProjectSchema.required({ project: true }),
 ]));
 
 export const getBoardSprintsInputSchema = getJiraInputBaseSchema.and(z.object({
@@ -183,9 +188,9 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
     return jiraUser;
 };
 
-export const getJiraProject = async ({ passwordEnv, usernameEnv, originEnv, project }: GetProjectWorklogInput & { project: string }) => {
+export const getJiraProject = async ({ passwordEnv, usernameEnv, originEnv, project }: GetProjectWorklogInput )=> {
     const { data } = await externalAxios.get<Project>(
-        `${origin}/rest/api/2/project/${project}`,
+        `${originEnv}/rest/api/2/project/${project}`,
         {
             headers: getBasicAuthHeader({ passwordEnv, usernameEnv }),
             maxRedirects: 0,
@@ -303,15 +308,16 @@ const getJiraSprintPage = async (
     input: GetBoardSprintsInput,
     startAt: Page['startAt'],
 ) => {
+    const { usernameEnv, passwordEnv, originEnv } = input;
     const { data } =  await externalAxios.get<SprintResponse>(
-        `${process.env[input.originEnv]}/rest/agile/1.0/board/${boardId}/sprint`,
+        `${originEnv}/rest/agile/1.0/board/${boardId}/sprint`,
         {
             params: {
                 ...(input?.state && { state: input.state }),
                 maxResults: 50, // 50 is max value
                 startAt,
             },
-            headers: getBasicAuthHeader(input),
+            headers: getBasicAuthHeader({ usernameEnv, passwordEnv }),
             maxRedirects: 0,
         },
     );

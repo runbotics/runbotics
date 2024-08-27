@@ -26,15 +26,12 @@ import { OneDriveService } from '../one-drive';
 import { hasWorkbookSessionId, hasWorksheetName } from './excel.utils';
 import { CloudExcelErrorMessage } from '../automation/excel/cloud-excel.error-message';
 import { MicrosoftAuthService } from '../microsoft-auth.service';
-import { MicrosoftAuth } from '#config';
 import { MicrosoftCredential } from '../common.types';
-// import { MicrosoftAuthService } from '../microsoft-auth.service';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 @Injectable()
 export class ExcelService {
-    private readonly logger = new RunboticsLogger(ExcelService.name);
     private microsoftGraphService: MicrosoftGraphService = null;
     private sharePointService: SharePointService = null;
     private oneDriveService: OneDriveService = null;
