@@ -25,6 +25,7 @@ import { dateTransformer, numberTransformer } from '../database.utils';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-database/notification-process/notification-process.entity';
+import { Credential } from '#/scheduler-database/credential/credential.entity';
 
 @Entity({ name: 'process', synchronize: false })
 export class ProcessEntity implements IProcess {
@@ -101,4 +102,13 @@ export class ProcessEntity implements IProcess {
     @OneToMany(() => NotificationProcessEntity, (notificationProcess) => notificationProcess.process)
     @JoinColumn({ name: 'process_id', referencedColumnName: 'id' })
     notifications: NotificationProcess[];
+
+    @ManyToMany(() => Credential)
+    @JoinTable({
+        schema: 'scheduler',
+        name: 'process_credential',
+        joinColumn: { name: 'process_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'credential_id', referencedColumnName: 'id' },
+    })
+    credentials: Credential[];
 }

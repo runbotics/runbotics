@@ -11,6 +11,8 @@ import { TagModule } from './tags/tag.module';
 import { CredentialModule } from './credential/credential.module';
 import { CredentialCollectionModule } from '#/scheduler-database/credential-collection/credential-collection.module';
 import { CredentialCollectionUserModule } from './credential-collection-user/credential-collection-user.module';
+import { FeatureKeyModule } from './feature-key/feature-key.module';
+import { AuthorityModule } from './authority/authority.module';
 
 @Module({
     imports: [
@@ -26,6 +28,8 @@ import { CredentialCollectionUserModule } from './credential-collection-user/cre
         CredentialCollectionModule,
         CredentialCollectionUserModule,
         CredentialModule,
+        FeatureKeyModule,
+        AuthorityModule,
     ],
     exports: [],
 })

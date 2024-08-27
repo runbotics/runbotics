@@ -4,7 +4,8 @@ import { Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { IProcess } from 'runbotics-common';
 
-const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor', 'notifications.user.authorities'];
+const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor', 'notifications.user.authorities', 'credentials.attributes'];
+
 
 interface PartialUpdateProcess extends IProcess {
     id: IProcess['id'];

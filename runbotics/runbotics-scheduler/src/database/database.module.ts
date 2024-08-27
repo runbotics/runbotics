@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServerConfigService } from '#/config/server-config';
 import { ConfigModule } from '#/config/config.module';
-import { AuthorityModule } from './authority/authority.module';
 import { UserModule } from './user/user.module';
 import { BotModule } from './bot/bot.module';
 import { ProcessModule } from './process/process.module';
@@ -11,7 +10,6 @@ import { ProcessInstanceEventModule } from './process-instance-event/process-ins
 import { ScheduleProcessModule } from './schedule-process/schedule-process.module';
 import { BotCollectionModule } from './bot-collection/bot-collection.module';
 import { BotSystemModule } from './bot-system/bot-system.module';
-import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
@@ -37,8 +35,6 @@ import { GuestModule } from './guest/guest.module';
             },
             inject: [ServerConfigService]
         }),
-        AuthorityModule,
-        FeatureKeyModule,
         UserModule,
         BotModule,
         BotCollectionModule,
@@ -50,11 +46,9 @@ import { GuestModule } from './guest/guest.module';
         ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
-        TypeOrmModule
+        TypeOrmModule,
     ],
     exports: [
-        AuthorityModule,
-        FeatureKeyModule,
         UserModule,
         BotModule,
         BotCollectionModule,
