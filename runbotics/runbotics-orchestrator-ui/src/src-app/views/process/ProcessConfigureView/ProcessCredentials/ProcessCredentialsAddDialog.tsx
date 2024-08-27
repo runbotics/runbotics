@@ -1,9 +1,13 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 import { Dialog, DialogActions, DialogTitle, Typography } from '@mui/material';
 
 import CredentialSelectSet from '#src-app/components/CredentialSelectSet';
 import If from '#src-app/components/utils/If';
+import { translate } from '#src-app/hooks/useTranslations';
+import { useDispatch, useSelector } from '#src-app/store';
+import { Credential } from '#src-app/store/slices/Credentials';
+import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials/Credentials.slice';
 
 import { AddDialogContent, StyledButton } from './ProcessCredentials.styles';
 
@@ -16,25 +20,47 @@ interface ProcessCredentialsAddDialogProps {
 export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAddDialogProps> = ({
     isOpen, handleClose
 }) => {
-    const x = 1;
+    const dispatch = useDispatch();
+    const { all } = useSelector(credentialsSelector);
+    const [pickedCredential, setPickedCredential] = useState<Credential | undefined>();
+
+    const handleCredentialChange = (credential: Credential | undefined) => {
+        setPickedCredential(credential);
+    };
+
+    const handleCredentialAdd = () => {
+        // here api
+    };
+
+    useEffect(() => {
+        dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
+    }, []);
 
     return (
         <If condition={isOpen}>
             <Dialog open fullWidth>
                 <DialogTitle>
                     <Typography variant='h5'>
-                        Add new credential for action
+                        {translate('Process.Configure.Credentials.Modal.Add.Title')}
                     </Typography>
                 </DialogTitle>
                 <AddDialogContent>
                     <CredentialSelectSet
-                        authors={[]}
-                        credentials={[]}
+                        credentials={all ?? []}
+                        handleCredentialChange={handleCredentialChange}
                     />
                 </AddDialogContent>
                 <DialogActions>
-                    <StyledButton onClick={handleClose}>Close</StyledButton>
-                    <StyledButton variant='contained'>Add</StyledButton>
+                    <StyledButton onClick={handleClose}>
+                        {translate('Common.Close')}
+                    </StyledButton>
+                    <StyledButton
+                        variant='contained'
+                        onClick={handleCredentialAdd}
+                        disabled={!pickedCredential}
+                    >
+                        {translate('Process.Configure.Credentials.Modal.Add.Button.Add')}
+                    </StyledButton>
                 </DialogActions>
             </Dialog>
         </If>

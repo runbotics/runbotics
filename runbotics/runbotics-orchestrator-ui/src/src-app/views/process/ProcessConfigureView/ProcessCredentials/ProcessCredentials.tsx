@@ -127,6 +127,7 @@ const ProcessCredentials = () => {
                                             credentialName={cred.name}
                                             credentialId={cred.id}
                                             collectionName={cred.collectionName}
+                                            authorName={cred.authorName}
                                             handleDeleteDialog={handleDeleteDialogOpen}
                                         />
                                     ))}

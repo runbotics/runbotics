@@ -13,12 +13,13 @@ interface ActionCredentialProps {
     isPrimary: boolean;
     collectionName: string;
     credentialName: string;
+    authorName: string;
     credentialId: string;
     handleDeleteDialog: (credentialId: string) => void;
 };
 
 const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
-    isPrimary, collectionName, credentialName, credentialId, handleDeleteDialog
+    isPrimary, collectionName, credentialName, authorName, credentialId, handleDeleteDialog
 }) => {
     const { translate } = useTranslations();
 
@@ -39,7 +40,11 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                 <CredentialDetails>
                     <List sx={{ display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
                         <ListItem>
-                            <Typography>{collectionName}</Typography>
+                            <Typography
+                                sx={{ wordBreak: 'break-word' }}
+                            >
+                                {collectionName}
+                            </Typography>
                         </ListItem>
                         <Divider component='li' variant='middle'/>
                         <ListItem>
@@ -47,8 +52,17 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                                 fontSize={18}
                                 fontWeight={500}
                                 textTransform='uppercase'
+                                sx={{ wordBreak: 'break-word' }}
                             >
                                 {credentialName}
+                            </Typography>
+                        </ListItem>
+                        <ListItem sx={{ paddingTop: 0 }}>
+                            <Typography
+                                fontSize={12}
+                                color='gray'
+                            >
+                                {authorName}
                             </Typography>
                         </ListItem>
                     </List>

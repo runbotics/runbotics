@@ -23,7 +23,6 @@ export const CredentialTile = styled.div<{ $isPrimary: boolean; }>(({ theme, $is
     borderRadius: '10px',
     backgroundColor: $isPrimary ? theme.palette.grey[300]: theme.palette.grey[200],
     alignItems: 'center',
-    height: '100px',
 }));
 
 export const CredentialSwipe = styled.div`

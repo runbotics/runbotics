@@ -23,6 +23,10 @@
     "Component.ProcessQueueDetails.Processing": "Waiting for the process to start, searching for a bot.",
     "Component.ProcessQueueDetails.Queue": "Waiting for processing. Your process is {{ queuePosition }} in queue.",
 
+    "Component.CredentialSelectSet.CollectionAuthor": "Collection author",
+    "Component.CredentialSelectSet.CollectionName": "Collection name",
+    "Component.CredentialSelectSet.CredentialName": "Credential name",
+
     "Component.Tile.Avatar.AriaLabel": "recipe",
     "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Process triggerable icon",
     "Component.Tile.Process.Header.Alt.PlayIcon": "Play icon",

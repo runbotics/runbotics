@@ -34,10 +34,10 @@ export const ProcessCredentialsDeleteDialog: FunctionComponent<ProcessCredential
                 </DeleteDialogContent>
                 <DialogActions>
                     <StyledButton onClick={handleClose}>
-                        {translate('Process.Configure.Credentials.Modal.Delete.Button.Close')}
+                        {translate('Common.Close')}
                     </StyledButton>
                     <StyledButton onClick={handleDelete} variant='contained'>
-                        {translate('Process.Configure.Credentials.Modal.Delete.Button.Delete')}
+                        {translate('Common.Delete')}
                     </StyledButton>
                 </DialogActions>
             </Dialog>
