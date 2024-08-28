@@ -1,6 +1,7 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
 import { Dialog, DialogActions, DialogTitle, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
 import CredentialSelectSet from '#src-app/components/CredentialSelectSet';
 import If from '#src-app/components/utils/If';
@@ -15,11 +16,13 @@ import { AddDialogContent, StyledButton } from './ProcessCredentials.styles';
 interface ProcessCredentialsAddDialogProps {
     isOpen: boolean;
     handleClose: () => void;
+    templateName: string;
 }
 
 export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAddDialogProps> = ({
-    isOpen, handleClose
+    isOpen, handleClose, templateName
 }) => {
+    const { id: processId } = useRouter().query;
     const dispatch = useDispatch();
     const { all } = useSelector(credentialsSelector);
     const [pickedCredential, setPickedCredential] = useState<Credential | undefined>();
@@ -33,8 +36,12 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
     };
 
     useEffect(() => {
-        dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
-    }, []);
+        if (isOpen) {
+            dispatch(credentialsActions.getAllForProcessAndTemplate({
+                pageParams: { templateName, processId }
+            }));
+        }
+    }, [isOpen]);
 
     return (
         <If condition={isOpen}>

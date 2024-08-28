@@ -44,6 +44,7 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
                 size='small'
                 value={author}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => { setAuthor(e.target.value); }}
+                disabled={!credentials.length}
             >
                 {_.uniqBy(credentials, credential => credential.createdBy.login)
                     .map(credential => (

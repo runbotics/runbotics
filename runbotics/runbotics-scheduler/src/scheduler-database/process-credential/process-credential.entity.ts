@@ -11,6 +11,12 @@ export class ProcessCredential {
     @Column()
     order: number;
 
+    @Column({ name: 'credential_id' })
+    credentialId: string;
+
+    @Column({ name: 'process_id' })
+    processId: number;
+
     @ManyToOne(() => ProcessEntity, { nullable: false })
     @JoinColumn({ name: 'process_id' })
     process: ProcessEntity;

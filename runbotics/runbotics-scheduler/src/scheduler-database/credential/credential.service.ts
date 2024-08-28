@@ -10,6 +10,7 @@ import { SecretService } from '../secret/secret.service';
 import { Secret } from '../secret/secret.entity';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 import { CredentialCollectionService } from '../credential-collection/credential-collection.service';
+import { ProcessCredential } from '../process-credential/process-credential.entity';
 
 const relations = ['attributes'];
 
@@ -93,6 +94,42 @@ export class CredentialService {
 
     if (!credentials.some((credential) => Boolean(credential))) {
       return [];
+    }
+
+    return credentials;
+  }
+
+  async findAllAccessibleByTemplateAndProcess(templateName: string, processId: string, user: IUser) {
+    const accessibleCollections = await this.collectionService.findAllAccessibleForCredentials(user);
+
+    const credentials = await this.credentialRepo
+      .createQueryBuilder('credentials')
+      .innerJoinAndSelect('credentials.createdBy', 'user')
+      .innerJoinAndSelect(
+        'credentials.collection', 'collection',
+        'collection.id IN (:...accessible)', { accessible: accessibleCollections.map(col=>col.id) }
+      ).innerJoinAndSelect(
+        'credentials.template', 'template',
+        'template.name = :templateName', { templateName }
+      ).leftJoin(
+        ProcessCredential, 'pc', 'pc.credentialId = credentials.id',
+      ).where(
+        'pc.processId != :processId OR pc.processId IS NULL',
+        { processId }
+      ).getMany().then(credentials => credentials.map(credential => ({
+        ...credential,
+        createdBy: {
+          id: credential.createdBy.id,
+          login: credential.createdBy.login,
+        },
+        collection: {
+          id: credential.collection.id,
+          name: credential.collection.name,
+        },
+      })));
+
+    if (!credentials.length) {
+      throw new NotFoundException('Could not find any credentials in any of the accessible collections');
     }
 
     return credentials;

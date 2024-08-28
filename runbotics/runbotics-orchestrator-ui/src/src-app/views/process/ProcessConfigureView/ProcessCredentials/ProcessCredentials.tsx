@@ -39,9 +39,10 @@ const ProcessCredentials = () => {
     );
 
     const [columns, setColumns] = useState<ActionSortedColumns>([]);
-    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const [currentCredentialId, setCurrentCredentialId] = useState(null);
+    const [currentCredentialId, setCurrentCredentialId] = useState<string>(null);
+    const [currentActionName, setCurrentActionName] = useState<string>(null);
 
     const { width: windowWidth } = useWindowSize();
     const rowCount = Math.max(Math.ceil((Math.abs(windowWidth - MARGIN_LIMIT)) / ACTION_MIN_WIDTH), 1);
@@ -66,12 +67,13 @@ const ProcessCredentials = () => {
         setIsDeleteDialogOpen(false);
     };
 
-    const handleEditDialogOpen = () => {
-        setIsEditDialogOpen(true);
+    const handleAddDialogOpen = (actionName: string) => {
+        setCurrentActionName(actionName);
+        setIsAddDialogOpen(true);
     };
 
-    const handleEditDialogClose = () => {
-        setIsEditDialogOpen(false);
+    const handleAddDialogClose = () => {
+        setIsAddDialogOpen(false);
     };
 
     const handleDeleteDialogOpen = (credentialId: string) => {
@@ -102,8 +104,9 @@ const ProcessCredentials = () => {
                 handleDelete={handleDelete}
             />
             <ProcessCredentialsAddDialog
-                isOpen={isEditDialogOpen}
-                handleClose={handleEditDialogClose}
+                isOpen={isAddDialogOpen}
+                handleClose={handleAddDialogClose}
+                templateName={currentActionName}
             />
             <Header>
                 <Image src={LockIcon} alt='lock icon' style={{ filter: 'brightness(0) saturate(100%)' }}/>
@@ -131,7 +134,9 @@ const ProcessCredentials = () => {
                                             handleDeleteDialog={handleDeleteDialogOpen}
                                         />
                                     ))}
-                                    <ActionCredentialAdd handleClick={handleEditDialogOpen}/>
+                                    <ActionCredentialAdd
+                                        handleClick={() => handleAddDialogOpen(actionType.name)}
+                                    />
                                 </ActionBoxContent>
                             </ActionBox>
                         ))}
