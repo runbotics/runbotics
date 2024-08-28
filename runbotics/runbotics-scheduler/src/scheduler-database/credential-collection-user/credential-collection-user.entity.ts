@@ -21,14 +21,14 @@ export class CredentialCollectionUser {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => CredentialCollection, (collection) => collection, { onDelete: 'CASCADE' })
+    @ManyToOne(() => CredentialCollection, (collection) => collection.credentialCollectionUser, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'collection_id' })
     credentialCollection: CredentialCollection;
 
     @Column({ name: 'collection_id', type: 'uuid' })
     credentialCollectionId: string;
 
-    @ManyToOne(() => UserEntity, (user) => user, { onDelete: 'SET NULL' })
+    @ManyToOne(() => UserEntity, (user) => user.credentialCollectionUser, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_id' })
     user: UserEntity;
 

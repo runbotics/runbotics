@@ -36,11 +36,11 @@ export class UserService {
         return this.userRepository.findOne({ where: { login }, relations });
     }
 
-    findAllByLogins(logins: string[], tenantId: string) {
+    findAllByEmails(emails: string[], tenantId: string) {
         return this.userRepository.find({
             where: {
                 tenantId,
-                login: In(logins),
+                email: In(emails),
             },
         });
     }

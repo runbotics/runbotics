@@ -5,12 +5,12 @@ import { PrivilegeType } from '#/scheduler-database/credential-collection-user/c
 export const updateCredentialCollectionSchema = z
     .object({
         name: z.string().optional(),
-        description: z.string().optional(),
+        description: z.string().optional().nullable(),
         accessType: z.nativeEnum(AccessType).optional(),
         color: z.nativeEnum(Color).optional(),
         sharedWith: z
             .object({
-                login: z.string(),
+                email: z.string(),
                 privilegeType: z.nativeEnum(PrivilegeType),
             })
             .array()
