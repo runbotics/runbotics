@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateCredentialCollectionDto } from './dto/create-credential-collection.dto';
 import { UpdateCredentialCollectionDto } from './dto/update-credential-collection.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -105,10 +105,15 @@ export class CredentialCollectionService {
                 'credentialCollectionEntity.credentialCollectionUser',
                 'credentialCollectionUser',
                 `
-                    credentialCollectionEntity.tenantId = '${user.tenantId}' AND
-                    credentialCollectionUser.user.id = '${user.id}' AND
-                    credentialCollectionUser.privilegeType = '${PrivilegeType.WRITE}'
+                    credentialCollectionEntity.tenantId = :tenantId AND
+                    credentialCollectionUser.user.id = :userId AND
+                    credentialCollectionUser.privilegeType = :privilegeType
                 `,
+                {
+                    tenantId: user.tenantId,
+                    userId: user.id,
+                    privilegeType: PrivilegeType.WRITE,
+                }
             )
             .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
             .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
@@ -123,11 +128,17 @@ export class CredentialCollectionService {
                 'credentialCollectionEntity.credentialCollectionUser',
                 'credentialCollectionUser',
                 `
-                    credentialCollectionEntity.id = '${id}' AND
-                    credentialCollectionEntity.tenantId = '${user.tenantId}' AND
-                    credentialCollectionUser.user.id = '${user.id}' AND
-                    credentialCollectionUser.privilegeType = '${PrivilegeType.WRITE}'
+                    credentialCollectionEntity.id = :id AND
+                    credentialCollectionEntity.tenantId = :tenantId AND
+                    credentialCollectionUser.user.id = :userId AND
+                    credentialCollectionUser.privilegeType = :privilegeType
                 `,
+                {
+                    id,
+                    tenantId: user.tenantId,
+                    userId: user.id,
+                    privilegeType: PrivilegeType.WRITE,
+                }
             )
             .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
             .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
@@ -193,21 +204,13 @@ export class CredentialCollectionService {
                     tenantId
                 );
 
-            await Promise
-                .all(credentialCollectionUserArray.map((ccu =>
-                    this.credentialCollectionUserRepository.remove(ccu)
-                )))
-                .catch(error => {
-                    throw new InternalServerErrorException(error);
-                });
+            await Promise.all(credentialCollectionUserArray.map((ccu =>
+                this.credentialCollectionUserRepository.remove(ccu)
+            )));
 
-            await Promise
-                .all(credentialCollectionUserArrayToSave.map(ccu =>
-                    this.credentialCollectionUserRepository.save(ccu)
-                ))
-                .catch(error => {
-                    throw new InternalServerErrorException(error);
-                });
+            await Promise.all(credentialCollectionUserArrayToSave.map(ccu =>
+                this.credentialCollectionUserRepository.save(ccu)
+            ));
         }
 
         await this.credentialCollectionRepository
