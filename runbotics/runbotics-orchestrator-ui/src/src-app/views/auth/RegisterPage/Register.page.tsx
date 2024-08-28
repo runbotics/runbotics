@@ -105,15 +105,12 @@ const RegisterPage: FC = () => {
             .unwrap()
             .catch((error) => {
                 if (error.statusCode === 400) {
-                    router.replace('/404');
+                    enqueueSnackbar(error.message, { variant: 'error' });
                 } else {
-                    enqueueSnackbar(
-                        translate('Register.Error.UnexpectedError'),
-                        { variant: 'error' }
-                    );
+                    enqueueSnackbar(translate('Register.Error.UnexpectedError'), { variant: 'error' });
                 }
             });
-    }, [inviteCodeURL, dispatch, router, enqueueSnackbar, translate]);
+    }, [inviteCodeURL]);
 
     useEffect(() => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });

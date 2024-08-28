@@ -98,11 +98,9 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
         // GET TENANT NAME BY INVITE CODE
         .addCase(fetchTenantNameByInviteCode.fulfilled, (state, action) => {
             state.invitingTenant = action.payload.tenantName;
-            state.loading = false;
         })
         .addCase(fetchTenantNameByInviteCode.rejected, (state) => {
             state.invitingTenant = null;
-            state.loading = false;
         });
 };
 
