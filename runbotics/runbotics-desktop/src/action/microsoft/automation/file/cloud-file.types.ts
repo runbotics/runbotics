@@ -7,7 +7,8 @@ export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>
     | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>
     | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>
-    | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>;
+    | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>
+    | DesktopRunRequest<CloudFileAction.GET_SHAREPOINT_LIST_ITEMS, SharepointGetListItems>;
 
 export interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
@@ -74,3 +75,10 @@ export interface OneDriveCreateShareLink {
 
 export type SharePointCreateShareLink = SharePointCommon & Omit<OneDriveCreateShareLink, 'platform'>;
 export type CloudFileCreateShareLink = OneDriveCreateShareLink | SharePointCreateShareLink;
+
+// GET SHAREPOINT LIST ITEMS
+export interface SharepointGetListItems {
+    platform: MicrosoftPlatform.SharePoint;
+    listName: string;
+    siteRelativePath: string;
+}

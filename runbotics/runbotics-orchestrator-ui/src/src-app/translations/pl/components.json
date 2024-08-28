@@ -89,6 +89,9 @@
     "Component.HistoryTable.Rows.Initiator.Api": "API({{ login }})",
     "Component.HistoryTable.Rows.Initiator.Email": "Email({{ email }})",
 
+    "Component.HistoryTable.Special.LoadMore": "Załaduj kolejne {{ pageSize }} (pozostało {{ count }})",
+    "Component.HistoryTable.Special.LoadAll": "Załaduj wszystkie ({{ total }} łącznie)",
+
     "Component.HistoryTable.Step.StartEvent": "Rozpoczęto zdarzenie",
     "Component.HistoryTable.Step.EndEvent": "Zakończono zdarzenie",
 
@@ -183,5 +186,9 @@
 
     "Component.NotificationTable.View.Header": "Subskrybenci",
     "Component.NotificationTable.View.SearchBarPlaceholder": "Szukaj",
-    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów"
+    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów",
+
+    "Component.InviteCodeButton.Generate": "Wygeneruj link zaproszenia",
+    "Component.InviteCodeButton.Copy": "Kliknij aby skopiować link zaproszenia",
+    "Component.InviteCodeButton.Copied": "Link skopiowany!"
 }

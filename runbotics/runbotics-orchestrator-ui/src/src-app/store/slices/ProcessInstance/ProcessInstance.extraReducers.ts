@@ -84,33 +84,36 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
 
         })
 
-        // GET sub processes
+        // GET subprocesses
         .addCase(getSubprocesses.pending, (state, action) => {
             updateProcessInstanceProps(
-                state, 
-                { 
-                    id: action.meta.arg.processInstanceId, 
+                state,
+                {
+                    id: action.meta.arg.processInstanceId,
                     isLoadingSubprocesses: true,
-                }
+                },
             );
         })
         .addCase(getSubprocesses.fulfilled, (state, action) => {
             updateProcessInstanceProps(
-                state, 
-                { 
-                    id: action.meta.arg.processInstanceId, 
-                    isLoadingSubprocesses: false, 
-                    subprocesses: action.payload 
-                }
+                state,
+                {
+                    id: action.meta.arg.processInstanceId,
+                    isLoadingSubprocesses: false,
+                    subprocesses: action.payload.content,
+                    subprocessesCount: action.payload.totalElements,
+                },
+                action.meta.arg?.page
             );
         })
         .addCase(getSubprocesses.rejected, (state, action) => {
             updateProcessInstanceProps(
-                state, 
-                { 
-                    id: action.meta.arg.processInstanceId, 
-                    isLoadingSubprocesses: false, 
-                    hasSubprocesses: false 
+                state,
+                {
+                    id: action.meta.arg.processInstanceId,
+                    isLoadingSubprocesses: false,
+                    hasSubprocesses: false,
+                    subprocessesCount: 0,
                 }
             );
         })

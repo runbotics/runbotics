@@ -17,9 +17,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
+
 import useProcessInstanceColumns from './HistoryTable.columns';
 import { Wrapper } from './HistoryTable.styles';
-import { HistoryTableProps, PanelInfoState } from './HistoryTable.types';
+import { GetSubprocessesPageParams, GetSubprocessesResponse, HistoryTableProps, PanelInfoState, ProcessInstanceRow } from './HistoryTable.types';
 import { useDispatch, useSelector } from '../../../store';
 import {
     processInstanceActions,
@@ -156,8 +157,24 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         setInstanceId(null);
         setPageSize(newPageSize);
     };
-    
-    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess);
+
+    const handleNoSubprocessesFound = (currRow: ProcessInstanceRow) => {
+        enqueueSnackbar(
+            translate('History.Table.Error.SubprocessesNotFound'),
+            { variant: 'error' },
+        );
+        dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
+    };
+
+    const getSubprocessesPage = ({ currRow, pageNum, size }: GetSubprocessesPageParams) => {
+        dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id, page: pageNum, size }))
+            .then((response) => {
+                if((response as GetSubprocessesResponse)?.payload?.content?.length === 0) handleNoSubprocessesFound(currRow);
+            })
+            .catch(() => { handleNoSubprocessesFound(currRow); });
+    };
+
+    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess, getSubprocessesPage);
 
     return (
         <Wrapper>
@@ -174,9 +191,10 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                         pageSize={pageSize}
                         setPageSize={handleSetPageSize}
                         loading={loadingPage}
-                        subRowProperty='subprocesses'      
+                        subRowProperty='subprocesses'
                         singleSelect={hasProcessInstanceEventReadAccess}
                         instanceId={instanceId}
+                        getSubprocessesPage={getSubprocessesPage}
                     />
                 </Box>
                 <If condition={panelInfoState.show && hasProcessInstanceEventReadAccess}>

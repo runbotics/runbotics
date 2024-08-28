@@ -176,7 +176,7 @@ const useOptions = () => {
         label: variable.name,
         value: variable.name,
         group: translate(
-            'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Utils'
+            'Process.Details.Modeler.Widgets.ElementAwareAutocomplete.Groups.Variables'
         ),
     }));
 
@@ -217,17 +217,17 @@ const useOptions = () => {
 
         const loopVariables = groupedLoopVariables.map((option) => ({
             ...option,
-            label: `\${${option.value}}`,
-            value: `\${${option.value}}`,
+            label: `#{${option.value}}`,
+            value: `#{${option.value}}`,
             name: option.value,
         }));
 
         result = [
             ...dollarVariables,
             ...hashVariables,
+            ...loopVariables,
             ...outputVariables,
             ...result,
-            ...loopVariables,
         ];
 
         return reduceList(result);

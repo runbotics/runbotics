@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 
 import { IScheduleProcess } from '#src-app/types/model/schedule-process.model';
+import axios from '#src-app/utils/axios';
 
 export const scheduleProcess = createAsyncThunk<IScheduleProcess, IScheduleProcess>(
     'scheduleProcess/scheduleProcess',

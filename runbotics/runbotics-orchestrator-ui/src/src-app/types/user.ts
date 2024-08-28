@@ -1,5 +1,5 @@
 import { Dictionary } from '@reduxjs/toolkit';
-import { FeatureKey, IAuthority, IUser } from 'runbotics-common';
+import { FeatureKey, IAuthority, IUser, Tenant } from 'runbotics-common';
 
 import { Language } from '#src-app/translations/translations';
 
@@ -18,5 +18,6 @@ export interface User extends IUser {
     authoritiesById?: Dictionary<any>;
     createdBy?: string;
     lastModifiedBy?: string;
+    tenant: Tenant;
     [key: string]: any;
 }

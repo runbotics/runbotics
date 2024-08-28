@@ -5,10 +5,10 @@ import { SxProps, Theme } from '@mui/system';
 import { Row } from 'react-table';
 
 import { InstanceExtendedWithSubprocesses, ProcessInstanceRequestCriteria } from '#src-app/store/slices/ProcessInstance';
-
-export interface getSubprocessesResponse { 
+import { Page } from '#src-app/utils/types/page';
+export interface GetSubprocessesResponse {
     type: string;
-    payload: InstanceExtendedWithSubprocesses[];
+    payload: Page<InstanceExtendedWithSubprocesses[]>
     meta: {
         arg: {
             processInstanceId: string;
@@ -35,4 +35,10 @@ export interface ProcessInstanceRow extends Omit<Row, 'subRows' | 'isExpanded'>{
     original: InstanceExtendedWithSubprocesses;
     subRows?: ProcessInstanceRow[];
     isExpanded?: boolean;
+}
+
+export interface GetSubprocessesPageParams {
+    currRow: ProcessInstanceRow;
+    pageNum: number;
+    size: number;
 }

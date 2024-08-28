@@ -62,7 +62,6 @@ public class ProcessInstance implements Serializable {
     private String step;
 
     @ManyToOne
-    @NotNull
     private User user;
 
     @ManyToOne(optional = false)

@@ -6,11 +6,11 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import {
     Box, Button, FormHelperText, Typography,
 } from '@mui/material';
-import Axios from 'axios';
 import clsx from 'clsx';
 import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
+import Axios from '#src-app/utils/axios';
 
 const PREFIX = 'InstallStep';
 
@@ -59,9 +59,9 @@ const InstallStep: FC<InstallStepProps> = ({
     useEffect(() => {
         const installBot = async () => {
             const installed = await isInstalled();
-            if (installed) 
+            if (installed)
             { onComplete(); }
-            
+
         };
         const interval = setInterval(() => {
             installBot();
@@ -76,11 +76,11 @@ const InstallStep: FC<InstallStepProps> = ({
         try {
             setSubmitting(true);
             const installed = await isInstalled();
-            if (installed) 
+            if (installed)
             { onComplete(); }
-            else 
+            else
             { setError(translate('Install.Errors.NotInstalled')); }
-            
+
         } catch (err) {
             setError(err.message);
         } finally {

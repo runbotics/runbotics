@@ -1,7 +1,5 @@
-import { IUser } from './user.model';
+import { IUser, UserDTO } from './user.model';
 import { VariableType } from '../../views/variable/Variable.types';
-
-export type UserDTO = Pick<IUser, 'id' | 'login'>;
 
 export interface IGlobalVariable {
     id?: number;

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { IBotCollection } from 'runbotics-common';
 
+import axios from '#src-app/utils/axios';
 import { IBotCollectionWithFilters } from '#src-app/views/bot/BotCollectionView/BotCollectionView.types';
 
 import { Page, PageRequestParams } from '../../../utils/types/page';

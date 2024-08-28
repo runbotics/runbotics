@@ -2,6 +2,7 @@ import englishTableListTranslations from '#src-app/translations/en/users/list/ta
 
 const tableListTranslations: typeof englishTableListTranslations = {
     'Users.List.Table.Columns.Email': 'Email',
+    'Users.List.Table.Columns.Tenant': 'Organizacja',
     'Users.List.Table.Columns.Roles': 'Role',
     'Users.List.Table.Columns.CreatedBy': 'Stworzony przez',
     'Users.List.Table.Columns.CreatedDate': 'Data utworzenia',
