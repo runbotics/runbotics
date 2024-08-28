@@ -78,7 +78,7 @@
     },
     "build": {
         "productName": "RunBotics",
-        "electronVersion": "19.1.9",
+        "electronVersion": "23.3.13",
         "appId": "com.runbotics.runbotics-desktop",
         "asar": true,
         "asarUnpack": [
@@ -137,7 +137,7 @@
         "cross-env": "^7.0.3",
         "vitest": "^0.29.8",
         "vite": "^4.2.1",
-        "electron-builder": "^24.6.4",
+        "electron-builder": "^24.13.3",
         "eslint": "^8.31.0",
         "ts-loader": "^9.4.2",
         "ts-node": "^10.9.1",
