@@ -11,7 +11,7 @@ export const createCredentialCollectionSchema = z
         color: z.nativeEnum(Color).optional(),
         sharedWith: z
             .object({
-                login: z.string(),
+                email: z.string(),
                 privilegeType: z.nativeEnum(PrivilegeType),
             })
             .array()

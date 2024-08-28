@@ -8,6 +8,8 @@ import {
     Delete,
     Request,
     UseInterceptors,
+    HttpCode,
+    HttpStatus,
 } from '@nestjs/common';
 import { CredentialCollectionService } from './credential-collection.service';
 import {
@@ -85,9 +87,12 @@ export class CredentialCollectionController {
     }
 
     @Delete(':id')
-    delete(@Param('id') id: string) {
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async delete(
+        @Param('id') id: string,
+        @User() user: IUser,
+    ) {
         this.logger.log(`Deleting credential collection with id (${id})`);
-
-        return this.credentialCollectionService.remove(id);
+        await this.credentialCollectionService.delete(id, user);
     }
 }
