@@ -4,12 +4,16 @@ import { ProcessCredential } from './process-credential.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessService } from '#/database/process/process.service';
+import { CreateProcessCredentialDto } from './dto/create-process-credential.dto';
+import { Credential } from '../credential/credential.entity';
 
 @Injectable()
 export class ProcessCredentialService {
     constructor(
         @InjectRepository(ProcessCredential)
         private readonly processCredentialRepository: Repository<ProcessCredential>,
+        @InjectRepository(Credential)
+        private readonly credentialRepository: Repository<Credential>,
         private readonly processService: ProcessService,
     ) {}
 
@@ -27,18 +31,71 @@ export class ProcessCredentialService {
         }).then(this.formatProcessCredentials);
     }
 
+    async create(processCredentialDto: CreateProcessCredentialDto, user: UserEntity) {
+        const process = await this.processService.checkAccessAndGetById(
+            +processCredentialDto.processId, user
+        );
+
+        const credential = await this.credentialRepository.findOneByOrFail({
+            id: processCredentialDto.credentialId, tenantId: user.tenantId
+        }).catch(() => {
+            throw new NotFoundException('Cannot find credential with provided id');
+        });
+
+        const lastCredentialOrder: number = await this.processCredentialRepository
+            .createQueryBuilder('pc')
+            .select('MAX(pc.order)', 'max')
+            .innerJoin('pc.credential', 'credential')
+            .innerJoin(
+                'credential.template', 'template',
+                'template.name = :templateName', { templateName: processCredentialDto.templateName }
+            ).where('pc.processId = :processId', { processId: processCredentialDto.processId })
+            .groupBy('template.name')
+            .getRawOne()
+            .then(res => res.max)
+            .catch(() => 0);
+
+        const newProcessCredential = new ProcessCredential();
+        newProcessCredential.process = process;
+        newProcessCredential.credential = credential;
+        newProcessCredential.order = lastCredentialOrder + 1;
+        await this.processCredentialRepository.insert(newProcessCredential);
+    }
+
     async delete(id: string, user: UserEntity) {
         const processCredential = await this.processCredentialRepository.findOneOrFail({
-            where: { id, credential: { tenantId: user.tenantId } }, relations: ['process']
+            where: { id, credential: { tenantId: user.tenantId } }, relations: ['process', 'credential.template']
         }).catch(() => {
             throw new NotFoundException();
         });
 
+        const processId = processCredential.process.id;
+
         await this.processService.checkAccessAndGetById(
-            processCredential.process.id, user
+            processId, user
         );
 
         await this.processCredentialRepository.delete(id);
+
+        const credentialsToUpdate = await this.processCredentialRepository
+            .createQueryBuilder('pc')
+            .select('pc.credentialId')
+            .innerJoin('pc.credential', 'credential')
+            .innerJoin('credential.template', 'template')
+            .where('pc.processId = :processId', { processId })
+            .andWhere('template.name = :templateName', { templateName: processCredential.credential.template.name })
+            .andWhere('pc.order > :removedOrder', { removedOrder: processCredential.order })
+            .getMany();
+
+        if (!credentialsToUpdate.length)
+            return;
+
+        await this.processCredentialRepository
+            .createQueryBuilder()
+            .update()
+            .set({ order: () => 'order - 1' })
+            .where('credentialId IN (:...credIds)', { credIds: credentialsToUpdate.map(cred => cred.credentialId) })
+            .execute();
     }
 
     private formatProcessCredentials(processCredentials: ProcessCredential[]) {

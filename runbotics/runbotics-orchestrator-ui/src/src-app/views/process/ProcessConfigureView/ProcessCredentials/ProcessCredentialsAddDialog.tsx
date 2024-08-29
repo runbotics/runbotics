@@ -2,6 +2,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 
 import { Dialog, DialogActions, DialogTitle, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 
 import CredentialSelectSet from '#src-app/components/CredentialSelectSet';
 import If from '#src-app/components/utils/If';
@@ -9,6 +10,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { Credential } from '#src-app/store/slices/Credentials';
 import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials/Credentials.slice';
+import { processActions } from '#src-app/store/slices/Process';
 
 import { AddDialogContent, StyledButton } from './ProcessCredentials.styles';
 
@@ -22,6 +24,7 @@ interface ProcessCredentialsAddDialogProps {
 export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAddDialogProps> = ({
     isOpen, handleClose, templateName
 }) => {
+    const { enqueueSnackbar } = useSnackbar();
     const { id: processId } = useRouter().query;
     const dispatch = useDispatch();
     const { all } = useSelector(credentialsSelector);
@@ -32,12 +35,33 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
     };
 
     const handleCredentialAdd = () => {
-        // here api
+        const payload = {
+            processId: String(processId),
+            credentialId: pickedCredential.id,
+            templateName
+        };
+
+        dispatch(processActions.createProcessCredential({ payload }))
+            .unwrap()
+            .then(() => {
+                enqueueSnackbar(
+                    'Successfully added credential to process',
+                    { variant: 'success' }
+                );
+                dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
+            })
+            .catch(() => {
+                enqueueSnackbar(
+                    'Error while adding credential',
+                    { variant: 'error' }
+                );
+            });
+        handleClose();
     };
 
     useEffect(() => {
         if (isOpen) {
-            dispatch(credentialsActions.getAllForProcessAndTemplate({
+            dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant({
                 pageParams: { templateName, processId }
             }));
         }

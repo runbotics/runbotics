@@ -45,7 +45,8 @@ export const sortByColumns = (actions: ActionCredentials, rowCount: number): Act
         .reduce((acc, actionType) => {
             const minSize = Math.min(...acc.map(el => el.count));
             const minIndex = acc.findIndex(el => el.count === minSize);
-            acc[minIndex].actionCredentials.push({ name: actionType, credentials: actions[actionType] });
+            const orderedCredentials = actions[actionType].sort((a, b) => a.order - b.order);
+            acc[minIndex].actionCredentials.push({ name: actionType, credentials: orderedCredentials });
             acc[minIndex].count += actions[actionType].length + 1;
             return acc;
         }, _.range(rowCount).map(() => ({ count: 0, actionCredentials: [] })));

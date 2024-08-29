@@ -1,18 +1,18 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { CredentialsState } from './Credentials.state';
-import { getAllForProcessAndTemplate } from './Credentials.thunks';
+import { fetchAllCredentialsAccessibleInTenant } from './Credentials.thunks';
 
 const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<CredentialsState>) => {
     builder
-        .addCase(getAllForProcessAndTemplate.pending, (state) => {
+        .addCase(fetchAllCredentialsAccessibleInTenant.pending, (state) => {
             state.loading = true;
         })
-        .addCase(getAllForProcessAndTemplate.fulfilled, (state, action) => {
+        .addCase(fetchAllCredentialsAccessibleInTenant.fulfilled, (state, action) => {
             state.all = action.payload;
             state.loading = false;
         })
-        .addCase(getAllForProcessAndTemplate.rejected, (state) => {
+        .addCase(fetchAllCredentialsAccessibleInTenant.rejected, (state) => {
             state.all = [];
             state.loading = false;
         });
