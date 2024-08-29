@@ -98,6 +98,8 @@ export class Expressions {
                 const trimmedArg = arg.trim();
                 if (jexlServicePattern.test(trimmedArg)) {
                     return Expressions.resolveExpression(trimmedArg, context, expressionFnContext);
+                } else if (trimmedArg === 'iterator') {
+                    return context.environment.variables.content.index;
                 } else if (Expressions.isVariableArgument(trimmedArg)) {
                     return 'environment.variables.' + trimmedArg;
                 }
@@ -158,6 +160,10 @@ export class Expressions {
             const jexlRegExp = new RegExp(jexlPattern, 'g');
             const property = templatedString.replace(
                 jexlRegExp, (expressionMatch, innerProperty) => {
+                    if (innerProperty === "iterator") {
+                        return jexlContext.index;
+                    }
+
                     const evaluatedProperty = Jexl.evalSync(innerProperty, jexlContext);
                     const isPropertyCollection = this.checkIsCollection(evaluatedProperty);
 
@@ -201,8 +207,6 @@ export class Expressions {
                 return false;
             } else if (innerProperty === "null") {
                 return null;
-            } else if (innerProperty === "iterator") {
-                return context.environment.variables.content.index;
             } else {
                 const n = Number(innerProperty);
                 if (!isNaN(n)) return n;

@@ -1,10 +1,10 @@
 import { IAuthority, IUser } from 'runbotics-common';
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
-import { AuthorityEntity } from '../authority/authority.entity';
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
 import { CredentialCollectionUser } from '#/scheduler-database/credential-collection-user/credential-collection-user.entity';
+import { Authority } from '#/scheduler-database/authority/authority.entity';
 @Entity({ name: 'jhi_user', synchronize: false })
 export class UserEntity implements IUser {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
@@ -55,7 +55,7 @@ export class UserEntity implements IUser {
     @Column({ name: 'last_modified_date', transformer: dateTransformer, type: 'varchar'  })
         lastModifiedDate: string;
 
-    @ManyToMany(() => AuthorityEntity)
+    @ManyToMany(() => Authority)
     @JoinTable({
         name: 'jhi_user_authority',
         joinColumn: { name: 'user_id', referencedColumnName: 'id' },
@@ -78,7 +78,7 @@ export class UserEntity implements IUser {
     @OneToMany(
         () => CredentialCollectionUser,
         (credentialCollectionUser) =>
-            credentialCollectionUser.userId,
+            credentialCollectionUser.user,
     )
     credentialCollectionUser: CredentialCollectionUser[];
 }

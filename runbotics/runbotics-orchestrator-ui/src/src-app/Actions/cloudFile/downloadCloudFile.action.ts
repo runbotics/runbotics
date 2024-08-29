@@ -1,6 +1,6 @@
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
-import { listNameUI, siteNameUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
+import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -38,9 +38,9 @@ export const downloadCloudFileAction: IBpmnAction = {
                                         platform: {
                                             enum: [MicrosoftPlatform.SharePoint],
                                         },
-                                        siteName: {
+                                        siteRelativePath: {
                                             title: translate(
-                                                'Process.Details.Modeler.Actions.Microsoft.SiteName',
+                                                'Process.Details.Modeler.Actions.Microsoft.SiteRelativePath',
                                             ),
                                             type: 'string',
                                         },
@@ -63,7 +63,7 @@ export const downloadCloudFileAction: IBpmnAction = {
                                             type: 'string',
                                         },
                                     },
-                                    required: ['siteName', 'listName', 'filePath'],
+                                    required: ['siteRelativePath', 'listName', 'filePath'],
                                 },
                                 {
                                     properties: {
@@ -103,7 +103,7 @@ export const downloadCloudFileAction: IBpmnAction = {
         },
         uiSchema: {
             input: {
-                siteName: siteNameUI,
+                siteRelativePath: siteRelativePathUI,
                 listName: listNameUI,
             },
             output: {
@@ -116,7 +116,7 @@ export const downloadCloudFileAction: IBpmnAction = {
         },
         formData: {
             input: {
-                siteName: undefined,
+                siteRelativePath: undefined,
                 listName: undefined,
                 filePath: undefined,
                 localDirectory: undefined,

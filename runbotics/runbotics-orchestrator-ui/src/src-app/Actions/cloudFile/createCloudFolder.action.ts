@@ -1,6 +1,6 @@
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 
-import { listNameUI, siteNameUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
+import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -32,9 +32,9 @@ export const createCloudFolderAction: IBpmnAction = {
                                         platform: {
                                             enum: [MicrosoftPlatform.SharePoint],
                                         },
-                                        siteName: {
+                                        siteRelativePath: {
                                             title: translate(
-                                                'Process.Details.Modeler.Actions.Microsoft.SiteName',
+                                                'Process.Details.Modeler.Actions.Microsoft.SiteRelativePath',
                                             ),
                                             type: 'string',
                                         },
@@ -57,7 +57,7 @@ export const createCloudFolderAction: IBpmnAction = {
                                             type: 'string',
                                         },
                                     },
-                                    required: ['siteName', 'listName', 'folderName'],
+                                    required: ['siteRelativePath', 'listName', 'folderName'],
                                 },
                                 {
                                     properties: {
@@ -87,13 +87,13 @@ export const createCloudFolderAction: IBpmnAction = {
         },
         uiSchema: {
             input: {
-                siteName: siteNameUI,
-                listName: listNameUI,  
+                siteRelativePath: siteRelativePathUI,
+                listName: listNameUI,
             },
         },
         formData: {
             input: {
-                siteName: undefined,
+                siteRelativePath: undefined,
                 listName: undefined,
                 folderName: undefined,
                 parentFolderPath: undefined,

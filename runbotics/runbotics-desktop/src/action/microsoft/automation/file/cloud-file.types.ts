@@ -10,10 +10,10 @@ export type CloudFileActionRequest =
     | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>
     | DesktopRunRequest<CloudFileAction.GET_SHAREPOINT_LIST_ITEMS, SharepointGetListItems>;
 
-interface SharePointCommon {
+export interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
     listName: string;
-    siteName: string;
+    siteRelativePath: string;
 }
 
 // DOWNLOAD FILE
@@ -80,5 +80,5 @@ export type CloudFileCreateShareLink = OneDriveCreateShareLink | SharePointCreat
 export interface SharepointGetListItems {
     platform: MicrosoftPlatform.SharePoint;
     listName: string;
-    siteName: string;
+    siteRelativePath: string;
 }

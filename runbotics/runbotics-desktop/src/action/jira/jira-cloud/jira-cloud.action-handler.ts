@@ -2,20 +2,53 @@ import { ZodError } from 'zod';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { Injectable } from '@nestjs/common';
 import { JiraCloudAction } from 'runbotics-common';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 import { RunboticsLogger } from '#logger';
 
 import {
-    JiraActionRequest, CloudJiraUser, SimpleCloudJiraUser
+    JiraActionRequest,
+    CloudJiraUser,
+    SimpleCloudJiraUser,
+    FilteredUserWorklogsParams,
+    FilteredProjectWorklogsParams
 } from './jira-cloud.types';
 import {
-    AVAILABLE_FORMATS, getDatesCollectionBoundaries, getIssueWorklogs,
-    getJiraUser, getUserIssueWorklogs, getWorklogInputSchema, groupByDay,
-    isAllowedDate, isWorklogCollection, isWorklogDay, isWorklogPeriod, sortAscending
+    AVAILABLE_FORMATS,
+    getDatesCollectionBoundaries,
+    getIssueWorklogs,
+    getIssueWorklogsByParam,
+    getJiraProject,
+    getJiraUser,
+    getProjectWorklogInputSchema,
+    getUserWorklogInputSchema,
+    groupByDay,
+    isAllowedDate,
+    isJiraDatesCollection,
+    isWorklogCreator,
+    isJiraSingleDay,
+    isJiraDatesPeriod,
+    sortAscending,
+    getBoardSprintsInputSchema,
+    getSprintTasksInputSchema,
+    getJiraAllBoardSprints,
+    getJiraAllSprintTasks
 } from '../jira.utils';
-import { GetWorklogInput, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
+import {
+    GetJiraDatesInput,
+    GetBoardSprintsInput,
+    GetProjectWorklogInput,
+    GetSprintTasksInput,
+    GetUserWorklogInput,
+    GetWorklogInput,
+    IssueWorklogsParam,
+    SearchIssue,
+    SimpleWorklog,
+    Worklog,
+    WorklogOutput,
+} from '../jira.types';
+import { formatZodError } from '#utils/zodError';
 
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2
@@ -28,41 +61,122 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         super();
     }
 
-    async getWorklog(rawInput: GetWorklogInput) {
-        let startDate, endDate, datesCollectionObjects;
-
-        const input = await getWorklogInputSchema.parseAsync(rawInput)
+    async getUserWorklog(rawInput: GetUserWorklogInput) {
+        const input = await getUserWorklogInputSchema.parseAsync(rawInput)
             .catch((error: ZodError) => {
-                const fieldErrors = error.formErrors.fieldErrors;
-                if (Object.keys(fieldErrors).length > 0) {
-                    throw new Error(Object.values(fieldErrors)[0][0]);
-                } else {
-                    throw new Error(error.issues[0].message);
-                }
+                throw formatZodError(error);
             });
 
-        if (isWorklogDay(input)) {
+        const { startDate, endDate, dates } = this.getJiraDates(input);
+
+        const jiraUser = await getJiraUser<CloudJiraUser>({ input });
+        const issues = await getIssueWorklogsByParam<CloudJiraUser>(
+            { param: IssueWorklogsParam.WORKLOG_AUTHOR, author: jiraUser.accountId },
+            input,
+        );
+        this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
+
+        const worklogs = await this.getAllWorklogsForIssue(
+            input,
+            issues,
+            this.filterUserWorklogs({
+                startDate,
+                endDate,
+                dates,
+                jiraUser
+            })
+        );
+
+        return input.groupByDay
+            ? groupByDay(worklogs)
+            : sortAscending(worklogs);
+    }
+
+    async getProjectWorklog(rawInput: GetProjectWorklogInput) {
+        const input = await getProjectWorklogInputSchema.parseAsync(rawInput)
+            .catch((error: ZodError) => {
+                throw formatZodError(error);
+            });
+
+        const { startDate, endDate, dates } = this.getJiraDates(input);
+
+        const jiraProject = await getJiraProject(input);
+        const issues = await getIssueWorklogsByParam<CloudJiraUser>(
+            { param: IssueWorklogsParam.PROJECT, project: jiraProject.key },
+            input,
+        );
+        this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
+
+        const worklogs = await this.getAllWorklogsForIssue(
+            input,
+            issues,
+            this.filterProjectWorklogs({
+                startDate,
+                endDate,
+                dates,
+            })
+        );
+
+        return input.groupByDay
+            ? groupByDay(worklogs)
+            : sortAscending(worklogs);
+    }
+
+    async getBoardSprints(rawInput: GetBoardSprintsInput) {
+        const input = await getBoardSprintsInputSchema.parseAsync(rawInput)
+            .catch((error: ZodError) => {
+                throw formatZodError(error);
+            });
+
+        const sprints = await getJiraAllBoardSprints(input.boardId, input);
+
+        return sprints;
+    }
+
+    async getSprintTasks(rawInput: GetSprintTasksInput) {
+        const input = await getSprintTasksInputSchema.parseAsync(rawInput)
+            .catch((error: ZodError) => {
+                throw formatZodError(error);
+            });
+
+        const sprintTasks = await getJiraAllSprintTasks(input);
+
+        return sprintTasks;
+    }
+
+    private getJiraDates(input: GetJiraDatesInput) {
+        let startDate: Dayjs, endDate: Dayjs, dates: Dayjs[];
+
+        if (isJiraSingleDay(input)) {
             startDate = dayjs(input.date, AVAILABLE_FORMATS).startOf('day');
             endDate = dayjs(input.date, AVAILABLE_FORMATS).endOf('day');
             this.logger.log(`Gathering worklogs for single date: ${input.date}`);
         }
-        if (isWorklogPeriod(input)) {
+        if (isJiraDatesPeriod(input)) {
             startDate = dayjs(input.startDate, AVAILABLE_FORMATS).startOf('day');
             endDate = dayjs(input.endDate, AVAILABLE_FORMATS).endOf('day');
             this.logger.log(`Gathering worklogs for date period: ${input.startDate} - ${input.endDate}`);
         }
-        if (isWorklogCollection(input)) {
+        if (isJiraDatesCollection(input)) {
             const { min, max, datesObjects } = getDatesCollectionBoundaries(input.dates);
             startDate = min.startOf('day');
             endDate = max.endOf('day');
-            datesCollectionObjects = datesObjects;
+            dates = datesObjects;
             this.logger.log(`Gathering worklogs for dates collection: ${input.dates.join(',')}`);
         }
 
-        const jiraUser = await getJiraUser<CloudJiraUser>({ input });
-        const issues = await getUserIssueWorklogs<CloudJiraUser>(jiraUser.accountId, input);
-        this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
+        return {
+            startDate,
+            endDate,
+            dates,
+        };
+    }
 
+    private async getAllWorklogsForIssue(
+        input: GetWorklogInput,
+        issues: SearchIssue<CloudJiraUser>[],
+        filterWorklogCb: (worklog: Worklog<CloudJiraUser>) => boolean,
+    ) {
         const worklogs = (await Promise.all(issues
             .flatMap(async (issue) => {
                 const worklogResponse = issue.fields.worklog;
@@ -74,16 +188,38 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                         return getIssueWorklogs<CloudJiraUser>(issue.key, input);
                     })();
                 return worklogs
-                    .filter(worklog => isAllowedDate<CloudJiraUser>({
-                        worklog, startDate, endDate, jiraUser, dates: datesCollectionObjects
-                    }))
+                    .filter(filterWorklogCb)
                     .map(worklog => this.mapWorklogOutput(worklog, issue));
             })
         )).flatMap(w => w);
 
-        return input.groupByDay
-            ? groupByDay(worklogs)
-            : sortAscending(worklogs);
+        return worklogs;
+    }
+
+    private filterUserWorklogs({ startDate, endDate, dates, jiraUser }: FilteredUserWorklogsParams) {
+        return (worklog: Worklog<CloudJiraUser>) => {
+            return isWorklogCreator<CloudJiraUser>({
+                worklog,
+                jiraUser,
+            }) &&
+            isAllowedDate<CloudJiraUser>({
+                worklog,
+                startDate,
+                endDate,
+                dates,
+            });
+        };
+    }
+
+    private filterProjectWorklogs({ startDate, endDate, dates }: FilteredProjectWorklogsParams) {
+        return (worklog: Worklog<CloudJiraUser>) => {
+            return isAllowedDate<CloudJiraUser>({
+                worklog,
+                startDate,
+                endDate,
+                dates,
+            });
+        };
     }
 
     private getSimpleWorklog({
@@ -154,7 +290,13 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     run(request: JiraActionRequest) {
         switch (request.script) {
             case JiraCloudAction.GET_USER_WORKLOGS:
-                return this.getWorklog(request.input);
+                return this.getUserWorklog(request.input);
+            case JiraCloudAction.GET_PROJECT_WORKLOGS:
+                return this.getProjectWorklog(request.input);
+            case JiraCloudAction.GET_BOARD_SPRINTS:
+                return this.getBoardSprints(request.input);
+            case JiraCloudAction.GET_SPRINT_TASKS:
+                return this.getSprintTasks(request.input);
             default:
                 throw new Error('Action not found');
         }
