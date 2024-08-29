@@ -45,14 +45,14 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
             .unwrap()
             .then(() => {
                 enqueueSnackbar(
-                    'Successfully added credential to process',
+                    translate('Process.Configure.Credentials.Modal.Add.Info.Success'),
                     { variant: 'success' }
                 );
                 dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
             })
             .catch(() => {
                 enqueueSnackbar(
-                    'Error while adding credential',
+                    translate('Process.Configure.Credentials.Modal.Add.Info.Error'),
                     { variant: 'error' }
                 );
             });

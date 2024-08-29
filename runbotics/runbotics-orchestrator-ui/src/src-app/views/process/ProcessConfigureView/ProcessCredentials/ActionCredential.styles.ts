@@ -23,6 +23,7 @@ export const CredentialTile = styled.div<{ $isPrimary: boolean; }>(({ theme, $is
     borderRadius: '10px',
     backgroundColor: $isPrimary ? theme.palette.grey[300]: theme.palette.grey[200],
     alignItems: 'center',
+    height: '120px',
 }));
 
 export const CredentialSwipe = styled.div`
@@ -46,7 +47,7 @@ export const AddTile = styled.div(({ theme }) => ({
     backgroundColor: theme.palette.grey[200],
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100px',
+    height: '120px',
     transition: '.5s',
     [':hover']: {
         cursor: 'pointer',

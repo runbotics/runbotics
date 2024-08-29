@@ -8,6 +8,8 @@ const credentialsTranslations = {
     'Process.Configure.Credentials.Modal.Delete.Info.Error': 'Error occurred while deleting process credential',
     'Process.Configure.Credentials.Modal.Add.Title': 'Add new credential for process action',
     'Process.Configure.Credentials.Modal.Add.Button.Add': 'Add',
+    'Process.Configure.Credentials.Modal.Add.Info.Success': 'Successfully added process credential',
+    'Process.Configure.Credentials.Modal.Add.Info.Error': 'Error occurred while adding process credential',
 };
 
 export default credentialsTranslations;
