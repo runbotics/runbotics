@@ -64,7 +64,8 @@ export class ProcessCredentialService {
 
     async delete(id: string, user: UserEntity) {
         const processCredential = await this.processCredentialRepository.findOneOrFail({
-            where: { id, credential: { tenantId: user.tenantId } }, relations: ['process', 'credential.template']
+            where: { id, credential: { tenantId: user.tenantId } },
+            relations: ['process', 'credential.template']
         }).catch(() => {
             throw new NotFoundException();
         });
@@ -83,9 +84,13 @@ export class ProcessCredentialService {
             .innerJoin('pc.credential', 'credential')
             .innerJoin('credential.template', 'template')
             .where('pc.processId = :processId', { processId })
-            .andWhere('template.name = :templateName', { templateName: processCredential.credential.template.name })
-            .andWhere('pc.order > :removedOrder', { removedOrder: processCredential.order })
-            .getMany();
+            .andWhere(
+                'template.name = :templateName',
+                { templateName: processCredential.credential.template.name }
+            ).andWhere(
+                'pc.order > :removedOrder',
+                { removedOrder: processCredential.order }
+            ).getMany();
 
         if (!credentialsToUpdate.length)
             return;
@@ -94,8 +99,10 @@ export class ProcessCredentialService {
             .createQueryBuilder()
             .update()
             .set({ order: () => 'order - 1' })
-            .where('credentialId IN (:...credIds)', { credIds: credentialsToUpdate.map(cred => cred.credentialId) })
-            .execute();
+            .where(
+                'credentialId IN (:...credIds)',
+                { credIds: credentialsToUpdate.map(cred => cred.credentialId) }
+            ).execute();
     }
 
     private formatProcessCredentials(processCredentials: ProcessCredential[]) {

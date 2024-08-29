@@ -69,9 +69,12 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                 </CredentialDetails>
                 <CredentialDelete>
                     <DeleteOutlineIcon
-                        sx={{...(!isPrimary && { [':hover']: { cursor: 'pointer' } })}}
                         color={isPrimary ? 'disabled' : 'error'}
-                        {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
+                        sx={{[':hover']: { cursor: 'pointer' } }}
+                        onClick={() => handleDeleteDialog(credentialId)}
+                        // Two lines to change after drag & drop (edit) functionality will be added
+                        // {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
+                        // sx={{...(!isPrimary && { [':hover']: { cursor: 'pointer' } })}}
                     />
                 </CredentialDelete>
             </CredentialTile>
