@@ -13,17 +13,16 @@ interface CredentialCollectionDeleteProps {
     credentials: BasicCredentialDto[];
     id: string;
     name: string;
-    isOwner: boolean;
     handleClose(event: React.MouseEvent<HTMLElement>): void;
 }
 
-export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = ({ credentials, id, name, isOwner, handleClose }) => {
+export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = ({ credentials, id, name, handleClose }) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    if (!credentials || credentials.length > 0) {
+    if (credentials && credentials.length > 0) {
         return <Alert severity="warning">{translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning')}</Alert>;
     }
 
@@ -43,7 +42,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
 
     return (
         <>
-            <MenuItem onClick={e => toggleDeleteDialog(e)} disabled={!isOwner}>
+            <MenuItem onClick={e => toggleDeleteDialog(e)}>
                 {translate('Process.Collection.Tile.MenuItem.Delete')}
             </MenuItem>
             <CustomDialog

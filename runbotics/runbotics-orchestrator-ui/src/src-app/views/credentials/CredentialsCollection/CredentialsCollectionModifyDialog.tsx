@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import CustomDialog from '#src-app/components/CustomDialog';
-import useAuth from '#src-app/hooks/useAuth';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 
@@ -29,7 +29,6 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
     const editableCollection = collection ? mapToEditCredentialCollectionDto(collection) : null;
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const { user: currentUser } = useAuth();
     const [credentialsCollectionFormState, setCredentialsCollectionFormState] = useState<EditCredentialsCollectionDto>(
         getInitialCredentialsCollectionData(editableCollection)
     );
@@ -38,27 +37,27 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
     const [collectionData, setCollectionData] = useState<EditCredentialsCollectionDto>(
         getInitialCredentialsCollectionData(editableCollection)
     );
-    const isOwner = collection ? parseInt(collection.createdById) === currentUser.id : true;
 
     const closeDialog = (event: React.MouseEvent<HTMLElement>) => {
         onClose(event);
-        setTimeout(() => clearForm(), 1000);
+        if (!collection) setTimeout(() => clearForm(), 100);
     };
 
-    useEffect(() => {
-        dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
-    }, [dispatch, collection]);
+    const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
+        const action = collection
+            ? credentialCollectionsActions.updateCredentialCollection({
+                resourceId: collection.id,
+                payload: collectionData as EditCredentialsCollectionDto
+            })
+            : credentialCollectionsActions.createCredentialCollection({ payload: collectionData });
 
-    const handleSubmit = (event: React.MouseEvent<HTMLElement>) => {
-        collection
-            ? dispatch(
-                credentialCollectionsActions.updateCredentialCollection({
-                    resourceId: collection.id,
-                    payload: collectionData as EditCredentialsCollectionDto
-                })
-            )
-            : dispatch(credentialCollectionsActions.createCredentialCollection({ payload: collectionData }));
-        onClose(event);
+        await dispatch(action)
+            .unwrap()
+            .then(() => {
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+            });
+
+        closeDialog(event);
     };
 
     const clearForm = () => {
@@ -66,34 +65,35 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
     };
 
     return (
-        <CustomDialog
-            isOpen={isOpen}
-            onClose={closeDialog}
-            title={translate(`Credentials.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}
-            confirmButtonOptions={{
-                label: translate('Common.Save'),
-                onClick: handleSubmit
-            }}
-            cancelButtonOptions={{
-                onClick: closeDialog
-            }}
-        >
-            <Content sx={{ overflowX: 'hidden', padding: 0 }}>
-                <Form $gap={0}>
-                    <GeneralOptions
-                        credentialsCollectionData={collectionData}
-                        setCredentialsCollectionData={setCollectionData}
-                        formValidationState={formValidationState}
-                        setFormValidationState={setFormValidationState}
-                        inputErrorType={inputErrorType}
-                        formState={credentialsCollectionFormState}
-                        setFormState={setCredentialsCollectionFormState}
-                        // isOwner={isOwner}
-                    />
-                    <SharedWithUsers collection={collectionData} setCredentialsCollectionData={setCollectionData} />
-                </Form>
-            </Content>
-        </CustomDialog>
+        <If condition={isOpen}>
+            <CustomDialog
+                isOpen={isOpen}
+                onClose={closeDialog}
+                title={translate(`Credentials.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}
+                confirmButtonOptions={{
+                    label: translate('Common.Save'),
+                    onClick: handleSubmit
+                }}
+                cancelButtonOptions={{
+                    onClick: closeDialog
+                }}
+            >
+                <Content sx={{ overflowX: 'hidden', padding: 0 }}>
+                    <Form $gap={0}>
+                        <GeneralOptions
+                            credentialsCollectionData={collectionData}
+                            setCredentialsCollectionData={setCollectionData}
+                            formValidationState={formValidationState}
+                            setFormValidationState={setFormValidationState}
+                            inputErrorType={inputErrorType}
+                            formState={credentialsCollectionFormState}
+                            setFormState={setCredentialsCollectionFormState}
+                        />
+                        <SharedWithUsers collection={collectionData} setCredentialsCollectionData={setCollectionData} />
+                    </Form>
+                </Content>
+            </CustomDialog>
+        </If>
     );
 };
 

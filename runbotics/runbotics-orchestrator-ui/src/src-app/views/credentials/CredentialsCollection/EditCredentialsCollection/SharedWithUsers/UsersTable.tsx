@@ -11,11 +11,13 @@ import { PrivilegeType } from '../../CredentialsCollection.types';
 interface UsersTableProps {
     users: SharedWithUser[];
     onDeleteUser: (email: string) => void;
-    onChangeAccessType: ({ login, privilegeType }: SharedWithUser) => void;
+    onChangeAccessType: ({ email, privilegeType }: SharedWithUser) => void;
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteUser, onChangeAccessType }) => {
     const { translate } = useTranslations();
+
+    console.log('users', users);
 
     return (
         <TableContainer sx={{ width: '100%', padding: 0 }}>
@@ -29,8 +31,8 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteUser, onChangeAc
                 </TableHead>
                 <TableBody>
                     {users.map(user => (
-                        <TableRow key={user.login}>
-                            <TableCell>{user.login}</TableCell>
+                        <TableRow key={user.email}>
+                            <TableCell>{user.email}</TableCell>
                             <TableCell>
                                 <FormControl fullWidth>
                                     <Select
@@ -41,7 +43,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteUser, onChangeAc
                                         // end to TODO
                                         value={user.privilegeType}
                                         onChange={e =>
-                                            onChangeAccessType({ login: user.login, privilegeType: e.target.value as PrivilegeType })
+                                            onChangeAccessType({ email: user.email, privilegeType: e.target.value as PrivilegeType })
                                         }
                                     >
                                         <MenuItem value={PrivilegeType.READ}>{PrivilegeType.READ}</MenuItem>
@@ -50,7 +52,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteUser, onChangeAc
                                 </FormControl>
                             </TableCell>
                             <TableCell align="right">
-                                <IconButton color="secondary" onClick={() => onDeleteUser(user.login)}>
+                                <IconButton color="secondary" onClick={() => onDeleteUser(user.email)}>
                                     <Clear />
                                 </IconButton>
                             </TableCell>

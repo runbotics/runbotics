@@ -11,7 +11,7 @@ import UsersTable from './UsersTable';
 import { AccessType, EditCredentialsCollectionDto, PrivilegeType } from '../../CredentialsCollection.types';
 
 export interface SharedWithUser {
-    login: string;
+    email: string;
     privilegeType: PrivilegeType;
 }
 
@@ -43,18 +43,18 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ collection, setCrede
         [nonAdmins, currentUser.email]
     );
 
-    const handleAddUser = (login: string) => {
-        if (!users.find(user => user.login === login)) {
-            setUsers([...users, { login, privilegeType: PrivilegeType.WRITE }]);
+    const handleAddUser = (email: string) => {
+        if (!users.find(user => user.email === email)) {
+            setUsers([...users, { email, privilegeType: PrivilegeType.WRITE }]);
         }
     };
 
-    const handleDeleteUser = (login: string) => {
-        setUsers(users.filter(user => user.login !== login));
+    const handleDeleteUser = (email: string) => {
+        setUsers(users.filter(user => user.email !== email));
     };
 
-    const handleChangeAccessType = ({login, privilegeType}: SharedWithUser) => {
-        setUsers(users.map(user => (user.login === login ? { ...user, privilegeType } : user)));
+    const handleChangeAccessType = ({email, privilegeType}: SharedWithUser) => {
+        setUsers(users.map(user => (user.email === email ? { ...user, privilegeType } : user)));
     };
 
     return (

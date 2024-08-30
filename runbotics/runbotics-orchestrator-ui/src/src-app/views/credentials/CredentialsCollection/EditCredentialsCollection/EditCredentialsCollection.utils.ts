@@ -41,12 +41,11 @@ export const getInitialCredentialsCollectionData = (
 };
 
 export const mapToEditCredentialCollectionDto = (collection: BasicCredentialsCollectionDto): EditCredentialsCollectionDto => {
-    // TODO jakiś eager by się przydał, bo credentialCollectionUser powinien być obiektem usera a tego nie zwraca - portrzebuję się dostać do obiektu credentialUser.user i stamtąd wyciągnąć .email (cause login is optional)
     const sharedWithUsers = collection.credentialCollectionUser
         ? [...collection.credentialCollectionUser].filter(
             credentialUser => credentialUser.userId !== collection.createdById
         ).map((filteredUser => ({
-            login: filteredUser.userId,
+            email: filteredUser.user.email,
             privilegeType: filteredUser.privilegeType
         })))
         : [];

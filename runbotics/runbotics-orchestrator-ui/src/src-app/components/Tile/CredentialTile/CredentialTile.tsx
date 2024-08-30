@@ -7,8 +7,6 @@ import { CircularProgress, Typography } from '@mui/material';
 
 import { useRouter } from 'next/router';
 
-
-
 import { collectionColors } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 
 import { CredentialCard, CredentialCollection } from './CredentialTile.styles';
@@ -27,26 +25,28 @@ const CredentialTile: FC<CredentialTileProps> = ({ credential, collections }) =>
             setLoading(false);
         }
     }, [credentialCollection]);
-    
+
     if (loading) {
         return <CircularProgress />;
     }
-    
+
     const handleClick = () => {
         router.push(`/app/credentials/${credential.id}`);
     };
 
+    console.log('CredentialTile rerender');
+
     return (
-        <Tile minHeight="10rem" >
+        <Tile minHeight="10rem">
             <CredentialCard collectionColor={collectionColors[collectionColor].hex} onClick={handleClick}>
-                <Typography variant="h4" sx={{paddingBottom: '8px' }}>
+                <Typography variant="h4" sx={{ paddingBottom: '8px' }}>
                     {credential.name}
                 </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">   
+                <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {credential.id}
                 </Typography>
                 <CredentialCollection>
-                    <FolderOpenIcon sx={{paddingRight: '4px'}}/>
+                    <FolderOpenIcon sx={{ paddingRight: '4px' }} />
                     {credential.collectionId}
                 </CredentialCollection>
             </CredentialCard>

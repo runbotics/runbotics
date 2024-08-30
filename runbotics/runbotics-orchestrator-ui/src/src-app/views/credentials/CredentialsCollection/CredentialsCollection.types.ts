@@ -26,6 +26,7 @@ export interface BasicCredentialsCollectionDto {
     credentials: BasicCredentialDto[]
     description?: string;
     credentialCollectionUser?: CredentialsCollectionUser[];
+    createdBy: User
 }
 
 export interface CredentialsCollectionUser {
@@ -43,7 +44,7 @@ export interface EditCredentialsCollectionDto {
     accessType: AccessType;
     color: CollectionColorName;
     sharedWith: {
-        login: string;
+        email: string;
         privilegeType: PrivilegeType
     }[]
     description?: string;

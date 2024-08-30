@@ -39,8 +39,6 @@ const GridView: FC<GridViewProps> = () => {
 
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
 
-    console.log(credentials);
-    
     useEffect(() => {
         // dispatch(fetchAllTemplates());
         dispatch(fetchAllCredentialsAccessibleInTenant());
@@ -49,9 +47,11 @@ const GridView: FC<GridViewProps> = () => {
             dispatch(usersActions.getAllLimited());
             dispatch(usersActions.getActiveNonAdmins());
         }
-    }, [dispatch]);
+    }, [dispatch, isCollectionsTab]);
 
-    const credentialsTiles = credentials.map(credential => <CredentialTile key={credential.id} credential={credential} collections={collections}/>);
+    const credentialsTiles = credentials.map(credential => (
+        <CredentialTile key={credential.id} credential={credential} collections={collections} />
+    ));
 
     const collectionTiles = collections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection} />);
 

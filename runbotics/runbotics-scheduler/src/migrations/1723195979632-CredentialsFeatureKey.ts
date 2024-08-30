@@ -1,91 +1,91 @@
-import { AuthorityEntity } from '#/database/authority/authority.entity';
-import { FeatureKeyEntity } from '#/database/feature-key/feature-key.entity';
-import { FeatureKey, Role } from 'runbotics-common';
+import { Authority } from '#/scheduler-database/authority/authority.entity';
+import { FeatureKey } from '#/scheduler-database/feature-key/feature-key.entity';
+import { FeatureKey as FeatureKeyEnum, Role } from 'runbotics-common';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CredentialsFeatureKey1723195979632 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.manager
-            .insert(FeatureKeyEntity, { name: FeatureKey.CREDENTIALS_PAGE_READ });
+            .insert(FeatureKey, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ });
 
         const newAuthorityTenantAdmin = await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_TENANT_ADMIN })
             .then(authority => {
-                authority.featureKeys = [...authority.featureKeys, { name: FeatureKey.CREDENTIALS_PAGE_READ }];
+                authority.featureKeys = [...authority.featureKeys, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ }];
 
                 return authority;
             });
 
         await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .save(newAuthorityTenantAdmin);
 
             const newAuthorityAdmin = await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_ADMIN })
             .then(authority => {
-                authority.featureKeys = [...authority.featureKeys, { name: FeatureKey.CREDENTIALS_PAGE_READ }];
+                authority.featureKeys = [...authority.featureKeys, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ }];
 
                 return authority;
             });
 
         await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .save(newAuthorityAdmin);
 
             await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .save(newAuthorityTenantAdmin);
 
             const newAuthorityUser = await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_USER })
             .then(authority => {
-                authority.featureKeys = [...authority.featureKeys, { name: FeatureKey.CREDENTIALS_PAGE_READ }];
+                authority.featureKeys = [...authority.featureKeys, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ }];
 
                 return authority;
             });
 
         await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .save(newAuthorityUser);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         const authorityUSer = await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_TENANT_ADMIN })
             .then(authority => ({ 
                 ...authority, 
-                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKey.CREDENTIALS_PAGE_READ) 
+                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ) 
             }));
 
-        await queryRunner.manager.save(AuthorityEntity, authorityUSer);
+        await queryRunner.manager.save(Authority, authorityUSer);
 
-        await queryRunner.manager.delete(FeatureKeyEntity, { name: FeatureKey.CREDENTIALS_PAGE_READ });
+        await queryRunner.manager.delete(FeatureKey, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ });
 
         const authorityAdmin = await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_TENANT_ADMIN })
             .then(authority => ({ 
                 ...authority, 
-                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKey.CREDENTIALS_PAGE_READ) 
+                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ) 
             }));
 
-        await queryRunner.manager.save(AuthorityEntity, authorityAdmin);
+        await queryRunner.manager.save(Authority, authorityAdmin);
 
-        await queryRunner.manager.delete(FeatureKeyEntity, { name: FeatureKey.CREDENTIALS_PAGE_READ });
+        await queryRunner.manager.delete(FeatureKey, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ });
         const authorityTenantAdmin = await queryRunner.manager
-            .getRepository(AuthorityEntity)
+            .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_TENANT_ADMIN })
             .then(authority => ({ 
                 ...authority, 
-                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKey.CREDENTIALS_PAGE_READ) 
+                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ) 
             }));
 
-        await queryRunner.manager.save(AuthorityEntity, authorityTenantAdmin);
+        await queryRunner.manager.save(Authority, authorityTenantAdmin);
 
-        await queryRunner.manager.delete(FeatureKeyEntity, { name: FeatureKey.CREDENTIALS_PAGE_READ });
+        await queryRunner.manager.delete(FeatureKey, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ });
     }
 }
