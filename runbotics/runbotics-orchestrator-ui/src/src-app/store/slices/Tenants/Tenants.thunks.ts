@@ -64,3 +64,11 @@ export const generateInviteCodeByTenantId = createAsyncThunk<TenantInviteCode, s
     (id) => axios.post<TenantInviteCode>(`/api/scheduler/tenants/invite-code/${id}`)
         .then(response => response.data)
 );
+
+export const fetchTenantNameByInviteCode = createAsyncThunk<{ tenantName: string }, string>(
+    'tenants/fetchTenantNameByInviteCode',
+    (inviteCode, { rejectWithValue }) => 
+        axios.post<{ tenantName: string }>('/api/scheduler/tenants/invite-code', { inviteCode })
+            .then((response) => response.data)
+            .catch((error) => rejectWithValue(error.response.data))
+);

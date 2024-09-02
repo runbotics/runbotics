@@ -11,6 +11,7 @@ const initialState: TenantsState = {
     all: [],
     allByPage: null,
     inviteCode: null,
+    invitingTenant: null,
 };
 
 export const slice = createSlice({
