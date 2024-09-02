@@ -9,6 +9,7 @@ export const CredentialCollectionCard = styled(CardContent)(
     && {
         padding-bottom: ${theme.spacing(1)} !important;
         cursor: pointer;
+        min-height: 258px;
     }
 
     &:hover {

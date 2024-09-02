@@ -53,7 +53,7 @@ const GridView: FC<GridViewProps> = () => {
         <CredentialTile key={credential.id} credential={credential} collections={collections} />
     ));
 
-    const collectionTiles = collections.map(collection => <CredentialsCollectionTile key={collection.id} collection={collection} />);
+    const collectionTiles = [...collections].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map(collection => <CredentialsCollectionTile key={collection.id} collection={collection} />);
 
     return (
         <>

@@ -1,4 +1,6 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
+
+import { useSnackbar } from 'notistack';
 
 import CustomDialog from '#src-app/components/CustomDialog';
 import If from '#src-app/components/utils/If';
@@ -13,6 +15,7 @@ import {
     getInitialCredentialsCollectionData,
     initialCredentialsCollectionData,
     initialFormValidationState,
+    inputErrorMessages,
     InputErrorType,
     mapToEditCredentialCollectionDto
 } from './EditCredentialsCollection/EditCredentialsCollection.utils';
@@ -38,30 +41,59 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
         getInitialCredentialsCollectionData(editableCollection)
     );
 
+    const { enqueueSnackbar } = useSnackbar();
+
+    useEffect(() => {
+        setFormValidationState(initialFormValidationState);
+        const updatedCollection = collection ? mapToEditCredentialCollectionDto(collection) : null;
+        setCredentialsCollectionFormState(getInitialCredentialsCollectionData(updatedCollection));
+    }, [collection]);
+
     const closeDialog = (event: React.MouseEvent<HTMLElement>) => {
         onClose(event);
+        setCredentialsCollectionFormState(collectionData);
         if (!collection) setTimeout(() => clearForm(), 100);
     };
 
+    useEffect(() => {
+        if (!credentialsCollectionFormState.name.trim()) {
+            setFormValidationState(false);
+            setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
+            return;
+        }
+
+        setInputErrorType(null);
+    }, [credentialsCollectionFormState.name]);
+
     const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
+        if (inputErrorType) {
+            enqueueSnackbar(inputErrorMessages[InputErrorType.NAME_IS_REQUIRED], { variant: 'error' });
+            return;
+        }
+
         const action = collection
             ? credentialCollectionsActions.updateCredentialCollection({
                 resourceId: collection.id,
-                payload: collectionData as EditCredentialsCollectionDto
+                payload: credentialsCollectionFormState as EditCredentialsCollectionDto
             })
-            : credentialCollectionsActions.createCredentialCollection({ payload: collectionData });
+            : credentialCollectionsActions.createCredentialCollection({ payload: credentialsCollectionFormState });
 
         await dispatch(action)
             .unwrap()
             .then(() => {
                 dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+                setCredentialsCollectionFormState(collectionData);
+                closeDialog(event);
+            }).catch((error) => {
+                enqueueSnackbar(error.message, { variant: 'error' });
             });
 
-        closeDialog(event);
     };
 
     const clearForm = () => {
         setCollectionData(initialCredentialsCollectionData);
+        setFormValidationState(initialFormValidationState);
+        setInputErrorType(null);
     };
 
     return (
@@ -86,6 +118,7 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
                             formValidationState={formValidationState}
                             setFormValidationState={setFormValidationState}
                             inputErrorType={inputErrorType}
+                            setInputErrorType={setInputErrorType}
                             formState={credentialsCollectionFormState}
                             setFormState={setCredentialsCollectionFormState}
                         />

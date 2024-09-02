@@ -27,11 +27,19 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
     }
 
     const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
-        dispatch(deleteCredentialCollections({ resourceId: id })).then(response => {
-            if (response.type.split('/').at(-1) === 'fulfilled')
-            { enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Success', { name }), { variant: 'success' }); }
-            else { enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Fail', { name }), { variant: 'error' }); }
-        });
+        dispatch(deleteCredentialCollections({ resourceId: id }))
+            .unwrap()
+            .then(() => {
+                enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Success', { name }), { variant: 'success' });
+            })
+            .catch((error) => {
+                console.log(error);
+                if (error.statusCode === 409) {
+                    enqueueSnackbar(error.message, { variant: 'error' });
+                } else {
+                    enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Fail', { name }), { variant: 'error' });
+                }
+            });
         handleClose(event);
     };
 
@@ -42,9 +50,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
 
     return (
         <>
-            <MenuItem onClick={e => toggleDeleteDialog(e)}>
-                {translate('Process.Collection.Tile.MenuItem.Delete')}
-            </MenuItem>
+            <MenuItem onClick={e => toggleDeleteDialog(e)}>{translate('Process.Collection.Tile.MenuItem.Delete')}</MenuItem>
             <CustomDialog
                 isOpen={isDeleteDialogOpen}
                 title={translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title', { name })}
@@ -53,10 +59,12 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
                     handleClose(e);
                 }}
                 confirmButtonOptions={{ onClick: handleDelete }}
-                cancelButtonOptions={{ onClick: e => {
-                    toggleDeleteDialog(e);
-                    handleClose(e);
-                } }}
+                cancelButtonOptions={{
+                    onClick: e => {
+                        toggleDeleteDialog(e);
+                        handleClose(e);
+                    }
+                }}
             ></CustomDialog>
         </>
     );

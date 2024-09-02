@@ -4,10 +4,10 @@ import { InputErrorType } from '../EditCredentialsCollection.utils';
 export interface CredentalsCollectionGeneralOptionsProps{
     credentialsCollectionData: EditCredentialsCollectionDto;
     setCredentialsCollectionData: (collection: EditCredentialsCollectionDto) => void;
-    // isOwner?: boolean;
     formValidationState: boolean;
     setFormValidationState: (formValidationState: boolean) => void;
     inputErrorType: InputErrorType;
+    setInputErrorType: (errorType: InputErrorType) => void;
     formState: EditCredentialsCollectionDto;
     setFormState: (newState: EditCredentialsCollectionDto) => void;
 }
