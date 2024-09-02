@@ -6,9 +6,8 @@ import {
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
-import { getActions } from '#src-app/store/slices/Action/Action.thunks';
+import { activityActions } from '#src-app/store/slices/Action';
 import { IAction } from '#src-app/types/model/action.model';
-import Axios from '#src-app/utils/axios';
 
 type DeleteActionDialogProps = {
     open?: boolean;
@@ -21,10 +20,13 @@ const DeleteActionDialog: FC<DeleteActionDialogProps> = (props) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
 
-    const handleSubmit = async () => {
-        await Axios.delete(`/api/actions/${props.action.id}`);
-        props.onDelete(props.action);
-        dispatch(getActions());
+    const handleSubmit = () => {
+        dispatch(activityActions.deleteAction({ resourceId: props.action.id }))
+            .unwrap()
+            .then(() => {
+                props.onDelete(props.action);
+                dispatch(activityActions.getAllActions());
+            });
     };
 
     return (
