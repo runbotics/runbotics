@@ -1,9 +1,7 @@
-import {  EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
+import { EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
 import { InputErrorType } from '../EditCredentialsCollection.utils';
 
-export interface CredentalsCollectionGeneralOptionsProps{
-    credentialsCollectionData: EditCredentialsCollectionDto;
-    setCredentialsCollectionData: (collection: EditCredentialsCollectionDto) => void;
+export interface CredentalsCollectionGeneralOptionsProps {
     formValidationState: boolean;
     setFormValidationState: (formValidationState: boolean) => void;
     inputErrorType: InputErrorType;

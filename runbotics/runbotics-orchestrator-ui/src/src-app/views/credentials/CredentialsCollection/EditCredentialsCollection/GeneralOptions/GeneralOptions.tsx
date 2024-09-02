@@ -11,7 +11,14 @@ import { BasicCredentialsCollectionDto, CredentialsCollectionKeys } from '../../
 import CollectionColorSelect from '../CollectionColor/CollectionColorSelect';
 import { inputErrorMessages, InputErrorType } from '../EditCredentialsCollection.utils';
 
-export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({credentialsCollectionData, setCredentialsCollectionData, formValidationState, setFormValidationState, inputErrorType, setInputErrorType, formState, setFormState}) => {
+export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
+    formValidationState,
+    setFormValidationState,
+    inputErrorType,
+    setInputErrorType,
+    formState,
+    setFormState
+}) => {
     const { translate } = useTranslations();
 
     const handleFormPropertyChange = <Key extends CredentialsCollectionKeys>(
@@ -22,9 +29,10 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({cre
             setFormValidationState(false);
             setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
         }
-        if (propertyName === 'name' && value.length) setFormValidationState(true);
-        setInputErrorType(null);
-        // setCredentialsCollectionData({ ...credentialsCollectionData, [propertyName]: value });
+        if (propertyName === 'name' && value.length) {
+            setFormValidationState(true);
+            setInputErrorType(null);
+        }
         setFormState({ ...formState, [propertyName]: value });
     };
 
@@ -39,7 +47,6 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({cre
                     value={formState.name}
                     variant="outlined"
                     error={!formValidationState}
-                    {...(!formValidationState && { helperText: translate('Credential.Add.Form.Error.NameIsRequired') })}
                     InputLabelProps={{ shrink: true }}
                     required
                     helperText={inputErrorMessages[inputErrorType]}
@@ -53,7 +60,11 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({cre
                     variant="outlined"
                     InputLabelProps={{ shrink: true }}
                 />
-                <CollectionColorSelect currentColor={credentialsCollectionData.color} credentialsCollectionData={credentialsCollectionData} setCredentialCollectionColor={setCredentialsCollectionData}/>
+                <CollectionColorSelect
+                    currentColor={formState.color}
+                    credentialsCollectionData={formState}
+                    setCredentialCollectionColor={setFormState}
+                />
             </Box>
         </Accordion>
     );

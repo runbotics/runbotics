@@ -24,9 +24,7 @@ export const initialCredentialsCollectionData: EditCredentialsCollectionDto = {
     sharedWith: []
 };
 
-export const getInitialCredentialsCollectionData = (
-    collection: null | EditCredentialsCollectionDto
-): EditCredentialsCollectionDto => {
+export const getInitialCredentialsCollectionData = (collection: null | EditCredentialsCollectionDto): EditCredentialsCollectionDto => {
     if (!collection) {
         return initialCredentialsCollectionData;
     }
@@ -42,12 +40,12 @@ export const getInitialCredentialsCollectionData = (
 
 export const mapToEditCredentialCollectionDto = (collection: BasicCredentialsCollectionDto): EditCredentialsCollectionDto => {
     const sharedWithUsers = collection.credentialCollectionUser
-        ? [...collection.credentialCollectionUser].filter(
-            credentialUser => credentialUser.userId !== collection.createdById
-        ).map((filteredUser => ({
-            email: filteredUser.user.email,
-            privilegeType: filteredUser.privilegeType
-        })))
+        ? [...collection.credentialCollectionUser]
+            .filter(credentialUser => credentialUser.userId !== collection.createdById)
+            .map(filteredUser => ({
+                email: filteredUser.user.email,
+                privilegeType: filteredUser.privilegeType
+            }))
         : [];
 
     return {

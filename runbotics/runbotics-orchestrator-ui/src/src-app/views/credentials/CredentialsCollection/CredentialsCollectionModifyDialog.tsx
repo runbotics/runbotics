@@ -29,9 +29,11 @@ interface CredentialCollectionModifyDialogProps {
 }
 
 const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProps> = ({ open: isOpen, onClose, collection }) => {
-    const editableCollection = collection ? mapToEditCredentialCollectionDto(collection) : null;
     const { translate } = useTranslations();
     const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+
+    const editableCollection = collection ? mapToEditCredentialCollectionDto(collection) : null;
     const [credentialsCollectionFormState, setCredentialsCollectionFormState] = useState<EditCredentialsCollectionDto>(
         getInitialCredentialsCollectionData(editableCollection)
     );
@@ -41,30 +43,28 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
         getInitialCredentialsCollectionData(editableCollection)
     );
 
-    const { enqueueSnackbar } = useSnackbar();
-
     useEffect(() => {
-        setFormValidationState(initialFormValidationState);
         const updatedCollection = collection ? mapToEditCredentialCollectionDto(collection) : null;
         setCredentialsCollectionFormState(getInitialCredentialsCollectionData(updatedCollection));
     }, [collection]);
+    
+    useEffect(() => {
+        if (!credentialsCollectionFormState.name.trim() && !collectionData.name) {
+            setFormValidationState(false);
+            setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
+        } else if (credentialsCollectionFormState.name.trim()) {
+            setInputErrorType(null);
+        }
+        
+    }, [credentialsCollectionFormState, collectionData, inputErrorType]);
 
     const closeDialog = (event: React.MouseEvent<HTMLElement>) => {
         onClose(event);
         setCredentialsCollectionFormState(collectionData);
+        if (collection) setFormValidationState(initialFormValidationState);
         if (!collection) setTimeout(() => clearForm(), 100);
     };
-
-    useEffect(() => {
-        if (!credentialsCollectionFormState.name.trim()) {
-            setFormValidationState(false);
-            setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
-            return;
-        }
-
-        setInputErrorType(null);
-    }, [credentialsCollectionFormState.name]);
-
+    
     const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         if (inputErrorType) {
             enqueueSnackbar(inputErrorMessages[InputErrorType.NAME_IS_REQUIRED], { variant: 'error' });
@@ -113,8 +113,6 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
                 <Content sx={{ overflowX: 'hidden', padding: 0 }}>
                     <Form $gap={0}>
                         <GeneralOptions
-                            credentialsCollectionData={collectionData}
-                            setCredentialsCollectionData={setCollectionData}
                             formValidationState={formValidationState}
                             setFormValidationState={setFormValidationState}
                             inputErrorType={inputErrorType}
