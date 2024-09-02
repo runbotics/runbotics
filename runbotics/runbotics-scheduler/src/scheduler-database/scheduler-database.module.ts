@@ -15,6 +15,7 @@ import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { AuthorityModule } from './authority/authority.module';
 import { ActionModule } from './action/action.module';
 import { ProcessCredentialModule } from './process-credential/process-credential.module';
+import { ScheduleProcessModule } from './schedule-process/schedule-process.module';
 
 @Module({
     imports: [
@@ -34,6 +35,7 @@ import { ProcessCredentialModule } from './process-credential/process-credential
         FeatureKeyModule,
         AuthorityModule,
         ActionModule,
+        ScheduleProcessModule,
     ],
     exports: [],
 })
