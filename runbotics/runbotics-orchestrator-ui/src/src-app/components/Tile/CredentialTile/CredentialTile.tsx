@@ -13,7 +13,7 @@ import { CredentialCard, CredentialCollection } from './CredentialTile.styles';
 import { CredentialTileProps } from './CredentialTile.types';
 import Tile from '../Tile';
 
-const CredentialTile: FC<CredentialTileProps> = ({ credential, collections }) => {
+const CredentialTile: FC<CredentialTileProps> = ({ credential, collections, templateName, collectionName }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const credentialCollection = collections.find(collection => credential.collectionId === collection.id);
@@ -39,15 +39,15 @@ const CredentialTile: FC<CredentialTileProps> = ({ credential, collections }) =>
     return (
         <Tile minHeight="10rem">
             <CredentialCard collectionColor={collectionColors[collectionColor].hex} onClick={handleClick}>
-                <Typography variant="h4" sx={{ paddingBottom: '8px' }}>
+                <Typography variant="h4" sx={{ paddingBottom: '16px' }}>
                     {credential.name}
                 </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {credential.id}
+                <Typography sx={{ mb: 1 }}>
+                    action group: {templateName}
                 </Typography>
                 <CredentialCollection>
                     <FolderOpenIcon sx={{ paddingRight: '4px' }} />
-                    {credential.collectionId}
+                    {collectionName}
                 </CredentialCollection>
             </CredentialCard>
         </Tile>

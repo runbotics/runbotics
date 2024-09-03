@@ -14,6 +14,7 @@ import If from '#src-app/components/utils/If';
 import { useSelector } from '#src-app/store';
 import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
 import { fetchAllCredentialsAccessibleInTenant } from '#src-app/store/slices/Credentials/Credentials.thunks';
+import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
 import { usersActions } from '#src-app/store/slices/Users';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
@@ -30,17 +31,16 @@ const TileGrid = styled.div`
 
 const GridView: FC<GridViewProps> = () => {
     const dispatch = useDispatch();
-    // const credentials = useSelector(state => state.credentials.all);
     const collections = useSelector(state => state.credentialCollections.credentialCollections);
     const credentials = useSelector(state => state.credentials.all);
-    // const allCollections = getCredentialsCollections();
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
 
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
 
+
     useEffect(() => {
-        // dispatch(fetchAllTemplates());
+        dispatch(fetchAllTemplates());
         dispatch(fetchAllCredentialsAccessibleInTenant());
         dispatch(fetchAllCredentialCollections());
         if (isCollectionsTab) {
@@ -50,10 +50,18 @@ const GridView: FC<GridViewProps> = () => {
     }, [dispatch, isCollectionsTab]);
 
     const credentialsTiles = credentials.map(credential => (
-        <CredentialTile key={credential.id} credential={credential} collections={collections} />
+        <CredentialTile
+            key={credential.id}
+            credential={credential}
+            collections={collections}
+            templateName={credentialTemplates.find(template => template.id === credential.templateId).name}
+            collectionName={collections.find(collection => collection.id === credential.collectionId)?.name}
+        />
     ));
 
-    const collectionTiles = [...collections].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map(collection => <CredentialsCollectionTile key={collection.id} collection={collection} />);
+    const collectionTiles = [...collections]
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .map(collection => <CredentialsCollectionTile key={collection.id} collection={collection} />);
 
     return (
         <>

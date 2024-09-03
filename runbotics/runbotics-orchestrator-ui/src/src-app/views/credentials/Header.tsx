@@ -70,14 +70,14 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             textColor="secondary"
         >
             <Tab
-                key={CredentialsTabs.CREDENTIALS}
-                value={CredentialsTabs.CREDENTIALS}
-                label={translate('Credentials.Tab.Credentials')}
-            />
-            <Tab
                 key={CredentialsTabs.COLLECTIONS}
                 value={CredentialsTabs.COLLECTIONS}
                 label={translate('Credentials.Tab.Collections')}
+            />
+            <Tab
+                key={CredentialsTabs.CREDENTIALS}
+                value={CredentialsTabs.CREDENTIALS}
+                label={translate('Credentials.Tab.Credentials')}
             />
         </Tabs>
     );

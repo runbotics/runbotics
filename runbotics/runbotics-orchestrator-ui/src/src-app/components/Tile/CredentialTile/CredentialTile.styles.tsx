@@ -3,9 +3,14 @@ import styled from 'styled-components';
 
 export const CredentialCard = styled(CardContent)<{ collectionColor: string }>(
     ({ theme, collectionColor }) => `
-    && {
-        border-left: 4px solid ${collectionColor || theme.palette.primary.light};
-        cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    color: ${theme.palette.grey[500]};
+    border-left: 4px solid ${collectionColor || theme.palette.primary.light};
+    cursor: pointer;
+    
+    > :first-child {
+        color: black;
     }
 
     &:hover {
@@ -14,13 +19,9 @@ export const CredentialCard = styled(CardContent)<{ collectionColor: string }>(
 `
 );
 
-export const CredentialCollection = styled(Typography)(
-    ({ theme }) => `
+export const CredentialCollection = styled(Typography)`
     && {
-        color: ${theme.palette.grey[500]};
-        text-transform: lowercase;
         display: flex;
     }
 
-`
-);
+`;

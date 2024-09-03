@@ -69,6 +69,7 @@ const MenuItems: FC<MenuItemsProps> = ({ collection, setShowCollectionDialog }) 
                     name={collection.name}
                     credentials={collection.credentials}
                     handleClose={handleClose}
+                    // handleDialogOpen={handleDialogOpen}
                 />
             </Menu>
         </Box>     

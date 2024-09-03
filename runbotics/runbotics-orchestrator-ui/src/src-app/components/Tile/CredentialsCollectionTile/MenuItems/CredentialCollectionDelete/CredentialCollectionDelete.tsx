@@ -1,9 +1,10 @@
 import React, { FC, useState } from 'react';
 
-import { Alert, MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import CustomDialog from '#src-app/components/CustomDialog';
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { deleteCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
@@ -14,26 +15,33 @@ interface CredentialCollectionDeleteProps {
     id: string;
     name: string;
     handleClose(event: React.MouseEvent<HTMLElement>): void;
+    // handleDialogOpen(event: React.MouseEvent<HTMLElement>): void;
 }
 
-export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = ({ credentials, id, name, handleClose }) => {
+export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = ({
+    credentials,
+    id,
+    name,
+    handleClose,
+    // handleDialogOpen
+}) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    if (credentials && credentials.length > 0) {
-        return <Alert severity="warning">{translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning')}</Alert>;
-    }
-
     const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
+        if (credentials && credentials.length > 0) {
+            enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning'), { variant: 'error' });
+            return;
+        }
+
         dispatch(deleteCredentialCollections({ resourceId: id }))
             .unwrap()
             .then(() => {
                 enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Success', { name }), { variant: 'success' });
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(error => {
                 if (error.statusCode === 409) {
                     enqueueSnackbar(error.message, { variant: 'error' });
                 } else {
@@ -50,22 +58,31 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
 
     return (
         <>
-            <MenuItem onClick={e => toggleDeleteDialog(e)}>{translate('Process.Collection.Tile.MenuItem.Delete')}</MenuItem>
-            <CustomDialog
-                isOpen={isDeleteDialogOpen}
-                title={translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title', { name })}
-                onClose={e => {
+            <MenuItem
+                onClick={e => {
                     toggleDeleteDialog(e);
-                    handleClose(e);
+                    // handleDialogOpen(e);
                 }}
-                confirmButtonOptions={{ onClick: handleDelete }}
-                cancelButtonOptions={{
-                    onClick: e => {
+            >
+                {translate('Process.Collection.Tile.MenuItem.Delete')}
+            </MenuItem>
+            <If condition={isDeleteDialogOpen}>
+                <CustomDialog
+                    isOpen={true}
+                    title={translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title', { name })}
+                    onClose={e => {
                         toggleDeleteDialog(e);
                         handleClose(e);
-                    }
-                }}
-            ></CustomDialog>
+                    }}
+                    confirmButtonOptions={{ onClick: handleDelete }}
+                    cancelButtonOptions={{
+                        onClick: e => {
+                            toggleDeleteDialog(e);
+                            handleClose(e);
+                        }
+                    }}
+                />
+            </If>
         </>
     );
 };

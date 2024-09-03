@@ -100,7 +100,8 @@ export class CredentialCollectionService {
     findAllAccessible(user: IUser) {
         return this.credentialCollectionRepository
             .createQueryBuilder('credentialCollectionEntity')
-            .innerJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
+            .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
+            .leftJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
             .innerJoinAndSelect(
                 'credentialCollectionEntity.credentialCollectionUser',
                 'credentialCollectionUser',
@@ -108,8 +109,8 @@ export class CredentialCollectionService {
                     credentialCollectionEntity.tenantId = :tenantId AND
                     credentialCollectionUser.user.id = :userId AND
                     credentialCollectionUser.privilegeType = :privilegeType
-                `,
-                {
+                    `,
+                    {
                     tenantId: user.tenantId,
                     userId: user.id,
                     privilegeType: PrivilegeType.WRITE,

@@ -99,7 +99,7 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
     return (
         <If condition={isOpen}>
             <CustomDialog
-                isOpen={isOpen}
+                isOpen={true}
                 onClose={closeDialog}
                 title={translate(`Credentials.Collection.Dialog.Modify.${collection ? 'Edit' : 'Create'}.Title`)}
                 confirmButtonOptions={{
