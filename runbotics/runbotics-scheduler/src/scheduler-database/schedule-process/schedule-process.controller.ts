@@ -7,69 +7,67 @@ import {
     Body,
     HttpStatus,
     HttpCode,
-    UsePipes,
-    Request,
-    BadRequestException,
+    Get,
+    NotFoundException,
 } from '@nestjs/common';
-import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
-import { ScheduleProcessEntity } from '#/database/schedule-process/schedule-process.entity';
-import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
-import { scheduleProcessSchema } from '#/utils/pipes';
-import { AuthRequest } from '#/types';
-import { ProcessService } from '#/database/process/process.service';
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { QueueService } from '#/queue/queue.service';
-import { FeatureKey, TriggerEvent } from 'runbotics-common';
-import { randomUUID } from 'crypto';
+import { FeatureKey } from 'runbotics-common';
+import { User } from '#/utils/decorators/user.decorator';
+import { UserEntity } from '#/database/user/user.entity';
+import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
+import { CreateScheduleProcessDto, createScheduleProcessSchema } from './dto/create-schedule-process.dto';
+import { ScheduleProcessService } from './schedule-process.service';
 
-@Controller('scheduler/schedule-processes')
+@Controller('/api/scheduler/tenants/:tenantId/schedule-processes')
 export class ScheduleProcessController {
     private readonly logger = new Logger(ScheduleProcessController.name);
 
     constructor(
         private scheduleProcessService: ScheduleProcessService,
-        private queueService: QueueService,
-        private processService: ProcessService,
     ) { }
 
-    @FeatureKeys(FeatureKey.SCHEDULE_ADD)
-    @Post()
-    @UsePipes(new SchemaValidationPipe(scheduleProcessSchema))
-    async createScheduleProcess(
-        @Body() scheduleProcess: ScheduleProcessEntity,
-        @Request() request: AuthRequest,
+    @Get('/processes/:processId')
+    getAllScheduleProcessesByProcessId(
+        @Param('processId', ParseIntPipe) processId: number,
+        @Param('tenantId') tenantId: string,
     ) {
-        this.logger.log(`=> Creating schedule for process ${scheduleProcess.process.id}`);
-        const orchestratorProcessInstanceId = randomUUID();
-        const process = await this.processService.findById(scheduleProcess.process.id);
-        if (!process) {
-            throw new BadRequestException('Wrong process id');
-        }
-        const scheduleProcessWithUser = { ...scheduleProcess, user: request.user, process };
-        const newScheduleProcess = await this.scheduleProcessService.save(scheduleProcessWithUser);
-
-        await this.queueService.createScheduledJob({
-            ...newScheduleProcess,
-            orchestratorProcessInstanceId,
-            trigger: { name: TriggerEvent.SCHEDULER },
-            triggerData: { userEmail: request.user.email },
-            input: { variables: newScheduleProcess?.inputVariables ? JSON.parse(newScheduleProcess.inputVariables) : null }
-        });
-
-        this.logger.log(`<= Creation successful: schedule process ${newScheduleProcess.id}`);
-        return newScheduleProcess;
+        this.logger.log('REST request to get all schedule processes');
+        return this.scheduleProcessService.getAllByProcessId(processId, tenantId);
     }
 
-    @FeatureKeys(FeatureKey.SCHEDULE_DELETE)
-    @HttpCode(HttpStatus.NO_CONTENT)
+    @Get(':id')
+    async getScheduleProcessById(
+        @Param('id') id: number,
+        @Param('tenantId') tenantId: string,
+    ) {
+        this.logger.log('REST request to get schedule process by id: ', id);
+        const scheduleProcess = await this.scheduleProcessService.getById(id, tenantId);
+
+        if (!scheduleProcess) {
+            this.logger.error('Cannot find schedule process',);
+            throw new NotFoundException('Scheduled process not found');
+        }
+
+        return scheduleProcess;
+    }
+
+    @Post()
+    @FeatureKeys(FeatureKey.SCHEDULE_ADD)
+    createScheduleProcess(
+        @Body(new ZodValidationPipe(createScheduleProcessSchema))
+        scheduleProcessDto: CreateScheduleProcessDto,
+        @User() user: UserEntity
+    ) {
+        this.logger.log('REST request to create new schedule for process with id: ', scheduleProcessDto.processId);
+        return this.scheduleProcessService.create(scheduleProcessDto, user);
+    }
+
     @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @FeatureKeys(FeatureKey.SCHEDULE_DELETE)
     async deleteScheduleProcess(@Param('id', ParseIntPipe) id: number) {
-        this.logger.log(`=> Deleting schedule process ${id}`);
-
+        this.logger.log('REST request to delete schedule process with id: ', id);
         await this.scheduleProcessService.delete(id);
-        await this.queueService.deleteScheduledJob(id);
-
-        this.logger.log(`<= Deletion successful: schedule process ${id}`);
     }
 }

@@ -24,6 +24,10 @@ export class ProcessService {
         return this.processRepository.findOne({ where: { id }, relations });
     }
 
+    findByIdAndTenantId(id: number, tenantId: string) {
+        return this.processRepository.findOneByOrFail({ id, tenantId });
+    }
+
     async save(process: IProcess) {
         await this.processRepository.save(process);
         return process;
