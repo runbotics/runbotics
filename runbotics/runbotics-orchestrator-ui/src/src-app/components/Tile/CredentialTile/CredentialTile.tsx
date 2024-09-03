@@ -13,18 +13,17 @@ import { CredentialCard, CredentialCollection } from './CredentialTile.styles';
 import { CredentialTileProps } from './CredentialTile.types';
 import Tile from '../Tile';
 
-const CredentialTile: FC<CredentialTileProps> = ({ credential, collections, templateName, collectionName }) => {
+const CredentialTile: FC<CredentialTileProps> = ({ credential, collection, templateName, collectionName }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
-    const credentialCollection = collections.find(collection => credential.collectionId === collection.id);
     const [collectionColor, setCollectionColor] = useState(null);
 
     useEffect(() => {
-        if (credentialCollection) {
-            setCollectionColor(credentialCollection.color);
+        if (collection) {
+            setCollectionColor(collection.color);
             setLoading(false);
         }
-    }, [credentialCollection]);
+    }, [collection]);
 
     if (loading) {
         return <CircularProgress />;
@@ -33,8 +32,6 @@ const CredentialTile: FC<CredentialTileProps> = ({ credential, collections, temp
     const handleClick = () => {
         router.push(`/app/credentials/${credential.id}`);
     };
-
-    console.log('CredentialTile rerender');
 
     return (
         <Tile minHeight="10rem">

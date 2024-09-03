@@ -124,7 +124,8 @@ export class CredentialCollectionService {
     async findOneAccessibleById(id: string, user: IUser) {
         const collection = await this.credentialCollectionRepository
             .createQueryBuilder('credentialCollectionEntity')
-            .innerJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
+            .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
+            .leftJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
             .innerJoinAndSelect(
                 'credentialCollectionEntity.credentialCollectionUser',
                 'credentialCollectionUser',

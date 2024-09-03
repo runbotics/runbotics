@@ -17,7 +17,7 @@ import { CredentialsCollectionTileProps } from './CredentialsCollectionTile.type
 import MenuItems from './MenuItems/MenuItems';
 import Tile from '../Tile';
 
-const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collection, handleOpenEditDialog, handleOpenDeleteDialog }) => {
+const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collection, handleOpenEditDialog, handleOpenDeleteDialog, setCurrentDialogCollection }) => {
     const router = useRouter();
     const { translate } = useTranslations();
     const { user: currentUser } = useSelector(state => state.auth);
@@ -30,7 +30,8 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collect
             : false;
 
     const handleCardClick = () => {
-        router.push(`/app/credentials/collections/${collection.id}`);
+        setCurrentDialogCollection(collection);
+        router.push(`/app/credentials/collections/${collection.id}?collectionId=${collection.id}`);
     };
 
     return (

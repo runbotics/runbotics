@@ -30,7 +30,7 @@ const buildCredentialCollectionsExtraReducers = (builder: ActionReducerMapBuilde
             state.loading = true;
         })
         .addCase(fetchOneCredentialCollection.fulfilled, (state, action) => {
-            state.credentialCollections = [...state.credentialCollections, action.payload];
+            state.credentialCollections = [action.payload];
             state.loading = false;
         })
         .addCase(fetchOneCredentialCollection.rejected, state => {

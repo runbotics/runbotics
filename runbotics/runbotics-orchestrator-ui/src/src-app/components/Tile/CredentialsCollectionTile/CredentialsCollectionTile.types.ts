@@ -4,4 +4,5 @@ export interface CredentialsCollectionTileProps {
     collection: BasicCredentialsCollectionDto;
     handleOpenEditDialog(id: string): void;
     handleOpenDeleteDialog(id: string): void;
+    setCurrentDialogCollection(collection: BasicCredentialsCollectionDto): void;
 }

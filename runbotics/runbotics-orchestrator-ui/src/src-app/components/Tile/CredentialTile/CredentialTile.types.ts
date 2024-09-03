@@ -15,7 +15,7 @@ export interface Credential {
 
 export interface CredentialTileProps {
     credential: BasicCredentialDto;
-    collections: BasicCredentialsCollectionDto[];
+    collection: BasicCredentialsCollectionDto;
     templateName: string;
     collectionName: string
 }

@@ -13,7 +13,9 @@ import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTi
 import If from '#src-app/components/utils/If';
 
 import { useSelector } from '#src-app/store';
-import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
+import {
+    fetchAllCredentialCollections
+} from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
 import { fetchAllCredentialsAccessibleInTenant } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
 import { usersActions } from '#src-app/store/slices/Users';
@@ -39,9 +41,16 @@ const GridView: FC<GridViewProps> = () => {
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
 
+    const collectionIdFromUrl = router.query.collectionId;
+    const [currentCollection, setCurrentCollection
+    ] = useState(() => 
+        collectionIdFromUrl ? collections.find(collection => collection.id === collectionIdFromUrl) : null
+    );
     const [currentDialogCollection, setCurrentDialogCollection] = useState(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+    const filteredCredentials = currentCollection ? credentials.filter(credential => credential.collectionId === currentCollection.id) : credentials;
 
     const handleOpenEditDialog = (id: string) => {
         setCurrentDialogCollection(collections.find(collection => collection.id === id));
@@ -64,20 +73,26 @@ const GridView: FC<GridViewProps> = () => {
     };
 
     useEffect(() => {
-        dispatch(fetchAllTemplates());
-        dispatch(fetchAllCredentialsAccessibleInTenant());
         dispatch(fetchAllCredentialCollections());
+        dispatch(fetchAllTemplates());
+    }, []);
+
+    useEffect(() => {
+        if (!isCollectionsTab) {
+            dispatch(fetchAllCredentialsAccessibleInTenant());
+        }
+
         if (isCollectionsTab) {
             dispatch(usersActions.getAllLimited());
             dispatch(usersActions.getActiveNonAdmins());
         }
-    }, [dispatch, isCollectionsTab]);
+    }, [isCollectionsTab]);
 
-    const credentialsTiles = credentials.map(credential => (
+    const credentialsTiles = filteredCredentials.map(credential => (
         <CredentialTile
             key={credential.id}
             credential={credential}
-            collections={collections}
+            collection={collections.find(collection => credential.collectionId === collection.id)}
             templateName={credentialTemplates.find(template => template.id === credential.templateId).name}
             collectionName={collections.find(collection => collection.id === credential.collectionId)?.name}
         />
@@ -91,6 +106,7 @@ const GridView: FC<GridViewProps> = () => {
                 collection={collection}
                 handleOpenEditDialog={handleOpenEditDialog}
                 handleOpenDeleteDialog={handleOpenDeleteDialog}
+                setCurrentDialogCollection={setCurrentCollection}
             />
         ));
 
