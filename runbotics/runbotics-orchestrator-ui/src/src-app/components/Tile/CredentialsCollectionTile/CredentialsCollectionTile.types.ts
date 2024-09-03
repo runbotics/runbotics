@@ -1,5 +1,7 @@
 import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 export interface CredentialsCollectionTileProps {
-    collection: BasicCredentialsCollectionDto
+    collection: BasicCredentialsCollectionDto;
+    handleOpenEditDialog(id: string): void;
+    handleOpenDeleteDialog(id: string): void;
 }

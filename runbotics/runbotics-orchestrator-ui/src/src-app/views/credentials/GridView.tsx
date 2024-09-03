@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 import { Pagination, Box } from '@mui/material';
 
@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
+import { CredentialCollectionDelete } from '#src-app/components/Tile/CredentialsCollectionTile/MenuItems/CredentialCollectionDelete/CredentialCollectionDelete';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 
 import If from '#src-app/components/utils/If';
@@ -18,6 +19,7 @@ import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/Cre
 import { usersActions } from '#src-app/store/slices/Users';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
+import CredentialsCollectionModifyDialog from './CredentialsCollection/CredentialsCollectionModifyDialog';
 import { GridViewProps } from './GridView.types';
 import { CredentialsTabs } from './Header';
 
@@ -35,9 +37,31 @@ const GridView: FC<GridViewProps> = () => {
     const credentials = useSelector(state => state.credentials.all);
     const router = useRouter();
     const isCollectionsTab = getLastParamOfUrl(router) === CredentialsTabs.COLLECTIONS;
-
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
 
+    const [currentDialogCollection, setCurrentDialogCollection] = useState(null);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+    const handleOpenEditDialog = (id: string) => {
+        setCurrentDialogCollection(collections.find(collection => collection.id === id));
+        setIsEditDialogOpen(true);
+    };
+
+    const handleCloseEditDialog = () => {
+        setCurrentDialogCollection(null);
+        setIsEditDialogOpen(false);
+    };
+
+    const handleOpenDeleteDialog = (id: string) => {
+        setCurrentDialogCollection(collections.find(collection => collection.id === id));
+        setIsDeleteDialogOpen(true);
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setCurrentDialogCollection(null);
+        setIsDeleteDialogOpen(false);
+    };
 
     useEffect(() => {
         dispatch(fetchAllTemplates());
@@ -61,7 +85,14 @@ const GridView: FC<GridViewProps> = () => {
 
     const collectionTiles = [...collections]
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        .map(collection => <CredentialsCollectionTile key={collection.id} collection={collection} />);
+        .map(collection => (
+            <CredentialsCollectionTile
+                key={collection.id}
+                collection={collection}
+                handleOpenEditDialog={handleOpenEditDialog}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
+            />
+        ));
 
     return (
         <>
@@ -69,6 +100,18 @@ const GridView: FC<GridViewProps> = () => {
                 <If condition={!isCollectionsTab}>{credentialsTiles}</If>
                 <If condition={isCollectionsTab}>{collectionTiles}</If>
             </TileGrid>
+            <If condition={currentDialogCollection}>
+                <CredentialsCollectionModifyDialog
+                    open={isEditDialogOpen}
+                    onClose={handleCloseEditDialog}
+                    collection={currentDialogCollection}
+                />
+                <CredentialCollectionDelete
+                    collection={currentDialogCollection}
+                    isDialogOpen={isDeleteDialogOpen}
+                    handleDialogClose={handleCloseDeleteDialog}
+                />
+            </If>
             <Box mt={6} display="flex" justifyContent="center">
                 <Pagination count={1} />
             </Box>

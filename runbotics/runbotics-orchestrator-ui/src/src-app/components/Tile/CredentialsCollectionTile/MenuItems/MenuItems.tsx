@@ -3,38 +3,33 @@ import React, { FC, useState } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Box, IconButton, Menu, MenuItem } from '@mui/material';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-
-import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
-
-import { CredentialCollectionDelete } from './CredentialCollectionDelete/CredentialCollectionDelete';
-
 interface MenuItemsProps {
-    collection: BasicCredentialsCollectionDto;
-    setShowCollectionDialog(value: boolean): void;
+    collectionId: string;
+    handleOpenEditDialog(id: string): void;
+    handleOpenDeleteDialog(id: string): void;
 }
 
-const MenuItems: FC<MenuItemsProps> = ({ collection, setShowCollectionDialog }) => {
+const MenuItems: FC<MenuItemsProps> = ({
+    collectionId,
+    handleOpenEditDialog,
+    handleOpenDeleteDialog
+}) => {
     const { translate } = useTranslations();
     const [anchorEl, setAnchorEl] = useState<HTMLElement>(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setIsMenuOpen(true);
         setAnchorEl(event.currentTarget);
     };
 
     const handleMenuClose = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
+        setIsMenuOpen(false);
         setAnchorEl(null);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleDialogOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setShowCollectionDialog(true);
-        handleMenuClose(event);
     };
 
     return (
@@ -42,37 +37,40 @@ const MenuItems: FC<MenuItemsProps> = ({ collection, setShowCollectionDialog }) 
             <IconButton
                 onClick={e => {
                     e.stopPropagation();
-                    handleClick(e);
+                    handleMenuClick(e);
                 }}
             >
                 <MoreVertIcon />
             </IconButton>
-            <Menu
-                id="credential-collection-actions-menu"
-                anchorEl={anchorEl}
-                open={!!anchorEl}
-                onClose={handleMenuClose}
-                MenuListProps={{
-                    onClick: e => e.stopPropagation()
-                }}
-            >
-                <MenuItem
-                    onClick={e => {
-                        e.stopPropagation();
-                        handleDialogOpen(e);
-                    }}
+            <If condition={isMenuOpen}>
+                <Menu
+                    id="credential-collection-actions-menu"
+                    anchorEl={anchorEl}
+                    open={true}
+                    onClose={handleMenuClose}
+                    onClick={e => e.stopPropagation()}
                 >
-                    {translate('Credentials.Collection.Tile.MenuItem.Edit')}
-                </MenuItem>
-                <CredentialCollectionDelete
-                    id={collection.id}
-                    name={collection.name}
-                    credentials={collection.credentials}
-                    handleClose={handleClose}
-                    // handleDialogOpen={handleDialogOpen}
-                />
-            </Menu>
-        </Box>     
+                    <MenuItem
+                        onClick={e => {
+                            e.stopPropagation();
+                            handleOpenEditDialog(collectionId);
+                            handleMenuClose(e);
+                        }}
+                    >
+                        {translate('Credentials.Collection.Tile.MenuItem.Edit')}
+                    </MenuItem>
+                    <MenuItem
+                        onClick={e => {
+                            e.stopPropagation();
+                            handleOpenDeleteDialog(collectionId);
+                            handleMenuClose(e);
+                        }}
+                    >
+                        {translate('Process.Collection.Tile.MenuItem.Delete')}
+                    </MenuItem>
+                </Menu>
+            </If>
+        </Box>
     );
 };
 

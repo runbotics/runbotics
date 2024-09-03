@@ -23,9 +23,9 @@ export interface BasicCredentialsCollectionDto {
     updatedAt: string;
     updatedById: string;
     accessType: AccessType;
-    credentials: BasicCredentialDto[]
     description?: string;
     credentialCollectionUser?: CredentialsCollectionUser[];
+    credentials: BasicCredentialDto[]
     createdBy: User
 }
 

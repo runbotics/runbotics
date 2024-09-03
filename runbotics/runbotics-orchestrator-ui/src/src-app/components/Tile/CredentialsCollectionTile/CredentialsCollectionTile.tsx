@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -11,17 +11,15 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { AccessType, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
-import CredentialsCollectionModifyDialog from '#src-app/views/credentials/CredentialsCollection/CredentialsCollectionModifyDialog';
 
 import { ColorDot, CredentialCollectionCard, ShareOptionSpan } from './CredentialsCollectionTile.style';
 import { CredentialsCollectionTileProps } from './CredentialsCollectionTile.types';
 import MenuItems from './MenuItems/MenuItems';
 import Tile from '../Tile';
 
-const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collection }) => {
+const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collection, handleOpenEditDialog, handleOpenDeleteDialog }) => {
     const router = useRouter();
     const { translate } = useTranslations();
-    const [showCollectionDialog, setShowCollectionDialog] = useState<boolean>(false);
     const { user: currentUser } = useSelector(state => state.auth);
     const isOwner = parseInt(collection.createdById) === currentUser.id;
     const hasEditAccess =
@@ -35,18 +33,10 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collect
         router.push(`/app/credentials/collections/${collection.id}`);
     };
 
-    const handleDialogClose = () => {
-        setShowCollectionDialog(false);
-    };
-
     return (
         <>
             <Tile>
-                <CredentialCollectionCard
-                    onClick={() => {
-                        if (!showCollectionDialog) handleCardClick();
-                    }}
-                >
+                <CredentialCollectionCard onClick={handleCardClick}>
                     <Box display="flex">
                         <ColorDot collectionColor={collection.color} />
                         <Typography variant="h4">{collection.name}</Typography>
@@ -101,11 +91,9 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collect
                     </Grid>
                     <Divider sx={{ marginTop: '2rem' }} />
                     <If condition={isOwner || hasEditAccess}>
-                        <MenuItems collection={collection} setShowCollectionDialog={setShowCollectionDialog} />
-                        <CredentialsCollectionModifyDialog
-                            open={showCollectionDialog}
-                            onClose={handleDialogClose}
-                            collection={collection}
+                        <MenuItems collectionId={collection?.id} 
+                            handleOpenEditDialog={handleOpenEditDialog}
+                            handleOpenDeleteDialog={handleOpenDeleteDialog}
                         />
                     </If>
                 </CredentialCollectionCard>
