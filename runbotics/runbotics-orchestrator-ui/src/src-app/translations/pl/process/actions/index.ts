@@ -2,6 +2,7 @@ import cloudFileActionsTranslations from './cloudFile';
 import commonActionsTranslations from './common';
 import excelActionsTranslations from './excel';
 import folderActionsTranslations from './folder';
+import googleActionsTranslations from './google';
 import actionGroupsTranslations from './groups';
 import imageActionsTranslations from './image';
 import jiraCloudActionsTranslations from './jiraCloud';
@@ -20,6 +21,7 @@ const processActionsTranslations = {
     ...jiraServerActionsTranslations,
     ...folderActionsTranslations,
     ...zipActionsTranslations,
+    ...googleActionsTranslations,
 };
 
 export default processActionsTranslations;
