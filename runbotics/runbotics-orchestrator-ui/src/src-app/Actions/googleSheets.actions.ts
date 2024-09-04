@@ -118,7 +118,6 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Google.Sheets.GetCell.Cell'
                                 ),
-                                pattern: ActionRegex.CELL_ADDRESS,
                                 type: 'string',
                             },
                             sheet: {
@@ -211,7 +210,6 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate(
                                     'Process.Details.Modeler.Actions.Google.Sheets.GetCells.Range'
                                 ),
-                                pattern: ActionRegex.CELL_RANGE,
                                 type: 'string',
                             },
                             sheet: {
@@ -390,7 +388,6 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
                                     'Process.Details.Modeler.Actions.Google.Sheets.SetCells.Range'
                                 ),
                                 type: 'string',
-                                pattern: ActionRegex.CELL_RANGE,
                             },
                             values: {
                                 title: translate(
