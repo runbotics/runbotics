@@ -21,13 +21,6 @@ interface CreateGeneralInfoProps {
     open?: boolean;
 }
 
-const tempCollections = [
-    { name: 'Kolekcja Basi', id: 'kolekcja_basi' },
-    { name: 'Kolekcja Ady', id: 'kolekcja_ady' },
-    { name: 'Kolekcja Stasia', id: 'kolekcja_stasia' },
-    { name: 'Kolekcja Asi', id: 'kolekcja_asi' }
-];
-
 export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, open }) => {
     const { translate } = useTranslations();
     const [credentialFormState, setCredentialFormState] = useState<CreateCredentialDto>(getInitialCredentialData());
@@ -39,6 +32,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
     });
     const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
     const { enqueueSnackbar } = useSnackbar();
+    const credentialsCollections = useSelector(state => state.credentialCollections.credentialCollections);
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
 
     const closeDialog = () => {
@@ -48,7 +42,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
     const handleSubmit = () => {
         try {
             if (!checkIsFormValid()) {
-                enqueueSnackbar('cos poszlo nie tak', { variant: 'error' });
+                enqueueSnackbar('Invalid form values', { variant: 'error' });
                 return;
             }
 
@@ -56,19 +50,13 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
         } catch (error) {}
     };
 
-    // change to take this from state
-    const credentialsCollections = tempCollections;
-
-    // get this from db
-    const templates = credentialTemplates;
-
     const collectionsToChoose = credentialsCollections.map(collection => (
         <MenuItem key={collection.id} value={collection.id}>
             <Typography>{collection.name}</Typography>
         </MenuItem>
     ));
 
-    const templatesToChoose = templates.map(template => (
+    const templatesToChoose = credentialTemplates.map(template => (
         <MenuItem key={template.id} value={template.id}>
             <Typography>{template.name}</Typography>
         </MenuItem>

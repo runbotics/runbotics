@@ -19,6 +19,7 @@ export interface BasicCredentialDto {
 export interface CreateCredentialDto {
     name: string;
     templateId: string;
+    collectionId: string;
     description?: string;
 }
 

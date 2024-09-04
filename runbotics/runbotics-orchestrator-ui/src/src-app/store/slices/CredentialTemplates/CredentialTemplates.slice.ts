@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import buildCredentialTemplatesExtraReducers from './CredentialTemplates.extraReducers';
 import { CredentialTemplatesState } from './CredentialTemplates.state';
+import * as credentialTemplatesThunks from './CredentialTemplates.thunks';
 
 const initialState: CredentialTemplatesState = {
     data: [],
@@ -16,3 +17,8 @@ export const slice = createSlice({
 });
 
 export const credentialTemplatesReducer = slice.reducer;
+
+export const credentialTemplatesActions = {
+    ...slice.actions,
+    ...credentialTemplatesThunks
+};

@@ -11,13 +11,17 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { AccessType, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
-
 import { ColorDot, CredentialCollectionCard, ShareOptionSpan } from './CredentialsCollectionTile.style';
 import { CredentialsCollectionTileProps } from './CredentialsCollectionTile.types';
 import MenuItems from './MenuItems/MenuItems';
 import Tile from '../Tile';
 
-const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collection, handleOpenEditDialog, handleOpenDeleteDialog, setCurrentDialogCollection }) => {
+const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
+    collection,
+    handleOpenEditDialog,
+    handleOpenDeleteDialog,
+    setCurrentDialogCollection
+}) => {
     const router = useRouter();
     const { translate } = useTranslations();
     const { user: currentUser } = useSelector(state => state.auth);
@@ -31,7 +35,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collect
 
     const handleCardClick = () => {
         setCurrentDialogCollection(collection);
-        router.push(`/app/credentials/collections/${collection.id}?collectionId=${collection.id}`);
+        router.push(`/app/credentials/collections/${collection.id}`);
     };
 
     return (
@@ -92,7 +96,8 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({ collect
                     </Grid>
                     <Divider sx={{ marginTop: '2rem' }} />
                     <If condition={isOwner || hasEditAccess}>
-                        <MenuItems collectionId={collection?.id} 
+                        <MenuItems
+                            collectionId={collection?.id}
                             handleOpenEditDialog={handleOpenEditDialog}
                             handleOpenDeleteDialog={handleOpenDeleteDialog}
                         />

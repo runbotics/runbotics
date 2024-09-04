@@ -21,7 +21,7 @@ const buildCredentialTemplatesExtraReducers =(builder:ActionReducerMapBuilder<Cr
         })
         .addCase(fetchOneTemplate.fulfilled, (state, action) => {
             state.loading = false;
-            state.data = [...action.payload];
+            state.data = [action.payload];
         })
         .addCase(fetchOneTemplate.rejected, (state) => {
             state.loading = false;

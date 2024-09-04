@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-
 const StyledTypography = styled(Typography)(({ theme }) => ({
     position: 'relative',
     '&:after': {
@@ -15,24 +14,23 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
         content: '" "',
         height: 3,
         width: 48,
-        backgroundColor: theme.palette.primary.main,
-    },
+        backgroundColor: theme.palette.primary.main
+    }
 }));
 
 interface CredentialsHeaderProps {
-    credentialCount: number
+    credentialCount: number;
 }
 
-const CredentialsHeader: FC<CredentialsHeaderProps> = ({credentialCount}) => {
+const CredentialsHeader: FC<CredentialsHeaderProps> = ({ credentialCount }) => {
     const { translate } = useTranslations();
 
     return (
-        <Box display="flex" alignItems="center" justifyContent="space-between">
+        <Box display="flex" alignItems="center" justifyContent="flex-start" mb={6}>
             <StyledTypography variant="h5" color="textPrimary">
                 {translate('Credentials.List.Header.Elements', { count: credentialCount })}
             </StyledTypography>
-            <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem">
-            </Box>
+            <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem"></Box>
         </Box>
     );
 };

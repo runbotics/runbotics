@@ -7,7 +7,7 @@ const CREDENTIAL_PATH = 'credential-collections/:collectionId/credentials/';
 
 export const createCredential = ApiTenantResource.post<BasicCredentialDto, EditCredentialDto>('credential/create', CREDENTIAL_PATH);
 
-export const fetchAllCredentialsInCollection = ApiTenantResource.get<BasicCredentialDto[]>('credential/fetchAllInCollection', CREDENTIAL_PATH);
+export const fetchAllCredentialsInCollection = ApiTenantResource.get<BasicCredentialDto[]>('credential/fetchAllInCollection', 'credential-collections');
 
 export const fetchAllCredentialsAccessibleInTenant = ApiTenantResource.get<BasicCredentialDto[]>('credential/fetchAllInTenant', 'credentials');
 
