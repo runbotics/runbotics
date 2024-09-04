@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
-const getBeeOfficeActions: () => Record<string, & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
+const getBeeOfficeActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
     'beeOffice.createNewTimetableActivity': {
         id: BeeOfficeAction.CREATE_NEW_TIMETABLE_ACTIVITY,
         credentialType: ActionCredentialType.BEE_OFFICE,

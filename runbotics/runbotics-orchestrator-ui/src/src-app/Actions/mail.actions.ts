@@ -1,14 +1,15 @@
 import { MailAction } from 'runbotics-common';
 
+import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
 
-
-const getMailActions: () => Record<string, IBpmnAction> = () => ({
+const getMailActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
     'mail.send': {
         id: MailAction.SEND,
+        credentialType: ActionCredentialType.EMAIL,
         label: translate('Process.Details.Modeler.Actions.Mail.Send.Label'),
         script: MailAction.SEND,
         runner: Runner.DESKTOP_SCRIPT,
