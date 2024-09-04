@@ -117,9 +117,10 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
 
 type DeleteProcessProps = {
     process: IProcess;
+    handleMenuClose(): void;
 };
 
-const DeleteProcess: FC<DeleteProcessProps> = ({ process }) => {
+const DeleteProcess: FC<DeleteProcessProps> = ({ process, handleMenuClose }) => {
     const [show, setShow] = useState(false);
     const { translate } = useTranslations();
 
@@ -129,7 +130,10 @@ const DeleteProcess: FC<DeleteProcessProps> = ({ process }) => {
 
     return (
         <>
-            <MenuItem onClick={() => setShow(true)}>{translate('Process.Delete.ActionName')}</MenuItem>
+            <MenuItem onClick={() => {
+                setShow(true);
+                handleMenuClose();
+            }}>{translate('Process.Delete.ActionName')}</MenuItem>
             <DeleteProcessDialog
                 process={process}
                 open={show}
