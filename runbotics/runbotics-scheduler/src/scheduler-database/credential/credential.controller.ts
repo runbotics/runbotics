@@ -21,43 +21,43 @@ export class CredentialController {
     @Param('collectionId') collectionId,
     @User() user: IUser
   ) {
-    this.logger.log('Creating new credential');
+    this.logger.log('REST request to create new credential');
     return this.credentialService.create(credentialDto, collectionId, user);
   }
 
   @Get(COLLECTION_URL_PARTIAL)
-  findAllUserAccessible(@User() user: IUser, @Param('collectionId') collectionId: string) {
-    this.logger.log('Getting all credentials');
+  findAllAccessibleInCollection(@User() user: IUser, @Param('collectionId') collectionId: string) {
+    this.logger.log('REST request to get all credentials from collection ' + collectionId);
     return this.credentialService.findAllAccessibleByCollectionId(user, collectionId);
   }
 
   @Get(COLLECTION_URL_PARTIAL + ':id')
-  findOneUserAccessible(@Param('id') id: string) {
-    this.logger.log('Getting credential by id ' + id);
-    return this.credentialService.findOneAccessibleById(id);
+  findOneUserAccessible(@Param('id') id: string, @User() user: IUser) {
+    this.logger.log('REST request to get credential by id ' + id);
+    return this.credentialService.findOneAccessibleById(id, user.tenantId);
   }
 
   @Patch(COLLECTION_URL_PARTIAL + ':id')
   update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialSchema)) credentialDto: UpdateCredentialDto, @User() user: IUser) {
-    this.logger.log('Updating credential by id ' + id);
+    this.logger.log('REST request to update credential by id ' + id);
     return this.credentialService.updateById(id, credentialDto, user);
   }
 
   @Patch(COLLECTION_URL_PARTIAL + ':id/UpdateAttribute/:attributeName')
   updateAttribute(@Param('id') id: string, @Param('attributeName') attributeName: string, @Body() attributeDto: UpdateAttributeDto, @User() user: IUser) {
-    this.logger.log('Updating credential attribute by id ' + id);
+    this.logger.log('REST request to update credential attribute by id ' + id);
     return this.credentialService.updateAttribute(id, attributeName, attributeDto, user);
   }
 
   @Delete(COLLECTION_URL_PARTIAL + ':id')
-  remove(@Param('id') id: string) {
-    this.logger.log('Deleting credential by id ' + id);
-    return this.credentialService.removeById(id);
+  remove(@Param('id') id: string, @User() user: IUser) {
+    this.logger.log('REST request to delete credential by id ' + id);
+    return this.credentialService.removeById(id, user.tenantId);
   }
 
   @Get('credentials')
-  findAllAccessible(@Param('tenantId') tenantId: string, @User() user: IUser) {
-    this.logger.log('Getting all credentials');
-    return this.credentialService.findAllAccessible(tenantId, user);
+  findAllAccessible(@User() user: IUser) {
+    this.logger.log('REST request to get all accessible credentials');
+    return this.credentialService.findAllAccessible(user);
   }
 }
