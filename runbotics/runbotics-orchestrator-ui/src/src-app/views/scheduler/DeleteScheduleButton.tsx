@@ -41,7 +41,7 @@ const DeleteScheduleButton: VFC<DeleteScheduleButtonProps> = ({ id, processName 
 
     const handleDelete = async () => {
         setShow(false);
-        await dispatch(scheduleProcessActions.removeScheduledProcess({ scheduleProcessId: id }))
+        await dispatch(scheduleProcessActions.removeScheduledProcess({ resourceId: id }))
             .then(() => {
                 enqueueSnackbar(translate('Scheduler.Delete.ScheduledProcess.Success', { processName }), {
                     variant: 'success',

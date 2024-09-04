@@ -15,14 +15,14 @@ export class ScheduleProcess {
     inputVariables: string;
 
     @Column({ name: 'process_id' })
-    processId: ProcessEntity;
+    processId: number;
 
     @ManyToOne(() => ProcessEntity, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'process_id', referencedColumnName: 'id' })
     process: ProcessEntity;
 
     @Column({ name: 'user_id' })
-    userId: UserEntity;
+    userId: number;
 
     @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })

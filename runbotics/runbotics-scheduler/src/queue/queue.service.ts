@@ -4,6 +4,8 @@ import { InjectQueue } from '@nestjs/bull';
 import {
     BadRequestException,
     ForbiddenException,
+    forwardRef,
+    Inject,
     Injectable,
     NotFoundException,
     OnModuleInit,
@@ -40,6 +42,7 @@ export class QueueService implements OnModuleInit {
     constructor(
         @InjectQueue('scheduler') private readonly processQueue: Queue<JobData>,
         private readonly processService: ProcessService,
+        @Inject(forwardRef(() => ScheduleProcessService))
         private readonly scheduleProcessService: ScheduleProcessService,
         private readonly botSchedulerService: BotSchedulerService,
         private readonly uiGateway: UiGateway,

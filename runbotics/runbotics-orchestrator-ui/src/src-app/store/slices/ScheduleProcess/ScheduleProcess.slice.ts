@@ -7,8 +7,6 @@ import { RootState } from '../../index';
 
 const initialState: ScheduleProcessState = {
     loading: false,
-    byId: {},
-    allIds: [],
     schedules: [],
 };
 

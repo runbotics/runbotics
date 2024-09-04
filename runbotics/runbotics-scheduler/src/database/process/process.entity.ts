@@ -18,13 +18,14 @@ import {
     IBotSystem,
     NotificationProcess,
 } from 'runbotics-common';
-import { ScheduleProcessEntity } from '../schedule-process/schedule-process.entity';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-database/notification-process/notification-process.entity';
+import { Credential } from '#/scheduler-database/credential/credential.entity';
+import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 
 @Entity({ name: 'process', synchronize: false })
 export class ProcessEntity implements IProcess {
@@ -69,10 +70,7 @@ export class ProcessEntity implements IProcess {
     @JoinColumn([{ name: 'system', referencedColumnName: 'name' }])
     system: IBotSystem;
 
-    @OneToMany(
-        () => ScheduleProcessEntity,
-        (scheduleProcess) => scheduleProcess.process
-    )
+    @OneToMany(() => ScheduleProcess, scheduleProcess => scheduleProcess.process)
     schedules: IScheduleProcess[];
 
     @ManyToOne(() => UserEntity)

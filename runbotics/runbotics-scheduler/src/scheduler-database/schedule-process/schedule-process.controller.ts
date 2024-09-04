@@ -42,7 +42,7 @@ export class ScheduleProcessController {
         @Param('tenantId') tenantId: string,
     ) {
         this.logger.log('REST request to get schedule process by id: ', id);
-        const scheduleProcess = await this.scheduleProcessService.getById(id, tenantId);
+        const scheduleProcess = await this.scheduleProcessService.getByIdAndTenantId(id, tenantId);
 
         if (!scheduleProcess) {
             this.logger.error('Cannot find schedule process',);
@@ -59,7 +59,7 @@ export class ScheduleProcessController {
         scheduleProcessDto: CreateScheduleProcessDto,
         @User() user: UserEntity
     ) {
-        this.logger.log('REST request to create new schedule for process with id: ', scheduleProcessDto.processId);
+        this.logger.log('REST request to create new schedule for process with id: ', scheduleProcessDto.process.id);
         return this.scheduleProcessService.create(scheduleProcessDto, user);
     }
 

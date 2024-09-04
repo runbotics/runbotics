@@ -2,8 +2,10 @@ import { z } from 'zod';
 
 export const createScheduleProcessSchema = z.object({
     cron: z.string(),
-    processId: z.number(),
-    inputVariables: z.string().optional(),
+    process: z.object({
+        id: z.number(),
+    }),
+    inputVariables: z.string().nullable(),
 }).required();
 
 export type CreateScheduleProcessDto = z.infer<typeof createScheduleProcessSchema>;

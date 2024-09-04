@@ -1,6 +1,6 @@
 import { ProcessService } from '#/database/process/process.service';
 import { Logger } from '#/utils/logger';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { ScheduleProcess } from './schedule-process.entity';
 import { CreateScheduleProcessDto } from './dto/create-schedule-process.dto';
@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { QueueService } from '#/queue/queue.service';
 import { TriggerEvent } from 'runbotics-common';
 
+const relations = ['process', 'user', 'process.system', 'process.botCollection'];
 
 @Injectable()
 export class ScheduleProcessService {
@@ -19,11 +20,12 @@ export class ScheduleProcessService {
         @InjectRepository(ScheduleProcess)
         private readonly scheduleProcessRepository: Repository<ScheduleProcess>,
         private readonly processService: ProcessService,
+        @Inject(forwardRef(() => QueueService))
         private readonly queueService: QueueService,
-    ) {}
+    ) { }
 
     getAll() {
-        return this.scheduleProcessRepository.find();
+        return this.scheduleProcessRepository.find({ relations });
     }
 
     getAllByProcessId(processId: number, tenantId: string) {
@@ -32,15 +34,19 @@ export class ScheduleProcessService {
         });
     }
 
-    getById(id: number, tenantId: string) {
+    getByIdAndTenantId(id: number, tenantId: string) {
         return this.scheduleProcessRepository.findOneBy({
             id, process: { tenantId }
         });
     }
 
+    getById(id: number) {
+        return this.scheduleProcessRepository.findOne({ where: { id }, relations });
+    }
+
     async create(scheduleProcessDto: CreateScheduleProcessDto, user: UserEntity) {
         const process = await this.processService
-            .findByIdAndTenantId(scheduleProcessDto.processId, user.tenantId)
+            .findByIdAndTenantId(scheduleProcessDto.process.id, user.tenantId)
             .catch(() => {
                 throw new BadRequestException('Cannot find process');
             });
@@ -61,6 +67,9 @@ export class ScheduleProcessService {
             triggerData: { userEmail: user.email },
             input: { variables: scheduleProcess?.inputVariables ? JSON.parse(scheduleProcess.inputVariables) : null }
         });
+
+        delete scheduleProcess.process;
+        delete scheduleProcess.user;
 
         return scheduleProcess;
     }
