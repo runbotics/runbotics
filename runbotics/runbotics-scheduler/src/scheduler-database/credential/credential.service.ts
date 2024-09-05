@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { IUser } from 'runbotics-common';
 import { CredentialTemplateService } from '../credential-template/credential-template.service';
 import { SecretService } from '../secret/secret.service';
@@ -15,8 +15,6 @@ const relations = ['attributes'];
 
 @Injectable()
 export class CredentialService {
-  private readonly logger = new Logger(CredentialService.name);
-
   constructor(
     @InjectRepository(Credential)
     private readonly credentialRepo: Repository<Credential>,
@@ -73,17 +71,13 @@ export class CredentialService {
       });
   }
 
-  async findAllAccessible(tenantId: string, user: IUser) {
+  async findAllAccessible(user: IUser) {
     const accessibleCollections = await this.collectionService.findAllAccessible(user);
-
-    if (accessibleCollections.length === 0) {
-      throw new NotFoundException('Could not find any accessible collections');
-    }
 
     const credentials = accessibleCollections.map((collection) => collection.credentials).flat();
 
     if (!credentials.some((credential) => Boolean(credential))) {
-      throw new NotFoundException('Could not find any credentials in any of the accessible collections');
+      return [];
     }
 
     return credentials;
@@ -108,17 +102,14 @@ export class CredentialService {
 
     const credentials = await this.findByCriteria(user.tenantId, { collectionId });
 
-    if (credentials.length === 0) {
-      throw new NotFoundException(`Could not find credentials for collection with id ${collectionId}`);
-    }
-
     return credentials;
   }
 
-  async findOneAccessibleById(id: string) {
+  async findOneAccessibleById(id: string, tenantId: string) {
     const result = await this.credentialRepo.findOne({
       where: {
-        id
+        id,
+        tenantId,
       },
       relations
     });
@@ -147,7 +138,7 @@ export class CredentialService {
   }
 
   async updateById(id: string, credentialDto: UpdateCredentialDto, user: IUser) {
-    const credential = await this.findOneAccessibleById(id);
+    const credential = await this.findOneAccessibleById(id, user.tenantId);
 
     if (!credential) {
       throw new NotFoundException(`Could not find credential with id ${id}`);
@@ -168,13 +159,13 @@ export class CredentialService {
       });
   }
 
-  async removeById(id: string) {
-    const credential = await this.findOneAccessibleById(id);
+  async removeById(id: string, tenantId: string) {
+    const credential = await this.findOneAccessibleById(id, tenantId);
     return this.credentialRepo.remove(credential);
   }
 
   async updateAttribute(id: string, attributeName: string, attributeDto: UpdateAttributeDto, user: IUser) {
-    const credential = await this.findOneAccessibleById(id);
+    const credential = await this.findOneAccessibleById(id, user.tenantId);
 
     if (!credential) {
       throw new NotFoundException(`Could not find credential with id ${id}`);

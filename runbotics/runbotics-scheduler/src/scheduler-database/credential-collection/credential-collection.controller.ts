@@ -41,23 +41,21 @@ export class CredentialCollectionController {
         createCredentialCollectionDto: CreateCredentialCollectionDto,
         @User() user: IUser,
     ) {
-        this.logger.log('Creating new credential collection');
+        this.logger.log('REST request to create credential collection');
 
         const collection = await this.credentialCollectionService.create(
             createCredentialCollectionDto,
             user,
         );
 
-        this.logger.log('Created new credential collection with id: ' + collection.id);
-
         return collection;
     }
 
     @Get()
-    findAll(@Request() request: AuthRequest) {
-        this.logger.log('Getting all credential collections');
+    findAll(@User() user: IUser) {
+        this.logger.log('REST request to get credential collections');
 
-        return this.credentialCollectionService.findAllAccessible(request.user);
+        return this.credentialCollectionService.findAllAccessible(user);
     }
 
     @Get(':id')
@@ -65,7 +63,7 @@ export class CredentialCollectionController {
         @Param('id') id: string,
         @Request() request: AuthRequest
     ) {
-        this.logger.log(`Getting credential collection with id (${id})`);
+        this.logger.log(`REST request to get collection with id (${id})`);
 
         return this.credentialCollectionService.findOneAccessibleById(id, request.user);
     }
@@ -77,7 +75,7 @@ export class CredentialCollectionController {
         updateCredentialCollectionDto: UpdateCredentialCollectionDto,
         @User() user: IUser,
     ) {
-        this.logger.log(`Updating credential collection with id (${id})`);
+        this.logger.log(`REST request to update credential collection with id (${id})`);
 
         return this.credentialCollectionService.update(
             id,
@@ -92,7 +90,7 @@ export class CredentialCollectionController {
         @Param('id') id: string,
         @User() user: IUser,
     ) {
-        this.logger.log(`Deleting credential collection with id (${id})`);
+        this.logger.log(`REST request to delete credential collection with id (${id})`);
         await this.credentialCollectionService.delete(id, user);
     }
 }
