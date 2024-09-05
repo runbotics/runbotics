@@ -10,7 +10,8 @@ import {
     getAllByPage,
     getInviteCode,
     getInviteCodeByTenantId,
-    partialUpdate
+    partialUpdate,
+    fetchTenantNameByInviteCode,
 } from './Tenants.thunks';
 
 const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState>) => {
@@ -92,6 +93,14 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
         })
         .addCase(generateInviteCodeByTenantId.fulfilled, (state, action) => {
             state.inviteCode = action.payload.inviteCode;
+        })
+
+        // GET TENANT NAME BY INVITE CODE
+        .addCase(fetchTenantNameByInviteCode.fulfilled, (state, action) => {
+            state.invitingTenant = action.payload.tenantName;
+        })
+        .addCase(fetchTenantNameByInviteCode.rejected, (state) => {
+            state.invitingTenant = null;
         });
 };
 

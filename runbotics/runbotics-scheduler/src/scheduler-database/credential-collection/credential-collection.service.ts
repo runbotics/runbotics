@@ -181,14 +181,14 @@ export class CredentialCollectionService {
             return this.credentialCollectionRepository.update(id, dto);
         }
 
-        const credentialCollection =
-            await this.credentialCollectionRepository.findOne({
-                where: { id, tenantId },
-                relations,
-            });
+        const credentialCollection = await this.findOneAccessibleById(id, user);
 
-        if (!credentialCollection) {
-            throw new NotFoundException(`Could not find collection with id ${id}`);
+        if (
+            !credentialCollection.credentialCollectionUser.some(
+                (ccu) => Number(ccu.userId) === user.id && ccu.privilegeType === PrivilegeType.WRITE
+            )
+        ) {
+            throw new BadRequestException('You do not have permission to update this collection. To edit you need EDIT access.');
         }
 
         if (sharedWith && sharedWith.length > 0) {
@@ -278,6 +278,12 @@ export class CredentialCollectionService {
             userEmails,
             tenantId
         );
+
+        const unknownEmails = userEmails.filter(email => !grantAccessUsers.some(user => user.email === email));
+
+        if (unknownEmails.length > 0) {
+            throw new BadRequestException(`Users with emails ${unknownEmails.join(', ')} do not exist`);
+        }
 
         const credentialCollectionCreator =
             this.credentialCollectionUserRepository.create({
