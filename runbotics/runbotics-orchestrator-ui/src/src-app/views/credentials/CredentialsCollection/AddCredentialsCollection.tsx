@@ -11,8 +11,6 @@ const AddCredentialsCollection: FC = () => {
     const { translate } = useTranslations();
     const [showDialog, setShowDialog] = useState(false);
 
-    const handleAdd = () => {};
-
     return (
         <>
             <Button

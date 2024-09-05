@@ -3,13 +3,16 @@ import React, { FC, useState } from 'react';
 
 import { Grid, TextField, Typography, MenuItem, SelectChangeEvent } from '@mui/material';
 
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
 import CustomDialog from '#src-app/components/CustomDialog';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { useSelector } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
+import { credentialsActions } from '#src-app/store/slices/Credentials';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
+
 
 import GeneralInfoDropdown from './GeneralInfoDropdown';
 import { CreateCredentialDto } from '../Credential.types';
@@ -17,18 +20,19 @@ import { getInitialCredentialData } from '../EditCredential/EditCredential.utils
 
 interface CreateGeneralInfoProps {
     onClose: () => void;
-    onAdd: (credential: CreateCredentialDto) => void;
     open?: boolean;
 }
 
-export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, open }) => {
+export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, open }) => {
     const { translate } = useTranslations();
-    const [credentialFormState, setCredentialFormState] = useState<CreateCredentialDto>(getInitialCredentialData());
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const collectionId = router.query.collectionId ? router.query.collectionId as string : null;
+    const [credentialFormState, setCredentialFormState] = useState<CreateCredentialDto>(getInitialCredentialData(collectionId));
     const [formValidationState, setFormValidationState] = useState<{ [key: string]: boolean }>({
         name: false,
-        description: false,
-        collectionId: false,
-        templateId: true
+        collectionId: collectionId ? true : false,
+        templateId: false
     });
     const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
     const { enqueueSnackbar } = useSnackbar();
@@ -39,15 +43,31 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
         onClose();
     };
 
-    const handleSubmit = () => {
-        try {
-            if (!checkIsFormValid()) {
-                enqueueSnackbar('Invalid form values', { variant: 'error' });
-                return;
-            }
+    const handleSubmit = async () => {
+        if (!checkIsFormValid()) {
+            enqueueSnackbar('Invalid form values', { variant: 'error' });
+            return;
+        }
 
-            onAdd(credentialFormState);
-        } catch (error) {}
+        await dispatch(
+            credentialsActions.createCredential({
+                resourceId: `${credentialFormState.collectionId}/credentials`,
+                payload: {
+                    name: credentialFormState.name,
+                    description: credentialFormState.description,
+                    templateId: credentialFormState.templateId,
+                }
+            })
+        ).unwrap().then((response) => {
+            router.push(`/app/credentials/${response.id}`);
+            // add info about redirecting to credential page
+            // close dialog
+            // clear form
+        }).catch((error) => {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        });
+
+
     };
 
     const collectionsToChoose = credentialsCollections.map(collection => (
@@ -134,8 +154,9 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
                         </Grid>
                         <Grid item xs={12}>
                             <GeneralInfoDropdown
+                                disabled={!!collectionId}
                                 selectLabel={translate('Credentials.Tab.Collections')}
-                                tooltipText={translate('Credential.Details.Dislaimer.Text')}
+                                tooltipText={translate('Credential.Details.Disclaimer.Text')}
                                 selectOptions={collectionsToChoose}
                                 selectedValue={credentialFormState.collectionId}
                                 handleChange={(event: SelectChangeEvent) => handleDropdownChange('collectionId', event.target.value)}
@@ -144,6 +165,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, onAdd, 
                         </Grid>
                         <Grid item xs={12}>
                             <GeneralInfoDropdown
+                                disabled={false}
                                 selectLabel={translate('Credential.Details.Template.Label')}
                                 tooltipText={translate('Credential.Details.Template.Info')}
                                 selectOptions={templatesToChoose}

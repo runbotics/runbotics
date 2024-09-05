@@ -9,7 +9,7 @@ import If from '#src-app/components/utils/If';
 
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
-import CollectionsGridView from './CollectionsGridView';
+import CredentialCollectionsGridView from './CollectionsGridView';
 import CredentialsGridView from './CredentialsGridView';
 import { CredentialsTabs } from '../Header';
 
@@ -32,7 +32,7 @@ const GridView = () => {
             </If>
             <If condition={isCollectionsTab}>
                 <TileGrid>
-                    <CollectionsGridView />
+                    <CredentialCollectionsGridView />
                 </TileGrid>
             </If>
             <Box mt={6} display="flex" justifyContent="center">

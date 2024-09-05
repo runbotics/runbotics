@@ -1,11 +1,11 @@
 
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
-import { BasicCredentialDto, EditCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
+import { BasicCredentialDto, CreateCredentialDto, EditCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 
 const CREDENTIAL_PATH = 'credential-collections/:collectionId/credentials/';
 
-export const createCredential = ApiTenantResource.post<BasicCredentialDto, EditCredentialDto>('credential/create', CREDENTIAL_PATH);
+export const createCredential = ApiTenantResource.post<BasicCredentialDto, CreateCredentialDto>('credential/create', 'credential-collections');
 
 export const fetchAllCredentialsInCollection = ApiTenantResource.get<BasicCredentialDto[]>('credential/fetchAllInCollection', 'credential-collections');
 

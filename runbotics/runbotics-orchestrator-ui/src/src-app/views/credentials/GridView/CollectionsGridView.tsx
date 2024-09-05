@@ -10,7 +10,7 @@ import { usersActions } from '#src-app/store/slices/Users';
 
 import CredentialsCollectionModifyDialog from '../CredentialsCollection/CredentialsCollectionModifyDialog';
 
-const CollectionsGridView = () => {
+const CredentialCollectionsGridView = () => {
     const dispatch = useDispatch();
     const collections = useSelector(state => state.credentialCollections.credentialCollections);
 
@@ -70,4 +70,4 @@ const CollectionsGridView = () => {
     );
 };
 
-export default CollectionsGridView;
+export default CredentialCollectionsGridView;

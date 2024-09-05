@@ -12,7 +12,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
         bottom: -8,
         left: 0,
         content: '" "',
-        height: 3,
+        height: 2,
         width: 48,
         backgroundColor: theme.palette.primary.main
     }

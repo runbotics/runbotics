@@ -19,7 +19,8 @@ export interface BasicCredentialDto {
 export interface CreateCredentialDto {
     name: string;
     templateId: string;
-    collectionId: string;
+    // TODO remove, but there is some view that requires it - check and correct
+    collectionId?: string; 
     description?: string;
 }
 

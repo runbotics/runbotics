@@ -12,7 +12,7 @@ export const CredentialsView = () => {
     return (
         <InternalPage title={translate('Credentials.Tab.Credentials')}>
             <Header />
-            <Box mt={6}>
+            <Box mt={2}>
                 <GridView />
             </Box>
         </InternalPage>

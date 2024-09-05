@@ -35,7 +35,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
 
     const handleCardClick = () => {
         setCurrentDialogCollection(collection);
-        router.push(`/app/credentials/collections/${collection.id}`);
+        router.push(`/app/credentials?collectionId=${collection.id}`);
     };
 
     return (

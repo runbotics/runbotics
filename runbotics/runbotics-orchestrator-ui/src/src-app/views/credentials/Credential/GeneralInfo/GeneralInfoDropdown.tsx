@@ -11,17 +11,16 @@ interface GeneralInfoDropdownProps {
     tooltipText: string;
     required: boolean;
     handleChange(event: SelectChangeEvent): void;
+    disabled: boolean;
     
 }
 
-const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, selectOptions, selectedValue, tooltipText, handleChange, required }) => {
+const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, selectOptions, selectedValue, tooltipText, handleChange, required, disabled }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-
-    console.log(selectedValue);
 
     const handlePopoverClose = () => {
         setAnchorEl(null);
@@ -33,6 +32,7 @@ const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, select
             <FormControl fullWidth required sx={{ marginRight: '1rem' }}>
                 <InputLabel id="collection_color">{selectLabel}</InputLabel>
                 <Select
+                    disabled={disabled}
                     SelectDisplayProps={{ style: { display: 'flex' } }}
                     labelId="collection-label"
                     id="collection-select"

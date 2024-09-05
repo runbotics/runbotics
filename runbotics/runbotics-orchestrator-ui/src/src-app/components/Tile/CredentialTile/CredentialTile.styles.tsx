@@ -2,12 +2,12 @@ import { CardContent, Typography } from '@mui/material';
 import styled from 'styled-components';
 
 export const CredentialCard = styled(CardContent)<{ collectionColor: string }>(
-    ({ theme, collectionColor }) => `
+    ({ theme }) => `
     display: flex;
     flex-direction: column;
     color: ${theme.palette.grey[500]};
-    border-left: 4px solid ${collectionColor || theme.palette.primary.light};
     cursor: pointer;
+    min-height: 11rem;
     
     > :first-child {
         color: black;
@@ -18,7 +18,6 @@ export const CredentialCard = styled(CardContent)<{ collectionColor: string }>(
     }
 `
 );
-
 export const CredentialCollection = styled(Typography)`
     && {
         display: flex;

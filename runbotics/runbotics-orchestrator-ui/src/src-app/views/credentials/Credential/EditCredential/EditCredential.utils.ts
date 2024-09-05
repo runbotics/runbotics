@@ -19,12 +19,12 @@ export const inputErrorMessages: Record<InputErrorType, string> = {
 
 export const initialFormValidationState = true;
 
-export const getInitialCredentialData = () => {
+export const getInitialCredentialData = (collectionId: string) => {
     const initialCredentialData: CreateCredentialDto = {
         name: '',
         description: '',
-        // TODO need to setup default or remove it
-        templateId: 'ee6622df-d567-4a90-a69f-a0050d94f185'
+        collectionId: collectionId ? collectionId : '',
+        templateId: ''
     };
 
     return initialCredentialData;
