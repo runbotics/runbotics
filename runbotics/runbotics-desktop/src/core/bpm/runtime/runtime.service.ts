@@ -136,10 +136,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     }
 
     public startProcessInstance = async (
-        request: IStartProcessInstance
+        startProcessInstanceRequest: IStartProcessInstance
     ): Promise<string> => {
         const processInstanceId = uuidv4();
 
+        const { credentials, ...request } = startProcessInstanceRequest;
         const processInstance = {
             ...request,
             id: processInstanceId,
@@ -150,8 +151,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             ...(request.callbackUrl && { callbackUrl: request.callbackUrl }),
         };
 
-        delete processInstance?.decryptedCredentials;
-
         this.processInstances[processInstanceId] = processInstance;
         this.processEventBus.publish({
             processInstanceId,
@@ -160,7 +159,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
         this.createTempDir();
         setTimeout(() => {
-            this.createAndStartEngine(processInstance, request);
+            this.createAndStartEngine(processInstance, { ...request, credentials });
         }, 0);
         return processInstanceId;
     };
@@ -457,7 +456,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         };
 
         const triggerData = request?.triggerData;
-        const credentials = request?.decryptedCredentials;
+        const credentials = request?.credentials;
 
         const services = this.createEngineExecutionServices(
             processInstanceId,
@@ -542,7 +541,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
     private createEngineExecutionServices = (
         processInstanceId: string,
-        credentials?: DecryptedCredential[],
+        credentials: DecryptedCredential[],
     ): BpmnEngineExecuteOptions['services'] => ({
         ...this.createCustomServices(processInstanceId),
         desktop:
@@ -576,6 +575,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     try {
                         const result = await this.desktopRunnerService.run({
                             script,
+                            credentials,
                             input: desktopTask.input,
                             processInstanceId,
                             rootProcessInstanceId:
@@ -588,7 +588,6 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                                 .trigger,
                             triggerData: this.processInstances[processInstanceId]
                                 .triggerData,
-                            ...(credentials && { credentials })
                         });
                         this.logger.log(
                             `[${processInstanceId}] [${executionId}] [${script}] Desktop action executed successfully`,

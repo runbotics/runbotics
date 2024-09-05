@@ -4,14 +4,15 @@ import {
     DecryptedCredential,
     IBot,
     InstantProcess,
+    IProcess,
 } from 'runbotics-common';
 
 import { Logger } from '#/utils/logger';
 import { WebsocketService } from '#/websocket/websocket.service';
 
 import { ProcessInputService } from './process-input.service';
-import { ProcessEntity } from '#/database/process/process.entity';
 import { SecretService } from '#/scheduler-database/secret/secret.service';
+import { ProcessService } from '#/database/process/process.service';
 
 @Injectable()
 export class ProcessSchedulerService {
@@ -19,8 +20,9 @@ export class ProcessSchedulerService {
 
     constructor(
         private readonly websocketService: WebsocketService,
+        private readonly processService: ProcessService,
         private readonly processInputService: ProcessInputService,
-        private readonly secretService: SecretService,
+        private readonly secretService: SecretService
     ) {}
 
     async startProcess(
@@ -41,7 +43,7 @@ export class ProcessSchedulerService {
                 fileVariables
             );
 
-        const body = this.createStartProcessBody(
+        const body = await this.createStartProcessBody(
             mergedInstantProcess,
             orchestratorProcessInstanceId
         );
@@ -55,19 +57,19 @@ export class ProcessSchedulerService {
         return { orchestratorProcessInstanceId };
     }
 
-    private createStartProcessBody(
+    private async createStartProcessBody(
         instantProcess: InstantProcess,
         orchestratorProcessInstanceId: string
     ) {
-        const decryptedCredentials = this.getDecryptedCredentials(
-            instantProcess.process as ProcessEntity
-        );
+        const processId = instantProcess.process.id;
+        const credentials = await this.getDecryptedCredentials(processId);
+
         return {
+            processId,
+            credentials,
             orchestratorProcessInstanceId,
-            processId: instantProcess.process.id,
             input: instantProcess.input,
             trigger: instantProcess.trigger,
-            ...(decryptedCredentials && { decryptedCredentials }),
             ...(instantProcess.user && { userId: instantProcess.user.id }),
             ...(instantProcess.triggerData && {
                 triggerData: instantProcess.triggerData,
@@ -75,17 +77,20 @@ export class ProcessSchedulerService {
         };
     }
 
-    private getDecryptedCredentials({
-        credentials,
-    }: ProcessEntity): DecryptedCredential[] {
+    private async getDecryptedCredentials(
+        processId: IProcess['id']
+    ): Promise<DecryptedCredential[]> {
+        const { credentials } =
+            await this.processService.findByIdWithSecrets(processId);
         const areCredentialsValid =
             credentials && Array.isArray(credentials) && credentials.length > 0;
 
         if (!areCredentialsValid) {
-            return null;
+            return [];
         }
 
-        return credentials.map(({ name, template, attributes }) => ({
+        return credentials.map(({ id, name, template, attributes }) => ({
+            id,
             name,
             template: template.name,
             attributes: attributes.map(({ id, name, secret }) => ({

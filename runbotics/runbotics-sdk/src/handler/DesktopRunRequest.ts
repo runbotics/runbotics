@@ -8,7 +8,8 @@ interface CommonDesktopRunRequest {
     trigger: { name: string };
     parentProcessInstanceId?: string;
     triggerData?: unknown;
-    credentials?: {
+    credentials: {
+        id: string;
         name: string;
         template: string;
         attributes: {

@@ -12,7 +12,7 @@ export interface StartProcessMessageBody {
     userId?: number;
     trigger: ITriggerEvent;
     triggerData?: UserTriggerData;
-    decryptedCredentials?: DecryptedCredential[];
+    credentials: DecryptedCredential[];
 }
 
 export interface KeepAliveStatus {
