@@ -28,6 +28,7 @@ export interface IProcess {
     tags?: Tag[];
     notifications?: NotificationProcess[];
     outputType?: ProcessOutput;
+    credentials?: unknown[]; //TODO: remove after rebase
 }
 
 export const defaultProcessValue: Readonly<IProcess> = {
