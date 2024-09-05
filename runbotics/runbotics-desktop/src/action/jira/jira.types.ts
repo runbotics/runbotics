@@ -211,3 +211,4 @@ interface GetIssueWorklogsByProjectParam extends GetIssueWorklogsByParamCommon {
     project: string;
 }
 export type GetIssueWorklogsByParam = GetIssueWorklogsByAuthorParam | GetIssueWorklogsByProjectParam;
+export type AtlassianCredentials = Required<Pick<GetWorklogInput, 'username' | 'password' | 'originUrl'>>;
