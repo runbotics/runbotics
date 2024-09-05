@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ActionRegex, CloudExcelAction } from 'runbotics-common';
+import { ActionCredentialType, ActionRegex, CloudExcelAction } from 'runbotics-common';
 import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
@@ -22,8 +22,8 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
         super();
     }
 
-    async openFile(input: ExcelSessionInfo, auth: MicrosoftCredential) {
-        this.session = await this.excelService.createSession(input, auth);
+    async openFile(input: ExcelSessionInfo, credential: MicrosoftCredential) {
+        this.session = await this.excelService.createSession(input, credential);
     }
 
     async closeSession() {
@@ -130,9 +130,7 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     run(request: CloudExcelTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
-                if (!request.input) { // @todo check if includes both CredentialData and list including MicrosoftCredential
-                    throw new Error('Auth is required for that action');
-                }
+                // @todo throw error 'incorrect action definition - credentials are needed for this action' if any of CredentialData or list including MicrosoftCredential is not present in the input
 
                 // eslint-disable-next-line no-case-declarations
                 const authData = this.serverConfigService.microsoftAuth;

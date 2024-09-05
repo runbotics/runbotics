@@ -172,9 +172,7 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     run(request: CloudFileActionRequest) {
-        if (!request.input) { // @todo check if includes both CredentialData and MicrosoftCredential
-            throw new Error('Auth is required for that action');
-        }
+        // @todo throw error 'incorrect action definition - credentials are needed for this action' if any of CredentialData or list including MicrosoftCredential is not present in the input
 
         const authData = this.serverConfigService.microsoftAuth;
 

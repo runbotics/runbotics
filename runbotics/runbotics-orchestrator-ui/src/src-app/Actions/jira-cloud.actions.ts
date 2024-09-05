@@ -43,18 +43,6 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                             title: translate('Process.Details.Modeler.Actions.Common.Input'),
                             type: 'object',
                             properties: {
-                                originEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Origin'),
-                                    type: 'string',
-                                },
-                                usernameEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Username'),
-                                    type: 'string',
-                                },
-                                passwordEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Password'),
-                                    type: 'string',
-                                },
                                 email: {
                                     title: translate('Process.Details.Modeler.Actions.Common.Email'),
                                     type: 'string',
@@ -113,7 +101,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                     }],
                                 },
                             },
-                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'email']
+                            required: ['email']
                         },
                         output: {
                             title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -160,15 +148,15 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                             title: translate('Process.Details.Modeler.Actions.Common.Input'),
                             type: 'object',
                             properties: {
-                                originEnv: {
+                                originUrl: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Origin'),
                                     type: 'string',
                                 },
-                                usernameEnv: {
+                                username: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Username'),
                                     type: 'string',
                                 },
-                                passwordEnv: {
+                                password: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Password'),
                                     type: 'string',
                                 },
@@ -230,7 +218,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                     }],
                                 },
                             },
-                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'project']
+                            required: ['originUrl', 'username', 'password', 'project']
                         },
                         output: {
                             title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -277,15 +265,15 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                             title: translate('Process.Details.Modeler.Actions.Common.Input'),
                             type: 'object',
                             properties: {
-                                originEnv: {
+                                originUrl: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Origin'),
                                     type: 'string',
                                 },
-                                usernameEnv: {
+                                username: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Username'),
                                     type: 'string',
                                 },
-                                passwordEnv: {
+                                password: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Password'),
                                     type: 'string',
                                 },
@@ -301,7 +289,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                     default: undefined,
                                 },
                             },
-                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'boardId']
+                            required: ['originUrl', 'username', 'password', 'boardId']
                         },
                         output: {
                             title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -348,15 +336,15 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                             title: translate('Process.Details.Modeler.Actions.Common.Input'),
                             type: 'object',
                             properties: {
-                                originEnv: {
+                                originUrl: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Origin'),
                                     type: 'string',
                                 },
-                                usernameEnv: {
+                                username: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Username'),
                                     type: 'string',
                                 },
-                                passwordEnv: {
+                                password: {
                                     title: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Password'),
                                     type: 'string',
                                 },
@@ -429,7 +417,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                     }],
                                 },
                             },
-                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'sprint']
+                            required: ['originUrl', 'username', 'password', 'sprint']
                         },
                         output: {
                             title: translate('Process.Details.Modeler.Actions.Common.Output'),

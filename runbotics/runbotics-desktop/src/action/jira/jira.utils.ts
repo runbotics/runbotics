@@ -35,9 +35,9 @@ export const isJiraInputBase = (
     data: unknown
 ): data is GetJiraInputBase => data
 && typeof data === 'object'
-&& 'originEnv' in data && typeof data.originEnv === 'string'
-&& 'usernameEnv' in data && typeof data.usernameEnv === 'string'
-&& 'passwordEnv' in data && typeof data.passwordEnv === 'string';
+&& 'originUrl' in data && typeof data.originUrl === 'string'
+&& 'username' in data && typeof data.username === 'string'
+&& 'password' in data && typeof data.password === 'string';
 
 export const isJiraDatesPeriod = (
     data: unknown
@@ -80,9 +80,9 @@ export const AVAILABLE_FORMATS = [
     'YYYY.M.D', 'YYYY.MM.DD', 'YYYY-M-D', 'YYYY-MM-DD', 'YYYY/M/D', 'YYYY/MM/DD'].flatMap(date => [date, `${date} HH:mm`]);
 
 export const getJiraInputBaseSchema = z.object({
-    originEnv: z.string().refine(value => value.startsWith('https://'), { message: 'originEnv must start with "https://"' }),
-    usernameEnv: z.string(),
-    passwordEnv: z.string(),
+    originUrl: z.string().refine(value => value.startsWith('https://'), { message: 'originUrl must start with "https://"' }),
+    username: z.string(),
+    password: z.string(),
 });
 
 export const getUserWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object({
@@ -125,7 +125,6 @@ export const getProjectWorklogInputSchema = getProjectWorklogInputBaseSchema.and
     jiraSingleDaySchema.required({ date: true }),
     jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
     jiraDatesCollectionSchema.required({ dates: true }),
-    jiraProjectSchema.required({ project: true }),
 ]));
 
 export const getBoardSprintsInputSchema = getJiraInputBaseSchema.and(z.object({
@@ -146,10 +145,10 @@ export const getSprintTasksInputSchema = getSprintTasksInputBaseSchema.and(z.uni
     jiraDatesCollectionSchema,
 ]));
 
-export const getBasicAuthHeader = ({ usernameEnv, passwordEnv }: Omit<AtlassianCredentials, 'originEnv'>) => {
+export const getBasicAuthHeader = ({ username, password }: Omit<AtlassianCredentials, 'originUrl'>) => {
     return {
         Authorization: 'Basic ' + Buffer.from(
-            `${usernameEnv}:${passwordEnv}`
+            `${username}:${password}`
         ).toString('base64')
     };
 };
@@ -165,9 +164,9 @@ interface GetJiraUserParams {
 export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
     input, isServer,
 }: GetJiraUserParams) => {
-    const { originEnv, usernameEnv, passwordEnv, email } = input;
+    const { originUrl, username, password, email } = input;
     const { data } = await externalAxios.get<T[]>(
-        `${originEnv}/rest/api/2/user/search`,
+        `${originUrl}/rest/api/2/user/search`,
         {
             params: {
                 maxResults: 10,
@@ -175,7 +174,7 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
 
                 [isServer ? 'username' : 'query']: email,
             },
-            headers: getBasicAuthHeader({ passwordEnv, usernameEnv }),
+            headers: getBasicAuthHeader({ password, username }),
             maxRedirects: 0,
         },
     );
@@ -188,11 +187,11 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
     return jiraUser;
 };
 
-export const getJiraProject = async ({ passwordEnv, usernameEnv, originEnv, project }: GetProjectWorklogInput )=> {
+export const getJiraProject = async ({ password, username, originUrl, project }: GetProjectWorklogInput)=> {
     const { data } = await externalAxios.get<Project>(
-        `${originEnv}/rest/api/2/project/${project}`,
+        `${originUrl}/rest/api/2/project/${project}`,
         {
-            headers: getBasicAuthHeader({ passwordEnv, usernameEnv }),
+            headers: getBasicAuthHeader({ password, username }),
             maxRedirects: 0,
         },
     );
@@ -251,7 +250,7 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
     jql: string,
     startAt: Page['startAt'],
 ) => {
-    const { usernameEnv, passwordEnv, originEnv } = input;
+    const { username, password, originUrl } = input;
     const baseFields = 'timespent,duedate,statuscategorychangedate,status';
     const additionalFields = input?.fields
         ? input?.fields
@@ -266,7 +265,7 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
         : baseFields;
 
     const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
-        `${originEnv}/rest/api/2/search`,
+        `${originUrl}/rest/api/2/search`,
         {
             params: {
                 jql,
@@ -274,7 +273,7 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
                 startAt,
                 fields,
             },
-            headers: getBasicAuthHeader({ usernameEnv, passwordEnv }),
+            headers: getBasicAuthHeader({ username, password }),
             maxRedirects: 0,
         },
     );
@@ -308,16 +307,16 @@ const getJiraSprintPage = async (
     input: GetBoardSprintsInput,
     startAt: Page['startAt'],
 ) => {
-    const { usernameEnv, passwordEnv, originEnv } = input;
+    const { username, password, originUrl } = input;
     const { data } =  await externalAxios.get<SprintResponse>(
-        `${originEnv}/rest/agile/1.0/board/${boardId}/sprint`,
+        `${originUrl}/rest/agile/1.0/board/${boardId}/sprint`,
         {
             params: {
                 ...(input?.state && { state: input.state }),
                 maxResults: 50, // 50 is max value
                 startAt,
             },
-            headers: getBasicAuthHeader({ usernameEnv, passwordEnv }),
+            headers: getBasicAuthHeader({ username, password }),
             maxRedirects: 0,
         },
     );
@@ -371,11 +370,11 @@ export const getIssueWorklogsByParam = async <T extends CloudJiraUser | ServerJi
 const searchWorklogsGroupedBy = <T extends CloudJiraUser | ServerJiraUser>({
     input, jql, startAt,
 }) => {
-    const { usernameEnv, passwordEnv, originEnv } = input;
+    const { username, password, originUrl } = input;
     return externalAxios.get<IssueWorklogResponse<T>>(
-        `${originEnv}/rest/api/2/search`,
+        `${originUrl}/rest/api/2/search`,
         {
-            headers: getBasicAuthHeader({ usernameEnv, passwordEnv }),
+            headers: getBasicAuthHeader({ username, password }),
             params: {
                 jql,
                 startAt,
@@ -428,9 +427,9 @@ export const getIssueWorklogs = <T extends CloudJiraUser | ServerJiraUser>(issue
     }
 
     return externalAxios.get<WorklogResponse<T>>(
-        `${input.originEnv}/rest/api/2/issue/${issueKey}/worklog`,
+        `${input.originUrl}/rest/api/2/issue/${issueKey}/worklog`,
         {
-            headers: getBasicAuthHeader({ usernameEnv: input.usernameEnv, passwordEnv: input.passwordEnv }),
+            headers: getBasicAuthHeader({ username: input.username, password: input.password }),
             params: {
                 ...timeParam,
                 maxResults: 1000,

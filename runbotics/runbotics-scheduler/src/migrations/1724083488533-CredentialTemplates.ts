@@ -1,7 +1,6 @@
 import { CredentialTemplate } from '#/scheduler-database/credential-template/credential-template.entity';
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import { In, MigrationInterface, QueryRunner } from 'typeorm';
 import { ActionCredentialType } from 'runbotics-common';
-import { CredentialTemplateAttribute } from '#/scheduler-database/credential-template-attribute/credential-template-attribute.entity';
 
 const TEMPLATES = [
     {
@@ -12,15 +11,15 @@ const TEMPLATES = [
         description: 'Among others for Jira Server and Jira Cloud actions',
         attributes: [
             {
-                name: 'usernameEnv',
-                description: 'Username of the account to use for the action', // @todo what with polish translations? how about using this name as translation key?
+                name: 'username',
+                description: 'Username of the account to use for the action', // @todo what with polish translations? how about using name as translation key?
             },
             {
-                name: 'passwordEnv',
+                name: 'password',
                 description: 'Password of the account to use for the action',
             },
             {
-                name: 'originEnv',
+                name: 'originUrl',
                 description: 'URL of the Jira instance to connect to',
             }
         ],
@@ -108,12 +107,12 @@ const TEMPLATES = [
     }
 ];
 
-export class CredentialTemplates1723801171165 implements MigrationInterface {
+export class CredentialTemplates1724083488533 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.manager.save(CredentialTemplate, TEMPLATES);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.manager.delete(CredentialTemplate, { name: TEMPLATES.map(t => t.name) });
+        await queryRunner.manager.delete(CredentialTemplate, { name: In(TEMPLATES.map(t => t.name)) });
     }
 }

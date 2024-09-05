@@ -119,11 +119,6 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         input: BeeOfficeCreateNewTimetableActivityActionInput,
         credential: BeeOfficeCredential,
     ): Promise<BeeOfficeCreateNewTimetableActivityActionOutput> {
-        const result = {};
-
-        // "activity_id": "dc96fe19-5177-44ff-a0d5-ec1747b3a662",
-        //     "activitygroup_id": "e79d2141-2a75-48f6-b640-56ec82219d43",
-
         const requestBody = {
             activity_id_mainvalue: '',
             activitygroup_id_mainvalue: '',
