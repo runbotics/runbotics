@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 import If from '#src-app/components/utils/If';
 import { useDispatch, useSelector } from '#src-app/store';
+import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { credentialsActions } from '#src-app/store/slices/Credentials';
 import { credentialTemplatesActions } from '#src-app/store/slices/CredentialTemplates';
 
@@ -21,7 +22,10 @@ const CredentialsGridView = () => {
     const router = useRouter();
     const collectionId = router.query.id ? (router.query.id as string) : null;
 
+    console.log(loading);
+
     useEffect(() => {
+        dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
         dispatch(credentialTemplatesActions.fetchAllTemplates());
         collectionId
             ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
@@ -35,13 +39,14 @@ const CredentialsGridView = () => {
             collection={collections.find(collection => credential.collectionId === collection.id)}
             templateName={credentialTemplates.find(template => template.id === credential.templateId).name}
             collectionName={collections.find(collection => collection.id === credential.collectionId)?.name}
+            loading={loading}
         />
     ));
 
     return (
         <>
-            <CredentialsHeader credentialCount={credentials.length} />
             <If condition={!loading}>
+                <CredentialsHeader credentialCount={credentials.length} />
                 <TileGrid>{credentialsTiles}</TileGrid>
             </If>
         </>

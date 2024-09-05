@@ -17,6 +17,7 @@ import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 import CredentialAttributesList from './CredentialAttributeList/CredentialAttributeList';
 import { EditCredentialProps } from './EditCredential.types';
 import Header from './Header/Header';
+import { ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 import GeneralInfo from '../GeneralInfo/GeneralInfo';
 
 const StyledGrid = styled(Grid)(
@@ -40,6 +41,8 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
     const credentialId = getLastParamOfUrl(router);
     const credentials = useSelector(state => state.credentials.all);
     const credential = credentials.find(cred => cred.id === credentialId);
+    const collections = useSelector(state => state.credentialCollections.credentialCollections);
+    const currentCredentialCollection = collections.find(collection => collection.id === credential.collectionId);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -52,7 +55,7 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
         <CredentialsInternalPage title={translate('Credential.Add.Title')}>
             <StyledGrid container justifyContent="space-between" my={2} ml={2} gap={2}>
                 <Header credentialName={credential.name} />
-                <GeneralInfo credential={credential} />
+                <GeneralInfo credential={credential} collectionColor={currentCredentialCollection.color as ColorNames}/>
                 <Grid container>
                     <Grid item xs={12}>
                         <Typography variant="h4">{translate('Credential.Attributes.Title')} (3)</Typography>

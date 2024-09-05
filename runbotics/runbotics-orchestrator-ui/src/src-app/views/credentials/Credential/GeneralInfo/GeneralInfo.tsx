@@ -9,17 +9,21 @@ import { useSelector } from '#src-app/store';
 
 
 import { ColorDot } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styled';
+import { collectionColors, ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 import { BasicCredentialDto } from '../Credential.types';
 
 interface GeneralInfoProps {
     credential: BasicCredentialDto;
+    collectionColor: ColorNames;
 }
 
-const GeneralInfo: FC<GeneralInfoProps> = ({ credential }) => {
+const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor }) => {
     const templateId = credential.templateId;
     const { translate } = useTranslations();
     const templates = useSelector(state => state.credentialTemplates.data);
     const credentialTemplate = templates.find(template => template.id === templateId);
+    console.log(collectionColor);
+    const color = collectionColors[collectionColor].hex;
 
     return (
         <Box sx={{ display: 'flex', width: '90%', justifyContent: 'flexStart', marginBottom: '80px' }}>
@@ -43,7 +47,7 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential }) => {
                             {translate('Credential.Details.Collection.Label')}
                         </Typography>
                         <Typography variant="body2" sx={{ display: 'flex', alignContent: 'center' }} ml={1}>
-                            <ColorDot collectionColor={credential.collectionColor} />
+                            <ColorDot collectionColor={color} />
                             {credential.collectionId}
                         </Typography>
                     </Box>

@@ -2,7 +2,8 @@ import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Creden
 import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 export interface CredentialTileProps {
-    credential: BasicCredentialDto
+    credential: BasicCredentialDto;
+    loading: boolean;
 }
 
 export interface Credential {
