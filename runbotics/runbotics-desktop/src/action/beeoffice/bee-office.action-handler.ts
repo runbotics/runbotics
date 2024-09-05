@@ -297,7 +297,6 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     run(request: BeeOfficeActionRequest) {
-        ActionCredentialType.ATLASSIAN;
         const credential: BeeOfficeCredential = { // @todo method for matching credentialId (action template) with decrypted credential values
             ...(this.serverConfigService.beeAuth), // @todo skip grant_type as it's being hardcoded later
             url: this.serverConfigService.beeUrl,
