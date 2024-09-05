@@ -6,7 +6,17 @@ import { IProcess, Role } from 'runbotics-common';
 import { UserEntity } from '../user/user.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
-const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor', 'notifications.user.authorities'];
+const relations = [
+    'createdBy',
+    'system',
+    'botCollection',
+    'schedules',
+    'editor',
+    'notifications.user.authorities',
+    'credentials.attributes',
+    'credentials.attributes.secret',
+    'credentials.template',
+];
 
 
 interface PartialUpdateProcess extends IProcess {
