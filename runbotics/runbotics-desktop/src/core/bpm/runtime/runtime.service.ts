@@ -21,6 +21,7 @@ import {
     IProcessInstance,
     IProcess,
     BpmnElementType,
+    DecryptedCredential,
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
@@ -148,6 +149,9 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             ...(request.userId && { user: { id: request.userId } }),
             ...(request.callbackUrl && { callbackUrl: request.callbackUrl }),
         };
+
+        delete processInstance?.decryptedCredentials;
+
         this.processInstances[processInstanceId] = processInstance;
         this.processEventBus.publish({
             processInstanceId,
@@ -452,8 +456,13 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 : baseLogPrefix;
         };
 
-        const services = this.createEngineExecutionServices(processInstanceId);
         const triggerData = request?.triggerData;
+        const credentials = request?.decryptedCredentials;
+
+        const services = this.createEngineExecutionServices(
+            processInstanceId,
+            credentials,
+        );
 
         const engineExecutionOptions: BpmnEngineExecuteOptions = {
             services,
@@ -532,7 +541,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     };
 
     private createEngineExecutionServices = (
-        processInstanceId: string
+        processInstanceId: string,
+        credentials?: DecryptedCredential[],
     ): BpmnEngineExecuteOptions['services'] => ({
         ...this.createCustomServices(processInstanceId),
         desktop:
@@ -578,6 +588,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                                 .trigger,
                             triggerData: this.processInstances[processInstanceId]
                                 .triggerData,
+                            ...(credentials && { credentials })
                         });
                         this.logger.log(
                             `[${processInstanceId}] [${executionId}] [${script}] Desktop action executed successfully`,
