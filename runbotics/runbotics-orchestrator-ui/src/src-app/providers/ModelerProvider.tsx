@@ -10,7 +10,7 @@ export const ModelerContext = React.createContext<ModelerContext>(null);
 
 interface ModelerProviderProps {
     modeler?: BpmnModelerType;
-}   
+}
 
 const ModelerProvider: FC<ModelerProviderProps> = ({ modeler, children }) => (
     <ModelerContext.Provider

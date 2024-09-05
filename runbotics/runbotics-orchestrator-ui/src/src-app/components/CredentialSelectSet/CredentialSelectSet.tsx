@@ -19,21 +19,21 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
     const { translate } = useTranslations();
 
     const [author, setAuthor] = useState<string>(null);
-    const credentialsSortedByAuthor = useMemo(
+    const credentialsFilteredByAuthor = useMemo(
         () => credentials.filter(credential => credential.createdBy.login === author),
         [author, credentials]);
     const [collectionName, setCollectionName] = useState<string>(null);
-    const credentialsSortedByCollection = useMemo(
-        () => credentialsSortedByAuthor.filter(credential => credential.collection.name === collectionName),
-        [collectionName, credentialsSortedByAuthor]);
+    const credentialsFilteredByCollection = useMemo(
+        () => credentialsFilteredByAuthor.filter(credential => credential.collection.name === collectionName),
+        [collectionName, credentialsFilteredByAuthor]);
     const [credentialName, setCredentialName] = useState<string>(null);
-    const credentialSortedByName = useMemo(
-        () => credentialsSortedByCollection.find(credential => credential.name === credentialName),
-        [credentialName, credentialsSortedByCollection]);
+    const credentialFilteredByName = useMemo(
+        () => credentialsFilteredByCollection.find(credential => credential.name === credentialName),
+        [credentialName, credentialsFilteredByCollection]);
 
     useEffect(() => {
-        handleCredentialChange(credentialSortedByName);
-    }, [credentialSortedByName]);
+        handleCredentialChange(credentialFilteredByName);
+    }, [credentialFilteredByName]);
 
     return (
         <Box>
@@ -63,9 +63,9 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
                 size='small'
                 value={collectionName}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => { setCollectionName(e.target.value); }}
-                disabled={!credentialsSortedByAuthor.length}
+                disabled={!credentialsFilteredByAuthor.length}
             >
-                {_.uniqBy(credentialsSortedByAuthor, credential => credential.collection.name)
+                {_.uniqBy(credentialsFilteredByAuthor, credential => credential.collection.name)
                     .map(credential => (
                         <MenuItem
                             value={credential.collection.name}
@@ -82,9 +82,9 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
                 size='small'
                 value={credentialName}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => { setCredentialName(e.target.value); }}
-                disabled={!credentialsSortedByCollection.length}
+                disabled={!credentialsFilteredByCollection.length}
             >
-                {credentialsSortedByCollection.map(credential => (
+                {credentialsFilteredByCollection.map(credential => (
                     <MenuItem
                         value={credential.name}
                         key={credential.name}

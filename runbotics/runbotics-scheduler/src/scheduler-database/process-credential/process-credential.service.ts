@@ -42,18 +42,24 @@ export class ProcessCredentialService {
             throw new NotFoundException('Cannot find credential with provided id');
         });
 
-        const lastCredentialOrder: number = await this.processCredentialRepository
-            .createQueryBuilder('pc')
-            .select('MAX(pc.order)', 'max')
-            .innerJoin('pc.credential', 'credential')
-            .innerJoin(
-                'credential.template', 'template',
-                'template.name = :templateName', { templateName: processCredentialDto.templateName }
-            ).where('pc.processId = :processId', { processId: processCredentialDto.processId })
-            .groupBy('template.name')
-            .getRawOne()
-            .then(res => res.max)
-            .catch(() => 0);
+        const lastCredentialOrder: number =
+            await this.processCredentialRepository
+                .createQueryBuilder('pc')
+                .select('MAX(pc.order)', 'max')
+                .innerJoin('pc.credential', 'credential')
+                .innerJoin(
+                    'credential.template',
+                    'template',
+                    'template.name = :templateName',
+                    { templateName: processCredentialDto.templateName }
+                )
+                .where('pc.processId = :processId', {
+                    processId: processCredentialDto.processId,
+                })
+                .groupBy('template.name')
+                .getRawOne()
+                .then(result => result.max)
+                .catch(() => 0);
 
         const newProcessCredential = new ProcessCredential();
         newProcessCredential.process = process;

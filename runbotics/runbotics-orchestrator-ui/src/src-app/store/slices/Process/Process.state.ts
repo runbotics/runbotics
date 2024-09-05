@@ -65,6 +65,12 @@ export interface UpdateDiagramRequest {
     executionInfo?: string | null;
 }
 
+export interface CreateProcessCredentialDto {
+    credentialId: string;
+    templateName: string;
+    processId: string;
+}
+
 export type StartProcessResponse = Pick<
     IProcessInstance,
     'orchestratorProcessInstanceId'

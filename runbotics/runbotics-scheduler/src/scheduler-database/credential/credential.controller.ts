@@ -7,7 +7,7 @@ import { IUser } from 'runbotics-common';
 import { User } from '#/utils/decorators/user.decorator';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
-import { isCredentialFilterQuery } from '#/utils/typeChecks';
+import { isCredentialFilterQuery } from './credential.utils';
 
 const COLLECTION_URL_PARTIAL = 'credential-collections/:collectionId/credentials/';
 @UseInterceptors(TenantInterceptor)
@@ -66,7 +66,9 @@ export class CredentialController {
 
     return isCredentialFilterQuery(query)
       ? this.credentialService.findAllAccessibleByTemplateAndProcess(
-        query.templateName, query.processId, user
+        query.templateName,
+        query.processId,
+        user
       )
       : this.credentialService.findAllAccessible(tenantId, user);
   }

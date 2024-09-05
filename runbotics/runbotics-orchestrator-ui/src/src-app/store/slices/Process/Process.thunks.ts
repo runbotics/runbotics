@@ -13,7 +13,7 @@ import URLBuilder from '#src-app/utils/URLBuilder';
 
 import IProcessWithFilters from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.types';
 
-import { StartProcessResponse, UpdateDiagramRequest } from './Process.state';
+import { CreateProcessCredentialDto, StartProcessResponse, UpdateDiagramRequest } from './Process.state';
 
 const PROCESS_NOTIFICATION_PATH = 'notifications-process';
 const TAGS_PATH = 'tags';
@@ -176,7 +176,7 @@ export const getProcessCredentials = ApiTenantResource
     .get<ProcessCredential[]>('processes/getProcessCredentials', `${PROCESS_CREDENTIALS_PATH}/processes`);
 
 export const createProcessCredential = ApiTenantResource
-    .post<void, { credentialId: string; templateName: string; processId: string; }>
+    .post<void, CreateProcessCredentialDto>
     ('processes/deleteProcessCredential', PROCESS_CREDENTIALS_PATH);
 
 export const deleteProcessCredential = ApiTenantResource

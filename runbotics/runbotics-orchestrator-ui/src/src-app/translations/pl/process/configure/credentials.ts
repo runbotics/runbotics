@@ -3,7 +3,6 @@ import englishCredentialsTranslations from '#src-app/translations/en/process/con
 const credentialsTranslations: typeof englishCredentialsTranslations = {
     'Process.Configure.Credentials.Section.Title': 'Poświadczenia',
     'Process.Configure.Credentials.Action.PrimaryCredential': 'Główny',
-    'Process.Configure.Credentials.Action.Credential': 'Główny',
     'Process.Configure.Credentials.Modal.Delete.Title': 'Usuń poświadczenia w procesie',
     'Process.Configure.Credentials.Modal.Delete.Content': 'Czy na pewno chcesz usunąć wybrane poświadczenia w procesie?',
     'Process.Configure.Credentials.Modal.Delete.Info.Success': 'Pomyślnie usunięto wybrane poświadczenia w procesie',
