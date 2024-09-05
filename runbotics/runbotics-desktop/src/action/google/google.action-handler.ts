@@ -11,7 +11,6 @@ import {
     GoogleSheetWriteActionInput,
     GoogleSheetGetCellsByValueActionInput,
     GoogleSheetGetCellActionInput,
-    CellByValueActionOutput,
 } from './google.types';
 import { GoogleAction } from 'runbotics-common';
 import {
@@ -20,10 +19,14 @@ import {
     getCellsInputSchema,
     getWorksheetInputSchema,
     setCellsInputSchema,
+    getCellCoordinatesByValue,
 } from './google.utils';
 import { ZodError } from 'zod';
 import { formatZodError } from '#utils/zodError';
 
+/**
+ * @see https://developers.google.com/sheets/api/guides/concepts
+ */
 @Injectable()
 export default class GoogleActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(GoogleActionHandler.name);
@@ -44,6 +47,7 @@ export default class GoogleActionHandler extends StatelessActionHandler {
         const defaultSheet = await this.getDefaultSheet(spreadsheetId);
 
         const { data: sheetData } = await sheets.spreadsheets.values.get({
+            // https://developers.google.com/sheets/api/guides/concepts#expandable-1
             range: sheet ? sheet.split('!')[0] : defaultSheet,
             spreadsheetId,
         });
@@ -63,6 +67,7 @@ export default class GoogleActionHandler extends StatelessActionHandler {
         const defaultSheet = await this.getDefaultSheet(spreadsheetId);
 
         const { data: sheetData } = await sheets.spreadsheets.values.get({
+            // https://developers.google.com/sheets/api/guides/concepts#expandable-1
             range: `${sheet ? sheet.split('!')[0] : defaultSheet}!${cell.split(':')[0]}`,
             spreadsheetId,
         });
@@ -82,6 +87,7 @@ export default class GoogleActionHandler extends StatelessActionHandler {
         const defaultSheet = await this.getDefaultSheet(spreadsheetId);
 
         const { data: sheetData } = await sheets.spreadsheets.values.get({
+            // https://developers.google.com/sheets/api/guides/concepts#expandable-1
             range: `${sheet ? sheet.split('!')[0] : defaultSheet}!${range}`,
             spreadsheetId,
         });
@@ -101,45 +107,12 @@ export default class GoogleActionHandler extends StatelessActionHandler {
         const defaultSheet = await this.getDefaultSheet(spreadsheetId);
 
         const { data: sheetData } = await sheets.spreadsheets.values.get({
+            // https://developers.google.com/sheets/api/guides/concepts#expandable-1
             range: sheet ? sheet.split('!')[0] : defaultSheet,
             spreadsheetId,
         });
 
-        const cellsByValueOutput: CellByValueActionOutput[] = [];
-        if (!sheetData?.values) {
-            return cellsByValueOutput;
-        }
-
-        const alphabetSize = 26;
-        const alphabetStartIndexUTF = 65;
-        const values = sheetData.values;
-        for (let row = 0; row < values.length; row++) {
-            const columnsCount = values[row].length;
-            for (let col = 0; col < columnsCount; col++) {
-                const cellValue = values[row][col];
-                if (cellValue !== value) continue;
-
-                const columnsCharsUTF = [];
-                const columnNameCharCount = Math.floor((col + 1) / alphabetSize);
-                for (let char = 0; char < columnNameCharCount; char++) {
-                    columnsCharsUTF.push(alphabetStartIndexUTF);
-                }
-
-                const lastColumnNameCharUTF = alphabetStartIndexUTF + (col % alphabetSize);
-                columnsCharsUTF.push(lastColumnNameCharUTF);
-
-                const columnName = String.fromCharCode(...columnsCharsUTF);
-
-                cellsByValueOutput.push({
-                    column: columnName,
-                    row: String(row + 1),
-                    cellAddress: `${columnName}${row + 1}`,
-                    cellValue,
-                });
-            }
-        }
-
-        return cellsByValueOutput;
+        return getCellCoordinatesByValue(value, sheetData?.values);
     }
 
     async setCells(rawInput: GoogleSheetWriteActionInput) {

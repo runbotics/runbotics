@@ -1,4 +1,5 @@
 import { ActionRegex } from 'runbotics-common';
+import { CellByValueActionOutput } from './google.types';
 import z from 'zod';
 
 const googleSheetInputBaseSchema = z.object({
@@ -46,3 +47,44 @@ export const setCellsInputSchema = googleSheetInputBaseSchema.and(
             }),
     })
 );
+
+export const getCellCoordinatesByValue = (
+    value: string,
+    values: unknown[][] | undefined
+) => {
+    const cellsByValueOutput: CellByValueActionOutput[] = [];
+    if (!values) {
+        return cellsByValueOutput;
+    }
+
+    const alphabetSize = 26;
+    const alphabetStartIndexUTF = 65;
+    for (let row = 0; row < values.length; row++) {
+        const columnsCount = values[row].length;
+        for (let col = 0; col < columnsCount; col++) {
+            const cellValue = values[row][col];
+            if (cellValue !== value) continue;
+
+            const columnsCharsUTF = [];
+            const columnNameCharCount = Math.floor((col + 1) / alphabetSize);
+            for (let char = 0; char < columnNameCharCount; char++) {
+                columnsCharsUTF.push(alphabetStartIndexUTF);
+            }
+
+            const lastColumnNameCharUTF =
+                alphabetStartIndexUTF + (col % alphabetSize);
+            columnsCharsUTF.push(lastColumnNameCharUTF);
+
+            const columnName = String.fromCharCode(...columnsCharsUTF);
+
+            cellsByValueOutput.push({
+                column: columnName,
+                row: String(row + 1),
+                cellAddress: `${columnName}${row + 1}`,
+                cellValue,
+            });
+        }
+    }
+
+    return cellsByValueOutput;
+};
