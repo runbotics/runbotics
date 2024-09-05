@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-const getJiraCloudActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => {
+const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
     const dateMode = {
         date: {
             title: translate('Process.Details.Modeler.Actions.Common.Date'),

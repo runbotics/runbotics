@@ -1,14 +1,14 @@
-import { Select } from '@mui/material';
 import styled from 'styled-components';
 
-export const Box = styled.div(({
+export const Container = styled.div(({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'left',
     width: '70%',
-    gap: '5px',
+    gap: '20px',
 }));
 
-export const StyledSelect = styled(Select)(({
-    marginBottom: '20px'
+export const Box = styled.div(({
+    display: 'flex',
+    flexDirection: 'column'
 }));

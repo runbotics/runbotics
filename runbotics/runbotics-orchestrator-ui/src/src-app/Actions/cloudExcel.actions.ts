@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
-const getCloudExcelActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
+const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     [CloudExcelAction.OPEN_FILE]: {
         id: CloudExcelAction.OPEN_FILE,
         credentialType: ActionCredentialType.MICROSOFT_GRAPH,

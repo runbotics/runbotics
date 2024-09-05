@@ -72,7 +72,7 @@ export class CredentialService {
       });
   }
 
-  async findAllAccessible(tenantId: string, user: IUser) {
+  async findAllAccessible(user: IUser) {
     const accessibleCollections = await this.collectionService.findAllAccessibleForCredentials(user);
 
     if (accessibleCollections.length === 0) {

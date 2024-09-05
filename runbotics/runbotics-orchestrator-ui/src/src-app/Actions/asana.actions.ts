@@ -5,7 +5,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-const getAsanaActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
+const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
     'asana.test': {
         id: AsanaAction.TEST,
         credentialType: ActionCredentialType.ASANA,

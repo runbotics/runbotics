@@ -7,7 +7,7 @@ import { SAPLanguages } from './sap.types';
 import { IBpmnAction, Runner, ActionSystem } from '../types';
 
 // eslint-disable-next-line max-lines-per-function
-const getSapActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
+const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.connect': {
         id: SapAction.CONNECT,
         credentialType: ActionCredentialType.SAP,

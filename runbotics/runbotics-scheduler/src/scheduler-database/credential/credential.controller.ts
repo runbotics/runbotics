@@ -59,7 +59,6 @@ export class CredentialController {
   @Get('credentials')
   findAllAccessible(
     @Query() query,
-    @Param('tenantId') tenantId: string,
     @User() user: IUser
   ) {
     this.logger.log('REST request to get all accessible credentials');
@@ -70,6 +69,6 @@ export class CredentialController {
         query.processId,
         user
       )
-      : this.credentialService.findAllAccessible(tenantId, user);
+      : this.credentialService.findAllAccessible(user);
   }
 }
