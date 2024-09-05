@@ -26,3 +26,14 @@ export interface CredentialDto
     template: Omit<CredentialTemplate, 'description'>;
     collection: Pick<CredentialCollection, 'id' | 'name'>;
 }
+
+export interface DecryptedCredential {
+    id: string;
+    name: string;
+    template: string;
+    attributes: {
+        id: string;
+        name: string;
+        value: string;
+    }[];
+}
