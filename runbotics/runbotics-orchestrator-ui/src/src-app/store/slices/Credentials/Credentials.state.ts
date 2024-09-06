@@ -1,7 +1,7 @@
-import { Credential } from 'runbotics-common';
+import { CredentialDto } from 'runbotics-common';
 
 
 export interface CredentialsState {
-    all: Credential[];
+    all: CredentialDto[];
     loading: boolean;
 }
