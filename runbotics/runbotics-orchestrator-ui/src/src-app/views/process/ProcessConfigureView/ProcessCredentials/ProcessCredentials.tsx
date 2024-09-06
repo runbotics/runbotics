@@ -41,8 +41,8 @@ const ProcessCredentials = () => {
     const [columns, setColumns] = useState<ActionSortedColumns>([]);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const [currentCredentialId, setCurrentCredentialId] = useState<string>(null);
-    const [currentActionName, setCurrentActionName] = useState<string>(null);
+    const [currentCredentialId, setCurrentCredentialId] = useState<string | null>(null);
+    const [currentActionName, setCurrentActionName] = useState<string | null>(null);
 
     const { width: windowWidth } = useWindowSize();
     const rowCount = Math.max(Math.ceil((Math.abs(windowWidth - MARGIN_LIMIT)) / ACTION_MIN_WIDTH), 1);

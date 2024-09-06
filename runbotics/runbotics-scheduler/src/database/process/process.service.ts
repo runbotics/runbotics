@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { IProcess, Role } from 'runbotics-common';
 import { UserEntity } from '../user/user.entity';
+import { isTenantAdmin } from '#/utils/authority.utils';
 
 const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor', 'notifications.user.authorities', 'credentials.attributes'];
 
@@ -36,23 +37,28 @@ export class ProcessService {
         // TODO: to be updated after process migration to scheduler
         // Explanation: Process privileges should be based on process collections
         // and checking privileges should be adjusted
-        return user.authorities.find(authority => authority.name === Role.ROLE_TENANT_ADMIN)
-            ? this.processRepository.findOneByOrFail({ id: processId, tenantId: user.tenantId })
+        if (isTenantAdmin(user)) {
+            return this.processRepository
+                .findOneByOrFail({ id: processId, tenantId: user.tenantId })
                 .catch(() => {
                     throw new NotFoundException();
-                })
-            : this.processRepository.findOneByOrFail([
+                });
+        }
+
+        return this.processRepository
+            .findOneByOrFail([
                 {
                     id: processId,
                     tenantId: user.tenantId,
-                    isPublic: true
+                    isPublic: true,
                 },
                 {
                     id: processId,
                     tenantId: user.tenantId,
-                    createdBy: { id: user.id }
-                }
-            ]).catch(() => {
+                    createdBy: { id: user.id },
+                },
+            ])
+            .catch(() => {
                 throw new NotFoundException();
             });
     }

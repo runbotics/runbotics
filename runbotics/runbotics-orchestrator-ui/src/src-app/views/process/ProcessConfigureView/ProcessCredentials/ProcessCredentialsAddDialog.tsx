@@ -31,11 +31,12 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
     const { all } = useSelector(credentialsSelector);
     const [pickedCredential, setPickedCredential] = useState<Credential>();
 
-    const handleCredentialChange = (credential: Credential) => {
-        setPickedCredential(credential);
+    const handleDialogClose = () => {
+        setPickedCredential(undefined);
+        handleClose();
     };
 
-    const handleCredentialAdd = () => {
+    const handleAddCredential = () => {
         const payload = {
             processId: String(processId),
             credentialId: pickedCredential.id,
@@ -49,15 +50,17 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
                     translate('Process.Configure.Credentials.Modal.Add.Info.Success'),
                     { variant: 'success' }
                 );
+                setPickedCredential(undefined);
                 dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
+                handleClose();
             })
             .catch(() => {
                 enqueueSnackbar(
                     translate('Process.Configure.Credentials.Modal.Add.Info.Error'),
                     { variant: 'error' }
                 );
+                handleClose();
             });
-        handleClose();
     };
 
     useEffect(() => {
@@ -79,16 +82,16 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
                 <AddDialogContent>
                     <CredentialSelectSet
                         credentials={all ?? []}
-                        handleCredentialChange={handleCredentialChange}
+                        handleCredentialChange={(credential) => { setPickedCredential(credential); }}
                     />
                 </AddDialogContent>
                 <DialogActions>
-                    <StyledButton onClick={handleClose}>
+                    <StyledButton onClick={handleDialogClose}>
                         {translate('Common.Close')}
                     </StyledButton>
                     <StyledButton
                         variant='contained'
-                        onClick={handleCredentialAdd}
+                        onClick={handleAddCredential}
                         disabled={!pickedCredential}
                     >
                         {translate('Process.Configure.Credentials.Modal.Add.Button.Add')}

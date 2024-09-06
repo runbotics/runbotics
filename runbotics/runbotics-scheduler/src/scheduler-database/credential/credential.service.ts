@@ -73,7 +73,7 @@ export class CredentialService {
   }
 
   async findAllAccessible(user: IUser) {
-    const accessibleCollections = await this.collectionService.findAllAccessibleForCredentials(user);
+    const accessibleCollections = await this.collectionService.findAllAccessibleWithUser(user);
 
     if (accessibleCollections.length === 0) {
       throw new NotFoundException('Could not find any accessible collections');
@@ -100,7 +100,7 @@ export class CredentialService {
   }
 
   async findAllAccessibleByTemplateAndProcess(templateName: string, processId: string, user: IUser) {
-    const accessibleCollections = await this.collectionService.findAllAccessibleForCredentials(user);
+    const accessibleCollections = await this.collectionService.findAllAccessibleWithUser(user);
     const accessible = accessibleCollections.map(collection => collection.id);
 
     const credentials = await this.credentialRepo
@@ -140,10 +140,6 @@ export class CredentialService {
               },
           }))
       );
-
-    if (!credentials.length) {
-      throw new NotFoundException('Could not find any credentials in any of the accessible collections');
-    }
 
     return credentials;
   }

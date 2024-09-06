@@ -19,17 +19,19 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
     const { translate } = useTranslations();
 
     const [author, setAuthor] = useState<string>(null);
-    const credentialsFilteredByAuthor = useMemo(
-        () => credentials.filter(credential => credential.createdBy.login === author),
-        [author, credentials]);
+    const credentialsFilteredByAuthor = credentials.filter(
+        (credential) => credential.createdBy.login === author
+    );
+
     const [collectionName, setCollectionName] = useState<string>(null);
-    const credentialsFilteredByCollection = useMemo(
-        () => credentialsFilteredByAuthor.filter(credential => credential.collection.name === collectionName),
-        [collectionName, credentialsFilteredByAuthor]);
+    const credentialsFilteredByCollection = credentialsFilteredByAuthor.filter(
+        (credential) => credential.collection.name === collectionName
+    );
+
     const [credentialName, setCredentialName] = useState<string>(null);
-    const credentialFilteredByName = useMemo(
-        () => credentialsFilteredByCollection.find(credential => credential.name === credentialName),
-        [credentialName, credentialsFilteredByCollection]);
+    const credentialFilteredByName = credentialsFilteredByCollection.find(
+        (credential) => credential.name === credentialName
+    );
 
     useEffect(() => {
         credentialFilteredByName && handleCredentialChange(credentialFilteredByName);
