@@ -65,10 +65,9 @@ export interface UpdateDiagramRequest {
     executionInfo?: string | null;
 }
 
-export interface CreateProcessCredentialDto {
-    credentialId: string;
+export interface CreateProcessCredentialDto
+    extends Pick<ProcessCredential, 'credentialId' | 'processId'> {
     templateName: string;
-    processId: string;
 }
 
 export type StartProcessResponse = Pick<

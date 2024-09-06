@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
 
-const getMailActions: () => Record<string, IBpmnAction & Required<Pick<IBpmnAction, 'credentialType'>>> = () => ({
+const getMailActions: () => Record<string, IBpmnAction> = () => ({
     'mail.send': {
         id: MailAction.SEND,
         credentialType: ActionCredentialType.EMAIL,

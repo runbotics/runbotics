@@ -76,7 +76,7 @@ export class CredentialService {
     const accessibleCollections = await this.collectionService.findAllAccessibleWithUser(user);
 
     if (accessibleCollections.length === 0) {
-      throw new NotFoundException('Could not find any accessible collections');
+      return [];
     }
 
     const credentials = accessibleCollections.flatMap((collection) => collection.credentials)

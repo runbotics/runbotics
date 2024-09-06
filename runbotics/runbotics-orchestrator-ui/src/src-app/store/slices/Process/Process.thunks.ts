@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { IProcess, Tag, NotificationProcess, NotificationProcessType, ProcessCredential } from 'runbotics-common';
+import { IProcess, Tag, NotificationProcess, NotificationProcessType, ProcessCredentialDto } from 'runbotics-common';
 
 import { Socket } from 'socket.io-client';
 
@@ -173,7 +173,7 @@ export const getProcessSubscriptionInfo = ApiTenantResource
     .get<NotificationProcess[]>('processes/getProcessSubscriptionInfo', `${PROCESS_NOTIFICATION_PATH}/processes`);
 
 export const getProcessCredentials = ApiTenantResource
-    .get<ProcessCredential[]>('processes/getProcessCredentials', `${PROCESS_CREDENTIALS_PATH}/processes`);
+    .get<ProcessCredentialDto[]>('processes/getProcessCredentials', `${PROCESS_CREDENTIALS_PATH}/processes`);
 
 export const createProcessCredential = ApiTenantResource
     .post<void, CreateProcessCredentialDto>

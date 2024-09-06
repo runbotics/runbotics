@@ -1,5 +1,5 @@
-import { Credential } from 'runbotics-common';
+import { CredentialDto } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 
-export const fetchAllCredentialsAccessibleInTenant = ApiTenantResource.get<Credential[]>('credential/fetchAllInTenant', 'credentials');
+export const fetchAllCredentialsAccessibleInTenant = ApiTenantResource.get<CredentialDto[]>('credential/fetchAllInTenant', 'credentials');

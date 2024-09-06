@@ -1,25 +1,10 @@
 import _ from 'lodash';
-import { ProcessCredential } from 'runbotics-common';
+import { ActionCredentialType, ProcessCredential } from 'runbotics-common';
 
-import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
+import { ActionCredentials, ActionSortedColumns } from './ProcessCredentials.types';
 
-export interface CredentialInAction {
-    authorName: string;
-    collectionName: string;
-    name: string;
-    order: number;
-    id: string;
-};
-
-export interface ActionCredentials extends Partial<Record<ActionCredentialType, CredentialInAction[]>> {};
-
-export interface ActionSortedColumns extends Array<{
-    count: number,
-    actionCredentials: {
-        name: string,
-        credentials: CredentialInAction[]
-    }[]
-}> {};
+export const ACTION_MIN_WIDTH = 400;
+export const MARGIN_LIMIT = 800;
 
 export const sortByActionCredentialType = (
     credentials: ProcessCredential[],

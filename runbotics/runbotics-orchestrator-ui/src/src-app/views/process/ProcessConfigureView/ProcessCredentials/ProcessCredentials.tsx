@@ -19,16 +19,20 @@ import {
     ActionBoxHeader, ActionsColumns,
     ActionsContainer, Container, Header
 } from './ProcessCredentials.styles';
-import { ActionSortedColumns, sortByActionCredentialType, sortByColumns } from './ProcessCredentials.utils';
+import { ActionSortedColumns, CredentialId } from './ProcessCredentials.types';
+import {
+    ACTION_MIN_WIDTH,
+    MARGIN_LIMIT,
+    sortByActionCredentialType,
+    sortByColumns,
+} from './ProcessCredentials.utils';
 import { ProcessCredentialsAddDialog } from './ProcessCredentialsAddDialog';
 import { ProcessCredentialsDeleteDialog } from './ProcessCredentialsDeleteDialog';
 
-const ACTION_MIN_WIDTH = 400;
-const MARGIN_LIMIT = 800;
 
 const ProcessCredentials = () => {
     const { enqueueSnackbar } = useSnackbar();
-    const { translate }= useTranslations();
+    const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { id: processId } = useRouter().query;
     const { draft: { credentials: processCredentials } } = useSelector(processSelector);
@@ -41,7 +45,7 @@ const ProcessCredentials = () => {
     const [columns, setColumns] = useState<ActionSortedColumns>([]);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const [currentCredentialId, setCurrentCredentialId] = useState<string | null>(null);
+    const [currentCredentialId, setCurrentCredentialId] = useState<CredentialId>(null);
     const [currentActionName, setCurrentActionName] = useState<string | null>(null);
 
     const { width: windowWidth } = useWindowSize();

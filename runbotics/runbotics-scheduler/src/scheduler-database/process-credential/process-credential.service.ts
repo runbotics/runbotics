@@ -1,8 +1,8 @@
 import { UserEntity } from '#/database/user/user.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ProcessCredential } from './process-credential.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { ProcessService } from '#/database/process/process.service';
 import { CreateProcessCredentialDto } from './dto/create-process-credential.dto';
 import { Credential } from '../credential/credential.entity';
@@ -15,6 +15,7 @@ export class ProcessCredentialService {
         @InjectRepository(Credential)
         private readonly credentialRepository: Repository<Credential>,
         private readonly processService: ProcessService,
+        private readonly connection: Connection,
     ) {}
 
     async findAllByProcessId(processId: number, user: UserEntity) {
@@ -82,33 +83,45 @@ export class ProcessCredentialService {
             processId, user
         );
 
-        await this.processCredentialRepository.delete(id);
+        const queryRunner = await this.connection.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            await queryRunner.manager.delete(ProcessCredential, id);
 
-        const credentialsToUpdate = await this.processCredentialRepository
-            .createQueryBuilder('pc')
-            .select('pc.credentialId')
-            .innerJoin('pc.credential', 'credential')
-            .innerJoin('credential.template', 'template')
-            .where('pc.processId = :processId', { processId })
-            .andWhere(
-                'template.name = :templateName',
-                { templateName: processCredential.credential.template.name }
-            ).andWhere(
-                'pc.order > :removedOrder',
-                { removedOrder: processCredential.order }
-            ).getMany();
+            const credentialsToUpdate = await queryRunner.manager
+                .getRepository(ProcessCredential)
+                .createQueryBuilder('pc')
+                .select('pc.credentialId')
+                .innerJoin('pc.credential', 'credential')
+                .innerJoin('credential.template', 'template')
+                .where('pc.processId = :processId', { processId })
+                .andWhere(
+                    'template.name = :templateName',
+                    { templateName: processCredential.credential.template.name }
+                ).andWhere(
+                    'pc.order > :removedOrder',
+                    { removedOrder: processCredential.order }
+                ).getMany();
 
-        if (!credentialsToUpdate.length)
-            return;
+            if (credentialsToUpdate.length) {
+                await queryRunner.manager
+                .createQueryBuilder()
+                .update(ProcessCredential)
+                .set({ order: () => 'order - 1' })
+                .where(
+                    'credentialId IN (:...credIds)',
+                    { credIds: credentialsToUpdate.map(cred => cred.credentialId) }
+                ).execute();
+            }
 
-        await this.processCredentialRepository
-            .createQueryBuilder()
-            .update()
-            .set({ order: () => 'order - 1' })
-            .where(
-                'credentialId IN (:...credIds)',
-                { credIds: credentialsToUpdate.map(cred => cred.credentialId) }
-            ).execute();
+            await queryRunner.commitTransaction();
+        } catch {
+            await queryRunner.rollbackTransaction();
+            throw new InternalServerErrorException();
+        } finally {
+            await queryRunner.release();
+        }
     }
 
     private formatProcessCredentials(processCredentials: ProcessCredential[]) {
