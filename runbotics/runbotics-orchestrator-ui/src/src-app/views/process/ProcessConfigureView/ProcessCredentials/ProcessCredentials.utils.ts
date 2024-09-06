@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ActionCredentialType, ProcessCredential } from 'runbotics-common';
+import { ActionCredentialType, ProcessCredentialDto } from 'runbotics-common';
 
 import { ActionCredentials, ActionSortedColumns } from './ProcessCredentials.types';
 
@@ -7,7 +7,7 @@ export const ACTION_MIN_WIDTH = 400;
 export const MARGIN_LIMIT = 800;
 
 export const sortByActionCredentialType = (
-    credentials: ProcessCredential[],
+    credentials: ProcessCredentialDto[],
     credentialTypes: ActionCredentialType[]
 ): ActionCredentials => {
     const actions: ActionCredentials = credentialTypes.reduce((acc, type) => (acc[type] = [], acc), {});

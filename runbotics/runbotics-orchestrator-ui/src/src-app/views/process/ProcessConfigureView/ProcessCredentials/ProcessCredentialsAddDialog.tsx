@@ -4,7 +4,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { Dialog, DialogActions, DialogTitle, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { Credential } from 'runbotics-common';
+import { CredentialDto } from 'runbotics-common';
 
 import CredentialSelectSet from '#src-app/components/CredentialSelectSet';
 import If from '#src-app/components/utils/If';
@@ -29,7 +29,7 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
     const { id: processId } = useRouter().query;
     const dispatch = useDispatch();
     const { all } = useSelector(credentialsSelector);
-    const [pickedCredential, setPickedCredential] = useState<Credential>();
+    const [pickedCredential, setPickedCredential] = useState<CredentialDto>();
 
     const handleDialogClose = () => {
         setPickedCredential(undefined);

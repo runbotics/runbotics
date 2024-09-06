@@ -2,15 +2,15 @@ import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 're
 
 import { MenuItem, Select, Typography } from '@mui/material';
 import _ from 'lodash';
-import { Credential } from 'runbotics-common';
+import { CredentialDto } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { Container, Box } from './CredentialSelectSet.styles';
 
 interface CredentialSelectSetProps {
-    credentials: Credential[];
-    handleCredentialChange: (credential: Credential) => void;
+    credentials: CredentialDto[];
+    handleCredentialChange: (credential: CredentialDto) => void;
 }
 
 const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
