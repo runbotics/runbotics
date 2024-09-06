@@ -60,9 +60,6 @@ public class ProcessDTO implements Serializable {
     private BotSystem system;
 
     @JsonView(ProcessDTOViews.DefaultView.class)
-    private Set<ScheduleProcessDTO> schedules;
-
-    @JsonView(ProcessDTOViews.DefaultView.class)
     private BotCollection botCollection;
 
     private ProcessCollection processCollection;
@@ -175,14 +172,6 @@ public class ProcessDTO implements Serializable {
         this.system = system;
     }
 
-    public Set<ScheduleProcessDTO> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(Set<ScheduleProcessDTO> schedules) {
-        this.schedules = schedules;
-    }
-
     public BotCollection getBotCollection() {
         return botCollection;
     }
@@ -279,7 +268,6 @@ public class ProcessDTO implements Serializable {
             ", isTriggerable=" + isTriggerable +
             ", createdBy=" + createdBy +
             ", system=" + system +
-            ", schedules=" + schedules +
             ", editor=" + editor +
             ", tags=" + tags +
             ", outputType=" + outputType +
