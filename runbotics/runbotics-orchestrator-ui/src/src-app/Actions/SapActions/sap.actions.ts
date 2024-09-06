@@ -1,6 +1,5 @@
-import { SapAction, ActionRegex } from 'runbotics-common';
+import { SapAction, ActionRegex, ActionCredentialType } from 'runbotics-common';
 
-import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { SAPLanguages } from './sap.types';

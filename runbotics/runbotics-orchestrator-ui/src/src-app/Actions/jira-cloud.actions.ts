@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { JiraCloudAction, ActionRegex, JiraTaskStatus, JiraSprintState } from 'runbotics-common';
+import { JiraCloudAction, ActionRegex, JiraTaskStatus, JiraSprintState, ActionCredentialType } from 'runbotics-common';
 
-import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';

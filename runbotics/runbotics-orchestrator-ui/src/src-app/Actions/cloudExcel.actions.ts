@@ -1,6 +1,5 @@
-import { CloudExcelAction, ActionRegex, MicrosoftPlatform } from 'runbotics-common';
+import { CloudExcelAction, ActionRegex, MicrosoftPlatform, ActionCredentialType } from 'runbotics-common';
 
-import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';

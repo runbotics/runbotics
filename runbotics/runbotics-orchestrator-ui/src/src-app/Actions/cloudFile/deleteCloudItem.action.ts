@@ -1,8 +1,7 @@
-import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
+import { CloudFileAction, MicrosoftPlatform, ActionCredentialType } from 'runbotics-common';
 
 import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloudFile.schema';
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
-import { ActionCredentialType } from '#src-app/credentials/actionCredentialType.enum';
 import { translate } from '#src-app/hooks/useTranslations';
 
 export const deleteCloudItemAction = {
