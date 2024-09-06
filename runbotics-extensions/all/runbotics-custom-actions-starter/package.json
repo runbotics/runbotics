@@ -15,19 +15,20 @@
         "start": "microbundle watch src/**/*.ts --no-compress --format cjs"
     },
     "devDependencies": {
-        "microbundle": "0.13.3",
-        "typescript": "3.9.9",
-        "tslib": "2.3.0",
-        "@runbotics/runbotics-sdk": "1.0.0-SNAPSHOT.1",
         "@nestjs/common": "^7.6.15",
-        "lodash": "4.17.21"
+        "@runbotics/runbotics-sdk": "1.2.1",
+        "@runbotics/winax": "^3.5.3",
+        "lodash": "4.17.21",
+        "microbundle": "0.13.3",
+        "tslib": "2.3.0",
+        "typescript": "3.9.9"
     },
     "dependencies": {
-        "@runbotics/runbotics-sdk": "1.0.0-SNAPSHOT.1",
         "@nestjs/common": "^7.6.15",
+        "@runbotics/runbotics-sdk": "1.2.1",
+        "@runbotics/winax": "^3.5.3",
         "axios": "0.21.1"
     },
-    "peerDependencies": {},
     "files": [
         "dist"
     ]
