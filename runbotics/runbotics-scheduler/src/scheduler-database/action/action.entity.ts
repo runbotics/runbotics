@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Unique } from 'typeorm';
 import { Tenant } from '../tenant/tenant.entity';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 
 @Entity({ name: 'action' })
@@ -17,10 +18,10 @@ export class Action {
     @Column({ type: 'varchar', length: 255 })
     script: string;
 
-    @Column({ name: 'tenant_id', type: 'uuid', default: 'b7f9092f-5973-c781-08db-4d6e48f78e98' })
+    @Column({ name: 'tenant_id', type: 'uuid', default: DEFAULT_TENANT_ID })
     tenantId: string;
 
-    @ManyToOne(() => Tenant, tenant => tenant.id, { nullable: false })
+    @ManyToOne(() => Tenant, tenant => tenant.id)
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 }

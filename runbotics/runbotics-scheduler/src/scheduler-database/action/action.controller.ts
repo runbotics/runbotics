@@ -1,6 +1,18 @@
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Logger } from '#/utils/logger';
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpStatus,
+    NotFoundException,
+    Param,
+    Patch,
+    Post,
+    UseInterceptors,
+} from '@nestjs/common';
 import { ActionService } from './action.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, Tenant } from 'runbotics-common';
@@ -67,6 +79,7 @@ export class ActionController {
 
     @Delete(':id')
     @FeatureKeys(FeatureKey.EXTERNAL_ACTION_DELETE)
+    @HttpCode(HttpStatus.NO_CONTENT)
     async deleteAction(
         @Param('id') id: string,
         @Param('tenantId') tenantId: string,

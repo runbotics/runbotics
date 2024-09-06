@@ -49,10 +49,11 @@ export class ActionService {
     ) {
         const updatedAction = await this.actionRepository
             .findOneByOrFail({ tenantId, id })
-            .then(action => ({
+            .then((action) => ({
                 ...action,
                 ...updateActionDto,
-            })).catch(() => {
+            }))
+            .catch(() => {
                 this.logger.error('Cannot find action with id: ', id);
                 throw new BadRequestException('Action not found');
             });
