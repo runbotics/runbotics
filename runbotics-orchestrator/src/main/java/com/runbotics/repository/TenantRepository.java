@@ -15,8 +15,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TenantRepository extends JpaRepository<Tenant, UUID>, JpaSpecificationExecutor<Tenant> {
-    Optional<Tenant> findByName(String name);
-
     Page<Tenant> findAllByNameIsContainingIgnoreCase(Pageable pageable, String name);
     @Query(
         "SELECT t FROM Tenant t LEFT JOIN TenantInviteCode tic ON t.id = tic.tenantId WHERE tic.id = ?1"
