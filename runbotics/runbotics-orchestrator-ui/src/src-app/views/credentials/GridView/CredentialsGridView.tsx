@@ -9,6 +9,7 @@ import { useSnackbar } from 'notistack';
 import CustomDialog from '#src-app/components/CustomDialog';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 import If from '#src-app/components/utils/If';
+import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
@@ -76,7 +77,7 @@ const CredentialsGridView = () => {
     console.log(currentDialogCredential);
     return (
         <>
-            <If condition={!loading}>
+            <If condition={!loading} else={<LoadingScreen/>}>
                 {collectionId &&
                 <Box display='flex' justifyItems='center' alignItems='center' mb={3} >
                     <SvgIcon fontSize='large' color='secondary'>

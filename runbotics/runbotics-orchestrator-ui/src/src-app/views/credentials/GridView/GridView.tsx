@@ -9,7 +9,7 @@ import If from '#src-app/components/utils/If';
 
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
-import CredentialCollectionsGridView from './CollectionsGridView';
+import CredentialCollectionsGridView from './CredentialCollectionsGridView';
 import CredentialsGridView from './CredentialsGridView';
 import { CredentialsTabs } from '../Header';
 

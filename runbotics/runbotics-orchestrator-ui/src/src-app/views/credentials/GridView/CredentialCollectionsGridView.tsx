@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
 import { CredentialCollectionDelete } from '#src-app/components/Tile/CredentialsCollectionTile/MenuItems/CredentialCollectionDelete/CredentialCollectionDelete';
 import If from '#src-app/components/utils/If';
+import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
@@ -13,6 +14,7 @@ import CredentialsCollectionModifyDialog from '../CredentialsCollection/Credenti
 const CredentialCollectionsGridView = () => {
     const dispatch = useDispatch();
     const collections = useSelector(state => state.credentialCollections.credentialCollections);
+    const isLoading = useSelector(state => state.credentialCollections.loading);
 
     const [currentCollection, setCurrentCollection] = useState(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -56,7 +58,7 @@ const CredentialCollectionsGridView = () => {
             />
         ));
     return (
-        <>
+        <If condition={!isLoading} else={<LoadingScreen/>}>
             {collectionTiles}
             <If condition={currentCollection}>
                 <CredentialsCollectionModifyDialog open={isEditDialogOpen} onClose={handleCloseEditDialog} collection={currentCollection} />
@@ -66,7 +68,7 @@ const CredentialCollectionsGridView = () => {
                     handleDialogClose={handleCloseDeleteDialog}
                 />
             </If>
-        </>
+        </If>
     );
 };
 
