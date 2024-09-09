@@ -8,7 +8,8 @@ import * as credentialCollectionThunks from './CredentialCollections.thunks';
 
 const initialState: CredentialCollectionsState = {
     credentialCollections: [],
-    loading: false
+    loading: false,
+    page: null
 };
 
 const slice = createSlice({

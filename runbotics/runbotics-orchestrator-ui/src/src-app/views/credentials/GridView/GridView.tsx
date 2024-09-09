@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Pagination, Box } from '@mui/material';
 
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -31,13 +30,8 @@ const GridView = () => {
                 <CredentialsGridView />
             </If>
             <If condition={isCollectionsTab}>
-                <TileGrid>
-                    <CredentialCollectionsGridView />
-                </TileGrid>
+                <CredentialCollectionsGridView />
             </If>
-            <Box mt={6} display="flex" justifyContent="center">
-                <Pagination count={1} />
-            </Box>
         </>
     );
 };

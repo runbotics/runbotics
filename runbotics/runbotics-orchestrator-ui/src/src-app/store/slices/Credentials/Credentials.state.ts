@@ -3,4 +3,5 @@ import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Creden
 export interface CredentialsState {
     all: BasicCredentialDto[];
     loading: boolean;
+    page: number;
 }
