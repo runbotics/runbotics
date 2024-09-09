@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import { Box, FormControl, InputLabel, Select, IconButton, Popover, Typography, SelectChangeEvent } from '@mui/material';
+import { Box, FormControl, InputLabel, Select, IconButton, Popover, Typography, SelectChangeEvent, FormHelperText } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
 interface GeneralInfoDropdownProps {
@@ -12,10 +12,12 @@ interface GeneralInfoDropdownProps {
     required: boolean;
     handleChange(event: SelectChangeEvent): void;
     disabled: boolean;
+    error: boolean;
+    helperText: string;
     
 }
 
-const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, selectOptions, selectedValue, tooltipText, handleChange, required, disabled }) => {
+const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, selectOptions, selectedValue, tooltipText, handleChange, required, disabled, error, helperText }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -26,23 +28,28 @@ const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, select
         setAnchorEl(null);
     };
 
+    console.log('error dropdown', helperText, error);
+    console.log('error dropdown', selectLabel, error);
+
     const open = Boolean(anchorEl);
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <FormControl fullWidth required sx={{ marginRight: '1rem' }}>
-                <InputLabel id="collection_color">{selectLabel}</InputLabel>
+                <InputLabel id={`${selectLabel}-inputLabel`} error={error}>{selectLabel}</InputLabel>
                 <Select
                     disabled={disabled}
                     SelectDisplayProps={{ style: { display: 'flex' } }}
-                    labelId="collection-label"
-                    id="collection-select"
+                    labelId={`${selectLabel}-labelId`}
+                    id={`${selectLabel}-selectId`}
                     value={selectedValue}
-                    label="Collection"
+                    label={selectLabel}
                     onChange={handleChange}
                     required={required}
+                    error={error}       
                 >
                     {selectOptions}
                 </Select>
+                {error && <FormHelperText error={true}>{helperText}</FormHelperText>}
             </FormControl>
             <IconButton color="secondary" onMouseEnter={event => handlePopoverOpen(event)} onMouseLeave={handlePopoverClose}>
                 <HelpOutlineOutlinedIcon color="primary" />

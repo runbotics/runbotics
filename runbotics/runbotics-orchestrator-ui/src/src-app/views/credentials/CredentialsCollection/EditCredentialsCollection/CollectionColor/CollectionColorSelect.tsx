@@ -3,10 +3,13 @@ import { useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Typography } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
+import useTranslations from '#src-app/hooks/useTranslations';
+
 import { ColorDot } from './CollectionColor.styled';
 import { CollectionColorName, collectionColors, getColorNameByHex } from './CollectionColor.types';
 
 const CollectionColorSelect = ({ currentColor, credentialsCollectionData, setCredentialCollectionColor }) => {
+    const { translate } = useTranslations();
     const [collectionColor, setCollectionColor] = useState(
         currentColor ? collectionColors[currentColor].hex : collectionColors.DARK_ORANGE.hex
     );
@@ -26,7 +29,7 @@ const CollectionColorSelect = ({ currentColor, credentialsCollectionData, setCre
 
     return (
         <FormControl fullWidth>
-            <InputLabel id="collection_color">Collection color</InputLabel>
+            <InputLabel id="collection_color">{translate('Credentials.Collection.Edit.CollectionColor.Label')}</InputLabel>
             <Select
                 SelectDisplayProps={{ style: { display: 'flex' } }}
                 labelId="collection_color-label"

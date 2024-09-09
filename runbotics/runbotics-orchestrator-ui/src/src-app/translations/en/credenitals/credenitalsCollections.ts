@@ -3,6 +3,7 @@ export const credentialsCollectons = {
     'Credentials.Collection.Create.Title': 'Create credentials collection',
     'Credentials.Collection.Edit.Title': 'Edit collection',
     'Credentials.Collection.Edit.Description.Label': 'Description',
+    'Credentials.Collection.Edit.CollectionColor.Label': 'Collection color',
     'Credentials.Collection.Dialog.Modify.Edit.Title': 'Edit credential collection details',
     'Credentials.Collection.Dialog.Modify.Create.Title': 'Create new collection',
     'Credentials.Collection.Add.Form.Error.General': 'An error has occured during new credential creation',

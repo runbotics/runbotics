@@ -11,6 +11,7 @@ import InternalPage from '#src-app/components/pages/InternalPage';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
+import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
 import { fetchOneCredential } from '#src-app/store/slices/Credentials/Credentials.thunks';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
@@ -38,34 +39,48 @@ const CredentialsInternalPage = styled(InternalPage)`
 
 const EditCredential: FC<EditCredentialProps> = ({}) => {
     const router = useRouter();
-    const credentialId = getLastParamOfUrl(router);
-    const credentials = useSelector(state => state.credentials.all);
-    const credential = credentials.find(cred => cred.id === credentialId);
-    const collections = useSelector(state => state.credentialCollections.credentialCollections);
-    const currentCredentialCollection = collections.find(collection => collection.id === credential.collectionId);
     const dispatch = useDispatch();
+    const credentialId = getLastParamOfUrl(router);
+
+    const credentials = useSelector(state => state.credentials.all);
+    const collections = useSelector(state => state.credentialCollections.credentialCollections);
+    const collectionsLoading = useSelector(state => state.credentialCollections.loading);
+
+    const credential = credentials ? credentials.find(cred => cred.id === credentialId) : undefined;
+    const currentCredentialCollection = credential ? collections.find(collection => collection.id === credential.collectionId) : undefined;
 
     useEffect(() => {
-        if (credentialId) {
-            dispatch(fetchOneCredential({resourceId: credentialId}));
-        }
-    }, [dispatch, credentialId]);
+        dispatch(fetchOneCredential({ resourceId: credentialId }));
+        if (!collections.length) dispatch(fetchAllCredentialCollections());
+    }, [credentialId, collections.length]);
 
     return (
-        <CredentialsInternalPage title={translate('Credential.Add.Title')}>
-            <StyledGrid container justifyContent="space-between" my={2} ml={2} gap={2}>
-                <Header credentialName={credential.name} />
-                <GeneralInfo credential={credential} collectionColor={currentCredentialCollection.color as ColorNames}/>
-                <Grid container>
-                    <Grid item xs={12}>
-                        <Typography variant="h4">{translate('Credential.Attributes.Title')} (3)</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <CredentialAttributesList templateId={credential.templateId} />
-                    </Grid>
-                </Grid>
-            </StyledGrid>
-        </CredentialsInternalPage>
+        <>
+            {!collectionsLoading && currentCredentialCollection && credential && (
+                <CredentialsInternalPage title={translate('Credential.Add.Title')}>
+                    <StyledGrid container justifyContent="space-between" my={2} ml={2} gap={2} width={'96%'}>
+                        <Header credentialName={credential.name} />
+                        <GeneralInfo
+                            credential={credential}
+                            collectionColor={currentCredentialCollection.color as ColorNames}
+                            collectionName={currentCredentialCollection.name}
+                        />
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Typography variant="h4">{translate('Credential.Attributes.Title')}</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <CredentialAttributesList
+                                    credential={credential}
+                                    templateId={credential.templateId}
+                                    isNewCredential={credential.attributes?.length ? true : false}
+                                ></CredentialAttributesList>
+                            </Grid>
+                        </Grid>
+                    </StyledGrid>
+                </CredentialsInternalPage>
+            )}
+        </>
     );
 };
 export default EditCredential;

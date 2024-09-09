@@ -6,7 +6,3 @@ export interface EditCredentialProps {
     onAdd: (credential: BasicCredentialDto) => void;
     open?: boolean;
 }
-
-// export interface FormValidationState {
-//     name: boolean;
-// }

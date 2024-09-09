@@ -51,7 +51,7 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
     useEffect(() => {
         if (!credentialsCollectionFormState.name.trim() && !collectionData.name) {
             setFormValidationState(false);
-            setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
+            // setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
         } else if (credentialsCollectionFormState.name.trim()) {
             setInputErrorType(null);
         }
@@ -120,7 +120,7 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
                             formState={credentialsCollectionFormState}
                             setFormState={setCredentialsCollectionFormState}
                         />
-                        <SharedWithUsers collection={collectionData} setCredentialsCollectionData={setCollectionData} />
+                        <SharedWithUsers credentialsCollectionFormState={credentialsCollectionFormState} setCredentialsCollectionFormState={setCredentialsCollectionFormState} />
                     </Form>
                 </Content>
             </CustomDialog>

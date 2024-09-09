@@ -3,6 +3,7 @@ export const credentialsCollectons = {
     'Credentials.Collection.Create.Title': 'Dodaj kolekcję',
     'Credentials.Collection.Edit.Title': 'Edytuj kolekcję',
     'Credentials.Collection.Edit.Description.Label': 'Opis',
+    'Credentials.Collection.Edit.CollectionColor.Label': 'Kolor kolekcji',
     'Credentials.Collection.Dialog.Modify.Edit.Title': 'Edytuj kolekcję poświadczeń',
     'Credentials.Collection.Dialog.Modify.Create.Title': 'Stwórz nową kolekcję poświadczeń',
     'Credentials.Collection.Add.Form.Error.General': 'Wystąpił błąd podczas tworzenia kolekcji',

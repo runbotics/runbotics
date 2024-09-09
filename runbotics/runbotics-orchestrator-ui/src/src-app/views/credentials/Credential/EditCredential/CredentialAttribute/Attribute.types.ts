@@ -1,8 +1,5 @@
 import { IUser } from 'runbotics-common';
 
-import { CredentialTemplateAttribute, CredentialTemplateAttributeType } from '#src-app/store/slices/CredentialTemplates';
-
-// TO_REVIEW
 export interface BasicAttributeDto {
     id: string;
     name: string;
@@ -30,19 +27,15 @@ export interface BasicAttributeDto {
 
 export interface CreateAttributeDto {
     name: string;
-    masked: boolean;
     value: string;
     credentialId: string;
-    // tenantId: string;
+    masked?: boolean;
     description?: string;
 }
 
 export interface EditAtributeDto {
-    id: string;
-    name: string;
     masked: boolean;
     value: string;
-    description?: string;
 }
 
 export interface DisplayAttribute {
@@ -66,16 +59,21 @@ export interface MaskedAttribute extends BasicAttributeDto {
     masked: true;
 }
 
-export type Attribute = UnmaskedAttribute | MaskedAttribute;
+export type CredentialTemplateAttributeType = 'string' | 'boolean' | 'number';
 
-export const initialCredentialAttributeValues: CreateAttributeDto = {
-    name: '',
-    value: '',
-    description: '',
-    masked: true,
-    credentialId: ''
-};
-
-export function isTemplateAttribute(obj: CredentialTemplateAttribute | EditAtributeDto): obj is CredentialTemplateAttribute {
-    return (obj as CredentialTemplateAttribute).required !== undefined;
+export interface CredentialTemplateAttribute {
+    id: string;
+    name: string;
+    description?: string;
+    templateId: string;
 }
+
+export interface CredentialTemplate {
+    id: string,
+    name: string,
+    tenantId?: string;
+    attributes: CredentialTemplateAttribute[]
+    description?: string
+}
+
+export type Attribute = UnmaskedAttribute | MaskedAttribute;

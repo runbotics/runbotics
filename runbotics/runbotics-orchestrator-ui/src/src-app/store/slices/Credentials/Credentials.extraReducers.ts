@@ -3,7 +3,7 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 
 import { CredentialsState } from './Credentials.state';
-import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential } from './Credentials.thunks';
+import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential, updateAttribute } from './Credentials.thunks';
 
 const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<CredentialsState>) => {
     builder
@@ -18,7 +18,8 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(fetchAllCredentialsInCollection.rejected, state => {
             state.loading = false;
         })
-        // fetch all user has access in tenant
+
+        // fetch all accessible credentials in tenant
         .addCase(fetchAllCredentialsAccessibleInTenant.pending, state => {
             state.loading = true;
         })
@@ -29,7 +30,8 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(fetchAllCredentialsAccessibleInTenant.rejected, state => {
             state.loading = false;
         })
-        // fetch one
+
+        // fetch one credential
         .addCase(fetchOneCredential.pending, state => {
             state.loading = true;
         })
@@ -40,7 +42,8 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(fetchOneCredential.rejected, state => {
             state.loading = false;
         })
-        // create
+
+        // create credential
         .addCase(createCredential.pending, state => {
             state.loading = true;
         })
@@ -51,7 +54,8 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(createCredential.rejected, state => {
             state.loading = false;
         })
-        // update
+
+        // update credential
         .addCase(updateCredential.pending, state => {
             state.loading = true;
         })
@@ -64,7 +68,19 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(updateCredential.rejected, state => {
             state.loading = false;
         })
-        // delete
+
+        // update credential attribute
+        .addCase(updateAttribute.pending, state => {
+            state.loading = true;
+        })
+        .addCase(updateAttribute.fulfilled, (state) => {       
+            state.loading = false;
+        })
+        .addCase(updateAttribute.rejected, state => {
+            state.loading = false;
+        })
+
+        // delete credential
         .addCase(deleteCredential.pending, state => {
             state.loading = true;
         })

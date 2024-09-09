@@ -14,7 +14,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { AttributeIcon, StyledCustomAttributeCard, StyledGridContainer } from './Attribute.styles';
 import { DisplayAttribute, EditAtributeDto } from './Attribute.types';
-import CredentialDetails from '../CredentialDetails/CredentialDetails';
+import CredentialAttributeDetails from '../CredentialAttributeDetails/CredentialAttributeDetials';
 
 type CustomAttributeProps = {
     attribute: DisplayAttribute;
@@ -109,7 +109,7 @@ const CustomAttribute: FC<CustomAttributeProps> = ({ attribute, setAttribute, de
                 <Collapse in={isEditMode} orientation="vertical" sx={{ width: '100%' }}>
                     <Grid item xs={12}>
                         <Divider variant="middle" />
-                        <CredentialDetails currentAttribute={currentAttribute} handleFieldChange={handleFieldChange} />
+                        <CredentialAttributeDetails currentAttribute={currentAttribute} handleFieldChange={handleFieldChange} />
                         <StyledGridContainer container justifyContent="space-between">
                             <Grid item>
                                 <Button size="small" onClick={handleCancel} sx={{ padding: 0 }}>

@@ -16,20 +16,20 @@ export interface SharedWithUser {
 }
 
 interface SharedWithUsersProps {
-    collection: EditCredentialsCollectionDto;
-    setCredentialsCollectionData(collection: EditCredentialsCollectionDto): void;
+    credentialsCollectionFormState: EditCredentialsCollectionDto;
+    setCredentialsCollectionFormState(collection: EditCredentialsCollectionDto): void;
 }
 
-export const SharedWithUsers: FC<SharedWithUsersProps> = ({ collection, setCredentialsCollectionData }) => {
+export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectionFormState, setCredentialsCollectionFormState }) => {
     const {
         activated: { nonAdmins }
     } = useSelector(state => state.users);
     const { user: currentUser } = useSelector(state => state.auth);
-    const [users, setUsers] = useState(collection.sharedWith);
+    const [users, setUsers] = useState(credentialsCollectionFormState.sharedWith);
     
     useEffect(() => {
-        setCredentialsCollectionData({
-            ...collection,
+        setCredentialsCollectionFormState({
+            ...credentialsCollectionFormState,
             accessType: users.length > 0 ? AccessType.GROUP : AccessType.PRIVATE,
             sharedWith: users,
         });

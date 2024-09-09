@@ -15,18 +15,18 @@ import { BasicCredentialDto } from '../Credential.types';
 interface GeneralInfoProps {
     credential: BasicCredentialDto;
     collectionColor: ColorNames;
+    collectionName: string;
 }
 
-const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor }) => {
+const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor, collectionName }) => {
     const templateId = credential.templateId;
     const { translate } = useTranslations();
     const templates = useSelector(state => state.credentialTemplates.data);
     const credentialTemplate = templates.find(template => template.id === templateId);
-    console.log(collectionColor);
     const color = collectionColors[collectionColor].hex;
 
     return (
-        <Box sx={{ display: 'flex', width: '90%', justifyContent: 'flexStart', marginBottom: '80px' }}>
+        <Box sx={{ display: 'flex', width: '90%', justifyContent: 'flexStart', marginBottom: '48px' }}>
             <Grid container spacing={5}>
                 <Grid item xs={12} sx={{ marginBottom: '-16px' }}>
                     <Typography variant="h4">{translate('Credential.GeneralInfo.Title')}</Typography>
@@ -48,7 +48,7 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor }) => {
                         </Typography>
                         <Typography variant="body2" sx={{ display: 'flex', alignContent: 'center' }} ml={1}>
                             <ColorDot collectionColor={color} />
-                            {credential.collectionId}
+                            {collectionName}
                         </Typography>
                     </Box>
                 </Grid>

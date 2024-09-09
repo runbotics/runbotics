@@ -7,7 +7,6 @@ import { authReducer as auth } from './slices/Auth/index';
 import { botReducer as bot } from './slices/Bot';
 import { botCollectionReducer as botCollection } from './slices/BotCollections';
 import { botSystemsReducer as botSystem } from './slices/BotSystem';
-import { credentialAttributeReducer as credentialAttributes } from './slices/CredentialAttributes';
 import { credentialCollectionsReducer as credentialCollections} from './slices/CredentialCollections';
 import { credentialsReducer as credentials } from './slices/Credentials';
 import { credentialTemplatesReducer as credentialTemplates } from './slices/CredentialTemplates';
@@ -43,7 +42,6 @@ const rootReducer = combineReducers({
     processOutput,
     tenants,
     credentials,
-    credentialAttributes,
     credentialCollections,
     credentialTemplates
 });

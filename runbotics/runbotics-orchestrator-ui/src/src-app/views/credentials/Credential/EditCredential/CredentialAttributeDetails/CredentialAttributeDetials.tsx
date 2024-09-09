@@ -9,14 +9,12 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledGridContainer } from '../CredentialAttribute/Attribute.styles';
 
-const CredentialDetails = ({ currentAttribute, handleFieldChange }) => {
+const CredentialAttributeDetails = ({ handleFieldChange, currentValue, setCurrentValue }) => {
     const { translate } = useTranslations();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, attributeId) => {
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-        setHoveredIndex(attributeId);
     };
 
     const handlePopoverClose = () => {
@@ -37,7 +35,7 @@ const CredentialDetails = ({ currentAttribute, handleFieldChange }) => {
                     <Grid item>
                         <IconButton
                             color="secondary"
-                            onMouseEnter={event => handlePopoverOpen(event, currentAttribute.id)}
+                            onMouseEnter={event => handlePopoverOpen(event)}
                             onMouseLeave={handlePopoverClose}
                         >
                             <HelpOutlineOutlinedIcon />
@@ -49,13 +47,17 @@ const CredentialDetails = ({ currentAttribute, handleFieldChange }) => {
                 <TextField
                     fullWidth
                     label={translate('Credential.Attribute.Value.Label')}
-                    value="masked"
-                    onChange={e => handleFieldChange('value', e.target.value)}
-                    InputProps={{ type: currentAttribute.masked ? 'password' : 'text' }}
+                    value={currentValue}
+                    onClick={() => setCurrentValue('')}
+                    onChange={e => {
+                        handleFieldChange(e.target.value);
+                        setCurrentValue(e.target.value);
+                    }}
+                    InputProps={{ type: 'password' }}
                 ></TextField>
             </Grid>
             <Popover
-                id={`mouse-over-popover-${currentAttribute.id}`}
+                id={'mouse-over-popover'}
                 sx={{ mt: 1, pointerEvents: 'none' }}
                 open={open}
                 anchorEl={anchorEl}
@@ -79,4 +81,4 @@ const CredentialDetails = ({ currentAttribute, handleFieldChange }) => {
     );
 };
 
-export default CredentialDetails;
+export default CredentialAttributeDetails;
