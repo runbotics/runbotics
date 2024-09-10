@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
     BotWsMessage,
     DecryptedCredential,
@@ -13,6 +13,7 @@ import { WebsocketService } from '#/websocket/websocket.service';
 import { ProcessInputService } from './process-input.service';
 import { SecretService } from '#/scheduler-database/secret/secret.service';
 import { ProcessService } from '#/database/process/process.service';
+import { findSubprocess } from '#/utils/bpmn/findSubprocess';
 
 @Injectable()
 export class ProcessSchedulerService {
@@ -62,7 +63,11 @@ export class ProcessSchedulerService {
         orchestratorProcessInstanceId: string
     ) {
         const processId = instantProcess.process.id;
-        const credentials = await this.getDecryptedCredentials(processId);
+        const processDef = instantProcess.process.definition;
+        const credentials = await this.getDecryptedCredentials(
+            processId,
+            processDef
+        );
 
         return {
             processId,
@@ -78,26 +83,70 @@ export class ProcessSchedulerService {
     }
 
     private async getDecryptedCredentials(
-        processId: IProcess['id']
+        processId: IProcess['id'],
+        definition: IProcess['definition']
     ): Promise<DecryptedCredential[]> {
-        const { credentials } =
-            await this.processService.findByIdWithSecrets(processId);
+        const process = await this.processService.findByIdWithSecrets(
+            processId
+        );
+
+        if (!process) {
+            throw new NotFoundException(
+                `Cannot find process with ID ${processId}`
+            );
+        }
+
+        const credentials = process.credentials;
         const areCredentialsValid =
             credentials && Array.isArray(credentials) && credentials.length > 0;
 
-        if (!areCredentialsValid) {
-            return [];
+        const processDecryptedCredentials = areCredentialsValid
+            ? credentials.map(({ id, name, template, attributes }) => ({
+                  id,
+                  name,
+                  template: template.name,
+                  attributes: attributes.map(({ id, name, secret }) => ({
+                      id,
+                      name,
+                      value: this.secretService.decrypt(secret),
+                  })),
+              }))
+            : [];
+
+        const subprocessIds = await findSubprocess(definition);
+        if (subprocessIds && subprocessIds.length) {
+            const subprocessCredentials = await Promise.all(
+                subprocessIds.map(async (subprocessId) => {
+                    const subprocess = await this.processService.findById(
+                        subprocessId
+                    );
+
+                    if (!subprocess) {
+                        throw new NotFoundException(
+                            `Cannot find process with ID ${processId}`
+                        );
+                    }
+
+                    const subprocessDefinition = subprocess.definition;
+                    const subprocessDecryptedCredentials =
+                        await this.getDecryptedCredentials(
+                            subprocessId,
+                            subprocessDefinition
+                        );
+
+                    return subprocessDecryptedCredentials;
+                })
+            );
+
+            const subprocessDecryptedCredentials =
+                subprocessCredentials.flatMap((c) => c);
+
+            return [
+                ...processDecryptedCredentials,
+                ...subprocessDecryptedCredentials,
+            ];
         }
 
-        return credentials.map(({ id, name, template, attributes }) => ({
-            id,
-            name,
-            template: template.name,
-            attributes: attributes.map(({ id, name, secret }) => ({
-                id,
-                name,
-                value: this.secretService.decrypt(secret),
-            })),
-        }));
+        return processDecryptedCredentials;
     }
 }
