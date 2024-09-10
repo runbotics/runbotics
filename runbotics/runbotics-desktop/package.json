@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.10.3",
+    "version": "2.10.4",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -47,7 +47,7 @@
         "dayjs": "^1.11.0",
         "execa": "^1.0.0",
         "file-type": "^16.5.4",
-        "googleapis": "^73.0.0",
+        "googleapis": "^143.0.0",
         "jexl": "^2.3.0",
         "jimp": "^0.22.10",
         "lodash": "^4.17.19",

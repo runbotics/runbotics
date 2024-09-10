@@ -8,6 +8,8 @@ const folderActionsTranslations: typeof englishFolderActionsTranslations = {
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Label': 'Wyświetl pliki',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Path': 'Ścieżka',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Name': 'Nazwa',
+    'Process.Details.Modeler.Actions.Folder.DisplayFiles.Name.Info': 'Nazwa folderu. Nie może zawierać następujących znaków: \\ / : * ? < > |',
+    'Process.Details.Modeler.Actions.Folder.DisplayFiles.Path.Info': 'Ścieżka do nadrzędnego folderu w hierarchii plików',
     'Process.Details.Modeler.Actions.Folder.Create.Label': 'Stwórz',
     'Process.Details.Modeler.Actions.Folder.Create.Name': 'Nazwa',
     'Process.Details.Modeler.Actions.Folder.Create.Name.Info': 'Nazwa folderu do utworzenia. Nie może zawierać następujących znaków: \\ / : * ? < > |',
