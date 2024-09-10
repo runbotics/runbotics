@@ -1,6 +1,14 @@
-version: '3.8'
-
 services:
+  runbotics-portainer:
+    container_name: runbotics-portainer
+    image: portainer/portainer-ce:2.20.3-alpine
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - 127.0.0.1:9000:9000
+
   runbotics-postgresql:
     container_name: runbotics-postgresql
     image: postgres:13.2
@@ -24,6 +32,8 @@ services:
 volumes:
   runbotics:
     external: true
+  portainer_data:
+    external: false
 
 networks:
   default:

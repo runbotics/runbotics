@@ -188,6 +188,22 @@ public class UserResource {
         );
     }
 
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
+    @PatchMapping("/users/tenant/{id}")
+    public ResponseEntity<AdminUserDTO> partialUpdateInTenant(
+        @PathVariable(value = "id", required = true) Long id,
+        @NotNull @RequestBody AdminUserDTO adminUserDTO
+    ) {
+        log.debug("REST request to partial update User in tenant partially : {}, {}", id, adminUserDTO);
+
+        Optional<AdminUserDTO> result = userService.partialUpdateInTenant(adminUserDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, adminUserDTO.getId().toString())
+        );
+    }
+
     /**
      * {@code GET /admin/users} : get all users with all the details - calling this are only allowed for the administrators.
      *
@@ -283,6 +299,46 @@ public class UserResource {
         }
 
         Page<AdminUserDTO> page = userService.getAllActivatedUsers(pageable, criteria);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
+    }
+
+    /**
+     * {@code GET /admin/users/activated-tenant} : get all activated users by tenant with all the details
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users in tenant.
+     */
+    @GetMapping("/users/not-activated-tenant")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
+    public ResponseEntity<Page<AdminUserDTO>> getAllNotActivatedUsersByTenant(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all by tenant activated User: {}, by criteria: {}", pageable, criteria);
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<AdminUserDTO> page = userService.getAllNotActivatedUsersByTenant(pageable, criteria);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
+    }
+
+    /**
+     * {@code GET /admin/users/not-activated-tenant} : get all not activated users by tenant with all the details
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users in tenant.
+     */
+    @GetMapping("/users/activated-tenant")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
+    public ResponseEntity<Page<AdminUserDTO>> getAllActivatedUsersByTenant(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all by tenant activated User: {}, by criteria: {}", pageable, criteria);
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<AdminUserDTO> page = userService.getAllActivatedUsersByTenant(pageable, criteria);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page, headers, HttpStatus.OK);

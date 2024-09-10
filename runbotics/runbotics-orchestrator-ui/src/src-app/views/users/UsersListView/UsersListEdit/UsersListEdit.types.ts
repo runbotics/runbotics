@@ -4,6 +4,7 @@ export interface UsersListEditDialogProps {
     open: boolean;
     onClose: () => void;
     userData: IUser;
+    isForAdmin: boolean;
 };
 
 export interface FormValidationState {

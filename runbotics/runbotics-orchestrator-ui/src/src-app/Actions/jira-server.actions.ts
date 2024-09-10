@@ -42,18 +42,6 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                             title: translate('Process.Details.Modeler.Actions.Common.Input'),
                             type: 'object',
                             properties: {
-                                originEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Origin'),
-                                    type: 'string',
-                                },
-                                usernameEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Username'),
-                                    type: 'string',
-                                },
-                                passwordEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Password'),
-                                    type: 'string',
-                                },
                                 email: {
                                     title: translate('Process.Details.Modeler.Actions.Common.Email'),
                                     type: 'string',
@@ -112,7 +100,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                     }],
                                 },
                             },
-                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'email']
+                            required: ['email']
                         },
                         output: {
                             title: translate('Process.Details.Modeler.Actions.Common.Output'),

@@ -8,8 +8,9 @@ import {
 export class ServerConfigService {
 
     constructor(
-        private configService: ConfigService
-    ) {}
+        private configService: ConfigService,
+    ) {
+    }
 
     get entrypointUrl(): string | undefined {
         return this.configService.get('RUNBOTICS_ENTRYPOINT_URL');
@@ -42,6 +43,7 @@ export class ServerConfigService {
     get botLogsDirectoryPath(): string | undefined {
         return this.configService.get('BOT_LOGS_DIRECTORY');
     }
+
     get requiredBotVersion(): string | undefined {
         return this.configService.get('MIN_BOT_VERSION');
     }
@@ -52,8 +54,8 @@ export class ServerConfigService {
             port: this.convertNumber(this.configService.get('BASIC_EMAIL_TRIGGER_READ_PORT')),
             auth: {
                 user: this.configService.get('BASIC_EMAIL_TRIGGER_USERNAME'),
-                pass: this.configService.get('BASIC_EMAIL_TRIGGER_PASSWORD')
-            }
+                pass: this.configService.get('BASIC_EMAIL_TRIGGER_PASSWORD'),
+            },
         };
     }
 
@@ -63,8 +65,8 @@ export class ServerConfigService {
             port: this.convertNumber(this.configService.get('BASIC_EMAIL_TRIGGER_WRITE_PORT')),
             auth: {
                 user: this.configService.get('BASIC_EMAIL_TRIGGER_USERNAME'),
-                pass: this.configService.get('BASIC_EMAIL_TRIGGER_PASSWORD')
-            }
+                pass: this.configService.get('BASIC_EMAIL_TRIGGER_PASSWORD'),
+            },
         };
     }
 
@@ -106,6 +108,10 @@ export class ServerConfigService {
             mailUsername: this.configService.get('MAIL_USERNAME'),
             mailPassword: this.configService.get('MAIL_PASSWORD'),
         };
+    }
+
+    get encryptionKey(): string {
+        return this.configService.get('ENCRYPTION_KEY');
     }
 
     private convertNumber(variable: string | undefined): number | undefined {

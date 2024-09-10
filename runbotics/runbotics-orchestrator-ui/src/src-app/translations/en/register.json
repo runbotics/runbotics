@@ -15,6 +15,7 @@
     "Register.Form.Fields.Email.Label": "Email",
     "Register.Form.Fields.Password.Label": "Password",
     "Register.Form.Fields.PasswordConfirmation.Label": "Repeat password",
+    "Register.Form.Fields.InviteCode.Label": "Invite code",
     "Register.Form.Actions.Register": "Register",
     "Register.SwitchToLoginMessage": "I already have an account",
     "Register.Error.NoInternet": "No internet connection",

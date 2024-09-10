@@ -6,6 +6,8 @@ const viewRegistrationTranslations = {
     'Users.Registration.View.SearchBarPlaceholder': 'Search',
     'Users.Registration.View.Button.Accept': 'Accept',
     'Users.Registration.View.Button.Delete': 'Delete',
+    'Users.Registration.View.Select.Label': 'Tenant',
+    'Users.Registration.View.Select.NoneTenant': 'None',
 };
 
 export default viewRegistrationTranslations;

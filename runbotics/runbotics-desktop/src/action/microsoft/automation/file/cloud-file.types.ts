@@ -1,14 +1,17 @@
 import { CloudFileAction, MicrosoftPlatform } from 'runbotics-common';
 import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
+import { ActionCredentialData } from '#action/microsoft/common.types';
 
 export type CloudFileActionRequest =
-    | DesktopRunRequest<CloudFileAction.DOWNLOAD_FILE, CloudFileDownloadFileActionInput>
-    | DesktopRunRequest<CloudFileAction.UPLOAD_FILE, CloudFileUploadFileActionInput>
-    | DesktopRunRequest<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>
-    | DesktopRunRequest<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>
-    | DesktopRunRequest<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>
-    | DesktopRunRequest<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>;
+    | DesktopRunRequestWithCredentials<CloudFileAction.DOWNLOAD_FILE, CloudFileDownloadFileActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.UPLOAD_FILE, CloudFileUploadFileActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.CREATE_FOLDER, CloudFileCreateFolderActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.MOVE_FILE, CloudFileMoveFileActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.DELETE_ITEM, CloudFileDeleteItemActionInput>
+    | DesktopRunRequestWithCredentials<CloudFileAction.CREATE_SHARE_LINK, CloudFileCreateShareLink>
+    | DesktopRunRequestWithCredentials<CloudFileAction.GET_SHAREPOINT_LIST_ITEMS, SharepointGetListItems>;
 
+type DesktopRunRequestWithCredentials<S extends string, I> = DesktopRunRequest<S, I> & ActionCredentialData;
 export interface SharePointCommon {
     platform: MicrosoftPlatform.SharePoint;
     listName: string;
@@ -74,3 +77,10 @@ export interface OneDriveCreateShareLink {
 
 export type SharePointCreateShareLink = SharePointCommon & Omit<OneDriveCreateShareLink, 'platform'>;
 export type CloudFileCreateShareLink = OneDriveCreateShareLink | SharePointCreateShareLink;
+
+// GET SHAREPOINT LIST ITEMS
+export interface SharepointGetListItems {
+    platform: MicrosoftPlatform.SharePoint;
+    listName: string;
+    siteRelativePath: string;
+}

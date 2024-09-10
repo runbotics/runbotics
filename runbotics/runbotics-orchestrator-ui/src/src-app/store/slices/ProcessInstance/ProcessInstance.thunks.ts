@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import Axios from 'axios';
 import { IProcessInstance } from 'runbotics-common';
 
+import Axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
@@ -48,13 +48,20 @@ export const getProcessInstance = createAsyncThunk<IProcessInstance, {
     },
 );
 
-export const getSubprocesses = createAsyncThunk<IProcessInstance[], {
+export const getSubprocesses = createAsyncThunk<Page<IProcessInstance>, {
     processInstanceId: string;
+    page?: number;
+    size?: number;
 }>(
     'processInstances/getSubprocesses',
-    ({ processInstanceId }) =>
-        Axios.get<IProcessInstance[]>(`/api/process-instances/${processInstanceId}/subprocesses`)
-            .then((response) => response.data),
+    ({ processInstanceId, page, size }, { rejectWithValue }) => Axios.get<Page<IProcessInstance>>(
+        URLBuilder
+            .url(`/api/process-instances/${processInstanceId}/subprocesses`)
+            .params({ page, size })
+            .build()
+    )
+        .then((response) => response.data)
+        .catch(error => rejectWithValue(error.response.data)),
 );
 
 export const getProcessInstanceAndUpdatePage = createAsyncThunk<IProcessInstance, { processInstanceId?: string }>(
