@@ -23,6 +23,11 @@ export interface Credentials {
     password: string;
 }
 
+export interface GoogleAuth {
+    privateKey: string | undefined;
+    serviceAccountEmail: string | undefined;
+}
+
 @Injectable()
 export class ServerConfigService {
     private readonly runboticsLogger = new RunboticsLogger(ServerConfigService.name);
@@ -102,12 +107,13 @@ export class ServerConfigService {
         return this.getEnvValue('MAIL_PORT');
     }
 
-    get googleRefreshToken(): string {
-        return this.getEnvValue('GOOGLE_REFRESH_TOKEN');
-    }
-
-    get googleAuthCode(): string {
-        return this.getEnvValue('GOOGLE_AUTHORIZATION_CODE');
+    get googleAuth(): GoogleAuth {
+        return {
+            privateKey: this.getEnvValue('GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY'),
+            serviceAccountEmail: this.getEnvValue(
+                'GOOGLE_SERVICE_ACCOUNT_EMAIL'
+            ),
+        };
     }
 
     get jiraUsername(): string {
@@ -163,8 +169,12 @@ export class ServerConfigService {
 
     private getEnvValue(key: string): string | undefined {
         const configValue = this.configService.get(key);
-        const fullEncKey = process.argv.find((arg) => arg.startsWith('--enc-key='));
+        const fullEncKey = process.argv.find((arg) =>
+            arg.startsWith('--enc-key=')
+        );
         const encKey = fullEncKey ? fullEncKey.split('=')[1] : '';
-        return (encKey && configValue) ? decrypt(configValue, encKey) : configValue;
+        return encKey && configValue
+            ? decrypt(configValue, encKey)
+            : configValue;
     }
 }

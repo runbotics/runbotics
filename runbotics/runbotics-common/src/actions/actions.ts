@@ -11,14 +11,14 @@ export enum CloudPath {
 export enum ActionRegex {
     VARIABLE_NAME = '^[a-zA-Z0-9_]*$',
     EXCEL_WORKSHEET_NAME = '^[^\\[\\]\\*\\?\\/\\\\\\:]{1,31}$',
-    EXCEL_CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
+    CELL_ADDRESS = '^[a-zA-Z]+\\d+$',
     EXCEL_COLUMN_NAME = '^[a-zA-Z]+',
     EXCEL_DIGITS_FROM_CELL_ADDRESS = '\\d+$',
     EXCEL_SPLIT_ADDRESS = '[!:]',
     EXCEL_ROW_RANGE = '^(\\d+:\\d+)$',
     EXCEL_DELETE_ROW_INPUT = '^[\\d]+$',
     EXCEL_DELETE_ROWS_INPUT = '^(\\d+:\\d+)$|^(\\[(\\d+\\,*\\s*)+])$|^(\\[(\\d+\\,*\\s*)+])$|^(\\d+)$',
-    EXCEL_CELL_RANGE = '^[A-Za-z]+[0-9]+:[A-Za-z]+[0-9]+$',
+    CELL_RANGE = '^[A-Za-z]+[0-9]+:[A-Za-z]+[0-9]+$',
     DIRECTORY_NAME = "^[^\\\\/?|<>*:]*$",
     DATE_FORMAT = '^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\/[0-9]{2}\/[0-9]{4}))$',
     WINDOWS_ABSOLUTE_PATH = "^[a-zA-Z]:[\\\/|\\\\]",
@@ -101,7 +101,11 @@ export enum AsanaAction {
 }
 
 export enum GoogleAction {
-    SHEETS_WRITE = 'google.sheets.write',
+    SHEETS_GET_WORKSHEET = 'google.sheets.getWorksheet',
+    SHEETS_GET_CELL = 'google.sheets.getCell',
+    SHEETS_GET_CELLS = 'google.sheets.getCells',
+    SHEETS_GET_CELL_BY_VALUE = 'google.sheets.getCellsByValue',
+    SHEETS_SET_CELLS = 'google.sheets.setCells',
 }
 
 export enum JiraCloudAction {

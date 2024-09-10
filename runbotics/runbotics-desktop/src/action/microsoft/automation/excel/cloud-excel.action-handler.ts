@@ -55,8 +55,8 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     }
 
     getCells(input: CloudExcelTypes.CloudExcelGetCellsActionInput) {
-        const startCell = input.startCell.match(ActionRegex.EXCEL_CELL_ADDRESS);
-        const endCell = input.endCell.match(ActionRegex.EXCEL_CELL_ADDRESS);
+        const startCell = input.startCell.match(ActionRegex.CELL_ADDRESS);
+        const endCell = input.endCell.match(ActionRegex.CELL_ADDRESS);
 
         if (!startCell || !endCell) {
             throw new Error(CloudExcelErrorMessage.getCellsIncorrectInput());
