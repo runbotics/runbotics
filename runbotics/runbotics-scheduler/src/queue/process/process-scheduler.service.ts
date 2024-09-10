@@ -86,9 +86,8 @@ export class ProcessSchedulerService {
         processId: IProcess['id'],
         definition: IProcess['definition']
     ): Promise<DecryptedCredential[]> {
-        const processDecryptedCredentials = await this.handleProcessCredentials(
-            processId
-        );
+        const processDecryptedCredentials =
+            await this.handleProcessCredentials(processId);
 
         const subprocessIds = await findSubprocess(definition);
         if (subprocessIds && subprocessIds.length) {
