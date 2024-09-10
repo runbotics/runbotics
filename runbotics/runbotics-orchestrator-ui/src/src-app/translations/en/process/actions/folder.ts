@@ -6,6 +6,8 @@ const folderActionsTranslations = {
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Label': 'Display files',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Path': 'Path',
     'Process.Details.Modeler.Actions.Folder.DisplayFiles.Name': 'Name',
+    'Process.Details.Modeler.Actions.Folder.DisplayFiles.Name.Info': 'Folder name. Cannot include the following characters: \\ / : * ? < > |',
+    'Process.Details.Modeler.Actions.Folder.DisplayFiles.Path.Info': 'Path to the parent folder',
     'Process.Details.Modeler.Actions.Folder.Create.Label': 'Create',
     'Process.Details.Modeler.Actions.Folder.Create.Name': 'Name',
     'Process.Details.Modeler.Actions.Folder.Create.Name.Info': 'New folder name. Cannot include the following characters: \\ / : * ? < > |',
