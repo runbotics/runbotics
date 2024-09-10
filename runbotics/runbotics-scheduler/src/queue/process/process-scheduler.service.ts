@@ -86,6 +86,27 @@ export class ProcessSchedulerService {
         processId: IProcess['id'],
         definition: IProcess['definition']
     ): Promise<DecryptedCredential[]> {
+        const processDecryptedCredentials = await this.handleProcessCredentials(
+            processId
+        );
+
+        const subprocessIds = await findSubprocess(definition);
+        if (subprocessIds && subprocessIds.length) {
+            const subprocessDecryptedCredentials =
+                await this.handleSubprocessCredentials(subprocessIds);
+
+            return this.filterDuplicatedCredentials([
+                ...processDecryptedCredentials,
+                ...subprocessDecryptedCredentials,
+            ]);
+        }
+
+        return processDecryptedCredentials;
+    }
+
+    private async handleProcessCredentials(
+        processId: IProcess['id']
+    ): Promise<DecryptedCredential[]> {
         const process = await this.processService.findByIdWithSecrets(
             processId
         );
@@ -113,40 +134,44 @@ export class ProcessSchedulerService {
               }))
             : [];
 
-        const subprocessIds = await findSubprocess(definition);
-        if (subprocessIds && subprocessIds.length) {
-            const subprocessCredentials = await Promise.all(
-                subprocessIds.map(async (subprocessId) => {
-                    const subprocess = await this.processService.findById(
-                        subprocessId
+        return processDecryptedCredentials;
+    }
+
+    private async handleSubprocessCredentials(
+        subprocessIds: IProcess['id'][]
+    ): Promise<DecryptedCredential[]> {
+        const subprocessDecryptedCredentials = await Promise.all(
+            subprocessIds.map(async (subprocessId) => {
+                const subprocess = await this.processService.findById(
+                    subprocessId
+                );
+
+                if (!subprocess) {
+                    throw new NotFoundException(
+                        `Cannot find process with ID ${subprocessIds}`
+                    );
+                }
+
+                const subprocessDefinition = subprocess.definition;
+                const subprocessDecryptedCredentials =
+                    await this.getDecryptedCredentials(
+                        subprocessId,
+                        subprocessDefinition
                     );
 
-                    if (!subprocess) {
-                        throw new NotFoundException(
-                            `Cannot find process with ID ${processId}`
-                        );
-                    }
+                return subprocessDecryptedCredentials;
+            })
+        );
 
-                    const subprocessDefinition = subprocess.definition;
-                    const subprocessDecryptedCredentials =
-                        await this.getDecryptedCredentials(
-                            subprocessId,
-                            subprocessDefinition
-                        );
+        return subprocessDecryptedCredentials.flatMap((c) => c);
+    }
 
-                    return subprocessDecryptedCredentials;
-                })
-            );
-
-            const subprocessDecryptedCredentials =
-                subprocessCredentials.flatMap((c) => c);
-
-            return [
-                ...processDecryptedCredentials,
-                ...subprocessDecryptedCredentials,
-            ];
-        }
-
-        return processDecryptedCredentials;
+    private filterDuplicatedCredentials(
+        decryptedCredentials: DecryptedCredential[]
+    ): DecryptedCredential[] {
+        return decryptedCredentials.filter(
+            (credential, index, array) =>
+                index === array.findIndex((c) => credential.id === c.id)
+        );
     }
 }
