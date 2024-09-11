@@ -6,12 +6,12 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { ColorDot } from './CollectionColor.styles';
-import { CollectionColorName, collectionColors, DEFAULT_CREDENTIALS_COLLECTION_COLOR, getColorNameByHex } from './CollectionColor.types';
+import { CollectionColorName, collectionColors, getColorNameByHex } from './CollectionColor.types';
 
 const CollectionColorSelect = ({ currentColor, credentialsCollectionData, setCredentialCollectionColor }) => {
     const { translate } = useTranslations();
     const [collectionColor, setCollectionColor] = useState(
-        currentColor ? currentColor : DEFAULT_CREDENTIALS_COLLECTION_COLOR
+        currentColor ? collectionColors[currentColor].hex : collectionColors.DARK_ORANGE.hex
     );
 
     const handleChange = (event: SelectChangeEvent) => {
