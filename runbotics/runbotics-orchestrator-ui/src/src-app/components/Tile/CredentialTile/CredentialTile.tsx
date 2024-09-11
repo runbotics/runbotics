@@ -7,6 +7,7 @@ import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import If from '#src-app/components/utils/If';
+import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 import { BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
@@ -35,6 +36,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
     handleDeleteDialogOpen
 }) => {
     const router = useRouter();
+    const { translate } = useTranslations();
     const { user: currentUser } = useSelector(state => state.auth);
     const isOwner = collection ? parseInt(collection.createdById) === currentUser.id : false;
     const hasEditAccess = collection?.credentialCollectionUser.length > 1
@@ -56,9 +58,9 @@ const CredentialTile: FC<CredentialTileProps> = ({
                     {credential.name}
                 </Typography>
                 <If condition={!!collectionId}>
-                    <Typography sx={{ mb: 1 }}>description: {credential.description}</Typography>
+                    <Typography sx={{ mb: 1 }}>{translate('Credential.Details.Description.Label')}: {credential.description}</Typography>
                 </If>
-                <Typography sx={{ mb: 1 }}>action group: {templateName}</Typography>
+                <Typography sx={{ mb: 1 }}>{translate('Credential.Details.Template.Label')}: {templateName}</Typography>
                 <If condition={!collectionId}>
                     <CredentialCollection>
                         <FolderOpenIcon sx={{ paddingRight: '4px' }} />
