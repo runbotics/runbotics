@@ -109,7 +109,9 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         }
 
         if (isExternalOpen) {
-            const replacedValue = value + newValue;
+            const replacedValue = value
+                ? value + newValue
+                : newValue;
             handleChange(replacedValue);
             setIsExternalOpen(false);
             return;
