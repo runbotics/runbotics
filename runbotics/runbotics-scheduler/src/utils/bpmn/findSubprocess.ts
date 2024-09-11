@@ -1,7 +1,7 @@
 import BpmnModdle, { BaseElement, Definitions } from 'bpmn-moddle';
 import { GeneralAction, IProcess } from 'runbotics-common';
 
-interface CustomExtensionElement {
+interface ExtensionElement {
     values: {
         $children: {
             $body: string;
@@ -13,39 +13,45 @@ interface CustomExtensionElement {
     }[];
 }
 
-interface CustomModdleElement
-    extends Pick<BaseElement, 'id' | '$attrs' | '$type'> {
+interface ModdleElement extends Pick<BaseElement, 'id' | '$attrs' | '$type'> {
     implementation: string;
-    extensionElements: CustomExtensionElement;
+    extensionElements: ExtensionElement;
 }
 
-interface CustomDefinition extends Definitions {
+interface Definition extends Definitions {
     elementsById: {
-        [key: BaseElement['id']]: CustomModdleElement;
+        [key: BaseElement['id']]: ModdleElement;
     };
 }
 
 const startProcessActionBodyPattern = /\${(.+?)}/;
 
-const isActionStartProcess = (elementId: string, element: unknown) =>
-    elementId.startsWith('Activity') &&
-    element !== null &&
-    element !== undefined &&
-    typeof element === 'object' &&
+const isObject = (element: unknown): element is object =>
+    element !== null && element !== undefined && typeof element === 'object';
+
+const hasAttributes = (element: object): element is ModdleElement =>
     '$attrs' in element &&
     element.$attrs !== null &&
     element.$attrs !== undefined &&
-    typeof element.$attrs === 'object' &&
+    typeof element.$attrs === 'object';
+
+const hasStartEventActionId = (element: ModdleElement) =>
     'camunda:actionId' in element.$attrs &&
     typeof element.$attrs['camunda:actionId'] === 'string' &&
     element.$attrs['camunda:actionId'] === GeneralAction.START_PROCESS;
+
+const isActionStartProcess = (elementId: string, element: unknown) =>
+    elementId.startsWith('Activity') &&
+    isObject(element) &&
+    hasAttributes(element) &&
+    hasStartEventActionId(element);
 
 export const findSubprocess = async (xmlStr: string) => {
     const moddle = new BpmnModdle();
 
     const parsedProcessDefinition = (await moddle.fromXML(
         xmlStr
-    )) as CustomDefinition;
+    )) as Definition;
 
     const bpmnElements = parsedProcessDefinition.elementsById;
     const activities = Object.entries(bpmnElements).filter(
@@ -63,12 +69,13 @@ export const findSubprocess = async (xmlStr: string) => {
                     );
                 if (!startProcessActionElement) return processIds;
 
-                const processId = startProcessActionElement.$body.match(
+                const processIdMatch = startProcessActionElement.$body.match(
                     startProcessActionBodyPattern
                 );
-                if (!processId) return processIds;
+                if (!processIdMatch) return processIds;
 
-                processIds.push(Number(processId[1]));
+                const processIdValue = Number(processIdMatch[1]);
+                processIds.push(processIdValue);
 
                 return processIds;
             },
@@ -76,7 +83,6 @@ export const findSubprocess = async (xmlStr: string) => {
         )
     );
 
-    const uniqueSubprocessIds = Array.from(new Set(subprocessIds));
-
-    return uniqueSubprocessIds;
+    const uniqueSubprocessIdSet = new Set(subprocessIds);
+    return [...uniqueSubprocessIdSet];
 };

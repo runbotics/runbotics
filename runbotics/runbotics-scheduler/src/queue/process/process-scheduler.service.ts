@@ -86,8 +86,9 @@ export class ProcessSchedulerService {
         processId: IProcess['id'],
         definition: IProcess['definition']
     ): Promise<DecryptedCredential[]> {
-        const processDecryptedCredentials =
-            await this.handleProcessCredentials(processId);
+        const processDecryptedCredentials = await this.handleProcessCredentials(
+            processId
+        );
 
         const subprocessIds = await findSubprocess(definition);
         if (subprocessIds && subprocessIds.length) {
@@ -125,6 +126,8 @@ export class ProcessSchedulerService {
                   id,
                   name,
                   template: template.name,
+                  // @todo Add credential order property after @Aeri4a PR
+                  // order: number;
                   attributes: attributes.map(({ id, name, secret }) => ({
                       id,
                       name,
@@ -162,15 +165,18 @@ export class ProcessSchedulerService {
             })
         );
 
-        return subprocessDecryptedCredentials.flatMap((c) => c);
+        return subprocessDecryptedCredentials.flat();
     }
 
     private filterDuplicatedCredentials(
         decryptedCredentials: DecryptedCredential[]
     ): DecryptedCredential[] {
-        return decryptedCredentials.filter(
-            (credential, index, array) =>
-                index === array.findIndex((c) => credential.id === c.id)
-        );
+        const decryptedCredentialsMap = new Map();
+        for (const credential of decryptedCredentials) {
+            if (decryptedCredentialsMap.has(credential.id)) continue;
+            decryptedCredentialsMap.set(credential.id, credential);
+        }
+
+        return [...decryptedCredentialsMap.values()];
     }
 }
