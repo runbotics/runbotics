@@ -1,19 +1,11 @@
-import React, { FC } from 'react';
-
 import { Card, Grid } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 
-import useTranslations from '#src-app/hooks/useTranslations';
-
 import useUserListColumns from './useUserAccessColumns';
 
-interface UsersListTableProps {
-  
-}
 
-export const SharedWithUsersTable: FC<UsersListTableProps> = ({  }) => {
-    const { translate } = useTranslations();
+export const SharedWithUsersTable = () => {
     const sharedWithUsersColumns = useUserListColumns();
     
     return (

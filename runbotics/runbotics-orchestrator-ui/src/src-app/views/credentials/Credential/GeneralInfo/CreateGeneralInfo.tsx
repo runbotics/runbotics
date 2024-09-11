@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 import { Grid, TextField, Typography, MenuItem, SelectChangeEvent } from '@mui/material';
 
@@ -30,13 +30,16 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, open })
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const router = useRouter();
+    const { enqueueSnackbar } = useSnackbar();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
+
     const [credentialFormState, setCredentialFormState] = useState<CreateCredentialDto>(getInitialCredentialData(collectionId));
     const [formValidationState, setFormValidationState] = useState(getInitialFormValidationState(collectionId));
-    const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
-    const { enqueueSnackbar } = useSnackbar();
+
     const credentialsCollections = useSelector(state => state.credentialCollections.credentialCollections);
     const credentialTemplates = useSelector(state => state.credentialTemplates.data);
+    
+    const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
 
     const closeDialog = () => {
         onClose();
@@ -50,10 +53,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, open })
         setFormValidationState(getInitialFormValidationState(collectionId));
     };
 
-    
     const handleSubmit = async () => {
-               
-        console.log(formValidationState);
         if (!checkIsFormValid()) {
             enqueueSnackbar(translate('Credential.Add.ValidationFail.Info'), { variant: 'error' });
             return;

@@ -7,7 +7,6 @@ export const credentialsCollectons = {
     'Credentials.Collection.Dialog.Modify.Edit.Title': 'Edit credential collection details',
     'Credentials.Collection.Dialog.Modify.Create.Title': 'Create new collection',
     'Credentials.Collection.Add.Form.Error.General': 'An error has occured during new credential creation',
-    'Credentials.Collection.Add.Form.Error.NameNotAvailable': 'Name is not available',
     'Credentials.Collection.Add.Form.Error.NameIsRequired': 'Name is required',
     'Credentials.Collection.Add.Form.Access.Label': 'Access',
     'Credentials.Collection.Add.Form.Access.Placeholder': 'User',

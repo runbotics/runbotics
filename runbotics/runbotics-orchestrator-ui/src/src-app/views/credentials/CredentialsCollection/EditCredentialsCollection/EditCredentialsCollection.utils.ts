@@ -5,12 +5,10 @@ import { AccessType, BasicCredentialsCollectionDto, EditCredentialsCollectionDto
 export const DEFAULT_COLLECTION_COLOR = 'DARK_ORANGE';
 
 export enum InputErrorType {
-    NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
     NAME_IS_REQUIRED = 'NAME_IS_REQUIRED'
 }
 
 export const inputErrorMessages: Record<InputErrorType, string> = {
-    [InputErrorType.NAME_NOT_AVAILABLE]: translate('Credentials.Collection.Add.Form.Error.NameNotAvailable'),
     [InputErrorType.NAME_IS_REQUIRED]: translate('Credentials.Collection.Add.Form.Error.NameIsRequired')
 };
 

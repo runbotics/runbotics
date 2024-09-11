@@ -1,5 +1,3 @@
-// import { useRouter } from 'next/router';
-
 import { FC } from 'react';
 
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -27,17 +25,23 @@ export interface CredentialTileProps {
     handleDeleteDialogOpen(id: string): void;
 }
 
-
-const CredentialTile: FC<CredentialTileProps> = ({ credential, collection, templateName, collectionName, loading, collectionId, handleDeleteDialogOpen }) => {
+const CredentialTile: FC<CredentialTileProps> = ({
+    credential,
+    collection,
+    templateName,
+    collectionName,
+    loading,
+    collectionId,
+    handleDeleteDialogOpen
+}) => {
     const router = useRouter();
     const { user: currentUser } = useSelector(state => state.auth);
-    const isOwner = parseInt(collection.createdById) === currentUser.id;
-    const hasEditAccess =
-        collection.credentialCollectionUser.length > 1
-            ? collection.credentialCollectionUser.some(
-                user => user.user.email === currentUser.email && user.privilegeType === PrivilegeType.WRITE
-            )
-            : false;
+    const isOwner = collection ? parseInt(collection.createdById) === currentUser.id : false;
+    const hasEditAccess = collection?.credentialCollectionUser.length > 1
+        ? collection.credentialCollectionUser.some(
+            user => user.user.email === currentUser.email && user.privilegeType === PrivilegeType.WRITE
+        )
+        : false;
 
     if (loading) return <CircularProgress />;
 
@@ -52,13 +56,9 @@ const CredentialTile: FC<CredentialTileProps> = ({ credential, collection, templ
                     {credential.name}
                 </Typography>
                 <If condition={!!collectionId}>
-                    <Typography sx={{ mb: 1 }}>
-                    description: {credential.description}
-                    </Typography>
+                    <Typography sx={{ mb: 1 }}>description: {credential.description}</Typography>
                 </If>
-                <Typography sx={{ mb: 1 }}>
-                    action group: {templateName}
-                </Typography>
+                <Typography sx={{ mb: 1 }}>action group: {templateName}</Typography>
                 <If condition={!collectionId}>
                     <CredentialCollection>
                         <FolderOpenIcon sx={{ paddingRight: '4px' }} />
@@ -66,12 +66,14 @@ const CredentialTile: FC<CredentialTileProps> = ({ credential, collection, templ
                     </CredentialCollection>
                 </If>
                 <If condition={collectionId && (isOwner || hasEditAccess)}>
-                    <Box alignSelf='flex-end'>
-                        <IconButton onClick={e => {
-                            e.stopPropagation();
-                            handleDeleteDialogOpen(credential.id);
-                        }}>
-                            <DeleteOutlineOutlinedIcon/>
+                    <Box alignSelf="flex-end">
+                        <IconButton
+                            onClick={e => {
+                                e.stopPropagation();
+                                handleDeleteDialogOpen(credential.id);
+                            }}
+                        >
+                            <DeleteOutlineOutlinedIcon />
                         </IconButton>
                     </Box>
                 </If>

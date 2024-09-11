@@ -7,7 +7,6 @@ export const credentialsCollectons = {
     'Credentials.Collection.Dialog.Modify.Edit.Title': 'Edytuj kolekcję poświadczeń',
     'Credentials.Collection.Dialog.Modify.Create.Title': 'Stwórz nową kolekcję poświadczeń',
     'Credentials.Collection.Add.Form.Error.General': 'Wystąpił błąd podczas tworzenia kolekcji',
-    'Credentials.Collection.Add.Form.Error.NameNotAvailable': 'Nazwa jest już zajęta',
     'Credentials.Collection.Add.Form.Error.NameIsRequired': 'Nazwa jest obowiązkowa',
     'Credentials.Collection.Add.Form.Access.Label': 'Dostęp',
     'Credentials.Collection.Add.Form.Access.Placeholder': 'Użytkownik',

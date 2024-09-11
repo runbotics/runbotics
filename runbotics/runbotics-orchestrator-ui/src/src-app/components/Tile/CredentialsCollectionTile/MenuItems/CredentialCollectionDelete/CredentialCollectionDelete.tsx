@@ -42,6 +42,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
                     });
                 }
             });
+            
         handleDialogClose();
     };
 

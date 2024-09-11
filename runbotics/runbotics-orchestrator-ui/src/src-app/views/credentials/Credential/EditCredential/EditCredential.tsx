@@ -4,9 +4,6 @@ import { Grid, Typography } from '@mui/material';
 
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
-
-import InternalPage from '#src-app/components/pages/InternalPage';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -16,26 +13,18 @@ import { fetchOneCredential } from '#src-app/store/slices/Credentials/Credential
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import CredentialAttributesList from './CredentialAttributeList/CredentialAttributeList';
-import { EditCredentialProps } from './EditCredential.types';
+import { CredentialsInternalPage, StyledGrid } from './EditCredential.styles';
 import Header from './Header/Header';
 import { ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import { BasicCredentialDto } from '../Credential.types';
 import GeneralInfo from '../GeneralInfo/GeneralInfo';
 
-const StyledGrid = styled(Grid)(
-    ({ theme }) => `
-    padding: ${theme.spacing(1)};
-`
-);
-
-const CredentialsInternalPage = styled(InternalPage)`
-    padding-top: 0;
-    padding-bottom: 0;
-
-    > [class*='MuiContainer'] {
-        padding-left: 0;
-        padding-right: 0;
-    }
-`;
+interface EditCredentialProps {
+    credential: Credential
+    onClose: () => void;
+    onAdd: (credential: BasicCredentialDto) => void;
+    open?: boolean;
+}
 
 const EditCredential: FC<EditCredentialProps> = ({}) => {
     const router = useRouter();

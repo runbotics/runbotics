@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { HomeOutlined, ArrowBack } from '@mui/icons-material';
 import { Box, Breadcrumbs, Divider, Grid, Typography } from '@mui/material';
@@ -21,6 +21,7 @@ const CredentialLocation: FC<CredentialLocationProps> = ({ credentialName }) => 
     const theme = useTheme();
 
     const isRootFolder = true;
+    
     return (
         <Grid container gap={1} justifyContent="center" alignSelf="center">
             <Grid item sx={{ display: 'flex', alignItems: 'center' }}>

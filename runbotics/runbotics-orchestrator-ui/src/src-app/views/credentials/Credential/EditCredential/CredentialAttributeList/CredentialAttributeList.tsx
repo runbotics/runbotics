@@ -1,4 +1,3 @@
-
 import { FC, useEffect } from 'react';
 
 import { CircularProgress, Grid } from '@mui/material';
@@ -11,7 +10,7 @@ import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/Cre
 import { BasicCredentialDto } from '../../Credential.types';
 import { DisplayAttribute } from '../CredentialAttribute/Attribute.types';
 
-import TemplateAttribute from '../CredentialAttribute/TemplateAttribute';
+import TemplateAttribute from '../CredentialAttribute/TemplateAttribute/TemplateAttribute';
 
 
 interface CredentialAttributesListProps {
@@ -44,8 +43,8 @@ const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credentia
         );
     }
 
-    const templateAttributesCards = credentialTemplate.attributes.map(attribute => (
-        <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12}>
+    const templateAttributesCards = credentialTemplate.attributes.map((attribute, index) => (
+        <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12} height="100%" display="flex">
             <TemplateAttribute credentialId={credential.id} attribute={attribute as DisplayAttribute} isNewCredential={isNewCredential}/>
         </Grid>
     ));

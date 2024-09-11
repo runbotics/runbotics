@@ -5,13 +5,13 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { ColorDot } from './CollectionColor.styled';
-import { CollectionColorName, collectionColors, getColorNameByHex } from './CollectionColor.types';
+import { ColorDot } from './CollectionColor.styles';
+import { CollectionColorName, collectionColors, DEFAULT_CREDENTIALS_COLLECTION_COLOR, getColorNameByHex } from './CollectionColor.types';
 
 const CollectionColorSelect = ({ currentColor, credentialsCollectionData, setCredentialCollectionColor }) => {
     const { translate } = useTranslations();
     const [collectionColor, setCollectionColor] = useState(
-        currentColor ? collectionColors[currentColor].hex : collectionColors.DARK_ORANGE.hex
+        currentColor ? currentColor : DEFAULT_CREDENTIALS_COLLECTION_COLOR
     );
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -22,7 +22,7 @@ const CollectionColorSelect = ({ currentColor, credentialsCollectionData, setCre
 
     const colorsToChoose = Object.keys(collectionColors).map((colorName: CollectionColorName) => (
         <MenuItem key={collectionColors[colorName].hex} value={collectionColors[colorName].hex}>
-            <ColorDot collectionColor={collectionColors[colorName].hex} />
+            <ColorDot collectionColor={getColorNameByHex(collectionColors[colorName].hex)} />
             <Typography>{collectionColors[colorName].name}</Typography>
         </MenuItem>
     ));

@@ -30,7 +30,7 @@ export const collectionColors: { [key in ColorNames]: ICollectionColor } = {
 
 export type CollectionColorHex = (typeof collectionColors)[ColorNames]['hex'];
 
-export type CollectionColorName = (typeof collectionColors)[ColorNames]['hex'];
+export type CollectionColorName = (typeof collectionColors)[ColorNames]['name'];
 
 const hexToColorName: { [hex: string]: ColorNames } = Object.keys(collectionColors).reduce((acc, colorName) => {
     const key = colorName as ColorNames;

@@ -25,6 +25,7 @@ export const credentials = {
     'Credential.Details.Disclaimer.Label': 'Wyjaśnienie: ',
     'Credential.Details.Disclaimer.Text': 'Wszystkie poświadczenia muszą należeń do kolekcji. Tylko właściciel poświadczeń może decydować o udostępnieniu kolekcji innym użytkownikom.',
     'Credential.Details.Template.Label': 'Szablon',
+    'Credential.Details.Template.Info': 'Szablon zawiera zdefiniowane atrybuty dla grupy akcji, np. szablon ATLASSIAN, który odnosi się do akcji tj. JIRA lub Confluence. Zazwyczaj wszystkie akcje danej grupy mają atrybuty, bez których żadna akcja nie będzie działać, np. login i hasło - te atrybuty są oznaczone jako WYMAGANE. Niektóre alcje mogą używać specyficznych atrybutów np. url dla strony na Confluence i takie są oznaczone jako OPCJONALNE',
     'Credential.GeneralInfo.Title': 'Informacje ogólne',
     'Credential.Dialog.Modify.Edit.Title': 'Edytuj poświadczenia',
     'Credential.Dialog.Modify.Create.Title': 'Stwórz nowe poświadczenia',

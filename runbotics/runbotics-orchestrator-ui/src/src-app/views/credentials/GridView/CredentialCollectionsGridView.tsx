@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { usersActions } from '#src-app/store/slices/Users';
 
-import { TileGrid } from './GridView';
+import { TileGrid } from './GridView.styles';
 import Paging from './Paging';
 import CredentialsCollectionModifyDialog from '../CredentialsCollection/CredentialsCollectionModifyDialog';
 

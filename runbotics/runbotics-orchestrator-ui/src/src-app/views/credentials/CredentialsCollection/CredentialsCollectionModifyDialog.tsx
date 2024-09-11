@@ -25,7 +25,7 @@ import { SharedWithUsers } from './EditCredentialsCollection/SharedWithUsers/Sha
 interface CredentialCollectionModifyDialogProps {
     open: boolean;
     collection: null | BasicCredentialsCollectionDto;
-    onClose(event: React.MouseEvent<HTMLElement>): void;
+    onClose(): void;
 }
 
 const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProps> = ({ open: isOpen, onClose, collection }) => {
@@ -51,21 +51,20 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
     useEffect(() => {
         if (!credentialsCollectionFormState.name.trim() && !collectionData.name) {
             setFormValidationState(false);
-            // setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
         } else if (credentialsCollectionFormState.name.trim()) {
             setInputErrorType(null);
         }
         
     }, [credentialsCollectionFormState, collectionData, inputErrorType]);
 
-    const closeDialog = (event: React.MouseEvent<HTMLElement>) => {
-        onClose(event);
+    const closeDialog = () => {
+        onClose();
         setCredentialsCollectionFormState(collectionData);
         if (collection) setFormValidationState(initialFormValidationState);
         if (!collection) setTimeout(() => clearForm(), 100);
     };
     
-    const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
+    const handleSubmit = async () => {
         if (inputErrorType) {
             enqueueSnackbar(inputErrorMessages[InputErrorType.NAME_IS_REQUIRED], { variant: 'error' });
             return;
@@ -83,7 +82,7 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
             .then(() => {
                 dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
                 setCredentialsCollectionFormState(collectionData);
-                closeDialog(event);
+                closeDialog();
             }).catch((error) => {
                 enqueueSnackbar(error.message, { variant: 'error' });
             });

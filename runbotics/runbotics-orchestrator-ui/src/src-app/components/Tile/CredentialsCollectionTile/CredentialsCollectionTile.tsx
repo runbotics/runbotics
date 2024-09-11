@@ -9,12 +9,20 @@ import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
-import { AccessType, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
+import { AccessType, BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
-import { ColorDot, CredentialCollectionCard, ShareOptionSpan } from './CredentialsCollectionTile.style';
-import { CredentialsCollectionTileProps } from './CredentialsCollectionTile.types';
+import { ColorDot } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
+
+import { CredentialCollectionCard, ShareOptionSpan } from './CredentialsCollectionTile.style';
 import MenuItems from './MenuItems/MenuItems';
 import Tile from '../Tile';
+
+interface CredentialsCollectionTileProps {
+    collection: BasicCredentialsCollectionDto;
+    handleOpenEditDialog(id: string): void;
+    handleOpenDeleteDialog(id: string): void;
+    setCurrentDialogCollection(collection: BasicCredentialsCollectionDto): void;
+}
 
 const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
     collection,
@@ -76,7 +84,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
                                     <Typography variant="h6">{translate('Credentials.Collection.Tile.ShareOption.Label')}</Typography>
                                     <If condition={collection.accessType === AccessType.PRIVATE}>
                                         <ShareOptionSpan>
-                                            <LockOutlinedIcon sx={{ marginRight: '8px' }} />
+                                            <LockOutlinedIcon/>
                                             <Typography variant="body2">
                                                 {translate('Credentials.Collection.Tile.ShareOption.Private')}
                                             </Typography>
@@ -84,7 +92,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
                                     </If>
                                     <If condition={collection.accessType === AccessType.GROUP}>
                                         <ShareOptionSpan>
-                                            <GroupsOutlinedIcon sx={{ marginRight: '8px' }} />
+                                            <GroupsOutlinedIcon/>
                                             <Typography variant="body2">
                                                 {translate('Credentials.Collection.Tile.ShareOption.GroupAccess')}
                                             </Typography>

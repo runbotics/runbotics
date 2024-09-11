@@ -25,6 +25,7 @@ export const credentials = {
     'Credential.Details.Disclaimer.Label': 'Disclaimer: ',
     'Credential.Details.Disclaimer.Text': 'All credentials must be contained in collections for bots to use them. Only the collection owner can edit credential and share it with other users.',
     'Credential.Details.Template.Label': 'Template',
+    'Credential.Details.Template.Info': 'Template has defined attributes for group of action, e.g. ATLASSIAN which can be used both for accessing tasks on JIRA or accessing notes on Confluence. Usually all of them use similar attributes like e.g. login and password. These are marked as REQUIRED. Although, some actions use specific attributes e.g. url to confluence page and these are marked as OPTIONAL',
     'Credential.GeneralInfo.Title': 'General info',
     'Credential.Dialog.Modify.Edit.Title': 'Edit credential details',
     'Credential.Dialog.Modify.Create.Title': 'Create new credential',

@@ -1,8 +1,9 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import { Box, FormControl, InputLabel, Select, IconButton, Popover, Typography, SelectChangeEvent, FormHelperText } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import { Box, FormControl, InputLabel, Select, IconButton, Popover, SelectChangeEvent, FormHelperText } from '@mui/material';
+
+import { PopoverTypography } from '../EditCredential/EditCredential.styles';
 
 interface GeneralInfoDropdownProps {
     selectLabel: string;
@@ -14,10 +15,19 @@ interface GeneralInfoDropdownProps {
     disabled: boolean;
     error: boolean;
     helperText: string;
-    
 }
 
-const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, selectOptions, selectedValue, tooltipText, handleChange, required, disabled, error, helperText }) => {
+const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({
+    selectLabel,
+    selectOptions,
+    selectedValue,
+    tooltipText,
+    handleChange,
+    required,
+    disabled,
+    error,
+    helperText
+}) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,14 +38,14 @@ const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, select
         setAnchorEl(null);
     };
 
-    console.log('error dropdown', helperText, error);
-    console.log('error dropdown', selectLabel, error);
-
     const open = Boolean(anchorEl);
+
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <FormControl fullWidth required sx={{ marginRight: '1rem' }}>
-                <InputLabel id={`${selectLabel}-inputLabel`} error={error}>{selectLabel}</InputLabel>
+                <InputLabel id={`${selectLabel}-inputLabel`} error={error}>
+                    {selectLabel}
+                </InputLabel>
                 <Select
                     disabled={disabled}
                     SelectDisplayProps={{ style: { display: 'flex' } }}
@@ -45,7 +55,7 @@ const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, select
                     label={selectLabel}
                     onChange={handleChange}
                     required={required}
-                    error={error}       
+                    error={error}
                 >
                     {selectOptions}
                 </Select>
@@ -70,9 +80,9 @@ const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({ selectLabel, select
                 onClose={handlePopoverClose}
                 disableRestoreFocus
             >
-                <Typography variant="h6" fontWeight={400} maxWidth="240px" padding="8px" sx={{ backgroundColor: grey[50] }}>
+                <PopoverTypography variant="h6" fontWeight={400}>
                     {tooltipText}
-                </Typography>
+                </PopoverTypography>
             </Popover>
         </Box>
     );

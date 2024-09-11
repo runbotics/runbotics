@@ -12,11 +12,7 @@ interface MenuItemsProps {
     handleOpenDeleteDialog(id: string): void;
 }
 
-const MenuItems: FC<MenuItemsProps> = ({
-    collectionId,
-    handleOpenEditDialog,
-    handleOpenDeleteDialog
-}) => {
+const MenuItems: FC<MenuItemsProps> = ({ collectionId, handleOpenEditDialog, handleOpenDeleteDialog }) => {
     const { translate } = useTranslations();
     const [anchorEl, setAnchorEl] = useState<HTMLElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);

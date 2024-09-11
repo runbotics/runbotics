@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { Grid, Typography, Box } from '@mui/material';
 
@@ -7,9 +7,8 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 
 
-
-import { ColorDot } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styled';
-import { collectionColors, ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import { ColorDot } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
+import { ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 import { BasicCredentialDto } from '../Credential.types';
 
 interface GeneralInfoProps {
@@ -23,7 +22,6 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor, collec
     const { translate } = useTranslations();
     const templates = useSelector(state => state.credentialTemplates.data);
     const credentialTemplate = templates.find(template => template.id === templateId);
-    const color = collectionColors[collectionColor].hex;
 
     return (
         <Box sx={{ display: 'flex', width: '90%', justifyContent: 'flexStart', marginBottom: '48px' }}>
@@ -47,7 +45,7 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor, collec
                             {translate('Credential.Details.Collection.Label')}
                         </Typography>
                         <Typography variant="body2" sx={{ display: 'flex', alignContent: 'center' }} ml={1}>
-                            <ColorDot collectionColor={color} />
+                            <ColorDot collectionColor={collectionColor} />
                             {collectionName}
                         </Typography>
                     </Box>

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC } from 'react';
 
 import { Grid, Stack, Tab, Tabs } from '@mui/material';
 import clsx from 'clsx';
@@ -36,29 +36,17 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
 
     const router = useRouter();
-    // const searchParams = useSearchParams();
 
     const currentTab = getLastParamOfUrl(router);
-
-    // const currentPage = parseInt(searchParams.get('page')) ?? DefaultPageValue.PAGE;
-    // const pageSize = parseInt(searchParams.get('pageSize')) ?? DefaultPageSize.GRID;
 
     const onTabChange = (event: ChangeEvent<HTMLInputElement>, tabValue: CredentialsTabs) => {
         if (tabValue === CredentialsTabs.CREDENTIALS) {
             router.replace({
                 pathname: '/app/credentials',
-                // query: {
-                //     pageSize: pageSize,
-                //     page: currentPage
-                // }
             });
         } else {
             router.replace({
                 pathname: '/app/credentials/collections',
-                // query: {
-                //     pageSize: pageSize,
-                //     page: currentPage
-                // }
             });
         }
     };

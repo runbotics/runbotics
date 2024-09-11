@@ -1,6 +1,5 @@
 import { translate } from '#src-app/hooks/useTranslations';
 
-
 import { CreateCredentialDto } from '../Credential.types';
 
 interface credentialFormValidationState {
@@ -11,14 +10,12 @@ interface credentialFormValidationState {
 }
 
 export enum InputErrorType {
-    NAME_NOT_AVAILABLE = 'NAME_NOT_AVAILABLE',
     NAME_IS_REQUIRED = 'NAME_IS_REQUIRED',
     COLLECTION_IS_REQUIRED = 'COLLECTION_IS_REQUIRED',
     TEMPLATE_IS_REQUIRED = 'TEMPLATE_IS_REQUIRED'
 }
 
 export const inputErrorMessages: Record<InputErrorType, string> = {
-    [InputErrorType.NAME_NOT_AVAILABLE]: translate('Credential.Add.Form.Error.NameNotAvailable'),
     [InputErrorType.NAME_IS_REQUIRED]: translate('Credential.Add.Form.Error.NameIsRequired'),
     [InputErrorType.COLLECTION_IS_REQUIRED]: translate('Credential.Add.Form.Error.CollectionIsRequired'),
     [InputErrorType.TEMPLATE_IS_REQUIRED]: translate('Credential.Add.Form.Error.TemplateIsRequired')

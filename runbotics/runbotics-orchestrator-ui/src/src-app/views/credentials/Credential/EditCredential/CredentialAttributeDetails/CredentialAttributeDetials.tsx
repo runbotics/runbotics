@@ -3,11 +3,11 @@ import { useState } from 'react';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { Grid, Popover, Typography, IconButton, TextField } from '@mui/material';
 
-import { grey } from '@mui/material/colors';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledGridContainer } from '../CredentialAttribute/Attribute.styles';
+import { PopoverTypography } from '../EditCredential.styles';
 
 const CredentialAttributeDetails = ({ handleFieldChange, currentValue, setCurrentValue }) => {
     const { translate } = useTranslations();
@@ -25,10 +25,10 @@ const CredentialAttributeDetails = ({ handleFieldChange, currentValue, setCurren
 
     return (
         <StyledGridContainer spacing={1} xs={12}>
-            <Grid item xs={12} sx={{ marginBottom: '24px' }}>
-                <Grid container alignItems="center">
+            <Grid item xs={12}>
+                <Grid container alignItems="center" >
                     <Grid item>
-                        <Typography variant="h5">
+                        <Typography variant="h5" mt={2} mb={2}>
                             {translate('Credential.Attribute.Details.Label')}
                         </Typography>
                     </Grid>
@@ -72,9 +72,9 @@ const CredentialAttributeDetails = ({ handleFieldChange, currentValue, setCurren
                 onClose={handlePopoverClose}
                 disableRestoreFocus
             >
-                <Typography variant="h6" fontWeight={400} maxWidth="240px" padding="8px" sx={{ backgroundColor: grey[50] }}>
+                <PopoverTypography variant="h6" fontWeight={400}>
                     {translate('Credential.Attribute.Details.Info')}
-                </Typography>
+                </PopoverTypography>
             </Popover>
         </StyledGridContainer>
      

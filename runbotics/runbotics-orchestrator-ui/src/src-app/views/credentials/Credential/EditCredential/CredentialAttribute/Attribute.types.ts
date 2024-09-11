@@ -10,7 +10,7 @@ export interface BasicAttributeDto {
     credentialId: string;
     createdAt: string;
     createdById: string;
-    tenant?: {
+    tenant: {
         id: string,
         name: string;
         createdById: string;

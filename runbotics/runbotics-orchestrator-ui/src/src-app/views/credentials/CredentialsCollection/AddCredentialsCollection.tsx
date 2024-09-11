@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
-import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';import { Button, SvgIcon } from '@mui/material';
-
+import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
+import { Button, SvgIcon } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -14,8 +14,8 @@ const AddCredentialsCollection: FC = () => {
     return (
         <>
             <Button
-                color='primary'
-                variant='contained'
+                color="primary"
+                variant="contained"
                 onClick={() => setShowDialog(true)}
                 startIcon={
                     <SvgIcon fontSize="small">
@@ -23,12 +23,12 @@ const AddCredentialsCollection: FC = () => {
                     </SvgIcon>
                 }
             >
-                {translate('Credentials.Collection.Add')}  
+                {translate('Credentials.Collection.Add')}
             </Button>
-            <CredentialsCollectionModifyDialog
-                open={showDialog}
-                onClose={() => setShowDialog(false)}
-                collection={null}
+            <CredentialsCollectionModifyDialog 
+                open={showDialog} 
+                onClose={() => setShowDialog(false)} 
+                collection={null} 
             />
         </>
     );

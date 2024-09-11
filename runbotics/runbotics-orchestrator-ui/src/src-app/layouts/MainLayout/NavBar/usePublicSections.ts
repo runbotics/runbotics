@@ -36,7 +36,6 @@ export const usePublicSections = (): Section[] => {
                     title: translate('Nav.Items.Credentials'),
                     icon: LockOutlinedIcon,
                     href: '/app/credentials/collections',
-                    authorities: [Role.ROLE_ADMIN],
                     featureKeys: [FeatureKey.CREDENTIALS_PAGE_READ],
                 },
                 {

@@ -1,4 +1,4 @@
-import React, { VFC, useState, useContext, FC } from 'react';
+import { VFC, useState, useContext, FC } from 'react';
 
 import {
     Button,
@@ -133,7 +133,9 @@ const DeleteProcess: FC<DeleteProcessProps> = ({ process, handleMenuClose }) => 
             <MenuItem onClick={() => {
                 setShow(true);
                 handleMenuClose();
-            }}>{translate('Process.Delete.ActionName')}</MenuItem>
+            }}>
+                {translate('Process.Delete.ActionName')}
+            </MenuItem>
             <DeleteProcessDialog
                 process={process}
                 open={show}
