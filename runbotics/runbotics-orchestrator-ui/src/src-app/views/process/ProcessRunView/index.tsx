@@ -67,7 +67,7 @@ const ProcessRunView: FC = () => {
             }
         }));
         dispatch(scheduleProcessActions.getSchedulesByProcess({
-            resourceId: `processes/${processId}`
+            resourceId: processId
         }));
     };
 

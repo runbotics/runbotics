@@ -7,7 +7,7 @@ export const scheduleProcess = ApiTenantResource
     .post<IScheduleProcess, IScheduleProcess>('scheduleProcess/scheduleProcess', SCHEDULE_PROCESS_PATH);
 
 export const getSchedulesByProcess = ApiTenantResource
-    .get<IScheduleProcess[]>('scheduleProcess/getSchedulesByProcess', SCHEDULE_PROCESS_PATH);
+    .get<IScheduleProcess[]>('scheduleProcess/getSchedulesByProcess', `${SCHEDULE_PROCESS_PATH}/processes`);
 
 export const removeScheduledProcess = ApiTenantResource
     .delete<void>('scheduleProcess/removeScheduledProcess', SCHEDULE_PROCESS_PATH);

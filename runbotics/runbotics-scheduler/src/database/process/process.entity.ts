@@ -24,7 +24,6 @@ import { dateTransformer, numberTransformer } from '../database.utils';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-database/notification-process/notification-process.entity';
-import { Credential } from '#/scheduler-database/credential/credential.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 
 @Entity({ name: 'process', synchronize: false })
