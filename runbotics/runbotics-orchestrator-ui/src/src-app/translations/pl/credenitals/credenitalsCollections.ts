@@ -1,4 +1,6 @@
-export const credentialsCollectons = {
+import englishCredentialsCollections from '#src-app/translations/en/credenitals/credenitalsCollections';
+
+const credentialsCollections: typeof englishCredentialsCollections = {
     'Credentials.Collection.Add': 'Dodaj nową kolekcję',
     'Credentials.Collection.Create.Title': 'Dodaj kolekcję',
     'Credentials.Collection.Edit.Title': 'Edytuj kolekcję',
@@ -10,8 +12,8 @@ export const credentialsCollectons = {
     'Credentials.Collection.Add.Form.Error.NameIsRequired': 'Nazwa jest obowiązkowa',
     'Credentials.Collection.Add.Form.Access.Label': 'Dostęp',
     'Credentials.Collection.Add.Form.Access.Placeholder': 'Użytkownik',
-    'Credentials.Collection.Add.Form.EditAccess.Label ': 'Udziel dostępu do edycji',
-    'Credentials.Collection.Add.Form.EditAccess.Tooltip ': 'Użytkownicy, którzy mają dostęp do edycji poświadczeń',
+    'Credentials.Collection.Add.Form.EditAccess.Label': 'Udziel dostępu do edycji',
+    'Credentials.Collection.Add.Form.EditAccess.Tooltip': 'Użytkownicy, którzy mają dostęp do edycji poświadczeń',
     'Credentials.Collection.Add.Form.ReadAccess.Label': 'Udziel dostępu do odczytu',
     'Credentials.Collection.Add.Form.ReadAccess.Tooltip': 'Użytkownicy, którzy mogą korzystać z poświadczeń, ale nie mogą ich edytować',
     'Credentials.Collection.Add.Form.IsPublic.True.Label': 'Publiczna',
@@ -33,3 +35,5 @@ export const credentialsCollectons = {
     'Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title': 'Czy na pewno chcesz usunąć kolekcję o nazwie "{{ name }}"',
     'Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning': 'Nie można usunąć kolekcji jeśli znajdują się w niej poświadczenia',
 };
+
+export default credentialsCollections;

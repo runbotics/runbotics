@@ -1,4 +1,4 @@
-export const credentials = {
+const credentials = {
     'Credentials.List.Header.Elements': '{{ count }} credentials',
     'Credentials.Add': 'Add new credential',
     'Credential.Add.Title': 'Add credential',
@@ -45,3 +45,5 @@ export const credentials = {
     'Credential.Attribute.Tag.Required': 'Required',
     'Credential.Attribute.Tag.Optional': 'Optional',
 };
+
+export default credentials;

@@ -1,11 +1,11 @@
-import { credentialsCollectons } from './credenitalsCollections';
-import { credentials } from './credentials';
-import { general } from './general';
+import credentialsCollections from './credenitalsCollections';
+import credentials from './credentials';
+import general from './general';
 
 const credenitalsTranslations = {
     ...general,
     ...credentials,
-    ...credentialsCollectons
+    ...credentialsCollections
 };
 
 export default credenitalsTranslations;

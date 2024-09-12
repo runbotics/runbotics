@@ -1,4 +1,6 @@
-export const credentials = {
+import englishCredentials from '#src-app/translations/en/credenitals/credentials';
+
+const credentials: typeof englishCredentials = {
     'Credentials.List.Header.Elements': '{{ count }} poświadczeń',
     'Credentials.Add': 'Dodaj nowe poświadczenia',
     'Credential.Add.Title': 'Dodaj poświadczenia',
@@ -46,4 +48,4 @@ export const credentials = {
     'Credential.Attribute.Tag.Optional': 'Opcjonalny',
 };
     
- 
+export default credentials; 

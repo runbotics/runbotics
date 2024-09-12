@@ -1,4 +1,4 @@
-export const credentialsCollectons = {
+const credentialsCollections = {
     'Credentials.Collection.Add': 'Add new collection',
     'Credentials.Collection.Create.Title': 'Create credentials collection',
     'Credentials.Collection.Edit.Title': 'Edit collection',
@@ -33,3 +33,5 @@ export const credentialsCollectons = {
     'Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title': 'Are you sure you want to delete collection "{{ name }}"',
     'Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Warning': 'Collection cannot be deleted in case there are credentials within it',
 };
+
+export default credentialsCollections;
