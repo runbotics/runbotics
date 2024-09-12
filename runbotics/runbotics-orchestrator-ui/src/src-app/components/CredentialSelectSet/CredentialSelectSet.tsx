@@ -1,4 +1,4 @@
-import { ChangeEvent, FunctionComponent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 
 import { MenuItem, Select, Typography } from '@mui/material';
 import _ from 'lodash';
@@ -7,6 +7,7 @@ import { CredentialDto } from 'runbotics-common';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { Container, Box } from './CredentialSelectSet.styles';
+import If from '../utils/If';
 
 interface CredentialSelectSetProps {
     credentials: CredentialDto[];
@@ -38,70 +39,92 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
     }, [credentialFilteredByName]);
 
     return (
-        <Container>
-            <Box>
+        <If
+            condition={Boolean(credentials.length)}
+            else={
                 <Typography>
-                    {translate('Component.CredentialSelectSet.CollectionAuthor')}
+                    {translate('Component.CredentialSelectSet.NotFound')}
                 </Typography>
-                <Select
-                    size='small'
-                    value={author}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => { setAuthor(e.target.value); }}
-                    disabled={!credentials.length}
-                >
-                    {_.uniqBy(credentials, credential => credential.createdBy.login)
-                        .map(credential => (
-                            <MenuItem
-                                value={credential.createdBy.login}
-                                key={credential.createdBy.login}
-                            >
-                                {credential.createdBy.login}
+            }
+        >
+            <Container>
+                <Box>
+                    <Typography>
+                        {translate(
+                            'Component.CredentialSelectSet.CollectionAuthor'
+                        )}
+                    </Typography>
+                    <Select
+                        size='small'
+                        value={author}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            setAuthor(e.target.value);
+                        }}
+                        disabled={!credentials.length}
+                    >
+                        {_.uniqBy(
+                            credentials,
+                            (credential) => credential.createdBy.login
+                        ).map(({ createdBy: creator }) => (
+                            <MenuItem value={creator.login} key={creator.login}>
+                                {creator.login}
                             </MenuItem>
                         ))}
-                </Select>
-            </Box>
-            <Box>
-                <Typography>
-                    {translate('Component.CredentialSelectSet.CollectionName')}
-                </Typography>
-                <Select
-                    size='small'
-                    value={collectionName}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => { setCollectionName(e.target.value); }}
-                    disabled={!credentialsFilteredByAuthor.length}
-                >
-                    {_.uniqBy(credentialsFilteredByAuthor, credential => credential.collection.name)
-                        .map(credential => (
+                    </Select>
+                </Box>
+                <Box>
+                    <Typography>
+                        {translate(
+                            'Component.CredentialSelectSet.CollectionName'
+                        )}
+                    </Typography>
+                    <Select
+                        size='small'
+                        value={collectionName}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            setCollectionName(e.target.value);
+                        }}
+                        disabled={!credentialsFilteredByAuthor.length}
+                    >
+                        {_.uniqBy(
+                            credentialsFilteredByAuthor,
+                            (credential) => credential.collection.name
+                        ).map(({ collection }) => (
                             <MenuItem
-                                value={credential.collection.name}
-                                key={credential.collection.name}
+                                value={collection.name}
+                                key={collection.name}
                             >
-                                {credential.collection.name}
+                                {collection.name}
                             </MenuItem>
                         ))}
-                </Select>
-            </Box>
-            <Box>
-                <Typography>
-                    {translate('Component.CredentialSelectSet.CredentialName')}
-                </Typography>
-                <Select
-                    size='small'
-                    value={credentialName}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => { setCredentialName(e.target.value); }}
-                    disabled={!credentialsFilteredByCollection.length}
-                >
-                    {credentialsFilteredByCollection.map(credential => (
-                        <MenuItem
-                            value={credential.name}
-                            key={credential.name}
-                        >
-                            {credential.name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </Box>
-        </Container>
+                    </Select>
+                </Box>
+                <Box>
+                    <Typography>
+                        {translate(
+                            'Component.CredentialSelectSet.CredentialName'
+                        )}
+                    </Typography>
+                    <Select
+                        size='small'
+                        value={credentialName}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            setCredentialName(e.target.value);
+                        }}
+                        disabled={!credentialsFilteredByCollection.length}
+                    >
+                        {credentialsFilteredByCollection.map((credential) => (
+                            <MenuItem
+                                value={credential.name}
+                                key={credential.name}
+                            >
+                                {credential.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </Box>
+            </Container>
+        </If>
     );
 };
 

@@ -101,6 +101,10 @@ export class CredentialService {
 
   async findAllAccessibleByTemplateAndProcess(templateName: string, processId: string, user: IUser) {
     const accessibleCollections = await this.collectionService.findAllAccessibleWithUser(user);
+    if (!accessibleCollections.length) {
+      return [];
+    }
+
     const accessible = accessibleCollections.map(collection => collection.id);
 
     const credentials = await this.credentialRepo

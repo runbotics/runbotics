@@ -1,4 +1,5 @@
-import { Button, DialogContent, Select } from '@mui/material';
+import { Button, DialogContent } from '@mui/material';
+import Image from 'next/image';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -65,4 +66,8 @@ export const AddDialogContent = styled(DialogContent)`
 
 export const StyledButton = styled(Button)`
     width: 80px;
+`;
+
+export const StyledImage = styled(Image)`
+    filter: brightness(0) saturate(100%);
 `;

@@ -25,7 +25,8 @@
 
     "Component.CredentialSelectSet.CollectionAuthor": "Autor kolekcji",
     "Component.CredentialSelectSet.CollectionName": "Nazwa kolekcji",
-    "Component.CredentialSelectSet.CredentialName": "Nazwa danych dostępowych",
+    "Component.CredentialSelectSet.CredentialName": "Nazwa poświadczeń",
+    "Component.CredentialSelectSet.NotFound": "Nie znaleziono pasujących poświadczeń",
 
     "Component.Tile.Avatar.AriaLabel": "Przepis",
     "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Ikona procesu triggerowalnego",

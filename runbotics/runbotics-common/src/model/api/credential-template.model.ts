@@ -1,6 +1,7 @@
+import { ActionCredentialType } from '../../utils';
 
 export interface CredentialTemplate {
     id: string;
-    name: string;
+    name: ActionCredentialType;
     description: string;
 }

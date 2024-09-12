@@ -36,6 +36,10 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
         handleClose();
     };
 
+    const handleCredentialChange = (credential) => {
+        setPickedCredential(credential);
+    };
+
     const handleAddCredential = () => {
         const payload = {
             processId: String(processId),
@@ -81,8 +85,8 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
                 </DialogTitle>
                 <AddDialogContent>
                     <CredentialSelectSet
-                        credentials={all ?? []}
-                        handleCredentialChange={(credential) => { setPickedCredential(credential); }}
+                        credentials={all}
+                        handleCredentialChange={handleCredentialChange}
                     />
                 </AddDialogContent>
                 <DialogActions>

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { Typography } from '@mui/material';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
@@ -17,7 +16,7 @@ import ActionCredentialAdd from './ActionCredentialAdd';
 import {
     ActionBox, ActionBoxContent,
     ActionBoxHeader, ActionsColumns,
-    ActionsContainer, Container, Header
+    ActionsContainer, Container, Header, StyledImage,
 } from './ProcessCredentials.styles';
 import { ActionSortedColumns, CredentialId } from './ProcessCredentials.types';
 import {
@@ -113,7 +112,11 @@ const ProcessCredentials = () => {
                 templateName={currentActionName}
             />
             <Header>
-                <Image src={LockIcon} alt='lock icon' style={{ filter: 'brightness(0) saturate(100%)' }}/>
+                <StyledImage
+                    src={LockIcon}
+                    alt={translate('Process.Configure.Credentials.Section.Icon.Alt')}
+                    style={{ filter: 'brightness(0) saturate(100%)' }}
+                />
                 <Typography>{translate('Process.Configure.Credentials.Section.Title')}</Typography>
             </Header>
             <ActionsContainer $rowCount={rowCount}>
