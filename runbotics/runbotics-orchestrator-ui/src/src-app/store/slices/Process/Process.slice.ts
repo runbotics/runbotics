@@ -35,6 +35,7 @@ export const initialState: ProcessState = {
         currentRequestId: undefined,
         error: null,
         processSubscriptions: [],
+        credentials: [],
     },
     modeler: initialModelerState,
     all: {

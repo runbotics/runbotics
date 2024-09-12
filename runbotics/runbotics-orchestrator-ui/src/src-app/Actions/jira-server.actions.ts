@@ -1,10 +1,8 @@
-import { JiraServerAction, ActionRegex } from 'runbotics-common';
+import { JiraServerAction, ActionRegex, ActionCredentialType } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
-
-
 
 const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
     const dateMode = {
@@ -25,6 +23,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
     return ({
         [JiraServerAction.GET_USER_WORKLOGS]: {
             id: JiraServerAction.GET_USER_WORKLOGS,
+            credentialType: ActionCredentialType.ATLASSIAN,
             label: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Label'),
             script: JiraServerAction.GET_USER_WORKLOGS,
             runner: Runner.DESKTOP_SCRIPT,

@@ -1,11 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { JiraCloudAction, ActionRegex, JiraTaskStatus, JiraSprintState } from 'runbotics-common';
+import { JiraCloudAction, ActionRegex, JiraTaskStatus, JiraSprintState, ActionCredentialType } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
-
-
 
 const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
     const dateMode = {
@@ -26,6 +24,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
     return ({
         [JiraCloudAction.GET_USER_WORKLOGS]: {
             id: JiraCloudAction.GET_USER_WORKLOGS,
+            credentialType: ActionCredentialType.ATLASSIAN,
             label: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Label'),
             script: JiraCloudAction.GET_USER_WORKLOGS,
             runner: Runner.DESKTOP_SCRIPT,

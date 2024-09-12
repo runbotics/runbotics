@@ -26,11 +26,14 @@ import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
 import ProcessAttendedComponent from './ProcessAttended.component';
 import {
-    Container,
     AttendancePaper,
     StyledPaper,
     ContainerWrapper,
+    PageContainer,
+    SettingsContainer,
+    CredentialsContainer,
 } from './ProcessConfigureView.styles';
+import ProcessCredentials from './ProcessCredentials';
 import ProcessOutputComponent from './ProcessOutput.component';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 
@@ -145,59 +148,66 @@ const ProcessConfigureView: VFC = () => {
 
     return (
         <ContainerWrapper>
-            <Container>
-                <Box>
-                    <StyledPaper elevation={1}>
-                        <BotSystemComponent
-                            selectedBotSystem={selectedBotSystem}
-                            onSelectBotSystem={handleSelectBotSystem}
-                        />
-                    </StyledPaper>
-                </Box>
-                <Box>
-                    <StyledPaper elevation={1}>
-                        <BotCollectionComponent
-                            selectedBotCollection={selectedBotCollection}
-                            onSelectBotCollection={handleSelectBotCollection}
-                        />
-                    </StyledPaper>
-                </Box>
-                <Box>
-                    <StyledPaper elevation={1}>
-                        <ProcessOutputComponent
-                            selectedProcessOutput={processOutputType}
-                            onSelectProcessOutput={handleSelectProcessOutputType}
-                        />
-                    </StyledPaper>
-                </Box>
-                <Box>
-                    <AttendancePaper>
-                        <ProcessAttendedComponent
-                            isProcessAttended={attended}
-                            onAttendedChange={handleAttendanceChange}
-                        />
-                    </AttendancePaper>
-                </Box>
-                <Box>
+            <PageContainer>
+                <SettingsContainer>
+                    <Box>
+                        <StyledPaper elevation={1}>
+                            <BotSystemComponent
+                                selectedBotSystem={selectedBotSystem}
+                                onSelectBotSystem={handleSelectBotSystem}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper elevation={1}>
+                            <BotCollectionComponent
+                                selectedBotCollection={selectedBotCollection}
+                                onSelectBotCollection={handleSelectBotCollection}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper elevation={1}>
+                            <ProcessOutputComponent
+                                selectedProcessOutput={processOutputType}
+                                onSelectProcessOutput={handleSelectProcessOutputType}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <AttendancePaper>
+                            <ProcessAttendedComponent
+                                isProcessAttended={attended}
+                                onAttendedChange={handleAttendanceChange}
+                            />
+                        </AttendancePaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper>
+                            <ProcessTriggerableComponent
+                                isProcessTriggerable={triggerable}
+                                onTriggerableChange={handleTriggerableChange}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper>
+                            <NotificationSwitchComponent
+                                onClick={() => setOpen(true)}
+                                isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id )}
+                                onSubscriptionChange={handleSubscriptionChange}
+                                label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
+                                tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
+                            />
+                        </StyledPaper>
+                    </Box>
+                </SettingsContainer>
+                <CredentialsContainer>
                     <StyledPaper>
-                        <ProcessTriggerableComponent
-                            isProcessTriggerable={triggerable}
-                            onTriggerableChange={handleTriggerableChange}
-                        />
+                        <ProcessCredentials/>
                     </StyledPaper>
-                </Box>
-                <Box>
-                    <StyledPaper>
-                        <NotificationSwitchComponent
-                            onClick={() => setOpen(true)}
-                            isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id )}
-                            onSubscriptionChange={handleSubscriptionChange}
-                            label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
-                            tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
-                        />
-                    </StyledPaper>
-                </Box>
-            </Container>
+                </CredentialsContainer>
+            </PageContainer>
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}

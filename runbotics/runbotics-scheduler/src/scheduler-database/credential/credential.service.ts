@@ -10,6 +10,7 @@ import { SecretService } from '../secret/secret.service';
 import { Secret } from '../secret/secret.entity';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 import { CredentialCollectionService } from '../credential-collection/credential-collection.service';
+import { ProcessCredential } from '../process-credential/process-credential.entity';
 
 const relations = ['attributes'];
 
@@ -72,13 +73,77 @@ export class CredentialService {
   }
 
   async findAllAccessible(user: IUser) {
-    const accessibleCollections = await this.collectionService.findAllAccessible(user);
+    const accessibleCollections = await this.collectionService.findAllAccessibleWithUser(user);
 
-    const credentials = accessibleCollections.map((collection) => collection.credentials).flat();
+    if (accessibleCollections.length === 0) {
+      return [];
+    }
+
+    const credentials = accessibleCollections.flatMap((collection) => collection.credentials)
+      .map(credential => ({
+        ...credential,
+        createdBy: {
+          id: credential.createdBy.id,
+          login: credential.createdBy.login,
+        },
+        collection: {
+          id: credential.collection.id,
+          name: credential.collection.name
+        }
+      }));
 
     if (!credentials.some((credential) => Boolean(credential))) {
       return [];
     }
+
+    return credentials;
+  }
+
+  async findAllAccessibleByTemplateAndProcess(templateName: string, processId: string, user: IUser) {
+    const accessibleCollections = await this.collectionService.findAllAccessibleWithUser(user);
+    if (!accessibleCollections.length) {
+      return [];
+    }
+
+    const accessible = accessibleCollections.map(collection => collection.id);
+
+    const credentials = await this.credentialRepo
+      .createQueryBuilder('credentials')
+      .innerJoinAndSelect('credentials.createdBy', 'user')
+      .innerJoinAndSelect(
+          'credentials.collection',
+          'collection',
+          'collection.id IN (:...accessible)',
+          { accessible }
+      )
+      .innerJoinAndSelect(
+          'credentials.template',
+          'template',
+          'template.name = :templateName',
+          { templateName }
+      )
+      .leftJoin(
+          ProcessCredential,
+          'pc',
+          'pc.credentialId = credentials.id'
+      )
+      .where('pc.processId != :processId OR pc.processId IS NULL', {
+          processId,
+      })
+      .getMany()
+      .then(credentials =>
+          credentials.map(credential => ({
+              ...credential,
+              createdBy: {
+                  id: credential.createdBy.id,
+                  login: credential.createdBy.login,
+              },
+              collection: {
+                  id: credential.collection.id,
+                  name: credential.collection.name,
+              },
+          }))
+      );
 
     return credentials;
   }
@@ -212,7 +277,7 @@ export class CredentialService {
     return this.credentialRepo.save(updatedCredential);
   }
 
-    async checkIsNameTaken(name: string, collectionId: string, tenantId: string) {
+  async checkIsNameTaken(name: string, collectionId: string, tenantId: string) {
     const result = await this.credentialRepo.findOne({
       where: {
         name,

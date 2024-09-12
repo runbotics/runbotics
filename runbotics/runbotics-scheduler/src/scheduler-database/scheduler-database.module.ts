@@ -14,6 +14,7 @@ import { CredentialCollectionUserModule } from './credential-collection-user/cre
 import { FeatureKeyModule } from './feature-key/feature-key.module';
 import { AuthorityModule } from './authority/authority.module';
 import { ActionModule } from './action/action.module';
+import { ProcessCredentialModule } from './process-credential/process-credential.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { ActionModule } from './action/action.module';
         SecretModule,
         ProcessContextModule,
         ProcessContextSecretModule,
+        ProcessCredentialModule,
         TenantModule,
         GlobalVariableModule,
         NotificationBotModule,
