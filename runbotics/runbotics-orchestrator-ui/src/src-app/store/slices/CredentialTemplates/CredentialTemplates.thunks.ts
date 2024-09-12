@@ -1,5 +1,5 @@
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
-import { CredentialTemplate } from '#src-app/views/credentials/Credential/Credential.types';
+import { CredentialTemplate } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/Attribute.types';
 
 const CREDENTIAL_TEMPLATE_PATH = 'credential-templates';
 
