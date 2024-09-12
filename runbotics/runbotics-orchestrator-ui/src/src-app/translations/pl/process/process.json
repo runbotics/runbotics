@@ -252,8 +252,6 @@
     "Process.Details.Modeler.Actions.General.StartProcess.Error.IncompatibleProcessSystem": "Systemy procesu i bota są niekompatybilne",
     "Process.Details.Modeler.Actions.General.ThrowError.Label": "Zwróć błąd",
     "Process.Details.Modeler.Actions.General.ThrowError.Message": "Komunikat błędu",
-    "Process.Details.Modeler.Actions.Google.Sheets.Write.Label": "Zapis w arkuszach Google",
-    "Process.Details.Modeler.Actions.GoogleSheets.Write.Values": "Wartości",
     "Process.Details.Modeler.Actions.Loop.Loop.Label": "Pętla",
     "Process.Details.Modeler.Actions.Loop.Loop1.Manual": "Ręczny",
     "Process.Details.Modeler.Actions.Loop.Loop1.List": "Lista",

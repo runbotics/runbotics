@@ -1,12 +1,26 @@
 import { Paper } from '@mui/material';
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const PageContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+`;
+
+export const SettingsContainer = styled.div`
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
     gap: 1rem;
     min-width: 375px;
+`;
+
+export const CredentialsContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    padding: 1.5rem;
 `;
 
 export const StyledPaper = styled(Paper)`
@@ -20,6 +34,7 @@ export const AttendancePaper = styled(StyledPaper)`
 `;
 
 export const ContainerWrapper = styled.div`
-    display: flex;
+    display: flex
+    flex: 1;
     width: 100%;
 `;

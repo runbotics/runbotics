@@ -19,7 +19,7 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
-import { getActions } from '#src-app/store/slices/Action/Action.thunks';
+import { activityActions } from '#src-app/store/slices/Action';
 import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
 
 import { processActions } from '#src-app/store/slices/Process';
@@ -52,7 +52,7 @@ const ProcessBuildView: FC = () => {
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
-        hasActionsAccess && dispatch(getActions());
+        hasActionsAccess && dispatch(activityActions.getAllActions());
 
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps

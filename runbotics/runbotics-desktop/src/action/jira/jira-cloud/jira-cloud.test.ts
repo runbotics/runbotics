@@ -3,32 +3,35 @@ import JiraCloudActionHandler from './jira-cloud.action-handler';
 import { GetUserWorklogInput, SearchIssue, WorklogResponse } from '../jira.types';
 import { CloudJiraUser } from './jira-cloud.types';
 import * as jiraUtils from '../jira.utils';
+import { ServerConfigService } from '#config';
+import { ConfigService } from '@nestjs/config';
+import { ArgumentsService } from '#config/arguments.service';
 
 describe('JiraCloudActionHandler', () => {
     let jiraCloudActionHandler: JiraCloudActionHandler;
 
     const getWorklogInputDate: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
-        passwordEnv: 'JIRA_CLOUD_PASSWORD',
-        usernameEnv: 'JIRA_CLOUD_USERNAME',
+        originUrl: 'https://JIRA_CLOUD_URL',
+        password: 'JIRA_CLOUD_PASSWORD',
+        username: 'JIRA_CLOUD_USERNAME',
         mode: 'date',
         date: '2023-11-12',
     };
     const getWorklogInputPeriod: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
-        passwordEnv: 'JIRA_CLOUD_PASSWORD',
-        usernameEnv: 'JIRA_CLOUD_USERNAME',
+        originUrl: 'https://JIRA_CLOUD_URL',
+        password: 'JIRA_CLOUD_PASSWORD',
+        username: 'JIRA_CLOUD_USERNAME',
         mode: 'period',
         startDate: '2023-11-12',
         endDate: '2023-11-14'
     };
     const getWorklogInputCollection: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
-        originEnv: 'JIRA_CLOUD_URL',
-        passwordEnv: 'JIRA_CLOUD_PASSWORD',
-        usernameEnv: 'JIRA_CLOUD_USERNAME',
+        originUrl: 'https://JIRA_CLOUD_URL',
+        password: 'JIRA_CLOUD_PASSWORD',
+        username: 'JIRA_CLOUD_USERNAME',
         mode: 'collection',
         dates: ['2023-11-12', '2023-11-15'],
     };
@@ -37,6 +40,9 @@ describe('JiraCloudActionHandler', () => {
         const module = await Test.createTestingModule({
             providers: [
                 JiraCloudActionHandler,
+                ServerConfigService,
+                ConfigService,
+                ArgumentsService,
             ],
         }).compile();
         jiraCloudActionHandler = module.get(JiraCloudActionHandler);

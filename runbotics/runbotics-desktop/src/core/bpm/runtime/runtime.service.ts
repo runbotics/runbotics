@@ -42,7 +42,7 @@ import {
     IStartProcessInstance,
     RunBoticsExecutionEnvironment,
     BpmnExecutionEventMessageExtendedApi,
-    BpmnProcessInstance, 
+    BpmnProcessInstance,
     BpmnExecutionEventMessageExtendedContent,
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';

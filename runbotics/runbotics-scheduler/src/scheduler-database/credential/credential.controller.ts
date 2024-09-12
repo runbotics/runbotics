@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Logger, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Logger, UseInterceptors, Query } from '@nestjs/common';
 import { CredentialService } from './credential.service';
 import { CreateCredentialDto, createCredentialSchema } from './dto/create-credential.dto';
 import { UpdateCredentialDto, updateCredentialSchema } from './dto/update-credential.dto';
@@ -7,6 +7,7 @@ import { IUser } from 'runbotics-common';
 import { User } from '#/utils/decorators/user.decorator';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
+import { isCredentialFilterQuery } from './credential.utils';
 
 const COLLECTION_URL_PARTIAL = 'credential-collections/:collectionId/credentials/';
 @UseInterceptors(TenantInterceptor)
@@ -56,8 +57,18 @@ export class CredentialController {
   }
 
   @Get('credentials')
-  findAllAccessible(@User() user: IUser) {
+  findAllAccessible(
+    @Query() query,
+    @User() user: IUser
+  ) {
     this.logger.log('REST request to get all accessible credentials');
-    return this.credentialService.findAllAccessible(user);
+
+    return isCredentialFilterQuery(query)
+      ? this.credentialService.findAllAccessibleByTemplateAndProcess(
+        query.templateName,
+        query.processId,
+        user
+      )
+      : this.credentialService.findAllAccessible(user);
   }
 }

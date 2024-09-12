@@ -24,3 +24,7 @@ export * from './api/process-output.model';
 export * from './api/process-collection.model';
 export * from './api/queue-message.model';
 export * from './api/tenant.model';
+export * from './api/process-credential.model';
+export * from './api/credential.model';
+export * from './api/credential-collection.model';
+export * from './api/credential-template.model';

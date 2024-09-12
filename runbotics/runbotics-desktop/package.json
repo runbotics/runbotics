@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.11.0-SNAPSHOT.37",
+    "version": "2.11.0-SNAPSHOT.41",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -43,7 +43,7 @@
         "csvtojson": "^2.0.10",
         "dayjs": "^1.11.0",
         "execa": "^1.0.0",
-        "googleapis": "^73.0.0",
+        "googleapis": "^143.0.0",
         "jimp": "^0.22.10",
         "lodash": "^4.17.19",
         "mime-types": "^2.1.35",

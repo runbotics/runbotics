@@ -1,14 +1,13 @@
-import { AsanaAction, ActionRegex } from 'runbotics-common';
+import { AsanaAction, ActionRegex, ActionCredentialType } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
-
-
 const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
     'asana.test': {
         id: AsanaAction.TEST,
+        credentialType: ActionCredentialType.ASANA,
         label: translate('Process.Details.Modeler.Actions.Asana.Test.Label'),
         script: AsanaAction.TEST,
         runner: Runner.DESKTOP_SCRIPT,

@@ -26,7 +26,7 @@ export class CredentialCollectionService {
         @InjectRepository(CredentialCollectionUser)
         private readonly credentialCollectionUserRepository: Repository<CredentialCollectionUser>,
         private readonly userService: UserService,
-    ) {}
+    ) { }
 
     async create(
         createCredentialCollectionDto: CreateCredentialCollectionDto,
@@ -84,11 +84,11 @@ export class CredentialCollectionService {
         if (sharedWith && sharedWith.length > 0) {
             const credentialCollectionUserArrayToSave =
                 await this.getCollectionUserArrayWithPrivileges(
-                        sharedWith,
-                        credentialCollection,
-                        userDto,
-                        tenantId,
-                    );
+                    sharedWith,
+                    credentialCollection,
+                    userDto,
+                    tenantId,
+                );
 
             credentialCollection.credentialCollectionUser =
                 credentialCollectionUserArrayToSave;
@@ -119,6 +119,21 @@ export class CredentialCollectionService {
             .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
             .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
             .getMany();
+    }
+
+    async findAllAccessibleWithUser(user: IUser) {
+        const collections = await this.credentialCollectionRepository.find({
+            where: {
+                tenantId: user.tenantId,
+                credentialCollectionUser: {
+                    userId: user.id,
+                    privilegeType: PrivilegeType.WRITE,
+                },
+            },
+            relations: [...relations, 'credentials.createdBy', 'credentials.collection'],
+        });
+
+        return collections;
     }
 
     async findOneAccessibleById(id: string, user: IUser) {
@@ -219,11 +234,11 @@ export class CredentialCollectionService {
             .update(id, dto)
             .catch(async (error) => {
                 const isNameTaken = await this.credentialCollectionRepository.findOne({
-                        where: {
-                            name: dto.name,
-                            createdById: user.id,
-                        }
-                    })
+                    where: {
+                        name: dto.name,
+                        createdById: user.id,
+                    }
+                })
                     .then((collection) => collection && collection.id !== id);
 
                 if (isNameTaken) {
@@ -279,7 +294,9 @@ export class CredentialCollectionService {
             tenantId
         );
 
-        const unknownEmails = userEmails.filter(email => !grantAccessUsers.some(user => user.email === email));
+        const grantAccessEmails = new Set(grantAccessUsers.map(user => user.email));
+
+        const unknownEmails = userEmails.filter(email => !grantAccessEmails.has(email));
 
         if (unknownEmails.length > 0) {
             throw new BadRequestException(`Users with emails ${unknownEmails.join(', ')} do not exist`);

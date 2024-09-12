@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { IncomingMessage } from 'http';
 import { createWriteStream } from 'fs';
@@ -11,7 +10,6 @@ import { DriveItem, Permission } from '../common.types';
 import { RequestOptions } from '../microsoft-graph';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
-@Injectable()
 export class OneDriveService {
     private readonly logger = new RunboticsLogger(OneDriveService.name);
 

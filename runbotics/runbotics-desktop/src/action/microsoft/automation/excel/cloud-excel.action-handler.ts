@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ActionRegex, CloudExcelAction } from 'runbotics-common';
+import { ActionCredentialType, ActionRegex, CloudExcelAction } from 'runbotics-common';
 import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
@@ -8,17 +8,22 @@ import * as CloudExcelTypes from './cloud-excel.types';
 import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
 import { sortNumbersDescending } from '#action/microsoft/excel/excel.utils';
+import { MicrosoftCredential } from '#action/microsoft/common.types';
+import { ServerConfigService } from '#config';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
     private session: ExcelSession = null;
 
-    constructor(private readonly excelService: ExcelService) {
+    constructor(
+        private readonly excelService: ExcelService,
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
 
-    async openFile(input: ExcelSessionInfo) {
-        this.session = await this.excelService.createSession(input);
+    async openFile(input: ExcelSessionInfo, credential: MicrosoftCredential) {
+        this.session = await this.excelService.createSession(input, credential);
     }
 
     async closeSession() {
@@ -50,8 +55,8 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     }
 
     getCells(input: CloudExcelTypes.CloudExcelGetCellsActionInput) {
-        const startCell = input.startCell.match(ActionRegex.EXCEL_CELL_ADDRESS);
-        const endCell = input.endCell.match(ActionRegex.EXCEL_CELL_ADDRESS);
+        const startCell = input.startCell.match(ActionRegex.CELL_ADDRESS);
+        const endCell = input.endCell.match(ActionRegex.CELL_ADDRESS);
 
         if (!startCell || !endCell) {
             throw new Error(CloudExcelErrorMessage.getCellsIncorrectInput());
@@ -125,7 +130,27 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     run(request: CloudExcelTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE:
-                return this.openFile(request.input);
+                // @todo throw error 'incorrect action definition - credentials are needed for this action' if any of CredentialData or list including MicrosoftCredential is not present in the input
+
+                // eslint-disable-next-line no-case-declarations
+                const authData = this.serverConfigService.microsoftAuth;
+
+                // eslint-disable-next-line no-case-declarations
+                const matchedCredentials = { // @todo here method for matching credentialId (templateName) from action input to decrypted credential (default for the template), e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
+                    config: {
+                        auth: {
+                            clientId: authData.clientId,
+                            authority: authData.tenantId,
+                            clientSecret: authData.clientSecret,
+                        }
+                    },
+                    loginCredential: {
+                        username: authData.username,
+                        password: authData.password,
+                    }
+                };
+
+                return this.openFile(request.input, matchedCredentials);
             case CloudExcelAction.GET_WORKSHEET_CONTENT:
                 this.checkSession();
                 return this.getWorksheetContent(request.input);

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { IProcess, Tag, NotificationProcess, NotificationProcessType } from 'runbotics-common';
+import { IProcess, Tag, NotificationProcess, NotificationProcessType, ProcessCredentialDto } from 'runbotics-common';
 
 import { Socket } from 'socket.io-client';
 
@@ -13,10 +13,11 @@ import URLBuilder from '#src-app/utils/URLBuilder';
 
 import IProcessWithFilters from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.types';
 
-import { StartProcessResponse, UpdateDiagramRequest } from './Process.state';
+import { CreateProcessCredentialDto, StartProcessResponse, UpdateDiagramRequest } from './Process.state';
 
 const PROCESS_NOTIFICATION_PATH = 'notifications-process';
 const TAGS_PATH = 'tags';
+const PROCESS_CREDENTIALS_PATH = 'process-credentials';
 
 // TODO and TO_REVIEW during processes migration
 const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
@@ -170,3 +171,13 @@ export const unsubscribeProcessNotifications = ApiTenantResource
 
 export const getProcessSubscriptionInfo = ApiTenantResource
     .get<NotificationProcess[]>('processes/getProcessSubscriptionInfo', `${PROCESS_NOTIFICATION_PATH}/processes`);
+
+export const getProcessCredentials = ApiTenantResource
+    .get<ProcessCredentialDto[]>('processes/getProcessCredentials', `${PROCESS_CREDENTIALS_PATH}/processes`);
+
+export const createProcessCredential = ApiTenantResource
+    .post<void, CreateProcessCredentialDto>
+    ('processes/deleteProcessCredential', PROCESS_CREDENTIALS_PATH);
+
+export const deleteProcessCredential = ApiTenantResource
+    .delete<void>('processes/deleteProcessCredential', PROCESS_CREDENTIALS_PATH);

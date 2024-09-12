@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer';
+import { MailerModule as NestMailerModule, MailerOptionsFactory, MailerOptions } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ServerConfigService } from '#config';
 import { ArgumentsService } from '#config/arguments.service';

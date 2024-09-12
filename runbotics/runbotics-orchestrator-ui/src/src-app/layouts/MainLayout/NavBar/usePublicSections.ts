@@ -43,7 +43,7 @@ export const usePublicSections = (): Section[] => {
                     icon: CommandIcon,
                     href: '/app/actions',
                     authorities: [Role.ROLE_ADMIN],
-                    featureKeys: [FeatureKey.EXTERNAL_ACTION_READ],
+                    featureKeys: [FeatureKey.EXTERNAL_ACTION_EDIT],
                 },
                 {
                     title: translate('Nav.Items.GlobalVariables'),
