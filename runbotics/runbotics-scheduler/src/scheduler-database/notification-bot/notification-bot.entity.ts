@@ -17,11 +17,11 @@ export class NotificationBot {
     @Column({ enum: NotificationBotType, default: NotificationBotType.BOT_DISCONNECTED, type: 'varchar', length: 50 })
     type: NotificationBotType;
 
-    @ManyToOne(() => UserEntity, { nullable: false })
+    @ManyToOne(() => UserEntity, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
     user: UserEntity;
 
-    @ManyToOne(() => BotEntity, { nullable: false })
+    @ManyToOne(() => BotEntity, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'bot_id' })
     bot: BotEntity;
 }

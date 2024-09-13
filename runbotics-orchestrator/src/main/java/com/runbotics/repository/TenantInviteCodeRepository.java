@@ -15,9 +15,4 @@ import java.util.UUID;
  */
 @Repository
 public interface TenantInviteCodeRepository extends JpaRepository<TenantInviteCode, UUID>, JpaSpecificationExecutor<TenantInviteCode> {
-
-    @Query(
-        "SELECT tic FROM TenantInviteCode tic WHERE tic.tenantId = :tenantId AND tic.expirationDate > :date"
-    )
-    Optional<TenantInviteCode> findByTenantIdAndExpirationDateBefore(UUID tenantId, ZonedDateTime date);
 }
