@@ -114,7 +114,7 @@
     "devDependencies": {
         "@nestjs/cli": "^9.1.8",
         "@nestjs/schematics": "^9.0.4",
-        "@nestjs/testing": "^9.2.1",
+        "@nestjs/testing": "^10.4.1",
         "@vitest/coverage-istanbul": "^0.29.8",
         "@types/asana": "^0.18.1",
         "@types/lodash": "^4.14.158",
