@@ -13,8 +13,8 @@ const relations = [
     'schedules',
     'editor',
     'notifications.user.authorities',
-    'credentials.attributes',
-    'credentials.template',
+    'processCredential.credential.attributes',
+    'processCredential.credential.template',
 ];
 
 interface PartialUpdateProcess extends IProcess {
@@ -39,7 +39,7 @@ export class ProcessService {
     findByIdWithSecrets(id: number) {
         return this.processRepository.findOne({
             where: { id },
-            relations: [...relations, 'credentials.attributes.secret'],
+            relations: [...relations, 'processCredential.credential.attributes.secret'],
         });
     }
 

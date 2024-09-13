@@ -17,11 +17,17 @@ export class ProcessCredential {
     @Column({ name: 'process_id' })
     processId: number;
 
-    @ManyToOne(() => ProcessEntity, { nullable: false })
+    @ManyToOne(
+        () => ProcessEntity,
+        { nullable: false, onDelete: 'CASCADE' }
+    )
     @JoinColumn({ name: 'process_id' })
     process: ProcessEntity;
 
-    @ManyToOne(() => Credential, { nullable: false })
+    @ManyToOne(
+        () => Credential,
+        { nullable: false, onDelete: 'CASCADE' }
+    )
     @JoinColumn({ name: 'credential_id' })
     credential: Credential;
 }
