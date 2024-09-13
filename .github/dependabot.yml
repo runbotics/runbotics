@@ -8,7 +8,7 @@ updates:
       - "/runbotics/runbotics-scheduler"
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 3
     target-branch: "develop"
     assignees:
       - "star-in-the-jar" # stanislaw-jarocki
@@ -18,7 +18,7 @@ updates:
     groups:
       pnpm-dependencies:
         patterns:
-          - "**/pnpm-lock.yaml"
+          - "common/config/rush/pnpm-lock.yaml"
           - "**/package.json"
 # if private registry is needed: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#registries
 # versioning strategy: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#versioning-strategy
