@@ -2,7 +2,7 @@ version: 2
 updates:
   - package-ecosystem: "pnpm"
     directories:
-      - "/runbotics/common"
+      - "/runbotics/runbotics-common"
       - "/runbotics/runbotics-orchestrator-ui"
       - "/runbotics/runbotics-desktop"
       - "/runbotics/runbotics-scheduler"
