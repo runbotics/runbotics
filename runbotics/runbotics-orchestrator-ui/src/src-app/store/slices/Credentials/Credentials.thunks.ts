@@ -1,4 +1,5 @@
 
+import { Credential } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import { BasicCredentialDto, CreateCredentialDto, EditCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
@@ -11,6 +12,8 @@ export const createCredential = ApiTenantResource.post<BasicCredentialDto, Creat
 export const fetchAllCredentialsInCollection = ApiTenantResource.get<BasicCredentialDto[]>('credential/fetchAllInCollection', 'credential-collections');
 
 export const fetchAllCredentialsAccessibleInTenant = ApiTenantResource.get<BasicCredentialDto[]>('credential/fetchAllInTenant', 'credentials');
+
+export const fetchAllCredentialsByTemplateAndProcess = ApiTenantResource.get<Credential[]>('credential/fetchAllByTemplateAndProcess', 'credentialsByTemplateAndProcess');
 
 export const fetchOneCredential = ApiTenantResource.get<BasicCredentialDto>('credential/fetchOne/:id', 'credentials');
 

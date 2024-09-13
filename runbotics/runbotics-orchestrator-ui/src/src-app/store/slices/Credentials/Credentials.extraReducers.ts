@@ -3,7 +3,7 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 
 import { CredentialsState } from './Credentials.state';
-import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential, updateAttribute } from './Credentials.thunks';
+import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential, updateAttribute, fetchAllCredentialsByTemplateAndProcess } from './Credentials.thunks';
 
 const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<CredentialsState>) => {
     builder
@@ -28,6 +28,18 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
             state.all = action.payload;
         })
         .addCase(fetchAllCredentialsAccessibleInTenant.rejected, state => {
+            state.loading = false;
+        })
+
+        // fetch all accessible credentials in tenant by template and process
+        .addCase(fetchAllCredentialsByTemplateAndProcess.pending, state => {
+            state.loading = true;
+        })
+        .addCase(fetchAllCredentialsByTemplateAndProcess.fulfilled, (state, action) => {
+            state.loading = false;
+            state.allByTemplateAndProcess = action.payload;
+        })
+        .addCase(fetchAllCredentialsByTemplateAndProcess.rejected, state => {
             state.loading = false;
         })
 

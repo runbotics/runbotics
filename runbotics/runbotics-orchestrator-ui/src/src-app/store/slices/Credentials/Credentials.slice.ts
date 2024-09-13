@@ -8,6 +8,7 @@ import { RootState } from '../../index';
 
 const initialState: CredentialsState = {
     all: [],
+    allByTemplateAndProcess: [],
     loading: false,
     page: null
 };

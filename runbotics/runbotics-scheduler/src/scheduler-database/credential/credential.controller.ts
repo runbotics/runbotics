@@ -58,17 +58,24 @@ export class CredentialController {
 
   @Get('credentials')
   findAllAccessible(
-    @Query() query,
     @User() user: IUser
   ) {
     this.logger.log('REST request to get all accessible credentials');
 
-    return isCredentialFilterQuery(query)
-      ? this.credentialService.findAllAccessibleByTemplateAndProcess(
+    return this.credentialService.findAllAccessible(user);
+  }
+
+  @Get('credentialsByTemplateAndProcess')
+  findAllAccessibleByTemplateAndProcess(
+    @Query() query,
+    @User() user: IUser
+  ) {
+    this.logger.log('REST request to get all accessible credentials by template and process');
+
+    return this.credentialService.findAllAccessibleByTemplateAndProcess(
         query.templateName,
         query.processId,
         user
-      )
-      : this.credentialService.findAllAccessible(user);
+      );
   }
 }
