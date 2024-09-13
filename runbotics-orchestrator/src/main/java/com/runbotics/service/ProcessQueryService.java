@@ -5,7 +5,6 @@ import com.runbotics.domain.Process_;
 import com.runbotics.domain.User;
 import com.runbotics.domain.User_;
 import com.runbotics.repository.ProcessRepository;
-import com.runbotics.repository.ScheduleProcessRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.criteria.ProcessCriteria;
 import com.runbotics.service.dto.ProcessDTO;
@@ -40,7 +39,6 @@ public class ProcessQueryService extends QueryService<Process> {
     private final Logger log = LoggerFactory.getLogger(ProcessQueryService.class);
 
     private final ProcessRepository processRepository;
-    private final ScheduleProcessRepository scheduleProcessRepository;
 
     private final ProcessMapper processMapper;
 
@@ -59,13 +57,11 @@ public class ProcessQueryService extends QueryService<Process> {
     public ProcessQueryService(
         ProcessRepository processRepository,
         ProcessMapper processMapper,
-        ScheduleProcessRepository scheduleProcessRepository,
         UserService userService,
         ProcessCollectionService processCollectionService
     ) {
         this.processRepository = processRepository;
         this.processMapper = processMapper;
-        this.scheduleProcessRepository = scheduleProcessRepository;
         this.userService = userService;
         this.processCollectionService = processCollectionService;
     }

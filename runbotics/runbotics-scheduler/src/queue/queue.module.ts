@@ -3,7 +3,7 @@ import { ServerConfigService } from '#/config/server-config/server-config.servic
 import { MicrosoftModule } from '#/microsoft';
 import { Logger } from '#/utils/logger';
 import { BullModule } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import IORedis from 'ioredis';
 import { ProcessInputService } from 'src/queue/process/process-input.service';
 import { AuthModule } from '../auth/auth.module';
@@ -18,12 +18,12 @@ import { ProcessController } from './process/process.controller';
 import { SchedulerProcessor } from './processor/scheduler.processor';
 import { QueueService } from './queue.service';
 
-import { ScheduleProcessController } from './schedule-process/schedule-process.controller';
 import { SchedulerController } from './scheduler/scheduler.controller';
 import { SchedulerService } from './scheduler/scheduler.service';
 import { TriggerController } from './trigger/trigger.controller';
 import { ProcessGuestService } from './process/process-guest.service';
 import { QueueMessageService } from './queue-message.service';
+import { ScheduleProcessModule } from '#/scheduler-database/schedule-process/schedule-process.module';
 
 @Module({
     imports: [
@@ -50,9 +50,10 @@ import { QueueMessageService } from './queue-message.service';
                 },
             }),
         }),
+        forwardRef(() => ScheduleProcessModule),
     ],
     controllers: [
-        SchedulerController, ProcessController, ProcessInstanceController, BotController, ScheduleProcessController, TriggerController,
+        SchedulerController, ProcessController, ProcessInstanceController, BotController, TriggerController,
     ],
     providers: [
         SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService, ProcessInputService,

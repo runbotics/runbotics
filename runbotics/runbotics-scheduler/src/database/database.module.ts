@@ -7,7 +7,6 @@ import { BotModule } from './bot/bot.module';
 import { ProcessModule } from './process/process.module';
 import { ProcessInstanceModule } from './process-instance/process-instance.module';
 import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
-import { ScheduleProcessModule } from './schedule-process/schedule-process.module';
 import { BotCollectionModule } from './bot-collection/bot-collection.module';
 import { BotSystemModule } from './bot-system/bot-system.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
@@ -43,7 +42,6 @@ import { GuestModule } from './guest/guest.module';
         ProcessInstanceModule,
         ProcessInstanceEventModule,
         ProcessInstanceLoopEventModule,
-        ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
         TypeOrmModule,
@@ -57,7 +55,6 @@ import { GuestModule } from './guest/guest.module';
         ProcessInstanceModule,
         ProcessInstanceEventModule,
         ProcessInstanceLoopEventModule,
-        ScheduleProcessModule,
         TriggerEventModule,
         GuestModule,
         TypeOrmModule,

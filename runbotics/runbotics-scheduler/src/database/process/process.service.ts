@@ -6,7 +6,7 @@ import { IProcess, Role } from 'runbotics-common';
 import { UserEntity } from '../user/user.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
-const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor', 'notifications.user.authorities', 'credentials.attributes'];
+const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor', 'notifications.user.authorities'];
 
 
 interface PartialUpdateProcess extends IProcess {
@@ -22,6 +22,10 @@ export class ProcessService {
 
     findById(id: number): Promise<IProcess> {
         return this.processRepository.findOne({ where: { id }, relations });
+    }
+
+    findByIdAndTenantId(id: number, tenantId: string) {
+        return this.processRepository.findOneByOrFail({ id, tenantId });
     }
 
     async save(process: IProcess) {
