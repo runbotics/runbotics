@@ -117,23 +117,29 @@ export class ProcessSchedulerService {
             );
         }
 
-        const credentials = process.credentials;
+        const processCredentials = process.processCredential;
         const areCredentialsValid =
-            credentials && Array.isArray(credentials) && credentials.length > 0;
+            processCredentials &&
+            Array.isArray(processCredentials) &&
+            processCredentials.length > 0;
 
         const processDecryptedCredentials = areCredentialsValid
-            ? credentials.map(({ id, name, template, attributes }) => ({
-                  id,
-                  name,
-                  template: template.name,
-                  // @todo Add credential order property after @Aeri4a PR
-                  // order: number;
-                  attributes: attributes.map(({ id, name, secret }) => ({
+            ? processCredentials.map(
+                  ({
+                      order,
+                      credential: { id, name, template, attributes },
+                  }) => ({
                       id,
                       name,
-                      value: this.secretService.decrypt(secret),
-                  })),
-              }))
+                      order,
+                      template: template.name,
+                      attributes: attributes.map(({ id, name, secret }) => ({
+                          id,
+                          name,
+                          value: this.secretService.decrypt(secret),
+                      })),
+                  })
+              )
             : [];
 
         return processDecryptedCredentials;
