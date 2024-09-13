@@ -16,6 +16,7 @@ import { AuthorityModule } from './authority/authority.module';
 import { ActionModule } from './action/action.module';
 import { ProcessCredentialModule } from './process-credential/process-credential.module';
 import { ScheduleProcessModule } from './schedule-process/schedule-process.module';
+import { CredentialAttributeModule } from './credential-attribute/credential-attribute.module';
 
 @Module({
     imports: [
@@ -36,7 +37,8 @@ import { ScheduleProcessModule } from './schedule-process/schedule-process.modul
         AuthorityModule,
         ActionModule,
         ScheduleProcessModule,
+        CredentialAttributeModule,
     ],
     exports: [],
 })
-export class SchedulerDatabaseModule { }
+export class SchedulerDatabaseModule {}
