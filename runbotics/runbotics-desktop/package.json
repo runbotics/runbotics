@@ -127,7 +127,7 @@
         "@types/bpmn-moddle": "^5.1.6",
         "cross-env": "^7.0.3",
         "vitest": "^0.29.8",
-        "vite": "^4.2.1",
+        "vite": "^5.4.5",
         "electron-builder": "^24.13.3",
         "eslint": "^8.31.0",
         "ts-loader": "^9.4.2",
