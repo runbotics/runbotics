@@ -35,7 +35,7 @@
         "axios": "^0.27.2",
         "bpmn-elements": "^5.1.2",
         "bpmn-engine": "^12.0.2",
-        "bpmn-moddle": "^7.0.5",
+        "bpmn-moddle": "^9.0.1",
         "camunda-bpmn-moddle": "^5.1.2",
         "cross-fetch": "^4.0.0",
         "csv-parser": "^3.0.0",
