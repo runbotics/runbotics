@@ -17,11 +17,11 @@ export class NotificationProcess {
     @Column({ enum: NotificationProcessType, default: NotificationProcessType.PROCESS_ERROR, type: 'varchar', length: 50 })
     type: NotificationProcessType;
 
-    @ManyToOne(() => UserEntity, { nullable: false })
+    @ManyToOne(() => UserEntity, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
     user: UserEntity;
 
-    @ManyToOne(() => ProcessEntity, { nullable: false })
+    @ManyToOne(() => ProcessEntity, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'process_id' })
     process: ProcessEntity;
 }
