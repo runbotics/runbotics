@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "pnpm"
+  - package-ecosystem: "npm"
     directories:
       - "/runbotics/runbotics-common"
       - "/runbotics/runbotics-orchestrator-ui"
@@ -15,5 +15,10 @@ updates:
       - "marcin-depcik"
     labels:
       - "security"
+    groups:
+      pnpm-dependencies:
+        patterns:
+          - "**/pnpm-lock.yaml"
+          - "**/package.json"
 # if private registry is needed: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#registries
 # versioning strategy: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#versioning-strategy
