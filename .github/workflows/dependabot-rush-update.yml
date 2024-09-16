@@ -14,7 +14,7 @@ env:
 
 jobs:
   perform-rush-update:
-    if: startsWith(github.head_ref, 'dependabot/')
+    if: ${{ startsWith(github.ref, 'refs/heads/dependabot/') }}
     runs-on: ubuntu-latest
     defaults:
       run:
