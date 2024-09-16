@@ -1,25 +1,43 @@
 name: dependabot-rush-update
 
 on:
-  pull_request:
-    branches: ["develop", "master"]
   push:
-    branches:
-      - 'dependabot/**'
+    branches: ['develop', 'master']
+  workflow_dispatch:
+
+env:
+  RUSH: node ../common/scripts/install-run-rush.js
+  NODE_VERSION: 18.x
 
 jobs:
-  build:
+  push-ui:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-orchestrator-ui
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
-      # Ensure that the job only runs if the event is both a push to the dependabot branch
-      # and a pull request on develop/master. You can customize this condition.
-      - name: Run only on matching events
-        if: >
-          (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/dependabot/')) &&
-          (github.event_name == 'pull_request' && contains(github.base_ref, 'develop') || contains(github.base_ref, 'master'))
-        run: echo "This runs only when both a push and a pull request event occurs."
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
+      - name: Update .npmrc
+        shell: bash
+        run: |
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Assign package version
+        uses: nyaa8/package-version@v1
+        with:
+          path: './runbotics/runbotics-orchestrator-ui/package.json'
