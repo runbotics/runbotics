@@ -1,52 +1,50 @@
 name: dependabot-rush-update
 
 on:
-    push:
-        branches:
-            - "dependabot/**"
-    pull_request:
-        branches:
-            - "dependabot/**"
-    workflow_dispatch:
+  pull_request:
+    branches: ["develop", "master"]
+  workflow_dispatch:
+
 env:
-    RUSH: node ../common/scripts/install-run-rush.js
-    NODE_VERSION: 18.x
+  RUSH: node ../common/scripts/install-run-rush.js
+  RUSHX: node ../common/scripts/install-run-rushx.js
+  NODE_VERSION: 18.x
 
 jobs:
-    perform-rush-update:
-        runs-on: ubuntu-latest
+  perform-rush-update:
+    runs-on: ubuntu-latest
 
-        defaults:
-            run:
-                working-directory: ./runbotics
+    defaults:
+      run:
+        working-directory: ./runbotics
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            - name: Install Node ${{ env.NODE_VERSION }}
-              uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ env.NODE_VERSION }}
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
-            - name: Update .npmrc
-              shell: bash
-              run: |
-                  echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+      - name: Update .npmrc
+        shell: bash
+        run: |
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
 
-            - name: Run rush update
-              shell: bash
-              run: |
-                  ${{ env.RUSH }} update
+      - name: Run rush update
+        shell: bash
+        run: |
+          ${{ env.RUSH }} update
 
-            - name: Commit changes
-              shell: bash
-              run: |
-                  git status
-                  git add .
-                  git commit -m "chore: 🔧 Update pnpm-lock"
+      - name: Commit changes
+        shell: bash
+        run: |
+          git status
+          git add .
+          git commit -m "chore: 🔧 Update pnpm-lock"
 
-            - name: Push commit
-              shell: bash
-              run: |
-                  git push origin ${{ github.ref_name }}
+      - name: Push commit
+        shell: bash
+        run: |
+          git push origin ${{ github.ref_name }}
