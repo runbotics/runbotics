@@ -9,7 +9,7 @@ on:
       - 'dependabot/**'
 
 env:
-  RUSH: node ../common/scripts/install-run-rush.js
+  RUSH: node ./common/scripts/install-run-rush.js
   NODE_VERSION: 18.x
 
 jobs:
