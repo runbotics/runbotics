@@ -2,8 +2,10 @@ name: dependabot-rush-update
 
 on:
   push:
-    branches: ["dependabot/**"]
-  workflow_dispatch:
+    branches:
+      - dependabot
+      # - dependabot/test
+      - 'dependabot/**'
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
