@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.11.0-SNAPSHOT.43",
+    "version": "2.11.0-SNAPSHOT.44",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -19,7 +19,7 @@
         "test:watch": "vitest dev",
         "test:cov": "vitest run --coverage",
         "test:debug": "vitest --inspect-brk --threads false",
-        "typeorm": "rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/ormconfig.ts",
+        "typeorm": "rm -rf ./dist && rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/ormconfig.ts",
         "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create"
     },
     "dependencies": {
@@ -67,7 +67,8 @@
         "cross-fetch": "^3.1.5",
         "@nestjs-modules/mailer": "1.8.1",
         "zod": "~3.23.8",
-        "unplugin-swc": "~1.4.5"
+        "unplugin-swc": "~1.4.5",
+        "bpmn-moddle": "^9.0.1"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",
@@ -94,7 +95,8 @@
         "ts-node": "~10.9.2",
         "tsconfig-paths": "~4.2.0",
         "typescript": "^5.0.3",
-        "@types/mime-types": "~2.1.4"
+        "@types/mime-types": "~2.1.4",
+        "@types/bpmn-moddle": "^5.1.11"
     },
     "files": [
         "dist"

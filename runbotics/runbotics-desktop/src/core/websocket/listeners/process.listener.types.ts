@@ -1,4 +1,9 @@
-import { UserTriggerData, ITriggerEvent, ProcessInput } from 'runbotics-common';
+import {
+    UserTriggerData,
+    ITriggerEvent,
+    ProcessInput,
+    DecryptedCredential,
+} from 'runbotics-common';
 
 export interface StartProcessMessageBody {
     orchestratorProcessInstanceId: string;
@@ -7,6 +12,7 @@ export interface StartProcessMessageBody {
     userId?: number;
     trigger: ITriggerEvent;
     triggerData?: UserTriggerData;
+    credentials: DecryptedCredential[];
 }
 
 export interface KeepAliveStatus {

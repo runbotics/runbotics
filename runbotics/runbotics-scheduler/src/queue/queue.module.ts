@@ -24,9 +24,11 @@ import { TriggerController } from './trigger/trigger.controller';
 import { ProcessGuestService } from './process/process-guest.service';
 import { QueueMessageService } from './queue-message.service';
 import { ScheduleProcessModule } from '#/scheduler-database/schedule-process/schedule-process.module';
+import { SecretModule } from '#/scheduler-database/secret/secret.module';
 
 @Module({
     imports: [
+        SecretModule,
         DatabaseModule,
         AuthModule,
         MicrosoftModule,

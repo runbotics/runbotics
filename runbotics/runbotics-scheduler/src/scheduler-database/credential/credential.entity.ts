@@ -3,7 +3,7 @@ import { CredentialAttribute } from '#/scheduler-database/credential-attribute/c
 import {
     Column,
     CreateDateColumn,
-    Entity, Index,
+    Entity,
     JoinColumn,
     ManyToOne,
     OneToMany,
@@ -13,6 +13,7 @@ import {
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { Tenant } from '../tenant/tenant.entity';
+import { ProcessCredential } from '../process-credential/process-credential.entity';
 
 @Entity({ schema: 'scheduler' })
 @Unique(['collectionId', 'name', 'tenantId'])
@@ -79,6 +80,16 @@ export class Credential {
     @Column({ name: 'template_id' })
     templateId: string;
 
-    @OneToMany(() => CredentialAttribute, attribute => attribute.credential, { cascade: true })
+    @OneToMany(
+        () => CredentialAttribute,
+        attribute => attribute.credential,
+        { cascade: true }
+    )
     attributes: CredentialAttribute[];
+
+    @OneToMany(
+        () => ProcessCredential,
+        (processCredential) => processCredential.credential
+    )
+    processCredential: ProcessCredential[];
 }

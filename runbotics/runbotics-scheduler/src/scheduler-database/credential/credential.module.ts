@@ -12,9 +12,19 @@ import { CredentialCollection } from '../credential-collection/credential-collec
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Credential, CredentialCollection, CredentialCollectionUser]), UserModule, CredentialTemplateModule, SecretModule, CredentialCollectionModule],
-  controllers: [CredentialController],
-  providers: [CredentialService, CredentialCollectionService],
-  exports: [CredentialService]
+    imports: [
+        TypeOrmModule.forFeature([
+            Credential,
+            CredentialCollection,
+            CredentialCollectionUser,
+        ]),
+        UserModule,
+        CredentialTemplateModule,
+        SecretModule,
+        CredentialCollectionModule,
+    ],
+    controllers: [CredentialController],
+    providers: [CredentialService, CredentialCollectionService],
+    exports: [CredentialService],
 })
 export class CredentialModule {}
