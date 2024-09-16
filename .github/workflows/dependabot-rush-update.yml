@@ -6,7 +6,7 @@ on:
   # @todo remove 3 lines below and uncomment 2 above
   push:
     branches:
-      - 'dependabot/*'
+      - 'dependabot/**'
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
@@ -53,10 +53,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Log .npmrc
+        shell: bash
+        run: |
+          ls ./runbotics/common/config/rush
       - name: Update .npmrc
         shell: bash
         run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ./common/config/rush/.npmrc
 # new stuff
       - name: Run rush update
         shell: bash
