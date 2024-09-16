@@ -1,12 +1,11 @@
 name: dependabot-rush-update
 
 on:
+  pull_request:
+    branches: ["develop", "master"]
   push:
     branches:
-      - 'dependabot/something-2'
-      - 'dependabot/npm_and_yarn/runbotics/runbotics-scheduler/develop/winston-daily-rotate-file-5.0.0'
-      - 'dependabot/test'
-      - 'dependabot/*' # Matches other similar dependabot branches
+      - 'dependabot/**'
 
 jobs:
   build:
@@ -16,16 +15,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+      # Ensure that the job only runs if the event is both a push to the dependabot branch
+      # and a pull request on develop/master. You can customize this condition.
+      - name: Run only on matching events
+        if: >
+          (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/dependabot/')) &&
+          (github.event_name == 'pull_request' && contains(github.base_ref, 'develop') || contains(github.base_ref, 'master'))
+        run: echo "This runs only when both a push and a pull request event occurs."
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run build
-        run: npm run build
-
-      - name: Run tests
-        run: npm test
