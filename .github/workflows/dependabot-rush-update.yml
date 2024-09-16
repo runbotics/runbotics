@@ -1,0 +1,50 @@
+name: CD
+
+on:
+  push:
+    branches: ['dependabot/npm_and_yarn/runbotics/runbotics-scheduler/develop/winston-daily-rotate-file-5.0.0'] # @todo change to dependabot/**
+  workflow_dispatch:
+
+env:
+  RUSH: node ../common/scripts/install-run-rush.js
+  NODE_VERSION: 18.x
+
+jobs:
+  perform-rush-update:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Update .npmrc
+        shell: bash
+        run: |
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+
+      - name: Run rush update
+        shell: bash
+        run: |
+          ${{ env.RUSH }} update
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git status
+          git add .
+          git commit -m "chore: 🔧 Update pnpm-lock"
+
+      - name: Push commit
+        shell: bash
+        run: | 
+          git push origin ${{ github.ref_name }}
