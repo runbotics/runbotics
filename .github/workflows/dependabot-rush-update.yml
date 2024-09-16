@@ -22,10 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
 
       - name: Cache Rush
         id: cache-rush
@@ -34,9 +30,23 @@ jobs:
           CACHE_NAME: cache-rush
         with:
           path: ~/.rush
-          key: ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+          key: ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
           restore-keys: |
-            ${{ runner.os }}-ui-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-
+
+      - name: Cache pnpm
+        id: cache-pnpm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-pnpm
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: |
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-
 
       - name: Install Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
@@ -47,22 +57,19 @@ jobs:
         shell: bash
         run: |
           echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
-
-      # - name: Update .npmrc
-      #   shell: bash
-      #   run: |
-      #     echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
-
+# new stuff
       - name: Run rush update
         shell: bash
         run: |
           ${{ env.RUSH }} update
+
       - name: Commit changes
         shell: bash
         run: |
           git status
           git add .
           git commit -m "chore: 🔧 Update pnpm-lock"
+
       - name: Push commit
         shell: bash
         run: |
