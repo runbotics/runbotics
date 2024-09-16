@@ -32,7 +32,7 @@
     "dependencies": {
         "@contentful/rich-text-react-renderer": "^15.4.0",
         "@contentful/rich-text-types": "^16.0.3",
-        "@date-io/date-fns": "^2.13.1",
+        "@date-io/date-fns": "^2.13.2",
         "@emotion/react": "~11.10.5",
         "@hookform/resolvers": "^3.3.2",
         "@monaco-editor/react": "^4.4.7",
