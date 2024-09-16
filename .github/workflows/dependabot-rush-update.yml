@@ -71,6 +71,8 @@ jobs:
       - name: Commit changes
         shell: bash
         run: |
+          git config --global user.email "contact@runbotics.com"
+          git config --global user.name "github-actions[bot]"
           git status
           git add .
           git commit -m "chore: 🔧 Update pnpm-lock"
