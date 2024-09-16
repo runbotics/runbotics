@@ -2,7 +2,8 @@ name: dependabot-rush-update
 
 on:
   push:
-    branches: ['dependabot/npm_and_yarn/runbotics/runbotics-scheduler/develop/winston-daily-rotate-file-5.0.0'] # @todo change to dependabot/**
+    branches:
+      - 'dependabot/**'
   workflow_dispatch:
 
 env:
