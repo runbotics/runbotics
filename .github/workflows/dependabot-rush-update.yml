@@ -1,10 +1,12 @@
 name: dependabot-rush-update
 
 on:
+  # pull_request:
+  #   types: [opened]
+  # @todo remove 3 lines below and uncomment 2 above
   push:
     branches:
-      - 'dependabot/**'
-  workflow_dispatch:
+      - 'dependabot/*'
 
 env:
   RUSH: node ../common/scripts/install-run-rush.js
@@ -12,6 +14,7 @@ env:
 
 jobs:
   perform-rush-update:
+    if: startsWith(github.head_ref, 'dependabot/')
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,10 +26,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Update .npmrc
-        shell: bash
-        run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+      # - name: Update .npmrc
+      #   shell: bash
+      #   run: |
+      #     echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
       - name: Run rush update
         shell: bash
         run: |
