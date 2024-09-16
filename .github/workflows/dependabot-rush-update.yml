@@ -3,50 +3,29 @@ name: dependabot-rush-update
 on:
   push:
     branches:
-      - dependabot
-      - dependabot/test
-      - 'dependabot/**'
-
-env:
-  RUSH: node ../common/scripts/install-run-rush.js
-  RUSHX: node ../common/scripts/install-run-rushx.js
-  NODE_VERSION: 18.x
+      - 'dependabot/something-2'
+      - 'dependabot/npm_and_yarn/runbotics/runbotics-scheduler/develop/winston-daily-rotate-file-5.0.0'
+      - 'dependabot/test'
+      - 'dependabot/*' # Matches other similar dependabot branches
 
 jobs:
-  perform-rush-update:
+  build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./runbotics
-
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Node ${{ env.NODE_VERSION }}
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '16'
 
-      # - name: Update .npmrc
-      #   shell: bash
-      #   run: |
-      #     echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+      - name: Install dependencies
+        run: npm install
 
-      - name: Run rush update
-        shell: bash
-        run: |
-          ${{ env.RUSH }} update
+      - name: Run build
+        run: npm run build
 
-      - name: Commit changes
-        shell: bash
-        run: |
-          git status
-          git add .
-          git commit -m "chore: 🔧 Update pnpm-lock"
-
-      - name: Push commit
-        shell: bash
-        run: |
-          git push origin ${{ github.ref_name }}
+      - name: Run tests
+        run: npm test
