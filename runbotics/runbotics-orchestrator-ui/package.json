@@ -128,7 +128,7 @@
         "@types/redux-form": "^8.2.7",
         "@types/redux-logger": "^3.0.8",
         "@types/uuid": "^8.3.0",
-        "@types/styled-components": "^5.1.22",
+        "@types/styled-components": "^5.2.22",
         "@typescript-eslint/parser": "^5.10.1",
         "@typescript-eslint/eslint-plugin": "~5.42.0",
         "eslint-plugin-import": "^2.24.2",
