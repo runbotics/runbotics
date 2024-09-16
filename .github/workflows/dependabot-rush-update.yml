@@ -1,8 +1,8 @@
 name: dependabot-rush-update
 
 on:
-  pull_request:
-    branches: ["develop", "master"]
+  push:
+    branches: ["dependabot/**"]
   workflow_dispatch:
 
 env:
