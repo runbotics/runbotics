@@ -1,4 +1,4 @@
-name: CD
+name: dependabot-rush-update
 
 on:
   push:
@@ -46,5 +46,5 @@ jobs:
 
       - name: Push commit
         shell: bash
-        run: | 
+        run: |
           git push origin ${{ github.ref_name }}
