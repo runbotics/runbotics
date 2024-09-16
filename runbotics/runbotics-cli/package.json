@@ -23,7 +23,7 @@
         "comment-json": "^4.2.3",
         "console-read-write": "^0.1.1",
         "figlet": "^1.5.2",
-        "fs-extra": "^11.1.0",
+        "fs-extra": "^11.1.1",
         "inquirer": "^9.1.4",
         "listr2": "^5.0.6"
     },
