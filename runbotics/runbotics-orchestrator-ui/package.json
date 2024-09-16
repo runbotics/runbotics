@@ -35,7 +35,7 @@
         "@date-io/date-fns": "^2.13.1",
         "@emotion/react": "~11.10.5",
         "@hookform/resolvers": "^3.3.2",
-        "@monaco-editor/react": "^4.4.6",
+        "@monaco-editor/react": "^4.4.7",
         "@mui/icons-material": "^5.10.7",
         "@mui/material": "^5.10.12",
         "@mui/lab": "^5.0.0-alpha.106",
