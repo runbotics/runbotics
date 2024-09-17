@@ -2,9 +2,6 @@ import englishJiraCloudActionsTranslations from '#src-app/translations/en/proces
 
 const jiraCloudTranslations: typeof englishJiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Label': 'Pobierz dziennik pracy',
-    'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Origin': 'Origin - Zmienna środowiskowa',
-    'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Username': 'Nazwa użytkownika - Zmienna środowiskowa',
-    'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Password': 'Hasło - Zmienna środowiskowa',
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.DateMode': 'Tryb daty',
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.StartDate': 'Data początkowa',
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.EndDate': 'Data końcowa',
@@ -13,9 +10,6 @@ const jiraCloudTranslations: typeof englishJiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Output.Info': 'Tablica z dziennikami pracy lub mapa pogrupowanych dzienników pracy po dniach',
 
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Label': 'Pobierz dziennik pracy',
-    'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Origin': 'Origin - Zmienna środowiskowa',
-    'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Username': 'Nazwa użytkownika - Zmienna środowiskowa',
-    'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Password': 'Hasło - Zmienna środowiskowa',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.DateMode': 'Tryb daty',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.StartDate': 'Data początkowa',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.EndDate': 'Data końcowa',
@@ -25,17 +19,11 @@ const jiraCloudTranslations: typeof englishJiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Output.Info': 'Tablica z dziennikami pracy lub mapa pogrupowanych dzienników pracy po dniach',
 
     'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Label': 'Pobierz sprinty tablicy',
-    'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Origin': 'Origin - Zmienna środowiskowa',
-    'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Username': 'Nazwa użytkownika - Zmienna środowiskowa',
-    'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Password': 'Hasło - Zmienna środowiskowa',
     'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Board': 'ID tablicy',
     'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.State': 'Status sprintu',
     'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Output.Info': 'Tablica sprintów projektu',
 
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Label': 'Pobierz zadania sprintu',
-    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Origin': 'Origin - Zmienna środowiskowa',
-    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Username': 'Nazwa użytkownika - Zmienna środowiskowa',
-    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Password': 'Hasło - Zmienna środowiskowa',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.DateMode': 'Tryb daty zmiany statusu zadania',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.StartDate': 'Data początkowa',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.EndDate': 'Data końcowa',
