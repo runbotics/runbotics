@@ -292,9 +292,9 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     run(request: JiraActionRequest) {
         // @todo method for matching credentialId (action template) with decrypted credential values and passing it further with input (there's no separation for input/credential)
         const atlassianCredentials: AtlassianCredentials = {
-            originUrl: this.serverConfigService.jiraUrl,
-            username: this.serverConfigService.jiraUsername,
-            password: this.serverConfigService.jiraPassword,
+            originUrl: this.serverConfigService.jiraA41Url,
+            username: this.serverConfigService.jiraA41Username,
+            password: this.serverConfigService.jiraA41Token,
         };
 
         const inputWithAuth = {
