@@ -22,6 +22,7 @@ import {
     IProcess,
     BpmnElementType,
     DecryptedCredential,
+    GeneralAction,
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
@@ -567,6 +568,12 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                         return;
                     }
 
+
+                    const credentialType = runboticsExecutionEnvironment.runbotic?.credentialType;
+                    const credentialsForAction = script !== GeneralAction.START_PROCESS
+                        ? this.determineCredentialsForAction(null, credentialType, credentials)
+                        : credentials;
+
                     this.logger.log(
                         `[${processInstanceId}] [${executionId}] [${script}] Running desktop script`,
                         desktopTask.input
@@ -575,7 +582,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     try {
                         const result = await this.desktopRunnerService.run({
                             script,
-                            credentials,
+                            credentials: credentialsForAction,
                             input: desktopTask.input,
                             processInstanceId,
                             rootProcessInstanceId:
@@ -685,4 +692,23 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         content.isSequenceFlow &&
         content.sourceId.includes('Gateway_')
     );
+
+    private determineCredentialsForAction(
+        credentialId: string | undefined,
+        credentialTemplateName: string,
+        credentials: DecryptedCredential[]
+    ) {
+        if (!credentials) {
+            return [];
+        }
+        if (credentialId) {
+            return credentials.filter((credential) =>
+                credential.id === credentialId
+            );
+        }
+        return credentials.filter((credential) =>
+            credential.template === credentialTemplateName &&
+            credential.order === 1
+        );
+    }
 }

@@ -41,6 +41,7 @@ export interface RunBoticsExecutionEnvironment extends BpmnEngineExecutionEnviro
     runbotic?: {
         disabled: boolean;
         processOutput: boolean;
+        credentialType?: string;
     };
 }
 
