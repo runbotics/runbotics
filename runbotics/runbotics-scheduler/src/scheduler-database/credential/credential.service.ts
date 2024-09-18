@@ -12,7 +12,7 @@ import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute
 import { CredentialCollectionService } from '../credential-collection/credential-collection.service';
 import { ProcessCredential } from '../process-credential/process-credential.entity';
 import { MailService } from '#/mail/mail.service';
-import { CredentialOperationType } from './credential.utils';
+import { CredentialNotifyMailArgs, CredentialOperationType } from './credential.utils';
 
 const relations = ['attributes'];
 
@@ -222,30 +222,35 @@ export class CredentialService {
       tenantId: credential.tenantId,
     });
 
-    return this.credentialRepo.save(credentialToUpdate)
-      .then((credential) => {
-        this.notifyCredentialCollectionOwner(
-            user,
-            credential.collectionId,
-            credential.name,
-            CredentialOperationType.EDIT
-        );
-      })
-      .catch(async (error) => {
-        await this.validateName(credentialToUpdate.name, credential.collectionId, credential.tenantId);
-        throw new BadRequestException(error.message);
-      });
+    return this.credentialRepo
+        .save(credentialToUpdate)
+        .then((credential) => {
+            this.notifyCredentialCollectionOwner({
+                executor: user,
+                collectionId: credential.collectionId,
+                credentialName: credential.name,
+                operationType: CredentialOperationType.EDIT,
+            });
+        })
+        .catch(async (error) => {
+            await this.validateName(
+                credentialToUpdate.name,
+                credential.collectionId,
+                credential.tenantId
+            );
+            throw new BadRequestException(error.message);
+        });
   }
 
   async removeById(id: string, user: IUser) {
     const credential = await this.findOneAccessibleById(id, user.tenantId);
     return this.credentialRepo.remove(credential).then((credential) => {
-        this.notifyCredentialCollectionOwner(
-            user,
-            credential.collectionId,
-            credential.name,
-            CredentialOperationType.DELETE
-        );
+        this.notifyCredentialCollectionOwner({
+            executor: user,
+            collectionId: credential.collectionId,
+            credentialName: credential.name,
+            operationType: CredentialOperationType.DELETE,
+        });
     });
   }
 
@@ -294,15 +299,15 @@ export class CredentialService {
       updatedById: user.id,
     });
 
-    return this.credentialRepo.save(updatedCredential)
-      .then((credential) => {
-        this.notifyCredentialCollectionOwner(
-            user,
-            credential.collectionId,
-            credential.name,
-            CredentialOperationType.CHANGE_ATTRIBUTE
-        );
-      });
+    return this.credentialRepo.save(updatedCredential).then((credential) => {
+        this.notifyCredentialCollectionOwner({
+            executor: user,
+            collectionId: credential.collectionId,
+            credentialName: credential.name,
+            operationType: CredentialOperationType.CHANGE_ATTRIBUTE,
+            attributeName,
+        });
+    });
   }
 
   async checkIsNameTaken(name: string, collectionId: string, tenantId: string) {
@@ -326,25 +331,29 @@ export class CredentialService {
   }
 
   private async notifyCredentialCollectionOwner(
-    executor: IUser,
-    collectionId: string,
-    credentialName: string,
-    operationType: CredentialOperationType,
+    params: CredentialNotifyMailArgs
   ) {
-    const collection = await this.collectionService.findOneByCriteria(
-        executor.tenantId,
-        { id: collectionId }
-    );
-    const collectionCreator = collection.createdBy;
+      const { executor, collectionId, credentialName, operationType } =
+          params;
 
-    if (collectionCreator.id !== executor.id) {
-      this.mailService.sendCredentialChangeNotificationMail({
-        editorEmail: executor.email,
-        collectionCreatorEmail: collectionCreator.email,
-        collectionName: collection.name,
-        credentialName,
-        operationType,
-      });
-    }
+      const collection = await this.collectionService.findOneByCriteria(
+          executor.tenantId,
+          { id: collectionId }
+      );
+      const collectionCreator = collection.createdBy;
+
+      if (collectionCreator.id !== executor.id) {
+          this.mailService.sendCredentialChangeNotificationMail({
+              editorEmail: executor.email,
+              collectionCreatorEmail: collectionCreator.email,
+              collectionName: collection.name,
+              credentialName,
+              operationType,
+              ...(operationType ===
+                  CredentialOperationType.CHANGE_ATTRIBUTE && {
+                  attributeName: params.attributeName,
+              }),
+          });
+      }
   }
 }

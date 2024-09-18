@@ -1,3 +1,4 @@
+import { IUser } from 'runbotics-common';
 
 interface CredentialFilterQuery {
     templateName: string;
@@ -14,13 +15,44 @@ export const isCredentialFilterQuery = (
 export enum CredentialOperationType {
     EDIT = 'edited',
     DELETE = 'deleted',
-    CHANGE_ATTRIBUTE = 'changed attribute for'
+    CHANGE_ATTRIBUTE = 'changed attribute'
 }
 
-export interface CredentialChangeMail {
+interface BaseCredentialChangeMailPayload {
     editorEmail: string;
     collectionCreatorEmail: string;
     collectionName: string;
     credentialName: string;
-    operationType: CredentialOperationType,
 }
+
+interface BaseCredentialNotifyMailArgs {
+    executor: IUser;
+    collectionId: string;
+    credentialName: string;
+}
+
+export type CredentialChangeMailPayload = BaseCredentialChangeMailPayload &
+    (
+        | {
+              operationType: CredentialOperationType.CHANGE_ATTRIBUTE;
+              attributeName: string;
+          }
+        | {
+              operationType:
+                  | CredentialOperationType.DELETE
+                  | CredentialOperationType.EDIT;
+          }
+    );
+
+export type CredentialNotifyMailArgs = BaseCredentialNotifyMailArgs &
+    (
+        | {
+              operationType: CredentialOperationType.CHANGE_ATTRIBUTE;
+              attributeName: string;
+          }
+        | {
+              operationType:
+                  | CredentialOperationType.DELETE
+                  | CredentialOperationType.EDIT;
+          }
+    );

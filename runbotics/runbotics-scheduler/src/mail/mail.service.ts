@@ -7,7 +7,7 @@ import { BotService } from '#/database/bot/bot.service';
 import { ProcessService } from '#/database/process/process.service';
 import { mergeArraysWithoutDuplicates } from '#/utils/mergeArrays';
 import { ServerConfigService } from '#/config/server-config';
-import { CredentialChangeMail } from '#/scheduler-database/credential/credential.utils';
+import { CredentialChangeMailPayload, CredentialOperationType } from '#/scheduler-database/credential/credential.utils';
 
 export type SendMailInput = {
     to?: string;
@@ -16,6 +16,7 @@ export type SendMailInput = {
     subject: string;
     content: string;
     attachment?: string;
+    isHtml: boolean;
 };
 
 
@@ -36,7 +37,7 @@ export class MailService {
         const sendMailOptions: ISendMailOptions = {
             from: process.env.MAIL_USERNAME,
             subject: input.subject,
-            text: input.content,
+            [input.isHtml ? 'html': 'text']: input.content,
         };
 
         const to = input.to;
@@ -77,6 +78,7 @@ export class MailService {
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
             content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\nYou can visit us here ${this.serverConfigService.entrypointUrl}\n\nBest regards,\nRunBotics`,
+            isHtml: false,
         };
 
         if (disconnectedBot.collection.name !== 'Public') {
@@ -103,6 +105,7 @@ export class MailService {
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
             content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\nYou can visit us here ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\nBest regards,\nRunBotics`,
+            isHtml: false,
         };
 
         if (!failedProcess.isPublic) {
@@ -121,19 +124,24 @@ export class MailService {
         }
     }
 
-    public sendCredentialChangeNotificationMail({
-        editorEmail,
-        collectionCreatorEmail,
-        collectionName,
-        credentialName,
-        operationType,
-    }: CredentialChangeMail) {
-        const content = `User with email "${editorEmail}" ${operationType} credential "${credentialName}" in collection "${collectionName}"`;
+    public sendCredentialChangeNotificationMail(params: CredentialChangeMailPayload) {
+        const {
+            editorEmail,
+            collectionCreatorEmail,
+            collectionName,
+            credentialName,
+            operationType,
+        } = params;
+
+        const attributeInfo = operationType === CredentialOperationType.CHANGE_ATTRIBUTE
+            ? ` with name <i>${params.attributeName}</i> for` : '';
+        const message = `User with email <b>${editorEmail}</b> ${operationType}${attributeInfo} credential <b>${credentialName}</b> in collection <b>${collectionName}</b>`;
 
         const sendMailInput: SendMailInput = {
             to: collectionCreatorEmail,
             subject: 'Credential change inside owned collection',
-            content,
+            content: message,
+            isHtml: true,
         };
 
         this.sendMail(sendMailInput);
