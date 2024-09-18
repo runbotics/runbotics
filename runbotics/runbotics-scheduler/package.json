@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.11.0-SNAPSHOT.47",
+    "version": "2.11.0-SNAPSHOT.48",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -78,7 +78,7 @@
         "@types/imapflow": "^1.0.11",
         "@types/passport-jwt": "^3.0.6",
         "@types/mailparser": "^3.4.0",
-        "@types/node": "^17.0.36",
+        "@types/node": "^22.5.5",
         "@types/nodemailer": "^6.4.6",
         "@types/lodash": "^4.14.158",
         "@types/json-schema": "^7.0.7",
