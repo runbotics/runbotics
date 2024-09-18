@@ -13,12 +13,13 @@ const StyledGrid = styled(Grid)(
 
 interface HeaderProps {
     credentialName: string;
+    collectionId: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ credentialName }) => (
+export const Header: React.FC<HeaderProps> = ({ credentialName, collectionId }) => (
     <StyledGrid container alignItems="center" justifyContent="space-between">
         <Grid item>
-            <CredentialLocation credentialName={credentialName} />
+            <CredentialLocation credentialName={credentialName} collectionId={collectionId}/>
         </Grid>
     </StyledGrid>
 );

@@ -28,13 +28,9 @@ export const getInitialFormValidationState = (collectionId: string): credentialF
     templateId: false
 });
 
-export const getInitialCredentialData = (collectionId: string) => {
-    const initialCredentialData: CreateCredentialDto = {
-        name: '',
-        description: '',
-        collectionId: collectionId ? collectionId : '',
-        templateId: ''
-    };
-
-    return initialCredentialData;
-};
+export const getInitialCredentialData = (collectionId: string): CreateCredentialDto => ({
+    name: '',
+    description: '',
+    collectionId: collectionId ? collectionId : '',
+    templateId: ''
+});

@@ -1,6 +1,6 @@
 import { blueGrey, blue, green, orange } from '@mui/material/colors';
 
-interface ICollectionColor {
+interface CollectionColor {
     name: string;
     hex: string;
 }
@@ -17,7 +17,7 @@ export type ColorNames =
     | 'LIGHT_GREY'
     | 'DARK_GREY';
 
-export const collectionColors: { [key in ColorNames]: ICollectionColor } = {
+export const collectionColors: { [key in ColorNames]: CollectionColor } = {
     LIGHT_ORANGE: { name: 'light orange', hex: orange[300] },
     DARK_ORANGE: { name: 'dark orange', hex: orange[600] },
     LIGHT_GREEN: { name: 'light green', hex: green.A200 },

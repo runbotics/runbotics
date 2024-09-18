@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
 import { FormControl, InputLabel, MenuItem, Typography } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -6,9 +6,15 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { ColorDot } from './CollectionColor.styles';
-import { CollectionColorName, collectionColors, getColorNameByHex } from './CollectionColor.types';
+import { collectionColors, ColorNames, getColorNameByHex } from './CollectionColor.utils';
+import { EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
 
-const CollectionColorSelect = ({ currentColor, credentialsCollectionData, setCredentialCollectionColor }) => {
+interface CollectionColorSelectProps {
+    currentColor: ColorNames;
+    setFormState: (state: ((prevState: EditCredentialsCollectionDto) => EditCredentialsCollectionDto)) => void;
+}
+
+const CollectionColorSelect: FC<CollectionColorSelectProps> = ({ currentColor, setFormState }) => {
     const { translate } = useTranslations();
     const [collectionColor, setCollectionColor] = useState(
         currentColor ? collectionColors[currentColor].hex : collectionColors.DARK_ORANGE.hex
@@ -17,13 +23,13 @@ const CollectionColorSelect = ({ currentColor, credentialsCollectionData, setCre
     const handleChange = (event: SelectChangeEvent) => {
         setCollectionColor(event.target.value);
         const colorName = getColorNameByHex(event.target.value);
-        setCredentialCollectionColor({ ...credentialsCollectionData, color: colorName });
+        setFormState((prevState) => ({ ...prevState, color: colorName }));
     };
 
-    const colorsToChoose = Object.keys(collectionColors).map((colorName: CollectionColorName) => (
-        <MenuItem key={collectionColors[colorName].hex} value={collectionColors[colorName].hex}>
-            <ColorDot collectionColor={getColorNameByHex(collectionColors[colorName].hex)} />
-            <Typography>{collectionColors[colorName].name}</Typography>
+    const colorsToChoose = Object.values(collectionColors).map((color) => (
+        <MenuItem key={color.hex} value={color.hex}>
+            <ColorDot collectionColor={getColorNameByHex(color.hex)} />
+            <Typography>{color.name}</Typography>
         </MenuItem>
     ));
 

@@ -8,16 +8,16 @@ export interface BasicCredentialDto {
     attributes: BasicAttributeDto[]
     templateId: string;
     createdAt: string;
-    createdById: string;
+    createdById: number;
     updatedAt?: string;
-    updatedById?: string;
+    updatedById?: number;
     description?: string;
 }
 
 export interface CreateCredentialDto {
     name: string;
     templateId: string;
-    collectionId?: string; 
+    collectionId?: string;
     description?: string;
 }
 

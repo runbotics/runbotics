@@ -6,5 +6,4 @@ export interface CredentialsState {
     all: BasicCredentialDto[];
     allByTemplateAndProcess: Credential[];
     loading: boolean;
-    page: number;
 }

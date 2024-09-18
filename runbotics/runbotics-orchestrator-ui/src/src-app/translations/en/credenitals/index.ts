@@ -1,4 +1,4 @@
-import credentialsCollections from './credenitalsCollections';
+import credentialsCollections from './collections';
 import credentials from './credentials';
 import general from './general';
 

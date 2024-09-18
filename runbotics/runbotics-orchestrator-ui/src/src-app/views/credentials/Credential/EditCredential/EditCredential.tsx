@@ -8,16 +8,15 @@ import { useDispatch } from 'react-redux';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
-import { fetchAllCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
-import { fetchOneCredential } from '#src-app/store/slices/Credentials/Credentials.thunks';
+import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
+import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
-import CredentialAttributesList from './CredentialAttributeList/CredentialAttributeList';
+import CredentialAttributesList from './CredentialAttribute/CredentialAttributeList';
 import { CredentialsInternalPage, StyledGrid } from './EditCredential.styles';
+import GeneralInfo from './GeneralInfo';
 import Header from './Header/Header';
-import { ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
 import { BasicCredentialDto } from '../Credential.types';
-import GeneralInfo from '../GeneralInfo/GeneralInfo';
 
 interface EditCredentialProps {
     credential: Credential
@@ -31,27 +30,27 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
     const dispatch = useDispatch();
     const credentialId = getLastParamOfUrl(router);
 
-    const credentials = useSelector(state => state.credentials.all);
-    const collections = useSelector(state => state.credentialCollections.credentialCollections);
-    const collectionsLoading = useSelector(state => state.credentialCollections.loading);
+    const { all: credentials} = useSelector(credentialsSelector);
+    const { credentialCollections, loading: collectionsLoading } = useSelector(credentialCollectionsSelector);
 
     const credential = credentials ? credentials.find(cred => cred.id === credentialId) : undefined;
-    const currentCredentialCollection = credential ? collections.find(collection => collection.id === credential.collectionId) : undefined;
+    const currentCredentialCollection = credential ? credentialCollections.find(collection => collection.id === credential.collectionId) : undefined;
+    const readyToLoadCredential = !collectionsLoading && Boolean(currentCredentialCollection) && Boolean(credential);
 
     useEffect(() => {
-        dispatch(fetchOneCredential({ resourceId: credentialId }));
-        if (!collections.length) dispatch(fetchAllCredentialCollections());
-    }, [credentialId, collections.length]);
+        dispatch(credentialsActions.fetchOneCredential({ resourceId: credentialId }));
+        if (!credentialCollections.length) dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+    }, [credentialId, credentialCollections.length]);
 
     return (
         <>
-            {!collectionsLoading && currentCredentialCollection && credential && (
+            {readyToLoadCredential && (
                 <CredentialsInternalPage title={translate('Credential.Add.Title')}>
                     <StyledGrid container justifyContent="space-between" my={2} ml={2} gap={2} width={'96%'}>
-                        <Header credentialName={credential.name} />
+                        <Header credentialName={credential.name} collectionId={credential.collectionId}/>
                         <GeneralInfo
                             credential={credential}
-                            collectionColor={currentCredentialCollection.color as ColorNames}
+                            collectionColor={currentCredentialCollection.color}
                             collectionName={currentCredentialCollection.name}
                         />
                         <Grid container>
@@ -62,8 +61,9 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
                                 <CredentialAttributesList
                                     credential={credential}
                                     templateId={credential.templateId}
-                                    isNewCredential={credential.attributes?.length ? true : false}
-                                ></CredentialAttributesList>
+                                    isNewCredential={Boolean(credential.attributes?.length)}
+                                    currentCollection={currentCredentialCollection}
+                                />
                             </Grid>
                         </Grid>
                     </StyledGrid>

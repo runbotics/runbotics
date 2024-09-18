@@ -1,6 +1,5 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
-import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 import { CredentialCollectionsState } from './CredentialCollections.state';
 import {
@@ -41,8 +40,7 @@ const buildCredentialCollectionsExtraReducers = (builder: ActionReducerMapBuilde
         .addCase(createCredentialCollection.pending, state => {
             state.loading = true;
         })
-        .addCase(createCredentialCollection.fulfilled, (state, action) => {
-            state.credentialCollections.push(action.payload as BasicCredentialsCollectionDto);
+        .addCase(createCredentialCollection.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(createCredentialCollection.rejected, state => {
@@ -53,22 +51,18 @@ const buildCredentialCollectionsExtraReducers = (builder: ActionReducerMapBuilde
         .addCase(updateCredentialCollection.pending, state => {
             state.loading = true;
         })
-        .addCase(updateCredentialCollection.fulfilled, (state, action) => {
-            state.credentialCollections = state.credentialCollections.map(collection =>
-                collection.id === action.payload.id ? { ...collection, ...action.payload } : collection
-            );
+        .addCase(updateCredentialCollection.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(updateCredentialCollection.rejected, state => {
             state.loading = false;
         })
-        
+
         // delete
         .addCase(deleteCredentialCollections.pending, state => {
             state.loading = true;
         })
-        .addCase(deleteCredentialCollections.fulfilled, (state, action) => {
-            state.credentialCollections = state.credentialCollections.filter(credentialCollection => credentialCollection.id !== action.meta.arg.resourceId);
+        .addCase(deleteCredentialCollections.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(deleteCredentialCollections.rejected, state => {

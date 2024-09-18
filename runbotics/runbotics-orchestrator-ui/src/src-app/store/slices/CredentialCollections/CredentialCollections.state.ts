@@ -3,5 +3,4 @@ import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/Creden
 export interface CredentialCollectionsState {
     credentialCollections: BasicCredentialsCollectionDto[];
     loading: boolean;
-    page: number;
 }

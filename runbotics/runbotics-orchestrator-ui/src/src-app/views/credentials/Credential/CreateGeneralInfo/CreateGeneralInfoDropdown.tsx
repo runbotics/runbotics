@@ -5,7 +5,7 @@ import { Box, FormControl, InputLabel, Select, IconButton, Popover, SelectChange
 
 import { PopoverTypography } from '../EditCredential/EditCredential.styles';
 
-interface GeneralInfoDropdownProps {
+interface CreateGeneralInfoDropdownProps {
     selectLabel: string;
     selectOptions: React.JSX.Element[];
     selectedValue: string;
@@ -17,7 +17,7 @@ interface GeneralInfoDropdownProps {
     helperText: string;
 }
 
-const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({
+const CreateGeneralInfoDropdown: FC<CreateGeneralInfoDropdownProps> = ({
     selectLabel,
     selectOptions,
     selectedValue,
@@ -88,4 +88,4 @@ const GeneralInfoDropdown: FC<GeneralInfoDropdownProps> = ({
     );
 };
 
-export default GeneralInfoDropdown;
+export default CreateGeneralInfoDropdown;

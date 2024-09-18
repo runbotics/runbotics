@@ -8,7 +8,8 @@ import { FeatureKey, ProcessCollection } from 'runbotics-common';
 
 import PrivateIcon from '#public/images/icons/lock.svg';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
-import { useSelector } from '#src-app/store';
+
+import useAuth from '#src-app/hooks/useAuth';
 
 import { CollectionDeleteItem } from './MenuItems/CollectionDeleteItem';
 import { CollectionEditItem } from './MenuItems/CollectionEditItem';
@@ -17,12 +18,13 @@ import { CollectionNameWrapper, ContextWrapper, MenuWrapper, ProcessCollectionTi
 import { translate } from '../../../hooks/useTranslations';
 import If from '../../utils/If';
 
+
 const ProcessCollectionTile: FC<ProcessCollection> = (collection) => {
     const router = useRouter();
     const { id, name, isPublic } = collection;
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
 
-    const { user: currentUser } = useSelector((state) => state.auth);
+    const { user: currentUser } = useAuth();
     const isOwner = currentUser.login === collection?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

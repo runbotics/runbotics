@@ -7,6 +7,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
+import { numberTransformer } from '#/database/database.utils';
 
 export enum PrivilegeType {
     READ = 'READ',
@@ -32,7 +33,7 @@ export class CredentialCollectionUser {
     @JoinColumn({ name: 'user_id' })
     user: UserEntity;
 
-    @Column({ name: 'user_id', type: 'bigint' })
+    @Column({ name: 'user_id', type: 'bigint', transformer: numberTransformer })
     userId: number;
 
     @Column({ name: 'privilege_type', type: 'enum', enum: PrivilegeType, default: PrivilegeType.WRITE })

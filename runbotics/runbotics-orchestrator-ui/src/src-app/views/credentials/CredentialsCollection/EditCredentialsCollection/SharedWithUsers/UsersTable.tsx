@@ -24,7 +24,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteUser, onChangeAc
                 </TableRow>
             </TableHead>
             <TableBody>
-                {users.map(user => (
+                {users?.map(user => (
                     <TableRow key={user.email}>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>

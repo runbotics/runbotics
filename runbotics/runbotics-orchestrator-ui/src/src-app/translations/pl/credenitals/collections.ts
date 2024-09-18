@@ -1,6 +1,7 @@
-import englishCredentialsCollections from '#src-app/translations/en/credenitals/credenitalsCollections';
+import englishCredentialsCollections from '#src-app/translations/en/credenitals/collections';
 
 const credentialsCollections: typeof englishCredentialsCollections = {
+    'Credentials.Collection.List.Header.Elements': 'Liczba kolekcji: {{ count }}',
     'Credentials.Collection.Add': 'Dodaj nową kolekcję',
     'Credentials.Collection.Create.Title': 'Dodaj kolekcję',
     'Credentials.Collection.Edit.Title': 'Edytuj kolekcję',
@@ -14,6 +15,7 @@ const credentialsCollections: typeof englishCredentialsCollections = {
     'Credentials.Collection.Add.Form.Access.Placeholder': 'Użytkownik',
     'Credentials.Collection.Add.Form.EditAccess.Label': 'Udziel dostępu do edycji',
     'Credentials.Collection.Add.Form.EditAccess.Tooltip': 'Użytkownicy, którzy mają dostęp do edycji poświadczeń',
+    'Credentials.Collection.Add.Form.Access.Title': 'Dostęp',
     'Credentials.Collection.Add.Form.ReadAccess.Label': 'Udziel dostępu do odczytu',
     'Credentials.Collection.Add.Form.ReadAccess.Tooltip': 'Użytkownicy, którzy mogą korzystać z poświadczeń, ale nie mogą ich edytować',
     'Credentials.Collection.Add.Form.IsPublic.True.Label': 'Publiczna',

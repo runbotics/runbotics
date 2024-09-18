@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { collectionColors } from './CollectionColor.types';
+import { collectionColors } from './CollectionColor.utils';
 
 interface ColorDotProps {
 collectionColor?: string;

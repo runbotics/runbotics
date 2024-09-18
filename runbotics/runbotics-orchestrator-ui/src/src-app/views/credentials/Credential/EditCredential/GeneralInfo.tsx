@@ -7,8 +7,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 
 
+import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
+
 import { ColorDot } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
-import { ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import { ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
 import { BasicCredentialDto } from '../Credential.types';
 
 interface GeneralInfoProps {
@@ -20,8 +22,8 @@ interface GeneralInfoProps {
 const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor, collectionName }) => {
     const templateId = credential.templateId;
     const { translate } = useTranslations();
-    const templates = useSelector(state => state.credentialTemplates.data);
-    const credentialTemplate = templates.find(template => template.id === templateId);
+    const { credentialTemplates } = useSelector(credentialTemplatesSelector);
+    const credentialTemplate = credentialTemplates.find(template => template.id === templateId);
 
     return (
         <Box sx={{ display: 'flex', width: '90%', justifyContent: 'flexStart', marginBottom: '48px' }}>

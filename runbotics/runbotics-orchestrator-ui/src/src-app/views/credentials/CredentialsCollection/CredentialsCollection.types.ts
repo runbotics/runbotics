@@ -1,9 +1,9 @@
 import { User } from '#src-app/types/user';
 
-import { CollectionColorName } from './EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import { ColorNames } from './EditCredentialsCollection/CollectionColor/CollectionColor.utils';
 import { BasicCredentialDto } from '../Credential/Credential.types';
 
-export enum AccessType { 
+export enum AccessType {
     PRIVATE = 'PRIVATE',
     GROUP = 'GROUP'
 }
@@ -17,11 +17,11 @@ export interface BasicCredentialsCollectionDto {
     id: string;
     name: string;
     tenantId: string;
-    color: CollectionColorName;
+    color: ColorNames;
     createdAt: string;
-    createdById: string;
+    createdById: number;
     updatedAt: string;
-    updatedById: string;
+    updatedById: number;
     accessType: AccessType;
     description?: string;
     credentialCollectionUser?: CredentialsCollectionUser[];
@@ -31,7 +31,7 @@ export interface BasicCredentialsCollectionDto {
 
 export interface CredentialsCollectionUser {
     id: string;
-    userId: string;
+    userId: number;
     credentialCollectionId: string;
     accessType: AccessType;
     privilegeType: PrivilegeType;
@@ -42,8 +42,8 @@ export interface EditCredentialsCollectionDto {
     id?: string;
     name: string;
     accessType: AccessType;
-    color: CollectionColorName;
-    sharedWith: {
+    color: ColorNames;
+    sharedWith?: {
         email: string;
         privilegeType: PrivilegeType
     }[]

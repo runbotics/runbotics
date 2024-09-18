@@ -1,17 +1,24 @@
-import { useContext } from 'react';
+
 
 import { Pagination } from '@mui/material';
 
-import { CredentialsPageContext } from '#src-app/providers/CredentialsPage.provider';
+const Paging = ({
+    totalItems,
+    itemsPerPage,
+    currentPage,
+    setPage
+}) => {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-const Paging = ({ totalPages }) => {
-    const { page, handlePageChange } = useContext(CredentialsPageContext);
+    const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+        setPage(page - 1);
+    };
 
     return (
         <Pagination
             count={totalPages || 1}
             onChange={handlePageChange}
-            page={page + 1}
+            page={currentPage + 1}
         />
     );
 };

@@ -17,15 +17,18 @@ const credentials = {
     'Credential.Form.Fields.Name.Label': 'Name',
     'Credential.Form.Fields.Description.Label': 'Description',
     'Credential.Form.Fields.Collection.Label': 'Collection',
+    'Credential.Form.Edit.Success': 'Successfully updated collection named {{ name }}',
+    'Credential.Form.Create.Success': 'Successfully created collection named {{ name }} collection',
     'Credential.Add.Save': 'Save changes',
-    'Credential.Add.Cancel': 'Cancel',
     'Credential.Details.Name.Label': 'Name',
     'Credential.Details.Description.Label': 'Description',
     'Credential.Details.Collection.Label': 'Collection',
     'Credential.Details.Disclaimer.Label': 'Disclaimer: ',
-    'Credential.Details.Disclaimer.Text': 'All credentials must be contained in collections for bots to use them. Only the collection owner can edit credential and share it with other users.',
+    'Credential.Details.Disclaimer.Text':
+        'All credentials must be contained in collections for bots to use them. Only the collection owner can edit credential and share it with other users.',
     'Credential.Details.Template.Label': 'Template',
-    'Credential.Details.Template.Info': 'Template has defined attributes for group of action, e.g. ATLASSIAN which can be used both for accessing tasks on JIRA or accessing notes on Confluence. Usually all of them use similar attributes like e.g. login and password. These are marked as REQUIRED. Although, some actions use specific attributes e.g. url to confluence page and these are marked as OPTIONAL',
+    'Credential.Details.Template.Info':
+        'Template has defined attributes for group of action, e.g. ATLASSIAN which can be used both for accessing tasks on JIRA or accessing notes on Confluence',
     'Credential.GeneralInfo.Title': 'General info',
     'Credential.Dialog.Modify.Edit.Title': 'Edit credential details',
     'Credential.Dialog.Modify.Create.Title': 'Create new credential',
@@ -34,16 +37,15 @@ const credentials = {
     'Credential.Attribute.Name.Label': 'Attribute name',
     'Credential.Attribute.Description.Label': 'Description (optional)',
     'Credential.Attribute.Details.Label': 'Details',
-    'Credential.Attribute.Details.Info': 'Here provide the true data of this credential such as: e-mail element, login, password or other data that is needed. One data per attribute.',
+    'Credential.Attribute.Details.Info':
+        'Here provide the true data of this credential such as: e-mail element, login, password or other data that is needed. One data per attribute.',
     'Credential.Attribute.Value.Label': 'Value',
     'Credential.Attribute.Security.Label': 'Security',
     'Credential.Attribute.Security.MaskValue': 'Mask value',
     'Credential.Attribute.Edit.AddCredential': 'Add',
-    'Credential.Attribute.Edit.Edit': 'Edit',
-    'Credential.Attribute.Edit.Confirm': 'Confirm',
-    'Credential.Attribute.Edit.Cancel': 'Cancel',
+    'Credential.Attribute.Edit.Success': 'Pomyślnie zaktualizowano atrybut',
     'Credential.Attribute.Tag.Required': 'Required',
-    'Credential.Attribute.Tag.Optional': 'Optional',
+    'Credential.Attribute.Tag.Optional': 'Optional'
 };
 
 export default credentials;

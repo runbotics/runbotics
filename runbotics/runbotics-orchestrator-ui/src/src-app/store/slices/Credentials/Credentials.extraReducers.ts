@@ -1,6 +1,5 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
-import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 
 import { CredentialsState } from './Credentials.state';
 import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential, updateAttribute, fetchAllCredentialsByTemplateAndProcess } from './Credentials.thunks';
@@ -59,8 +58,7 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(createCredential.pending, state => {
             state.loading = true;
         })
-        .addCase(createCredential.fulfilled, (state, action) => {
-            state.all.push(action.payload as BasicCredentialDto);
+        .addCase(createCredential.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(createCredential.rejected, state => {
@@ -71,10 +69,7 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(updateCredential.pending, state => {
             state.loading = true;
         })
-        .addCase(updateCredential.fulfilled, (state, action) => {
-            state.all = state.all.map(credential =>
-                credential.id === action.meta.arg.resourceId ? { ...credential, ...action.meta.arg.payload} : credential
-            );
+        .addCase(updateCredential.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(updateCredential.rejected, state => {
@@ -85,7 +80,7 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(updateAttribute.pending, state => {
             state.loading = true;
         })
-        .addCase(updateAttribute.fulfilled, (state) => {       
+        .addCase(updateAttribute.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(updateAttribute.rejected, state => {
@@ -96,8 +91,7 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
         .addCase(deleteCredential.pending, state => {
             state.loading = true;
         })
-        .addCase(deleteCredential.fulfilled, (state, action) => {
-            state.all = state.all.filter(credential => credential.id !== action.meta.arg.resourceId);
+        .addCase(deleteCredential.fulfilled, (state) => {
             state.loading = false;
         })
         .addCase(deleteCredential.rejected, state => {

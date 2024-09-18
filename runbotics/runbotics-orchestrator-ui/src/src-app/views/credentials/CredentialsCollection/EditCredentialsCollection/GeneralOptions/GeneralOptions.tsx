@@ -6,7 +6,7 @@ import Accordion from '#src-app/components/Accordion';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { BasicCredentialsCollectionDto, CredentialsCollectionKeys, EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
+import { CredentialsCollectionKeys, EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
 import CollectionColorSelect from '../CollectionColor/CollectionColorSelect';
 import { inputErrorMessages, InputErrorType } from '../EditCredentialsCollection.utils';
 
@@ -16,7 +16,7 @@ interface CredentalsCollectionGeneralOptionsProps {
     inputErrorType: InputErrorType;
     setInputErrorType: (errorType: InputErrorType) => void;
     formState: EditCredentialsCollectionDto;
-    setFormState: (newState: EditCredentialsCollectionDto) => void;
+    setFormState: (state: ((prevState: EditCredentialsCollectionDto) => EditCredentialsCollectionDto)) => void;
 }
 
 export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
@@ -31,7 +31,7 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
 
     const handleFormPropertyChange = <Key extends CredentialsCollectionKeys>(
         propertyName: Key,
-        value: Partial<BasicCredentialsCollectionDto[Key]>
+        value: string
     ) => {
         if (propertyName === 'name' && !value.length) {
             setFormValidationState(false);
@@ -41,7 +41,10 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
             setFormValidationState(true);
             setInputErrorType(null);
         }
-        setFormState({ ...formState, [propertyName]: value });
+        setFormState((prevFormState) => ({
+            ...prevFormState,
+            [propertyName]: value
+        }));
     };
 
     return (
@@ -70,8 +73,7 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
                 />
                 <CollectionColorSelect
                     currentColor={formState.color}
-                    credentialsCollectionData={formState}
-                    setCredentialCollectionColor={setFormState}
+                    setFormState={setFormState}
                 />
             </Box>
         </Accordion>

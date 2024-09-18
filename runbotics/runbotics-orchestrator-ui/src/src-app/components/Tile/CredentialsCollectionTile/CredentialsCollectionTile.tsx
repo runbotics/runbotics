@@ -6,10 +6,10 @@ import { Divider, Grid, Typography, Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import If from '#src-app/components/utils/If';
+import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { useSelector } from '#src-app/store';
-import { AccessType, BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
+import { AccessType, BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 import { ColorDot } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
 
@@ -32,14 +32,8 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
 }) => {
     const router = useRouter();
     const { translate } = useTranslations();
-    const { user: currentUser } = useSelector(state => state.auth);
-    const isOwner = parseInt(collection.createdById) === currentUser.id;
-    const hasEditAccess =
-        collection.credentialCollectionUser.length > 1
-            ? collection.credentialCollectionUser.some(
-                user => user.user.email === currentUser.email && user.privilegeType === PrivilegeType.WRITE
-            )
-            : false;
+    const { user: currentUser } = useAuth();
+    const isOwner = collection.createdById === currentUser.id;
 
     const handleCardClick = () => {
         setCurrentDialogCollection(collection);
@@ -103,7 +97,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
                         </Grid>
                     </Grid>
                     <Divider sx={{ marginTop: '2rem' }} />
-                    <If condition={isOwner || hasEditAccess}>
+                    <If condition={isOwner}>
                         <MenuItems
                             collectionId={collection?.id}
                             handleOpenEditDialog={handleOpenEditDialog}

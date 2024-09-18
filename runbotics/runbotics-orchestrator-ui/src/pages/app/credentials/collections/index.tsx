@@ -1,6 +1,6 @@
 import { FeatureKey } from 'runbotics-common';
 
 import { withAuthGuard } from '#src-app/components/guards/AuthGuard';
-import CredentialsCollectionsView from '#src-app/views/credentials/CredentialsCollection/CredentialsCollectionsView';
+import CredentialCollectionsGridView from '#src-app/views/credentials/GridView/CredentialCollectionsGridView';
 
-export default withAuthGuard({ Component: CredentialsCollectionsView, featureKeys: [FeatureKey.CREDENTIALS_PAGE_READ] });
+export default withAuthGuard({ Component: CredentialCollectionsGridView, featureKeys: [FeatureKey.CREDENTIALS_PAGE_READ] });

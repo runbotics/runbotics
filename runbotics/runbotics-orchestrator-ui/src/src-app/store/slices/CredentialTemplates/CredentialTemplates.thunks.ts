@@ -3,7 +3,9 @@ import { CredentialTemplate } from '#src-app/views/credentials/Credential/EditCr
 
 const CREDENTIAL_TEMPLATE_PATH = 'credential-templates';
 
-export const fetchAllTemplates = ApiTenantResource.get<CredentialTemplate[]>('template/fetchAllInTenant', CREDENTIAL_TEMPLATE_PATH);
+export const fetchAllTemplates = ApiTenantResource
+    .get<CredentialTemplate[]>('template/fetchAllInTenant', CREDENTIAL_TEMPLATE_PATH);
 
-export const fetchOneTemplate = ApiTenantResource.get<CredentialTemplate>('template/fetchOne/:id', CREDENTIAL_TEMPLATE_PATH);
+export const fetchOneTemplate = ApiTenantResource
+    .get<CredentialTemplate>('template/fetchOne/:id', CREDENTIAL_TEMPLATE_PATH);
 

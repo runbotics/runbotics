@@ -7,8 +7,7 @@ export const CredentialCard = styled(CardContent)<{ collectionColor: string }>(
     flex-direction: column;
     color: ${theme.palette.grey[500]};
     cursor: pointer;
-    min-height: 11rem;
-    
+
     > :first-child {
         color: black;
     }

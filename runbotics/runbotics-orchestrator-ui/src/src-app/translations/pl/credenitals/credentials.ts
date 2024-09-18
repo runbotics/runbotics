@@ -1,7 +1,7 @@
 import englishCredentials from '#src-app/translations/en/credenitals/credentials';
 
 const credentials: typeof englishCredentials = {
-    'Credentials.List.Header.Elements': '{{ count }} poświadczeń',
+    'Credentials.List.Header.Elements': 'Liczba poświadczeń: {{ count }}',
     'Credentials.Add': 'Dodaj nowe poświadczenia',
     'Credential.Add.Title': 'Dodaj poświadczenia',
     'Credential.Edit.Title': 'Edytuj poświadczenia',
@@ -19,15 +19,16 @@ const credentials: typeof englishCredentials = {
     'Credential.Form.Fields.Name.Label': 'Nazwa',
     'Credential.Form.Fields.Description.Label': 'Opis',
     'Credential.Form.Fields.Collection.Label': 'Kolekcja',
+    'Credential.Form.Edit.Success': 'Pomyślnie zaktualizowano kolekcję o nazwie {{ name }}',
+    'Credential.Form.Create.Success': 'Pomyślnie utworzono kolekcję o nazwie {{ name }}',
     'Credential.Add.Save': 'Zapisz zmiany',
-    'Credential.Add.Cancel': 'Anuluj',
     'Credential.Details.Name.Label': 'Nazwa',
     'Credential.Details.Description.Label': 'Opis',
     'Credential.Details.Collection.Label': 'Kolekcja',
     'Credential.Details.Disclaimer.Label': 'Wyjaśnienie: ',
-    'Credential.Details.Disclaimer.Text': 'Wszystkie poświadczenia muszą należeń do kolekcji. Tylko właściciel poświadczeń może decydować o udostępnieniu kolekcji innym użytkownikom.',
+    'Credential.Details.Disclaimer.Text': 'Wszystkie poświadczenia muszą należeć do kolekcji. Tylko właściciel poświadczeń może decydować o udostępnieniu kolekcji innym użytkownikom.',
     'Credential.Details.Template.Label': 'Szablon',
-    'Credential.Details.Template.Info': 'Szablon zawiera zdefiniowane atrybuty dla grupy akcji, np. szablon ATLASSIAN, który odnosi się do akcji tj. JIRA lub Confluence. Zazwyczaj wszystkie akcje danej grupy mają atrybuty, bez których żadna akcja nie będzie działać, np. login i hasło - te atrybuty są oznaczone jako WYMAGANE. Niektóre alcje mogą używać specyficznych atrybutów np. url dla strony na Confluence i takie są oznaczone jako OPCJONALNE',
+    'Credential.Details.Template.Info': 'Szablon zawiera zdefiniowane atrybuty dla grupy akcji, np. szablon ATLASSIAN, który odnosi się do akcji tj. JIRA lub Confluence',
     'Credential.GeneralInfo.Title': 'Informacje ogólne',
     'Credential.Dialog.Modify.Edit.Title': 'Edytuj poświadczenia',
     'Credential.Dialog.Modify.Create.Title': 'Stwórz nowe poświadczenia',
@@ -41,11 +42,9 @@ const credentials: typeof englishCredentials = {
     'Credential.Attribute.Security.Label': 'Security',
     'Credential.Attribute.Security.MaskValue': 'Zamaskuj wartość',
     'Credential.Attribute.Edit.AddCredential': 'Dodaj',
-    'Credential.Attribute.Edit.Edit': 'Edytuj',
-    'Credential.Attribute.Edit.Confirm': 'Zatwierdź',
-    'Credential.Attribute.Edit.Cancel': 'Anuluj',
+    'Credential.Attribute.Edit.Success': 'Successfully updated attribute',
     'Credential.Attribute.Tag.Required': 'Wymagany',
     'Credential.Attribute.Tag.Optional': 'Opcjonalny',
 };
-    
-export default credentials; 
+
+export default credentials;

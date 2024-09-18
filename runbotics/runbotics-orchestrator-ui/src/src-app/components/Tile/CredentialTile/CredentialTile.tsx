@@ -7,11 +7,11 @@ import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 
 import If from '#src-app/components/utils/If';
+import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { useSelector } from '#src-app/store';
 import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 import { BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
-import { collectionColors } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.types';
+import { collectionColors } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
 
 import { CredentialCard, CredentialCollection } from './CredentialTile.styles';
 import Tile from '../Tile';
@@ -37,8 +37,8 @@ const CredentialTile: FC<CredentialTileProps> = ({
 }) => {
     const router = useRouter();
     const { translate } = useTranslations();
-    const { user: currentUser } = useSelector(state => state.auth);
-    const isOwner = collection ? parseInt(collection.createdById) === currentUser.id : false;
+    const { user: currentUser } = useAuth();
+    const isOwner = collection ? collection.createdById === currentUser.id : false;
     const hasEditAccess = collection?.credentialCollectionUser.length > 1
         ? collection.credentialCollectionUser.some(
             user => user.user.email === currentUser.email && user.privilegeType === PrivilegeType.WRITE
@@ -52,7 +52,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
     };
 
     return (
-        <Tile leftBorderColor={`4px solid ${collectionColors[collection.color].hex}`}>
+        <Tile leftBorderColor={`4px solid ${collectionColors[collection.color].hex}`} minHeight='min-content'>
             <CredentialCard collectionColor={collectionColors[collection.color].hex} onClick={handleClick}>
                 <Typography variant="h4" sx={{ paddingBottom: '16px' }}>
                     {credential.name}
@@ -67,7 +67,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
                         {collectionName}
                     </CredentialCollection>
                 </If>
-                <If condition={collectionId && (isOwner || hasEditAccess)}>
+                <If condition={isOwner || hasEditAccess}>
                     <Box alignSelf="flex-end">
                         <IconButton
                             onClick={e => {

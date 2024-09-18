@@ -4,37 +4,38 @@ import { Box } from '@mui/material';
 
 import { useSearchParams } from 'next/navigation';
 
+import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
 import { CredentialCollectionDelete } from '#src-app/components/Tile/CredentialsCollectionTile/MenuItems/CredentialCollectionDelete/CredentialCollectionDelete';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
-import CredentialsPageProvider from '#src-app/providers/CredentialsPage.provider';
+import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
-import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
-import { usersActions } from '#src-app/store/slices/Users';
+import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
 
 import { TileGrid } from './GridView.styles';
+import Header, { CredentialsTabs } from './Header';
 import Paging from './Paging';
-import CredentialsCollectionModifyDialog from '../CredentialsCollection/CredentialsCollectionModifyDialog';
+import CredentialsHeader from '../Credentials/CredentialsHeader/CredentialsHeader';
+import CredentialsCollectionForm from '../CredentialsCollection/CredentialsCollectionForm';
 
 const CredentialCollectionsGridView = () => {
     const dispatch = useDispatch();
-    const collections = useSelector(state => state.credentialCollections.credentialCollections);
-    const isLoading = useSelector(state => state.credentialCollections.loading);
+    const { credentialCollections, loading: isLoading } = useSelector(credentialCollectionsSelector);
     const searchParams = useSearchParams();
     const replaceQueryParams = useReplaceQueryParams();
+    const { translate } = useTranslations();
 
-    const collectionsPage = useSelector(state => state.credentialCollections.page);
     const pageFromUrl = searchParams.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const pageSizeFromUrl = searchParams.get('pageSize');
-    const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : 12);
-    const totalPages = Math.ceil(collections.length / pageSize);
+    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
+    const totalPages = Math.ceil(credentialCollections.length / pageSize);
     const startingPageItemIndex = page * pageSize;
     const endingPageItemIndex = startingPageItemIndex + pageSize;
-    const currentPageCollections = collections ? collections.slice(startingPageItemIndex, endingPageItemIndex) : [];
+    const currentPageCollections = credentialCollections ? credentialCollections.slice(startingPageItemIndex, endingPageItemIndex) : [];
 
     const [currentCollection, setCurrentCollection] = useState(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -42,21 +43,19 @@ const CredentialCollectionsGridView = () => {
 
     useEffect(() => {
         dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
-        dispatch(usersActions.getAllLimited());
-        dispatch(usersActions.getActiveNonAdmins());
     }, []);
 
     useEffect(() => {
-        const pageNotAvailable = collectionsPage && page >= totalPages;
+        const pageNotAvailable = page >= totalPages;
 
         if (pageNotAvailable) {
             setPage(0);
-            replaceQueryParams({ collectionId: currentCollection.id, page: 0, pageSize });
+            replaceQueryParams({ collectionId: currentCollection ? currentCollection.id : null, page: 0, pageSize });
         }
     }, [page]);
 
     const handleOpenEditDialog = (id: string) => {
-        setCurrentCollection(collections.find(collection => collection.id === id));
+        setCurrentCollection(credentialCollections.find(collection => collection.id === id));
         setIsEditDialogOpen(true);
     };
 
@@ -66,7 +65,7 @@ const CredentialCollectionsGridView = () => {
     };
 
     const handleOpenDeleteDialog = (id: string) => {
-        setCurrentCollection(collections.find(collection => collection.id === id));
+        setCurrentCollection(credentialCollections.find(collection => collection.id === id));
         setIsDeleteDialogOpen(true);
     };
 
@@ -75,7 +74,7 @@ const CredentialCollectionsGridView = () => {
         setIsDeleteDialogOpen(false);
     };
 
-    const collectionTiles = [...currentPageCollections]
+    const collectionTiles = currentPageCollections
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         .map(collection => (
             <CredentialsCollectionTile
@@ -86,15 +85,18 @@ const CredentialCollectionsGridView = () => {
                 setCurrentDialogCollection={setCurrentCollection}
             />
         ));
+
     return (
-        <CredentialsPageProvider
-            {...{ pageSize, setPageSize, page, setPage, collectionId: null }}
-        >
+        <InternalPage title={translate('Credentials.Collections.Page.Title')}>
+            <Header />
             <If condition={!isLoading} else={<LoadingScreen />}>
+                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
+                    <CredentialsHeader credentialCount={credentialCollections.length} tabName={CredentialsTabs.COLLECTIONS} />
+                </Box>
                 <TileGrid>
                     {collectionTiles}
                     <If condition={currentCollection}>
-                        <CredentialsCollectionModifyDialog
+                        <CredentialsCollectionForm
                             open={isEditDialogOpen}
                             onClose={handleCloseEditDialog}
                             collection={currentCollection}
@@ -107,10 +109,15 @@ const CredentialCollectionsGridView = () => {
                     </If>
                 </TileGrid>
                 <Box mt={6} display="flex" justifyContent="center">
-                    <Paging totalPages={totalPages} />
+                    <Paging
+                        totalItems={credentialCollections.length}
+                        itemsPerPage={pageSize}
+                        currentPage={page}
+                        setPage={setPage}
+                    />
                 </Box>
             </If>
-        </CredentialsPageProvider>
+        </InternalPage>
     );
 };
 

@@ -6,6 +6,7 @@ import CustomDialog from '#src-app/components/CustomDialog';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
+import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { deleteCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
 import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
@@ -32,6 +33,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
                 enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Success', { name: collection.name }), {
                     variant: 'success'
                 });
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
             })
             .catch(error => {
                 if (error.statusCode === 409) {
@@ -42,7 +44,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
                     });
                 }
             });
-            
+
         handleDialogClose();
     };
 

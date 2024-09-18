@@ -17,13 +17,20 @@ export const updateCredentialCollectionSchema = z
             .optional(),
     })
     .strict()
-    .refine(
-        (input) =>
-            !(input.accessType === AccessType.GROUP && !input.sharedWith),
-        {
-            message: `For accessType: ${AccessType.GROUP} sharedWith must be a valid array`,
+    .superRefine((input, ctx) => {
+        if (input.accessType === AccessType.GROUP && !input.sharedWith) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `For accessType: ${AccessType.GROUP} sharedWith must be a valid array`
+            });
         }
-    );
+        if (input.accessType === AccessType.PRIVATE && input.sharedWith !== undefined) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `For accessType: ${AccessType.PRIVATE} sharedWith should not be defined`
+            });
+        }
+    });
 
 export type UpdateCredentialCollectionDto = z.infer<
     typeof updateCredentialCollectionSchema

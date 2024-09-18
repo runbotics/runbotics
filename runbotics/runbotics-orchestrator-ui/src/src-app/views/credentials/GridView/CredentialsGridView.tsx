@@ -8,18 +8,18 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
 import CustomDialog from '#src-app/components/CustomDialog';
+import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
-import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useTranslations from '#src-app/hooks/useTranslations';
-import CredentialsPageProvider from '#src-app/providers/CredentialsPage.provider';
 import { useDispatch, useSelector } from '#src-app/store';
-import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
-import { credentialsActions } from '#src-app/store/slices/Credentials';
-import { credentialTemplatesActions } from '#src-app/store/slices/CredentialTemplates';
+import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
+import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
+import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
 import { TileGrid } from './GridView.styles';
+import Header, { CredentialsTabs } from './Header';
 import Paging from './Paging';
 import CredentialsHeader from '../Credentials/CredentialsHeader/CredentialsHeader';
 
@@ -28,19 +28,16 @@ const CredentialsGridView = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const searchParams = useSearchParams();
-    const replaceQueryParams = useReplaceQueryParams();
 
-    const credentials = useSelector(state => state.credentials.all);
-    const collections = useSelector(state => state.credentialCollections.credentialCollections);
-    const credentialTemplates = useSelector(state => state.credentialTemplates.data);
+    const { all: credentials } = useSelector(credentialsSelector);
+    const { credentialCollections } = useSelector(credentialCollectionsSelector);
+    const { credentialTemplates } = useSelector(credentialTemplatesSelector);
     const [loading, setLoading] = useState(true);
 
-    const credentialsPage = useSelector(state => state.credentials.page);
     const pageFromUrl = searchParams.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const pageSizeFromUrl = searchParams.get('pageSize');
-    const [pageSize, setPageSize] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : 12);
-    const totalPages = Math.ceil(credentials.length / pageSize);
+    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
     const startingPageItemIndex = page * pageSize;
     const endingPageItemIndex = startingPageItemIndex + pageSize;
     const currentPageCredentials = credentials ? credentials.slice(startingPageItemIndex, endingPageItemIndex) : [];
@@ -50,6 +47,10 @@ const CredentialsGridView = () => {
 
     const router = useRouter();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
+
+    useEffect(() => {
+
+    }, [page]);
 
     const handleDeleteDialogOpen = (id: string) => {
         setIsDeleteDialogOpen(true);
@@ -63,11 +64,18 @@ const CredentialsGridView = () => {
 
     const handleDelete = () => {
         dispatch(credentialsActions.deleteCredential({ resourceId: currentDialogCredential.id }))
+            .unwrap()
             .then(() => {
                 enqueueSnackbar(translate('Credential.Tile.Delete.Success', { name: currentDialogCredential.name }), {
                     variant: 'success'
                 });
                 handleDeleteDialogClose();
+
+                if (collectionId) {
+                    dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }));
+                } else {
+                    dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
+                }
             })
             .catch(error => {
                 enqueueSnackbar(error ? error.message : translate('Credential.Tile.Delete.Fail', { name: currentDialogCredential.name }), {
@@ -77,38 +85,29 @@ const CredentialsGridView = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
-                await dispatch(credentialTemplatesActions.fetchAllTemplates());
-                collectionId
-                    ? await dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
-                    : await dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
-            } finally {
+        const fetchData = () => {
+            const fetchAllCollections = dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+            const fetchAllTemplates = dispatch(credentialTemplatesActions.fetchAllTemplates());
+
+            const fetchCredentials = collectionId ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
+                : dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
+
+            Promise.allSettled([fetchAllCollections, fetchAllTemplates, fetchCredentials]).then(() => {
                 setLoading(false);
-            }
+            });
         };
 
         fetchData();
     }, []);
-
-    useEffect(() => {
-        const pageNotAvailable = credentialsPage && page >= totalPages;
-
-        if (pageNotAvailable) {
-            setPage(0);
-            replaceQueryParams({ collectionId, page: 0, pageSize });
-        }
-    }, [page]);
 
     const credentialsTiles = currentPageCredentials
         ? currentPageCredentials.map(credential => (
             <CredentialTile
                 key={credential.id}
                 credential={credential}
-                collection={collections.find(collection => credential.collectionId === collection.id)}
+                collection={credentialCollections.find(collection => credential.collectionId === collection.id)}
                 templateName={credentialTemplates.find(template => template.id === credential.templateId).name}
-                collectionName={collections.find(collection => collection.id === credential.collectionId)?.name}
+                collectionName={credentialCollections.find(collection => collection.id === credential.collectionId)?.name}
                 loading={loading}
                 collectionId={collectionId}
                 handleDeleteDialogOpen={handleDeleteDialogOpen}
@@ -117,7 +116,8 @@ const CredentialsGridView = () => {
         : [];
 
     return (
-        <CredentialsPageProvider {...{ pageSize, setPageSize, page, setPage, collectionId }}>
+        <InternalPage title={translate('Credentials.Collections.Page.Title')}>
+            <Header />
             <If condition={!loading} else={<LoadingScreen />}>
                 {collectionId && (
                     <Box display="flex" justifyItems="center" alignItems="center" mb={3}>
@@ -125,11 +125,13 @@ const CredentialsGridView = () => {
                             <FolderOpenIcon />
                         </SvgIcon>
                         <Typography variant="h3" ml={1}>
-                            {collections.find(collection => collectionId === collection.id)?.name}
+                            {credentialCollections.find(collection => collectionId === collection.id)?.name}
                         </Typography>
                     </Box>
                 )}
-                <CredentialsHeader credentialCount={credentials.length} />
+                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
+                    <CredentialsHeader credentialCount={credentials.length} tabName={CredentialsTabs.CREDENTIALS}/>
+                </Box>
                 <TileGrid>{credentialsTiles}</TileGrid>
             </If>
             {currentDialogCredential && (
@@ -142,9 +144,14 @@ const CredentialsGridView = () => {
                 />
             )}
             <Box mt={6} display="flex" justifyContent="center">
-                <Paging totalPages={totalPages} />
+                <Paging
+                    totalItems={credentials.length}
+                    itemsPerPage={pageSize}
+                    currentPage={page}
+                    setPage={setPage}
+                />
             </Box>
-        </CredentialsPageProvider>
+        </InternalPage>
     );
 };
 

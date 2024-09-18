@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { TextField, Box, ListItemButton, ListItemText, Paper, List } from '@mui/material';
 import { IUser } from 'runbotics-common';
@@ -7,13 +7,12 @@ import If from '#src-app/components/utils/If';
 
 interface SearchBarProps {
   onAddUser: (email: string) => void;
-  sharableUsers: IUser[];
+  availableUsers: IUser[];
+  setAvailableUsers: (state: ((prevState: IUser[]) => IUser[])) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, sharableUsers }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers, setAvailableUsers }) => {
     const [searchInput, setSearchInput] = useState('');
-    const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
-    const [selectedUsers, setSelectedUsers] = useState<IUser[]>([]);
     const [isFocused, setIsFocused] = useState(false);
     const searchInputRef = useRef<HTMLInputElement | null>(null);
     const listRef = useRef<HTMLDivElement | null>(null);
@@ -21,39 +20,27 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, sharableUsers }) => {
     const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setSearchInput(value);
-        
-        const filtered = sharableUsers.filter((sharableUser) =>
-            sharableUser.email.toLowerCase().includes(value.toLowerCase())
-            && !selectedUsers.some((selectedUser) => selectedUser.id === sharableUser.id)
-        );
-        setFilteredUsers(filtered);
+        setAvailableUsers((prevState) => prevState.filter(user => user.email.toLowerCase().includes(value.toLowerCase())));
     };
 
     const handleUserAdd = (user: IUser) => {
         setSearchInput('');
-        setFilteredUsers([]);
-        setSelectedUsers([...selectedUsers, user]);
         onAddUser(user.email);
     };
 
-    const handleFocus = useCallback(() => {
+    const handleFocus = () => {
         setIsFocused(true);
-        setFilteredUsers(sharableUsers.filter(sharableUser => 
-            sharableUser.email.toLowerCase().includes(searchInput.toLowerCase())
-            && !selectedUsers.some((selectedUser) => selectedUser.id === sharableUser.id)
-        ));
-    }, [searchInput, sharableUsers, selectedUsers]);
+    };
 
-    const handleBlur = useCallback(() => {
+    const handleBlur = () => {
         setTimeout(() => {
             if (document.activeElement !== searchInputRef.current && !listRef.current?.contains(document.activeElement)) {
                 setIsFocused(false);
-                setFilteredUsers([]);
             }
         }, 100);
-    }, []);
+    };
 
-    const filteredUsersElements = filteredUsers.map(filteredUser => (
+    const filteredUsersElements = availableUsers.map(filteredUser => (
         <ListItemButton key={filteredUser.id} onClick={() => handleUserAdd(filteredUser)} >
             <ListItemText primary={filteredUser.email} />
         </ListItemButton>));
@@ -79,9 +66,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, sharableUsers }) => {
                     </List>
                 </Paper>
             </If>
-            {/* <IconButton color="primary" onClick={handleUserAdd}>
-                <AddIcon />
-            </IconButton> */}
         </Box>
     );
 };

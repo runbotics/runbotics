@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 import { Tenant } from '../tenant/tenant.entity';
+import { numberTransformer } from '#/database/database.utils';
 
 export enum AccessType {
     PRIVATE = 'PRIVATE',
@@ -59,7 +60,7 @@ export class CredentialCollection {
     @JoinColumn({ name: 'created_by_id' })
     createdBy: UserEntity;
 
-    @Column({ name: 'created_by_id' })
+    @Column({ name: 'created_by_id', transformer: numberTransformer })
     createdById: number;
 
     @UpdateDateColumn({
@@ -72,7 +73,7 @@ export class CredentialCollection {
     @JoinColumn({ name: 'updated_by_id' })
     updatedBy: UserEntity;
 
-    @Column({ name: 'updated_by_id' })
+    @Column({ name: 'updated_by_id', transformer: numberTransformer  })
     updatedById: number;
 
     @OneToMany(() => CredentialCollectionUser, (credentialCollectionUser) => credentialCollectionUser.credentialCollection, { cascade: true })

@@ -3,7 +3,6 @@ import { FC } from 'react';
 import { HomeOutlined, ArrowBack } from '@mui/icons-material';
 import { Box, Breadcrumbs, Divider, Grid, Typography } from '@mui/material';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import styled, { useTheme } from 'styled-components';
 
 import { translate } from '#src-app/hooks/useTranslations';
@@ -14,18 +13,17 @@ const StyledLink = styled(Link)`
 
 interface CredentialLocationProps {
     credentialName: string;
+    collectionId: string;
 }
 
-const CredentialLocation: FC<CredentialLocationProps> = ({ credentialName }) => {
-    const router = useRouter();
+const CredentialLocation: FC<CredentialLocationProps> = ({ credentialName, collectionId }) => {
     const theme = useTheme();
+    const allCredentialsPath = '/app/credentials';
 
-    const isRootFolder = true;
-    
     return (
         <Grid container gap={1} justifyContent="center" alignSelf="center">
             <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
-                <StyledLink href="/app/credentials">
+                <StyledLink href={allCredentialsPath}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <ArrowBack fontSize="medium" />
                         <Typography variant="body1" ml={1}>
@@ -39,18 +37,16 @@ const CredentialLocation: FC<CredentialLocationProps> = ({ credentialName }) => 
                 <Breadcrumbs>
                     <Link
                         href={{
-                            pathname: router.pathname,
+                            pathname: allCredentialsPath,
                             query: {
-                                ...router.query
+                                collectionId
                             }
                         }}
                     >
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <HomeOutlined
                                 fontSize="medium"
-                                sx={{
-                                    color: isRootFolder ? theme.palette.secondary.main : theme.palette.common.black
-                                }}
+                                sx={{ color: theme.palette.secondary.main }}
                             />
                         </Box>
                     </Link>

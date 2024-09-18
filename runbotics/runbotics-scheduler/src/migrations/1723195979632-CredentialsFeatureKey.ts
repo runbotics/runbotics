@@ -5,8 +5,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CredentialsFeatureKey1723195979632 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.manager
-            .insert(FeatureKey, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ });
+        await queryRunner.manager.insert(FeatureKey, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ });
 
         const newAuthorityTenantAdmin = await queryRunner.manager
             .getRepository(Authority)
@@ -17,11 +16,9 @@ export class CredentialsFeatureKey1723195979632 implements MigrationInterface {
                 return authority;
             });
 
-        await queryRunner.manager
-            .getRepository(Authority)
-            .save(newAuthorityTenantAdmin);
+        await queryRunner.manager.getRepository(Authority).save(newAuthorityTenantAdmin);
 
-            const newAuthorityAdmin = await queryRunner.manager
+        const newAuthorityAdmin = await queryRunner.manager
             .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_ADMIN })
             .then(authority => {
@@ -30,15 +27,11 @@ export class CredentialsFeatureKey1723195979632 implements MigrationInterface {
                 return authority;
             });
 
-        await queryRunner.manager
-            .getRepository(Authority)
-            .save(newAuthorityAdmin);
+        await queryRunner.manager.getRepository(Authority).save(newAuthorityAdmin);
 
-            await queryRunner.manager
-            .getRepository(Authority)
-            .save(newAuthorityTenantAdmin);
+        await queryRunner.manager.getRepository(Authority).save(newAuthorityTenantAdmin);
 
-            const newAuthorityUser = await queryRunner.manager
+        const newAuthorityUser = await queryRunner.manager
             .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_USER })
             .then(authority => {
@@ -47,18 +40,16 @@ export class CredentialsFeatureKey1723195979632 implements MigrationInterface {
                 return authority;
             });
 
-        await queryRunner.manager
-            .getRepository(Authority)
-            .save(newAuthorityUser);
+        await queryRunner.manager.getRepository(Authority).save(newAuthorityUser);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         const authorityUSer = await queryRunner.manager
             .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_TENANT_ADMIN })
-            .then(authority => ({ 
-                ...authority, 
-                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ) 
+            .then(authority => ({
+                ...authority,
+                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ)
             }));
 
         await queryRunner.manager.save(Authority, authorityUSer);
@@ -68,9 +59,9 @@ export class CredentialsFeatureKey1723195979632 implements MigrationInterface {
         const authorityAdmin = await queryRunner.manager
             .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_TENANT_ADMIN })
-            .then(authority => ({ 
-                ...authority, 
-                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ) 
+            .then(authority => ({
+                ...authority,
+                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ)
             }));
 
         await queryRunner.manager.save(Authority, authorityAdmin);
@@ -79,9 +70,9 @@ export class CredentialsFeatureKey1723195979632 implements MigrationInterface {
         const authorityTenantAdmin = await queryRunner.manager
             .getRepository(Authority)
             .findOneByOrFail({ name: Role.ROLE_TENANT_ADMIN })
-            .then(authority => ({ 
-                ...authority, 
-                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ) 
+            .then(authority => ({
+                ...authority,
+                featureKeys: authority.featureKeys.filter(featureKey => featureKey.name !== FeatureKeyEnum.CREDENTIALS_PAGE_READ)
             }));
 
         await queryRunner.manager.save(Authority, authorityTenantAdmin);

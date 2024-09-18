@@ -10,10 +10,12 @@ import CustomDialog from '#src-app/components/CustomDialog';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useDispatch, useSelector } from '#src-app/store';
+import { credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
 import { credentialsActions } from '#src-app/store/slices/Credentials';
+import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import GeneralInfoDropdown from './GeneralInfoDropdown';
+import GeneralInfoDropdown from './CreateGeneralInfoDropdown';
 import { CreateCredentialDto } from '../Credential.types';
 import {
     getInitialCredentialData,
@@ -26,7 +28,7 @@ interface CreateGeneralInfoProps {
     open?: boolean;
 }
 
-export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, open }) => {
+export const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const router = useRouter();
@@ -36,9 +38,9 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, open })
     const [credentialFormState, setCredentialFormState] = useState<CreateCredentialDto>(getInitialCredentialData(collectionId));
     const [formValidationState, setFormValidationState] = useState(getInitialFormValidationState(collectionId));
 
-    const credentialsCollections = useSelector(state => state.credentialCollections.credentialCollections);
-    const credentialTemplates = useSelector(state => state.credentialTemplates.data);
-    
+    const { credentialCollections } = useSelector(credentialCollectionsSelector);
+    const { credentialTemplates } = useSelector(credentialTemplatesSelector);
+
     const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
 
     const closeDialog = () => {
@@ -80,7 +82,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, open })
             });
     };
 
-    const collectionsToChoose = credentialsCollections.map(collection => (
+    const collectionsToChoose = credentialCollections.map(collection => (
         <MenuItem key={collection.id} value={collection.id}>
             <Typography>{collection.name}</Typography>
         </MenuItem>
@@ -111,7 +113,7 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, open })
         let changeTo = value;
 
         if (name === 'collectionId') {
-            const foundCollection = credentialsCollections.find(collection => collection.id === value);
+            const foundCollection = credentialCollections.find(collection => collection.id === value);
 
             if (foundCollection) changeTo = foundCollection.id;
         }
@@ -154,7 +156,10 @@ export const CreateGeneralInfo: FC<CreateGeneralInfoProps> = ({ onClose, open })
                                 value={credentialFormState.name}
                                 onChange={handleInputChange}
                                 error={formValidationState.edited && !formValidationState.name}
-                                helperText={formValidationState.edited && !formValidationState.name && inputErrorMessages.NAME_IS_REQUIRED}
+                                helperText={
+                                    formValidationState.edited &&
+                                    !formValidationState.name &&
+                                    inputErrorMessages.NAME_IS_REQUIRED}
                             ></TextField>
                         </Grid>
                         <Grid item xs={12}>

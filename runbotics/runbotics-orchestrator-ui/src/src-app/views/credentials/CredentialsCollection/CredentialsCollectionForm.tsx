@@ -17,18 +17,19 @@ import {
     initialFormValidationState,
     inputErrorMessages,
     InputErrorType,
+    adjustShareWithProperty,
     mapToEditCredentialCollectionDto
 } from './EditCredentialsCollection/EditCredentialsCollection.utils';
 import { GeneralOptions } from './EditCredentialsCollection/GeneralOptions/GeneralOptions';
 import { SharedWithUsers } from './EditCredentialsCollection/SharedWithUsers/SharedWithUsers';
 
-interface CredentialCollectionModifyDialogProps {
+interface CredentialCollectionFormProps {
     open: boolean;
     collection: null | BasicCredentialsCollectionDto;
     onClose(): void;
 }
 
-const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProps> = ({ open: isOpen, onClose, collection }) => {
+const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: isOpen, onClose, collection }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -47,14 +48,13 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
         const updatedCollection = collection ? mapToEditCredentialCollectionDto(collection) : null;
         setCredentialsCollectionFormState(getInitialCredentialsCollectionData(updatedCollection));
     }, [collection]);
-    
+
     useEffect(() => {
         if (!credentialsCollectionFormState.name.trim() && !collectionData.name) {
             setFormValidationState(false);
         } else if (credentialsCollectionFormState.name.trim()) {
             setInputErrorType(null);
         }
-        
     }, [credentialsCollectionFormState, collectionData, inputErrorType]);
 
     const closeDialog = () => {
@@ -63,30 +63,35 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
         if (collection) setFormValidationState(initialFormValidationState);
         if (!collection) setTimeout(() => clearForm(), 100);
     };
-    
+
     const handleSubmit = async () => {
         if (inputErrorType) {
             enqueueSnackbar(inputErrorMessages[InputErrorType.NAME_IS_REQUIRED], { variant: 'error' });
             return;
         }
 
+        const credentialCollectionObject = adjustShareWithProperty(credentialsCollectionFormState);
+
         const action = collection
             ? credentialCollectionsActions.updateCredentialCollection({
                 resourceId: collection.id,
-                payload: credentialsCollectionFormState as EditCredentialsCollectionDto
+                payload: credentialCollectionObject
             })
-            : credentialCollectionsActions.createCredentialCollection({ payload: credentialsCollectionFormState });
+            : credentialCollectionsActions.createCredentialCollection({ payload: credentialCollectionObject });
 
         await dispatch(action)
             .unwrap()
             .then(() => {
                 dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
-                setCredentialsCollectionFormState(collectionData);
+                const successMessage = collection
+                    ? translate('Credential.Form.Create.Success', { name: credentialsCollectionFormState.name })
+                    : translate('Credential.Form.Edit.Success', { name: credentialsCollectionFormState.name });
+                enqueueSnackbar(successMessage, { variant: 'success' });
                 closeDialog();
-            }).catch((error) => {
+            })
+            .catch(error => {
                 enqueueSnackbar(error.message, { variant: 'error' });
             });
-
     };
 
     const clearForm = () => {
@@ -119,7 +124,10 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
                             formState={credentialsCollectionFormState}
                             setFormState={setCredentialsCollectionFormState}
                         />
-                        <SharedWithUsers credentialsCollectionFormState={credentialsCollectionFormState} setCredentialsCollectionFormState={setCredentialsCollectionFormState} />
+                        <SharedWithUsers
+                            credentialsCollectionFormState={credentialsCollectionFormState}
+                            setCredentialsCollectionFormState={setCredentialsCollectionFormState}
+                        />
                     </Form>
                 </Content>
             </CustomDialog>
@@ -127,4 +135,4 @@ const CredentialsCollectionModifyDialog: FC<CredentialCollectionModifyDialogProp
     );
 };
 
-export default CredentialsCollectionModifyDialog;
+export default CredentialsCollectionForm;
