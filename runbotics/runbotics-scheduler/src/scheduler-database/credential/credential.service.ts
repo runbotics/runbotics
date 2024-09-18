@@ -11,6 +11,8 @@ import { Secret } from '../secret/secret.entity';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 import { CredentialCollectionService } from '../credential-collection/credential-collection.service';
 import { ProcessCredential } from '../process-credential/process-credential.entity';
+import { MailService } from '#/mail/mail.service';
+import { CredentialOperationType } from './credential.utils';
 
 const relations = ['attributes'];
 
@@ -22,6 +24,7 @@ export class CredentialService {
     private readonly templateService: CredentialTemplateService,
     private readonly secretService: SecretService,
     private readonly collectionService: CredentialCollectionService,
+    private readonly mailService: MailService,
   ) { }
 
   async create(credentialDto: CreateCredentialDto, collectionId: string, user: IUser) {
@@ -220,15 +223,30 @@ export class CredentialService {
     });
 
     return this.credentialRepo.save(credentialToUpdate)
+      .then((credential) => {
+        this.notifyCredentialCollectionOwner(
+            user,
+            credential.collectionId,
+            credential.name,
+            CredentialOperationType.EDIT
+        );
+      })
       .catch(async (error) => {
         await this.validateName(credentialToUpdate.name, credential.collectionId, credential.tenantId);
         throw new BadRequestException(error.message);
       });
   }
 
-  async removeById(id: string, tenantId: string) {
-    const credential = await this.findOneAccessibleById(id, tenantId);
-    return this.credentialRepo.remove(credential);
+  async removeById(id: string, user: IUser) {
+    const credential = await this.findOneAccessibleById(id, user.tenantId);
+    return this.credentialRepo.remove(credential).then((credential) => {
+        this.notifyCredentialCollectionOwner(
+            user,
+            credential.collectionId,
+            credential.name,
+            CredentialOperationType.DELETE
+        );
+    });
   }
 
   async updateAttribute(id: string, attributeName: string, attributeDto: UpdateAttributeDto, user: IUser) {
@@ -276,7 +294,15 @@ export class CredentialService {
       updatedById: user.id,
     });
 
-    return this.credentialRepo.save(updatedCredential);
+    return this.credentialRepo.save(updatedCredential)
+      .then((credential) => {
+        this.notifyCredentialCollectionOwner(
+            user,
+            credential.collectionId,
+            credential.name,
+            CredentialOperationType.CHANGE_ATTRIBUTE
+        );
+      });
   }
 
   async checkIsNameTaken(name: string, collectionId: string, tenantId: string) {
@@ -296,6 +322,29 @@ export class CredentialService {
 
     if (isNameTaken) {
       throw new BadRequestException('Name already taken. There cannot be two credentials with the same name in the same collection');
+    }
+  }
+
+  private async notifyCredentialCollectionOwner(
+    executor: IUser,
+    collectionId: string,
+    credentialName: string,
+    operationType: CredentialOperationType,
+  ) {
+    const collection = await this.collectionService.findOneByCriteria(
+        executor.tenantId,
+        { id: collectionId }
+    );
+    const collectionCreator = collection.createdBy;
+
+    if (collectionCreator.id !== executor.id) {
+      this.mailService.sendCredentialChangeNotificationMail({
+        editorEmail: executor.email,
+        collectionCreatorEmail: collectionCreator.email,
+        collectionName: collection.name,
+        credentialName,
+        operationType,
+      });
     }
   }
 }

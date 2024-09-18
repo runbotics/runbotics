@@ -7,6 +7,7 @@ import { BotService } from '#/database/bot/bot.service';
 import { ProcessService } from '#/database/process/process.service';
 import { mergeArraysWithoutDuplicates } from '#/utils/mergeArrays';
 import { ServerConfigService } from '#/config/server-config';
+import { CredentialChangeMail } from '#/scheduler-database/credential/credential.utils';
 
 export type SendMailInput = {
     to?: string;
@@ -16,6 +17,7 @@ export type SendMailInput = {
     content: string;
     attachment?: string;
 };
+
 
 const NOTIFICATION_MAIL_SUBJECT = 'RunBotics Healthcheck Notification 🔧';
 
@@ -117,6 +119,24 @@ export class MailService {
         } else {
             await this.handlePublicProcessesAndBotsNotificationEmail(subscribers, sendMailInput, processCreatorEmail);
         }
+    }
+
+    public sendCredentialChangeNotificationMail({
+        editorEmail,
+        collectionCreatorEmail,
+        collectionName,
+        credentialName,
+        operationType,
+    }: CredentialChangeMail) {
+        const content = `User with email "${editorEmail}" ${operationType} credential "${credentialName}" in collection "${collectionName}"`;
+
+        const sendMailInput: SendMailInput = {
+            to: collectionCreatorEmail,
+            subject: 'Credential change inside owned collection',
+            content,
+        };
+
+        this.sendMail(sendMailInput);
     }
 
     private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {
