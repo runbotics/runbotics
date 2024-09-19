@@ -16,6 +16,6 @@ export interface StartProcessMessageBody {
 }
 
 export interface KeepAliveStatus {
-    intervalId: NodeJS.Timer;
+    intervalId: NodeJS.Timeout;
     isActive: boolean;
 }
