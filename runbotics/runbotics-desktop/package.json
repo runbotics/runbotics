@@ -118,7 +118,7 @@
         "@vitest/coverage-istanbul": "^0.29.8",
         "@types/asana": "^0.18.1",
         "@types/lodash": "^4.14.158",
-        "@types/node": "^18.11.18",
+        "@types/node": "^22.5.5",
         "@types/nodemailer": "^6.4.1",
         "@types/selenium-webdriver": "^4.0.12",
         "@types/uuid": "^8.3.0",
