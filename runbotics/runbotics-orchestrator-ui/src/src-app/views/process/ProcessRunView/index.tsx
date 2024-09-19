@@ -52,7 +52,7 @@ const ProcessRunView: FC = () => {
         if (hasReadSchedulesAccess)
         { dispatch(
             scheduleProcessActions.getSchedulesByProcess({
-                resourceId: `processes/${processId}`
+                resourceId: processId
             })
         ); }
         // eslint-disable-next-line react-hooks/exhaustive-deps
