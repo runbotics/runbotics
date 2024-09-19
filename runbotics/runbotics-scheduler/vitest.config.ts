@@ -11,5 +11,7 @@ export default defineConfig({
             '#': path.resolve(__dirname, './src'),
         }
     },
-    plugins: [swc.vite()],
+    plugins: [
+        swc.vite(),
+    ],
 });

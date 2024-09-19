@@ -67,7 +67,6 @@
         "cross-fetch": "^3.1.5",
         "@nestjs-modules/mailer": "1.8.1",
         "zod": "~3.23.8",
-        "unplugin-swc": "~1.4.5",
         "bpmn-moddle": "^9.0.1"
     },
     "devDependencies": {
@@ -87,16 +86,18 @@
         "@typescript-eslint/eslint-plugin": "^5.60.1",
         "@typescript-eslint/parser": "^5.60.1",
         "cross-env": "^7.0.3",
-        "eslint": "^8.0.1",
-        "vitest": "^0.29.8",
-        "vite": "^5.4.5",
-        "ts-jest": "^27.0.3",
-        "ts-loader": "^9.3.0",
-        "ts-node": "~10.9.2",
+        "eslint": "^8.31.0",
+        "vitest": "~1.6.0",
+        "vite": "~5.4.5",
+        "ts-loader": "^9.4.2",
+        "ts-node": "^10.9.1",
         "tsconfig-paths": "~4.2.0",
+        "vite-tsconfig-paths": "~4.2.1",
         "typescript": "^5.0.3",
         "@types/mime-types": "~2.1.4",
-        "@types/bpmn-moddle": "^5.1.11"
+        "@types/bpmn-moddle": "^5.1.11",
+        "unplugin-swc": "~1.5.1",
+        "@swc/core": "~1.7.26"
     },
     "files": [
         "dist"
