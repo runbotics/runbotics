@@ -14,7 +14,7 @@ interface MenuItemsProps {
 
 const MenuItems: FC<MenuItemsProps> = ({ collectionId, handleOpenEditDialog, handleOpenDeleteDialog }) => {
     const { translate } = useTranslations();
-    const [anchorEl, setAnchorEl] = useState<HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,7 +48,6 @@ const MenuItems: FC<MenuItemsProps> = ({ collectionId, handleOpenEditDialog, han
                 >
                     <MenuItem
                         onClick={e => {
-                            e.stopPropagation();
                             handleOpenEditDialog(collectionId);
                             handleMenuClose(e);
                         }}

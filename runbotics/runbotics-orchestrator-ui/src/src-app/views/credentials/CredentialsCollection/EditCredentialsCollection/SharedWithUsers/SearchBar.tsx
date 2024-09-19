@@ -33,11 +33,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers, setAva
     };
 
     const handleBlur = () => {
-        setTimeout(() => {
-            if (document.activeElement !== searchInputRef.current && !listRef.current?.contains(document.activeElement)) {
-                setIsFocused(false);
-            }
-        }, 100);
+        if (document.activeElement !== searchInputRef.current && !listRef.current?.contains(document.activeElement)) {
+            setIsFocused(false);
+        }
     };
 
     const filteredUsersElements = availableUsers.map(filteredUser => (

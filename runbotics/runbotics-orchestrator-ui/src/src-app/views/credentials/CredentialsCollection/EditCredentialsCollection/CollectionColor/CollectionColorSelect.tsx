@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { FormControl, InputLabel, MenuItem, Typography } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -16,12 +16,9 @@ interface CollectionColorSelectProps {
 
 const CollectionColorSelect: FC<CollectionColorSelectProps> = ({ currentColor, setFormState }) => {
     const { translate } = useTranslations();
-    const [collectionColor, setCollectionColor] = useState(
-        currentColor ? collectionColors[currentColor].hex : collectionColors.DARK_ORANGE.hex
-    );
+    const collectionColor = currentColor ? collectionColors[currentColor].hex : collectionColors.DARK_ORANGE.hex;
 
     const handleChange = (event: SelectChangeEvent) => {
-        setCollectionColor(event.target.value);
         const colorName = getColorNameByHex(event.target.value);
         setFormState((prevState) => ({ ...prevState, color: colorName }));
     };

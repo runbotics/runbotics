@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 
 import { useSearchParams } from 'next/navigation';
+import { useSnackbar } from 'notistack';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
 import { CredentialCollectionDelete } from '#src-app/components/Tile/CredentialsCollectionTile/MenuItems/CredentialCollectionDelete/CredentialCollectionDelete';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
-import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
@@ -25,15 +25,15 @@ const CredentialCollectionsGridView = () => {
     const dispatch = useDispatch();
     const { credentialCollections, loading: isLoading } = useSelector(credentialCollectionsSelector);
     const searchParams = useSearchParams();
-    const replaceQueryParams = useReplaceQueryParams();
     const { translate } = useTranslations();
+    const { enqueueSnackbar } = useSnackbar();
 
     const pageFromUrl = searchParams.get('page');
-    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
+
+    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 1);
     const pageSizeFromUrl = searchParams.get('pageSize');
     const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
-    const totalPages = Math.ceil(credentialCollections.length / pageSize);
-    const startingPageItemIndex = page * pageSize;
+    const startingPageItemIndex = (page - 1) * pageSize;
     const endingPageItemIndex = startingPageItemIndex + pageSize;
     const currentPageCollections = credentialCollections ? credentialCollections.slice(startingPageItemIndex, endingPageItemIndex) : [];
 
@@ -42,17 +42,11 @@ const CredentialCollectionsGridView = () => {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     useEffect(() => {
-        dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+        dispatch(credentialCollectionsActions.fetchAllCredentialCollections())
+            .catch((error) => {
+                enqueueSnackbar(error.message, { variant: 'error' });
+            });
     }, []);
-
-    useEffect(() => {
-        const pageNotAvailable = page >= totalPages;
-
-        if (pageNotAvailable) {
-            setPage(0);
-            replaceQueryParams({ collectionId: currentCollection ? currentCollection.id : null, page: 0, pageSize });
-        }
-    }, [page]);
 
     const handleOpenEditDialog = (id: string) => {
         setCurrentCollection(credentialCollections.find(collection => collection.id === id));

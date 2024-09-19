@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { collectionColors } from './CollectionColor.utils';
 
 interface ColorDotProps {
-collectionColor?: string;
+    collectionColor?: string;
 }
 
 export const ColorDot = styled.span<ColorDotProps>(

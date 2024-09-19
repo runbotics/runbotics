@@ -25,10 +25,10 @@ import {
 
 interface CreateGeneralInfoProps {
     onClose: () => void;
-    open?: boolean;
+    open: boolean;
 }
 
-export const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open }) => {
+const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const router = useRouter();
@@ -41,13 +41,11 @@ export const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClos
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
     const { credentialTemplates } = useSelector(credentialTemplatesSelector);
 
-    const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
+    const isFormValid = () => Object.values(formValidationState).every(Boolean);
 
     const closeDialog = () => {
         onClose();
-        setTimeout(() => {
-            clearForm();
-        }, 100);
+        clearForm();
     };
 
     const clearForm = () => {
@@ -55,13 +53,13 @@ export const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClos
         setFormValidationState(getInitialFormValidationState(collectionId));
     };
 
-    const handleSubmit = async () => {
-        if (!checkIsFormValid()) {
+    const handleSubmit = () => {
+        if (!isFormValid()) {
             enqueueSnackbar(translate('Credential.Add.ValidationFail.Info'), { variant: 'error' });
             return;
         }
 
-        await dispatch(
+        dispatch(
             credentialsActions.createCredential({
                 resourceId: `${credentialFormState.collectionId}/credentials`,
                 payload: {
@@ -204,3 +202,5 @@ export const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClos
         </CustomDialog>
     );
 };
+
+export default CreateGeneralInfoFormDialog;

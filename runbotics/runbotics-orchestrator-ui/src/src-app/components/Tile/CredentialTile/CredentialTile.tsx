@@ -39,11 +39,10 @@ const CredentialTile: FC<CredentialTileProps> = ({
     const { translate } = useTranslations();
     const { user: currentUser } = useAuth();
     const isOwner = collection ? collection.createdById === currentUser.id : false;
-    const hasEditAccess = collection?.credentialCollectionUser.length > 1
-        ? collection.credentialCollectionUser.some(
-            user => user.user.email === currentUser.email && user.privilegeType === PrivilegeType.WRITE
-        )
-        : false;
+    const hasEditAccess = collection?.credentialCollectionUser.some(
+        user => user.user.email === currentUser.email &&
+        user.privilegeType === PrivilegeType.WRITE
+    );
 
     if (loading) return <CircularProgress />;
 

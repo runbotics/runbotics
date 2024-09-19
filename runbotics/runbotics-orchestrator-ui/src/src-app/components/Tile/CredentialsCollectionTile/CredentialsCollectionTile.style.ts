@@ -4,9 +4,12 @@ import styled from 'styled-components';
 export const CredentialCollectionCard = styled(CardContent)(
     ({ theme }) => `
     && {
-        padding-bottom: ${theme.spacing(1)} !important;
-        cursor: pointer;
         min-height: 258px;
+        cursor: pointer;
+    }
+
+    &.MuiCardContent-root:last-child {
+        padding-bottom: ${theme.spacing(1)}
     }
 
     &:hover {

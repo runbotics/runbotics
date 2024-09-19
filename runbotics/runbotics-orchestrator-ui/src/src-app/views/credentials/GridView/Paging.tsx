@@ -1,8 +1,15 @@
-
+import { FC } from 'react';
 
 import { Pagination } from '@mui/material';
 
-const Paging = ({
+interface PagingProps {
+    totalItems: number;
+    itemsPerPage: number;
+    currentPage: number;
+    setPage: (changeTo: number) => void;
+}
+
+const Paging: FC<PagingProps> = ({
     totalItems,
     itemsPerPage,
     currentPage,
@@ -11,14 +18,14 @@ const Paging = ({
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
-        setPage(page - 1);
+        setPage(page);
     };
 
     return (
         <Pagination
             count={totalPages || 1}
             onChange={handlePageChange}
-            page={currentPage + 1}
+            page={currentPage}
         />
     );
 };

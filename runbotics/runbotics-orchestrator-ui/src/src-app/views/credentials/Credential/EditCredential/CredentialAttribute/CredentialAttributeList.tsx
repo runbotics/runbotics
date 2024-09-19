@@ -1,13 +1,13 @@
 import { FC, useEffect } from 'react';
 
-import { CircularProgress, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 
+import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useAuth from '#src-app/hooks/useAuth';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { credentialsActions } from '#src-app/store/slices/Credentials';
-import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
-import { fetchAllTemplates } from '#src-app/store/slices/CredentialTemplates/CredentialTemplates.thunks';
+import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
 import { BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
@@ -40,16 +40,10 @@ const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credentia
     }, []);
 
     useEffect(() => {
-        if (credentialTemplates.length === 0) dispatch(fetchAllTemplates());
+        if (credentialTemplates.length === 0) dispatch(credentialTemplatesActions.fetchAllTemplates());
     }, []);
 
-    if (templatesLoading|| credentialTemplates.length === 0) {
-        return (
-            <Grid container justifyContent="center" alignItems="center" sx={{ height: '100vh' }}>
-                <CircularProgress />
-            </Grid>
-        );
-    }
+    if (templatesLoading|| credentialTemplates.length === 0) return <LoadingScreen/>;
 
     const templateAttributesCards = credentialTemplate.attributes.map((attribute) => (
         <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12} display="flex" alignSelf="stretch">

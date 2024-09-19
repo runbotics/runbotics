@@ -21,14 +21,14 @@ export const StyledAttributeCard = styled(Card)<{ isEditMode: boolean }>(
     `
 );
 
-export const AttributeInfoNotEdiable = styled(Typography)`
-&.MuiTypography-root {
-    margin-left: 0.5rem;
+export const AttributeInfoNotEdiable = styled(Typography)(({ theme }) => `
+    &.MuiTypography-root {
+        margin-left: ${theme.spacing(1)};
     }
     color: ${grey[600]};
     display: inline-block;
-    min-height: 20px;
-`;
+`
+);
 
 export const AttributeIcon = styled(IconButton)(
     ({ theme }) => `

@@ -6,6 +6,7 @@ import { fetchAllTemplates, fetchOneTemplate } from './CredentialTemplates.thunk
 
 const buildCredentialTemplatesExtraReducers =(builder:ActionReducerMapBuilder<CredentialTemplatesState>) => {
     builder
+        // fetch all templates
         .addCase(fetchAllTemplates.pending, (state) => {
             state.loading = true;
         })
@@ -16,6 +17,8 @@ const buildCredentialTemplatesExtraReducers =(builder:ActionReducerMapBuilder<Cr
         .addCase(fetchAllTemplates.rejected, (state) => {
             state.loading = false;
         })
+
+        // fetch one template
         .addCase(fetchOneTemplate.pending, (state) => {
             state.loading = true;
         })

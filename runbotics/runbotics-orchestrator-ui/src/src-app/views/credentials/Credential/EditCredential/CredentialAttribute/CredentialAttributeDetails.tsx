@@ -29,8 +29,6 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
         setAnchorEl(null);
     };
 
-    const open = Boolean(anchorEl);
-
     const handleClickShowValue = () => setShowValue(show => !show);
 
     const handleMouseDownValue = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,7 +88,7 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
             <Popover
                 id={'mouse-over-popover'}
                 sx={{ mt: 1, pointerEvents: 'none' }}
-                open={open}
+                open={!!anchorEl}
                 anchorEl={anchorEl}
                 anchorOrigin={{
                     vertical: 'bottom',

@@ -25,8 +25,8 @@ import { SharedWithUsers } from './EditCredentialsCollection/SharedWithUsers/Sha
 
 interface CredentialCollectionFormProps {
     open: boolean;
-    collection: null | BasicCredentialsCollectionDto;
-    onClose(): void;
+    collection: BasicCredentialsCollectionDto | null;
+    onClose: () => void;
 }
 
 const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: isOpen, onClose, collection }) => {

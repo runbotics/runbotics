@@ -65,7 +65,7 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
         setIsEditMode(false);
     };
 
-    const handleFieldChange = (value) => {
+    const handleFieldChange = (value: string) => {
         setCurrentAttribute({
             masked: true,
             value

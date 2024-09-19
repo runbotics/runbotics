@@ -49,16 +49,14 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
     };
 
     return (
-        <>
-            <If condition={isDialogOpen}>
-                <CustomDialog
-                    isOpen={true}
-                    title={translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title', { name: collection.name })}
-                    onClose={() => handleDialogClose()}
-                    confirmButtonOptions={{ onClick: handleDelete }}
-                    cancelButtonOptions={{ onClick: () => handleDialogClose() }}
-                />
-            </If>
-        </>
+        <If condition={isDialogOpen}>
+            <CustomDialog
+                isOpen={true}
+                title={translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title', { name: collection.name })}
+                onClose={() => handleDialogClose()}
+                confirmButtonOptions={{ onClick: handleDelete }}
+                cancelButtonOptions={{ onClick: () => handleDialogClose() }}
+            />
+        </If>
     );
 };

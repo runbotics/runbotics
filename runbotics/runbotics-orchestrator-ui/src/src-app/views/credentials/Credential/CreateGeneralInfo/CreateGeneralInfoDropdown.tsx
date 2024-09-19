@@ -11,7 +11,7 @@ interface CreateGeneralInfoDropdownProps {
     selectedValue: string;
     tooltipText: string;
     required: boolean;
-    handleChange(event: SelectChangeEvent): void;
+    handleChange: (event: SelectChangeEvent) => void;
     disabled: boolean;
     error: boolean;
     helperText: string;
@@ -37,8 +37,6 @@ const CreateGeneralInfoDropdown: FC<CreateGeneralInfoDropdownProps> = ({
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };
-
-    const open = Boolean(anchorEl);
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -67,7 +65,7 @@ const CreateGeneralInfoDropdown: FC<CreateGeneralInfoDropdownProps> = ({
             <Popover
                 id="mouse-over-popover"
                 sx={{ mt: 1, pointerEvents: 'none' }}
-                open={open}
+                open={!!anchorEl}
                 anchorEl={anchorEl}
                 anchorOrigin={{
                     vertical: 'bottom',

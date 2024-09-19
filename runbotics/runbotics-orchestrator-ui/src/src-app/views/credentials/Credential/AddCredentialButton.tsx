@@ -5,7 +5,7 @@ import { Button, SvgIcon } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { CreateGeneralInfoFormDialog } from './CreateGeneralInfo/CreateGeneralInfoFormDialog';
+import CreateGeneralInfoFormDialog from './CreateGeneralInfo/CreateGeneralInfoFormDialog';
 
 const AddCredentialButton: FC = () => {
     const { translate } = useTranslations();
