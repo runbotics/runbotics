@@ -21,6 +21,7 @@ import {
     IProcessInstance,
     IProcess,
     BpmnElementType,
+    DecryptedCredential,
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
@@ -135,10 +136,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     }
 
     public startProcessInstance = async (
-        request: IStartProcessInstance
+        startProcessInstanceRequest: IStartProcessInstance
     ): Promise<string> => {
         const processInstanceId = uuidv4();
 
+        const { credentials, ...request } = startProcessInstanceRequest;
         const processInstance = {
             ...request,
             id: processInstanceId,
@@ -148,6 +150,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             ...(request.userId && { user: { id: request.userId } }),
             ...(request.callbackUrl && { callbackUrl: request.callbackUrl }),
         };
+
         this.processInstances[processInstanceId] = processInstance;
         this.processEventBus.publish({
             processInstanceId,
@@ -156,7 +159,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         });
         this.createTempDir();
         setTimeout(() => {
-            this.createAndStartEngine(processInstance, request);
+            this.createAndStartEngine(processInstance, { ...request, credentials });
         }, 0);
         return processInstanceId;
     };
@@ -452,8 +455,13 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 : baseLogPrefix;
         };
 
-        const services = this.createEngineExecutionServices(processInstanceId);
         const triggerData = request?.triggerData;
+        const credentials = request?.credentials;
+
+        const services = this.createEngineExecutionServices(
+            processInstanceId,
+            credentials,
+        );
 
         const engineExecutionOptions: BpmnEngineExecuteOptions = {
             services,
@@ -532,7 +540,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     };
 
     private createEngineExecutionServices = (
-        processInstanceId: string
+        processInstanceId: string,
+        credentials: DecryptedCredential[],
     ): BpmnEngineExecuteOptions['services'] => ({
         ...this.createCustomServices(processInstanceId),
         desktop:
@@ -566,6 +575,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     try {
                         const result = await this.desktopRunnerService.run({
                             script,
+                            credentials,
                             input: desktopTask.input,
                             processInstanceId,
                             rootProcessInstanceId:

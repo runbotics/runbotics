@@ -2,12 +2,20 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
-import { IProcess, Role } from 'runbotics-common';
+import { IProcess } from 'runbotics-common';
 import { UserEntity } from '../user/user.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
-const relations = ['createdBy', 'system', 'botCollection', 'schedules', 'editor', 'notifications.user.authorities'];
-
+const relations = [
+    'createdBy',
+    'system',
+    'botCollection',
+    'schedules',
+    'editor',
+    'notifications.user.authorities',
+    'processCredential.credential.attributes',
+    'processCredential.credential.template',
+];
 
 interface PartialUpdateProcess extends IProcess {
     id: IProcess['id'];
@@ -17,8 +25,8 @@ interface PartialUpdateProcess extends IProcess {
 export class ProcessService {
     constructor(
         @InjectRepository(ProcessEntity)
-        private processRepository: Repository<ProcessEntity>,
-    ) { }
+        private processRepository: Repository<ProcessEntity>
+    ) {}
 
     findById(id: number): Promise<IProcess> {
         return this.processRepository.findOne({ where: { id }, relations });
@@ -26,6 +34,13 @@ export class ProcessService {
 
     findByIdAndTenantId(id: number, tenantId: string) {
         return this.processRepository.findOneByOrFail({ id, tenantId });
+    }
+
+    findByIdWithSecrets(id: number) {
+        return this.processRepository.findOne({
+            where: { id },
+            relations: [...relations, 'processCredential.credential.attributes.secret'],
+        });
     }
 
     async save(process: IProcess) {

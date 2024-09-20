@@ -49,7 +49,9 @@ export class CredentialService {
         const secretId = secret.id;
 
         return {
-          ...attribute,
+          name: attribute.name,
+          description: attribute.description,
+          templateId: attribute.templateId,
           secretId: secretId,
           tenantId,
           masked: true,

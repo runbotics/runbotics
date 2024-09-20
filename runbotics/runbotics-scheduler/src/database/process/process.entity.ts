@@ -25,6 +25,7 @@ import { ProcessContext } from '#/scheduler-database/process-context/process-con
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-database/notification-process/notification-process.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
+import { ProcessCredential } from '#/scheduler-database/process-credential/process-credential.entity';
 
 @Entity({ name: 'process', synchronize: false })
 export class ProcessEntity implements IProcess {
@@ -95,7 +96,15 @@ export class ProcessEntity implements IProcess {
     })
     globalVariables: GlobalVariable[];
 
-    @OneToMany(() => NotificationProcessEntity, (notificationProcess) => notificationProcess.process)
-    @JoinColumn({ name: 'process_id', referencedColumnName: 'id' })
+    @OneToMany(
+        () => NotificationProcessEntity,
+        (notificationProcess) => notificationProcess.process
+    )
     notifications: NotificationProcess[];
+
+    @OneToMany(
+        () => ProcessCredential,
+        (processCredential) => processCredential.process
+    )
+    processCredential: ProcessCredential[];
 }

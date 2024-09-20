@@ -97,7 +97,7 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
     const handleDelete = async (id: number) => {
         await dispatch(scheduleProcessActions.removeScheduledProcess({ resourceId: id }));
         await dispatch(scheduleProcessActions.getSchedulesByProcess({
-            resourceId: `processes/${processId}`
+            resourceId: processId
         }));
         dispatch(processActions.removeDraftProcessSchedule(id));
     };
