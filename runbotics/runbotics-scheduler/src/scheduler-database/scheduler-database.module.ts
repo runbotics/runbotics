@@ -17,6 +17,7 @@ import { ActionModule } from './action/action.module';
 import { ProcessCredentialModule } from './process-credential/process-credential.module';
 import { ScheduleProcessModule } from './schedule-process/schedule-process.module';
 import { CredentialAttributeModule } from './credential-attribute/credential-attribute.module';
+import { ProcessOutputModule } from './process-output/process-output.module';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { CredentialAttributeModule } from './credential-attribute/credential-att
         ProcessContextModule,
         ProcessContextSecretModule,
         ProcessCredentialModule,
+        ProcessOutputModule,
         TenantModule,
         GlobalVariableModule,
         NotificationBotModule,
