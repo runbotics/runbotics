@@ -55,7 +55,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
                 title={translate('Credentials.Collection.Tile.MenuItem.Delete.ConfirmationDialog.Title', { name: collection.name })}
                 onClose={() => handleDialogClose()}
                 confirmButtonOptions={{ onClick: handleDelete }}
-                cancelButtonOptions={{ onClick: () => handleDialogClose() }}
+                cancelButtonOptions={{ onClick: handleDialogClose }}
             />
         </If>
     );
