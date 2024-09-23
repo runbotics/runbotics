@@ -13,7 +13,6 @@ import { BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/cre
 
 import TemplateAttribute from './TemplateAttribute';
 import { BasicCredentialDto } from '../../Credential.types';
-import { DisplayAttribute } from '../CredentialAttribute/Attribute.types';
 
 interface CredentialAttributesListProps {
     credential: BasicCredentialDto;
@@ -25,7 +24,7 @@ interface CredentialAttributesListProps {
 const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credential, templateId, isNewCredential, currentCollection }) => {
     const dispatch = useDispatch();
     const { credentialTemplates, loading: templatesLoading } = useSelector(credentialTemplatesSelector);
-    const credentialTemplate = credentialTemplates.find(template => template.id === templateId);
+    const credentialTemplate = credentialTemplates && credentialTemplates.find(template => template.id === templateId);
     const { user } = useAuth();
     const isOwner = currentCollection ? currentCollection.createdById === user.id : false;
     const hasEditAccess = currentCollection
@@ -37,17 +36,14 @@ const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credentia
 
     useEffect(() => {
         dispatch(credentialsActions.fetchOneCredential({ resourceId: credential.id }));
+        if (!credentialTemplates) dispatch(credentialTemplatesActions.fetchAllTemplates());
     }, []);
 
-    useEffect(() => {
-        if (credentialTemplates.length === 0) dispatch(credentialTemplatesActions.fetchAllTemplates());
-    }, []);
-
-    if (templatesLoading|| credentialTemplates.length === 0) return <LoadingScreen/>;
+    if (templatesLoading|| !credentialTemplates) return <LoadingScreen/>;
 
     const templateAttributesCards = credentialTemplate.attributes.map((attribute) => (
         <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12} display="flex" alignSelf="stretch">
-            <TemplateAttribute credentialId={credential.id} attribute={attribute as DisplayAttribute} isNewCredential={isNewCredential} canEdit={canEdit}/>
+            <TemplateAttribute credentialId={credential.id} attribute={attribute} isNewCredential={isNewCredential} canEdit={canEdit}/>
         </Grid>
     ));
 

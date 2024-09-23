@@ -117,7 +117,7 @@ const CredentialsGridView = () => {
 
     return (
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
-            <Header />
+            <Header addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0}/>
             <If condition={!loading} else={<LoadingScreen />}>
                 {collectionId && (
                     <Box display="flex" justifyItems="center" alignItems="center" mb={3}>
@@ -125,12 +125,12 @@ const CredentialsGridView = () => {
                             <FolderOpenIcon />
                         </SvgIcon>
                         <Typography variant="h3" ml={1}>
-                            {credentialCollections.find(collection => collectionId === collection.id)?.name}
+                            {credentialCollections && credentialCollections.find(collection => collectionId === collection.id)?.name}
                         </Typography>
                     </Box>
                 )}
                 <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
-                    <CredentialsHeader credentialCount={credentials.length} tabName={CredentialsTabs.CREDENTIALS}/>
+                    <CredentialsHeader credentialCount={credentials && credentials.length} tabName={CredentialsTabs.CREDENTIALS}/>
                 </Box>
                 <TileGrid>{credentialsTiles}</TileGrid>
             </If>
@@ -145,7 +145,7 @@ const CredentialsGridView = () => {
             )}
             <Box mt={6} display="flex" justifyContent="center">
                 <Paging
-                    totalItems={credentials.length}
+                    totalItems={credentials && credentials.length}
                     itemsPerPage={pageSize}
                     currentPage={page}
                     setPage={setPage}

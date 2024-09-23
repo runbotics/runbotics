@@ -2,6 +2,7 @@ const credentials = {
     'Credentials.List.Header.Elements': '{{ count }} credentials',
     'Credentials.Add': 'Add new credential',
     'Credential.Add.Title': 'Add credential',
+    'Credential.Add.CollectionNotFoundInfo': 'Create credential collection first',
     'Credential.Edit.Title': 'Edit credential',
     'Credential.Tile.Delete.Warning': 'Are you sure you want to delete credential named {{ name }}?',
     'Credential.Tile.Delete.Success': 'Successfully deleted credential named {{ name }}',

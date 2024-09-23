@@ -2,13 +2,11 @@ import { FC, useState } from 'react';
 
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
-import EditIcon from '@mui/icons-material/Edit';
 
 import { Typography, Grid, Button } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import { grey } from '@mui/material/colors';
 
-import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useDispatch } from '#src-app/store';
@@ -18,12 +16,12 @@ import { credentialsActions } from '#src-app/store/slices/Credentials';
 import { fetchOneCredential } from '#src-app/store/slices/Credentials/Credentials.thunks';
 
 import { AttributeIcon, AttributeInfoNotEdiable, StyledAttributeCard, StyledGridContainer } from './Attribute.styles';
-import { DisplayAttribute } from './Attribute.types';
+import { CredentialTemplateAttribute } from './Attribute.types';
 import CredentialAttributeDetails from './CredentialAttributeDetails';
 
 type TemplateAttributeProps = {
     credentialId: string;
-    attribute: DisplayAttribute;
+    attribute: CredentialTemplateAttribute;
     isNewCredential: boolean;
     canEdit: boolean;
 };
@@ -36,10 +34,6 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
         masked: true,
         value: ''
     });
-
-    const handleEdit = () => {
-        setIsEditMode(true);
-    };
 
     const handleCancel = () => {
         setCurrentAttribute({
@@ -55,9 +49,11 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
                 resourceId: `/${credentialIdToUpdate}/UpdateAttribute/${attributeName}`,
                 payload: currentAttribute
             })
-        ).unwrap().then((response => {
-            dispatch(fetchOneCredential({resourceId: response.id}));
-        }));
+        )
+            .unwrap()
+            .then(response => {
+                dispatch(fetchOneCredential({ resourceId: response.id }));
+            });
         setCurrentAttribute({
             masked: true,
             value: ''
@@ -83,7 +79,13 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
                     <Typography variant="h6">{translate('Credential.Attribute.Description.Label')}</Typography>
                     <AttributeInfoNotEdiable>{attribute.description}</AttributeInfoNotEdiable>
                 </Grid>
-                <CredentialAttributeDetails handleFieldChange={handleFieldChange} currentAttribute={currentAttribute} isEditMode={isEditMode}/>
+                <CredentialAttributeDetails
+                    handleFieldChange={handleFieldChange}
+                    currentAttribute={currentAttribute}
+                    isEditMode={isEditMode}
+                    canEdit={canEdit}
+                    setIsEditMode={setIsEditMode}
+                />
                 <Collapse in={isEditMode} orientation="vertical" sx={{ width: '100%' }}>
                     <Grid container xs={12} justifyContent="space-between">
                         <Grid item>
@@ -109,16 +111,6 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
                         </Grid>
                     </Grid>
                 </Collapse>
-                <If condition={!isEditMode && canEdit}>
-                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', alignSelf: 'center' }}>
-                        <Button size="small" onClick={handleEdit} sx={{ marginRight: '4px'}}>
-                            <EditIcon sx={{ marginRight: '8px', color: grey[700] }} />
-                            <Typography variant="h5" sx={{ color: grey[700] }}>
-                                {translate('Common.Edit').toUpperCase()}
-                            </Typography>
-                        </Button>
-                    </Grid>
-                </If>
             </StyledGridContainer>
         </StyledAttributeCard>
     );

@@ -80,17 +80,17 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
             });
     };
 
-    const collectionsToChoose = credentialCollections.map(collection => (
+    const collectionsToChoose = credentialCollections ? credentialCollections.map(collection => (
         <MenuItem key={collection.id} value={collection.id}>
             <Typography>{collection.name}</Typography>
         </MenuItem>
-    ));
+    )) : null;
 
-    const templatesToChoose = credentialTemplates.map(template => (
+    const templatesToChoose = credentialTemplates ? credentialTemplates.map(template => (
         <MenuItem key={template.id} value={template.id}>
             <Typography>{template.name}</Typography>
         </MenuItem>
-    ));
+    )) : null;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;

@@ -22,6 +22,7 @@ const credentialsCollections: typeof englishCredentialsCollections = {
     'Credentials.Collection.Add.Form.IsPublic.True.Tooltip': 'Ta kolekcja jest widoczna dla każdego, kto ma dostęp do kolekcji',
     'Credentials.Collection.Add.Form.IsPublic.False.Label': 'Prywatna',
     'Credentials.Collection.Add.Form.IsPublic.False.Tooltip': 'Ta kolekcja widoczna jest tylko dla ciebie i adminów',
+    'Credentials.Collection.Add.Form.SharedWith.NoUser': 'Nie znaleziono użytkownika',
     'Credentials.Collection.Tile.CreatedDate.Label': 'Data utworzenia',
     'Credentials.Collection.Tile.Owner.Label': 'Właściciel',
     'Credentials.Collection.Tile.UpdatedDate.Label': 'Data modyfikacji',

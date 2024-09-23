@@ -4,6 +4,7 @@ const credentials: typeof englishCredentials = {
     'Credentials.List.Header.Elements': 'Liczba poświadczeń: {{ count }}',
     'Credentials.Add': 'Dodaj nowe poświadczenia',
     'Credential.Add.Title': 'Dodaj poświadczenia',
+    'Credential.Add.CollectionNotFoundInfo': 'Najpierw stwórz kolekcję',
     'Credential.Edit.Title': 'Edytuj poświadczenia',
     'Credential.Tile.Delete.Warning': 'Czy na pewno chcesz usunąć poświadczenie o nazwie {{ name }}?',
     'Credential.Tile.Delete.Success': 'Usunięto poświadczenie o nazwie {{ name }}',

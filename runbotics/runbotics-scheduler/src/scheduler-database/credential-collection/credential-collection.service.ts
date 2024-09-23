@@ -6,7 +6,7 @@ import {
     AccessType,
     CredentialCollection,
 } from './credential-collection.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import {
     CredentialCollectionUser,
     PrivilegeType,
@@ -108,12 +108,12 @@ export class CredentialCollectionService {
                 `
                     credentialCollectionEntity.tenantId = :tenantId AND
                     credentialCollectionUser.user.id = :userId AND
-                    credentialCollectionUser.privilegeType = :privilegeType
+                    credentialCollectionUser.privilegeType IN (:...privilegeTypes)
                     `,
                     {
                     tenantId: user.tenantId,
                     userId: user.id,
-                    privilegeType: PrivilegeType.WRITE,
+                    privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE],
                 }
             )
             .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
@@ -127,7 +127,7 @@ export class CredentialCollectionService {
                 tenantId: user.tenantId,
                 credentialCollectionUser: {
                     userId: user.id,
-                    privilegeType: PrivilegeType.WRITE,
+                    privilegeType: In([PrivilegeType.WRITE, PrivilegeType.READ]),
                 },
             },
             relations: [...relations, 'credentials.createdBy', 'credentials.collection'],
@@ -148,13 +148,13 @@ export class CredentialCollectionService {
                     credentialCollectionEntity.id = :id AND
                     credentialCollectionEntity.tenantId = :tenantId AND
                     credentialCollectionUser.user.id = :userId AND
-                    credentialCollectionUser.privilegeType = :privilegeType
+                    credentialCollectionUser.privilegeType IN (:...privilegeTypes)
                 `,
                 {
                     id,
                     tenantId: user.tenantId,
                     userId: user.id,
-                    privilegeType: PrivilegeType.WRITE,
+                    privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE],
                 }
             )
             .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')

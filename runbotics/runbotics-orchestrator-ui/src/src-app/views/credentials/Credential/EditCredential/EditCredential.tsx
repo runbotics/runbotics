@@ -34,13 +34,13 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
     const { credentialCollections, loading: collectionsLoading } = useSelector(credentialCollectionsSelector);
 
     const credential = credentials ? credentials.find(cred => cred.id === credentialId) : undefined;
-    const currentCredentialCollection = credential ? credentialCollections.find(collection => collection.id === credential.collectionId) : undefined;
-    const readyToLoadCredential = !collectionsLoading && Boolean(currentCredentialCollection) && Boolean(credential);
+    const currentCredentialCollection = credential && credentialCollections ? credentialCollections.find(collection => collection.id === credential.collectionId) : undefined;
+    const readyToLoadCredential = !collectionsLoading && !!currentCredentialCollection && !!credential;
 
     useEffect(() => {
         dispatch(credentialsActions.fetchOneCredential({ resourceId: credentialId }));
-        if (!credentialCollections.length) dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
-    }, [credentialId, credentialCollections.length]);
+        if (!credentialCollections) dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+    }, [credentialId, credentialCollections]);
 
     return (
         <>

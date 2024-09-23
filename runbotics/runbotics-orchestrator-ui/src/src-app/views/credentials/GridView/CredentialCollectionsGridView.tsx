@@ -85,7 +85,7 @@ const CredentialCollectionsGridView = () => {
             <Header />
             <If condition={!isLoading} else={<LoadingScreen />}>
                 <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
-                    <CredentialsHeader credentialCount={credentialCollections.length} tabName={CredentialsTabs.COLLECTIONS} />
+                    <CredentialsHeader credentialCount={credentialCollections && credentialCollections.length} tabName={CredentialsTabs.COLLECTIONS} />
                 </Box>
                 <TileGrid>
                     {collectionTiles}
@@ -104,7 +104,7 @@ const CredentialCollectionsGridView = () => {
                 </TileGrid>
                 <Box mt={6} display="flex" justifyContent="center">
                     <Paging
-                        totalItems={credentialCollections.length}
+                        totalItems={credentialCollections && credentialCollections.length}
                         itemsPerPage={pageSize}
                         currentPage={page}
                         setPage={setPage}

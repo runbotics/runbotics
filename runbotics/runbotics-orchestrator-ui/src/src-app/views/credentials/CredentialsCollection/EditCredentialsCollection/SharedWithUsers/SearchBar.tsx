@@ -1,31 +1,39 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { TextField, Box, ListItemButton, ListItemText, Paper, List } from '@mui/material';
 import { IUser } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
+import useTranslations from '#src-app/hooks/useTranslations';
+
 
 interface SearchBarProps {
   onAddUser: (email: string) => void;
   availableUsers: IUser[];
-  setAvailableUsers: (state: ((prevState: IUser[]) => IUser[])) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers, setAvailableUsers }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {
+    const { translate } = useTranslations();
     const [searchInput, setSearchInput] = useState('');
     const [isFocused, setIsFocused] = useState(false);
-    const searchInputRef = useRef<HTMLInputElement | null>(null);
+    const [filteredUsers, setFilteredUsers] = useState([]);
+    const searchInputRef = useRef<HTMLInputElement>(null);
     const listRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        setFilteredUsers(availableUsers);
+    }, [availableUsers]);
 
     const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setSearchInput(value);
-        setAvailableUsers((prevState) => prevState.filter(user => user.email.toLowerCase().includes(value.toLowerCase())));
+        setFilteredUsers(availableUsers.filter(user => user.email.toLowerCase().includes(value.toLowerCase())));
     };
 
     const handleUserAdd = (user: IUser) => {
         setSearchInput('');
         onAddUser(user.email);
+        setIsFocused(false);
     };
 
     const handleFocus = () => {
@@ -38,7 +46,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers, setAva
         }
     };
 
-    const filteredUsersElements = availableUsers.map(filteredUser => (
+    const filteredUsersElements = filteredUsers.map(filteredUser => (
         <ListItemButton key={filteredUser.id} onClick={() => handleUserAdd(filteredUser)} >
             <ListItemText primary={filteredUser.email} />
         </ListItemButton>));
@@ -50,17 +58,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers, setAva
                 variant="outlined"
                 value={searchInput}
                 onFocus={handleFocus}
+                onBlur={() => setTimeout(() => {
+                    handleBlur();
+                }, 100)}
                 onChange={handleSearchInputChange}
                 fullWidth
-                onBlur={handleBlur}
                 inputRef={searchInputRef}
             >
-
             </TextField>
             <If condition={isFocused}>
                 <Paper ref={listRef} style={{ position: 'absolute', top: '100%', zIndex: 1, width: '100%' }}>
                     <List>
-                        {filteredUsersElements}
+                        <If condition={filteredUsersElements.length > 0} else={<ListItemText sx={{ marginLeft: '4px'}} primary={translate('Credentials.Collection.Add.Form.SharedWith.NoUser')} />}>
+                            {filteredUsersElements}
+                        </If>
                     </List>
                 </Paper>
             </If>

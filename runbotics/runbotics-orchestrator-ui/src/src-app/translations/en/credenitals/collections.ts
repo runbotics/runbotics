@@ -20,6 +20,7 @@ const credentialsCollections = {
     'Credentials.Collection.Add.Form.IsPublic.True.Tooltip': 'This collection is visible to everyone who has granted access to the collection',
     'Credentials.Collection.Add.Form.IsPublic.False.Label': 'Private',
     'Credentials.Collection.Add.Form.IsPublic.False.Tooltip': 'This collection is visible only to you and admins',
+    'Credentials.Collection.Add.Form.SharedWith.NoUser': 'No user found',
     'Credentials.Collection.Tile.CreatedDate.Label': 'Created date',
     'Credentials.Collection.Tile.Owner.Label': 'Owner',
     'Credentials.Collection.Tile.UpdatedDate.Label': 'Updated date',

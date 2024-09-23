@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { FC, ChangeEvent } from 'react';
 
 import { Grid, Stack, Tab, Tabs } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -15,7 +15,11 @@ export enum CredentialsTabs {
     COLLECTIONS = 'collections'
 }
 
-const Header = () => {
+interface HeaderProps {
+    addCredentialDisabled?: boolean;
+}
+
+const Header: FC<HeaderProps> = ({ addCredentialDisabled }) => {
     const { translate } = useTranslations();
 
     const router = useRouter();
@@ -66,7 +70,7 @@ const Header = () => {
             <Grid item>
                 <Stack direction="row" spacing={2}>
                     <If condition={currentTab === CredentialsTabs.CREDENTIALS}>
-                        <AddCredentialButton/>
+                        <AddCredentialButton disabled={addCredentialDisabled}/>
                     </If>
                     <If condition={currentTab === CredentialsTabs.COLLECTIONS}>
                         <AddCredentialsCollectionButton/>

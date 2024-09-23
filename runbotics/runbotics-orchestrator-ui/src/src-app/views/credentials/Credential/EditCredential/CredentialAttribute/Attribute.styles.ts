@@ -32,6 +32,20 @@ export const AttributeInfoNotEdiable = styled(Typography)(({ theme }) => `
 
 export const AttributeIcon = styled(IconButton)(
     ({ theme }) => `
-    margin-right: ${theme.spacing(1)}
+    margin-right: ${theme.spacing(1)};
+`
+);
+
+export const CustomButtonIcon = styled(IconButton)(
+    ({ theme }) => `
+    &.MuiIconButton-root {
+        margin-left: ${theme.spacing(1)};
+        border-radius: 50%;
+        align-self: center;
+
+        &:hover {
+            background-color: ${grey[300]};
+        }
+    }
 `
 );
