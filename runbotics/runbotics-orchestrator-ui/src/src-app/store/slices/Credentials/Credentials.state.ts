@@ -1,7 +1,9 @@
-import { CredentialDto } from 'runbotics-common';
+import { Credential } from 'runbotics-common';
 
+import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 
 export interface CredentialsState {
-    all: CredentialDto[];
+    all: BasicCredentialDto[];
+    allByTemplateAndProcess: Credential[];
     loading: boolean;
 }

@@ -13,6 +13,7 @@ import {
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { Tenant } from '../tenant/tenant.entity';
+import { numberTransformer } from '#/database/database.utils';
 import { ProcessCredential } from '../process-credential/process-credential.entity';
 
 @Entity({ schema: 'scheduler' })
@@ -54,7 +55,7 @@ export class Credential {
     @JoinColumn({ name: 'created_by_id' })
     createdBy: UserEntity;
 
-    @Column({ name: 'created_by_id' })
+    @Column({ name: 'created_by_id', transformer: numberTransformer  })
     createdById: number;
 
     @UpdateDateColumn({
@@ -67,7 +68,7 @@ export class Credential {
     @JoinColumn({ name: 'updated_by_id' })
     updatedBy: UserEntity;
 
-    @Column({ name: 'updated_by_id' })
+    @Column({ name: 'updated_by_id', transformer: numberTransformer  })
     updatedById: number;
 
     @ManyToOne(

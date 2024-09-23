@@ -28,7 +28,7 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
     const { enqueueSnackbar } = useSnackbar();
     const { id: processId } = useRouter().query;
     const dispatch = useDispatch();
-    const { all } = useSelector(credentialsSelector);
+    const { allByTemplateAndProcess } = useSelector(credentialsSelector);
     const [pickedCredential, setPickedCredential] = useState<CredentialDto>();
 
     const handleDialogClose = () => {
@@ -69,7 +69,7 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
 
     useEffect(() => {
         if (isOpen) {
-            dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant({
+            dispatch(credentialsActions.fetchAllCredentialsByTemplateAndProcess({
                 pageParams: { templateName, processId }
             }));
         }
@@ -85,7 +85,7 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
                 </DialogTitle>
                 <AddDialogContent>
                     <CredentialSelectSet
-                        credentials={all}
+                        credentials={allByTemplateAndProcess}
                         handleCredentialChange={handleCredentialChange}
                     />
                 </AddDialogContent>

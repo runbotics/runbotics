@@ -1,6 +1,7 @@
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import HistoryIcon from '@mui/icons-material/History';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import TuneIcon from '@mui/icons-material/Tune';
 import { Command as CommandIcon } from 'react-feather';
@@ -30,6 +31,12 @@ export const usePublicSections = (): Section[] => {
                     href: '/app/bots',
                     authorities: [Role.ROLE_ADMIN],
                     featureKeys: [FeatureKey.BOT_READ],
+                },
+                {
+                    title: translate('Nav.Items.Credentials'),
+                    icon: LockOutlinedIcon,
+                    href: '/app/credentials/collections',
+                    featureKeys: [FeatureKey.CREDENTIALS_PAGE_READ],
                 },
                 {
                     title: translate('Nav.Items.Actions'),

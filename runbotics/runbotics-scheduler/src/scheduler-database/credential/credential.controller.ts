@@ -32,7 +32,7 @@ export class CredentialController {
     return this.credentialService.findAllAccessibleByCollectionId(user, collectionId);
   }
 
-  @Get(COLLECTION_URL_PARTIAL + ':id')
+  @Get('credentials/:id')
   findOneUserAccessible(@Param('id') id: string, @User() user: IUser) {
     this.logger.log('REST request to get credential by id ' + id);
     return this.credentialService.findOneAccessibleById(id, user.tenantId);
@@ -44,7 +44,7 @@ export class CredentialController {
     return this.credentialService.updateById(id, credentialDto, user);
   }
 
-  @Patch(COLLECTION_URL_PARTIAL + ':id/UpdateAttribute/:attributeName')
+  @Patch('credentials/:id/UpdateAttribute/:attributeName')
   updateAttribute(@Param('id') id: string, @Param('attributeName') attributeName: string, @Body() attributeDto: UpdateAttributeDto, @User() user: IUser) {
     this.logger.log('REST request to update credential attribute by id ' + id);
     return this.credentialService.updateAttribute(id, attributeName, attributeDto, user);
@@ -58,17 +58,24 @@ export class CredentialController {
 
   @Get('credentials')
   findAllAccessible(
-    @Query() query,
     @User() user: IUser
   ) {
     this.logger.log('REST request to get all accessible credentials');
 
-    return isCredentialFilterQuery(query)
-      ? this.credentialService.findAllAccessibleByTemplateAndProcess(
+    return this.credentialService.findAllAccessible(user);
+  }
+
+  @Get('credentialsByTemplateAndProcess')
+  findAllAccessibleByTemplateAndProcess(
+    @Query() query,
+    @User() user: IUser
+  ) {
+    this.logger.log('REST request to get all accessible credentials by template and process');
+
+    return this.credentialService.findAllAccessibleByTemplateAndProcess(
         query.templateName,
         query.processId,
         user
-      )
-      : this.credentialService.findAllAccessible(user);
+      );
   }
 }

@@ -210,6 +210,9 @@ export enum FeatureKey {
 
     // Allows to create invite code for all tenants
     TENANT_CREATE_ALL_INVITE_CODE = 'TENANT_CREATE_ALL_INVITE_CODE',
+
+    // Allows to read credentials page
+    CREDENTIALS_PAGE_READ = 'CREDENTIALS_PAGE_READ',
 }
 
 export interface IFeatureKey {
