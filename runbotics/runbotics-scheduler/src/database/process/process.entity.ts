@@ -7,7 +7,7 @@ import {
     Generated,
     PrimaryColumn,
     ManyToMany,
-    JoinTable, OneToOne,
+    JoinTable, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import {
@@ -15,8 +15,8 @@ import {
     IScheduleProcess,
     IUser,
     IBotCollection,
-    IBotSystem,
     NotificationProcess,
+    IBotSystem, ProcessOutputType,
 } from 'runbotics-common';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
 import { BotSystemEntity } from '../bot-system/bot-system.entity';
@@ -27,44 +27,50 @@ import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-da
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 import { ProcessCredential } from '#/scheduler-database/process-credential/process-credential.entity';
 
-@Entity({ name: 'process', synchronize: false })
-export class ProcessEntity implements IProcess {
+@Entity({ name: 'process' })
+export class ProcessEntity {
     @Generated()
-    @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
+    @PrimaryColumn({ type: 'bigint', transformer: numberTransformer})
     id: number;
 
     @Column({ name: 'tenant_id' })
     tenantId: string;
 
-    @Column({ unique: true, type: 'varchar' })
-    name: string;
+    @Column({ type: 'varchar', length: 255 })
+    name: string;   
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'clob' })
     description: string;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'clob' })
     definition: string;
 
-    @Column({ transformer: dateTransformer, type: 'varchar' })
+    @Column()
+    shared: boolean;
+
+    @CreateDateColumn({ transformer: dateTransformer, type: 'timestamp with time zone' })
     created: string;
 
-    @Column({ transformer: dateTransformer, type: 'varchar' })
+    @UpdateDateColumn({ transformer: dateTransformer, type: 'timestamp with time zone' })
     updated: string;
 
-    @Column({ name: 'is_public', type: 'boolean' })
+    @Column({ name: 'is_public' })
     isPublic: boolean;
 
-    @Column({ name: 'is_attended', type: 'boolean' })
+    @Column({ name: 'is_attended' })
     isAttended?: boolean;
 
-    @Column({ name: 'is_triggerable', type: 'boolean' })
+    @Column({ name: 'is_triggerable' })
     isTriggerable?: boolean;
 
-    @Column({ name: 'last_run', type: 'varchar' })
+    @Column({ name: 'last_run', transformer: dateTransformer, type: 'timestamp with time zone' })
     lastRun?: string;
 
-    @Column({ name: 'execution_info', type: 'varchar' })
+    @Column({ name: 'execution_info', type: 'text' })
     executionInfo: string;
+
+    @Column({ type: 'varchar', length: 50 })
+    outputType: ProcessOutputType;
 
     @ManyToOne(() => BotSystemEntity)
     @JoinColumn([{ name: 'system', referencedColumnName: 'name' }])
@@ -80,6 +86,9 @@ export class ProcessEntity implements IProcess {
     @ManyToOne(() => BotCollectionEntity)
     @JoinColumn({ name: 'bot_collection', referencedColumnName: 'id' })
     botCollection: IBotCollection;
+
+    @ManyToOne(() => ProcessCol)
+    processCollection: string;
 
     @ManyToOne(() => UserEntity)
     @JoinColumn({ name: 'editor_id', referencedColumnName: 'id' })
