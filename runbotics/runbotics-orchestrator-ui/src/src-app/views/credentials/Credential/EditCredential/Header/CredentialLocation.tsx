@@ -9,6 +9,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 const StyledLink = styled(Link)`
     text-decoration: none;
+    color: black;
 `;
 
 interface CredentialLocationProps {
@@ -23,7 +24,14 @@ const CredentialLocation: FC<CredentialLocationProps> = ({ credentialName, colle
     return (
         <Grid container gap={1} justifyContent="center" alignSelf="center">
             <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
-                <StyledLink href={allCredentialsPath}>
+                <StyledLink
+                    href={{
+                        pathname: allCredentialsPath,
+                        query: {
+                            collectionId
+                        }
+                    }}
+                >
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <ArrowBack fontSize="medium" />
                         <Typography variant="body1" ml={1}>
@@ -35,19 +43,9 @@ const CredentialLocation: FC<CredentialLocationProps> = ({ credentialName, colle
             <Divider orientation="vertical" variant="fullWidth" flexItem />
             <Grid item>
                 <Breadcrumbs>
-                    <Link
-                        href={{
-                            pathname: allCredentialsPath,
-                            query: {
-                                collectionId
-                            }
-                        }}
-                    >
+                    <Link href={allCredentialsPath}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <HomeOutlined
-                                fontSize="medium"
-                                sx={{ color: theme.palette.secondary.main }}
-                            />
+                            <HomeOutlined fontSize="medium" sx={{ color: theme.palette.secondary.main }} />
                         </Box>
                     </Link>
                     <Typography variant="body1">{credentialName}</Typography>
