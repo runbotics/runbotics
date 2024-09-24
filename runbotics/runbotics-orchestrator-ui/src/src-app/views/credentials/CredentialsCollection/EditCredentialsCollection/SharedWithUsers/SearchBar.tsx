@@ -34,6 +34,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {
         setSearchInput('');
         onAddUser(user.email);
         setIsFocused(false);
+        searchInputRef.current.blur();
     };
 
     const handleFocus = () => {
@@ -47,7 +48,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {
     };
 
     const filteredUsersElements = filteredUsers.map(filteredUser => (
-        <ListItemButton key={filteredUser.id} onClick={() => handleUserAdd(filteredUser)} >
+        <ListItemButton key={filteredUser.id}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={(e) => {
+                e.preventDefault();
+                handleUserAdd(filteredUser);
+            }} >
             <ListItemText primary={filteredUser.email} />
         </ListItemButton>));
 
@@ -57,10 +63,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {
                 label="Search for a user"
                 variant="outlined"
                 value={searchInput}
-                onFocus={handleFocus}
-                onBlur={() => setTimeout(() => {
-                    handleBlur();
-                }, 100)}
+                onClick={handleFocus}
+                onBlur={() => handleBlur()}
                 onChange={handleSearchInputChange}
                 fullWidth
                 inputRef={searchInputRef}
@@ -69,7 +73,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {
             <If condition={isFocused}>
                 <Paper ref={listRef} style={{ position: 'absolute', top: '100%', zIndex: 1, width: '100%' }}>
                     <List>
-                        <If condition={filteredUsersElements.length > 0} else={<ListItemText sx={{ marginLeft: '4px'}} primary={translate('Credentials.Collection.Add.Form.SharedWith.NoUser')} />}>
+                        <If condition={filteredUsersElements.length > 0} else={
+                            <ListItemText sx={{ marginLeft: '4px'}}
+                                primary={translate('Credentials.Collection.Add.Form.SharedWith.NoUser')}
+                            />
+                        }>
                             {filteredUsersElements}
                         </If>
                     </List>
