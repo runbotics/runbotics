@@ -29,17 +29,22 @@ const CredentialCollectionsGridView = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const pageFromUrl = searchParams.get('page');
-
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 1);
     const pageSizeFromUrl = searchParams.get('pageSize');
     const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
     const startingPageItemIndex = (page - 1) * pageSize;
     const endingPageItemIndex = startingPageItemIndex + pageSize;
-    const currentPageCollections = credentialCollections ? credentialCollections.slice(startingPageItemIndex, endingPageItemIndex) : [];
 
     const [currentCollection, setCurrentCollection] = useState(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+    const [filteredCollections, setFilteredCollections] = useState([]);
+    const currentPageCollections = filteredCollections ? filteredCollections.slice(startingPageItemIndex, endingPageItemIndex) : [];
+
+    useEffect(() => {
+        setFilteredCollections(credentialCollections);
+    }, [credentialCollections]);
 
     useEffect(() => {
         dispatch(credentialCollectionsActions.fetchAllCredentialCollections())
@@ -84,17 +89,18 @@ const CredentialCollectionsGridView = () => {
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
             <Header />
             <If condition={!isLoading} else={<LoadingScreen />}>
-                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
-                    <CredentialsHeader credentialCount={credentialCollections && credentialCollections.length} tabName={CredentialsTabs.COLLECTIONS} />
+                <Box display="flex" flexDirection="row" justifyContent="space-between" mt={2} mb={2} alignItems="center">
+                    <CredentialsHeader
+                        credentialCount={filteredCollections && filteredCollections.length}
+                        tabName={CredentialsTabs.COLLECTIONS}
+                        items={credentialCollections}
+                        setItems={setFilteredCollections}
+                    />
                 </Box>
                 <TileGrid>
                     {collectionTiles}
                     <If condition={currentCollection}>
-                        <CredentialsCollectionForm
-                            open={isEditDialogOpen}
-                            onClose={handleCloseEditDialog}
-                            collection={currentCollection}
-                        />
+                        <CredentialsCollectionForm open={isEditDialogOpen} onClose={handleCloseEditDialog} collection={currentCollection} />
                         <CredentialCollectionDelete
                             collection={currentCollection}
                             isDialogOpen={isDeleteDialogOpen}

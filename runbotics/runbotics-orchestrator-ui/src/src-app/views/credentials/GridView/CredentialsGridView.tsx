@@ -40,7 +40,13 @@ const CredentialsGridView = () => {
     const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
     const startingPageItemIndex = page * pageSize;
     const endingPageItemIndex = startingPageItemIndex + pageSize;
-    const currentPageCredentials = credentials ? credentials.slice(startingPageItemIndex, endingPageItemIndex) : [];
+
+    const [filteredCredentials, setFilteredCredentials] = useState([]);
+    const currentPageCredentials = filteredCredentials ? filteredCredentials.slice(startingPageItemIndex, endingPageItemIndex) : [];
+
+    console.log('all', credentials);
+    console.log('currentPageCredentials', currentPageCredentials);
+    console.log('filteredCredentials', filteredCredentials);
 
     const [currentDialogCredential, setCurrentDialogCredential] = useState(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -49,8 +55,10 @@ const CredentialsGridView = () => {
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
 
     useEffect(() => {
+        setFilteredCredentials(credentials);
+    }, [credentials]);
 
-    }, [page]);
+    useEffect(() => {}, [page]);
 
     const handleDeleteDialogOpen = (id: string) => {
         setIsDeleteDialogOpen(true);
@@ -89,7 +97,8 @@ const CredentialsGridView = () => {
             const fetchAllCollections = dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
             const fetchAllTemplates = dispatch(credentialTemplatesActions.fetchAllTemplates());
 
-            const fetchCredentials = collectionId ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
+            const fetchCredentials = collectionId
+                ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
                 : dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
 
             Promise.allSettled([fetchAllCollections, fetchAllTemplates, fetchCredentials]).then(() => {
@@ -117,20 +126,25 @@ const CredentialsGridView = () => {
 
     return (
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
-            <Header addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0}/>
+            <Header addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0} />
             <If condition={!loading} else={<LoadingScreen />}>
                 {collectionId && (
-                    <Box display="flex" justifyItems="center" alignItems="center" mb={3}>
+                    <Box display="flex" justifyItems="center" alignItems="center" mb={2} mt={2}>
                         <SvgIcon fontSize="large" color="secondary">
                             <FolderOpenIcon />
                         </SvgIcon>
-                        <Typography variant="h3" ml={1}>
+                        <Typography variant="h3" ml={1} >
                             {credentialCollections && credentialCollections.find(collection => collectionId === collection.id)?.name}
                         </Typography>
                     </Box>
                 )}
-                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
-                    <CredentialsHeader credentialCount={credentials && credentials.length} tabName={CredentialsTabs.CREDENTIALS}/>
+                <Box display="flex" flexDirection="row" justifyContent="space-between" mt={2} mb={2} alignItems="center">
+                    <CredentialsHeader
+                        credentialCount={filteredCredentials && filteredCredentials.length}
+                        tabName={CredentialsTabs.CREDENTIALS}
+                        items={credentials}
+                        setItems={setFilteredCredentials}
+                    />
                 </Box>
                 <TileGrid>{credentialsTiles}</TileGrid>
             </If>
@@ -144,12 +158,7 @@ const CredentialsGridView = () => {
                 />
             )}
             <Box mt={6} display="flex" justifyContent="center">
-                <Paging
-                    totalItems={credentials && credentials.length}
-                    itemsPerPage={pageSize}
-                    currentPage={page}
-                    setPage={setPage}
-                />
+                <Paging totalItems={credentials && credentials.length} itemsPerPage={pageSize} currentPage={page} setPage={setPage} />
             </Box>
         </InternalPage>
     );
