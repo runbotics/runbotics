@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ActionCredentialType, ActionRegex, CloudExcelAction } from 'runbotics-common';
+import { ActionRegex, CloudExcelAction } from 'runbotics-common';
 import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 
 import { ExcelSession, ExcelSessionInfo, ExcelService } from '#action/microsoft/excel';
@@ -9,7 +9,8 @@ import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
 import { sortNumbersDescending } from '#action/microsoft/excel/excel.utils';
 import { MicrosoftCredential } from '#action/microsoft/common.types';
-import { ServerConfigService } from '#config';
+import { MicrosoftAuth, ServerConfigService } from '#config';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
@@ -129,28 +130,31 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
 
     run(request: CloudExcelTypes.CloudExcelActionRequest) {
         switch (request.script) {
-            case CloudExcelAction.OPEN_FILE:
-                // @todo throw error 'incorrect action definition - credentials are needed for this action' if any of CredentialData or list including MicrosoftCredential is not present in the input
+            case CloudExcelAction.OPEN_FILE: {
+                const passwordManagerCredential =
+                    credentialAttributesMapper<MicrosoftAuth>(request.credentials);
 
-                // eslint-disable-next-line no-case-declarations
-                const authData = this.serverConfigService.microsoftAuth;
+                // @todo After completion of password manager switch fully to passwordManagerCredential
+                const credential: MicrosoftAuth =
+                    passwordManagerCredential ??
+                    this.serverConfigService.microsoftAuth;
 
-                // eslint-disable-next-line no-case-declarations
-                const matchedCredentials = { // @todo here method for matching credentialId (templateName) from action input to decrypted credential (default for the template), e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
+                const matchedCredentials = {
                     config: {
                         auth: {
-                            clientId: authData.clientId,
-                            authority: authData.tenantId,
-                            clientSecret: authData.clientSecret,
+                            clientId: credential.clientId,
+                            authority: credential.tenantId,
+                            clientSecret: credential.clientSecret,
                         }
                     },
                     loginCredential: {
-                        username: authData.username,
-                        password: authData.password,
+                        username: credential.username,
+                        password: credential.password,
                     }
                 };
 
                 return this.openFile(request.input, matchedCredentials);
+            }
             case CloudExcelAction.GET_WORKSHEET_CONTENT:
                 this.checkSession();
                 return this.getWorksheetContent(request.input);

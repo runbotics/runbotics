@@ -51,6 +51,7 @@ import {
 } from '../jira.types';
 import { formatZodError } from '#utils/zodError';
 import { ServerConfigService } from '#config';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2
@@ -290,8 +291,11 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     }
 
     run(request: JiraActionRequest) {
-        // @todo method for matching credentialId (action template) with decrypted credential values and passing it further with input (there's no separation for input/credential)
-        const atlassianCredentials: AtlassianCredentials = {
+        const passwordManagerCredential =
+            credentialAttributesMapper<AtlassianCredentials>(request.credentials);
+
+        // @todo After completion of password manager switch fully to passwordManagerCredential
+        const atlassianCredentials: AtlassianCredentials = passwordManagerCredential ?? {
             originUrl: this.serverConfigService.jiraA41Url,
             username: this.serverConfigService.jiraA41Username,
             password: this.serverConfigService.jiraA41Token,

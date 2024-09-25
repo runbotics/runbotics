@@ -1,5 +1,5 @@
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
-import { ActionCredentialType, ActionRegex } from 'runbotics-common';
+import { ActionRegex } from 'runbotics-common';
 import { Injectable } from '@nestjs/common';
 import { externalAxios, ServerConfigService } from '#config';
 import {
@@ -27,6 +27,7 @@ import {
     IBeeOfficeActivity,
     IBeeOfficeEmployee
 } from './bee-office.types';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 @Injectable()
 export default class BeeOfficeActionHandler extends StatelessActionHandler {
@@ -297,10 +298,15 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     run(request: BeeOfficeActionRequest) {
-        const credential: BeeOfficeCredential = { // @todo method for matching credentialId (action template) with decrypted credential values
-            ...(this.serverConfigService.beeAuth), // @todo skip grant_type as it's being hardcoded later
+        const passwordManagerCredential =
+            credentialAttributesMapper<BeeOfficeCredential>(request.credentials);
+
+        // @todo After completion of password manager switch fully to passwordManagerCredential
+        const credential: BeeOfficeCredential = passwordManagerCredential ?? {
+            ...(this.serverConfigService.beeAuth),
             url: this.serverConfigService.beeUrl,
         };
+
         switch (request.script) {
             case 'beeOffice.createNewTimetableActivity':
                 return this.createNewTimetableActivity(request.input, credential);

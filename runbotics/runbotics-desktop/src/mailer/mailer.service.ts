@@ -8,7 +8,7 @@ export class MailService {
     async sendMail({ to, from, subject, html, cc, attachments }: Mail.Options, credential: MailCredential) {
         const transporter = nodemailer.createTransport({
             host: credential.mailHost,
-            port: credential.mailPort,
+            port: Number(credential.mailPort),
             auth: {
                 user: credential.mailUsername,
                 pass: credential.mailPassword,
