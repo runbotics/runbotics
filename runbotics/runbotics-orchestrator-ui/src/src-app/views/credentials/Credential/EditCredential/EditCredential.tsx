@@ -64,7 +64,7 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
                                 <CredentialAttributesList
                                     credential={credential}
                                     templateId={credential.templateId}
-                                    isNewCredential={credential?.attributes.length === 0}
+                                    isNewCredential={credential?.attributes?.length === 0}
                                     currentCollection={currentCredentialCollection}
                                 />
                             </Grid>
