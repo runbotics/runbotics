@@ -144,11 +144,11 @@ export default class GoogleActionHandler extends StatelessActionHandler {
     }
 
     run(request: GoogleActionRequest) {
-        const passwordManagerCredential =
+        const matchedCredential =
             credentialAttributesMapper<GoogleCredential>(request.credentials);
 
-        // @todo After completion of password manager switch fully to passwordManagerCredential
-        const credential: GoogleCredential = passwordManagerCredential ?? {
+        // @todo After completion of password manager switch fully to matchedCredential
+        const credential: GoogleCredential = matchedCredential ?? {
             email: this.serverConfigService.googleAuth.serviceAccountEmail,
             key: this.serverConfigService.googleAuth.privateKey,
         };

@@ -1,5 +1,11 @@
 import { DecryptedCredential } from 'runbotics-common';
 
+/**
+ * Takes array of decrypted credentials and returns mapped credential attributes in expected type.
+ *
+ * @param credentials Single element array of decrypted credentials matched for specific action
+ * @returns Mapped credential attributes to single object with expected type.
+ */
 export const credentialAttributesMapper = <R = Record<string, any>>(
     credentials: DecryptedCredential[]
 ): R | undefined => {

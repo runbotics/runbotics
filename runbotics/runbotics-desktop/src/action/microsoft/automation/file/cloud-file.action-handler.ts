@@ -172,12 +172,12 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     run(request: CloudFileActionRequest) {
-        const passwordManagerCredential =
+        const matchedCredential =
             credentialAttributesMapper<MicrosoftAuth>(request.credentials);
 
-        // @todo After completion of password manager switch fully to passwordManagerCredential
+        // @todo After completion of password manager switch fully to matchedCredential
         const credential: MicrosoftAuth =
-            passwordManagerCredential ??
+            matchedCredential ??
             this.serverConfigService.microsoftAuth;
 
         const matchedCredentials = {

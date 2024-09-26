@@ -23,6 +23,8 @@ import {
     BpmnElementType,
     DecryptedCredential,
     GeneralAction,
+    Credential,
+    ActionCredentialType,
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
@@ -571,6 +573,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
                     const credentialType = runboticsExecutionEnvironment.runbotic?.credentialType;
                     const credentialsForAction = script !== GeneralAction.START_PROCESS
+                        //@todo after implementation of custom credential, pass credentialId instead of null
                         ? this.determineCredentialsForAction(null, credentialType, credentials)
                         : credentials;
 
@@ -694,14 +697,13 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
     );
 
     private determineCredentialsForAction(
-        credentialId: string | undefined,
-        credentialTemplateName: string,
+        credentialId: Credential['id'] | null,
+        credentialTemplateName: ActionCredentialType,
         credentials: DecryptedCredential[]
     ) {
         if (!credentials) {
             return [];
-        }
-        if (credentialId) {
+        } else if (credentialId) {
             return credentials.filter((credential) =>
                 credential.id === credentialId
             );

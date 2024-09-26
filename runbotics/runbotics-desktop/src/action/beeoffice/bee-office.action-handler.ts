@@ -298,11 +298,11 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     run(request: BeeOfficeActionRequest) {
-        const passwordManagerCredential =
+        const matchedCredential =
             credentialAttributesMapper<BeeOfficeCredential>(request.credentials);
 
-        // @todo After completion of password manager switch fully to passwordManagerCredential
-        const credential: BeeOfficeCredential = passwordManagerCredential ?? {
+        // @todo After completion of password manager switch fully to matchedCredential
+        const credential: BeeOfficeCredential = matchedCredential ?? {
             ...(this.serverConfigService.beeAuth),
             url: this.serverConfigService.beeUrl,
         };
