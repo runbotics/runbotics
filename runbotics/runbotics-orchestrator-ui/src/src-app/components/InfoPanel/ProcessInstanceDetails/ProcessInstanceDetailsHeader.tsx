@@ -53,7 +53,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
 
             const processOutputValue = Object.values(output)[0];
 
-            switch (process.outputType.type) {
+            switch (process.output.type) {
                 case ProcessOutputType.TEXT:
                     return <TextOutputWrapper>
                         <Typography variant='body2'>{processOutputValue}</Typography>
@@ -73,7 +73,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
         }
         return null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ isProcessOutput, processInstance.output, process.outputType ]);
+    }, [ isProcessOutput, processInstance.output, process.output ]);
 
     return (
         <Grid container spacing={2}>

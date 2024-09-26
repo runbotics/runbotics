@@ -405,7 +405,7 @@ public class ProcessResource {
         }
     }
 
-    private void checkProcessForEdit(long id, ProcessDiagramUpdateDTO processDiagramDTO) throws BadRequestAlertException {
+    private void checkProcessForEdit(long id, ProcessDiagramUpdateDTO processDiagramDTO) throws BadRequestAlertException { 
         if (processDiagramDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }

@@ -44,29 +44,31 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                                 name: search.trim(),
                                 createdByName: search.trim(),
                                 tagName: search.trim(),
-                            })
+                            }),
                         },
                         equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
+                            ...(collectionId !== null && { collectionId }),
+                        },
                     },
-                })
+                }),
             );
         } else {
             dispatch(
                 processActions.getProcessesPage({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(debouncedValue.trim() && {
-                                name: debouncedValue.trim(),
-                                createdByName: debouncedValue.trim(),
-                                tagName: debouncedValue.trim()
-                            })
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(debouncedValue.trim() && {
+                                    name: debouncedValue.trim(),
+                                    createdByName: debouncedValue.trim(),
+                                    tagName: debouncedValue.trim(),
+                                }),
+                            },
                         },
                     },
-                })
+                }),
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

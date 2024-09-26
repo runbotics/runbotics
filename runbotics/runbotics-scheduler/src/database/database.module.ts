@@ -12,6 +12,7 @@ import { BotSystemModule } from './bot-system/bot-system.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
+import { ProcessCollectionModule } from '#/database/process-collection/process-collection.module';
 
 @Module({
     imports: [
@@ -44,6 +45,7 @@ import { GuestModule } from './guest/guest.module';
         ProcessInstanceLoopEventModule,
         TriggerEventModule,
         GuestModule,
+        ProcessCollectionModule,
         TypeOrmModule,
     ],
     exports: [
@@ -57,6 +59,7 @@ import { GuestModule } from './guest/guest.module';
         ProcessInstanceLoopEventModule,
         TriggerEventModule,
         GuestModule,
+        ProcessCollectionModule,
         TypeOrmModule,
     ],
 })
