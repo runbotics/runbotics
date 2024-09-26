@@ -125,7 +125,10 @@ const CredentialsGridView = () => {
                     />
                 )}
                 <Box display="flex" flexDirection="row" gap="1.5rem" marginTop="1.5rem" mb={5}>
-                    <CredentialsHeader credentialCount={credentials.length} tabName={CredentialsTabs.CREDENTIALS} />
+                    <CredentialsHeader
+                        credentialCount={credentials.length}
+                        tabName={CredentialsTabs.CREDENTIALS}
+                    />
                     {collectionId && (
                         <SharedWithInfo
                             sharedWithNumber={
@@ -147,7 +150,11 @@ const CredentialsGridView = () => {
                 />
             )}
             <Box mt={6} display="flex" justifyContent="center">
-                <Paging totalItems={credentials.length} itemsPerPage={pageSize} currentPage={page} setPage={setPage} />
+                <Paging
+                    totalItems={credentials.length}
+                    itemsPerPage={pageSize}
+                    currentPage={page}
+                    setPage={setPage} />
             </Box>
         </InternalPage>
     );
