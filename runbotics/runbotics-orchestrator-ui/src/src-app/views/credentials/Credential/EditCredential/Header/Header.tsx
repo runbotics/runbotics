@@ -1,27 +1,50 @@
-import { Grid } from '@mui/material';
+import { FC } from 'react';
 
+import { ArrowBack } from '@mui/icons-material';
+import { Grid, Typography } from '@mui/material';
+
+import Link from 'next/link';
 import styled from 'styled-components';
 
-import CredentialLocation from './CredentialLocation';
+import useTranslations from '#src-app/hooks/useTranslations';
 
-const StyledGrid = styled(Grid)(
-    ({ theme }) => `
-    margin-bottom: ${theme.spacing(3)};
-    spacing: ${theme.spacing(2)};
-`
-);
+import { GoBackSpan } from '../EditCredential.styles';
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: black;
+`;
 
 interface HeaderProps {
-    credentialName: string;
     collectionId: string;
+    collectionName: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ credentialName, collectionId }) => (
-    <StyledGrid container alignItems="center" justifyContent="space-between">
-        <Grid item>
-            <CredentialLocation credentialName={credentialName} collectionId={collectionId}/>
+const Header: FC<HeaderProps> = ({ collectionId, collectionName }) => {
+    const allCredentialsPath = '/app/credentials';
+    const { translate } = useTranslations();
+
+    return (
+        <Grid container gap={1} alignSelf="center" mb={3}>
+            <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                <StyledLink
+                    href={{
+                        pathname: allCredentialsPath,
+                        query: {
+                            collectionId
+                        }
+                    }}
+                >
+                    <GoBackSpan>
+                        <ArrowBack/>
+                        <Typography variant="body1" ml={1} fontWeight={500}>
+                            {translate('Credential.Edit.GoBack', { collectionName: collectionName })}
+                        </Typography>
+                    </GoBackSpan>
+                </StyledLink>
+            </Grid>
         </Grid>
-    </StyledGrid>
-);
+    );
+};
 
 export default Header;

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import React, { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
@@ -84,7 +85,7 @@ const CredentialCollectionsGridView = () => {
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
             <Header />
             <If condition={!isLoading} else={<LoadingScreen />}>
-                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
+                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem" mb={5}>
                     <CredentialsHeader credentialCount={credentialCollections.length} tabName={CredentialsTabs.COLLECTIONS} />
                 </Box>
                 <TileGrid>
