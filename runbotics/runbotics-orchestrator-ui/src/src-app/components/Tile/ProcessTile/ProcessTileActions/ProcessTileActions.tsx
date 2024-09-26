@@ -82,15 +82,17 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
             } else {
                 await dispatch(
                     processActions.getProcessesPage({
-                        page,
-                        size: pageSize,
-                        filter: {
-                            contains: {
-                                ...(search.trim() && {
-                                    name: search.trim(),
-                                    createdByName: search.trim(),
-                                    tagName: search.trim()
-                                })
+                        pageParams: {
+                            page,
+                            size: pageSize,
+                            filter: {
+                                contains: {
+                                    ...(search.trim() && {
+                                        name: search.trim(),
+                                        createdByName: search.trim(),
+                                        tagName: search.trim()
+                                    })
+                                }
                             }
                         }
                     }),

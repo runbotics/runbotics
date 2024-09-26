@@ -1,80 +1,91 @@
 import {
-    Entity,
     Column,
-    ManyToOne,
-    JoinColumn,
-    OneToMany,
+    CreateDateColumn,
+    Entity,
     Generated,
+    JoinColumn, JoinTable, ManyToMany,
+    ManyToOne, OneToMany, OneToOne,
     PrimaryColumn,
-    ManyToMany,
-    JoinTable, CreateDateColumn, UpdateDateColumn,
+    UpdateDateColumn,
 } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
+import { dateTransformer, numberTransformer } from '#/database/database.utils';
 import {
-    IProcess,
-    IScheduleProcess,
-    IUser,
     IBotCollection,
-    NotificationProcess,
-    IBotSystem, ProcessOutputType,
+    IBotSystem,
+    IScheduleProcess,
+    IUser, NotificationProcess, ProcessCollection,
 } from 'runbotics-common';
-import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
-import { BotSystemEntity } from '../bot-system/bot-system.entity';
-import { dateTransformer, numberTransformer } from '../database.utils';
-import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
-import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
-import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-database/notification-process/notification-process.entity';
+import { BotSystemEntity } from '#/database/bot-system/bot-system.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
+import { UserEntity } from '#/database/user/user.entity';
+import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
+import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
+import {
+    NotificationProcess as NotificationProcessEntity,
+} from '#/scheduler-database/notification-process/notification-process.entity';
+import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { ProcessCredential } from '#/scheduler-database/process-credential/process-credential.entity';
+import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
+import { Tag } from '#/scheduler-database/tags/tag.entity';
+import { ProcessOutput } from '#/scheduler-database/process-output/process-output.entity';
 
 @Entity({ name: 'process' })
 export class ProcessEntity {
+    @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     @Generated()
-    @PrimaryColumn({ type: 'bigint', transformer: numberTransformer})
     id: number;
 
-    @Column({ name: 'tenant_id' })
+    @Column({
+        name: 'tenant_id',
+        type: 'uuid',
+        nullable: false,
+        default: 'b7f9092f-5973-c781-08db-4d6e48f78e98',
+    })
     tenantId: string;
 
     @Column({ type: 'varchar', length: 255 })
-    name: string;   
+    name: string;
 
-    @Column({ type: 'clob' })
+    @Column('text')
     description: string;
 
-    @Column({ type: 'clob' })
+    @Column('text')
     definition: string;
 
-    @Column()
-    shared: boolean;
-
-    @CreateDateColumn({ transformer: dateTransformer, type: 'timestamp with time zone' })
+    @CreateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone' })
     created: string;
 
-    @UpdateDateColumn({ transformer: dateTransformer, type: 'timestamp with time zone' })
+    @UpdateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone' })
     updated: string;
 
     @Column({ name: 'is_public' })
     isPublic: boolean;
 
-    @Column({ name: 'is_attended' })
+    @Column({ name: 'is_attended', default: false, nullable: true })
     isAttended?: boolean;
 
-    @Column({ name: 'is_triggerable' })
+    @Column({ name: 'is_triggerable', default: false, nullable: true })
     isTriggerable?: boolean;
 
-    @Column({ name: 'last_run', transformer: dateTransformer, type: 'timestamp with time zone' })
+    @Column({ name: 'last_run', transformer: dateTransformer, type: 'timestamp without time zone', nullable: true })
     lastRun?: string;
 
-    @Column({ name: 'execution_info', type: 'text' })
+    @Column({ name: 'execution_info', type: 'text', nullable: true })
     executionInfo: string;
 
-    @Column({ type: 'varchar', length: 50 })
-    outputType: ProcessOutputType;
+    @ManyToOne(() => ProcessOutput, processOutput => processOutput.processes)
+    @JoinColumn({ name: 'output_type' })
+    output: ProcessOutput;
 
-    @ManyToOne(() => BotSystemEntity)
-    @JoinColumn([{ name: 'system', referencedColumnName: 'name' }])
+    @Column({ name: 'output_type', type: 'varchar', length: 50, default: 'JSON' })
+    outputType: string;
+
+    @ManyToOne(() => BotSystemEntity, system => system.processes)
+    @JoinColumn({ name: 'system' })
     system: IBotSystem;
+
+    @Column({ name: 'system', type: 'varchar', length: 50 })
+    systemName: string;
 
     @OneToMany(() => ScheduleProcess, scheduleProcess => scheduleProcess.process)
     schedules: IScheduleProcess[];
@@ -83,12 +94,19 @@ export class ProcessEntity {
     @JoinColumn({ name: 'created_by_id', referencedColumnName: 'id' })
     createdBy: IUser;
 
-    @ManyToOne(() => BotCollectionEntity)
+    @ManyToOne(() => BotCollectionEntity, { nullable: false })
     @JoinColumn({ name: 'bot_collection', referencedColumnName: 'id' })
     botCollection: IBotCollection;
 
-    @ManyToOne(() => ProcessCol)
-    processCollection: string;
+    @Column({ name: 'bot_collection' })
+    botCollectionId: string;
+
+    @ManyToOne(() => ProcessCollectionEntity)
+    @JoinColumn({ name: 'process_collection' })
+    processCollection: ProcessCollection;
+
+    @Column({ name: 'process_collection', nullable: true })
+    processCollectionId: string;
 
     @ManyToOne(() => UserEntity)
     @JoinColumn({ name: 'editor_id', referencedColumnName: 'id' })
@@ -101,19 +119,27 @@ export class ProcessEntity {
     @JoinTable({
         name: 'process_global_variable',
         joinColumn: { name: 'process_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'global_variable_id', referencedColumnName: 'id' }
+        inverseJoinColumn: { name: 'global_variable_id', referencedColumnName: 'id' },
     })
     globalVariables: GlobalVariable[];
 
     @OneToMany(
         () => NotificationProcessEntity,
-        (notificationProcess) => notificationProcess.process
+        (notificationProcess) => notificationProcess.process,
     )
     notifications: NotificationProcess[];
 
     @OneToMany(
         () => ProcessCredential,
-        (processCredential) => processCredential.process
+        (processCredential) => processCredential.process,
     )
     processCredential: ProcessCredential[];
+
+    @ManyToMany(() => Tag, tag => tag.processes, { eager: true })
+    @JoinTable({
+        name: 'tag_process',
+        joinColumn: { name: 'process_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
+    })
+    tags: Tag[];
 }
