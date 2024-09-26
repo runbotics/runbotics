@@ -44,7 +44,7 @@ const ProcessConfigureView: VFC = () => {
     const { id } = useRouter().query;
     const processId = Number(id);
 
-    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(process?.outputType);
+    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(process?.output);
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(
         process?.system
     );
@@ -86,7 +86,7 @@ const ProcessConfigureView: VFC = () => {
 
         if (process?.isTriggerable) setTriggerable(process.isTriggerable);
 
-        if (process?.outputType) setProcessOutputType(process.outputType);
+        if (process?.output) setProcessOutputType(process.output);
     }, [process]);
 
     const fetchProcess = async () => {
@@ -94,7 +94,7 @@ const ProcessConfigureView: VFC = () => {
     };
 
     const handleSelectProcessOutputType = async (outputType: ProcessOutput) => {
-        await dispatch(processActions.updateProcessOutputType({ id: process.id, outputType }));
+        await dispatch(processActions.updateProcessOutputType({ id: process.id, output: outputType }));
         setProcessOutputType(outputType);
         await fetchProcess();
     };

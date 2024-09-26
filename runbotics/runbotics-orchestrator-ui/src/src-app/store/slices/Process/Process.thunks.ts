@@ -21,7 +21,7 @@ const PROCESS_CREDENTIALS_PATH = 'process-credentials';
 
 // TODO and TO_REVIEW during processes migration
 const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
-    .url('/api/processes-page').param('sort', 'updated,desc').params(params).build();
+    .url('processes').param('sort', 'updated,desc').params(params).build();
 
 // TODO and TO_REVIEW during process migration
 const processPageByCollectionURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
@@ -98,7 +98,7 @@ export const updateBotSystem = createAsyncThunk<IProcess, IProcess, { rejectValu
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
-export const updateProcessOutputType = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'outputType'>, { rejectValue: any }>(
+export const updateProcessOutputType = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'output'>, { rejectValue: any }>(
     'processes/output-type',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/output-type`, process)
         .then((response) => response.data)
@@ -141,12 +141,15 @@ export const startProcess = createAsyncThunk<StartProcessResponse, { processId: 
 
 export const setDraft = createAsyncThunk('api/setDraft', (payload: { process: IProcess }) => payload.process);
 
-export const getProcesses = createAsyncThunk<IProcess[]>('processes/getAll', () => Axios.get<IProcess[]>('/api/processes').then((response) => response.data));
+// export const getProcesses = createAsyncThunk<IProcess[]>('processes/getAll', () => Axios.get<IProcess[]>('/api/processes').then((response) => response.data));
+export const getProcesses = ApiTenantResource.get<IProcess[]>('process/getAll', 'processes');
+// export const getProcessesPage = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
+//     'processes/getPage',
+//     (params) => Axios.get<Page<IProcess>>(processPageURL(params)).then((response) => response.data),
+// );
 
-export const getProcessesPage = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
-    'processes/getPage',
-    (params) => Axios.get<Page<IProcess>>(processPageURL(params)).then((response) => response.data),
-);
+export const getProcessesPage = ApiTenantResource.get<IProcess[]>('process/getPage', 'processes');
+
 
 export const getProcessesPageByCollection = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
     'processes/getPageByCollection',

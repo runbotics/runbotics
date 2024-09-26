@@ -49,6 +49,8 @@ class ApiTenantResource {
                 const { auth: { user } } = thunkApi.getState();
 
                 const url = this.buildURL({ resourcePath, resourceId, pageParams }, user);
+                
+                console.log('url:', url, pageParams)
 
                 return axios[method]<ReturnType>(url, payload)
                     .then(response => response.data)
