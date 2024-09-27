@@ -9,6 +9,7 @@ import {
     HttpCode,
     Get,
     NotFoundException,
+    UseInterceptors,
 } from '@nestjs/common';
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -18,7 +19,9 @@ import { UserEntity } from '#/database/user/user.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { CreateScheduleProcessDto, createScheduleProcessSchema } from './dto/create-schedule-process.dto';
 import { ScheduleProcessService } from './schedule-process.service';
+import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 
+@UseInterceptors(TenantInterceptor)
 @Controller('/api/scheduler/tenants/:tenantId/schedule-processes')
 export class ScheduleProcessController {
     private readonly logger = new Logger(ScheduleProcessController.name);
