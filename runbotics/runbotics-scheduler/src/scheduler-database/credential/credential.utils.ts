@@ -31,28 +31,25 @@ interface BaseCredentialNotifyMailArgs {
     credentialName: string;
 }
 
+interface OperationWithAttribute {
+    operationType: CredentialOperationType.CHANGE_ATTRIBUTE;
+    attributeName: string;
+}
+
+interface OperationWithoutAttribute {
+    operationType:
+        | CredentialOperationType.DELETE
+        | CredentialOperationType.EDIT;
+}
+
 export type CredentialChangeMailPayload = BaseCredentialChangeMailPayload &
     (
-        | {
-              operationType: CredentialOperationType.CHANGE_ATTRIBUTE;
-              attributeName: string;
-          }
-        | {
-              operationType:
-                  | CredentialOperationType.DELETE
-                  | CredentialOperationType.EDIT;
-          }
+        | OperationWithAttribute
+        | OperationWithoutAttribute
     );
 
 export type CredentialNotifyMailArgs = BaseCredentialNotifyMailArgs &
     (
-        | {
-              operationType: CredentialOperationType.CHANGE_ATTRIBUTE;
-              attributeName: string;
-          }
-        | {
-              operationType:
-                  | CredentialOperationType.DELETE
-                  | CredentialOperationType.EDIT;
-          }
+        | OperationWithAttribute
+        | OperationWithoutAttribute
     );
