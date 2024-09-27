@@ -11,7 +11,7 @@ import { usersActions } from '#src-app/store/slices/Users';
 import SearchBar from './SearchBar';
 import UsersTable from './UsersTable';
 import { AccessType, EditCredentialsCollectionDto, PrivilegeType } from '../../CredentialsCollection.types';
-import { filteredSharableUsers } from '../EditCredentialsCollection.utils';
+import { filterSharableUsers } from '../EditCredentialsCollection.utils';
 
 export interface SharedWithUser {
     email: string;
@@ -31,10 +31,10 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
 
     const { user: collectionCreator } = useAuth();
     const [selectedUsers, setSelectedUsers] = useState(credentialsCollectionFormState.sharedWith || []);
-    const [availableUsers, setAvailableUsers] = useState(filteredSharableUsers('', nonAdmins.all, { sharedWithUsers: credentialsCollectionFormState.sharedWith, selectedUsers, collectionCreatorId: collectionCreator.id}));
+    const [availableUsers, setAvailableUsers] = useState(filterSharableUsers('', nonAdmins.all, { sharedWithUsers: credentialsCollectionFormState.sharedWith, selectedUsers, collectionCreatorId: collectionCreator.id}));
 
     useEffect(() => {
-        setAvailableUsers(filteredSharableUsers('', nonAdmins.all, { sharedWithUsers: credentialsCollectionFormState.sharedWith, selectedUsers, collectionCreatorId: collectionCreator.id}));
+        setAvailableUsers(filterSharableUsers('', nonAdmins.all, { sharedWithUsers: credentialsCollectionFormState.sharedWith, selectedUsers, collectionCreatorId: collectionCreator.id}));
     }, [nonAdmins.all]);
 
     useEffect(() => {
@@ -45,7 +45,7 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
         setCredentialsCollectionFormState(prevFormState => ({
             ...prevFormState,
             accessType: selectedUsers.length > 0 ? AccessType.GROUP : AccessType.PRIVATE,
-            sharedWith: selectedUsers
+            sharedWith: selectedUsers,
         }));
     }, [selectedUsers]);
 

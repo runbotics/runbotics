@@ -48,8 +48,8 @@ const CredentialsGridView = () => {
 
     const router = useRouter();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
-
-    useEffect(() => {}, [page]);
+    const collectionSharedWithNumber =
+        collectionId && credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length - 1;
 
     const handleDeleteDialogOpen = (id: string) => {
         setIsDeleteDialogOpen(true);
@@ -125,18 +125,8 @@ const CredentialsGridView = () => {
                     />
                 )}
                 <Box display="flex" flexDirection="row" gap="1.5rem" marginTop="1.5rem" mb={5}>
-                    <CredentialsHeader
-                        credentialCount={credentials.length}
-                        tabName={CredentialsTabs.CREDENTIALS}
-                    />
-                    {collectionId && (
-                        <SharedWithInfo
-                            sharedWithNumber={
-                                credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length -
-                                1
-                            }
-                        />
-                    )}
+                    <CredentialsHeader credentialCount={credentials.length} tabName={CredentialsTabs.CREDENTIALS} />
+                    {collectionId && <SharedWithInfo sharedWithNumber={collectionSharedWithNumber} />}
                 </Box>
                 <TileGrid>{credentialsTiles}</TileGrid>
             </If>
@@ -150,11 +140,7 @@ const CredentialsGridView = () => {
                 />
             )}
             <Box mt={6} display="flex" justifyContent="center">
-                <Paging
-                    totalItems={credentials.length}
-                    itemsPerPage={pageSize}
-                    currentPage={page}
-                    setPage={setPage} />
+                <Paging totalItems={credentials.length} itemsPerPage={pageSize} currentPage={page} setPage={setPage} />
             </Box>
         </InternalPage>
     );

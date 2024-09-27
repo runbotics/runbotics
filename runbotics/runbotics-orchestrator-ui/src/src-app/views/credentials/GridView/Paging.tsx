@@ -18,14 +18,14 @@ const Paging: FC<PagingProps> = ({
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
-        setPage(page);
+        setPage(page - 1);
     };
 
     return (
         <Pagination
             count={totalPages || 1}
             onChange={handlePageChange}
-            page={currentPage}
+            page={currentPage + 1}
         />
     );
 };

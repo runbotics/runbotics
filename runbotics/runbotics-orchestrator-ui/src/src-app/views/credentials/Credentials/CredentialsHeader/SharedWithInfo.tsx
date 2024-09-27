@@ -27,8 +27,6 @@ export const SharedWithInfo: FC<SharedWithInfoProps> = ({ sharedWithNumber }) =>
                 </If>
             </Typography>
         </>
-
-
     );
 };
 
