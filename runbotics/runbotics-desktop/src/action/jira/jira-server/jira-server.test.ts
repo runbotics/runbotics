@@ -3,9 +3,11 @@ import JiraServerActionHandler from './jira-server.action-handler';
 import { SearchIssue, WorklogResponse, GetUserWorklogInput } from '../jira.types';
 import { ServerJiraUser } from './jira-server.types';
 import * as jiraUtils from '../jira.utils';
+import { ServerConfigService } from '#config';
 
 describe('JiraServerActionHandler', () => {
     let jiraServerActionHandler: JiraServerActionHandler;
+    let serverConfigService: ServerConfigService;
 
     const getWorklogInputDate: GetUserWorklogInput = {
         email: 'john.doe@runbotics.com',
@@ -37,9 +39,21 @@ describe('JiraServerActionHandler', () => {
         const module = await Test.createTestingModule({
             providers: [
                 JiraServerActionHandler,
+                {
+                    provide: ServerConfigService,
+                    useValue: {
+                        jiraUsername: () => 'username',
+                        jiraUrl: () => 'https://some-url.com',
+                        jiraPassword: () => 'passwd',
+                        jiraA41Username: () => 'a41username',
+                        jiraA41Token: () => 'token',
+                        jiraA41Url: () => 'https://some-url.com',
+                    }
+                }
             ],
         }).compile();
         jiraServerActionHandler = module.get(JiraServerActionHandler);
+        serverConfigService = module.get<ServerConfigService>(ServerConfigService);
     });
 
     it('should be defined', () => {
