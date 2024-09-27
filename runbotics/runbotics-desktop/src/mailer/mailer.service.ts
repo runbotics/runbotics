@@ -5,22 +5,25 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-    async sendMail({ to, from, subject, html }: Mail.Options, auth: MailCredential) {
+    async sendMail({ to, from, subject, html, cc, attachments }: Mail.Options, credential: MailCredential) {
         const transporter = nodemailer.createTransport({
-            host: auth.mailHost,
-            port: auth.mailPort,
-            secure: true,
+            host: credential.mailHost,
+            port: credential.mailPort,
             auth: {
-                user: auth.mailUsername,
-                pass: auth.mailPassword,
+                user: credential.mailUsername,
+                pass: credential.mailPassword,
             },
+            // secure: true, // false (default) for openssl version 1.1.1, true for ^3.1.1
+            tls: { rejectUnauthorized: false },
         });
 
         await transporter.sendMail({
             to,
+            cc,
             from,
             subject,
             html,
+            attachments,
         });
     }
 }
