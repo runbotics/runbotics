@@ -126,18 +126,44 @@ export const Index = () => {
                     <Grid container>
                         <Grid item xs={8}>
                             <form onSubmit={handleSubmit}>
-                                <TextField fullWidth label={translate('Action.Details.Script')}
+                                <TextField
+                                    fullWidth
+                                    label={translate('Action.Details.Script')}
                                     name="script"
-                                    sx={{margin: (theme) => `${theme.spacing(1)} 0`}}
+                                    sx={{
+                                        margin: (theme) =>
+                                            `${theme.spacing(1)} 0`,
+                                    }}
                                     value={draft.script}
                                     onChange={handleChange}
+                                    {...((draft.script === '' ||
+                                        !draft.script?.startsWith(
+                                            'external.'
+                                        )) && {
+                                        error: true,
+                                        helperText: translate(
+                                            'Action.Details.Form.Script.Error'
+                                        ),
+                                    })}
                                 />
-                                <TextField fullWidth label={translate('Action.Details.Label')}
+                                <TextField
+                                    fullWidth
+                                    label={translate('Action.Details.Label')}
                                     name="label"
-                                    sx={{margin: (theme) => `${theme.spacing(1)} 0 ${theme.spacing(2)} 0`}}
+                                    sx={{
+                                        margin: (theme) =>
+                                            `${theme.spacing(
+                                                1
+                                            )} 0 ${theme.spacing(2)} 0`,
+                                    }}
                                     value={draft.label}
                                     onChange={handleChange}
-
+                                    {...(draft.label === '' && {
+                                        error: true,
+                                        helperText: translate(
+                                            'Action.Details.Form.Label.Error'
+                                        ),
+                                    })}
                                 />
                                 <ErrorBoundary>
                                     <Editor
