@@ -19,7 +19,7 @@ interface CredentialAttributeDetailsProps {
 const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handleFieldChange, currentAttribute, isEditMode }) => {
     const { translate } = useTranslations();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [showValue, setShowValue] = useState(currentAttribute.masked);
+    const [maskValue, setMaskValue] = useState(currentAttribute.masked);
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -29,7 +29,7 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
         setAnchorEl(null);
     };
 
-    const handleClickShowValue = () => setShowValue(show => !show);
+    const handleClickShowValue = () => setMaskValue(mask => !mask);
 
     const handleMouseDownValue = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -61,9 +61,8 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
                         {translate('Credential.Attribute.Value.Label')}
                     </InputLabel>
                     <OutlinedInput
-                        id={translate('Credential.Attribute.Value.Label')}
                         value={isEditMode ? currentAttribute.value : '[hidden]'}
-                        type={showValue ? 'text' : 'password'}
+                        type={maskValue ? 'password' : 'text'}
                         onChange={e => {
                             handleFieldChange(e.target.value);
                         }}
@@ -77,7 +76,7 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
                                         onMouseDown={handleMouseDownValue}
                                         onMouseUp={handleMouseUpValue}
                                     >
-                                        {showValue ? <VisibilityOff /> : <Visibility />}
+                                        {maskValue ? <Visibility /> : <VisibilityOff />}
                                     </IconButton>
                                 </InputAdornment>
                             )

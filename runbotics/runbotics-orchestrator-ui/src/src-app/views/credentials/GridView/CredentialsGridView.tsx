@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { Box, SvgIcon, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
@@ -22,6 +21,8 @@ import { TileGrid } from './GridView.styles';
 import Header, { CredentialsTabs } from './Header';
 import Paging from './Paging';
 import CredentialsHeader from '../Credentials/CredentialsHeader/CredentialsHeader';
+import SharedWithInfo from '../Credentials/CredentialsHeader/SharedWithInfo';
+import CredentialsCollectionLocation from '../CredentialsCollection/CredentialsCollectionLocation';
 
 const CredentialsGridView = () => {
     const dispatch = useDispatch();
@@ -47,10 +48,8 @@ const CredentialsGridView = () => {
 
     const router = useRouter();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
-
-    useEffect(() => {
-
-    }, [page]);
+    const collectionSharedWithNumber =
+        collectionId && credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length - 1;
 
     const handleDeleteDialogOpen = (id: string) => {
         setIsDeleteDialogOpen(true);
@@ -89,7 +88,8 @@ const CredentialsGridView = () => {
             const fetchAllCollections = dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
             const fetchAllTemplates = dispatch(credentialTemplatesActions.fetchAllTemplates());
 
-            const fetchCredentials = collectionId ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
+            const fetchCredentials = collectionId
+                ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
                 : dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
 
             Promise.allSettled([fetchAllCollections, fetchAllTemplates, fetchCredentials]).then(() => {
@@ -120,17 +120,13 @@ const CredentialsGridView = () => {
             <Header />
             <If condition={!loading} else={<LoadingScreen />}>
                 {collectionId && (
-                    <Box display="flex" justifyItems="center" alignItems="center" mb={3}>
-                        <SvgIcon fontSize="large" color="secondary">
-                            <FolderOpenIcon />
-                        </SvgIcon>
-                        <Typography variant="h3" ml={1}>
-                            {credentialCollections.find(collection => collectionId === collection.id)?.name}
-                        </Typography>
-                    </Box>
+                    <CredentialsCollectionLocation
+                        collectionName={credentialCollections?.find(collection => collectionId === collection.id)?.name}
+                    />
                 )}
-                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
-                    <CredentialsHeader credentialCount={credentials.length} tabName={CredentialsTabs.CREDENTIALS}/>
+                <Box display="flex" flexDirection="row" gap="1.5rem" marginTop="1.5rem" mb={5}>
+                    <CredentialsHeader credentialCount={credentials.length} tabName={CredentialsTabs.CREDENTIALS} />
+                    {collectionId && <SharedWithInfo sharedWithNumber={collectionSharedWithNumber} />}
                 </Box>
                 <TileGrid>{credentialsTiles}</TileGrid>
             </If>
@@ -144,12 +140,7 @@ const CredentialsGridView = () => {
                 />
             )}
             <Box mt={6} display="flex" justifyContent="center">
-                <Paging
-                    totalItems={credentials.length}
-                    itemsPerPage={pageSize}
-                    currentPage={page}
-                    setPage={setPage}
-                />
+                <Paging totalItems={credentials.length} itemsPerPage={pageSize} currentPage={page} setPage={setPage} />
             </Box>
         </InternalPage>
     );

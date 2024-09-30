@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import styled from 'styled-components';
 
@@ -25,5 +25,18 @@ export const PopoverTypography = styled(Typography)(
     padding: ${theme.spacing(1)};
     max-width: 240px;
     background-color: ${grey[50]};
+`
+);
+
+export const GoBackSpan = styled(Box)(
+    ({ theme }) => `
+    display: flex;
+    font-weight;
+    align-items: center;
+    justify-content: center;
+
+    > * {
+        color: ${theme.palette.secondary.main};
+    }
 `
 );

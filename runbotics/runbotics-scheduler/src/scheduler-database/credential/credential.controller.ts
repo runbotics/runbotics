@@ -53,7 +53,7 @@ export class CredentialController {
   @Delete(COLLECTION_URL_PARTIAL + ':id')
   remove(@Param('id') id: string, @User() user: IUser) {
     this.logger.log('REST request to delete credential by id ' + id);
-    return this.credentialService.removeById(id, user.tenantId);
+    return this.credentialService.removeById(id, user);
   }
 
   @Get('credentials')

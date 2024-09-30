@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const CredentialCollectionCard = styled(CardContent)(
     ({ theme }) => `
     && {
-        min-height: 258px;
+        padding: ${theme.spacing(2)};
         cursor: pointer;
     }
 
@@ -18,11 +18,13 @@ export const CredentialCollectionCard = styled(CardContent)(
 `
 );
 
-export const ShareOptionSpan = styled.span(({ theme }) => `
+export const ShareOptionSpan = styled.span(
+    ({ theme }) => `
   display: flex;
   align-items: center;
 
   svg {
     margin-right: ${theme.spacing(1)};
   }
-`);
+`
+);
