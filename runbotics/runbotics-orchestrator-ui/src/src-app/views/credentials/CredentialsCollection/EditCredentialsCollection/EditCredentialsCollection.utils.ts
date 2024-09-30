@@ -65,7 +65,7 @@ export const adjustShareWithProperty = (collection: EditCredentialsCollectionDto
     ...(collection.sharedWith.length > 0 && { sharedWith: collection.sharedWith })
 });
 
-interface filerOptions {
+interface filterOptions {
     sharedWithUsers: SharedWithUser[];
     selectedUsers: IUser[];
     collectionCreatorId: number;
@@ -75,7 +75,7 @@ export const filterSharableUsers = (value: string, allSharableUsers: IUser[], {
     sharedWithUsers =[],
     selectedUsers = [],
     collectionCreatorId
-}: filerOptions ): IUser[] =>
+}: filterOptions ): IUser[] =>
     allSharableUsers.filter(
         sharableUser =>
             sharableUser.email.toLowerCase().includes(value.toLowerCase()) &&
