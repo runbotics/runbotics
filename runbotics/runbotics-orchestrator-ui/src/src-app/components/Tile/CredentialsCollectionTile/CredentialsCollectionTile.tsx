@@ -47,7 +47,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
                     <ColorDot collectionColor={collection.color} />
                     <Typography variant="h4">{collection.name}</Typography>
                 </Box>
-                <Grid container spacing={2} marginTop="0.5rem" alignItems="stretch">
+                <Grid container spacing={2} marginTop="0.5rem" minHeight="160px">
                     <Grid item xs={5}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>

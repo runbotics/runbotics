@@ -45,9 +45,12 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
     return (
         <>
             {readyToLoadCredential && (
-                <CredentialsInternalPage title={translate('Credential.Add.Title')}>
+                <CredentialsInternalPage title={translate('Credential.Title', { name: credential.name })}>
                     <StyledGrid container justifyContent="space-between" my={2} ml={2} gap={2} width={'96%'}>
-                        <Header credentialName={credential.name} collectionId={credential.collectionId}/>
+                        <Header
+                            collectionId={credential.collectionId}
+                            collectionName={currentCredentialCollection.name}
+                        />
                         <GeneralInfo
                             credential={credential}
                             collectionColor={currentCredentialCollection.color}
@@ -61,7 +64,7 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
                                 <CredentialAttributesList
                                     credential={credential}
                                     templateId={credential.templateId}
-                                    isNewCredential={Boolean(credential.attributes?.length)}
+                                    isNewCredential={credential?.attributes?.length === 0}
                                     currentCollection={currentCredentialCollection}
                                 />
                             </Grid>

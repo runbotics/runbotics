@@ -10,6 +10,7 @@ import { CredentialCollectionModule } from '../credential-collection/credential-
 import { CredentialCollectionService } from '../credential-collection/credential-collection.service';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
+import { MailModule } from '#/mail/mail.module';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { CredentialCollectionUser } from '../credential-collection-user/credenti
         CredentialTemplateModule,
         SecretModule,
         CredentialCollectionModule,
+        MailModule,
     ],
     controllers: [CredentialController],
     providers: [CredentialService, CredentialCollectionService],

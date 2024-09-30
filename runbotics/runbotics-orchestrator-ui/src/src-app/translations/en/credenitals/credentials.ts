@@ -1,9 +1,10 @@
 const credentials = {
     'Credentials.List.Header.Elements': '{{ count }} credentials',
     'Credentials.Add': 'Add new credential',
-    'Credential.Add.Title': 'Add credential',
+    'Credential.Title': 'Credential {{ name }}',
     'Credential.Add.CollectionNotFoundInfo': 'Create credential collection first',
     'Credential.Edit.Title': 'Edit credential',
+    'Credential.Edit.GoBack': 'Back to {{ collectionName }} collection',
     'Credential.Tile.Delete.Warning': 'Are you sure you want to delete credential named {{ name }}?',
     'Credential.Tile.Delete.Success': 'Successfully deleted credential named {{ name }}',
     'Credential.Tile.Delete.Fail': 'Unexpected error occured during credential named {{ name }} deletion',

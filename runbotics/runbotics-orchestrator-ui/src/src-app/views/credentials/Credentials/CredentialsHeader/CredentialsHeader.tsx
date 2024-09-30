@@ -9,7 +9,6 @@ import { StyledTypography } from './CredentialsHeader.styles';
 import { BasicCredentialDto } from '../../Credential/Credential.types';
 import { BasicCredentialsCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
 import { CredentialsTabs } from '../../GridView/Header';
-import Search from '../../GridView/Search/Search';
 
 interface CredentialsHeaderProps<T extends BasicCredentialDto | BasicCredentialsCollectionDto> {
     credentialCount: number;
@@ -35,14 +34,11 @@ const CredentialsHeader = <T extends BasicCredentialDto | BasicCredentialsCollec
     };
 
     return (
-        <>
-            <Box display="flex" alignItems="center" justifyContent="flex-start">
-                <StyledTypography variant="h5" color="textPrimary">
-                    {elementsCountMessage}
-                </StyledTypography>
-            </Box>
-            <Search searchValue={searchValue} handleSearch={handleSearch}/>
-        </>
+        <Box display="flex" alignItems="center" justifyContent="flex-start">
+            <StyledTypography variant="h5" color="textPrimary">
+                {elementsCountMessage}
+            </StyledTypography>
+        </Box>
     );
 };
 

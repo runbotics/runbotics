@@ -29,10 +29,11 @@ const CredentialCollectionsGridView = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const pageFromUrl = searchParams.get('page');
-    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 1);
+
+    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 0);
     const pageSizeFromUrl = searchParams.get('pageSize');
     const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
-    const startingPageItemIndex = (page - 1) * pageSize;
+    const startingPageItemIndex = page * pageSize;
     const endingPageItemIndex = startingPageItemIndex + pageSize;
 
     const [currentCollection, setCurrentCollection] = useState(null);
@@ -89,13 +90,12 @@ const CredentialCollectionsGridView = () => {
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
             <Header />
             <If condition={!isLoading} else={<LoadingScreen />}>
-                <Box display="flex" flexDirection="row" justifyContent="space-between" mt={2} mb={2} alignItems="center">
+                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem" mb={5}>
                     <CredentialsHeader
-                        credentialCount={filteredCollections && filteredCollections.length}
+                        credentialCount={credentialCollections.length}
                         tabName={CredentialsTabs.COLLECTIONS}
                         items={credentialCollections}
-                        setItems={setFilteredCollections}
-                    />
+                        setItems={setFilteredCollections} />
                 </Box>
                 <TileGrid>
                     {collectionTiles}
@@ -110,7 +110,7 @@ const CredentialCollectionsGridView = () => {
                 </TileGrid>
                 <Box mt={6} display="flex" justifyContent="center">
                     <Paging
-                        totalItems={credentialCollections && credentialCollections.length}
+                        totalItems={filteredCollections && filteredCollections.length}
                         itemsPerPage={pageSize}
                         currentPage={page}
                         setPage={setPage}
