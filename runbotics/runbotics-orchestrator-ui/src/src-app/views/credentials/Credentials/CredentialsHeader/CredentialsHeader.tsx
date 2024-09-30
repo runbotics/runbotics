@@ -20,11 +20,10 @@ const CredentialsHeader: FC<CredentialsHeaderProps> = ({ credentialCount, tabNam
             : translate('Credentials.Collection.List.Header.Elements', { count: credentialCount });
 
     return (
-        <Box display="flex" alignItems="center" justifyContent="flex-start" mb={6}>
+        <Box display="flex" alignItems="center" justifyContent="flex-start">
             <StyledTypography variant="h5" color="textPrimary">
                 {elementsCountMessage}
             </StyledTypography>
-            <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem"></Box>
         </Box>
     );
 };

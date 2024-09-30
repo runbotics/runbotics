@@ -30,10 +30,10 @@ const CredentialCollectionsGridView = () => {
 
     const pageFromUrl = searchParams.get('page');
 
-    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 1);
+    const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 0);
     const pageSizeFromUrl = searchParams.get('pageSize');
     const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
-    const startingPageItemIndex = (page - 1) * pageSize;
+    const startingPageItemIndex = page * pageSize;
     const endingPageItemIndex = startingPageItemIndex + pageSize;
     const currentPageCollections = credentialCollections ? credentialCollections.slice(startingPageItemIndex, endingPageItemIndex) : [];
 
@@ -84,7 +84,7 @@ const CredentialCollectionsGridView = () => {
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
             <Header />
             <If condition={!isLoading} else={<LoadingScreen />}>
-                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem">
+                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem" mb={5}>
                     <CredentialsHeader credentialCount={credentialCollections.length} tabName={CredentialsTabs.COLLECTIONS} />
                 </Box>
                 <TileGrid>

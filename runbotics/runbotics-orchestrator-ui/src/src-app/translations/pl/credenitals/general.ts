@@ -4,7 +4,7 @@ const general: typeof englishGeneral = {
     'Credentials.Collections.Page.Title': 'Kolekcja poświadczeń',
     'Credentials.Tab.Collections': 'Kolekcje',
     'Credentials.Tab.Credentials': 'Poświadczenia',
-    'Credentials.GoBack': 'Wróć do wszystkich poświadczeń'
+    'Credentials.GoBack': 'Wróć'
 };
 
 export default general;

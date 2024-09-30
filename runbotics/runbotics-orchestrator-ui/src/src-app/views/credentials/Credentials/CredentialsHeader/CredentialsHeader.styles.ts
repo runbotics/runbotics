@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 export const StyledTypography = styled(Typography)(({ theme }) => ({
     position: 'relative',
+
     '&:after': {
         position: 'absolute',
         bottom: '-8px',
@@ -10,6 +11,6 @@ export const StyledTypography = styled(Typography)(({ theme }) => ({
         content: '" "',
         height: '2px',
         width: '48%',
-        backgroundColor: theme.palette.primary.main
+        backgroundColor: theme.palette.secondary.main
     }
 }));

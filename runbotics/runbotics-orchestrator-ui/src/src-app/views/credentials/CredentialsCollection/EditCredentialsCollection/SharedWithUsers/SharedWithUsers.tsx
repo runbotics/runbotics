@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 
 import Accordion from '#src-app/components/Accordion';
 
-
 import useAuth from '#src-app/hooks/useAuth';
 import { useDispatch, useSelector } from '#src-app/store';
 import { usersActions } from '#src-app/store/slices/Users';
@@ -12,7 +11,7 @@ import { usersActions } from '#src-app/store/slices/Users';
 import SearchBar from './SearchBar';
 import UsersTable from './UsersTable';
 import { AccessType, EditCredentialsCollectionDto, PrivilegeType } from '../../CredentialsCollection.types';
-import { filteredSharableUsers } from '../EditCredentialsCollection.utils';
+import { filterSharableUsers } from '../EditCredentialsCollection.utils';
 
 export interface SharedWithUser {
     email: string;
@@ -21,7 +20,7 @@ export interface SharedWithUser {
 
 interface SharedWithUsersProps {
     credentialsCollectionFormState: EditCredentialsCollectionDto;
-    setCredentialsCollectionFormState: (state: ((prevState: EditCredentialsCollectionDto) => EditCredentialsCollectionDto)) => void;
+    setCredentialsCollectionFormState: (state: (prevState: EditCredentialsCollectionDto) => EditCredentialsCollectionDto) => void;
 }
 
 export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectionFormState, setCredentialsCollectionFormState }) => {
@@ -32,10 +31,22 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
 
     const { user: collectionCreator } = useAuth();
     const [selectedUsers, setSelectedUsers] = useState(credentialsCollectionFormState.sharedWith || []);
-    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [availableUsers, setAvailableUsers] = useState(
+        filterSharableUsers('', nonAdmins.all, {
+            sharedWithUsers: credentialsCollectionFormState.sharedWith,
+            selectedUsers,
+            collectionCreatorId: collectionCreator.id
+        })
+    );
 
     useEffect(() => {
-        setFilteredUsers(filteredSharableUsers('', nonAdmins.all, { sharedWithUsers: credentialsCollectionFormState.sharedWith, selectedUsers, collectionCreatorId: collectionCreator.id}));
+        setAvailableUsers(
+            filterSharableUsers('', nonAdmins.all, {
+                sharedWithUsers: credentialsCollectionFormState.sharedWith,
+                selectedUsers,
+                collectionCreatorId: collectionCreator.id
+            })
+        );
     }, [nonAdmins.all]);
 
     useEffect(() => {
@@ -43,31 +54,33 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
     }, []);
 
     useEffect(() => {
-        setCredentialsCollectionFormState((prevFormState) => ({
+        setCredentialsCollectionFormState(prevFormState => ({
             ...prevFormState,
             accessType: selectedUsers.length > 0 ? AccessType.GROUP : AccessType.PRIVATE,
-            sharedWith: selectedUsers,
+            sharedWith: selectedUsers
         }));
     }, [selectedUsers]);
 
     const handleAddUser = (email: string) => {
         setSelectedUsers(prevState => [...prevState, { email, privilegeType: PrivilegeType.WRITE }]);
-        setFilteredUsers(prevState => prevState.filter(user => user.email !== email));
+        setAvailableUsers(prevState => prevState.filter(user => user.email !== email));
     };
 
     const handleDeleteUser = (email: string) => {
         setSelectedUsers(prevState => prevState.filter(user => user.email !== email));
-        setFilteredUsers(prevState => [...prevState, nonAdmins.all.find(user => user.email === email)]);
+        setAvailableUsers(prevState => [...prevState, nonAdmins.all.find(user => user.email === email)]);
     };
 
-    const handleChangeAccessType = ({email, privilegeType}: SharedWithUser) => {
-        setSelectedUsers(selectedUsers.map(selectedUser => (selectedUser.email === email ? { ...selectedUser, privilegeType } : selectedUser)));
+    const handleChangeAccessType = ({ email, privilegeType }: SharedWithUser) => {
+        setSelectedUsers(
+            selectedUsers.map(selectedUser => (selectedUser.email === email ? { ...selectedUser, privilegeType } : selectedUser))
+        );
     };
 
     return (
         <Accordion title="Access" defaultExpanded>
             <Box>
-                <SearchBar onAddUser={handleAddUser} availableUsers={filteredUsers} setAvailableUsers={setFilteredUsers}/>
+                <SearchBar onAddUser={handleAddUser} availableUsers={availableUsers} />
                 <UsersTable users={selectedUsers} onDeleteUser={handleDeleteUser} onChangeAccessType={handleChangeAccessType} />
             </Box>
         </Accordion>
