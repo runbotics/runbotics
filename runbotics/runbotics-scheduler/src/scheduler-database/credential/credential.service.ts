@@ -11,6 +11,8 @@ import { Secret } from '../secret/secret.entity';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 import { CredentialCollectionService } from '../credential-collection/credential-collection.service';
 import { ProcessCredential } from '../process-credential/process-credential.entity';
+import { MailService } from '#/mail/mail.service';
+import { CredentialNotifyMailArgs, CredentialOperationType } from './credential.utils';
 
 const relations = ['attributes'];
 
@@ -22,6 +24,7 @@ export class CredentialService {
     private readonly templateService: CredentialTemplateService,
     private readonly secretService: SecretService,
     private readonly collectionService: CredentialCollectionService,
+    private readonly mailService: MailService,
   ) { }
 
   async create(credentialDto: CreateCredentialDto, collectionId: string, user: IUser) {
@@ -219,16 +222,36 @@ export class CredentialService {
       tenantId: credential.tenantId,
     });
 
-    return this.credentialRepo.save(credentialToUpdate)
-      .catch(async (error) => {
-        await this.validateName(credentialToUpdate.name, credential.collectionId, credential.tenantId);
-        throw new BadRequestException(error.message);
-      });
+    return this.credentialRepo
+        .save(credentialToUpdate)
+        .then((credential) => {
+            this.notifyCredentialCollectionOwner({
+                executor: user,
+                collectionId: credential.collectionId,
+                credentialName: credential.name,
+                operationType: CredentialOperationType.EDIT,
+            });
+        })
+        .catch(async (error) => {
+            await this.validateName(
+                credentialToUpdate.name,
+                credential.collectionId,
+                credential.tenantId
+            );
+            throw new BadRequestException(error.message);
+        });
   }
 
-  async removeById(id: string, tenantId: string) {
-    const credential = await this.findOneAccessibleById(id, tenantId);
-    return this.credentialRepo.remove(credential);
+  async removeById(id: string, user: IUser) {
+    const credential = await this.findOneAccessibleById(id, user.tenantId);
+    return this.credentialRepo.remove(credential).then((credential) => {
+        this.notifyCredentialCollectionOwner({
+            executor: user,
+            collectionId: credential.collectionId,
+            credentialName: credential.name,
+            operationType: CredentialOperationType.DELETE,
+        });
+    });
   }
 
   async updateAttribute(id: string, attributeName: string, attributeDto: UpdateAttributeDto, user: IUser) {
@@ -276,7 +299,15 @@ export class CredentialService {
       updatedById: user.id,
     });
 
-    return this.credentialRepo.save(updatedCredential);
+    return this.credentialRepo.save(updatedCredential).then((credential) => {
+        this.notifyCredentialCollectionOwner({
+            executor: user,
+            collectionId: credential.collectionId,
+            credentialName: credential.name,
+            operationType: CredentialOperationType.CHANGE_ATTRIBUTE,
+            attributeName,
+        });
+    });
   }
 
   async checkIsNameTaken(name: string, collectionId: string, tenantId: string) {
@@ -297,5 +328,32 @@ export class CredentialService {
     if (isNameTaken) {
       throw new BadRequestException('Name already taken. There cannot be two credentials with the same name in the same collection');
     }
+  }
+
+  private async notifyCredentialCollectionOwner(
+    params: CredentialNotifyMailArgs
+  ) {
+      const { executor, collectionId, credentialName, operationType } =
+          params;
+
+      const collection = await this.collectionService.findOneByCriteria(
+          executor.tenantId,
+          { id: collectionId }
+      );
+      const collectionCreator = collection.createdBy;
+
+      if (collectionCreator.id !== executor.id) {
+          this.mailService.sendCredentialChangeNotificationMail({
+              editorEmail: executor.email,
+              collectionCreatorEmail: collectionCreator.email,
+              collectionName: collection.name,
+              credentialName,
+              operationType,
+              ...(operationType ===
+                  CredentialOperationType.CHANGE_ATTRIBUTE && {
+                  attributeName: params.attributeName,
+              }),
+          });
+      }
   }
 }
