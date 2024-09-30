@@ -7,12 +7,12 @@ import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 interface MenuItemsProps {
-    collectionId: string;
+    itemId: string;
     handleOpenEditDialog(id: string): void;
     handleOpenDeleteDialog(id: string): void;
 }
 
-const MenuItems: FC<MenuItemsProps> = ({ collectionId, handleOpenEditDialog, handleOpenDeleteDialog }) => {
+const MenuItems: FC<MenuItemsProps> = ({ itemId, handleOpenEditDialog, handleOpenDeleteDialog }) => {
     const { translate } = useTranslations();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,7 +48,7 @@ const MenuItems: FC<MenuItemsProps> = ({ collectionId, handleOpenEditDialog, han
                 >
                     <MenuItem
                         onClick={e => {
-                            handleOpenEditDialog(collectionId);
+                            handleOpenEditDialog(itemId);
                             handleMenuClose(e);
                         }}
                     >
@@ -57,7 +57,7 @@ const MenuItems: FC<MenuItemsProps> = ({ collectionId, handleOpenEditDialog, han
                     <MenuItem
                         onClick={e => {
                             e.stopPropagation();
-                            handleOpenDeleteDialog(collectionId);
+                            handleOpenDeleteDialog(itemId);
                             handleMenuClose(e);
                         }}
                     >

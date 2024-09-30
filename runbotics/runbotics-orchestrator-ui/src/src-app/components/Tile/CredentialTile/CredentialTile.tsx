@@ -1,8 +1,7 @@
 import { FC } from 'react';
 
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 
 import { useRouter } from 'next/router';
 
@@ -14,6 +13,7 @@ import { BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/cre
 import { collectionColors } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
 
 import { CredentialCard, CredentialCollection } from './CredentialTile.styles';
+import MenuItems from '../CredentialsCollectionTile/MenuItems/MenuItems';
 import Tile from '../Tile';
 
 export interface CredentialTileProps {
@@ -23,6 +23,7 @@ export interface CredentialTileProps {
     collectionName: string;
     loading: boolean;
     collectionId: string;
+    handleEditDialogOpen(id: string): void;
     handleDeleteDialogOpen(id: string): void;
 }
 
@@ -33,6 +34,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
     collectionName,
     loading,
     collectionId,
+    handleEditDialogOpen,
     handleDeleteDialogOpen
 }) => {
     const router = useRouter();
@@ -67,7 +69,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
                     </CredentialCollection>
                 </If>
                 <If condition={isOwner || hasEditAccess}>
-                    <Box alignSelf="flex-end">
+                    {/* <Box alignSelf="flex-end">
                         <IconButton
                             onClick={e => {
                                 e.stopPropagation();
@@ -76,7 +78,12 @@ const CredentialTile: FC<CredentialTileProps> = ({
                         >
                             <DeleteOutlineOutlinedIcon />
                         </IconButton>
-                    </Box>
+                    </Box> */}
+                    <MenuItems
+                        itemId={credential?.id}
+                        handleOpenEditDialog={handleEditDialogOpen}
+                        handleOpenDeleteDialog={handleDeleteDialogOpen}
+                    />
                 </If>
             </CredentialCard>
         </Tile>

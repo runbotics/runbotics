@@ -7,7 +7,6 @@ import { useSnackbar } from 'notistack';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
-import { CredentialCollectionDelete } from '#src-app/components/Tile/CredentialsCollectionTile/MenuItems/CredentialCollectionDelete/CredentialCollectionDelete';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -15,11 +14,12 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
 
-import { TileGrid } from './GridView.styles';
-import Header, { CredentialsTabs } from './Header';
-import Paging from './Paging';
-import CredentialsHeader from '../Credentials/CredentialsHeader/CredentialsHeader';
-import CredentialsCollectionForm from '../CredentialsCollection/CredentialsCollectionForm';
+import { CredentialsCollectionModals } from './CredentialsCollectionModals';
+import CredentialsHeader from '../../Credentials/CredentialsHeader/CredentialsHeader';
+import { TileGrid } from '../GridView.styles';
+import Header, { CredentialsTabs } from '../Header';
+import Paging from '../Paging';
+import { getFilterItemsForPage } from '../Paging.utils';
 
 const CredentialCollectionsGridView = () => {
     const dispatch = useDispatch();
@@ -29,19 +29,16 @@ const CredentialCollectionsGridView = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const pageFromUrl = searchParams.get('page');
-
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 0);
     const pageSizeFromUrl = searchParams.get('pageSize');
     const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
-    const startingPageItemIndex = page * pageSize;
-    const endingPageItemIndex = startingPageItemIndex + pageSize;
 
     const [currentCollection, setCurrentCollection] = useState(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     const [filteredCollections, setFilteredCollections] = useState([]);
-    const currentPageCollections = filteredCollections ? filteredCollections.slice(startingPageItemIndex, endingPageItemIndex) : [];
+    const currentPageCollections = filteredCollections ? getFilterItemsForPage(filteredCollections, page, pageSize) : [];
 
     useEffect(() => {
         setFilteredCollections(credentialCollections);
@@ -59,19 +56,9 @@ const CredentialCollectionsGridView = () => {
         setIsEditDialogOpen(true);
     };
 
-    const handleCloseEditDialog = () => {
-        setCurrentCollection(null);
-        setIsEditDialogOpen(false);
-    };
-
     const handleOpenDeleteDialog = (id: string) => {
         setCurrentCollection(credentialCollections.find(collection => collection.id === id));
         setIsDeleteDialogOpen(true);
-    };
-
-    const handleCloseDeleteDialog = () => {
-        setCurrentCollection(null);
-        setIsDeleteDialogOpen(false);
     };
 
     const collectionTiles = currentPageCollections
@@ -95,16 +82,19 @@ const CredentialCollectionsGridView = () => {
                         credentialCount={credentialCollections && credentialCollections.length}
                         tabName={CredentialsTabs.COLLECTIONS}
                         items={credentialCollections}
-                        setItems={setFilteredCollections} />
+                        setItems={setFilteredCollections}
+                        sharedWithNumber={null}/>
                 </Box>
                 <TileGrid>
                     {collectionTiles}
                     <If condition={currentCollection}>
-                        <CredentialsCollectionForm open={isEditDialogOpen} onClose={handleCloseEditDialog} collection={currentCollection} />
-                        <CredentialCollectionDelete
-                            collection={currentCollection}
-                            isDialogOpen={isDeleteDialogOpen}
-                            handleDialogClose={handleCloseDeleteDialog}
+                        <CredentialsCollectionModals
+                            isEditDialogOpen={isEditDialogOpen}
+                            isDeleteDialogOpen={isDeleteDialogOpen}
+                            currentCollection={currentCollection}
+                            setIsEditDialogOpen={setIsEditDialogOpen}
+                            setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+                            setCurrentCollection={setCurrentCollection}
                         />
                     </If>
                 </TileGrid>

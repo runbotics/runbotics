@@ -1,11 +1,14 @@
 import { useState } from 'react';
 
-import { Box } from '@mui/material';
 
+import { Divider, Grid } from '@mui/material';
+
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 
 import { StyledTypography } from './CredentialsHeader.styles';
+import SharedWithInfo from './SharedWithInfo';
 import { BasicCredentialDto } from '../../Credential/Credential.types';
 import { BasicCredentialsCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
 import { CredentialsTabs } from '../../GridView/Header';
@@ -16,9 +19,10 @@ interface CredentialsHeaderProps<T extends BasicCredentialDto | BasicCredentials
     tabName: CredentialsTabs;
     items: (T[]);
     setItems: (items: T[]) => void;
+    sharedWithNumber: number;
 }
 
-const CredentialsHeader = <T extends BasicCredentialDto | BasicCredentialsCollectionDto>({ credentialCount, tabName, items, setItems }: CredentialsHeaderProps<T>) => {
+const CredentialsHeader = <T extends BasicCredentialDto | BasicCredentialsCollectionDto>({ credentialCount, tabName, items, setItems, sharedWithNumber }: CredentialsHeaderProps<T>) => {
     const { translate } = useTranslations();
     const elementsCountMessage =
         tabName === CredentialsTabs.CREDENTIALS
@@ -36,11 +40,19 @@ const CredentialsHeader = <T extends BasicCredentialDto | BasicCredentialsCollec
 
     return (
         <>
-            <Box display="flex" alignItems="center" justifyContent="flex-start">
-                <StyledTypography variant="h5" color="textPrimary">
-                    {elementsCountMessage}
-                </StyledTypography>
-            </Box>
+            <Grid container display="flex" alignItems="center" justifyContent="flex-start">
+                <Grid item mr={6}>
+                    <StyledTypography variant="h5" color="textPrimary">
+                        {elementsCountMessage}
+                    </StyledTypography>
+                </Grid>
+                <If condition={sharedWithNumber !== null}>
+                    <Divider orientation="vertical" flexItem/>
+                    <Grid item>
+                        <SharedWithInfo sharedWithNumber={sharedWithNumber}/>
+                    </Grid>
+                </If>
+            </Grid>
             <Search searchValue={searchValue} handleSearch={handleSearch}/>
         </>
     );

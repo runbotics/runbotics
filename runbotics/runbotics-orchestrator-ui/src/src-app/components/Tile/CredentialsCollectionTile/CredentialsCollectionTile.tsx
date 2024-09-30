@@ -98,7 +98,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
                 <Divider sx={{ marginTop: '2rem' }} />
                 <If condition={isOwner}>
                     <MenuItems
-                        collectionId={collection?.id}
+                        itemId={collection?.id}
                         handleOpenEditDialog={handleOpenEditDialog}
                         handleOpenDeleteDialog={handleOpenDeleteDialog}
                     />
