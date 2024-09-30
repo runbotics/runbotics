@@ -90,9 +90,9 @@ const CredentialCollectionsGridView = () => {
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
             <Header />
             <If condition={!isLoading} else={<LoadingScreen />}>
-                <Box display="flex" flexDirection="column" gap="1.5rem" marginTop="1.5rem" mb={5}>
+                <Box display="flex" flexDirection="row" justifyContent="space-between" mt={2} mb={2} alignItems="center">
                     <CredentialsHeader
-                        credentialCount={credentialCollections.length}
+                        credentialCount={credentialCollections && credentialCollections.length}
                         tabName={CredentialsTabs.COLLECTIONS}
                         items={credentialCollections}
                         setItems={setFilteredCollections} />

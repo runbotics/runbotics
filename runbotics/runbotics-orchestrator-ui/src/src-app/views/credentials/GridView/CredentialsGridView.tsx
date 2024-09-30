@@ -130,7 +130,7 @@ const CredentialsGridView = () => {
                         collectionName={credentialCollections?.find(collection => collectionId === collection.id)?.name}
                     />
                 )}
-                <Box display="flex" flexDirection="row" gap="1.5rem" marginTop="1.5rem" mb={5}>
+                <Box display="flex" flexDirection="row" justifyContent="space-between" mt={2} mb={2} alignItems="center">
                     <CredentialsHeader
                         credentialCount={filteredCredentials && filteredCredentials.length}
                         tabName={CredentialsTabs.CREDENTIALS}
