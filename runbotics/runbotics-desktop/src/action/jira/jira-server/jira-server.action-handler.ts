@@ -23,9 +23,10 @@ import {
     isJiraDatesPeriod,
     sortAscending
 } from '../jira.utils';
-import { GetUserWorklogInput, IssueWorklogsParam, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
+import { AtlassianCredentials, GetUserWorklogInput, IssueWorklogsParam, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
 import { JiraActionRequest, ServerJiraUser, SimpleServerJiraUser } from './jira-server.types';
 import { formatZodError } from '#utils/zodError';
+import { ServerConfigService } from '#config';
 
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2
@@ -34,7 +35,7 @@ import { formatZodError } from '#utils/zodError';
 export default class JiraCloudActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(JiraCloudActionHandler.name);
 
-    constructor() {
+    constructor(private readonly serverConfigService: ServerConfigService) {
         super();
     }
 
@@ -170,9 +171,20 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
 
     run(request: JiraActionRequest) {
         // @todo method for matching credentialId (action template) with decrypted credential values
+        const atlassianCredentials: AtlassianCredentials = {
+            originUrl: this.serverConfigService.jiraUrl,
+            username: this.serverConfigService.jiraUsername,
+            password: this.serverConfigService.jiraPassword,
+        };
+
+        const inputWithAuth = {
+            ...request.input,
+            ...atlassianCredentials,
+        };
+
         switch (request.script) {
             case JiraServerAction.GET_USER_WORKLOGS:
-                return this.getWorklog(request.input);
+                return this.getWorklog(inputWithAuth);
             default:
                 throw new Error('Action not found');
         }

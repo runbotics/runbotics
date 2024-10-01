@@ -14,6 +14,7 @@ import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import CredentialAttributesList from './CredentialAttribute/CredentialAttributeList';
 import { CredentialsInternalPage, StyledGrid } from './EditCredential.styles';
+import { isCreatedNow } from './EditCredential.utils';
 import GeneralInfo from './GeneralInfo';
 import Header from './Header/Header';
 import { BasicCredentialDto } from '../Credential.types';
@@ -30,12 +31,13 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
     const dispatch = useDispatch();
     const credentialId = getLastParamOfUrl(router);
 
-    const { all: credentials} = useSelector(credentialsSelector);
+    const { all: credentials } = useSelector(credentialsSelector);
     const { credentialCollections, loading: collectionsLoading } = useSelector(credentialCollectionsSelector);
 
     const credential = credentials ? credentials.find(cred => cred.id === credentialId) : undefined;
     const currentCredentialCollection = credential && credentialCollections ? credentialCollections.find(collection => collection.id === credential.collectionId) : undefined;
     const readyToLoadCredential = !collectionsLoading && !!currentCredentialCollection && !!credential;
+    const isNewCredential = isCreatedNow(credential?.createdAt);
 
     useEffect(() => {
         dispatch(credentialsActions.fetchOneCredential({ resourceId: credentialId }));
@@ -64,7 +66,7 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
                                 <CredentialAttributesList
                                     credential={credential}
                                     templateId={credential.templateId}
-                                    isNewCredential={credential?.attributes?.length === 0}
+                                    isNewCredential={isNewCredential}
                                     currentCollection={currentCredentialCollection}
                                 />
                             </Grid>

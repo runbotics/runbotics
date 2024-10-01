@@ -7,13 +7,14 @@ import { Typography, Grid, Button } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import { grey } from '@mui/material/colors';
 
+import { useSnackbar } from 'notistack';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useDispatch } from '#src-app/store';
 
 import { credentialsActions } from '#src-app/store/slices/Credentials';
 
-import { fetchOneCredential } from '#src-app/store/slices/Credentials/Credentials.thunks';
 
 import { AttributeIcon, AttributeInfoNotEdiable, StyledAttributeCard, StyledGridContainer } from './Attribute.styles';
 import { CredentialTemplateAttribute } from './Attribute.types';
@@ -34,6 +35,11 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
         masked: true,
         value: ''
     });
+    const { enqueueSnackbar } = useSnackbar();
+
+    const handleEdit = () => {
+        setIsEditMode(true);
+    };
 
     const handleCancel = () => {
         setCurrentAttribute({
@@ -44,21 +50,28 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
     };
 
     const handleConfirm = (credentialIdToUpdate: string, attributeName: string) => {
+        if (currentAttribute.value.trim() === '') {
+            enqueueSnackbar(translate('Credential.Attribute.Edit.Fail.NoValue'), { variant: 'error' });
+            setIsEditMode(false);
+            return;
+        };
+
         dispatch(
             credentialsActions.updateAttribute({
                 resourceId: `/${credentialIdToUpdate}/UpdateAttribute/${attributeName}`,
                 payload: currentAttribute
             })
-        )
-            .unwrap()
-            .then(response => {
-                dispatch(fetchOneCredential({ resourceId: response.id }));
+        ).then(() => {
+            enqueueSnackbar(translate('Credential.Attribute.Edit.Success'), { variant: 'success' });
+            setCurrentAttribute({
+                masked: true,
+                value: ''
             });
-        setCurrentAttribute({
-            masked: true,
-            value: ''
-        });
-        setIsEditMode(false);
+            setIsEditMode(false);
+        })
+            .catch((error => {
+                enqueueSnackbar(error.message, { variant: 'error' });
+            }));
     };
 
     const handleFieldChange = (value: string) => {

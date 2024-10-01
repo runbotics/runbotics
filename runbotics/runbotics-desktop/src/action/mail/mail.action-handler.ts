@@ -27,7 +27,7 @@ export default class MailActionHandler extends StatelessActionHandler {
         super();
     }
 
-    async sendMail(input: MailSendActionInput, auth: MailCredential): Promise<MailSendActionOutput> {
+    async sendMail(input: MailSendActionInput, credential: MailCredential): Promise<MailSendActionOutput> {
         const regex1 = new RegExp('&lt;');
         const regex2 = new RegExp('&gt;');
         let content = input.content;
@@ -43,7 +43,7 @@ export default class MailActionHandler extends StatelessActionHandler {
                 {
                     to: input.to,
                     cc: input.cc,
-                    from: auth.mailUsername,
+                    from: credential.mailUsername,
                     subject: input.subject,
                     html: content,
                     attachments: [
@@ -54,18 +54,18 @@ export default class MailActionHandler extends StatelessActionHandler {
                         },
                     ],
                 },
-                auth,
+                credential,
             );
         } else {
             await this.mailService.sendMail(
                 {
                     to: input.to,
                     cc: input.cc,
-                    from: auth.mailUsername,
+                    from: credential.mailUsername,
                     subject: input.subject,
                     html: content,
                 },
-                auth,
+                credential,
             );
         }
         return {};

@@ -13,7 +13,7 @@ import {
 } from 'typeorm';
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 import { Tenant } from '../tenant/tenant.entity';
-import { numberTransformer } from '#/database/database.utils';
+import { dateTransformer, numberTransformer } from '#/database/database.utils';
 
 export enum AccessType {
     PRIVATE = 'PRIVATE',
@@ -53,6 +53,7 @@ export class CredentialCollection {
     @CreateDateColumn({
         name: 'created_at',
         type: 'timestamp without time zone',
+        transformer: dateTransformer,
     })
     createdAt: string;
 
@@ -66,6 +67,7 @@ export class CredentialCollection {
     @UpdateDateColumn({
         name: 'updated_at',
         type: 'timestamp without time zone',
+        transformer: dateTransformer
     })
     updatedAt: string;
 
