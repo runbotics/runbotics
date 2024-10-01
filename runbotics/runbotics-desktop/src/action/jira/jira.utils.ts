@@ -111,10 +111,6 @@ export const jiraDatesCollectionSchema = z.object({
     dates: z.array(dateValidator('Dates')).optional(),
 });
 
-const jiraProjectSchema = z.object({
-    project: z.string()
-});
-
 export const getUserWorklogInputSchema = getUserWorklogInputBaseSchema.and(z.union([
     jiraSingleDaySchema.required({ date: true }),
     jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
