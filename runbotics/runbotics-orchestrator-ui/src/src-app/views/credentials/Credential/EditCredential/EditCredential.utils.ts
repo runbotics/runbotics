@@ -34,3 +34,11 @@ export const getInitialCredentialData = (collectionId: string): CreateCredential
     collectionId: collectionId ? collectionId : '',
     templateId: ''
 });
+
+export const isCreatedNow = (dateString: string): boolean => {
+    const inputDate = new Date(dateString);
+    const now = new Date();
+    const timeDifference = now.getTime() - inputDate.getTime();
+
+    return timeDifference <= 60 * 1000 && timeDifference >= 0;
+};

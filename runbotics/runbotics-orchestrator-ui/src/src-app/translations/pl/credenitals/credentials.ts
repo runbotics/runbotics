@@ -44,6 +44,7 @@ const credentials: typeof englishCredentials = {
     'Credential.Attribute.Security.MaskValue': 'Zamaskuj wartość',
     'Credential.Attribute.Edit.AddCredential': 'Dodaj',
     'Credential.Attribute.Edit.Success': 'Successfully updated attribute',
+    'Credential.Attribute.Edit.Fail.NoValue': 'Nie zaktualizowano atrybutu. Nie podano wartości',
     'Credential.Attribute.Tag.Required': 'Wymagany',
     'Credential.Attribute.Tag.Optional': 'Opcjonalny',
 };

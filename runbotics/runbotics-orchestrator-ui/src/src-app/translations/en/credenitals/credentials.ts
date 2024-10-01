@@ -45,6 +45,7 @@ const credentials = {
     'Credential.Attribute.Security.MaskValue': 'Mask value',
     'Credential.Attribute.Edit.AddCredential': 'Add',
     'Credential.Attribute.Edit.Success': 'Pomyślnie zaktualizowano atrybut',
+    'Credential.Attribute.Edit.Fail.NoValue': 'Attribute not updated. No value provided',
     'Credential.Attribute.Tag.Required': 'Required',
     'Credential.Attribute.Tag.Optional': 'Optional'
 };

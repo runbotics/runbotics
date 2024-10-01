@@ -106,7 +106,7 @@ const CredentialsGridView = () => {
                 key={credential.id}
                 credential={credential}
                 collection={credentialCollections.find(collection => credential.collectionId === collection.id)}
-                templateName={credentialTemplates.find(template => template.id === credential.templateId).name}
+                templateName={credentialTemplates.find(template => template.id === credential.templateId)?.name}
                 collectionName={credentialCollections.find(collection => collection.id === credential.collectionId)?.name}
                 loading={loading}
                 collectionId={collectionId}
