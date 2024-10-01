@@ -13,7 +13,7 @@ import {
 import { CredentialTemplate } from '../credential-template/credential-template.entity';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { Tenant } from '../tenant/tenant.entity';
-import { numberTransformer } from '#/database/database.utils';
+import { dateTransformer, numberTransformer } from '#/database/database.utils';
 import { ProcessCredential } from '../process-credential/process-credential.entity';
 
 @Entity({ schema: 'scheduler' })
@@ -48,8 +48,9 @@ export class Credential {
     @CreateDateColumn({
         name: 'created_at',
         type: 'timestamp without time zone',
+        transformer: dateTransformer
     })
-    createdAt: Date;
+    createdAt: string;
 
     @ManyToOne(() => UserEntity, user => user.createdCredentials)
     @JoinColumn({ name: 'created_by_id' })
@@ -61,8 +62,9 @@ export class Credential {
     @UpdateDateColumn({
         name: 'updated_at',
         type: 'timestamp without time zone',
+        transformer: dateTransformer
     })
-    updatedAt: Date;
+    updatedAt: string;
 
     @ManyToOne(() => UserEntity, user => user.updatedCredentials)
     @JoinColumn({ name: 'updated_by_id' })

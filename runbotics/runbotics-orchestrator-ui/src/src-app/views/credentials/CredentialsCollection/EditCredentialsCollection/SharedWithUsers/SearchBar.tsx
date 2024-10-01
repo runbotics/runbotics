@@ -68,6 +68,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {
                 onChange={handleSearchInputChange}
                 fullWidth
                 inputRef={searchInputRef}
+                autoComplete="off"
             >
             </TextField>
             <If condition={isFocused}>
