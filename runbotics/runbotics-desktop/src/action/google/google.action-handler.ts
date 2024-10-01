@@ -189,12 +189,16 @@ export default class GoogleActionHandler extends StatelessActionHandler {
         };
     }
     private inputArrayParser(values: unknown[][] | string): unknown[][] {
-        if (!values) return [];
+        try {
+            if (!values) return [];
 
-        if (Array.isArray(values)) {
-            return values;
+            if (Array.isArray(values)) {
+                return values;
+            }
+
+            return JSON.parse(values);
+        } catch (e) {
+            throw new Error('Invalid values type. Should be 2D array.');
         }
-
-        return JSON.parse(values);
     }
 }
