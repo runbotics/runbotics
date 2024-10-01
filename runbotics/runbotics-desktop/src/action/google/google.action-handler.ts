@@ -188,7 +188,7 @@ export default class GoogleActionHandler extends StatelessActionHandler {
             values: [],
         };
     }
-    private inputArrayParser(values: unknown[][] | string): unknown[][] {
+    private inputArrayParser(values: GoogleSheetWriteActionInput['values']) {
         try {
             if (!values) return [];
 
