@@ -36,9 +36,11 @@ export const getInitialCredentialData = (collectionId: string): CreateCredential
 });
 
 export const isCreatedNow = (dateString: string): boolean => {
+    const ONE_MIN_MLS = 60 * 1000;
     const inputDate = new Date(dateString);
     const now = new Date();
     const timeDifference = now.getTime() - inputDate.getTime();
+    const createdInPastMinute = timeDifference <= ONE_MIN_MLS && timeDifference >= 0;
 
-    return timeDifference <= 60 * 1000 && timeDifference >= 0;
+    return createdInPastMinute;
 };
