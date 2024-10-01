@@ -1,6 +1,6 @@
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
-import { UserEntity } from '#/database/user/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity({ name: 'schedule_process' })
 export class ScheduleProcess {
@@ -23,7 +23,7 @@ export class ScheduleProcess {
     @Column({ name: 'user_id' })
     userId: number;
 
-    @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
-    user: UserEntity;
+    user: User;
 }

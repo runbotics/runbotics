@@ -1,13 +1,12 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { UserEntity } from '#/database/user/user.entity';
-
 import { Secret } from '../secret/secret.entity';
 import { ProcessContextSecret } from '../process-context-secret/process-context-secret.entity';
 import { ProcessContext } from '../process-context/process-context.entity';
 import { CredentialAttribute } from '../credential-attribute/credential-attribute.entity';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { Credential } from '../credential/credential.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Tenant {
@@ -17,9 +16,9 @@ export class Tenant {
     @Column({ type: 'varchar', length: 255, unique: true })
     name: string;
 
-    @ManyToOne(() => UserEntity, user => user.tenants)
+    @ManyToOne(() => User, user => user.tenants)
     @JoinColumn({ name: 'created_by' })
-    createdByUser: UserEntity;
+    createdByUser: User;
 
     @Column({ name: 'created_by' })
     createdBy: number;

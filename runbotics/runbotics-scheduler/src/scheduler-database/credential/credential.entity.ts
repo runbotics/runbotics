@@ -1,4 +1,3 @@
-import { UserEntity } from '#/database/user/user.entity';
 import { CredentialAttribute } from '#/scheduler-database/credential-attribute/credential-attribute.entity';
 import {
     Column,
@@ -15,6 +14,7 @@ import { CredentialCollection } from '../credential-collection/credential-collec
 import { Tenant } from '../tenant/tenant.entity';
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
 import { ProcessCredential } from '../process-credential/process-credential.entity';
+import { User } from '../user/user.entity';
 
 @Entity({ schema: 'scheduler' })
 @Unique(['collectionId', 'name', 'tenantId'])
@@ -52,9 +52,9 @@ export class Credential {
     })
     createdAt: string;
 
-    @ManyToOne(() => UserEntity, user => user.createdCredentials)
+    @ManyToOne(() => User, user => user.createdCredentials)
     @JoinColumn({ name: 'created_by_id' })
-    createdBy: UserEntity;
+    createdBy: User;
 
     @Column({ name: 'created_by_id', transformer: numberTransformer  })
     createdById: number;
@@ -66,9 +66,9 @@ export class Credential {
     })
     updatedAt: string;
 
-    @ManyToOne(() => UserEntity, user => user.updatedCredentials)
+    @ManyToOne(() => User, user => user.updatedCredentials)
     @JoinColumn({ name: 'updated_by_id' })
-    updatedBy: UserEntity;
+    updatedBy: User;
 
     @Column({ name: 'updated_by_id', transformer: numberTransformer  })
     updatedById: number;
