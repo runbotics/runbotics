@@ -127,15 +127,16 @@ export default class GoogleActionHandler extends StatelessActionHandler {
 
         const defaultSheet = await this.getDefaultSheet(spreadsheetId);
 
-        const { data: updatedSheetData } = await sheets.spreadsheets.values.update({
-            spreadsheetId,
-            range: `${sheet ? sheet.split('!')[0] : defaultSheet}!${range}`,
-            valueInputOption: 'USER_ENTERED',
-            includeValuesInResponse: true,
-            requestBody: {
-                values: values || [],
-            },
-        });
+        const { data: updatedSheetData } =
+            await sheets.spreadsheets.values.update({
+                spreadsheetId,
+                range: `${sheet ? sheet.split('!')[0] : defaultSheet}!${range}`,
+                valueInputOption: 'USER_ENTERED',
+                includeValuesInResponse: true,
+                requestBody: {
+                    values: this.inputArrayParser(values),
+                },
+            });
 
         return updatedSheetData;
     }
@@ -186,5 +187,14 @@ export default class GoogleActionHandler extends StatelessActionHandler {
             ...data,
             values: [],
         };
+    }
+    private inputArrayParser(values: unknown[][] | string): unknown[][] {
+        if (!values) return [];
+
+        if (Array.isArray(values)) {
+            return values;
+        }
+
+        return JSON.parse(values);
     }
 }
