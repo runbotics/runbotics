@@ -57,6 +57,7 @@ services:
       - MAIL_PORT=
       - MAIL_USERNAME=
       - MAIL_PASSWORD=
+      - ENCRYPTION_KEY=O3OTmXJpIIyUb3ByT4t65xblgsxfDGQu
     ports:
       - 4000:4000
     depends_on:

@@ -52,8 +52,10 @@ export function Camunda(activity, processEnvironment) {
         // }
         if (activity.type === 'bpmn:ServiceTask') {
             const disabled = activity.behaviour.disabled;
+            const credentialType = activity.behaviour.credentialType;
             activity.environment.runbotic = {
                 disabled,
+                ...(!disabled && credentialType && { credentialType }),
                 ...(!disabled && { processOutput: activity.behaviour.processOutput })
             };
         } else if (activity.type === 'bpmn:BoundaryEvent') {

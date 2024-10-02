@@ -1,6 +1,6 @@
 export interface MailCredential {
     mailHost: string;
-    mailPort: number;
+    mailPort: string | number;
     mailUsername: string;
     mailPassword: string;
 }

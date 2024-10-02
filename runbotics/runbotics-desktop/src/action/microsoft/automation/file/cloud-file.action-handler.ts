@@ -5,7 +5,6 @@ import mimeTypes from 'mime-types';
 
 import { OneDriveService } from '#action/microsoft/one-drive';
 import { SharePointService } from '#action/microsoft/share-point';
-import { RunboticsLogger } from '#logger';
 
 import {
     CloudFileActionRequest,
@@ -18,11 +17,12 @@ import {
     SharePointCommon,
     SharepointGetListItems,
 } from './cloud-file.types';
-import { ServerConfigService } from '#config';
+import { MicrosoftAuth, ServerConfigService } from '#config';
 import { readFileSync } from 'fs';
 import path from 'path';
 import { MicrosoftGraphService } from '#action/microsoft/microsoft-graph';
 import { MicrosoftAuthService } from '#action/microsoft/microsoft-auth.service';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 @Injectable()
 export class CloudFileActionHandler extends StatelessActionHandler {
@@ -172,21 +172,25 @@ export class CloudFileActionHandler extends StatelessActionHandler {
     }
 
     run(request: CloudFileActionRequest) {
-        // @todo throw error 'incorrect action definition - credentials are needed for this action' if any of CredentialData or list including MicrosoftCredential is not present in the input
+        const matchedCredential =
+            credentialAttributesMapper<MicrosoftAuth>(request.credentials);
 
-        const authData = this.serverConfigService.microsoftAuth;
+        // @todo After completion of password manager switch fully to matchedCredential
+        const credential: MicrosoftAuth =
+            matchedCredential ??
+            this.serverConfigService.microsoftAuth;
 
-        const matchedCredentials = { // @todo here method for matching credentialId (templateName) from action input to decrypted credential (default for the template), e.g.: this.credentialService.getCredentialValue(templateName: request.input.templateName, credentialId?: request.input.credentialId); -> output like mock below
+        const matchedCredentials = {
             config: {
                 auth: {
-                    clientId: authData.clientId,
-                    authority: authData.tenantId,
-                    clientSecret: authData.clientSecret,
+                    clientId: credential.clientId,
+                    authority: credential.tenantId,
+                    clientSecret: credential.clientSecret,
                 }
             },
             loginCredential: {
-                username: authData.username,
-                password: authData.password,
+                username: credential.username,
+                password: credential.password,
             }
         };
 

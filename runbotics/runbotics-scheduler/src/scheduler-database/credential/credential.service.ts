@@ -263,7 +263,8 @@ export class CredentialService {
 
     const attribute = credential.attributes.find((attr) => attr.name === attributeName);
 
-    const encryptedValue = this.secretService.encrypt('', user.tenantId);
+    const encryptedValue =
+      this.secretService.encrypt(attributeDto.value, user.tenantId);
     const secretEntity: Secret = {
       ...encryptedValue,
       tenantId: user.tenantId,
