@@ -171,7 +171,8 @@ export default class GoogleActionHandler extends StatelessActionHandler {
 
     private getGoogleSheets(credential: GoogleCredential) {
         const auth = new google.auth.JWT({
-            ...credential,
+            email: credential.email,
+            key: Buffer.from(credential.key , 'base64').toString('utf-8'), // PK must alway be saved in base64 format
             scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
 
