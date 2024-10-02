@@ -49,7 +49,7 @@ const CredentialsGridView = () => {
     const router = useRouter();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
     const collectionSharedWithNumber =
-        collectionId && credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length - 1;
+        collectionId && credentialCollections && credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length - 1;
 
     useEffect(() => {
         setFilteredCredentials(credentials);

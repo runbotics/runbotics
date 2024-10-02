@@ -15,7 +15,15 @@ export const inputErrorMessages: Record<InputErrorType, string> = {
     [InputErrorType.NAME_IS_REQUIRED]: translate('Credentials.Collection.Add.Form.Error.NameIsRequired')
 };
 
-export const initialFormValidationState = true;
+export interface CollectionFormValidation {
+    edited: boolean;
+    name: boolean
+}
+
+export const initialFormValidationState: CollectionFormValidation = {
+    edited: false,
+    name: false
+};
 
 export const initialCredentialsCollectionData: EditCredentialsCollectionDto = {
     name: '',

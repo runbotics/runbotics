@@ -8,11 +8,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { CredentialsCollectionKeys, EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
 import CollectionColorSelect from '../CollectionColor/CollectionColorSelect';
-import { inputErrorMessages, InputErrorType } from '../EditCredentialsCollection.utils';
+import { CollectionFormValidation, inputErrorMessages, InputErrorType } from '../EditCredentialsCollection.utils';
 
 interface CredentalsCollectionGeneralOptionsProps {
-    formValidationState: boolean;
-    setFormValidationState: (formValidationState: boolean) => void;
+    formValidationState: CollectionFormValidation;
+    setFormValidationState: (formValidationState: CollectionFormValidation) => void;
     inputErrorType: InputErrorType;
     setInputErrorType: (errorType: InputErrorType) => void;
     formState: EditCredentialsCollectionDto;
@@ -34,11 +34,17 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
         value: string
     ) => {
         if (propertyName === 'name' && !value.length) {
-            setFormValidationState(false);
+            setFormValidationState({
+                edited: true,
+                name: false
+            });
             setInputErrorType(InputErrorType.NAME_IS_REQUIRED);
         }
         if (propertyName === 'name' && value.length) {
-            setFormValidationState(true);
+            setFormValidationState({
+                edited: true,
+                name: true
+            });
             setInputErrorType(null);
         }
         setFormState((prevFormState) => ({
@@ -57,7 +63,7 @@ export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
                     onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormPropertyChange('name', e.target.value)}
                     value={formState.name}
                     variant="outlined"
-                    error={!formValidationState}
+                    error={formValidationState.edited && !formValidationState.name}
                     InputLabelProps={{ shrink: true }}
                     required
                     helperText={inputErrorMessages[inputErrorType]}

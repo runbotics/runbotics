@@ -51,7 +51,10 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
 
     useEffect(() => {
         if (!credentialsCollectionFormState.name.trim() && !collectionData.name) {
-            setFormValidationState(false);
+            setFormValidationState((prevState) => ({
+                ...prevState,
+                name: false
+            }));
         } else if (credentialsCollectionFormState.name.trim()) {
             setInputErrorType(null);
         }
@@ -65,7 +68,7 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
     };
 
     const handleSubmit = async () => {
-        if (inputErrorType) {
+        if (credentialsCollectionFormState.name.trim() === '' || inputErrorType) {
             enqueueSnackbar(inputErrorMessages[InputErrorType.NAME_IS_REQUIRED], { variant: 'error' });
             return;
         }
