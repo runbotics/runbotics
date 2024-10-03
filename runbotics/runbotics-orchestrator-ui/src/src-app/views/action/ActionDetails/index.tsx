@@ -110,6 +110,22 @@ export const Index = () => {
         setLoading(false);
     };
 
+    const scriptInputErrorProperties = {
+        ...((draft.script === '' ||
+            (!draft.script?.startsWith('external.') ||
+                draft.script?.length < 10)) && {
+            error: true,
+            helperText: translate('Action.Details.Form.Script.Error'),
+        }),
+    };
+
+    const labelInputErrorProperties = {
+        ...(draft.label === '' && {
+            error: true,
+            helperText: translate('Action.Details.Form.Label.Error'),
+        }),
+    };
+
     return (
         <>
             <Dialog
@@ -136,15 +152,7 @@ export const Index = () => {
                                     }}
                                     value={draft.script}
                                     onChange={handleChange}
-                                    {...((draft.script === '' ||
-                                        !draft.script?.startsWith(
-                                            'external.'
-                                        )) && {
-                                        error: true,
-                                        helperText: translate(
-                                            'Action.Details.Form.Script.Error'
-                                        ),
-                                    })}
+                                    {...scriptInputErrorProperties}
                                 />
                                 <TextField
                                     fullWidth
@@ -158,12 +166,7 @@ export const Index = () => {
                                     }}
                                     value={draft.label}
                                     onChange={handleChange}
-                                    {...(draft.label === '' && {
-                                        error: true,
-                                        helperText: translate(
-                                            'Action.Details.Form.Label.Error'
-                                        ),
-                                    })}
+                                    {...labelInputErrorProperties}
                                 />
                                 <ErrorBoundary>
                                     <Editor

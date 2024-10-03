@@ -6,10 +6,12 @@ export const createActionSchema = z
         id: z
             .string()
             .startsWith('external.', { message: 'Must start with "external."' })
+            .min(10)
             .max(255),
         script: z
             .string()
             .startsWith('external.', { message: 'Must start with "external."' })
+            .min(10)
             .max(255),
         label: z.string().min(1).max(255),
         form: z.string(),
