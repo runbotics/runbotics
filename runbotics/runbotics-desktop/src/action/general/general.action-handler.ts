@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
-import { GeneralAction, BotSystemType, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
+import { GeneralAction, BotSystem, IProcess, ProcessInstanceStatus, TriggerEvent } from 'runbotics-common';
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
@@ -65,7 +65,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                 userId: request.userId,
                 orchestratorProcessInstanceId: null,
                 rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
-                trigger: request.trigger as ITriggerEvent,
+                trigger: request.trigger as TriggerEvent,
                 triggerData: request.triggerData,
                 credentials: request.credentials,
             });

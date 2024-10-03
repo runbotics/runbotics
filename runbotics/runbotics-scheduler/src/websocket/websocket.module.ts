@@ -2,7 +2,6 @@ import { Global, Module } from '@nestjs/common';
 
 import { QueueModule } from '#/queue/queue.module';
 import { MicrosoftModule } from '#/microsoft';
-import { DatabaseModule } from '#/database/database.module';
 import { AuthModule } from '#/auth/auth.module';
 import { MailTriggerModule } from '#/mail-trigger/mail-trigger.module';
 import { BotProcessService } from './bot/process-launch/bot-process-instance.service';
@@ -15,11 +14,12 @@ import { BotLifecycleService } from './bot/bot-lifecycle.service';
 import { Logger } from 'src/utils/logger';
 import { MailModule } from '#/mail/mail.module';
 import { ProcessModule } from '#/scheduler-database/process/process.module';
+import { SchedulerDatabaseModule } from '#/scheduler-database/scheduler-database.module';
 
 @Global()
 @Module({
     imports: [
-        DatabaseModule,
+        SchedulerDatabaseModule,
         AuthModule,
         MailTriggerModule,
         QueueModule,
