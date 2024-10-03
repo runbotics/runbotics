@@ -63,7 +63,7 @@ export class ScheduleProcessService {
         await this.queueService.createScheduledJob({
             ...scheduleProcess,
             orchestratorProcessInstanceId,
-            trigger: { name: TriggerEvent.SCHEDULER },
+            trigger: TriggerEvent.SCHEDULER,
             triggerData: { userEmail: user.email },
             input: { variables: scheduleProcess?.inputVariables ? JSON.parse(scheduleProcess.inputVariables) : null }
         });

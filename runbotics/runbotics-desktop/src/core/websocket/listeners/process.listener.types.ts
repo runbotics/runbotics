@@ -1,8 +1,8 @@
 import {
     UserTriggerData,
-    ITriggerEvent,
     ProcessInput,
     DecryptedCredential,
+    TriggerEvent,
 } from 'runbotics-common';
 
 export interface StartProcessMessageBody {
@@ -10,7 +10,7 @@ export interface StartProcessMessageBody {
     processId: number;
     input: ProcessInput;
     userId?: number;
-    trigger: ITriggerEvent;
+    trigger: TriggerEvent;
     triggerData?: UserTriggerData;
     credentials: DecryptedCredential[];
 }

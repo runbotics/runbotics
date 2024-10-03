@@ -140,7 +140,7 @@ export class MailTriggerService implements OnModuleInit {
                         process,
                         input,
                         user: null,
-                        trigger: { name: TriggerEvent.EMAIL },
+                        trigger: TriggerEvent.EMAIL,
                         triggerData: {
                             sender: sender.toLowerCase(),
                         },
@@ -167,7 +167,7 @@ export class MailTriggerService implements OnModuleInit {
     }
 
     public async sendProcessResultMail(processInstance: IProcessInstance) {
-        if (processInstance.trigger.name !== TriggerEvent.EMAIL || !processInstance.triggerData) return;
+        if (processInstance.trigger !== TriggerEvent.EMAIL || !processInstance.triggerData) return;
 
         await this.server.sendMail({
             from: this.serverConfigService.writeEmailTriggerConfig.auth.user,

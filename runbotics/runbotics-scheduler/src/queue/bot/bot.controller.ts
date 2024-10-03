@@ -13,8 +13,11 @@ import { BotSchedulerService } from './bot.scheduler.service';
 import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
 import { BotService } from '#/scheduler-database/bot/bot.service';
-import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
+import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
+import { UpdateProcessInstanceDto } from '#/scheduler-database/process-instance/dto/update-process-instance.dto';
+import { User } from '#/utils/decorators/user.decorator';
+import { UserEntity } from '#/database/user/user.entity';
 
 
 @Controller('scheduler/bots')
@@ -66,7 +69,10 @@ export class BotController {
 
     @FeatureKeys(FeatureKey.BOT_DELETE)
     @Delete(':id')
-    async deleteBot(@Param('id') id: IBot['id']) {
+    async deleteBot(
+        @Param('id') id: IBot['id'],
+        @User() user: UserEntity,
+    ) {
         this.logger.log(`=> Deleting bot ${id}`);
 
         const bot = (await this.botService.findById(id));
@@ -74,14 +80,17 @@ export class BotController {
 
         await this.authService.unregisterBot(installationId);
 
-        const botProcessInstances = await this.processInstanceService.findAllByBotId(id);
+        const botProcessInstances =
+            await this.processInstanceService.findAllByBotId(id, user.tenantId);
 
         botProcessInstances.forEach(async instance => {
             if (instance.status === ProcessInstanceStatus.IN_PROGRESS
                 || instance.status === ProcessInstanceStatus.INITIALIZING
             ) {
-                instance.status = ProcessInstanceStatus.TERMINATED;
-                await this.processInstanceService.save(instance);
+                const newProcessInstance: UpdateProcessInstanceDto = {
+                    status: ProcessInstanceStatus.TERMINATED,
+                };
+                await this.processInstanceService.update(instance.id, newProcessInstance);
             }
         });
 
