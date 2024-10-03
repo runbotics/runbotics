@@ -52,8 +52,10 @@ export function Camunda(activity, processEnvironment) {
         // }
         if (activity.type === 'bpmn:ServiceTask') {
             const disabled = activity.behaviour.disabled;
+            const credentialType = activity.behaviour.credentialType;
             activity.environment.runbotic = {
                 disabled,
+                ...(!disabled && credentialType && { credentialType }),
                 ...(!disabled && { processOutput: activity.behaviour.processOutput })
             };
         } else if (activity.type === 'bpmn:BoundaryEvent') {
@@ -120,9 +122,7 @@ export function Camunda(activity, processEnvironment) {
 
                         const valueKey = jexlPattern.exec(entry.value);
 
-                        if (data.name === 'functionParams' && entry.value === '#{iterator}') {
-                            entry.value = '${iterator}';
-                        } else if (data.name === 'functionParams' && valueKey !== null && entry.value !== '${iterator}') {
+                        if (data.name === 'functionParams' && valueKey !== null && entry.value !== '#{iterator}') {
                             entry.value = '${environment.variables.' + valueKey[1] + '}';
                         }
                         let value = environment.resolveExpression(entry.value, message);

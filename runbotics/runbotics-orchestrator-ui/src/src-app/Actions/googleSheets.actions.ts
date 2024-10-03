@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ActionRegex, GoogleAction } from 'runbotics-common';
+import { ActionRegex, GoogleAction, ActionCredentialType } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -8,6 +8,7 @@ import { IBpmnAction, Runner } from './types';
 const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
     [GoogleAction.SHEETS_GET_WORKSHEET]: {
         id: GoogleAction.SHEETS_GET_WORKSHEET,
+        credentialType: ActionCredentialType.GOOGLE,
         label: translate(
             'Process.Details.Modeler.Actions.Google.Sheets.GetWorksheet.Label'
         ),
@@ -87,6 +88,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
     },
     [GoogleAction.SHEETS_GET_CELL]: {
         id: GoogleAction.SHEETS_GET_CELL,
+        credentialType: ActionCredentialType.GOOGLE,
         label: translate(
             'Process.Details.Modeler.Actions.Google.Sheets.GetCell.Label'
         ),
@@ -179,6 +181,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
     },
     [GoogleAction.SHEETS_GET_CELLS]: {
         id: GoogleAction.SHEETS_GET_CELLS,
+        credentialType: ActionCredentialType.GOOGLE,
         label: translate(
             'Process.Details.Modeler.Actions.Google.Sheets.GetCells.Label'
         ),
@@ -271,6 +274,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
     },
     [GoogleAction.SHEETS_GET_CELL_BY_VALUE]: {
         id: GoogleAction.SHEETS_GET_CELL_BY_VALUE,
+        credentialType: ActionCredentialType.GOOGLE,
         label: translate(
             'Process.Details.Modeler.Actions.Google.Sheets.GetCellsByValue.Label'
         ),
@@ -356,6 +360,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
     },
     [GoogleAction.SHEETS_SET_CELLS]: {
         id: GoogleAction.SHEETS_SET_CELLS,
+        credentialType: ActionCredentialType.GOOGLE,
         label: translate(
             'Process.Details.Modeler.Actions.Google.Sheets.SetCells.Label'
         ),

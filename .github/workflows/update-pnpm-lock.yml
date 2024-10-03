@@ -1,0 +1,129 @@
+name: Update pnpm-lock.yml
+
+on:
+  pull_request:
+    types: [opened]
+
+env:
+  RUSH: node ./common/scripts/install-run-rush.js
+  NODE_VERSION: 18.x
+
+jobs:
+  perform-rush-update:
+    if: ${{ startsWith(github.ref, 'refs/heads/dependabot/') }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./runbotics
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache Rush
+        id: cache-rush
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-rush
+        with:
+          path: ~/.rush
+          key: ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+          restore-keys: |
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-
+
+      - name: Cache pnpm
+        id: cache-pnpm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-pnpm
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: |
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+            ${{ runner.os }}-scheduler-${{ env.CACHE_NAME }}-
+
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Update .npmrc
+        shell: bash
+        run: |
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.WORKFLOW_PACKAGE }}" >> ./common/config/rush/.npmrc
+
+      - name: Run rush update
+        shell: bash
+        run: |
+          ${{ env.RUSH }} update
+
+      - name: Prepare pnpm-lock.yaml for commit
+        shell: bash
+        run: |
+          git config --global user.email "contact@runbotics.com"
+          git config --global user.name "github-actions[bot]"
+          git status
+          git add ./common/config/rush/pnpm-lock.yaml
+
+      - name: Commit updated pnpm-lock.yaml
+        shell: bash
+        run: |
+          git status
+          git commit -m "chore: 🔧 Update pnpm-lock"
+
+      - name: Push commit
+        shell: bash
+        run: |
+          git push origin ${{ github.ref_name }}
+
+      - name: Clean up
+        run: |
+          git status
+          git add .
+          git status
+          git reset --hard
+
+      - name: Install Runbotics CLI
+        run: |
+          touch ~/.npmrc
+          echo -e "@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.WORKFLOW_PACKAGE }}" > ~/.npmrc
+          cat ~/.npmrc
+          npm install -g @runbotics/runbotics-cli@3.0.0
+
+      - name: Bump app version
+        run: |
+          echo Y | npx rb version --no-push
+          git status
+
+      - name: Prepare for commit
+        run: |
+          git status
+          git add ../runbotics-orchestrator/build.gradle \
+            common/config/runbotics.json \
+            runbotics-desktop/package.json \
+            runbotics-orchestrator-ui/package.json \
+            runbotics-scheduler/package.json
+
+      - name: Assign package version
+        uses: nyaa8/package-version@v1
+        with:
+          path: './runbotics/runbotics-orchestrator-ui/package.json'
+
+      - name: Commit updated version
+        run: |
+          git config --global user.email "contact@runbotics.com"
+          git config --global user.name "github-actions[bot]"
+          git status
+          git commit -m "chore: 🔧 Bump app version to ${{ env.PACKAGE_VERSION }}"
+
+      - name: Push commit
+        shell: bash
+        run: |
+          git push origin ${{ github.ref_name }}
+
+      - name: Run CI workflow
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: CI

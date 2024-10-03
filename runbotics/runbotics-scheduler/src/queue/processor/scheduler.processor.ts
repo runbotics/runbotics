@@ -44,6 +44,9 @@ export class SchedulerProcessor {
             throw new Error('Job data is empty');
         }
 
+        await this.validateTriggerData(job)
+            .catch((err) => Promise.reject(new Error(err)));
+
         const process = await this.processService.findById(job.data.process.id);
         if (!isScheduledProcess(job.data)) {
             return this.runProcess(process, job);
@@ -283,5 +286,15 @@ export class SchedulerProcessor {
             job.id
         );
         return orchestratorProcessInstanceId;
+    }
+
+    private async validateTriggerData(job: Job) {
+        if (!Object.keys(job.data.triggerData).length) {
+            await this.processInstanceSchedulerService.saveFailedProcessInstance(
+                job,
+                'User email not specified'
+            );
+            return Promise.reject();
+        }
     }
 }

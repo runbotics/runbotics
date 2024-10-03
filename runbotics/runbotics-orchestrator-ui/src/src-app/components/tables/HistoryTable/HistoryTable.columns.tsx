@@ -1,64 +1,50 @@
 import React from 'react';
 
 import moment from 'moment';
-import { useSnackbar } from 'notistack';
 import { FeatureKey } from 'runbotics-common';
 
 import BotProcessRunner from '#src-app/components/BotProcessRunner';
 import useAuth from '#src-app/hooks/useAuth';
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import { ProcessInstanceRow, getSubprocessesResponse } from './HistoryTable.types';
-import { useDispatch, useSelector } from '../../../store';
+import { GetSubprocessesPageParams, ProcessInstanceRow } from './HistoryTable.types';
+import { useSelector } from '../../../store';
 import { getProcessInstanceStatusColor } from '../../../utils/getProcessInstanceStatusColor';
 import Label from '../../Label';
 import { hasFeatureKeyAccess } from '../../utils/Secured';
 import { Column } from '../Table';
-import TableRowExpander from '../Table/TableRowExpander';
-
-
+import TableRowExpander from '../Table/components/TableRowExpander';
+import { calcPage, SUBPROCESSES_PAGE_SIZE } from '../Table/Table.utils';
 
 const useProcessInstanceColumns = (
     rerunEnabled: boolean,
     onRerunProcess: () => void,
+    getSubprocessesPage: (params: GetSubprocessesPageParams) => void
 ): Column[] => {
     const { translate } = useTranslations();
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
     const { user: authUser } = useAuth();
     const { mapInitiatorLabel } = useInitiatorLabel();
     const { process: currentProcess } = useSelector(
         (state) => state.process.draft
     );
 
-    const handleNoSubprocessesFound = (currRow: ProcessInstanceRow) => {
-        enqueueSnackbar(
-            translate('History.Table.Error.SubprocessesNotFound'),
-            { variant: 'error' },
-        );
-        dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
-    };
-
     const handleRowExpand = (currRow: ProcessInstanceRow) => {
+        const page = calcPage(currRow.subRows.length, SUBPROCESSES_PAGE_SIZE);
         if (currRow.subRows.length > 0 || currRow.isExpanded) return;
-        dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id }))
-            .then((response: getSubprocessesResponse ) => {
-                if(response.payload.length === 0) handleNoSubprocessesFound(currRow);
-            })
-            .catch(() => { handleNoSubprocessesFound(currRow); });
+        getSubprocessesPage({ currRow, pageNum: page, size: SUBPROCESSES_PAGE_SIZE });
     };
 
     let columns = [
         {
             Header: ' ',
             id: 'expander',
-            Cell: ({ row }) =>
+            Cell: ({ row }) => (
                 row.original.hasSubprocesses ? (
                     <TableRowExpander row={row} handleClick={handleRowExpand} />
-                ) : null,
+                ) : null
+            ),
         },
         {
             Header: translate('Component.HistoryTable.Header.ProcessName'),

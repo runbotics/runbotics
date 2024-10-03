@@ -16,12 +16,15 @@ import { Row, useExpanded, useRowSelect, useTable } from 'react-table';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import BlankRow from './components/BlankRow';
+import { LoadMore } from './components/LoadMore';
 import DataTableFooter from './Table.footer';
 import { DataTableRow, DataTableWrapper, LoadingRow } from './Table.styles';
-import { DataTableProps } from './Table.types';
-import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS } from './Table.utils';
+import { DataTableProps, DataRow } from './Table.types';
+import { TABLE_PAGE_SIZES, TABLE_ROW_HEIGHT, INTERACTIVE_COLUMNS, calcPage, getEndedBranches, getRowsToInsert, getNthId, getRowId, getSpecialRows, LOAD_MORE_SUBPROCESSES_PAGE_SIZE } from './Table.utils';
 import If from '../../utils/If';
 import { ProcessInstanceRow } from '../HistoryTable/HistoryTable.types';
+import { COLUMNS_NUMBER } from '../HistoryTable/HistoryTable.utils';
 
 
 const Table = <T extends object>({
@@ -35,10 +38,10 @@ const Table = <T extends object>({
     page,
     loading,
     subRowProperty,
-    renderSubRow,
     singleSelect,
     autoHeight,
     instanceId,
+    getSubprocessesPage,
 }: DataTableProps<T>) => {
     const [isLoading, setIsLoading] = useState(true);
     const [pageSize, setPageSize] = useState(propPageSize);
@@ -52,20 +55,20 @@ const Table = <T extends object>({
         if (typeof tableData !== 'object' || tableData === null) {
             return tableData;
         }
-      
+
         if (Array.isArray(tableData)) {
             return tableData.map(item => replaceKeyRecursive(item, newKey));
         }
-      
+
         const newObj = {};
-      
+
         for (const key in tableData) {
             if (Object.hasOwnProperty.call(tableData, key)) {
                 const newKeyString = key === subRowProperty ? newKey : key;
                 newObj[newKeyString] = replaceKeyRecursive(tableData[key] as T[], newKey);
             }
         }
-      
+
         return newObj;
     };
 
@@ -145,19 +148,32 @@ const Table = <T extends object>({
 
     const rowLoader = (
         <TableRow>
-            <TableCell colSpan={columns.length ?? 7} sx={{ height: `${TABLE_ROW_HEIGHT}px`}}>
-                <LoadingRow /> 
+            <TableCell colSpan={columns.length ?? COLUMNS_NUMBER} sx={{ height: `${TABLE_ROW_HEIGHT}px`}}>
+                <LoadingRow />
             </TableCell>
         </TableRow>
     );
 
 
     const renderTableRows = () => {
-        const dataRows = mappedRows
+        const dataRows: DataRow[] = mappedRows
             .map((row: Row<T>) => {
                 prepareRow(row);
                 const rowKey = row.getRowProps().key;
-                return (
+                const canLoadMore = row.isExpanded && (row as ProcessInstanceRow).original?.subprocessesCount > row.subRows.length;
+                const isRowLoading = row.isExpanded && (row as ProcessInstanceRow).original?.isLoadingSubprocesses;
+                const loaderOrLoadMore = isRowLoading
+                    ? rowLoader
+                    : canLoadMore &&
+                    <LoadMore
+                        row={row as ProcessInstanceRow}
+                        getSubprocessesPage={getSubprocessesPage}
+                        pageNum={calcPage(row.subRows.length, LOAD_MORE_SUBPROCESSES_PAGE_SIZE)}
+                        size={LOAD_MORE_SUBPROCESSES_PAGE_SIZE}
+                        columnsNum={columns.length}
+                    />;
+
+                const createdRow = (
                     <React.Fragment key={rowKey}>
                         <DataTableRow
                             key={row.id}
@@ -167,34 +183,48 @@ const Table = <T extends object>({
                         >
                             {renderCells(row)}
                         </DataTableRow>
-                        {!!renderSubRow && row.isExpanded ? renderSubRow(row) : null}
-                        {row.isExpanded && (row as ProcessInstanceRow).original?.isLoadingSubprocesses ? rowLoader : null}
                     </React.Fragment>
                 );
+
+                return ({
+                    createdRow,
+                    loaderOrLoadMore,
+                });
             });
 
-        if (autoHeight) return dataRows;
+        const blankRow = <BlankRow key={-1} />;
 
-        const dummyRows: JSX.Element[] = [];
-        const dummyRowsLength = TABLE_PAGE_SIZES[0] - dataRows.length;
-        for (let i = dummyRowsLength; i > 0; i--) {
-            dummyRows.push(
-                <TableRow
-                    key={`dummy-row-${i}`}
-                    sx={{
-                        minHeight: `${TABLE_ROW_HEIGHT}px`,
-                        height: `${TABLE_ROW_HEIGHT}px`,
-                    }}
-                />,
-            );
-        }
+        const orderedRows = [...dataRows, { createdRow: blankRow, loaderOrLoadMore: false }].reduce((acc, { createdRow: currRow }) => {
+            const prevRow = acc.at(-1);
 
-        return [...dataRows, ...dummyRows];
+            if (!prevRow) {
+                return [...acc, currRow];
+            }
+
+            const prevRowId = getNthId(acc, -1);
+            const currRowId = getRowId(currRow) ?? '';
+
+            if(!prevRowId) {
+                return [...acc, currRow];
+            }
+
+            const endedBranches = getEndedBranches(prevRowId, currRowId);
+            const rowsToInsert = getRowsToInsert(endedBranches, getSpecialRows(dataRows));
+
+            return [...acc, ...rowsToInsert, currRow];
+        }, []);
+
+        if (autoHeight) return orderedRows;
+
+        const blankRowsLength = TABLE_PAGE_SIZES[0] - orderedRows.length;
+        const blankRows: JSX.Element[] = Array.from({ length: blankRowsLength }, (_, i) => <BlankRow key={i + 1} />);
+
+        return [...orderedRows, ...blankRows];
     };
 
     const emptyDataElement = (
         <TableRow>
-            <TableCell colSpan={columns.length ?? 7} align="center">
+            <TableCell colSpan={columns.length ?? COLUMNS_NUMBER} align="center">
                 <Grid item xs={12}>
                     {translate('Component.Table.NoDataFound')}
                 </Grid>
@@ -204,7 +234,7 @@ const Table = <T extends object>({
 
     const cellLoader = (
         <TableRow>
-            <TableCell colSpan={columns.length ?? 7} sx={{ verticalAlign: 'middle' }}>
+            <TableCell colSpan={columns.length ?? COLUMNS_NUMBER} sx={{ verticalAlign: 'middle' }}>
                 <Box width="100%" display="flex" justifyContent="center">
                     <CircularProgress color="secondary" />
                 </Box>

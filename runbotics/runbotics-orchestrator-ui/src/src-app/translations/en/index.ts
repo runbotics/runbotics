@@ -7,6 +7,7 @@ import botTranslations from './bot.json';
 import collectionTranslations from './collections';
 import commonTranslations from './common.json';
 import componentsTranslations from './components.json';
+import credenitalsTranslations from './credenitals';
 import demoTranslations from './demo.json';
 import error404Translations from './error404.json';
 import historyTranslations from './history.json';
@@ -17,6 +18,7 @@ import paletteTranslations from './palette.json';
 import processTranslations from './process';
 import registerTranslations from './register.json';
 import schedulerTranslations from './scheduler';
+import tenantsTranslations from './tenants';
 import usersTranslations from './users';
 import variablesTranslations from './variables.json';
 
@@ -41,5 +43,7 @@ const translationResources = {
     ...blogTranslations,
     ...demoTranslations,
     ...usersTranslations,
+    ...tenantsTranslations,
+    ...credenitalsTranslations
 };
 export default translationResources;

@@ -23,6 +23,11 @@
     "Component.ProcessQueueDetails.Processing": "Oczekiwanie na rozpoczęcie procesu, szukanie bota.",
     "Component.ProcessQueueDetails.Queue": "Oczekiwanie na przetwarzanie. Twój proces jest {{ queuePosition }} w kolejce.",
 
+    "Component.CredentialSelectSet.CollectionAuthor": "Autor kolekcji",
+    "Component.CredentialSelectSet.CollectionName": "Nazwa kolekcji",
+    "Component.CredentialSelectSet.CredentialName": "Nazwa poświadczeń",
+    "Component.CredentialSelectSet.NotFound": "Nie znaleziono pasujących poświadczeń",
+
     "Component.Tile.Avatar.AriaLabel": "Przepis",
     "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Ikona procesu triggerowalnego",
     "Component.Tile.Process.Header.Alt.PlayIcon": "Ikona startu",
@@ -88,6 +93,9 @@
     "Component.HistoryTable.Rows.Initiator.Scheduler": "Harmonogram({{ login }})",
     "Component.HistoryTable.Rows.Initiator.Api": "API({{ login }})",
     "Component.HistoryTable.Rows.Initiator.Email": "Email({{ email }})",
+
+    "Component.HistoryTable.Special.LoadMore": "Załaduj kolejne {{ pageSize }} (pozostało {{ count }})",
+    "Component.HistoryTable.Special.LoadAll": "Załaduj wszystkie ({{ total }} łącznie)",
 
     "Component.HistoryTable.Step.StartEvent": "Rozpoczęto zdarzenie",
     "Component.HistoryTable.Step.EndEvent": "Zakończono zdarzenie",
@@ -183,5 +191,9 @@
 
     "Component.NotificationTable.View.Header": "Subskrybenci",
     "Component.NotificationTable.View.SearchBarPlaceholder": "Szukaj",
-    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów"
+    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów",
+
+    "Component.InviteCodeButton.Generate": "Wygeneruj link zaproszenia",
+    "Component.InviteCodeButton.Copy": "Kliknij aby skopiować link zaproszenia",
+    "Component.InviteCodeButton.Copied": "Link skopiowany!"
 }

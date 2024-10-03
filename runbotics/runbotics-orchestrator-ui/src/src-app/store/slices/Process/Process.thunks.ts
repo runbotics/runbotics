@@ -1,30 +1,31 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import Axios from 'axios';
 
-import { IProcess, Tag, NotificationProcess, IUser } from 'runbotics-common';
+import { IProcess, Tag, NotificationProcess, NotificationProcessType, ProcessCredentialDto } from 'runbotics-common';
 
 import { Socket } from 'socket.io-client';
 
 import { RootState } from '#src-app/store';
 import LoadingType from '#src-app/types/loading';
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
+import Axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
 import IProcessWithFilters from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.types';
 
-import { StartProcessResponse, UpdateDiagramRequest } from './Process.state';
+import { CreateProcessCredentialDto, StartProcessResponse, UpdateDiagramRequest } from './Process.state';
 
+const PROCESS_NOTIFICATION_PATH = 'notifications-process';
+const TAGS_PATH = 'tags';
+const PROCESS_CREDENTIALS_PATH = 'process-credentials';
 
+// TODO and TO_REVIEW during processes migration
 const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
     .url('/api/processes-page').param('sort', 'updated,desc').params(params).build();
 
+// TODO and TO_REVIEW during process migration
 const processPageByCollectionURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
     .url('/api/processes-page-collection').param('sort', 'updated,desc').params(params).build();
-
-const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
-    .url(url)
-    .params(params)
-    .build();
 
 export const fetchProcessById = createAsyncThunk<
     IProcess,
@@ -159,31 +160,24 @@ export const deleteProcess = createAsyncThunk<void, { processId: number }>(
     },
 );
 
-export const getTagsByName = createAsyncThunk<Tag[], PageRequestParams>(
-    'tags/getByName',
-    (params) => Axios.get<Tag[]>(buildPageURL(params, '/api/tags'))
-        .then((response) => response.data)
-);
+export const getTagsByName = ApiTenantResource.get<Tag[]>('tags/getByName', TAGS_PATH);
 
-export const subscribeProcessNotifications = createAsyncThunk<NotificationProcess, { processId: IProcess['id']; userId: IUser['id'] }>(
-    'processes/subscribeProcessNotifications',
-    (userProcess) => Axios.post<NotificationProcess>('/api/process-notifications', userProcess)
-        .then((response) => response.data)
-);
+export const subscribeProcessNotifications = ApiTenantResource
+    .post<NotificationProcess, { processId: number, type: NotificationProcessType }>
+    ('processes/subscribeProcessNotifications', PROCESS_NOTIFICATION_PATH);
 
-export const unsubscribeProcessNotifications = createAsyncThunk<void, NotificationProcess['id']>(
-    'processes/unsubscribeProcessNotifications',
-    (notificationId) => Axios.delete(`/api/process-notifications/${notificationId}`)
-);
+export const unsubscribeProcessNotifications = ApiTenantResource
+    .delete<void>('processes/unsubscribeProcessNotifications', PROCESS_NOTIFICATION_PATH);
 
-export const getProcessSubscriptionInfo = createAsyncThunk<NotificationProcess[], IProcess['id']>(
-    'processes/getProcessSubscriptionInfo',
-    (processId) => Axios.get<NotificationProcess[]>(`/api/processes/${processId}/notifications`)
-        .then((response) => response.data)
-);
+export const getProcessSubscriptionInfo = ApiTenantResource
+    .get<NotificationProcess[]>('processes/getProcessSubscriptionInfo', `${PROCESS_NOTIFICATION_PATH}/processes`);
 
-export const getProcessSubscriptionInfoByProcessIdAndUserId = createAsyncThunk<NotificationProcess, { processId: IProcess['id']; userId: IUser['id'] }>(
-    'processes/getProcessSubscriptionInfoByProcessIdAndUserId',
-    ({ processId, userId }) => Axios.get<NotificationProcess>(`/api/process-notifications?processId=${processId}&userId=${userId}`)
-        .then((response) => response.data)
-);
+export const getProcessCredentials = ApiTenantResource
+    .get<ProcessCredentialDto[]>('processes/getProcessCredentials', `${PROCESS_CREDENTIALS_PATH}/processes`);
+
+export const createProcessCredential = ApiTenantResource
+    .post<void, CreateProcessCredentialDto>
+    ('processes/deleteProcessCredential', PROCESS_CREDENTIALS_PATH);
+
+export const deleteProcessCredential = ApiTenantResource
+    .delete<void>('processes/deleteProcessCredential', PROCESS_CREDENTIALS_PATH);

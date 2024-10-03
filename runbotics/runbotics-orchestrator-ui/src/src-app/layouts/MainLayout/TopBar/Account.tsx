@@ -5,11 +5,12 @@ import { useTheme } from '@mui/material/styles';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { Role } from 'runbotics-common';
+import { FeatureKey, Role } from 'runbotics-common';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
@@ -60,6 +61,8 @@ const Account: FC = () => {
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
+    const hasUserEditAccess = useFeatureKey([FeatureKey.TENANT_EDIT_USER, FeatureKey.USERS_PAGE_READ], { oneOf: true });
+
     const { pathname } = useRouter();
 
     const handleOpen = (): void => {
@@ -106,9 +109,14 @@ const Account: FC = () => {
                 sx={{ color: theme.palette.primary.contrastText }}
             >
                 <Hidden lgDown>
-                    <Typography variant="h5" sx={{ fontSize: '0.875rem' }}>
-                        {auth.user.email}
-                    </Typography>
+                    <Box display="flex" flexDirection="column" alignItems="flex-end">
+                        <Typography variant="h5" sx={{ fontSize: '0.875rem' }} align="right">
+                            {auth.user.email}
+                        </Typography>
+                        <Typography variant="subtitle1" sx={{ fontSize: '0.75rem' }}>
+                            {auth.user.tenant.name}
+                        </Typography>
+                    </Box>
                 </Hidden>
                 <Avatar alt={translate('Account.User')} className={classes.avatar} src={auth.user.avatar} />
             </Box>
@@ -123,17 +131,24 @@ const Account: FC = () => {
                 anchorEl={ref.current}
                 open={isOpen}
             >
-                <If condition={hasAdminAccess}>
-                    <MenuItem>
-                        <MenuLink href='/app/users'>
+                <If condition={hasUserEditAccess}>
+                    <MenuLink href='/app/users'>
+                        <MenuItem>
                             {translate('Account.Users')}
-                        </MenuLink>
-                    </MenuItem>
-                    <MenuItem>
-                        <MenuLink href='/monitoring/grafana'>
+                        </MenuItem>
+                    </MenuLink>
+                </If>
+                <If condition={hasAdminAccess}>
+                    <MenuLink href='/app/tenants'>
+                        <MenuItem>
+                            {translate('Account.Tenants')}
+                        </MenuItem>
+                    </MenuLink>
+                    <MenuLink href='/monitoring/grafana'>
+                        <MenuItem>
                             {translate('Account.Monitoring')}
-                        </MenuLink>
-                    </MenuItem>
+                        </MenuItem>
+                    </MenuLink>
                 </If>
                 <MenuItem onClick={handleLogout}>{translate('Account.Logout')}</MenuItem>
             </Menu>

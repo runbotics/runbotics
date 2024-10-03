@@ -1,6 +1,6 @@
 import { MicrosoftPlatform } from 'runbotics-common';
 
-import { Drive, DriveItem } from '../common.types';
+import { ActionCredentialData, Drive, DriveItem } from '../common.types';
 import { Site } from '../share-point/share-point.types';
 
 // Session
@@ -17,7 +17,7 @@ export interface SharePointSession extends Omit<OneDriveSession, 'platform'> {
     driveId: Drive['id'];
 }
 
-export type ExcelSession = SharePointSession | OneDriveSession;
+export type ExcelSession = (SharePointSession | OneDriveSession) & ActionCredentialData;
 
 // Session Info
 export interface OneDriveSessionInfo {
@@ -32,7 +32,7 @@ export interface SharePointSessionInfo extends Omit<OneDriveSessionInfo, 'platfo
     listName: string;
 }
 
-export type ExcelSessionInfo = OneDriveSessionInfo | SharePointSessionInfo;
+export type ExcelSessionInfo = (OneDriveSessionInfo | SharePointSessionInfo) & ActionCredentialData;
 
 // File Info
 export type SharePointFileInfo = Omit<SharePointSession, 'worksheetName' | 'workbookSessionId'>;

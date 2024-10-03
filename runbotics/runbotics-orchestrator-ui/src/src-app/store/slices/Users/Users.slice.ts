@@ -28,6 +28,16 @@ const initialState: UsersState = {
         all: [],
         allByPage: null,
     },
+    tenantActivated: {
+        loading: false,
+        all: [],
+        allByPage: null,
+    },
+    tenantNotActivated: {
+        loading: false,
+        all: [],
+        allByPage: null
+    }
 };
 
 export const slice = createSlice({

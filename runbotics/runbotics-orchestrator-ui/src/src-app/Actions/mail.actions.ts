@@ -1,14 +1,14 @@
-import { MailAction } from 'runbotics-common';
+import { MailAction, ActionCredentialType } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { IBpmnAction, Runner } from './types';
 
 
-
 const getMailActions: () => Record<string, IBpmnAction> = () => ({
     'mail.send': {
         id: MailAction.SEND,
+        credentialType: ActionCredentialType.EMAIL,
         label: translate('Process.Details.Modeler.Actions.Mail.Send.Label'),
         script: MailAction.SEND,
         runner: Runner.DESKTOP_SCRIPT,

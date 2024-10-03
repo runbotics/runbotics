@@ -1,16 +1,15 @@
-import { SapAction, ActionRegex } from 'runbotics-common';
+import { SapAction, ActionRegex, ActionCredentialType } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { SAPLanguages } from './sap.types';
 import { IBpmnAction, Runner, ActionSystem } from '../types';
 
-
-
 // eslint-disable-next-line max-lines-per-function
 const getSapActions: () => Record<string, IBpmnAction> = () => ({
     'sap.connect': {
         id: SapAction.CONNECT,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Connect.Label'),
         script: SapAction.CONNECT,
         runner: Runner.DESKTOP_SCRIPT,
@@ -64,6 +63,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.disconnect': {
         id: SapAction.DISCONNECT,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Disconnect.Label'),
         script: SapAction.DISCONNECT,
         runner: Runner.DESKTOP_SCRIPT,
@@ -91,6 +91,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
 
     'sap.startTransaction': {
         id: SapAction.START_TRANSACTION,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.StartTransaction.Label'),
         script: SapAction.START_TRANSACTION,
         runner: Runner.DESKTOP_SCRIPT,
@@ -124,6 +125,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.endTransaction': {
         id: SapAction.END_TRANSACTION,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.EndTransaction.Label'),
         script: SapAction.END_TRANSACTION,
         runner: Runner.DESKTOP_SCRIPT,
@@ -144,6 +146,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.type': {
         id: SapAction.TYPE,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Type.Label'),
         script: SapAction.TYPE,
         runner: Runner.DESKTOP_SCRIPT,
@@ -182,6 +185,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.sendVKey': {
         id: SapAction.SEND_VKEY,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.SendVKey.Label'),
         script: SapAction.SEND_VKEY,
         runner: Runner.DESKTOP_SCRIPT,
@@ -283,6 +287,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.index': {
         id: SapAction.INDEX,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Index.Label'),
         script: SapAction.INDEX,
         runner: Runner.DESKTOP_SCRIPT,
@@ -345,6 +350,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.readText': {
         id: SapAction.READ_TEXT,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.ReadText.Label'),
         script: SapAction.READ_TEXT,
         runner: Runner.DESKTOP_SCRIPT,
@@ -407,6 +413,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.click': {
         id: SapAction.CLICK,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Click.Label'),
         script: SapAction.CLICK,
         runner: Runner.DESKTOP_SCRIPT,
@@ -440,6 +447,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.focus': {
         id: SapAction.FOCUS,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Focus.Label'),
         script: SapAction.FOCUS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -473,6 +481,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.doubleClick': {
         id: SapAction.DOUBLE_CLICK,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.DoubleClick.Label'),
         script: SapAction.DOUBLE_CLICK,
         runner: Runner.DESKTOP_SCRIPT,
@@ -506,6 +515,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.select': {
         id: 'sap.select',
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Select.Label'),
         script: 'sap.select',
         runner: Runner.DESKTOP_SCRIPT,
@@ -539,6 +549,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.openContextMenu': {
         id: SapAction.OPEN_CONTEXT_MENU,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.OpenContextMenu.Label'),
         script: SapAction.OPEN_CONTEXT_MENU,
         runner: Runner.DESKTOP_SCRIPT,
@@ -577,6 +588,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.selectFromContextMenu': {
         id: SapAction.SELECT_FROM_CONTEXT_MENU,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.Label'),
         script: SapAction.SELECT_FROM_CONTEXT_MENU,
         runner: Runner.DESKTOP_SCRIPT,
@@ -615,6 +627,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.clickToolbarButton': {
         id: SapAction.CLICK_TOOLBAR_BUTTON,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Label'),
         script: SapAction.CLICK_TOOLBAR_BUTTON,
         runner: Runner.DESKTOP_SCRIPT,
@@ -653,6 +666,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.selectTableRow': {
         id: SapAction.SELECT_TABLE_ROW,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.SelectTableRow.Label'),
         script: SapAction.SELECT_TABLE_ROW,
         runner: Runner.DESKTOP_SCRIPT,
@@ -690,6 +704,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.toggleCheckbox': {
         id: SapAction.TOGGLE_CHECKBOX,
+        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Label'),
         script: SapAction.TOGGLE_CHECKBOX,
         runner: Runner.DESKTOP_SCRIPT,

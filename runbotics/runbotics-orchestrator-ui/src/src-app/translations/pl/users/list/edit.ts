@@ -16,6 +16,7 @@ const editListTranslations: typeof englishEditListTranslations = {
     'Users.List.Edit.Form.Select.Language.English': 'Angielski',
     'Users.List.Edit.Form.Select.Language.Polish': 'Polski',
     'Users.List.Edit.Form.Switch.Activated': 'Aktywowany:',
+    'Users.List.Edit.Form.Switch.InfoTooltip': 'Aby zmienić rolę dezaktywuj użytkownika',
     'Users.List.Edit.Form.Error.FieldRequired': 'Pole jest wymagane',
     'Users.List.Edit.Form.Error.Email': 'Niepoprawny email'
 };

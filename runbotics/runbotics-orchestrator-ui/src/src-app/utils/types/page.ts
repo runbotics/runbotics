@@ -22,6 +22,7 @@ export interface PageRequestParams<T extends object = any> {
         equals?: ObjectOf<T>;
         in?: IdentifiersObjectOf<T>;
     };
+    [key: string]: unknown;
 }
 
 type SortType<T> = {

@@ -67,13 +67,14 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                 rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
                 trigger: request.trigger as ITriggerEvent,
                 triggerData: request.triggerData,
+                credentials: request.credentials,
             });
 
             const subscription = this.runtimeService.processChange().subscribe((data) => {
                 if (data.processInstanceId === processInstanceId) {
                     switch (data.eventType) {
                         case ProcessInstanceStatus.COMPLETED:
-                        case ProcessInstanceStatus.STOPPED:
+                        case ProcessInstanceStatus.STOPPED: {
                             const result = {
                                 variables: {},
                             };
@@ -88,6 +89,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                             resolve(result);
                             subscription.unsubscribe();
                             break;
+                        }
                         case ProcessInstanceStatus.ERRORED:
                             reject(new Error('Process errored'));
                             subscription.unsubscribe();

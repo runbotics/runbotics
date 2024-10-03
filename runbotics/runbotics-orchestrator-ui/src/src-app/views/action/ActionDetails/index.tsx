@@ -20,8 +20,8 @@ import { v4 as uuidv4 } from 'uuid';
 import ErrorBoundary from '#src-app/components/utils/ErrorBoundary';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
+import { activityActions } from '#src-app/store/slices/Action';
 import {
-    saveAction,
     setShowEditModal
 } from '#src-app/store/slices/Action/Action.thunks';
 import { IAction } from '#src-app/types/model/action.model';
@@ -37,6 +37,7 @@ export function isValidJson(str) {
     return true;
 }
 
+// eslint-disable-next-line max-lines-per-function
 export const Index = () => {
     const dispatch = useDispatch();
     const [draft, setDraft] = useState<IAction>({});
@@ -70,8 +71,22 @@ export const Index = () => {
             enqueueSnackbar(translate('Action.Details.ExternalScript.Error'), {
                 variant: 'error'
             });
+            return;
+        }
+
+        if (draft.id) {
+            dispatch(activityActions.updateAction({ payload: draft, resourceId: draft.id }))
+                .unwrap()
+                .then(() => {
+                    dispatch(activityActions.getAllActions());
+                });
+            dispatch(setShowEditModal({ show: false }));
         } else {
-            dispatch(saveAction(draft));
+            dispatch(activityActions.createAction({ payload: { ...draft, id: draft.script } }))
+                .unwrap()
+                .then(() => {
+                    dispatch(activityActions.getAllActions());
+                });
             dispatch(setShowEditModal({ show: false }));
         }
     };

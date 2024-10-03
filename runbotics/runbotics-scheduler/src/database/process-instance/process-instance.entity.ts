@@ -6,7 +6,7 @@ import { IProcess, IProcessInstance, IUser, ProcessInstanceStatus, IBot, ITrigge
 import { dateTransformer } from '../database.utils';
 import { TriggerEventEntity } from '../trigger-event/trigger-event.entity';
 
-@Entity({ name: 'process_instance' })
+@Entity({ name: 'process_instance', synchronize: false })
 export class ProcessInstanceEntity implements IProcessInstance {
     @PrimaryGeneratedColumn('uuid')
         id: string;

@@ -95,8 +95,10 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
     const hasDeleteScheduleAccess = useFeatureKey([FeatureKey.SCHEDULE_DELETE]);
 
     const handleDelete = async (id: number) => {
-        await dispatch(scheduleProcessActions.removeScheduledProcess({ scheduleProcessId: id }));
-        await dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
+        await dispatch(scheduleProcessActions.removeScheduledProcess({ resourceId: id }));
+        await dispatch(scheduleProcessActions.getSchedulesByProcess({
+            resourceId: processId
+        }));
         dispatch(processActions.removeDraftProcessSchedule(id));
     };
 
@@ -111,14 +113,14 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
                 <Tooltip title={<pre>{schedule.inputVariables}</pre>}>
                     <Avatar classes={{ root: clsx(classes.avatar, { 'disabled': isNotRunableSchedule(schedule) }) }}>
                         <SvgIcon fontSize="small">
-                            <ListIcon/>
+                            <ListIcon />
                         </SvgIcon>
                     </Avatar>
                 </Tooltip>
             </If>
         </div>
     );
-    
+
     const isNotRunableSchedule = (schedule: IScheduleProcess) => !schedule.inputVariables && process.isAttended;
 
     return (

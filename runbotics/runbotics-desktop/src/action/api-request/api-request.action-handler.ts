@@ -1,6 +1,6 @@
 import Axios, { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { Injectable, InternalServerErrorException, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import mimeTypes from 'mime-types';
 import { v4 as uuid } from 'uuid';
@@ -106,8 +106,12 @@ export default class ApiRequestActionHandler extends StatelessActionHandler impl
         const response = await Axios.get(url, {
             responseType: 'stream',
         });
-        const mimeType = mimeTypes.extension(response.headers['content-type']);
-        const fileName = `${process.cwd()}\\temp\\${uuid()}.${mimeType}`.replace(/\\\\/g, '\\');
+        const extension = mimeTypes.extension(response.headers['content-type']);
+        if (!extension) {
+            throw new Error('Unable to determine the extension');
+        }
+
+        const fileName = `${process.cwd()}\\temp\\${uuid()}.${extension}`.replace(/\\\\/g, '\\');
         await new Promise((resolve, reject) =>
             response.data
                 .pipe(fs.createWriteStream(fileName).on('finish', () => resolve(true)))

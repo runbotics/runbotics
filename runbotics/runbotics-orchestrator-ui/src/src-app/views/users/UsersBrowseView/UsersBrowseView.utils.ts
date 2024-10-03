@@ -29,6 +29,7 @@ export const useUsersTabs = (): UsersTabsHookProps[]  => {
 
 export enum UserField {
     EMAIL = 'email',
+    TENANT = 'tenant',
     ROLE = 'role',
     CREATED_BY = 'createdBy',
     CREATED_DATE = 'createdDate',
@@ -36,6 +37,8 @@ export enum UserField {
     LAST_MODIFIED_DATE = 'lastModifiedDate',
 };
 
-export const formatUserRoles = (roles: Role[]) => roles.map((role) => role.split('_')[1]);
-
 export const getAllUserRoles = (): Role[] => Object.values(Role);
+
+export const getTenantAllowedRoles = () => [Role.ROLE_USER, Role.ROLE_EXTERNAL_USER, Role.ROLE_TENANT_ADMIN];
+
+export const formatUserRoles = (roles: Role[]) => roles.map((role) => role.match(/^ROLE_(.*)/)[1]);

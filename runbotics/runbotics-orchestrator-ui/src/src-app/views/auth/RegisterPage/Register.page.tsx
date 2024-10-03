@@ -15,6 +15,7 @@ import {
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
 import RouterLink from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import styled from 'styled-components';
@@ -24,8 +25,9 @@ import Logo from '#src-app/components/utils/Logo/Logo';
 import useTranslations, {
     checkIfKeyExists,
 } from '#src-app/hooks/useTranslations';
-import { useDispatch } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants/Tenants.slice';
 import { Language } from '#src-app/translations/translations';
 import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
 
@@ -72,6 +74,7 @@ interface RegisterFormState {
     passwordConfirmation: string;
     submit: null | boolean;
     langKey: Language;
+    inviteCode?: string;
 }
 
 const initialValues: RegisterFormState = {
@@ -89,8 +92,25 @@ const RegisterPage: FC = () => {
     const { translate } = useTranslations();
     const registerValidationSchema = useRegisterValidationSchema();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const inviteCodeURL = searchParams.get('inviteCode');
+
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+
+    const invitingTenant = useSelector((state) => tenantsSelector(state).invitingTenant);
+
+    useEffect(() => {
+        dispatch(tenantsActions.fetchTenantNameByInviteCode(inviteCodeURL))
+            .unwrap()
+            .catch((error) => {
+                if (error.statusCode === 400) {
+                    enqueueSnackbar(error.message, { variant: 'error' });
+                } else {
+                    enqueueSnackbar(translate('Register.Error.UnexpectedError'), { variant: 'error' });
+                }
+            });
+    }, [inviteCodeURL]);
 
     useEffect(() => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.REGISTER });
@@ -183,7 +203,7 @@ const RegisterPage: FC = () => {
             <RouterLink href="/privacy-policy" target="blank">
                 <Link>{translate('Landing.Policy.Info.Link')}</Link>
             </RouterLink>
-        </> 
+        </>
     , [translate]);
 
     const renderForm = ({
@@ -273,10 +293,15 @@ const RegisterPage: FC = () => {
             title={translate('Register.Meta.Title')}
         >
             <Container className={classes.container} maxWidth="sm">
-                <Box mb={6} display="flex" justifyContent="center">
+                <Box mb={6} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
                     <RouterLink href="/">
                         <Logo height={100} />
                     </RouterLink>
+                    <Typography  
+                        variant="h4"
+                    >
+                        {invitingTenant}
+                    </Typography>
                 </Box>
                 <Card>
                     <CardContent className={classes.card}>
@@ -298,7 +323,7 @@ const RegisterPage: FC = () => {
                         </Box>
                         <Box flexGrow={1} mt={3}>
                             <Formik
-                                initialValues={initialValues}
+                                initialValues={{ ...initialValues, inviteCode: inviteCodeURL ?? '' }}
                                 validationSchema={registerValidationSchema}
                                 onSubmit={handleFormSubmit}
                             >

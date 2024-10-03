@@ -1,12 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import Axios from 'axios';
-import { IBot, IUser, NotificationBot } from 'runbotics-common';
+import { IBot, NotificationBot, NotificationBotType } from 'runbotics-common';
 
-import { IProcess } from '#src-app/types/model/process.model';
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
+import Axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
-const botPageURL = (params: PageRequestParams<IProcess>) => URLBuilder
+const BOT_NOTIFICATION_PATH = 'notifications-bot';
+
+
+const botPageURL = (params: PageRequestParams<IBot>) => URLBuilder
     .url('/api/bots-page')
     .params(params)
     .build();
@@ -40,25 +43,12 @@ export const getLogs = createAsyncThunk<string[], { id: IBot['id'], lines?: numb
         .then((response) => response.data.logs),
 );
 
-export const subscribeBotNotifications = createAsyncThunk<NotificationBot, { botId: IBot['id']; userId: IUser['id'] }>(
-    'bot/subscribeBotNotifications',
-    (userBot) => Axios.post<NotificationBot>('/api/bot-notifications', userBot)
-        .then((response) => response.data)
-);
+export const subscribeBotNotifications = ApiTenantResource
+    .post<NotificationBot, { botId: number, type: NotificationBotType }>
+    ('bot/subscribeBotNotifications', BOT_NOTIFICATION_PATH);
 
-export const unsubscribeBotNotifications = createAsyncThunk<void, NotificationBot['id']>(
-    'bot/unsubscribeBotNotifications',
-    (notificationId) => Axios.delete(`/api/bot-notifications/${notificationId}`)
-);
+export const unsubscribeBotNotifications = ApiTenantResource
+    .delete<void>('bot/unsubscribeBotNotifications', BOT_NOTIFICATION_PATH);
 
-export const getBotSubscriptionInfo = createAsyncThunk<NotificationBot[], IBot['id']>(
-    'bot/getBotSubscriptionInfo',
-    (botId) => Axios.get<NotificationBot[]>(`/api/bots/${botId}/notifications`)
-        .then((response) => response.data)
-);
-
-export const getBotSubscriptionInfoByBotIdAndUserId = createAsyncThunk<NotificationBot, { botId: IBot['id']; userId: IUser['id'] }>(
-    'bot/getBotSubscriptionInfoByBotIdAndUserId',
-    ({ botId, userId }) => Axios.get<NotificationBot>(`/api/bot-notifications?botId=${botId}&userId=${userId}`)
-        .then((response) => response.data)
-);
+export const getBotSubscriptionInfo = ApiTenantResource
+    .get<NotificationBot[]>('bot/getBotSubscriptionInfoByBotId', `${BOT_NOTIFICATION_PATH}/bots`);

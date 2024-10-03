@@ -121,7 +121,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                         </MenuItem>
                     </If>
                     <If condition={hasDeleteProcessAccess}>
-                        <DeleteProcess process={process} />
+                        <DeleteProcess process={process} handleMenuClose={handleClose}/>
                     </If>
                 </Menu>
             </If>

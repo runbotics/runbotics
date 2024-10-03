@@ -2,7 +2,32 @@ import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { ActionRegex } from 'runbotics-common';
 import { Injectable } from '@nestjs/common';
 import { externalAxios, ServerConfigService } from '#config';
-import * as BeeOfficeTypes from './types';
+import {
+    BeeOfficeActionRequest,
+    BeeOfficeAuth,
+    BeeOfficeCreateHolidayLeaveActionInput,
+    BeeOfficeCreateHolidayLeaveActionOutput,
+    BeeOfficeCreateNewTimetableActivityActionInput,
+    BeeOfficeCreateNewTimetableActivityActionOutput,
+    BeeOfficeCredential,
+    BeeOfficeDeleteTimeTableActionInput,
+    BeeOfficeDeleteTimeTableActionOutput,
+    BeeOfficeGetActivitiesByURLParametersActionInput,
+    BeeOfficeGetActivitiesByURLParametersActionOutput,
+    BeeOfficeGetActivityActionInput,
+    BeeOfficeGetActivityActionOutput,
+    BeeOfficeGetActivityGroupsActionInput,
+    BeeOfficeGetActivityGroupsActionOutput,
+    BeeOfficeGetEmployeeActionInput,
+    BeeOfficeGetEmployeeActionOutput,
+    BeeOfficeGetEmployeeByIdActionInput,
+    BeeOfficeGetEmployeeByIdActionOutput,
+    BeeOfficeGetScheduleActionInput,
+    BeeOfficeGetScheduleActionOutput,
+    IBeeOfficeActivity,
+    IBeeOfficeEmployee
+} from './bee-office.types';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 @Injectable()
 export default class BeeOfficeActionHandler extends StatelessActionHandler {
@@ -12,11 +37,14 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         super();
     }
 
-    async getBearerToken() {
-        const obj = this.serverConfigService.beeAuth;
+    async getBearerToken({ url, ...authData }: BeeOfficeCredential) {
+        const auth: BeeOfficeAuth = {
+            ...authData,
+            grant_type: 'password',
+        };
 
-        const data = Object.keys(obj)
-            .map((key, index) => `${key}=${encodeURIComponent(obj[key])}`)
+        const data = Object.keys(auth)
+            .map((key) => `${key}=${encodeURIComponent(auth[key])}`)
             .join('&');
 
         const response = await externalAxios({
@@ -25,7 +53,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
                 'content-type': 'application/x-www-form-urlencoded',
             },
             data,
-            url: `${this.serverConfigService.beeUrl}/Token`,
+            url: `${url}/Token`,
             maxRedirects: 0,
         });
 
@@ -33,13 +61,14 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async getEmployee(
-        input: BeeOfficeTypes.BeeOfficeGetEmployeeActionInput
-    ): Promise<BeeOfficeTypes.BeeOfficeGetEmployeeActionOutput> {
-        const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeEmployee[]>(
-            `${this.serverConfigService.beeUrl}/api/employees/email%3BADD%3Beq%3B${input.email}/1`,
+        input: BeeOfficeGetEmployeeActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeGetEmployeeActionOutput> {
+        const response = await externalAxios.get<IBeeOfficeEmployee[]>(
+            `${credential.url}/api/employees/email%3BADD%3Beq%3B${input.email}/1`,
             {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             },
@@ -49,13 +78,14 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async getEmployeeById(
-        input: BeeOfficeTypes.BeeOfficeGetEmployeeByIdActionInput
-    ): Promise<BeeOfficeTypes.BeeOfficeGetEmployeeByIdActionOutput> {
-        const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeEmployee[]>(
-            `${this.serverConfigService.beeUrl}/api/employees/ID;ADD;eq;${input.id}`,
+        input: BeeOfficeGetEmployeeByIdActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeGetEmployeeByIdActionOutput> {
+        const response = await externalAxios.get<IBeeOfficeEmployee[]>(
+            `${credential.url}/api/employees/ID;ADD;eq;${input.id}`,
             {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             },
@@ -65,18 +95,19 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async getActivity(
-        input: BeeOfficeTypes.BeeOfficeGetActivityActionInput
-    ): Promise<BeeOfficeTypes.BeeOfficeGetActivityActionOutput> {
+        input: BeeOfficeGetActivityActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeGetActivityActionOutput> {
         const methods = {
             Equals: 'eq',
             Contains: 'ct',
         };
         const method = input.method ? methods[input.method] : 'ct';
-        const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeActivity[]>(
-            `${this.serverConfigService.beeUrl}/api/activity/name%3BADD%3B${method}%3B${input.query}/1`,
+        const response = await externalAxios.get<IBeeOfficeActivity[]>(
+            `${credential.url}/api/activity/name%3BADD%3B${method}%3B${input.query}/1`,
             {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             },
@@ -86,13 +117,9 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async createNewTimetableActivity(
-        input: BeeOfficeTypes.BeeOfficeCreateNewTimetableActivityActionInput,
-    ): Promise<BeeOfficeTypes.BeeOfficeCreateNewTimetableActivityActionOutput> {
-        const result = {};
-
-        // "activity_id": "dc96fe19-5177-44ff-a0d5-ec1747b3a662",
-        //     "activitygroup_id": "e79d2141-2a75-48f6-b640-56ec82219d43",
-
+        input: BeeOfficeCreateNewTimetableActivityActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeCreateNewTimetableActivityActionOutput> {
         const requestBody = {
             activity_id_mainvalue: '',
             activitygroup_id_mainvalue: '',
@@ -137,9 +164,9 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
             leaveConfig_id: null,
         };
 
-        const response = await externalAxios.post(`${this.serverConfigService.beeUrl}/api/timetableactivity`, requestBody, {
+        const response = await externalAxios.post(`${credential.url}/api/timetableactivity`, requestBody, {
             headers: {
-                Authorization: 'Bearer ' + (await this.getBearerToken()),
+                Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
             },
             maxRedirects: 0,
         });
@@ -148,14 +175,15 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async getSchedule(
-        input: BeeOfficeTypes.BeeOfficeGetScheduleActionInput
-    ): Promise<BeeOfficeTypes.BeeOfficeGetScheduleActionOutput> {
+        input: BeeOfficeGetScheduleActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeGetScheduleActionOutput> {
         const limit = input.limit ? input.limit : 100;
-        const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeActivity[]>(
-            `${this.serverConfigService.beeUrl}/api/timetableactivity/employee_id%3BADD%3Beq%3B${input.employee.ID}%7Ctimetabledate%3BADD%3Beq%3B${input.date}/${limit}`,
+        const response = await externalAxios.get<IBeeOfficeActivity[]>(
+            `${credential.url}/api/timetableactivity/employee_id%3BADD%3Beq%3B${input.employee.ID}%7Ctimetabledate%3BADD%3Beq%3B${input.date}/${limit}`,
             {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             },
@@ -165,13 +193,14 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async deleteTimeTableActivity(
-        input: BeeOfficeTypes.BeeOfficeDeleteTimeTableActionInput,
-    ): Promise<BeeOfficeTypes.BeeOfficeDeleteTimeTableActionOutput> {
+        input: BeeOfficeDeleteTimeTableActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeDeleteTimeTableActionOutput> {
         const response = await externalAxios.delete<any>(
-            `${this.serverConfigService.beeUrl}/api/timetableactivity/${input.timeTableActivity.ID}`,
+            `${credential.url}/api/timetableactivity/${input.timeTableActivity.ID}`,
             {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             },
@@ -181,13 +210,14 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async getActivityGroups(
-        input: BeeOfficeTypes.BeeOfficeGetActivityGroupsActionInput,
-    ): Promise<BeeOfficeTypes.BeeOfficeGetActivityGroupsActionOutput> {
-        const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeActivity[]>(
-            `${this.serverConfigService.beeUrl}/api/activitygroup/name;ADD;eq;${input.group}`,
+        input: BeeOfficeGetActivityGroupsActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeGetActivityGroupsActionOutput> {
+        const response = await externalAxios.get<IBeeOfficeActivity[]>(
+            `${credential.url}/api/activitygroup/name;ADD;eq;${input.group}`,
             {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             },
@@ -197,13 +227,14 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async getActivitiesByURLParameters(
-        input: BeeOfficeTypes.BeeOfficeGetActivitiesByURLParametersActionInput,
-    ): Promise<BeeOfficeTypes.BeeOfficeGetActivitiesByURLParametersActionOutput> {
-        const response = await externalAxios.get<BeeOfficeTypes.IBeeOfficeActivity[]>(
-            `${this.serverConfigService.beeUrl}/api/activity/${input.query}`,
+        input: BeeOfficeGetActivitiesByURLParametersActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeGetActivitiesByURLParametersActionOutput> {
+        const response = await externalAxios.get<IBeeOfficeActivity[]>(
+            `${credential.url}/api/activity/${input.query}`,
             {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             },
@@ -213,8 +244,9 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     async createHolidayLeave(
-        input: BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionInput
-    ): Promise<BeeOfficeTypes.BeeOfficeCreateHolidayLeaveActionOutput> {
+        input: BeeOfficeCreateHolidayLeaveActionInput,
+        credential: BeeOfficeCredential,
+    ): Promise<BeeOfficeCreateHolidayLeaveActionOutput> {
 
         const dateRegex = new RegExp(ActionRegex.DATE_FORMAT);
         if (!dateRegex.test(input.dateFrom) || !dateRegex.test(input.dateTo)) {
@@ -222,9 +254,9 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         }
 
         const matchedLeaveConfig = await externalAxios.get(
-            `${this.serverConfigService.beeUrl}/api/leaveconfig`, {
+            `${credential.url}/api/leaveconfig`, {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             }).then(response => response.data.find(config => config.name === input.leaveConfigName));
@@ -232,7 +264,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
             throw new Error('Cannot find leave config with specific name');
         }
 
-        const requestBody =  {
+        const requestBody = {
             employee_id: input.employeeId,
             leaveconfig_id: matchedLeaveConfig.ID,
             fromdate: input.dateFrom,
@@ -242,10 +274,10 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         };
 
         const response = await externalAxios.post(
-            `${this.serverConfigService.beeUrl}/api/leaves`,
+            `${credential.url}/api/leaves`,
             requestBody, {
                 headers: {
-                    Authorization: 'Bearer ' + (await this.getBearerToken()),
+                    Authorization: 'Bearer ' + (await this.getBearerToken(credential)),
                 },
                 maxRedirects: 0,
             })
@@ -265,26 +297,35 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         }
     }
 
-    run(request: BeeOfficeTypes.BeeOfficeActionRequest) {
+    run(request: BeeOfficeActionRequest) {
+        const matchedCredential =
+            credentialAttributesMapper<BeeOfficeCredential>(request.credentials);
+
+        // @todo After completion of password manager switch fully to matchedCredential
+        const credential: BeeOfficeCredential = matchedCredential ?? {
+            ...(this.serverConfigService.beeAuth),
+            url: this.serverConfigService.beeUrl,
+        };
+
         switch (request.script) {
             case 'beeOffice.createNewTimetableActivity':
-                return this.createNewTimetableActivity(request.input);
+                return this.createNewTimetableActivity(request.input, credential);
             case 'beeOffice.getEmployee':
-                return this.getEmployee(request.input);
+                return this.getEmployee(request.input, credential);
             case 'beeOffice.getEmployeeById':
-                return this.getEmployeeById(request.input);
+                return this.getEmployeeById(request.input, credential);
             case 'beeOffice.getActivity':
-                return this.getActivity(request.input);
+                return this.getActivity(request.input, credential);
             case 'beeOffice.getActivitiesByURLParameters':
-                return this.getActivitiesByURLParameters(request.input);
+                return this.getActivitiesByURLParameters(request.input, credential);
             case 'beeOffice.getSchedule':
-                return this.getSchedule(request.input);
+                return this.getSchedule(request.input, credential);
             case 'beeOffice.deleteTimeTableActivity':
-                return this.deleteTimeTableActivity(request.input);
+                return this.deleteTimeTableActivity(request.input, credential);
             case 'beeOffice.getActivityGroups':
-                return this.getActivityGroups(request.input);
+                return this.getActivityGroups(request.input, credential);
             case 'beeOffice.createHolidayLeave':
-                return this.createHolidayLeave(request.input);
+                return this.createHolidayLeave(request.input, credential);
             default:
                 throw new Error('Action not found');
         }

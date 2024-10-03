@@ -1,11 +1,10 @@
-import { Notification } from "../../notifications";
 import { IBot } from "./bot.model";
+import { NotificationBotType } from "./notification-type.model";
 import { IUser } from "./user.model";
 
 export interface NotificationBot {
-    id: number;
+    id: string;
     user: IUser;
-    bot: IBot;
-    type: Notification.BOT_DISCONNECTED;
+    type: NotificationBotType;
     createdAt: string;
 }
