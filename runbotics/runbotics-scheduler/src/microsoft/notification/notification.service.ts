@@ -42,7 +42,7 @@ export class NotificationService {
             try {
                 const process = await this.validateTitle(processId);
                 const variables = this.parseMailBody(email.bodyPreview);
-    
+
                 if (email.hasAttachments) {
                     const attachments = (await this.outlookService.getAttachments(email.id)).value;
                     attachments.forEach((attachment) => {
@@ -50,7 +50,7 @@ export class NotificationService {
                         variables[filename] = fileContent;
                     });
                 }
-                
+
                 variables['senderEmailAddress'] = email.sender.emailAddress.address.toLowerCase();
 
                 const input = { variables };
@@ -75,14 +75,14 @@ export class NotificationService {
 
             } catch (e: any) {
                 const replyEmail: ReplyEmailRequest = {
-                    message: { 
+                    message: {
                         toRecipients: [email.sender],
                         ccRecipients: email.ccRecipients,
                         bccRecipients: email.bccRecipients,
                     },
                     comment: e.message,
                 };
-                
+
                 this.logger.error(e.message);
                 await this.outlookService.replyEmail(email.id, replyEmail)
                     .catch(error => {
@@ -110,7 +110,7 @@ export class NotificationService {
         const processUrl = `${this.serverConfigService.entrypointUrl}/app/processes/${processInstance.process.id}/run`;
 
         const replyEmail: ReplyEmailRequest = {
-            message: { 
+            message: {
                 toRecipients: [{
                     emailAddress: {
                         address: processInstance.triggerData.sender,
@@ -121,7 +121,7 @@ export class NotificationService {
             },
             comment: `Process finished with status ${processInstance.status}. See more details at ${processUrl}`,
         };
-        
+
         await this.outlookService.replyEmail(processInstance.triggerData.emailId, replyEmail)
             .catch(error => {
                 const triggerData = processInstance.triggerData as EmailTriggerData;
@@ -157,11 +157,11 @@ export class NotificationService {
         const filename = attachment.name
             .split('.')
             .slice(0, -1)
-            .join(''); 
+            .join('');
 
         const fileSection = `filename:${filename}`;
         const contentTypeSection = `data:${attachment.contentType}`;
-        const baseSection = `base64,${Buffer.from(attachment.contentBytes).toString('base64')}`;
+        const baseSection = `base64,${attachment.contentBytes}`; // contentBytes is content of the file, comes already in base64
         const fileContent = [fileSection, contentTypeSection, baseSection].join(';');
 
         return {
@@ -182,7 +182,7 @@ export class NotificationService {
 
     private async validateTitle(processId: number) {
         const message = `Process "${processId}" does not exist`;
-        
+
         const process = await this.processService.findById(processId);
 
         if (!process) {
