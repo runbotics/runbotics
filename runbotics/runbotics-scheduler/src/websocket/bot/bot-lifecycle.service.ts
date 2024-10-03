@@ -2,13 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import dayjs from 'dayjs';
 import { IBot, IProcessInstance, IProcessInstanceEvent, ProcessInstanceEventStatus, ProcessInstanceStatus } from 'runbotics-common';
 
-import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
 import { Logger } from '#/utils/logger';
-import { ProcessInstanceEventService } from '#/database/process-instance-event/process-instance-event.service';
 
 import { BotProcessEventService } from './process-launch/bot-process-instance-event.service';
 import { BotProcessService } from './process-launch/bot-process-instance.service';
 import { Connection } from 'typeorm';
+import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
+import { UpdateProcessInstanceDto } from '#/scheduler-database/process-instance/dto/update-process-instance.dto';
+import { ProcessInstanceEventService } from '#/scheduler-database/process-instance-event/process-instance-event.service';
 
 @Injectable()
 export class BotLifecycleService {
@@ -19,12 +20,12 @@ export class BotLifecycleService {
         private readonly botProcessService: BotProcessService,
         private readonly connection: Connection,
     ) { }
-    
+
     private readonly logger = new Logger(BotLifecycleService.name);
 
     async handleProcessInstanceInterruption(bot: IBot): Promise<void> {
-        const disconnectedInstances: IProcessInstance[] = 
-            await this.processInstanceService.findActiveByBotId(bot.id)
+        const disconnectedInstances =
+            await this.processInstanceService.findAllActiveByBotId(bot.id)
                 .catch(() => {
                     this.logger.error(`Not found process-instances for bot (${bot.id})`);
                     throw new NotFoundException(`Not found process-instances for bot (${bot.id})`);
@@ -38,29 +39,31 @@ export class BotLifecycleService {
                 disconnectedInstance.status !== ProcessInstanceStatus.IN_PROGRESS
             ) return;
 
-            const newProcessInstance: IProcessInstance = {
-                ...disconnectedInstance,
-                status: ProcessInstanceStatus.ERRORED, 
+            const newProcessInstance: UpdateProcessInstanceDto = {
+                status: ProcessInstanceStatus.ERRORED,
                 error: 'Bot has been shut down',
                 updated: dayjs().toISOString(),
             };
 
             await this.updateInterruptedProcessInstance(newProcessInstance);
             await this.handleProcessInstanceEventInterruption(newProcessInstance);
-            await this.processInstanceService.save(newProcessInstance);
+            await this.processInstanceService.update(
+                disconnectedInstance.id,
+                newProcessInstance
+            );
         }));
     }
 
     private async handleProcessInstanceEventInterruption (processInstance: IProcessInstance): Promise<void> {
-        const activeEvents: IProcessInstanceEvent[] = await this.processInstanceEventService
-            .findActiveByProcessInstanceId(processInstance.id);
+        const activeEvents = await this.processInstanceEventService
+            .findAllActiveByProcessInstanceId(processInstance.id);
 
         if(!activeEvents) return;
 
         await activeEvents.forEach(async event => {
             const newProcessInstanceEvent: IProcessInstanceEvent = {
-                ...event, 
-                status: ProcessInstanceEventStatus.ERRORED, 
+                ...event,
+                status: ProcessInstanceEventStatus.ERRORED,
                 error: 'Bot has been shut down',
                 finished: processInstance.updated,
                 processInstance,

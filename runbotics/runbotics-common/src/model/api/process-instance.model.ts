@@ -1,7 +1,7 @@
 import { IProcess } from "./process.model";
 import { IBot } from "./bot.model";
 import { IUser } from "./user.model";
-import { ITriggerEvent } from './trigger-event.model';
+import { TriggerEvent } from './trigger-event.model';
 
 export interface IProcessInstance {
     id?: string;
@@ -18,7 +18,7 @@ export interface IProcessInstance {
     process?: IProcess;
     bot?: IBot;
     error?: string | null;
-    trigger?: ITriggerEvent;
+    trigger?: TriggerEvent;
     triggerData?: EmailTriggerData | UserTriggerData | unknown;
     warning?: boolean;
     callbackUrl?: string;
