@@ -5,12 +5,8 @@ import { ConfigModule } from '#/config/config.module';
 import { UserModule } from './user/user.module';
 import { BotModule } from './bot/bot.module';
 import { ProcessModule } from './process/process.module';
-import { ProcessInstanceModule } from './process-instance/process-instance.module';
-import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
 import { BotCollectionModule } from './bot-collection/bot-collection.module';
 import { BotSystemModule } from './bot-system/bot-system.module';
-import { TriggerEventModule } from './trigger-event/trigger-event.module';
-import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
 
 @Module({
@@ -39,10 +35,6 @@ import { GuestModule } from './guest/guest.module';
         BotCollectionModule,
         BotSystemModule,
         ProcessModule,
-        ProcessInstanceModule,
-        ProcessInstanceEventModule,
-        ProcessInstanceLoopEventModule,
-        TriggerEventModule,
         GuestModule,
         TypeOrmModule,
     ],
@@ -52,10 +44,6 @@ import { GuestModule } from './guest/guest.module';
         BotCollectionModule,
         BotSystemModule,
         ProcessModule,
-        ProcessInstanceModule,
-        ProcessInstanceEventModule,
-        ProcessInstanceLoopEventModule,
-        TriggerEventModule,
         GuestModule,
         TypeOrmModule,
     ],
