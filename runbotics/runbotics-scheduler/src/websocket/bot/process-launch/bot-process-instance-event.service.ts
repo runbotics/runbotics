@@ -1,5 +1,4 @@
 import { Logger } from '../../../utils/logger';
-import { ProcessInstanceEventService } from '../../../database/process-instance-event/process-instance-event.service';
 import {
     IBot,
     IProcessInstance,
@@ -12,12 +11,13 @@ import {
 } from 'runbotics-common';
 import { Connection, QueryRunner } from 'typeorm';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
-import { ProcessInstanceEventEntity } from '#/database/process-instance-event/process-instance-event.entity';
-import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
-import { ProcessInstanceLoopEventEntity } from '#/database/process-instance-loop-event/process-instance-loop-event.entity';
-import { ProcessInstanceLoopEventService } from '#/database/process-instance-loop-event/process-instance-loop-event.service';
 import { Injectable } from '@nestjs/common';
 import { isInstanceInterrupted } from './bot-process-instance.service.utils';
+import { ProcessInstance } from '#/scheduler-database/process-instance/process-instance.entity';
+import { ProcessInstanceEventService } from '#/scheduler-database/process-instance-event/process-instance-event.service';
+import { ProcessInstanceEvent } from '#/scheduler-database/process-instance-event/process-instance-event.entity';
+import { ProcessInstanceLoopEventService } from '#/scheduler-database/process-instance-loop-event/process-instance-loop-event.service';
+import { ProcessInstanceLoopEvent } from '#/scheduler-database/process-instance-loop-event/process-instance-loop-event.entity';
 
 const COMPLETED_UPDATE_FIELDS = [
     'status',
@@ -54,7 +54,7 @@ export class BotProcessEventService {
             await queryRunner.manager
                 .createQueryBuilder()
                 .insert()
-                .into(ProcessInstanceEntity)
+                .into(ProcessInstance)
                 .values({
                     ...processInstanceEvent.processInstance,
                     status: ProcessInstanceStatus.INITIALIZING,
@@ -63,10 +63,10 @@ export class BotProcessEventService {
                 .orIgnore()
                 .execute();
 
-            const processInstance = 
+            const processInstance =
                 await queryRunner.manager
                 .findOne(
-                    ProcessInstanceEntity,
+                    ProcessInstance,
                     { where: { id: processInstanceEvent.processInstance.id } }
                 )
                 .catch(error => {
@@ -78,8 +78,7 @@ export class BotProcessEventService {
             await queryRunner.commitTransaction();
 
             const updatedProcessInstanceEvent =
-                await this.processInstanceEventService.findByExecutionId(
-                    queryRunner,
+                await this.processInstanceEventService.findOneByExecutionId(
                     processInstanceEvent.executionId
                 );
 
@@ -154,7 +153,7 @@ export class BotProcessEventService {
         await queryRunner.manager
             .createQueryBuilder()
             .insert()
-            .into(ProcessInstanceEventEntity)
+            .into(ProcessInstanceEvent)
             .values(newProcessInstanceEvent)
             .orUpdate(
                 originalEventStatus === ProcessInstanceEventStatus.IN_PROGRESS
@@ -163,7 +162,7 @@ export class BotProcessEventService {
                 ['execution_id']
             )
             .execute();
-            
+
         await this.updateProcessInstance(queryRunner, newProcessInstanceEvent, processInstance);
     }
 
@@ -178,7 +177,7 @@ export class BotProcessEventService {
             await queryRunner.manager
                 .createQueryBuilder()
                 .insert()
-                .into(ProcessInstanceEntity)
+                .into(ProcessInstance)
                 .values({
                     ...processInstanceEvent.processInstance,
                     status: ProcessInstanceStatus.INITIALIZING,
@@ -190,7 +189,7 @@ export class BotProcessEventService {
             await queryRunner.manager
                 .createQueryBuilder()
                 .insert()
-                .into(ProcessInstanceLoopEventEntity)
+                .into(ProcessInstanceLoopEvent)
                 .values(processInstanceEvent)
                 .orUpdate(
                     processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS
@@ -201,7 +200,7 @@ export class BotProcessEventService {
                 .execute();
 
             const processInstance = await queryRunner.manager.findOne(
-                ProcessInstanceEntity,
+                ProcessInstance,
                 { where: { id: processInstanceEvent.processInstance.id } }
             );
 
@@ -209,8 +208,7 @@ export class BotProcessEventService {
             await queryRunner.commitTransaction();
 
             const updatedProcessInstanceEvent =
-                await this.processInstanceLoopEventService.findByExecutionId(
-                    queryRunner,
+                await this.processInstanceLoopEventService.findOneByExecutionId(
                     processInstanceEvent.executionId
                 );
             if (
@@ -241,7 +239,7 @@ export class BotProcessEventService {
         if (processInstance) {
             await queryRunner.manager
                 .createQueryBuilder()
-                .update(ProcessInstanceEntity)
+                .update(ProcessInstance)
                 .set({
                     error: processInstanceEvent.error,
                     step: processInstanceEvent.step,
@@ -253,16 +251,16 @@ export class BotProcessEventService {
     }
 
     async setEventStatusesAlikeInstance(bot: IBot, processInstance: IProcessInstance) {
-        const activeEvents = await this.processInstanceEventService.findActiveByProcessInstanceId(processInstance.id);
+        const activeEvents = await this.processInstanceEventService.findAllActiveByProcessInstanceId(processInstance.id);
 
-        const newStatus = 
+        const newStatus =
             processInstance.status === ProcessInstanceStatus.TERMINATED
                 ? ProcessInstanceEventStatus.TERMINATED
                 : ProcessInstanceEventStatus.ERRORED;
 
         await activeEvents.forEach((event) => {
-            const newProcessInstanceEvent: IProcessInstanceEvent = { 
-                ...event, 
+            const newProcessInstanceEvent: IProcessInstanceEvent = {
+                ...event,
                 status: newStatus,
                 finished: processInstance.updated,
                 processInstance,
