@@ -4,12 +4,8 @@ import { ServerConfigService } from '#/config/server-config';
 import { ConfigModule } from '#/config/config.module';
 import { UserModule } from './user/user.module';
 import { BotModule } from '#/scheduler-database/bot/bot.module';
-import { ProcessInstanceModule } from './process-instance/process-instance.module';
-import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
 import { BotCollectionModule } from '#/scheduler-database/bot-collection/bot-collection.module';
 import { BotSystemModule } from '#/scheduler-database/bot-system/bot-system.module';
-import { TriggerEventModule } from './trigger-event/trigger-event.module';
-import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { GuestModule } from './guest/guest.module';
 import { ProcessCollectionModule } from '#/database/process-collection/process-collection.module';
 import { ProcessModule } from '#/scheduler-database/process/process.module';
@@ -40,10 +36,6 @@ import { ProcessModule } from '#/scheduler-database/process/process.module';
         BotCollectionModule,
         BotSystemModule,
         ProcessModule,
-        ProcessInstanceModule,
-        ProcessInstanceEventModule,
-        ProcessInstanceLoopEventModule,
-        TriggerEventModule,
         GuestModule,
         ProcessCollectionModule,
         TypeOrmModule,
@@ -54,10 +46,6 @@ import { ProcessModule } from '#/scheduler-database/process/process.module';
         BotCollectionModule,
         BotSystemModule,
         ProcessModule,
-        ProcessInstanceModule,
-        ProcessInstanceEventModule,
-        ProcessInstanceLoopEventModule,
-        TriggerEventModule,
         GuestModule,
         ProcessCollectionModule,
         TypeOrmModule,
