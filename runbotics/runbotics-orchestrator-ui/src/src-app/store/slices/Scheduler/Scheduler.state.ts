@@ -1,5 +1,5 @@
 import {
-    IProcess, IProcessInstance, IUser, InstantProcess, ScheduledProcess,
+    IProcess, IProcessInstance, UserDto, InstantProcess, ScheduledProcess,
 } from 'runbotics-common';
 
 export interface SchedulerState {
@@ -45,5 +45,5 @@ export interface ScheduledJob {
     next: number;
     process: IProcess;
     tz: string | null;
-    user: IUser;
+    user: UserDto;
 }

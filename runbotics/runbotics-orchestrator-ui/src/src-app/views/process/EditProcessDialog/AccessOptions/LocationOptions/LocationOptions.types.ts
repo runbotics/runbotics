@@ -1,4 +1,4 @@
-import { CollectionId, IUser, ProcessCollection } from 'runbotics-common';
+import { CollectionId, UserDto, ProcessCollection } from 'runbotics-common';
 
 
 export interface LocationOptionsProps {
@@ -12,7 +12,7 @@ export type ProcessCollectionHierarchy = ProcessCollection & { children?: Proces
 
 export interface GetIconParams {
     isPublic: boolean,
-    users: IUser[]
+    users: UserDto[]
 }
 
 export interface GetHierarchicalStructureParams {

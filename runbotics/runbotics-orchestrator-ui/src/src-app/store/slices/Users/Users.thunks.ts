@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 
 import axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
@@ -11,25 +11,25 @@ const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .params(params)
     .build();
 
-export const getAll = createAsyncThunk<IUser[], void>(
+export const getAll = createAsyncThunk<UserDto[], void>(
     'users/getAll',
     () =>
         axios
-            .get<IUser[]>('/api/admin/users')
+            .get<UserDto[]>('/api/admin/users')
             .then((response) => response.data)
 );
 
-export const getAllLimited = createAsyncThunk<IUser[], void>(
+export const getAllLimited = createAsyncThunk<UserDto[], void>(
     'users/getAll',
     () =>
         axios
-            .get<IUser[]>('/api/admin/users/limited')
+            .get<UserDto[]>('/api/admin/users/limited')
             .then((response) => response.data)
 );
 
 export const partialUpdate = createAsyncThunk(
     'account/update',
-    async (fieldsToUpdate: IUser, { rejectWithValue }) => {
+    async (fieldsToUpdate: UserDto, { rejectWithValue }) => {
         await axios
             .patch('/api/account', fieldsToUpdate)
             .then((response) => response.data)
@@ -37,58 +37,58 @@ export const partialUpdate = createAsyncThunk(
     }
 );
 
-export const getAllActivatedByPage = createAsyncThunk<Page<IUser>, PageRequestParams>(
+export const getAllActivatedByPage = createAsyncThunk<Page<UserDto>, PageRequestParams>(
     'users/getAllActivatedByPage',
-    (params) => axios.get<Page<IUser>>(buildPageURL(params, '/api/admin/users/activated'))
+    (params) => axios.get<Page<UserDto>>(buildPageURL(params, '/api/admin/users/activated'))
         .then((response) => response.data),
 );
 
-export const getActiveNonAdmins = createAsyncThunk<IUser[]>(
+export const getActiveNonAdmins = createAsyncThunk<UserDto[]>(
     'users/getActiveNonAdmins',
-    () => axios.get<IUser[]>('/api/admin/users/non-admins')
+    () => axios.get<UserDto[]>('/api/admin/users/non-admins')
         .then((response) => response.data),
 );
 
-export const getAllNotActivatedByPage = createAsyncThunk<Page<IUser>, PageRequestParams>(
+export const getAllNotActivatedByPage = createAsyncThunk<Page<UserDto>, PageRequestParams>(
     'users/getAllNotActivatedByPage',
-    (params) => axios.get<Page<IUser>>(buildPageURL(params, '/api/admin/users/not-activated'))
+    (params) => axios.get<Page<UserDto>>(buildPageURL(params, '/api/admin/users/not-activated'))
         .then((response) => response.data),
 );
 
-export const getAllActivatedByPageAndTenant = createAsyncThunk<Page<IUser>, PageRequestParams>(
+export const getAllActivatedByPageAndTenant = createAsyncThunk<Page<UserDto>, PageRequestParams>(
     'users/getAllActivatedByPageAndTenant',
-    (params) => axios.get<Page<IUser>>(buildPageURL(params, '/api/admin/users/activated-tenant'))
+    (params) => axios.get<Page<UserDto>>(buildPageURL(params, '/api/admin/users/activated-tenant'))
         .then((response) => response.data),
 );
 
-export const getAllNotActivatedByPageAndTenant = createAsyncThunk<Page<IUser>, PageRequestParams>(
+export const getAllNotActivatedByPageAndTenant = createAsyncThunk<Page<UserDto>, PageRequestParams>(
     'users/getAllNotActivatedByPageAndTenant',
-    (params) => axios.get<Page<IUser>>(buildPageURL(params, '/api/admin/users/not-activated-tenant'))
+    (params) => axios.get<Page<UserDto>>(buildPageURL(params, '/api/admin/users/not-activated-tenant'))
         .then((response) => response.data),
 );
 
-export const updateNotActivated = createAsyncThunk<IUser, IUser>(
+export const updateNotActivated = createAsyncThunk<UserDto, UserDto>(
     'users/updateNotActivated',
-    (user) => axios.patch<IUser>(`/api/admin/users/${user.id}`, user)
+    (user) => axios.patch<UserDto>(`/api/admin/users/${user.id}`, user)
         .then((response) => response.data)
 );
 
-export const updateActivated = createAsyncThunk<IUser, IUser>(
+export const updateActivated = createAsyncThunk<UserDto, UserDto>(
     'users/updateActivated',
-    (user, { rejectWithValue }) => axios.patch<IUser>(`/api/admin/users/${user.id}`, user)
+    (user, { rejectWithValue }) => axios.patch<UserDto>(`/api/admin/users/${user.id}`, user)
         .then((response) => response.data)
         .catch((error) => rejectWithValue(error.response.data))
 );
 
-export const updateNotActivatedByTenant = createAsyncThunk<IUser, IUser>(
+export const updateNotActivatedByTenant = createAsyncThunk<UserDto, UserDto>(
     'users/updateNotActivatedByTenant',
-    (user) => axios.patch<IUser>(`/api/admin/users/tenant/${user.id}`, user)
+    (user) => axios.patch<UserDto>(`/api/admin/users/tenant/${user.id}`, user)
         .then((response) => response.data)
 );
 
-export const updateActivatedByTenant = createAsyncThunk<IUser, IUser>(
+export const updateActivatedByTenant = createAsyncThunk<UserDto, UserDto>(
     'users/updateActivatedByTenant',
-    (user, { rejectWithValue }) => axios.patch<IUser>(`/api/admin/users/tenant/${user.id}`, user)
+    (user, { rejectWithValue }) => axios.patch<UserDto>(`/api/admin/users/tenant/${user.id}`, user)
         .then((response) => response.data)
         .catch((error) => rejectWithValue(error.response.data))
 );

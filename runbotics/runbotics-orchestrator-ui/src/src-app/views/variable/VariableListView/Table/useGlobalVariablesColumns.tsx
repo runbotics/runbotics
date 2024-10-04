@@ -15,7 +15,7 @@ import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
-import { IUser, UserDTO } from '#src-app/types/model/user.model';
+import { UserDto, UserDTO } from '#src-app/types/model/user.model';
 
 interface ColumnsActions {
     onDelete: (globalVariable: IGlobalVariable) => void;
@@ -76,7 +76,7 @@ const useGlobalVariablesColumns = ({
             headerName: translate('Variables.ListView.Table.Header.ModifiedBy'),
             flex: 0.8,
             renderCell: (params: GridCellParams) => {
-                const user = params.row.user as IUser;
+                const user = params.row.user as UserDto;
                 return user?.login ?? '';
             },
         },

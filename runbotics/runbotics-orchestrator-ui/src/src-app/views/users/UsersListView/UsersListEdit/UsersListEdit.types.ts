@@ -1,9 +1,9 @@
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 
 export interface UsersListEditDialogProps {
     open: boolean;
     onClose: () => void;
-    userData: IUser;
+    userData: UserDto;
     isForAdmin: boolean;
 };
 
@@ -13,8 +13,8 @@ export interface FormValidationState {
 };
 
 export interface UsersListEditFormProps {
-    user: IUser;
-    setUser: (IUser) => void;
+    user: UserDto;
+    setUser: (UserDto) => void;
     formValidationState: FormValidationState;
     setFormValidationState: (FormValidationState) => void;
 };

@@ -3,7 +3,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Dialog, Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -33,7 +33,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType });
     const { activated } = useSelector(usersSelector);
 
-    const [user, setUser] = useState<IUser>(userData);
+    const [user, setUser] = useState<UserDto>(userData);
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
 
@@ -54,7 +54,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const handleSave = (): void => {
         if (!checkFormFieldsValidation()) return;
 
-        const dataPayload: IUser = getUserDataWithoutEmptyStrings(user);
+        const dataPayload: UserDto = getUserDataWithoutEmptyStrings(user);
         const updateAction = isForAdmin
             ? usersActions.updateActivated(dataPayload)
             : usersActions.updateActivatedByTenant(dataPayload);

@@ -1,7 +1,8 @@
 import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete, Button, CircularProgress, Dialog, DialogActions, Switch, TextField, Typography } from '@mui/material';
-import { FeatureKey, IBotCollection, IUser } from 'runbotics-common';
+import moment from 'moment';
+import { FeatureKey, IBotCollection, UserDto } from 'runbotics-common';
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -35,8 +36,8 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
     const { user: currentUser } = useSelector((state) => state.auth);
     const { all: allUsers, activated: { nonAdmins } } = useSelector((state) => state.users);
     const [name, setName] = useState(collection ? collection.name : '');
-    const [description, setDescription] = useState(collection?.description ? collection.description : '');
-    const [selectedUsers, setSelectedUsers] = useState<IUser[]>(collection ? collection.users : []);
+    const [description, setDescription] = useState(collection ? collection.description : '');
+    const [selectedUsers, setSelectedUsers] = useState<UserDto[]>(collection ? collection.users : []);
     const [publicBotsIncluded, setPublicBotsIncluded] = useState(collection ? collection.publicBotsIncluded : true);
     const [error, setError] = useState(null);
 

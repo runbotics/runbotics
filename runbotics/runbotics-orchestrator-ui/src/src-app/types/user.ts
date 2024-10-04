@@ -1,9 +1,9 @@
 import { Dictionary } from '@reduxjs/toolkit';
-import { FeatureKey, IAuthority, IUser, Tenant } from 'runbotics-common';
+import { FeatureKey, IAuthority, Tenant } from 'runbotics-common';
 
 import { Language } from '#src-app/translations/translations';
 
-export interface User extends IUser {
+export interface User { // to remove probably
     avatar: string;
     email: string;
     name: string;

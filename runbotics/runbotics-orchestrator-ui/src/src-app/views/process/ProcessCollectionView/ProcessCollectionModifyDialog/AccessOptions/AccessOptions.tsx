@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC } from 'react';
 
 import { Autocomplete, Box, Switch, TextField, FormControlLabel, CircularProgress } from '@mui/material';
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 
 import Accordion from '#src-app/components/Accordion';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -36,7 +36,7 @@ const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, i
                 <Box display="flex" alignItems="center" gap={1} width="full">
                     <Autocomplete
                         fullWidth
-                        onChange={(e: ChangeEvent<HTMLInputElement>, value: IUser[]) => handleChange('users', value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement>, value: UserDto[]) => handleChange('users', value)}
                         multiple
                         id="process-collection-users-select"
                         disabled={!isOwner}

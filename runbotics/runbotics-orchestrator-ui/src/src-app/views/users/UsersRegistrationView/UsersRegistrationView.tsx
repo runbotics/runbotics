@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
-import { Role, IUser, Tenant } from 'runbotics-common';
+import { Role, UserDto, Tenant } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useRole from '#src-app/hooks/useRole';
@@ -115,7 +115,7 @@ const UsersRegistrationView: FC = () => {
         };
     };
 
-    const handleSubmit = (usersData: IUser[]) =>
+    const handleSubmit = (usersData: UserDto[]) =>
         Promise
             .allSettled(
                 hasAdminAccess
@@ -132,7 +132,7 @@ const UsersRegistrationView: FC = () => {
 
     const handleDelete = () => setIsDeleteDialogVisible(true);
 
-    const getSelectedUsers = (): IUser[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
+    const getSelectedUsers = (): UserDto[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
 
     useEffect(() => {
         const allUsers = hasAdminAccess ? notActivated.allByPage : tenantNotActivated.allByPage;
