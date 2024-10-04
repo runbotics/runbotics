@@ -32,6 +32,11 @@ import {
     UpdateProcessOutputTypeDto,
     updateProcessOutputTypeSchema,
 } from '#/database/process/dto/update-process-output-type.dto';
+import { ResourceSpecification } from '#/utils/specification/resource-specification.decorator';
+import { Specification } from '#/utils/specification/specification';
+import { ProcessEntity } from '#/database/process/process.entity';
+import { FindManyOptions } from 'typeorm';
+import { ProcessCriteria } from '#/database/process/criteria/process.criteria';
 
 
 @UseInterceptors(TenantInterceptor)
@@ -138,18 +143,20 @@ export class ProcessController {
     @Get()
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     async getAll(
+        @ResourceSpecification(ProcessCriteria) specs: FindManyOptions<ProcessEntity>,
         @User() user: UserEntity,
     ){
-        return (await this.processCrudService.getAll(user)).map(x => ({...x, name: 'xD2'}));
+        return (await this.processCrudService.getAll(user, specs)).map(x => ({...x, name: 'xD2'}));
     }
     
     // @TODO paging/criteria
     @Get('page')
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     getPage(
+        @ResourceSpecification() specs: FindManyOptions<ProcessEntity>,
         @User() user: UserEntity,
     ){
-        return this.processCrudService.getAll(user);
+        return this.processCrudService.getAll(user, specs);
     }
 
     @Get(':id')
