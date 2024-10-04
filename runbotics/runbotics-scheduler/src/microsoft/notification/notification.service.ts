@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, PayloadTooLargeException } from '@nestjs/common';
 import { EmailTriggerData, IProcessInstance, isEmailTriggerData, TriggerEvent } from 'runbotics-common';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -46,6 +46,9 @@ export class NotificationService {
                 if (email.hasAttachments) {
                     const attachments = (await this.outlookService.getAttachments(email.id)).value;
                     attachments.forEach((attachment) => {
+                        if (this.isFileSizeAllowed(attachment.size)) {
+                            throw new PayloadTooLargeException('Uploaded file is too large');
+                        }
                         const { filename, fileContent } = this.mapAttachment(attachment);
                         variables[filename] = fileContent;
                     });
@@ -207,5 +210,10 @@ export class NotificationService {
                 acc[key.trim()] = value.trim().replace(/['"]/g, '');
                 return acc;
             }, {});
+    }
+
+    private isFileSizeAllowed(size: number) {
+        const MAX_FILE_SIZE = 4194304; // 4MB -> 4194304 bytes
+        return size <= MAX_FILE_SIZE;
     }
 }
