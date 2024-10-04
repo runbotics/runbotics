@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+
 import ErrorView from '../src-app/views/errors/ErrorView';
 
 const ErrorPage  = () => {

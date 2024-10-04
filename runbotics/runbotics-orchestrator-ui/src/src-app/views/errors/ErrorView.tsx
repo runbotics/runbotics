@@ -3,13 +3,13 @@ import React, { FC, useEffect } from 'react';
 import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
+import Image from 'next/image';
 import RouterLink from 'next/link';
 import { Role } from 'runbotics-common';
 import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo';
-import Image from 'next/image';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
@@ -32,7 +32,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
         paddingTop: 80,
         paddingBottom: 80,
         position: 'relative',
-        overflow: 'hidden', 
+        overflow: 'hidden',
     },
 }));
 
@@ -43,9 +43,9 @@ interface ErrorViewProps {
 }
 
 const LogoImage: FC<{ position: 'top' | 'bottom'; }> = ({ position }) => {
-    const positionStyles = position === 'top' 
+    const positionStyles = position === 'top'
         ? { top: '-5vw', maxTop: '-5px' }
-        : {  bottom: '-5vw', maxBottom: '-5px' };
+        : { bottom: '-5vw', maxBottom: '-5px' };
 
     return (
         <Box
@@ -84,7 +84,7 @@ const ErrorView: FC<ErrorViewProps> = ({ errorCode, customTitle, customMessage }
         if (user?.roles.includes(Role.ROLE_GUEST)) {
             dispatch(authActions.logout());
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const metaTitle = errorCode ? translate(`Error${errorCode}.Meta.Title` as any) : translate(`CustomError.Meta.Title`);
@@ -99,39 +99,39 @@ const ErrorView: FC<ErrorViewProps> = ({ errorCode, customTitle, customMessage }
                     <Logo height={mobileDevice ? 100 : 200} white />
                 </Box>
                 {!isNaN(errorCode) && (
-                     <Typography 
-                     align="center" 
-                     variant="h1" 
-                     color="textPrimary" 
-                     sx={{ 
-                         height: 150, 
-                         fontWeight: 800, 
-                         fontSize: { xs: '64px', sm: '128px' },
-                         lineHeight: '150px',
-                     }}
-                 >
+                    <Typography
+                        align="center"
+                        variant="h1"
+                        color="textPrimary"
+                        sx={{
+                            height: 150,
+                            fontWeight: 800,
+                            fontSize: { xs: '64px', sm: '128px' },
+                            lineHeight: '150px',
+                        }}
+                    >
                         {errorCode}
                     </Typography>
                 )}
-                <Typography 
-                    align="center" 
-                    variant={mobileDevice ? 'h4' : 'h1'} 
-                    color="textPrimary" 
+                <Typography
+                    align="center"
+                    variant={mobileDevice ? 'h4' : 'h1'}
+                    color="textPrimary"
                     sx={{ fontWeight: 600, fontSize: mobileDevice ? '24px' : '36px' }}
                 >
                     {viewTitle}
                 </Typography>
-                <Typography 
-                    align="center" 
-                    variant="subtitle2" 
-                    color="textSecondary" 
+                <Typography
+                    align="center"
+                    variant="subtitle2"
+                    color="textSecondary"
                     sx={{ maxWidth: '670px', margin: '0 auto' }}
                 >
                     {viewMessage}
                 </Typography>
                 <Box mt={6} display="flex" justifyContent="center">
                     <RouterLink href="/" passHref legacyBehavior>
-                        <Button color="secondary" variant="contained" size="medium" >
+                        <Button color="secondary" variant="contained" size="medium">
                             {translate('Error.View.BackToHome' as any)}
                         </Button>
                     </RouterLink>
