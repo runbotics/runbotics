@@ -87,7 +87,7 @@ const ErrorView: FC<ErrorViewProps> = ({ errorCode, customTitle, customMessage }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const metaTitle = errorCode ? translate(`Error${errorCode}.Meta.Title` as any) : translate(`CustomError.Meta.Title`);
+    const metaTitle = errorCode ? translate(`Error${errorCode}.Meta.Title` as any) : translate('CustomError.Meta.Title');
     const viewTitle = errorCode ? translate(`Error${errorCode}.View.Title` as any) : customTitle;
     const viewMessage = errorCode ? translate(`Error${errorCode}.View.Message` as any) : customMessage;
 
