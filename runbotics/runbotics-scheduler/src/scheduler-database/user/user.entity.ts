@@ -65,7 +65,7 @@ export class User {
         joinColumn: { name: 'user_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' },
     })
-        authorities: IAuthority[];
+    authorities: IAuthority[];
 
     @OneToMany(() => Tenant, tenant => tenant.createdByUser)
     tenants: Tenant[];

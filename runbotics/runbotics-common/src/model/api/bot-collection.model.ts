@@ -1,4 +1,4 @@
-import { IUser } from './user.model';
+import { UserDto } from './user.model';
 
 export interface IBotCollection {
     tenantId?: string;
@@ -8,6 +8,6 @@ export interface IBotCollection {
     description?: string;
     created?: string | null;
     updated?: string | null;
-    createdByUser?: IUser;
-    users?: IUser[];
+    createdBy?: UserDto;
+    users?: UserDto[];
 }

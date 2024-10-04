@@ -1,5 +1,5 @@
 import { IScheduleProcess } from './schedule-process.model';
-import { IUser } from './user.model';
+import { UserDto } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
@@ -20,11 +20,11 @@ export interface IProcess {
     lastRun?: string | null;
     executionInfo?: string | null;
     system?: IBotSystem | null;
-    createdBy?: IUser | null;
+    createdBy?: UserDto | null;
     schedules?: Omit<IScheduleProcess, 'process'>[] | null;
     botCollection?: IBotCollection | null;
     processCollection?: ProcessCollection | null;
-    editor?: IUser | null;
+    editor?: UserDto | null;
     tags?: Tag[];
     notifications?: NotificationProcess[];
     output?: ProcessOutput;

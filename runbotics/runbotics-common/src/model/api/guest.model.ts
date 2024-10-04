@@ -1,7 +1,7 @@
-import { IUser } from './user.model';
+import { UserDto } from './user.model';
 
 export interface Guest {
     ipHash: string;
-    user: IUser;
+    user: UserDto;
     executionsCount: number;
 }

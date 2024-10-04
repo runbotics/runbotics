@@ -1,4 +1,4 @@
-import { IUser, UserDTO } from './user.model';
+import { BasicUserDto, UserDto } from './user.model';
 
 export enum GlobalVariableType {
     LIST = 'LIST',
@@ -13,6 +13,6 @@ export interface IGlobalVariable {
     type: GlobalVariableType;
     value: string;
     lastModified: string;
-    user: IUser;
-    creator?: UserDTO | null;
+    user: UserDto;
+    creator?: BasicUserDto | null;
 }

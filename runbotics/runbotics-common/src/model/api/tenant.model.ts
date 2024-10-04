@@ -1,10 +1,10 @@
-import { UserDTO } from "./user.model";
+import { BasicUserDto } from "./user.model";
 
 export interface Tenant {
     id?: string;
     name?: string;
     createdBy?: string;
-    createdByUser?: UserDTO;
+    createdByUser?: BasicUserDto;
     created?: string | null;
     updated?: string | null;
     lastModifiedBy?: string | null;
@@ -12,4 +12,9 @@ export interface Tenant {
 
 export interface TenantInviteCode {
     inviteCode: string;
+}
+
+export interface BasicTenantDto {
+    id: string;
+    name: string;
 }
