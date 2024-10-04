@@ -1,6 +1,31 @@
 {
     "Error404.Meta.Title": "404: Nie znaleziono",
-    "Error404.View.Title": "404: Nie ma strony, której szukasz",
-    "Error404.View.Message": "Albo wybrałeś tymczasową ścieżkę, albo trafiłeś tu przez przez przypadek. Cokolwiek to jest, spróbuj użyć nawigacji",
-    "Error404.View.BackToHome": "Powrót do strony głównej"
+    "Error404.View.Title": "Strona, której szukasz, nie została odnaleziona",
+    "Error404.View.Message": "Czasami zasoby mogą być niedostępne. Możesz wrócić na stronę główną i kontynuować stamtąd lub zgłosić problem do naszego zespołu IT. Postaramy się jak najszybciej przywrócić brakującą stronę.",
+
+    "Error400.Meta.Title": "400: Błędne żądanie",
+    "Error400.View.Title": "Serwer nie mógł przetworzyć żądania.",
+    "Error400.View.Message": "Ten błąd może być spowodowany konfiguracją przeglądarki lub urządzenia. Najpierw spróbuj odświeżyć stronę, używając kombinacji klawiszy CTRL + F5, ponieważ problem może być tymczasowy. Jeśli to nie pomoże, upewnij się, że adres URL jest poprawny i sprawdź połączenie z Internetem. Możesz również zrestartować urządzenie, aby wyczyścić pamięć podręczną, a następnie sprawdzić, czy strona działa. Możesz także wyczyścić pliki cookie przeglądarki. Jeśli te kroki nie pomogą, skontaktuj się z naszym wsparciem technicznym.",
+
+    "Error403.Meta.Title": "403: Dostęp zabroniony",
+    "Error403.View.Title": "Nie masz uprawnień do uzyskania dostępu do tego zasobu",
+    "Error403.View.Message": "Upewnij się, że adres URL jest wprowadzony poprawnie i spróbuj odświeżyć stronę. Jeśli problem się powtarza, wyczyść pamięć podręczną przeglądarki i włącz pliki cookie. Czasami rozszerzenia przeglądarki mogą powodować ten błąd. Jeśli te kroki nie rozwiążą problemu, skontaktuj się z administratorem systemu i spróbuj ponownie później.",
+
+    "Error502.Meta.Title": "502: Błędna brama",
+    "Error502.View.Title": "Wystąpił błąd połączenia z serwerem",
+    "Error502.View.Message": "Wystąpił niespodziewany błąd. Najpierw spróbuj odświeżyć stronę. Jeśli to nie pomoże, wyczyść pamięć podręczną przeglądarki. Jeśli nadal masz problemy, sprawdź ustawienia zapory, które mogą blokować dostęp do strony. W przypadku dalszych trudności, przepraszamy, problem może leżeć po naszej stronie. W takim przypadku skontaktuj się z administratorem sieci i zgłoś błąd.",
+
+    "Error500.Meta.Title": "500: Nieoczekiwany błąd",
+    "Error500.View.Title": "Wystąpił nieoczekiwany błąd",
+    "Error500.View.Message": "Najpierw spróbuj odświeżyć stronę. Jeśli to nie pomoże, wyczyść pamięć podręczną przeglądarki. Jeśli błąd nadal występuje, przepraszamy, problem może być po naszej stronie. W takim przypadku skontaktuj się z administratorem sieci i zgłoś błąd.",
+
+    "Error.Unknown": "Wystąpił nieznany błąd",
+    "Error.Unknown.View.Message": "Wystąpił niespodziewany błąd. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
+
+    "Error.View.BackToHome": "Powrót do strony głównej",
+
+    "CustomError.Meta.Title": "Błąd niestandardowy",
+
+    "Error.InviteCode.View.Title": "Kod zaproszenia jest nieprawidłowy lub wygasł.",
+    "Error.InviteCode.View.Message": "Ten kod dostępu jest nieprawidłowy. Sesja związana z tym kodem mogła wygasnąć lub zostać anulowana. Sprawdź, czy masz aktualne linki zaproszenia do użycia, lub skontaktuj się z gospodarzem lub ich organizacją, aby poprosić o nowy."
 }

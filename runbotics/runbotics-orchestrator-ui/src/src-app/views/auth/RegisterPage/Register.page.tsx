@@ -105,7 +105,13 @@ const RegisterPage: FC = () => {
             .unwrap()
             .catch((error) => {
                 if (error.statusCode === 400) {
-                    enqueueSnackbar(error.message, { variant: 'error' });
+                    const customTitle = translate('Error.InviteCode.View.Title');
+                    const customMessage = translate('Error.InviteCode.View.Message');
+                    sessionStorage.setItem('errorTitle', customTitle);
+                    sessionStorage.setItem('errorMessage', customMessage);
+
+
+                    router.push('/customerror');
                 } else {
                     enqueueSnackbar(translate('Register.Error.UnexpectedError'), { variant: 'error' });
                 }
