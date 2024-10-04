@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindManyOptions, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { BotSystem, DefaultCollections, ProcessOutputType, Role } from 'runbotics-common';
 import { UserEntity } from '../user/user.entity';
@@ -110,7 +110,6 @@ export class ProcessCrudService {
 
     async updateDiagram(user: UserEntity, id: number, updateDiagramDto: UpdateDiagramDto) {
         const process = await this.processRepository.findOneBy({ tenantId: user.tenantId, id });
-
         if (!process) {
             throw new NotFoundException();
         }
@@ -126,9 +125,14 @@ export class ProcessCrudService {
         return this.processRepository.save(process);
     }
 
-    getAll(user: UserEntity) {
-        return this.processRepository.findBy({
+    getAll(user: UserEntity, options: FindManyOptions<ProcessEntity>) {
+        options.where = {
+            ...options.where,
             tenantId: user.tenantId,
+        }
+        
+        return this.processRepository.find({
+            ...options,
         })
     }
 

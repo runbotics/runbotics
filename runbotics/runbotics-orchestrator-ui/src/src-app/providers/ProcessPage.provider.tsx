@@ -32,7 +32,7 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     setPageSize,
     page,
     setPage,
-    collectionId
+    collectionId,
 }) => {
     const dispatch = useDispatch();
     const replaceQueryParams = useReplaceQueryParams();
@@ -49,26 +49,28 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                                 name: search.trim(),
                                 createdByName: search.trim(),
                                 tagName: search.trim(),
-                            })
+                            }),
                         },
                         equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
+                            ...(collectionId !== null && { collectionId }),
+                        },
                     },
-                })
+                }),
             );
         } else {
             dispatch(
                 processActions.getProcessesPage({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim()
-                            })
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim(),
+                                }),
+                            },
                         },
                     },
                 }),
