@@ -42,7 +42,7 @@ interface ErrorViewProps {
     customMessage?: string;
 }
 
-const LogoImage: FC<{ position: 'top' | 'bottom'; }> = ({ position }) => {
+const LogoImage: FC<{ position: 'top' | 'bottom' }> = ({ position }) => {
     const positionStyles = position === 'top'
         ? { top: '-5vw', maxTop: '-5px' }
         : { bottom: '-5vw', maxBottom: '-5px' };
@@ -59,8 +59,8 @@ const LogoImage: FC<{ position: 'top' | 'bottom'; }> = ({ position }) => {
             }}
         >
             <Image
-                src="/images/runBoticsLogo/logo-blur.svg"
-                alt="Runbotics logo"
+                src='/images/runBoticsLogo/logo-blur.svg'
+                alt='Runbotics logo'
                 width={1}
                 height={1}
                 style={{
@@ -93,16 +93,16 @@ const ErrorView: FC<ErrorViewProps> = ({ errorCode, customTitle, customMessage }
 
     return (
         <StyledPage className={classes.root} title={metaTitle}>
-            <LogoImage position="top" />
-            <Container maxWidth="lg">
-                <Box mt={0} display="flex" justifyContent="center">
+            <LogoImage position='top' />
+            <Container maxWidth='lg'>
+                <Box mt={0} display='flex' justifyContent='center'>
                     <Logo height={mobileDevice ? 100 : 200} white />
                 </Box>
                 {!isNaN(errorCode) && (
                     <Typography
-                        align="center"
-                        variant="h1"
-                        color="textPrimary"
+                        align='center'
+                        variant='h1'
+                        color='textPrimary'
                         sx={{
                             height: 150,
                             fontWeight: 800,
@@ -114,30 +114,30 @@ const ErrorView: FC<ErrorViewProps> = ({ errorCode, customTitle, customMessage }
                     </Typography>
                 )}
                 <Typography
-                    align="center"
+                    align='center'
                     variant={mobileDevice ? 'h4' : 'h1'}
-                    color="textPrimary"
+                    color='textPrimary'
                     sx={{ fontWeight: 600, fontSize: mobileDevice ? '24px' : '36px' }}
                 >
                     {viewTitle}
                 </Typography>
                 <Typography
-                    align="center"
-                    variant="subtitle2"
-                    color="textSecondary"
+                    align='center'
+                    variant='subtitle2'
+                    color='textSecondary'
                     sx={{ maxWidth: '670px', margin: '0 auto' }}
                 >
                     {viewMessage}
                 </Typography>
-                <Box mt={6} display="flex" justifyContent="center">
-                    <RouterLink href="/" passHref legacyBehavior>
-                        <Button color="secondary" variant="contained" size="medium">
+                <Box mt={6} display='flex' justifyContent='center'>
+                    <RouterLink href='/' passHref legacyBehavior>
+                        <Button color='secondary' variant='contained' size='medium'>
                             {translate('Error.View.BackToHome' as any)}
                         </Button>
                     </RouterLink>
                 </Box>
             </Container>
-            <LogoImage position="bottom" />
+            <LogoImage position='bottom' />
         </StyledPage>
     );
 };
