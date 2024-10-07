@@ -110,6 +110,22 @@ export const Index = () => {
         setLoading(false);
     };
 
+    const scriptInputErrorProperties = {
+        ...((draft.script === '' ||
+            (!draft.script?.startsWith('external.') ||
+                draft.script?.length < 10)) && {
+            error: true,
+            helperText: translate('Action.Details.Form.Script.Error'),
+        }),
+    };
+
+    const labelInputErrorProperties = {
+        ...(draft.label === '' && {
+            error: true,
+            helperText: translate('Action.Details.Form.Label.Error'),
+        }),
+    };
+
     return (
         <>
             <Dialog
@@ -126,18 +142,31 @@ export const Index = () => {
                     <Grid container>
                         <Grid item xs={8}>
                             <form onSubmit={handleSubmit}>
-                                <TextField fullWidth label={translate('Action.Details.Script')}
+                                <TextField
+                                    fullWidth
+                                    label={translate('Action.Details.Script')}
                                     name="script"
-                                    sx={{margin: (theme) => `${theme.spacing(1)} 0`}}
+                                    sx={{
+                                        margin: (theme) =>
+                                            `${theme.spacing(1)} 0`,
+                                    }}
                                     value={draft.script}
                                     onChange={handleChange}
+                                    {...scriptInputErrorProperties}
                                 />
-                                <TextField fullWidth label={translate('Action.Details.Label')}
+                                <TextField
+                                    fullWidth
+                                    label={translate('Action.Details.Label')}
                                     name="label"
-                                    sx={{margin: (theme) => `${theme.spacing(1)} 0 ${theme.spacing(2)} 0`}}
+                                    sx={{
+                                        margin: (theme) =>
+                                            `${theme.spacing(
+                                                1
+                                            )} 0 ${theme.spacing(2)} 0`,
+                                    }}
                                     value={draft.label}
                                     onChange={handleChange}
-
+                                    {...labelInputErrorProperties}
                                 />
                                 <ErrorBoundary>
                                     <Editor
