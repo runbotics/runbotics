@@ -46,8 +46,10 @@ export class NotificationService {
                 if (email.hasAttachments) {
                     const attachments = (await this.outlookService.getAttachments(email.id)).value;
                     attachments.forEach((attachment) => {
-                        if (this.isFileSizeAllowed(attachment.size)) {
-                            throw new PayloadTooLargeException('Uploaded file is too large');
+                        if (!this.isFileSizeAllowed(attachment.size)) {
+                            throw new PayloadTooLargeException(
+                                `Cannot start the process "${processId}". Uploaded attachment is too large (max 4MB).`
+                            );
                         }
                         const { filename, fileContent } = this.mapAttachment(attachment);
                         variables[filename] = fileContent;
