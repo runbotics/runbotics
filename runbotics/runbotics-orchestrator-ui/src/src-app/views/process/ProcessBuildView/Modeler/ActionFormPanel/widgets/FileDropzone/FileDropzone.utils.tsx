@@ -1,6 +1,8 @@
+import { MemoryUnit } from 'runbotics-common';
+
 import { DropzoneRootProps } from '.';
 
-export const MAX_FILE_SIZE = 4194304; // 4MB -> 4194304 bytes
+export const MAX_FILE_SIZE = MemoryUnit.MB * 4;
 
 export const getColor = (props: DropzoneRootProps) => {
     if (props.isDragAccepted) {
@@ -19,16 +21,16 @@ export const getColor = (props: DropzoneRootProps) => {
 };
 
 export const calculateSize = (size: number) => {
-    if (size < 1024) {
+    if (size < MemoryUnit.KB) {
         return size + ' bytes';
     }
 
-    if (size >= 1024 && size < 1048576) {
-        return (size / 1024).toFixed(2) + ' KB';
+    if (size >= MemoryUnit.KB && size < MemoryUnit.MB) {
+        return (size / MemoryUnit.KB).toFixed(2) + ' KB';
     }
 
-    if (size >= 1048576) {
-        return (size / 1048576).toFixed(2) + ' MB';
+    if (size >= MemoryUnit.MB) {
+        return (size / MemoryUnit.MB).toFixed(2) + ' MB';
     }
 
     return size;

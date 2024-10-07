@@ -1,5 +1,5 @@
 import { Injectable, PayloadTooLargeException } from '@nestjs/common';
-import { EmailTriggerData, IProcessInstance, isEmailTriggerData, TriggerEvent } from 'runbotics-common';
+import { EmailTriggerData, IProcessInstance, isEmailTriggerData, MemoryUnit, TriggerEvent } from 'runbotics-common';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
@@ -215,7 +215,7 @@ export class NotificationService {
     }
 
     private isFileSizeAllowed(size: number) {
-        const MAX_FILE_SIZE = 4194304; // 4MB -> 4194304 bytes
+        const MAX_FILE_SIZE = MemoryUnit.MB * 4;
         return size <= MAX_FILE_SIZE;
     }
 }
