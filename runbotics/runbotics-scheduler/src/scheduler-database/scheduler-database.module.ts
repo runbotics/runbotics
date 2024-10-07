@@ -18,6 +18,9 @@ import { ProcessCredentialModule } from './process-credential/process-credential
 import { ScheduleProcessModule } from './schedule-process/schedule-process.module';
 import { CredentialAttributeModule } from './credential-attribute/credential-attribute.module';
 import { ProcessOutputModule } from './process-output/process-output.module';
+import { ProcessInstanceModule } from './process-instance/process-instance.module';
+import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
+import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 
 @Module({
     imports: [
@@ -40,6 +43,9 @@ import { ProcessOutputModule } from './process-output/process-output.module';
         ActionModule,
         ScheduleProcessModule,
         CredentialAttributeModule,
+        ProcessInstanceModule,
+        ProcessInstanceEventModule,
+        ProcessInstanceLoopEventModule,
     ],
     exports: [],
 })
