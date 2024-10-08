@@ -8,10 +8,10 @@ updates:
       - "/runbotics/runbotics-scheduler"
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 2
+    open-pull-requests-limit: 1
     target-branch: "develop"
     commit-message:
-      prefix: "[Dependency] "
+      prefix: "[RPA-1715] "
     assignees:
       - "star-in-the-jar" # stanislaw-jarocki
       - "marcin-depcik"
