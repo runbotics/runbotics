@@ -1,14 +1,14 @@
-import { BotSystem } from 'runbotics-common';
+import { BotSystemType } from 'runbotics-common';
 
 const getBotSystem = () => {
     const system = process.platform;
     switch (system) {
         case 'win32':
-            return BotSystem.WINDOWS;
+            return BotSystemType.WINDOWS;
         case 'linux':
-            return BotSystem.LINUX;
+            return BotSystemType.LINUX;
         case 'darwin':
-            return BotSystem.MAC;
+            return BotSystemType.MAC;
         default:
             return system.toUpperCase();
     }

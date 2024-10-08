@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createProcessSchema } from '#/database/process/dto/create-process.dto';
+import { createProcessSchema } from '#/scheduler-database/process/dto/create-process.dto';
 
 export const updateTriggerableSchema = createProcessSchema.pick({
     isTriggerable: true,

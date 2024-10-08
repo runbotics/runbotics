@@ -8,7 +8,7 @@ import { BotModule } from '../database/bot/bot.module';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from '../database/user/user.module';
-import { BotSystemModule } from '../database/bot-system/bot-system.module';
+import { BotSystemModule } from '#/scheduler-database/bot-system/bot-system.module';
 import { BotCollectionModule } from '../database/bot-collection/bot-collection.module';
 import { RoleGuard } from './guards';
 import { FeatureKeyGuard } from './guards/featureKey.guard';

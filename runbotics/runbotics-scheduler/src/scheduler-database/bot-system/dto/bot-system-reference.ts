@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { BotSystem } from 'runbotics-common';
+import { BotSystemType } from 'runbotics-common';
 
 export const botSystemReferenceSchema = z.object({
-    name: z.nativeEnum(BotSystem),
+    name: z.nativeEnum(BotSystemType),
 });
 
 export type BotSystemReference = z.infer<typeof botSystemReferenceSchema>;

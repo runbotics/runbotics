@@ -12,7 +12,7 @@ import { WebsocketService } from '#/websocket/websocket.service';
 
 import { ProcessInputService } from './process-input.service';
 import { SecretService } from '#/scheduler-database/secret/secret.service';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { findSubprocess } from '#/utils/bpmn/findSubprocess';
 
 @Injectable()

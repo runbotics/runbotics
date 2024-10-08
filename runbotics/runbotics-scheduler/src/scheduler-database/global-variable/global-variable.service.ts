@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Logger } from '#/utils/logger';
 import { UserEntity } from '#/database/user/user.entity';
-import { ProcessEntity } from '#/database/process/process.entity';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
 import { GlobalVariable } from './global-variable.entity';

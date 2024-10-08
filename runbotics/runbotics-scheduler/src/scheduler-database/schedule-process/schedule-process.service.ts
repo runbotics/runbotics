@@ -1,4 +1,4 @@
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { Logger } from '#/utils/logger';
 import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';

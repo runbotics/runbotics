@@ -1,5 +1,5 @@
 import { PrimaryColumn, Entity, OneToMany } from 'typeorm';
-import { ProcessEntity } from '#/database/process/process.entity';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { ProcessOutputType } from 'runbotics-common';
 
 @Entity('process_output')
