@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { ProcessOutput } from './process-output.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
-
 @Controller('/api/scheduler/process-outputs')
 export class ProcessOutputController {
     private readonly logger = new Logger(ProcessOutputController.name);

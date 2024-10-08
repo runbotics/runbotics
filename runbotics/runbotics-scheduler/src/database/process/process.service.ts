@@ -1,12 +1,11 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
-import { IProcess, Role } from 'runbotics-common';
+import { IProcess } from 'runbotics-common';
 import { UserEntity } from '../user/user.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
-import { CreateProcessDto } from '#/database/process/dto/create-process.dto';
-import { UserService } from '#/database/user/user.service';
+
 
 const relations = [
     'createdBy',
@@ -29,17 +28,6 @@ export class ProcessService {
         @InjectRepository(ProcessEntity)
         private processRepository: Repository<ProcessEntity>,
     ) {
-    }
-
-    async checkCreateProcessViability(user: UserEntity) {
-        console.log('user', user);
-        if (user.authorities.some(authority => authority.name === Role.ROLE_GUEST)) {
-            const count = await this.processRepository.countBy({ createdBy: { id: user.id } });
-            
-            return count === 0;
-        }
-        
-        return true;
     }
     
     findById(id: number): Promise<IProcess | null> {

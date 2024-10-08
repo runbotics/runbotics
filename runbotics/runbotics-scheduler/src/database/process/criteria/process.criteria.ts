@@ -4,15 +4,28 @@ import { BooleanFilter } from '#/utils/specification/filter/boolean-filter/boole
 import { DatetimeFilter } from '#/utils/specification/filter/datetime-filter/datetime-filter';
 import { Criteria } from '#/utils/specification/criteria/criteria';
 
-export class ProcessCriteria implements Criteria<ProcessCriteria> {
+export class ProcessCriteria extends Criteria {
     id = new NumberFilter();
     name = new StringFilter();
     isPublic = new BooleanFilter();
     created = new DatetimeFilter();
     updated = new DatetimeFilter();
-    createdById = new NumberFilter();
-    createdByName = new StringFilter();
-    botCollectionName = new StringFilter();
-    tagName = new StringFilter();
+    botCollection = new BotCollectionCriteria();
+    tag = new TagCriteria();
     collectionId = new StringFilter();
+
+    createdBy = new CreatedByCriteria();
+}
+
+class CreatedByCriteria extends Criteria {
+    id = new NumberFilter();
+    login = new StringFilter();
+}
+
+class TagCriteria extends Criteria {
+    name = new StringFilter();
+}
+
+class BotCollectionCriteria extends Criteria {
+    name = new StringFilter();
 }
