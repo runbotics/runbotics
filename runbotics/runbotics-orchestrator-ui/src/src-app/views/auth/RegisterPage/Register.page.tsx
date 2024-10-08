@@ -100,14 +100,19 @@ const RegisterPage: FC = () => {
 
     const invitingTenant = useSelector((state) => tenantsSelector(state).invitingTenant);
 
+
     useEffect(() => {
         dispatch(tenantsActions.fetchTenantNameByInviteCode(inviteCodeURL))
             .unwrap()
             .catch((error) => {
                 if (error.statusCode === 400) {
-                    enqueueSnackbar(error.message, { variant: 'error' });
+                    const title = translate('Error.InviteCode.View.Title');
+                    const message = translate('Error.InviteCode.View.Message');
+                    sessionStorage.setItem('errorTitle', title);
+                    sessionStorage.setItem('errorMessage', message);
+                    router.push('/error');
                 } else {
-                    enqueueSnackbar(translate('Register.Error.UnexpectedError'), { variant: 'error' });
+                    router.push(`/${error.statusCode}`);
                 }
             });
     }, [inviteCodeURL]);
