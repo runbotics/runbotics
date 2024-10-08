@@ -16,7 +16,8 @@ import {
     subscribeProcessNotifications,
     unsubscribeProcessNotifications,
     getProcessSubscriptionInfo,
-    getProcessCredentials, getProcessesPageByCollection,
+    getProcessesPageByCollection,
+    getProcessCredentials,
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
@@ -40,18 +41,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = true;
         })
         .addCase(getProcessesPage.fulfilled, (state, action) => {
-            state.all.page = {
-                content: action.payload,
-                totalPages: 1,
-                totalElements: action.payload.length,
-                empty: false,
-                last: true,
-                first: true,
-                number: 1,
-                size: 1,
-                numberOfElements: action.payload.length,
-                sort: null,
-            };
+            state.all.page = action.payload;
             state.all.loading = false;
         })
         .addCase(getProcessesPage.rejected, (state) => {
