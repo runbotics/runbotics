@@ -13,7 +13,6 @@ export class ProcessCriteria extends Criteria {
     botCollection = new BotCollectionCriteria();
     tag = new TagCriteria();
     collectionId = new StringFilter();
-
     createdBy = new CreatedByCriteria();
 }
 

@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, In, Repository, FindOptionsRelations } from 'typeorm';
 import { ProcessEntity } from './process.entity';
-import { BotSystem, DefaultCollections, FeatureKey, ProcessOutputType, Role } from 'runbotics-common';
+import { BotSystem, DefaultCollections, ProcessOutputType, Role } from 'runbotics-common';
 import { UserEntity } from '../user/user.entity';
 import { CreateProcessDto } from '#/database/process/dto/create-process.dto';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
@@ -10,6 +10,9 @@ import { ProcessCollectionEntity } from '#/database/process-collection/process-c
 import { UpdateProcessDto } from '#/database/process/dto/update-process.dto';
 import { UpdateDiagramDto } from '#/database/process/dto/update-diagram.dto';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
+import { getPage } from '#/utils/page/page';
+import { Paging } from '#/utils/page/pageable.decorator';
+import { Specs } from '#/utils/specification/specifiable.decorator';
 
 const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     system: true,
@@ -131,18 +134,33 @@ export class ProcessCrudService {
         return this.processRepository.save(process);
     }
 
-    getAll(user: UserEntity, options: FindManyOptions<ProcessEntity>) {
-        options.where = {
-            ...options.where,
-            tenantId: user.tenantId,
+    getAll(user: UserEntity, specs: Specs<ProcessEntity>) {
+        const options: FindManyOptions<ProcessEntity> = {
+            ...specs,
         };
         options.relations = RELATIONS;
 
-        return this.processRepository.find({
-            ...options,
-        });
+        options.where = {
+            tenantId: user.tenantId,
+        };
+
+        return this.processRepository.find(options);
     }
 
+    getPage(user: UserEntity, specs: Specs<ProcessEntity>, paging: Paging) {
+        const options: FindManyOptions<ProcessEntity> = {
+            ...paging,
+            ...specs
+        };
+        
+        options.where = {
+            tenantId: user.tenantId,
+        };
+        
+        options.relations = RELATIONS;
+
+        return getPage(this.processRepository, options);
+    }
 
     get(user: UserEntity, id: number) {
         return this.processRepository.findOne({
@@ -169,30 +187,5 @@ export class ProcessCrudService {
         });
     }
 
-    checkPermission(user: UserEntity, tenantId: string, processId: number): boolean {
-        const featureKeys = user.authorities
-            .flatMap(authority => authority.featureKeys)
-            .map(key => key.name);
 
-        if (featureKeys.includes(FeatureKey.PROCESS_ALL_ACCESS)) {
-            return true;
-        }
-        
-        this.processRepository.query(`
-            WITH RECURSIVE ancestors AS
-                               (SELECT pc.*, 1 AS depth, pc.is_public OR pc.§ AS access
-                                FROM process_collection pc
-                                JOIN
-                                WHERE pc.id = ?1
-                                UNION
-                                SELECT pc.*, ancestors.depth + 1, 
-                                FROM ancestors a
-                                         JOIN process_collection pc ON pc.id = a.parent_id
-                                WHERE a)
-            SELECT bc.created_by,
-                   bc.is_public,
-            FROM ancestors
-            WHERE 
-            ORDER BY bc.lvl DESC`, [user.id, processId])
-    }
 }

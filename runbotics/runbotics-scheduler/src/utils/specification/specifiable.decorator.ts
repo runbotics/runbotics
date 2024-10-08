@@ -1,10 +1,15 @@
 import { BadRequestException, createParamDecorator, ExecutionContext, Logger } from '@nestjs/common';
-import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
+import { FindManyOptions, FindOptionsOrder, FindOptionsOrderProperty } from 'typeorm';
 import { Request } from 'express';
-import { FindOptionsWhereProperty } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 import { Specification } from '#/utils/specification/specification';
 import { Criteria } from '#/utils/specification/criteria/criteria';
 import { Filter } from '#/utils/specification/filter/filter';
+
+export type Specs<T> = {
+    where: FindOptionsWhere<T>,
+    order: FindOptionsOrder<T>
+};
 
 export interface CriteriaClass {
     new(): Criteria;
@@ -12,49 +17,14 @@ export interface CriteriaClass {
 
 const logger = new Logger('ResourceSpecification');
 
-export const ResourceSpecification = createParamDecorator<CriteriaClass>(
-    (CriteriaClass: CriteriaClass, ctx: ExecutionContext): FindManyOptions => {
-
+export const Specifiable = createParamDecorator<CriteriaClass>(
+    (CriteriaClass: CriteriaClass, ctx: ExecutionContext): Specs<CriteriaClass> => {
         const request = ctx.switchToHttp().getRequest();
         const params = (request as Request).query;
+        
         const specification: Specification<Criteria> = {
             criteria: new CriteriaClass(),
         };
-
-        if (params['size']) {
-            const page = (() => {
-                if (!params['page']) {
-                    return 0;
-                } else if (typeof params['page'] !== 'string') {
-                    throw new BadRequestException();
-                } else {
-                    const page = parseInt(params['page']);
-                    if (isFinite(page) && !isNaN(page)) {
-                        return page;
-                    } else {
-                        throw new BadRequestException();
-                    }
-                }
-            })();
-
-            const pageSize = (() => {
-                if (typeof params['size'] !== 'string') {
-                    throw new BadRequestException();
-                } else {
-                    const size = parseInt(params['size']);
-                    if (isFinite(size) && !isNaN(size)) {
-                        return size;
-                    } else {
-                        throw new BadRequestException();
-                    }
-                }
-            })();
-
-            specification.pagination = {
-                page,
-                pageSize,
-            };
-        }
 
         Object.entries(params).forEach(([key, value]) => {
             const [field, operator] = key.split('.');
@@ -76,8 +46,11 @@ export const ResourceSpecification = createParamDecorator<CriteriaClass>(
 
 export const specificationToFindOptions = <T extends Criteria>(
     specification: Specification<T>,
-): FindManyOptions => {
-    const where: FindManyOptions['where'] = {};
+): {
+    where: FindOptionsWhere<T>,
+    order: FindOptionsOrder<T>,
+} => {
+    const where: FindOptionsWhere<T> = {};
 
     const getFilters = (criteria: Criteria) => {
         return Object.keys(criteria).filter(field => criteria[field].type === 'filter');
@@ -93,25 +66,19 @@ export const specificationToFindOptions = <T extends Criteria>(
         });
 
         getFilters(criteria).forEach(field => {
-            where[field] = criteria[field].eval() as FindOptionsWhereProperty<Criteria>;
+            where[field] = criteria[field].eval() as FindOptionsWhere<Criteria>;
         });
     };
 
     evalRecursively(specification.criteria, where);
 
-    const paging = specification.pagination ? {
-        skip: specification.pagination.pageSize * specification.pagination.page,
-        take: specification.pagination.pageSize,
-    } : {};
-
-    const order = specification.order ? {
-        order: {
-            [specification.order.name]: specification.order.direction,
-        },
-    } : {};
+    // types in typeorm...
+    const order: FindOptionsOrder<T> = (specification.order ?
+        {
+            [specification.order.name]: 'desc',
+        } : {}) as { [P in keyof T]: P extends 'toString' ? unknown : FindOptionsOrderProperty<NonNullable<T[P]>> };
 
     return {
-        ...paging,
         where,
         order,
     };
@@ -125,7 +92,7 @@ const getFilterRecursively = (field: string, criteria: Criteria) => {
     for (let i = 0; i < fields.length; i++) {
         current = current[fields[i]];
     }
-    
+
     if (current?._type !== 'filter') {
         logger.error(`Incorrect field: ${field}`);
         throw new BadRequestException(`Incorrect field: ${field}`);
@@ -133,4 +100,3 @@ const getFilterRecursively = (field: string, criteria: Criteria) => {
 
     return current;
 };
-

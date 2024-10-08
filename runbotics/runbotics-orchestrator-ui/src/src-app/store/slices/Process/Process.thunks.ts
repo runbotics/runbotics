@@ -128,9 +128,9 @@ export const setDraft = createAsyncThunk('api/setDraft', (payload: { process: IP
 
 export const getProcesses = ApiTenantResource.get<IProcess[]>('process/getAll', PROCESSES_PATH);
 
-export const getProcessesPage = ApiTenantResource.get<IProcess[]>('process/getPage', PROCESSES_PATH);
+export const getProcessesPage = ApiTenantResource.get<Page<IProcess>>('process/getPage', `${PROCESSES_PATH}/Page`);
 
-export const getProcessesPageByCollection = ApiTenantResource.get<Page<IProcess>>('process/getPageByCollection', PROCESSES_PATH);
+export const getProcessesPageByCollection = ApiTenantResource.get<Page<IProcess>>('process/getPageByCollection', `${PROCESSES_PATH}/ByCollection`);
 
 export const deleteProcess = ApiTenantResource.delete<number>('process/delete', PROCESSES_PATH);
 
