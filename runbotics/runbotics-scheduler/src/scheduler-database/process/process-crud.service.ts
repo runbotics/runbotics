@@ -2,13 +2,13 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, In, Repository, FindOptionsRelations } from 'typeorm';
 import { ProcessEntity } from './process.entity';
-import { BotSystem, DefaultCollections, ProcessOutputType, Role } from 'runbotics-common';
-import { UserEntity } from '../user/user.entity';
-import { CreateProcessDto } from '#/database/process/dto/create-process.dto';
+import { BotSystemType, DefaultCollections, ProcessOutputType, Role } from 'runbotics-common';
+import { UserEntity } from '../../database/user/user.entity';
+import { CreateProcessDto } from '#/scheduler-database/process/dto/create-process.dto';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
-import { UpdateProcessDto } from '#/database/process/dto/update-process.dto';
-import { UpdateDiagramDto } from '#/database/process/dto/update-diagram.dto';
+import { UpdateProcessDto } from '#/scheduler-database/process/dto/update-process.dto';
+import { UpdateDiagramDto } from '#/scheduler-database/process/dto/update-diagram.dto';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { getPage } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
@@ -75,7 +75,7 @@ export class ProcessCrudService {
         process.definition = EMPTY_PROCESS_DEFINITION;
         process.name = 'DEMO';
         process.isPublic = false;
-        process.systemName = BotSystem.LINUX;
+        process.systemName = BotSystemType.LINUX;
         process.outputType = ProcessOutputType.TEXT;
 
         const guestCollection = await this.processCollectionRepository.findOneBy({ name: DefaultCollections.GUEST });

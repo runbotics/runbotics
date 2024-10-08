@@ -14,7 +14,7 @@ import { UiGateway } from './ui/ui.gateway';
 import { BotLifecycleService } from './bot/bot-lifecycle.service';
 import { Logger } from 'src/utils/logger';
 import { MailModule } from '#/mail/mail.module';
-import { ProcessModule } from '#/database/process/process.module';
+import { ProcessModule } from '#/scheduler-database/process/process.module';
 
 @Global()
 @Module({
