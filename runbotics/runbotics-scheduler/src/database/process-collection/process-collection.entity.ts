@@ -3,7 +3,7 @@ import {
     Entity, Generated, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from '#/database/user/user.entity';
-import { ProcessEntity } from '#/database/process/process.entity';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 
 @Entity({ name: 'process_collection' })
 export class ProcessCollectionEntity {

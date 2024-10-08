@@ -15,29 +15,29 @@ import {
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
-import { ProcessService } from '#/database/process/process.service';
-import { CreateProcessDto, createProcessSchema } from '#/database/process/dto/create-process.dto';
+import { ProcessService } from '#/scheduler-database/process/process.service';
+import { CreateProcessDto, createProcessSchema } from '#/scheduler-database/process/dto/create-process.dto';
 import { User } from '#/utils/decorators/user.decorator';
 import { UserEntity } from '#/database/user/user.entity';
-import { UpdateProcessDto, updateProcessSchema } from '#/database/process/dto/update-process.dto';
-import { ProcessCrudService } from '#/database/process/process-crud.service';
-import { UpdateDiagramDto, updateDiagramSchema } from '#/database/process/dto/update-diagram.dto';
-import { UpdateAttendedDto, updateAttendedSchema } from '#/database/process/dto/update-attended.dto';
-import { UpdateTriggerableDto, updateTriggerableSchema } from '#/database/process/dto/update-triggerable.dto';
+import { UpdateProcessDto, updateProcessSchema } from '#/scheduler-database/process/dto/update-process.dto';
+import { ProcessCrudService } from '#/scheduler-database/process/process-crud.service';
+import { UpdateDiagramDto, updateDiagramSchema } from '#/scheduler-database/process/dto/update-diagram.dto';
+import { UpdateAttendedDto, updateAttendedSchema } from '#/scheduler-database/process/dto/update-attended.dto';
+import { UpdateTriggerableDto, updateTriggerableSchema } from '#/scheduler-database/process/dto/update-triggerable.dto';
 import {
     UpdateProcessBotCollectionDto,
     updateProcessBotCollectionSchema,
-} from '#/database/process/dto/update-process-bot-collection.dto';
+} from '#/scheduler-database/process/dto/update-process-bot-collection.dto';
 import {
     UpdateProcessOutputTypeDto,
     updateProcessOutputTypeSchema,
-} from '#/database/process/dto/update-process-output-type.dto';
-import { ProcessEntity } from '#/database/process/process.entity';
-import { ProcessCriteria } from '#/database/process/criteria/process.criteria';
+} from '#/scheduler-database/process/dto/update-process-output-type.dto';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
+import { ProcessCriteria } from '#/scheduler-database/process/criteria/process.criteria';
 import {
     updateProcessBotSystemSchema,
     UpdateProcessBotSystemDto,
-} from '#/database/process/dto/update-process-bot-system.dto';
+} from '#/scheduler-database/process/dto/update-process-bot-system.dto';
 import { Page } from '#/utils/page/page';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';

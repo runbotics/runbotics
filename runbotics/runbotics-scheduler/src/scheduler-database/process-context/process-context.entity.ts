@@ -1,5 +1,5 @@
 import { PrimaryColumn, Entity, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
-import { ProcessEntity } from '#/database/process/process.entity';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { ProcessContextSecret } from '#/scheduler-database/process-context-secret/process-context-secret.entity';
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 

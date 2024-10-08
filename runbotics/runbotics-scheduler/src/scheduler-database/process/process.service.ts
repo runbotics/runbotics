@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { FeatureKey, IProcess } from 'runbotics-common';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../../database/user/user.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
 

@@ -15,7 +15,7 @@ import {
     IScheduleProcess,
     IUser, NotificationProcess, ProcessCollection,
 } from 'runbotics-common';
-import { BotSystemEntity } from '#/database/bot-system/bot-system.entity';
+import { BotSystemEntity } from '#/scheduler-database/bot-system/bot-system.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 import { UserEntity } from '#/database/user/user.entity';
 import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
