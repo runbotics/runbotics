@@ -41,9 +41,9 @@ export const fetchProcessById = createAsyncThunk<
         return;
     }
 
-    const z = await dispatch(getProcessById({ resourceId: processId }));
+    const result = await dispatch(getProcessById({ resourceId: processId }));
     
-    return z.payload;
+    return result.payload;
 });
 
 export const fetchGuestDemoProcess = createAsyncThunk<IProcess>(
