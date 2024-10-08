@@ -1,31 +1,29 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { IProcess, Tag, NotificationProcess, NotificationProcessType, ProcessCredentialDto } from 'runbotics-common';
+import {
+    IProcess,
+    Tag,
+    NotificationProcess,
+    NotificationProcessType,
+    ProcessCredentialDto,
+} from 'runbotics-common';
 
 import { Socket } from 'socket.io-client';
 
-import { RootState } from '#src-app/store';
-import LoadingType from '#src-app/types/loading';
+import { AppDispatch, RootState } from '#src-app/store';
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import Axios from '#src-app/utils/axios';
-import { Page, PageRequestParams } from '#src-app/utils/types/page';
-import URLBuilder from '#src-app/utils/URLBuilder';
-
-import IProcessWithFilters from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.types';
+import { Page } from '#src-app/utils/types/page';
 
 import { CreateProcessCredentialDto, StartProcessResponse, UpdateDiagramRequest } from './Process.state';
+import LoadingType from '#src-app/types/loading';
 
 const PROCESS_NOTIFICATION_PATH = 'notifications-process';
 const TAGS_PATH = 'tags';
+const PROCESSES_PATH = 'processes';
 const PROCESS_CREDENTIALS_PATH = 'process-credentials';
 
-// TODO and TO_REVIEW during processes migration
-const processPageURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
-    .url('processes').param('sort', 'updated,desc').params(params).build();
-
-// TODO and TO_REVIEW during process migration
-const processPageByCollectionURL = (params: PageRequestParams<IProcessWithFilters>) => URLBuilder
-    .url('/api/processes-page-collection').param('sort', 'updated,desc').params(params).build();
+const getProcessById = ApiTenantResource.get<IProcess[]>('processes/getByName', PROCESSES_PATH);
 
 export const fetchProcessById = createAsyncThunk<
     IProcess,
@@ -34,20 +32,18 @@ export const fetchProcessById = createAsyncThunk<
         state: RootState;
         requestId: string;
         rejectValue: any;
+        dispatch: AppDispatch;
     }
->('processes/fetchById', (processId, { getState, requestId, rejectWithValue }) => {
+>('processes/fetchById', async (processId, { getState, requestId, dispatch }) => {
     const { currentRequestId, loading } = getState().process.draft;
-    if (loading !== LoadingType.PENDING || requestId !== currentRequestId) { return; }
 
-    // eslint-disable-next-line consistent-return
-    return Axios.get<IProcess>(`/api/processes/${processId}`)
-        .then((response) => response.data)
-        .catch((error) => {
-            if (!error.response) { throw error; }
+    if (loading !== LoadingType.PENDING || requestId !== currentRequestId) {
+        return;
+    }
 
-            // We got validation errors, let's return those so we can reference in our component and set form errors
-            return rejectWithValue(error.response);
-        });
+    const z = await dispatch(getProcessById({ resourceId: processId }));
+    
+    return z.payload;
 });
 
 export const fetchGuestDemoProcess = createAsyncThunk<IProcess>(
@@ -56,6 +52,9 @@ export const fetchGuestDemoProcess = createAsyncThunk<IProcess>(
         .then((response) => response.data),
 );
 
+
+export const updateProcess = ApiTenantResource.patch<IProcess, IProcess>('processes/getByName', PROCESSES_PATH);
+
 export const partialUpdateProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
     'processes/partialUpdate',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}`, process)
@@ -63,74 +62,60 @@ export const partialUpdateProcess = createAsyncThunk<IProcess, IProcess, { rejec
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
-export const updateProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
-    'processes/update',
-    (process, { rejectWithValue }) => Axios.put(`/api/processes/${process.id}`, process)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
-);
-
-export const updateBotCollection = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+export const updateBotCollection = ApiTenantResource.patch<IProcess, Pick<IProcess, 'botCollection'>>(
     'processes/bot-collection',
-    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/bot-collection`, process)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
+    (id: string) => `${PROCESSES_PATH}/${id}/bot-collection`,
 );
 
-export const updateAttendance = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'isAttended'>, { rejectValue: any }>(
+export const updateAttendance = ApiTenantResource.patch<void, Pick<IProcess, 'isAttended'>>(
     'processes/updateAttended',
-    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-attended`, process)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
+    (id: string) => `${PROCESSES_PATH}/${id}/is-attended`,
 );
 
-export const updateTriggerable = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'isTriggerable'>, { rejectValue: any }>(
+export const updateTriggerable = ApiTenantResource.patch<void, Pick<IProcess, 'isTriggerable'>>(
     'processes/updateTriggerable',
-    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/is-triggerable`, process)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
+    (id: string) => `${PROCESSES_PATH}/${id}/is-triggerable`,
 );
 
-export const updateBotSystem = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
-    'processes/bot-system',
-    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/bot-system`, process)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
+export const updateBotSystem = ApiTenantResource.patch<IProcess, Pick<IProcess, 'system'>>(
+    'processes/updateBotSystem',
+    (id: string) => `${PROCESSES_PATH}/${id}/bot-system`,
 );
 
-export const updateProcessOutputType = createAsyncThunk<IProcess, Pick<IProcess, 'id' | 'output'>, { rejectValue: any }>(
+export const updateProcessOutputType = ApiTenantResource.patch<void, Pick<IProcess, 'output'>>(
     'processes/output-type',
-    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}/output-type`, process)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
+    (id: string) => `${PROCESSES_PATH}/${id}/output-type`,
 );
 
-export const updateDiagram = createAsyncThunk<IProcess, UpdateDiagramRequest, { rejectValue: any }>(
+export const updateDiagram = ApiTenantResource.patch<IProcess, UpdateDiagramRequest>(
     'processes/updateDiagram',
-    (process, { rejectWithValue }) => Axios.patch<IProcess>(`/api/processes/${process.id}/diagram`, process)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
+    (id: string) => `${PROCESSES_PATH}/${id}/diagram`,
 );
 
-export const createProcess = createAsyncThunk<IProcess, IProcess>(
+export const createProcess = ApiTenantResource.post<void, IProcess>(
     'processes/create',
-    (processInfo, { rejectWithValue }) => Axios.post<IProcess>('/api/processes', processInfo)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
+    PROCESSES_PATH,
 );
 
-export const createGuestProcess = createAsyncThunk<IProcess>(
+export const createGuestProcess = ApiTenantResource.post<IProcess>(
     'processes/create',
-    () => Axios.post<IProcess>('/api/processes/guest')
-        .then((response) => response.data)
-        .catch((error) => {
-            throw error;
-        }),
+    `${PROCESSES_PATH}/guest`,
 );
 
-export const startProcess = createAsyncThunk<StartProcessResponse, { processId: IProcess['id'], clientId: Socket['id'], executionInfo?: Record<string, any> }>(
+export const startProcess = createAsyncThunk<StartProcessResponse, {
+    processId: IProcess['id'],
+    clientId: Socket['id'],
+    executionInfo?: Record<string, any>
+}>(
     'processes/startProcess',
-    ({ processId, clientId, executionInfo }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, { clientId, variables: executionInfo })
+    ({
+         processId,
+         clientId,
+         executionInfo,
+     }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, {
+        clientId,
+        variables: executionInfo,
+    })
         .then((response) => response.data)
         .catch((error) => {
             const message = error.response.status === 504 ? { message: 'Process start failed' } : error.response.data;
@@ -141,27 +126,13 @@ export const startProcess = createAsyncThunk<StartProcessResponse, { processId: 
 
 export const setDraft = createAsyncThunk('api/setDraft', (payload: { process: IProcess }) => payload.process);
 
-// export const getProcesses = createAsyncThunk<IProcess[]>('processes/getAll', () => Axios.get<IProcess[]>('/api/processes').then((response) => response.data));
-export const getProcesses = ApiTenantResource.get<IProcess[]>('process/getAll', 'processes');
-// export const getProcessesPage = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
-//     'processes/getPage',
-//     (params) => Axios.get<Page<IProcess>>(processPageURL(params)).then((response) => response.data),
-// );
+export const getProcesses = ApiTenantResource.get<IProcess[]>('process/getAll', PROCESSES_PATH);
 
-export const getProcessesPage = ApiTenantResource.get<IProcess[]>('process/getPage', 'processes');
+export const getProcessesPage = ApiTenantResource.get<IProcess[]>('process/getPage', PROCESSES_PATH);
 
+export const getProcessesPageByCollection = ApiTenantResource.get<Page<IProcess>>('process/getPageByCollection', PROCESSES_PATH);
 
-export const getProcessesPageByCollection = createAsyncThunk<Page<IProcess>, PageRequestParams<IProcessWithFilters>>(
-    'processes/getPageByCollection',
-    (params) => Axios.get<Page<IProcess>>(processPageByCollectionURL(params)).then((response) => response.data)
-);
-
-export const deleteProcess = createAsyncThunk<void, { processId: number }>(
-    'processes/delete',
-    async ({ processId }) => {
-        await Axios.delete(`/api/processes/${processId}`);
-    },
-);
+export const deleteProcess = ApiTenantResource.delete<number>('process/delete', PROCESSES_PATH);
 
 export const getTagsByName = ApiTenantResource.get<Tag[]>('tags/getByName', TAGS_PATH);
 

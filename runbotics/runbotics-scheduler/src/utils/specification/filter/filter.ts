@@ -1,14 +1,14 @@
-import { And, FindOneOptions, FindOperator, FindOptionsWhereProperty } from 'typeorm';
-import { Criteria } from '#/utils/specification/criteria/criteria';
+import { Or, FindOperator, FindOptionsWhereProperty } from 'typeorm';
 
 export abstract class Filter {
+    _type: 'filter' = 'filter';
     abstract name: string;
 
     predicates: FindOperator<unknown>[] = [];
-    
+
     eval(): FindOptionsWhereProperty<unknown> {
-        return And(...this.predicates);
-    }
-    
+        return this.predicates.length > 0 ? Or(...this.predicates) : undefined;
+    } 
+
     abstract consume(operator: string, value: string): void;
 }

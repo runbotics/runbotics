@@ -13,13 +13,15 @@ interface PayloadWrap<T> {
     pageParams?: PageRequestParams;
 }
 
+type ResourcePath = string | ((resourceId: string) => string);
+
 interface PathElements {
-    resourcePath?: string;
+    resourcePath?: ResourcePath;
     resourceId?: string | number;
     pageParams?: PageRequestParams;
 }
 
-type ThunkArguments = [typePrefix: string, resourcePath?: string];
+type ThunkArguments = [typePrefix: string, resourcePath?: ResourcePath];
 
 class ApiTenantResource {
 
@@ -41,7 +43,8 @@ class ApiTenantResource {
 
     private static request<ReturnType, PayloadType>(
         method: 'get' | 'post' | 'patch' | 'delete',
-        typePrefix: string, resourcePath?: string
+        typePrefix: string, 
+        resourcePath?: ResourcePath,
     ) {
         const asyncThunk = createAsyncThunk<ReturnType, PayloadWrap<PayloadType>, { state: RootState }>(
             typePrefix,
@@ -50,8 +53,6 @@ class ApiTenantResource {
 
                 const url = this.buildURL({ resourcePath, resourceId, pageParams }, user);
                 
-                console.log('url:', url, pageParams)
-
                 return axios[method]<ReturnType>(url, payload)
                     .then(response => response.data)
                     .catch(error => thunkApi.rejectWithValue(error.response.data));
@@ -74,12 +75,14 @@ class ApiTenantResource {
         const resourceIdPart = resourceId
             ? `/${resourceId}` : '';
 
-        const apiURL = `/api/scheduler/tenants/${user.tenant.id}${resourcePathPart}${resourceIdPart}`;
+        const apiURL = typeof resourcePath === 'function' ?
+            `/api/scheduler/tenants/${user.tenant.id}/${resourcePath(resourceId.toString())}` 
+            : `/api/scheduler/tenants/${user.tenant.id}${resourcePathPart}${resourceIdPart}`;
 
         return pageParams
             ? URLBuilder.url(apiURL).params(pageParams).build()
             : apiURL;
     }
-};
+}
 
 export default ApiTenantResource;

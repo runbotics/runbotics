@@ -46,10 +46,10 @@ const ProcessConfigureView: VFC = () => {
 
     const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(process?.output);
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(
-        process?.system
+        process?.system,
     );
     const [selectedBotCollection, setSelectedBotCollection] =
-		useState<IBotCollection>(process?.botCollection);
+        useState<IBotCollection>(process?.botCollection);
     const [attended, setAttended] = useState(process?.isAttended);
     const [triggerable, setTriggerable] = useState(process?.isTriggerable);
 
@@ -93,21 +93,21 @@ const ProcessConfigureView: VFC = () => {
         await dispatch(processActions.fetchProcessById(process.id));
     };
 
-    const handleSelectProcessOutputType = async (outputType: ProcessOutput) => {
-        await dispatch(processActions.updateProcessOutputType({ id: process.id, output: outputType }));
-        setProcessOutputType(outputType);
+    const handleSelectProcessOutputType = async (output: ProcessOutput) => {
+        await dispatch(processActions.updateProcessOutputType({ resourceId: process.id, payload: { output } }));
+        setProcessOutputType(output);
         await fetchProcess();
     };
 
     const handleSelectBotSystem = async (system: IBotSystem) => {
-        await dispatch(processActions.updateBotSystem({ id: process.id, system }));
+        await dispatch(processActions.updateBotSystem({ resourceId: process.id, payload: { system } }));
         setSelectedBotSystem(system);
         await fetchProcess();
     };
 
     const handleSelectBotCollection = async (botCollection: IBotCollection) => {
         await dispatch(
-            processActions.updateBotCollection({ id: process.id, botCollection })
+            processActions.updateBotCollection({ resourceId: process.id, payload: { botCollection } }),
         );
         setSelectedBotCollection(botCollection);
         await fetchProcess();
@@ -115,7 +115,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(
-            processActions.updateAttendance({ id: process.id, isAttended })
+            processActions.updateAttendance({ resourceId: process.id, payload: { isAttended } }),
         );
         setAttended(isAttended);
         await fetchProcess();
@@ -123,7 +123,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
         await dispatch(
-            processActions.updateTriggerable({ id: process.id, isTriggerable })
+            processActions.updateTriggerable({ resourceId: process.id, payload: { isTriggerable } }),
         );
         setTriggerable(isTriggerable);
         await fetchProcess();
@@ -132,10 +132,10 @@ const ProcessConfigureView: VFC = () => {
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
             ? await dispatch(processActions.subscribeProcessNotifications({
-                payload: { processId, type: NotificationProcessType.PROCESS_ERROR }
+                payload: { processId, type: NotificationProcessType.PROCESS_ERROR },
             }))
             : await dispatch(processActions.unsubscribeProcessNotifications({
-                resourceId: processSubscriptions.find(sub => sub.user.id === user.id ).id
+                resourceId: processSubscriptions.find(sub => sub.user.id === user.id).id,
             }));
 
         await handleGetProcessSubscribers();
@@ -194,7 +194,7 @@ const ProcessConfigureView: VFC = () => {
                         <StyledPaper>
                             <NotificationSwitchComponent
                                 onClick={() => setOpen(true)}
-                                isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id )}
+                                isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id)}
                                 onSubscriptionChange={handleSubscriptionChange}
                                 label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
                                 tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}

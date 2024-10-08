@@ -1,6 +1,6 @@
 import { Criteria } from '#/utils/specification/criteria/criteria';
 
-export interface Specification<T extends Criteria<T>> {
+export interface Specification<T extends Criteria> {
     pagination?: {
         page: number;
         pageSize: number;

@@ -2,7 +2,7 @@ import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Logger } from '#/utils/logger';
 import {
     Body,
-    Controller,
+    Controller, Delete,
     ForbiddenException,
     Get,
     Param,
@@ -33,10 +33,13 @@ import {
     updateProcessOutputTypeSchema,
 } from '#/database/process/dto/update-process-output-type.dto';
 import { ResourceSpecification } from '#/utils/specification/resource-specification.decorator';
-import { Specification } from '#/utils/specification/specification';
 import { ProcessEntity } from '#/database/process/process.entity';
 import { FindManyOptions } from 'typeorm';
 import { ProcessCriteria } from '#/database/process/criteria/process.criteria';
+import {
+    updateProcessBotSystemDto,
+    UpdateProcessBotSystemDto,
+} from '#/database/process/dto/update-process-bot-system.dto';
 
 
 @UseInterceptors(TenantInterceptor)
@@ -56,7 +59,7 @@ export class ProcessController {
         @User() user: UserEntity,
         @Body(new ZodValidationPipe(createProcessSchema)) processDto: CreateProcessDto,
     ) {
-        const canCreate = this.processService.checkCreateProcessViability(user);
+        const canCreate = this.processCrudService.checkCreateProcessViability(user);
 
         if (!canCreate) {
             throw new ForbiddenException('Guest can create only one process');
@@ -70,7 +73,7 @@ export class ProcessController {
     createGuestProcess(
         @User() user: UserEntity,
     ) {
-        const canCreate = this.processService.checkCreateProcessViability(user);
+        const canCreate = this.processCrudService.checkCreateProcessViability(user);
 
         if (!canCreate) {
             throw new ForbiddenException('Guest can create only one process');
@@ -88,7 +91,7 @@ export class ProcessController {
     ) {
         return this.processCrudService.update(user.tenantId, id, processDto);
     }
-    
+
     @Patch(':id/diagram')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_STRUCTURE)
     setDiagram(
@@ -116,7 +119,7 @@ export class ProcessController {
         @User() user: UserEntity,
         @Body(new ZodValidationPipe(updateTriggerableSchema)) triggerableDto: UpdateTriggerableDto,
     ) {
-        return this.processCrudService.update(user.tenantId, id, { isAttended: triggerableDto.isTriggerable });
+        return this.processCrudService.update(user.tenantId, id, { isTriggerable: triggerableDto.isTriggerable });
     }
 
     @Patch(':id/bot-collection')
@@ -127,6 +130,16 @@ export class ProcessController {
         @Body(new ZodValidationPipe(updateProcessBotCollectionSchema)) updateBotCollectionDto: UpdateProcessBotCollectionDto,
     ) {
         return this.processCrudService.update(user.tenantId, id, { botCollection: updateBotCollectionDto.botCollection });
+    }
+
+    @Patch(':id/bot-system')
+    @FeatureKeys(FeatureKey.PROCESS_BOT_SYSTEM_EDIT)
+    setBotSystem(
+        @Param('id', new ParseIntPipe()) id: number,
+        @User() user: UserEntity,
+        @Body(new ZodValidationPipe(updateProcessBotSystemDto)) updateProcessBotSystemDto: UpdateProcessBotSystemDto,
+    ) {
+        return this.processCrudService.update(user.tenantId, id, updateProcessBotSystemDto);
     }
 
     @Patch(':id/output-type')
@@ -145,17 +158,16 @@ export class ProcessController {
     async getAll(
         @ResourceSpecification(ProcessCriteria) specs: FindManyOptions<ProcessEntity>,
         @User() user: UserEntity,
-    ){
-        return (await this.processCrudService.getAll(user, specs)).map(x => ({...x, name: 'xD2'}));
+    ) {
+        return (await this.processCrudService.getAll(user, specs)).map(x => ({ ...x, name: 'xD2' }));
     }
-    
-    // @TODO paging/criteria
+
     @Get('page')
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     getPage(
         @ResourceSpecification() specs: FindManyOptions<ProcessEntity>,
         @User() user: UserEntity,
-    ){
+    ) {
         return this.processCrudService.getAll(user, specs);
     }
 
@@ -163,11 +175,15 @@ export class ProcessController {
     get(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
-    ){
+    ) {
         return this.processCrudService.get(user, id);
     }
-    
-    checkPermission(user: UserEntity, processId: number){
-        
+
+    @Delete(':id')
+    delete(
+        @Param('id', new ParseIntPipe()) id: number,
+        @User() user: UserEntity,
+    ) {
+        return this.processCrudService.delete(user, id);
     }
 }
