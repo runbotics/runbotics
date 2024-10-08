@@ -32,14 +32,15 @@ import {
     UpdateProcessOutputTypeDto,
     updateProcessOutputTypeSchema,
 } from '#/database/process/dto/update-process-output-type.dto';
-import { ResourceSpecification } from '#/utils/specification/resource-specification.decorator';
 import { ProcessEntity } from '#/database/process/process.entity';
-import { FindManyOptions } from 'typeorm';
 import { ProcessCriteria } from '#/database/process/criteria/process.criteria';
 import {
-    updateProcessBotSystemDto,
+    updateProcessBotSystemSchema,
     UpdateProcessBotSystemDto,
 } from '#/database/process/dto/update-process-bot-system.dto';
+import { Page } from '#/utils/page/page';
+import { Pageable, Paging } from '#/utils/page/pageable.decorator';
+import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 
 
 @UseInterceptors(TenantInterceptor)
@@ -65,6 +66,7 @@ export class ProcessController {
             throw new ForbiddenException('Guest can create only one process');
         }
 
+
         return this.processCrudService.create(user, processDto);
     }
 
@@ -84,106 +86,144 @@ export class ProcessController {
 
     @Put(':id')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
-    update(
+    async update(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
         @Body(new ZodValidationPipe(updateProcessSchema)) processDto: UpdateProcessDto,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.update(user.tenantId, id, processDto);
     }
 
     @Patch(':id/diagram')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_STRUCTURE)
-    setDiagram(
+    async setDiagram(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
         @Body(new ZodValidationPipe(updateDiagramSchema)) updateDiagramDto: UpdateDiagramDto,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.updateDiagram(user, id, updateDiagramDto);
     }
 
     @Patch(':id/is-attended')
     @FeatureKeys(FeatureKey.PROCESS_IS_ATTENDED_EDIT)
-    setIsAttended(
+    async setIsAttended(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
         @Body(new ZodValidationPipe(updateAttendedSchema)) attendedDto: UpdateAttendedDto,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.update(user.tenantId, id, { isAttended: attendedDto.isAttended });
     }
 
     @Patch(':id/is-triggerable')
     @FeatureKeys(FeatureKey.PROCESS_IS_TRIGGERABLE_EDIT)
-    setIsTriggerable(
+    async setIsTriggerable(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
         @Body(new ZodValidationPipe(updateTriggerableSchema)) triggerableDto: UpdateTriggerableDto,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.update(user.tenantId, id, { isTriggerable: triggerableDto.isTriggerable });
     }
 
     @Patch(':id/bot-collection')
     @FeatureKeys(FeatureKey.PROCESS_BOT_COLLECTION_EDIT)
-    setBotCollection(
+    async setBotCollection(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
         @Body(new ZodValidationPipe(updateProcessBotCollectionSchema)) updateBotCollectionDto: UpdateProcessBotCollectionDto,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.update(user.tenantId, id, { botCollection: updateBotCollectionDto.botCollection });
     }
 
     @Patch(':id/bot-system')
     @FeatureKeys(FeatureKey.PROCESS_BOT_SYSTEM_EDIT)
-    setBotSystem(
+    async setBotSystem(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
-        @Body(new ZodValidationPipe(updateProcessBotSystemDto)) updateProcessBotSystemDto: UpdateProcessBotSystemDto,
+        @Body(new ZodValidationPipe(updateProcessBotSystemSchema)) updateProcessBotSystemDto: UpdateProcessBotSystemDto,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.update(user.tenantId, id, updateProcessBotSystemDto);
     }
 
     @Patch(':id/output-type')
     @FeatureKeys(FeatureKey.PROCESS_BOT_COLLECTION_EDIT)
-    setOutputType(
+    async setOutputType(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
         @Body(new ZodValidationPipe(updateProcessOutputTypeSchema)) updateOutputTypeDto: UpdateProcessOutputTypeDto,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.update(user.tenantId, id, { outputType: updateOutputTypeDto.outputType });
     }
 
-    // @TODO paging/criteria
     @Get()
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     async getAll(
-        @ResourceSpecification(ProcessCriteria) specs: FindManyOptions<ProcessEntity>,
+        @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
         @User() user: UserEntity,
     ) {
-        return (await this.processCrudService.getAll(user, specs)).map(x => ({ ...x, name: 'xD2' }));
+        return (await this.processCrudService.getAll(user, specs));
     }
 
-    @Get('page')
+    @Get('Page')
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     getPage(
-        @ResourceSpecification() specs: FindManyOptions<ProcessEntity>,
+        @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
+        @Pageable() paging: Paging, 
+        @User() user: UserEntity,
+    ): Promise<Page<ProcessEntity>> {
+        return this.processCrudService.getPage(user, specs, paging);
+    }
+
+    @Get('PageByCollection')
+    @FeatureKeys(FeatureKey.PROCESS_READ)
+    getPageByCollection(
+        @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
+        @Pageable() paging: Paging,
         @User() user: UserEntity,
     ) {
-        return this.processCrudService.getAll(user, specs);
+        return this.processCrudService.getPage(user, specs, paging);
     }
 
     @Get(':id')
-    get(
+    @FeatureKeys(FeatureKey.PROCESS_READ)
+    async get(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.get(user, id);
     }
 
     @Delete(':id')
-    delete(
+    @FeatureKeys(FeatureKey.PROCESS_DELETE)
+    async delete(
         @Param('id', new ParseIntPipe()) id: number,
         @User() user: UserEntity,
     ) {
+        await this.checkAccess(user, id);
+
         return this.processCrudService.delete(user, id);
+    }
+
+    async checkAccess(user: UserEntity, processId: number) {
+        const hasAccess = await this.processService.hasAccess(user, processId);
+
+        if (!hasAccess) {
+            throw new ForbiddenException();
+        }
     }
 }
