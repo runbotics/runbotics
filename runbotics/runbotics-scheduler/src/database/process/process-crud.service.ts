@@ -1,16 +1,21 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, In, Repository } from 'typeorm';
+import { FindManyOptions, In, Repository, FindOptionsRelations } from 'typeorm';
 import { ProcessEntity } from './process.entity';
-import { BotSystem, DefaultCollections, ProcessOutputType, Role } from 'runbotics-common';
+import { BotSystem, DefaultCollections, FeatureKey, ProcessOutputType, Role } from 'runbotics-common';
 import { UserEntity } from '../user/user.entity';
 import { CreateProcessDto } from '#/database/process/dto/create-process.dto';
-import { UserService } from '#/database/user/user.service';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
 import { UpdateProcessDto } from '#/database/process/dto/update-process.dto';
 import { UpdateDiagramDto } from '#/database/process/dto/update-diagram.dto';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
+
+const RELATIONS: FindOptionsRelations<ProcessEntity> = {
+    system: true,
+    botCollection: true,
+    output: true,
+};
 
 @Injectable()
 export class ProcessCrudService {
@@ -25,7 +30,6 @@ export class ProcessCrudService {
     }
 
     async checkCreateProcessViability(user: UserEntity) {
-        console.log('user', user);
         if (user.authorities.some(authority => authority.name === Role.ROLE_GUEST)) {
             const count = await this.processRepository.countBy({ createdBy: { id: user.id } });
 
@@ -80,48 +84,50 @@ export class ProcessCrudService {
 
     async update(tenantId: string, id: number, processDto: UpdateProcessDto) {
         const process = await this.processRepository.findOneBy({ tenantId, id });
+
         if (!process) {
             throw new NotFoundException();
         }
 
         const partial: Partial<ProcessEntity> = {};
 
-        partial.name = processDto.name;
-        partial.description = processDto.description;
-        partial.definition = processDto.definition;
-        partial.isPublic = processDto.isPublic;
+        process.name = processDto.name;
+        process.description = processDto.description;
+        process.definition = processDto.definition;
+        process.isPublic = processDto.isPublic;
         partial.isAttended = processDto.isAttended;
         partial.isTriggerable = processDto.isTriggerable;
 
-        partial.botCollectionId = processDto.botCollection.id;
+        partial.botCollectionId = processDto.botCollection?.id;
         partial.outputType = processDto.outputType?.type;
-        partial.systemName = processDto.system.name;
+        partial.systemName = processDto.system?.name;
 
-        if (processDto.tags.length > 15) {
+        if (processDto.tags?.length > 15) {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
         // { id } is enough to persist a relation
-        partial.tags = processDto.tags as Tag[];
+        partial.tags = processDto.tags as Tag[] | undefined;
 
-        return this.processRepository.update({ tenantId, id }, partial);
+        await this.processRepository.update({ tenantId, id }, partial);
+
+        return this.processRepository.findOneBy({ tenantId, id });
     }
-
 
     async updateDiagram(user: UserEntity, id: number, updateDiagramDto: UpdateDiagramDto) {
         const process = await this.processRepository.findOneBy({ tenantId: user.tenantId, id });
         if (!process) {
             throw new NotFoundException();
         }
-        
+
         process.globalVariables = await this.globalVariableRepository.findBy({
-            id: In(updateDiagramDto.globalVariableIds)
+            id: In(updateDiagramDto.globalVariableIds),
         });
-        
+
         process.definition = updateDiagramDto.definition;
         process.executionInfo = updateDiagramDto.executionInfo;
         process.editor = user;
-        
+
         return this.processRepository.save(process);
     }
 
@@ -129,31 +135,64 @@ export class ProcessCrudService {
         options.where = {
             ...options.where,
             tenantId: user.tenantId,
-        }
-        
+        };
+        options.relations = RELATIONS;
+
         return this.processRepository.find({
             ...options,
-        })
+        });
     }
 
 
     get(user: UserEntity, id: number) {
-        return this.processRepository.findOneBy({
+        return this.processRepository.findOne({
+            where: {
+                tenantId: user.tenantId,
+                id,
+            },
+            relations: RELATIONS,
+        });
+    }
+
+    async delete(user: UserEntity, id: number) {
+        await this.processRepository.delete({
             tenantId: user.tenantId,
             id,
-        })
+        });
+
+        return id;
     }
-    
-    delete(user: UserEntity, id: number){
-        return this.processRepository.delete({
-            tenantId: user.tenantId,
-            id,
-        })
-    }
-    
-    count(user: UserEntity){
+
+    count(user: UserEntity) {
         return this.processRepository.countBy({
             tenantId: user.tenantId,
-        })
+        });
+    }
+
+    checkPermission(user: UserEntity, tenantId: string, processId: number): boolean {
+        const featureKeys = user.authorities
+            .flatMap(authority => authority.featureKeys)
+            .map(key => key.name);
+
+        if (featureKeys.includes(FeatureKey.PROCESS_ALL_ACCESS)) {
+            return true;
+        }
+        
+        this.processRepository.query(`
+            WITH RECURSIVE ancestors AS
+                               (SELECT pc.*, 1 AS depth, pc.is_public OR pc.§ AS access
+                                FROM process_collection pc
+                                JOIN
+                                WHERE pc.id = ?1
+                                UNION
+                                SELECT pc.*, ancestors.depth + 1, 
+                                FROM ancestors a
+                                         JOIN process_collection pc ON pc.id = a.parent_id
+                                WHERE a)
+            SELECT bc.created_by,
+                   bc.is_public,
+            FROM ancestors
+            WHERE 
+            ORDER BY bc.lvl DESC`, [user.id, processId])
     }
 }

@@ -36,18 +36,20 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
         if (collectionId !== undefined) {
             dispatch(
                 processActions.getProcessesPageByCollection({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim(),
-                            }),
-                        },
-                        equals: {
-                            ...(collectionId !== null && { collectionId }),
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim(),
+                                }),
+                            },
+                            equals: {
+                                ...(collectionId !== null && { collectionId }),
+                            },
                         },
                     },
                 }),
@@ -62,8 +64,8 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                             contains: {
                                 ...(debouncedValue.trim() && {
                                     name: debouncedValue.trim(),
-                                    createdByName: debouncedValue.trim(),
-                                    tagName: debouncedValue.trim(),
+                                    'createdBy->login': debouncedValue.trim(),
+                                    'tag->name': debouncedValue.trim(),
                                 }),
                             },
                         },

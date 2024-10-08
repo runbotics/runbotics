@@ -1,24 +1,26 @@
-import { BadRequestException, createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { BadRequestException, createParamDecorator, ExecutionContext, Logger } from '@nestjs/common';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { Request } from 'express';
-import { Equal, FindOptionsWhereProperty, ILike, ObjectLiteral, Or } from 'typeorm';
+import { FindOptionsWhereProperty } from 'typeorm';
 import { Specification } from '#/utils/specification/specification';
 import { Criteria } from '#/utils/specification/criteria/criteria';
-import { FilterType } from '#/utils/specification/filter-type';
 import { Filter } from '#/utils/specification/filter/filter';
 
 export interface CriteriaClass {
-    new(): Criteria<CriteriaClass>;
+    new(): Criteria;
 }
+
+const logger = new Logger('ResourceSpecification');
 
 export const ResourceSpecification = createParamDecorator<CriteriaClass>(
     (CriteriaClass: CriteriaClass, ctx: ExecutionContext): FindManyOptions => {
+
         const request = ctx.switchToHttp().getRequest();
         const params = (request as Request).query;
-        const specification: Specification<Criteria<CriteriaClass>> = {
+        const specification: Specification<Criteria> = {
             criteria: new CriteriaClass(),
         };
-        
+
         if (params['size']) {
             const page = (() => {
                 if (!params['page']) {
@@ -34,7 +36,7 @@ export const ResourceSpecification = createParamDecorator<CriteriaClass>(
                     }
                 }
             })();
-            
+
             const pageSize = (() => {
                 if (typeof params['size'] !== 'string') {
                     throw new BadRequestException();
@@ -46,7 +48,7 @@ export const ResourceSpecification = createParamDecorator<CriteriaClass>(
                         throw new BadRequestException();
                     }
                 }
-            })()
+            })();
 
             specification.pagination = {
                 page,
@@ -55,31 +57,47 @@ export const ResourceSpecification = createParamDecorator<CriteriaClass>(
         }
 
         Object.entries(params).forEach(([key, value]) => {
-            console.log('xd', key, value);
             const [field, operator] = key.split('.');
-            
-            if(
+
+            if (
                 field &&
-                specification.criteria[field] &&
+                specification.criteria[field.split('->')[0]] &&
                 operator.length > 0 &&
                 typeof value === 'string'
-            ){
-                specification.criteria[field].consume(operator, value);
+            ) {
+                const filterValue = getFilterRecursively(field, specification.criteria);
+                filterValue.consume(operator, value);
             }
         });
-        console.log('spec', specification)
+
         return specificationToFindOptions(specification);
     },
 );
 
-export const specificationToFindOptions = <T extends Criteria<T>>(
+export const specificationToFindOptions = <T extends Criteria>(
     specification: Specification<T>,
 ): FindManyOptions => {
     const where: FindManyOptions['where'] = {};
 
-    Object.keys(specification.criteria).forEach((key) => {
-        where[key] = specification.criteria[key].eval() as FindOptionsWhereProperty<Criteria<T>>;
-    });
+    const getFilters = (criteria: Criteria) => {
+        return Object.keys(criteria).filter(field => criteria[field].type === 'filter');
+    };
+    const getCriterias = (criteria: Criteria) => {
+        return Object.keys(criteria).filter(field => criteria[field].type === 'criteria');
+    };
+
+    const evalRecursively = (criteria: Criteria, where: FindManyOptions['where']) => {
+        getCriterias(criteria).forEach(field => {
+            where[field] = {};
+            evalRecursively(criteria[field] as Criteria, where[field]);
+        });
+
+        getFilters(criteria).forEach(field => {
+            where[field] = criteria[field].eval() as FindOptionsWhereProperty<Criteria>;
+        });
+    };
+
+    evalRecursively(specification.criteria, where);
 
     const paging = specification.pagination ? {
         skip: specification.pagination.pageSize * specification.pagination.page,
@@ -97,5 +115,22 @@ export const specificationToFindOptions = <T extends Criteria<T>>(
         where,
         order,
     };
+};
+
+const getFilterRecursively = (field: string, criteria: Criteria) => {
+    const fields = field.split('->');
+
+    let current: Criteria | Filter = criteria;
+
+    for (let i = 0; i < fields.length; i++) {
+        current = current[fields[i]];
+    }
+    
+    if (current?._type !== 'filter') {
+        logger.error(`Incorrect field: ${field}`);
+        throw new BadRequestException(`Incorrect field: ${field}`);
+    }
+
+    return current;
 };
 

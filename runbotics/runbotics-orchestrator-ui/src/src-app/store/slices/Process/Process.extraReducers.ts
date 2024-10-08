@@ -16,8 +16,7 @@ import {
     subscribeProcessNotifications,
     unsubscribeProcessNotifications,
     getProcessSubscriptionInfo,
-    getProcessesPageByCollection,
-    getProcessCredentials,
+    getProcessCredentials, getProcessesPageByCollection,
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
@@ -125,7 +124,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(deleteProcess.fulfilled, (state, action) => {
             state.all.loading = false;
-            delete state.all.byId[action.meta.arg.processId];
+            delete state.all.byId[action.meta.arg.resourceId];
         })
         .addCase(deleteProcess.rejected, (state) => {
             state.all.loading = false;
