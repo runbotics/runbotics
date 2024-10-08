@@ -1,15 +1,17 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
+
+import { useRouter } from 'next/router';
 
 import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-import Image from 'next/image';
 import RouterLink from 'next/link';
-import { Role } from 'runbotics-common';
+import { Role, HttpErrorCodes } from 'runbotics-common';
 import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo';
+import BackgroundLogo from './BackgroundLogo';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
@@ -38,47 +40,44 @@ const StyledPage = styled(Page)(({ theme }) => ({
 
 interface ErrorViewProps {
     errorCode?: number;
-    customTitle?: string;
-    customMessage?: string;
+    title?: string;
+    message?: string;
 }
 
-const LogoImage: FC<{ position: 'top' | 'bottom' }> = ({ position }) => {
-    const positionStyles = position === 'top'
-        ? { top: '-5vw', maxTop: '-5px' }
-        : { bottom: '-5vw', maxBottom: '-5px' };
-
-    return (
-        <Box
-            position="absolute"
-            sx={{
-                ...positionStyles,
-                width: '100%',
-                margin: '0 auto',
-                display: 'flex',
-                justifyContent: 'center',
-            }}
-        >
-            <Image
-                src='/images/runBoticsLogo/logo-blur.svg'
-                alt='Runbotics logo'
-                width={1}
-                height={1}
-                style={{
-                    maxWidth: '1550px',
-                    width: '100%',
-                    height: 'auto',
-                }}
-            />
-        </Box>
-    );
-};
-
-const ErrorView: FC<ErrorViewProps> = ({ errorCode, customTitle, customMessage }) => {
+const ErrorView: FC<ErrorViewProps> = () => {
+    const [errorTitle, setErrorTitle] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [errorCode, setErrorCode] = useState<number | null>(null);
     const theme = useTheme();
     const { user } = useAuth();
     const dispatch = useDispatch();
     const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
     const { translate } = useTranslations();
+    const router = useRouter();
+
+
+
+    useEffect(() => {
+        const { code } = router.query;
+
+        if (!isNaN(Number(code)) && Object.values(HttpErrorCodes).includes(Number(code))) {
+            setErrorCode(Number(code));
+        } else {
+            const storedTitle = sessionStorage.getItem('errorTitle');
+            const storedMessage = sessionStorage.getItem('errorMessage');
+
+            if (storedTitle && storedMessage) {
+
+            setErrorTitle(storedTitle);
+            setErrorMessage(storedMessage);
+
+            sessionStorage.removeItem('errorTitle');
+            sessionStorage.removeItem('errorMessage');
+            } else {
+                router.replace('/404');
+            }
+        }
+    }, [router.query]);
 
     useEffect(() => {
         if (user?.roles.includes(Role.ROLE_GUEST)) {
@@ -87,18 +86,26 @@ const ErrorView: FC<ErrorViewProps> = ({ errorCode, customTitle, customMessage }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const metaTitle = errorCode ? translate(`Error${errorCode}.Meta.Title` as any) : translate('CustomError.Meta.Title');
-    const viewTitle = errorCode ? translate(`Error${errorCode}.View.Title` as any) : customTitle;
-    const viewMessage = errorCode ? translate(`Error${errorCode}.View.Message` as any) : customMessage;
+    if (!errorCode && !errorTitle && !errorMessage) {
+        return null;
+    }
+
+    const getTranslationKey = (code: HttpErrorCodes, type: 'Meta.Title' | 'View.Title' | 'View.Message') => {
+        return `Error${code}.${type}` as const;
+    };
+
+    const metaTitle = errorCode ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'Meta.Title')) : translate('CustomError.Meta.Title');
+    const viewTitle = errorCode ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'View.Title')) : errorTitle;
+    const viewMessage = errorCode ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'View.Message')) : errorMessage;
 
     return (
         <StyledPage className={classes.root} title={metaTitle}>
-            <LogoImage position='top' />
+            <BackgroundLogo position='top' />
             <Container maxWidth='lg'>
                 <Box mt={0} display='flex' justifyContent='center'>
                     <Logo height={mobileDevice ? 100 : 200} white />
                 </Box>
-                {!isNaN(errorCode) && (
+                {errorCode && !isNaN(errorCode) && (
                     <Typography
                         align='center'
                         variant='h1'
@@ -137,7 +144,7 @@ const ErrorView: FC<ErrorViewProps> = ({ errorCode, customTitle, customMessage }
                     </RouterLink>
                 </Box>
             </Container>
-            <LogoImage position='bottom' />
+            <BackgroundLogo position='bottom' />
         </StyledPage>
     );
 };

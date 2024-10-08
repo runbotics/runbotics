@@ -9,7 +9,7 @@
 
     "Error403.Meta.Title": "403: Dostęp zabroniony",
     "Error403.View.Title": "Nie masz uprawnień do uzyskania dostępu do tego zasobu",
-    "Error403.View.Message": "Upewnij się, że adres URL jest wprowadzony poprawnie i spróbuj odświeżyć stronę. Jeśli problem się powtarza, wyczyść pamięć podręczną przeglądarki i włącz pliki cookie. Czasami rozszerzenia przeglądarki mogą powodować ten błąd. Jeśli te kroki nie rozwiążą problemu, skontaktuj się z administratorem systemu i spróbuj ponownie później.",
+    "Error403.View.Message": "Upewnij się, że adres URL jest wprowadzony poprawnie i spróbuj odświeżyć stronę. Jeśli problem się powtarza, wyczyść pamięć podręczną przeglądarki i włącz pliki cookie. Czasami rozszerzenia przeglądarki mogą powodować ten błąd. Jeśli te kroki nie rozwiążą problemu, skontaktuj się z Administratorem systemu i spróbuj ponownie później.",
 
     "Error502.Meta.Title": "502: Błędna brama",
     "Error502.View.Title": "Wystąpił błąd połączenia z serwerem",
@@ -17,14 +17,14 @@
 
     "Error500.Meta.Title": "500: Nieoczekiwany błąd",
     "Error500.View.Title": "Wystąpił nieoczekiwany błąd",
-    "Error500.View.Message": "Najpierw spróbuj odświeżyć stronę. Jeśli to nie pomoże, wyczyść pamięć podręczną przeglądarki. Jeśli błąd nadal występuje, przepraszamy, problem może być po naszej stronie. W takim przypadku skontaktuj się z administratorem sieci i zgłoś błąd.",
+    "Error500.View.Message": "Najpierw spróbuj odświeżyć stronę. Jeśli to nie pomoże, wyczyść pamięć podręczną przeglądarki. Jeśli błąd nadal występuje, przepraszamy, problem może być po naszej stronie. W takim przypadku skontaktuj się z Administratorem sieci i zgłoś błąd.",
 
     "Error.Unknown": "Wystąpił nieznany błąd",
     "Error.Unknown.View.Message": "Wystąpił niespodziewany błąd. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
 
     "Error.View.BackToHome": "Powrót do strony głównej",
 
-    "CustomError.Meta.Title": "Błąd niestandardowy",
+    "CustomError.Meta.Title": "Błąd",
 
     "Error.InviteCode.View.Title": "Kod zaproszenia jest nieprawidłowy lub wygasł.",
     "Error.InviteCode.View.Message": "Ten kod dostępu jest nieprawidłowy. Sesja związana z tym kodem mogła wygasnąć lub zostać anulowana. Sprawdź, czy masz aktualne linki zaproszenia do użycia, lub skontaktuj się z gospodarzem lub ich organizacją, aby poprosić o nowy."

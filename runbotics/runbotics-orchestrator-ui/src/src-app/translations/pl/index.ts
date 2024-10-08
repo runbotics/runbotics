@@ -9,7 +9,7 @@ import commonTranslations from './common.json';
 import componentsTranslations from './components.json';
 import credenitalsTranslations from './credenitals';
 import demoTranslations from './demo.json';
-import error404Translations from './error404.json';
+import httpErrorsTranslations from './httpErrors.json';
 import historyTranslations from './history.json';
 import installTranslations from './install.json';
 import loginTranslations from './login.json';
@@ -32,7 +32,7 @@ const translationResources = {
     ...botTranslations,
     ...processTranslations,
     ...collectionTranslations,
-    ...error404Translations,
+    ...httpErrorsTranslations,
     ...actionTranslations,
     ...schedulerTranslations,
     ...variablesTranslations,
