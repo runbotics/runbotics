@@ -1,21 +1,24 @@
 import React, { FC, useEffect, useState } from 'react';
 
-import { useRouter } from 'next/router';
-
 import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import RouterLink from 'next/link';
+import { useRouter } from 'next/router';
 import { Role, HttpErrorCodes } from 'runbotics-common';
+
 import styled from 'styled-components';
 
 import Page from '#src-app/components/pages/Page';
+
 import Logo from '#src-app/components/utils/Logo';
-import BackgroundLogo from './BackgroundLogo';
+
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
+
+import BackgroundLogo from './BackgroundLogo';
 
 const PREFIX = 'ErrorView';
 
@@ -65,14 +68,11 @@ const ErrorView: FC<ErrorViewProps> = () => {
         } else {
             const storedTitle = sessionStorage.getItem('errorTitle');
             const storedMessage = sessionStorage.getItem('errorMessage');
-
             if (storedTitle && storedMessage) {
-
-            setErrorTitle(storedTitle);
-            setErrorMessage(storedMessage);
-
-            sessionStorage.removeItem('errorTitle');
-            sessionStorage.removeItem('errorMessage');
+                setErrorTitle(storedTitle);
+                setErrorMessage(storedMessage);
+                sessionStorage.removeItem('errorTitle');
+                sessionStorage.removeItem('errorMessage');
             } else {
                 router.replace('/404');
             }
