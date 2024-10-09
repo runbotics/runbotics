@@ -6,8 +6,9 @@ export const updateActionSchema = z
             .string()
             .startsWith('external.', { message: 'Must start with "external."' })
             .min(10)
-            .max(255),
-        label: z.string().min(1).max(255),
+            .max(255)
+            .trim(),
+        label: z.string().min(1).max(255).trim(),
         form: z.string(),
     })
     .partial();
