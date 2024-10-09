@@ -1,4 +1,4 @@
-import { ProcessEntity } from '#/database/process/process.entity';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Credential } from '../credential/credential.entity';
 

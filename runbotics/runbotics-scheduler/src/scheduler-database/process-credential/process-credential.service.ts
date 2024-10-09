@@ -3,7 +3,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from '@ne
 import { ProcessCredential } from './process-credential.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { CreateProcessCredentialDto } from './dto/create-process-credential.dto';
 import { Credential } from '../credential/credential.entity';
 

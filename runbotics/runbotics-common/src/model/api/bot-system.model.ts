@@ -1,8 +1,8 @@
 export interface IBotSystem {
-    name: BotSystem;
+    name: BotSystemType;
 }
 
-export enum BotSystem {
+export enum BotSystemType {
     WINDOWS = 'WINDOWS',
     LINUX = 'LINUX',
     MAC = 'MAC',

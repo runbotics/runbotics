@@ -10,7 +10,7 @@ import {
 
 import clsx from 'clsx';
 
-import { ACTION_GROUP, AllActionIds, BotSystem, FeatureKey, Role } from 'runbotics-common';
+import { ACTION_GROUP, AllActionIds, BotSystemType, FeatureKey, Role } from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -49,7 +49,7 @@ const ActionList: FC<ActionListProps> = ({
     ]);
     const actionSystemCheck = (actionSystem: string) =>
         process?.system?.name &&
-        process.system.name !== BotSystem.ANY &&
+        process.system.name !== BotSystemType.ANY &&
         actionSystem.toUpperCase() !== process.system.name;
 
     const ListItem = ({ item, disabled }: ListItemProps) => (

@@ -4,7 +4,7 @@ import { ScheduleProcess } from './schedule-process.entity';
 import { ScheduleProcessController } from './schedule-process.controller';
 import { ScheduleProcessService } from './schedule-process.service';
 import { QueueModule } from '#/queue/queue.module';
-import { ProcessModule } from '#/database/process/process.module';
+import { ProcessModule } from '#/scheduler-database/process/process.module';
 
 @Module({
     imports: [

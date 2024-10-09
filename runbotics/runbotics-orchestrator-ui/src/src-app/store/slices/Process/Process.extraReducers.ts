@@ -114,7 +114,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(deleteProcess.fulfilled, (state, action) => {
             state.all.loading = false;
-            delete state.all.byId[action.meta.arg.processId];
+            delete state.all.byId[action.meta.arg.resourceId];
         })
         .addCase(deleteProcess.rejected, (state) => {
             state.all.loading = false;
