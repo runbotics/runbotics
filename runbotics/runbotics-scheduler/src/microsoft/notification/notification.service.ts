@@ -63,7 +63,7 @@ export class NotificationService {
                 await this.queueService.createInstantJob({
                     process,
                     input,
-                    user: null,
+                    user: process?.createdBy || null,
                     trigger: { name: TriggerEvent.EMAIL },
                     triggerData: {
                         emailId,
@@ -196,16 +196,18 @@ export class NotificationService {
     }
 
     private parseMailBody(text: string): unknown {
-        return text
-            ?.split(/\r?\n/)
-            .reduce((acc, line, index) => {
-                if (!line) return acc;
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const [key, value, _] = line.split('=');
-                if (!key || !value)
-                    throw new Error(`Invalid variable format at line ${index + 1}`);
-                acc[key.trim()] = value.trim().replace(/['"]/g, '');
-                return acc;
-            }, {});
+        return {};
+        // @todo enable getting process variables from email attachment "variables.txt"
+        // return text
+        //     ?.split(/\r?\n/)
+        //     .reduce((acc, line, index) => {
+        //         if (!line) return acc;
+        //         // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        //         const [key, value, _] = line.split('=');
+        //         if (!key || !value)
+        //             throw new Error(`Invalid variable format at line ${index + 1}`);
+        //         acc[key.trim()] = value.trim().replace(/['"]/g, '');
+        //         return acc;
+        //     }, {});
     }
 }
