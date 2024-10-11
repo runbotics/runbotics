@@ -13,6 +13,7 @@ export const isCredentialFilterQuery = (
 && 'processId' in query && typeof query.processId === 'string';
 
 export enum CredentialOperationType {
+    CREATE = 'created',
     EDIT = 'edited',
     DELETE = 'deleted',
     CHANGE_ATTRIBUTE = 'changed attribute'
@@ -23,12 +24,14 @@ interface BaseCredentialChangeMailPayload {
     collectionCreatorEmail: string;
     collectionName: string;
     credentialName: string;
+    credentialOldName?: string | undefined;
 }
 
 interface BaseCredentialNotifyMailArgs {
     executor: IUser;
     collectionId: string;
     credentialName: string;
+    credentialOldName?: string | undefined;
 }
 
 interface OperationWithAttribute {
@@ -39,7 +42,8 @@ interface OperationWithAttribute {
 interface OperationWithoutAttribute {
     operationType:
         | CredentialOperationType.DELETE
-        | CredentialOperationType.EDIT;
+        | CredentialOperationType.EDIT
+        | CredentialOperationType.CREATE;
 }
 
 export type CredentialChangeMailPayload = BaseCredentialChangeMailPayload &
