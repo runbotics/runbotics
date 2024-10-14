@@ -21,6 +21,7 @@ import DeleteProcess from '#src-app/views/process/DeleteProcess';
 import EditProcessDialog from '#src-app/views/process/EditProcessDialog';
 
 import { ProcessesTabs } from '#src-app/views/process/ProcessBrowseView/Header';
+import { ProcessDetailsDialog } from '#src-app/views/process/ProcessDetailsDialog/ProcessDetailsDialog';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import { ProcessTileActionsProps } from './ProcessTileActions.types';
@@ -33,15 +34,18 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const searchParams = useSearchParams();
     const collectionId = searchParams.get('collectionId');
     const router = useRouter();
-    const isCollectionsTab = getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
+    const isCollectionsTab =
+        getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
-    const [isDialogVisible, setIsDialogVisible] = useState(false);
+    const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
+    const [isDetailsDialogVisible, setIsDetailsDialogVisible] = useState(false);
     const hasEditProcessAccess = useFeatureKey([FeatureKey.PROCESS_EDIT_INFO]);
     const hasDeleteProcessAccess = useFeatureKey([FeatureKey.PROCESS_DELETE]);
     const isAdmin = useRole([Role.ROLE_ADMIN]);
     const isProcessOwner = useOwner();
-    const hasModifyProcessAccess = isAdmin || isProcessOwner(process.createdBy?.id);
+    const hasModifyProcessAccess =
+        isAdmin || isProcessOwner(process.createdBy?.id);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -52,7 +56,13 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     };
 
     const handleOpenEditModal = () => {
-        setIsDialogVisible(true);
+        setIsDetailsDialogVisible(false);
+        setIsEditDialogVisible(true);
+        handleClose();
+    };
+
+    const handleOpenDetailsModal = () => {
+        setIsDetailsDialogVisible(true);
         handleClose();
     };
 
@@ -101,42 +111,71 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                 );
             }
             enqueueSnackbar(
-                translate('Component.Tile.Process.Update.Success', { name: process.name }),
+                translate('Component.Tile.Process.Update.Success', {
+                    name: process.name,
+                }),
                 { variant: 'success' }
             );
         } catch (e) {
             enqueueSnackbar(
-                translate('Component.Tile.Process.Update.Failed', { name: process.name }),
-                { variant: 'error' },
+                translate('Component.Tile.Process.Update.Failed', {
+                    name: process.name,
+                }),
+                { variant: 'error' }
             );
         }
     };
 
     return (
         <>
-            <If condition={hasModifyProcessAccess && (hasEditProcessAccess || hasDeleteProcessAccess)}>
-                <IconButton aria-label={translate('Component.Tile.Process.Settings.AriaLabel')} onClick={handleClick} >
+            <If
+                condition={
+                    hasModifyProcessAccess &&
+                    (hasEditProcessAccess || hasDeleteProcessAccess)
+                }
+            >
+                <IconButton
+                    aria-label={translate(
+                        'Component.Tile.Process.Settings.AriaLabel'
+                    )}
+                    onClick={handleClick}
+                >
                     <MoreVertIcon />
                 </IconButton>
-                <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={!!anchorEl} onClose={handleClose}>
+                <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={!!anchorEl}
+                    onClose={handleClose}
+                >
                     <If condition={hasEditProcessAccess}>
                         <MenuItem onClick={handleOpenEditModal}>
                             {translate('Common.Edit')}
                         </MenuItem>
                     </If>
                     <If condition={hasDeleteProcessAccess}>
-                        <DeleteProcess process={process} handleMenuClose={handleClose}/>
+                        <DeleteProcess
+                            process={process}
+                            handleMenuClose={handleClose}
+                        />
                     </If>
+                    <MenuItem onClick={handleOpenDetailsModal}>
+                        {translate('Common.Details')}
+                    </MenuItem>
                 </Menu>
             </If>
-            <If condition={hasEditProcessAccess && isDialogVisible}>
-                <EditProcessDialog
-                    open
-                    onClose={() => setIsDialogVisible(false)}
-                    onAdd={handleEdit}
-                    process={process}
-                />
-            </If>
+            <EditProcessDialog
+                open={hasEditProcessAccess && isEditDialogVisible}
+                onClose={() => setIsEditDialogVisible(false)}
+                onAdd={handleEdit}
+                process={process}
+            />
+            <ProcessDetailsDialog
+                process={process}
+                isOpen={isDetailsDialogVisible}
+                onClose={() => setIsDetailsDialogVisible(false)}
+            />
         </>
     );
 };

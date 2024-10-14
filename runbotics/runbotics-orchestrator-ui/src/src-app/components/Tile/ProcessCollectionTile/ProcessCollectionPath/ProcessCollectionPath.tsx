@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import { Box, Breadcrumbs, Typography } from '@mui/material';
+import { Box, Breadcrumbs, SxProps, Theme, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useTheme } from 'styled-components';
 
@@ -12,10 +12,12 @@ import { HomeBox, StyledLink } from './ProcessCollectionPath.styles';
 interface ProcessCollectionPathProps {
     breadcrumbs: CollectionBreadcrumb[];
     currentCollectionId: string;
+    sx?: SxProps<Theme>;
+    hrefPathname?: string;
 }
 
 const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
-    breadcrumbs, currentCollectionId
+    breadcrumbs, currentCollectionId, sx, hrefPathname
 }) => {
     const router = useRouter();
     const theme = useTheme();
@@ -23,11 +25,11 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
     const isRootFolder = breadcrumbs.length === 0;
 
     return (
-        <Box pb={2}>
+        <Box pb={2} sx={sx}>
             <Breadcrumbs>
                 <StyledLink
                     href={{
-                        pathname: 'collections',
+                        pathname: hrefPathname || 'collections',
                     }}
                 >
                     <HomeBox>
@@ -44,7 +46,7 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
                     <StyledLink
                         key={breadcrumb.name}
                         href={{
-                            pathname: router.pathname,
+                            pathname: hrefPathname || router.pathname,
                             query: {
                                 ...router.query,
                                 ...(breadcrumb.collectionId  && { collectionId: breadcrumb.collectionId }),
