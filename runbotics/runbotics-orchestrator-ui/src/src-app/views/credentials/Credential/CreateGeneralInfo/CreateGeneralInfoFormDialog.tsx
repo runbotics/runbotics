@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { Grid, TextField, Typography, MenuItem, SelectChangeEvent } from '@mui/material';
 
@@ -12,16 +12,12 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
 import { credentialsActions } from '#src-app/store/slices/Credentials';
-import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
+import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
 import GeneralInfoDropdown from './CreateGeneralInfoDropdown';
 import { CreateCredentialDto } from '../Credential.types';
-import {
-    getInitialCredentialData,
-    getInitialFormValidationState,
-    inputErrorMessages
-} from '../EditCredential/EditCredential.utils';
+import { getInitialCredentialData, getInitialFormValidationState, inputErrorMessages } from '../EditCredential/EditCredential.utils';
 
 interface CreateGeneralInfoProps {
     onClose: () => void;
@@ -40,6 +36,10 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
 
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
     const { credentialTemplates } = useSelector(credentialTemplatesSelector);
+
+    useEffect(() => {
+        dispatch(credentialTemplatesActions.fetchAllTemplates());
+    }, []);
 
     const isFormValid = () => Object.values(formValidationState).every(Boolean);
 
@@ -80,17 +80,21 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
             });
     };
 
-    const collectionsToChoose = credentialCollections ? credentialCollections.map(collection => (
-        <MenuItem key={collection.id} value={collection.id}>
-            <Typography>{collection.name}</Typography>
-        </MenuItem>
-    )) : null;
+    const collectionsToChoose = credentialCollections
+        ? credentialCollections.map(collection => (
+            <MenuItem key={collection.id} value={collection.id}>
+                <Typography>{collection.name}</Typography>
+            </MenuItem>
+        ))
+        : null;
 
-    const templatesToChoose = credentialTemplates ? credentialTemplates.map(template => (
-        <MenuItem key={template.id} value={template.id}>
-            <Typography>{template.name}</Typography>
-        </MenuItem>
-    )) : null;
+    const templatesToChoose = credentialTemplates
+        ? credentialTemplates.map(template => (
+            <MenuItem key={template.id} value={template.id}>
+                <Typography>{template.name}</Typography>
+            </MenuItem>
+        ))
+        : null;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -154,10 +158,7 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
                                 value={credentialFormState.name}
                                 onChange={handleInputChange}
                                 error={formValidationState.edited && !formValidationState.name}
-                                helperText={
-                                    formValidationState.edited &&
-                                    !formValidationState.name &&
-                                    inputErrorMessages.NAME_IS_REQUIRED}
+                                helperText={formValidationState.edited && !formValidationState.name && inputErrorMessages.NAME_IS_REQUIRED}
                             ></TextField>
                         </Grid>
                         <Grid item xs={12}>

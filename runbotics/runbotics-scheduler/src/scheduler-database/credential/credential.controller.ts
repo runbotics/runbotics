@@ -35,7 +35,7 @@ export class CredentialController {
   @Get('credentials/:id')
   findOneUserAccessible(@Param('id') id: string, @User() user: IUser) {
     this.logger.log('REST request to get credential by id ' + id);
-    return this.credentialService.findOneAccessibleById(id, user.tenantId);
+    return this.credentialService.findOneAccessibleById(id, user.tenantId, user);
   }
 
   @Patch(COLLECTION_URL_PARTIAL + ':id')

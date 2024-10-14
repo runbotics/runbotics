@@ -20,7 +20,6 @@ export interface CredentialTileProps {
     credential: BasicCredentialDto;
     collection: BasicCredentialsCollectionDto;
     templateName: string;
-    collectionName: string;
     loading: boolean;
     collectionId: string;
     handleEditDialogOpen(id: string): void;
@@ -31,7 +30,6 @@ const CredentialTile: FC<CredentialTileProps> = ({
     credential,
     collection,
     templateName,
-    collectionName,
     loading,
     collectionId,
     handleEditDialogOpen,
@@ -53,7 +51,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
     };
 
     return (
-        <Tile leftBorderColor={`4px solid ${collectionColors[collection.color].hex}`} minHeight='min-content'>
+        <Tile leftBorderColor={`4px solid ${collectionColors[collection?.color].hex}`} minHeight='min-content'>
             <CredentialCard collectionColor={collectionColors[collection.color].hex} onClick={handleClick}>
                 <Typography variant="h4" sx={{ paddingBottom: '16px' }}>
                     {credential.name}
@@ -65,20 +63,10 @@ const CredentialTile: FC<CredentialTileProps> = ({
                 <If condition={!collectionId}>
                     <CredentialCollection>
                         <FolderOpenIcon sx={{ paddingRight: '4px' }} />
-                        {collectionName}
+                        {collection.name}
                     </CredentialCollection>
                 </If>
                 <If condition={isOwner || hasEditAccess}>
-                    {/* <Box alignSelf="flex-end">
-                        <IconButton
-                            onClick={e => {
-                                e.stopPropagation();
-                                handleDeleteDialogOpen(credential.id);
-                            }}
-                        >
-                            <DeleteOutlineOutlinedIcon />
-                        </IconButton>
-                    </Box> */}
                     <MenuItems
                         itemId={credential?.id}
                         handleOpenEditDialog={handleEditDialogOpen}

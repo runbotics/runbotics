@@ -4,7 +4,6 @@ import { Box } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
-
 import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 import If from '#src-app/components/utils/If';
@@ -13,7 +12,6 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
 import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
-import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
 import { CredentialsModals } from './CredentialModals';
 import { BasicCredentialDto } from '../../Credential/Credential.types';
@@ -31,7 +29,6 @@ const CredentialsGridView = () => {
 
     const { all: credentials } = useSelector(credentialsSelector);
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
-    const { credentialTemplates } = useSelector(credentialTemplatesSelector);
     const [loading, setLoading] = useState(true);
 
     const pageFromUrl = searchParams.get('page');
@@ -40,7 +37,7 @@ const CredentialsGridView = () => {
     const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
 
     const [filteredCredentials, setFilteredCredentials] = useState<BasicCredentialDto[]>([]);
-    const currentPageCredentials = filteredCredentials ? getFilterItemsForPage(filteredCredentials, page, pageSize) : [];
+    const currentPageCredentials = filteredCredentials ? getFilterItemsForPage(filteredCredentials, page, pageSize) : null;
 
     const [currentDialogCredential, setCurrentDialogCredential] = useState<BasicCredentialDto>(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -67,13 +64,12 @@ const CredentialsGridView = () => {
 
     useEffect(() => {
         const fetchAllCollections = dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
-        const fetchAllTemplates = dispatch(credentialTemplatesActions.fetchAllTemplates());
 
         const fetchCredentials = collectionId
-            ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
+            ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials` }))
             : dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
 
-        Promise.allSettled([fetchAllCollections, fetchAllTemplates, fetchCredentials]).then(() => {
+        Promise.allSettled([fetchAllCollections, fetchCredentials]).then(() => {
             setLoading(false);
         });
     }, []);
@@ -86,8 +82,7 @@ const CredentialsGridView = () => {
                     key={credential.id}
                     credential={credential}
                     collection={credentialCollections.find(collection => credential.collectionId === collection.id)}
-                    templateName={credentialTemplates.find(template => template.id === credential.templateId)?.name}
-                    collectionName={credentialCollections.find(collection => collection.id === credential.collectionId)?.name}
+                    templateName={credential.template.name}
                     loading={loading}
                     collectionId={collectionId}
                     handleEditDialogOpen={handleEditDialogOpen}

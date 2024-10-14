@@ -14,18 +14,18 @@ import { ProcessCredential } from '../process-credential/process-credential.enti
 import { MailService } from '#/mail/mail.service';
 import { CredentialNotifyMailArgs, CredentialOperationType } from './credential.utils';
 
-const relations = ['attributes'];
+const relations = ['attributes', 'createdBy'];
 
 @Injectable()
 export class CredentialService {
-  constructor(
-    @InjectRepository(Credential)
-    private readonly credentialRepo: Repository<Credential>,
-    private readonly templateService: CredentialTemplateService,
-    private readonly secretService: SecretService,
-    private readonly collectionService: CredentialCollectionService,
-    private readonly mailService: MailService,
-  ) { }
+    constructor(
+        @InjectRepository(Credential)
+        private readonly credentialRepo: Repository<Credential>,
+        private readonly templateService: CredentialTemplateService,
+        private readonly secretService: SecretService,
+        private readonly collectionService: CredentialCollectionService,
+        private readonly mailService: MailService
+    ) {}
 
   async create(credentialDto: CreateCredentialDto, collectionId: string, user: IUser) {
     const template = await this.templateService.findOneById(credentialDto.templateId);
@@ -36,7 +36,7 @@ export class CredentialService {
 
     const tenantId = user.tenantId;
 
-    const attributes = await Promise.all(
+        const attributes = await Promise.all(
       template.attributes.map(async (attribute) => {
         const encryptedValue = this.secretService.encrypt('', tenantId);
         const secretEntity: Secret = {
@@ -70,11 +70,12 @@ export class CredentialService {
       attributes,
     });
 
-    return this.credentialRepo.save(credential)
-      .catch(async (error) => {
-        await this.validateName(credentialDto.name, collectionId, tenantId);
+    this.credentialRepo.save(credential).catch(async error => {
+      await this.validateName(credentialDto.name, collectionId, tenantId);
         throw new BadRequestException(error.message);
-      });
+    });
+
+    return this.mapToFrontDto(credential, user);
   }
 
   async findAllAccessible(user: IUser) {
@@ -85,23 +86,28 @@ export class CredentialService {
     }
 
     const credentials = accessibleCollections.flatMap((collection) => collection.credentials)
-      .map(credential => ({
-        ...credential,
-        createdBy: {
-          id: credential.createdBy.id,
-          login: credential.createdBy.login,
-        },
-        collection: {
-          id: credential.collection.id,
-          name: credential.collection.name
-        }
-      }));
+    .map(credential => ({
+      ...credential,
+      createdBy: {
+        id: credential.createdBy.id,
+        login: credential.createdBy.login,
+      },
+      collection: {
+        id: credential.collection.id,
+        name: credential.collection.name
+      }
+    }));
+
+    const credentials2 = await Promise.all(accessibleCollections
+      .flatMap(collection => collection.credentials)
+      .map(async (credential) => await this.mapToFrontDto(credential, user))
+    );
 
     if (!credentials.some((credential) => Boolean(credential))) {
       return [];
     }
 
-    return credentials;
+    return credentials2;
   }
 
   async findAllAccessibleByTemplateAndProcess(templateName: string, processId: string, user: IUser) {
@@ -153,7 +159,7 @@ export class CredentialService {
     return credentials;
   }
 
-  async findByCriteria(tenantId: string, criteria: Partial<Credential>) {
+  async findByCriteria(tenantId: string, criteria: Partial<Credential>, ) {
     return this.credentialRepo.find({
       where: {
         tenantId,
@@ -172,10 +178,10 @@ export class CredentialService {
 
     const credentials = await this.findByCriteria(user.tenantId, { collectionId });
 
-    return credentials;
+    return Promise.all(credentials.map(credential => this.mapToFrontDto(credential, user)));
   }
 
-  async findOneAccessibleById(id: string, tenantId: string) {
+  async findOneAccessibleById(id: string, tenantId: string, user: IUser) {
     const result = await this.credentialRepo.findOne({
       where: {
         id,
@@ -188,8 +194,8 @@ export class CredentialService {
       throw new NotFoundException(`Could not find credential with id ${id}`);
     }
 
-    return result;
-  }
+      return this.mapToFrontDto(result, user);
+    }
 
   async findById(id: string, tenantId: string) {
     const credential = await this.credentialRepo.findOne({
@@ -208,7 +214,7 @@ export class CredentialService {
   }
 
   async updateById(id: string, credentialDto: UpdateCredentialDto, user: IUser) {
-    const credential = await this.findOneAccessibleById(id, user.tenantId);
+    const credential = await this.findOneAccessibleById(id, user.tenantId, user);
 
     if (!credential) {
       throw new NotFoundException(`Could not find credential with id ${id}`);
@@ -243,7 +249,8 @@ export class CredentialService {
   }
 
   async removeById(id: string, user: IUser) {
-    const credential = await this.findOneAccessibleById(id, user.tenantId);
+    const credential = await this.findById(id, user.tenantId);
+
     return this.credentialRepo.remove(credential).then((credential) => {
         this.notifyCredentialCollectionOwner({
             executor: user,
@@ -255,13 +262,13 @@ export class CredentialService {
   }
 
   async updateAttribute(id: string, attributeName: string, attributeDto: UpdateAttributeDto, user: IUser) {
-    const credential = await this.findOneAccessibleById(id, user.tenantId);
+    const credential = await this.findOneAccessibleById(id, user.tenantId, user);
 
     if (!credential) {
       throw new NotFoundException(`Could not find credential with id ${id}`);
     }
 
-    const attribute = credential.attributes.find((attr) => attr.name === attributeName);
+        const attribute = credential.attributes.find(attr => attr.name === attributeName);
 
     const encryptedValue = this.secretService.encrypt('', user.tenantId);
     const secretEntity: Secret = {
@@ -279,9 +286,9 @@ export class CredentialService {
       throw new NotFoundException(`Could not find attribute with name ${attributeName}`);
     }
 
-    const updatedAttribute = {
-      ...attribute,
-      ...attributeDto,
+        const updatedAttribute = {
+            ...attribute,
+            ...attributeDto,
       secret,
     };
 
@@ -356,4 +363,28 @@ export class CredentialService {
           });
       }
   }
+
+    private async mapToFrontDto(credential: Credential, user: IUser) {
+        if (!credential) return;
+
+        const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
+        const template = await this.templateService.findOneById(credential.templateId);
+
+        return {
+            ...credential,
+            createdBy: {
+              id: credential.createdBy.id,
+              login: credential.createdBy.login
+            },
+            template: {
+                id: template.id,
+                name: template.name
+            },
+            collection: {
+                id: collection.id,
+                name: collection.name,
+                color: collection.color
+            }
+        };
+    }
 }

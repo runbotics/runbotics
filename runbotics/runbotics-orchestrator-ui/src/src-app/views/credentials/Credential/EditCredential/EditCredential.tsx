@@ -51,12 +51,12 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
                     <StyledGrid container justifyContent="space-between" my={2} ml={2} gap={2} width={'96%'}>
                         <Header
                             collectionId={credential.collectionId}
-                            collectionName={currentCredentialCollection.name}
+                            collectionName={credential.collection.name}
                         />
                         <GeneralInfo
                             credential={credential}
                             collectionColor={currentCredentialCollection.color}
-                            collectionName={currentCredentialCollection.name}
+                            collectionName={credential.collection.name}
                         />
                         <Grid container>
                             <Grid item xs={12}>
