@@ -247,19 +247,19 @@
    *
    * For more details and instructions, see this article:  https://rushjs.io/pages/advanced/installation_variants/
    */
-    "variants": [
-        // {
-        //   /**
-        //    * The folder name for this variant.
-        //    */
-        //   "variantName": "old-sdk",
-        // 
-        //   /**
-        //    * An informative description
-        //    */
-        //   "description": "Build this repo using the previous release of the SDK"
-        // }
-    ],
+    // "variants": [
+    //     {
+    //       /**
+    //        * The folder name for this variant.
+    //        */
+    //       "variantName": "old-sdk",
+
+    //       /**
+    //        * An informative description
+    //        */
+    //       "description": "Build this repo using the previous release of the SDK"
+    //     }
+    // ],
     /**
    * Rush can collect anonymous telemetry about everyday developer activity such as
    * success/failure of installs, builds, and other operations.  You can use this to identify
