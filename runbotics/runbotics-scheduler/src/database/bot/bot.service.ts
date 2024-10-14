@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { BotEntity } from './bot.entity';
 import {
     BotStatus,
-    BotSystemType,
+    BotSystemType, 
     DefaultCollections,
     IBot,
     IBotCollection,
