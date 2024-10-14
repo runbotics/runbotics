@@ -2,7 +2,10 @@ name: Update pnpm-lock.yml
 
 on:
   pull_request:
-    types: [opened]
+    branches:
+      - 'dependabot/**'
+    types:
+      - opened
 
 env:
   RUSH: node ./common/scripts/install-run-rush.js
@@ -10,7 +13,6 @@ env:
 
 jobs:
   perform-rush-update:
-    if: ${{ startsWith(github.ref, 'refs/heads/dependabot/') }}
     runs-on: ubuntu-latest
     defaults:
       run:
