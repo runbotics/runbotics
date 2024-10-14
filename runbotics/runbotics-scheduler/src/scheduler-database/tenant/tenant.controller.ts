@@ -10,7 +10,7 @@ import { FeatureKey, Tenant } from 'runbotics-common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 import { Logger } from '#/utils/logger';
 import { Public } from '#/auth/guards';
 import { GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';

@@ -3,7 +3,7 @@ import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatu
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Logger } from '#/utils/logger';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 
 import { TagService } from './tag.service';
 import { Tenant } from 'runbotics-common';
@@ -16,7 +16,7 @@ export class TagController {
     private readonly logger = new Logger(TagController.name);
 
     constructor(private readonly tagService: TagService) {}
-    
+
     @Get()
     getAllTags(
         @Param('tenantId', ParseUUIDPipe) tenantId: Tenant['id'],
@@ -34,7 +34,7 @@ export class TagController {
         this.logger.log(`REST request to get one tag by id: ${id}`);
 
         const foundTag = await this.tagService.getById(id, user);
-        
+
         if (!foundTag) throw new BadRequestException(`Tag with id ${id} not found`);
 
         return this.tagService.getById(id, user);

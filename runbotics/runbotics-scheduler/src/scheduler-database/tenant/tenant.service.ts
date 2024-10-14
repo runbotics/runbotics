@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, MoreThanOrEqual, Repository } from 'typeorm';
 import dayjs from 'dayjs';
 
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { Logger } from '#/utils/logger';
 
 import { Tenant } from './tenant.entity';
@@ -35,12 +35,12 @@ export class TenantService {
                 ...tenant,
                 createdByUser: {
                     id: tenant.createdByUser.id,
-                    login: tenant.createdByUser.login
+                    email: tenant.createdByUser.email
                 }
             })));
     }
 
-    async create(tenantDto: CreateTenantDto, requester: UserEntity): Promise<Tenant> {
+    async create(tenantDto: CreateTenantDto, requester: User): Promise<Tenant> {
         const tenantByName = await this.tenantRepository.findOneBy({ name: tenantDto.name });
         if (tenantByName) throw new BadRequestException('Name already exist', 'NameExist');
 
@@ -56,7 +56,7 @@ export class TenantService {
     async update(
         tenantDto: UpdateTenantDto,
         id: string,
-        requester: UserEntity
+        requester: User
     ): Promise<Tenant> {
         const tenantByName = await this.tenantRepository.findOneBy({ name: tenantDto.name });
         if (tenantByName) throw new BadRequestException('Name already exist', 'NameExist');

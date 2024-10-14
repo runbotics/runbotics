@@ -1,4 +1,4 @@
-import { IUser } from 'runbotics-common';
+import { User } from '../user/user.entity';
 
 interface CredentialFilterQuery {
     templateName: string;
@@ -28,7 +28,7 @@ interface BaseCredentialChangeMailPayload {
 }
 
 interface BaseCredentialNotifyMailArgs {
-    executor: IUser;
+    executor: User;
     collectionId: string;
     credentialName: string;
     credentialOldName?: string | undefined;

@@ -4,7 +4,7 @@ import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/com
 import { randomUUID } from 'crypto';
 import { ScheduleProcess } from './schedule-process.entity';
 import { CreateScheduleProcessDto } from './dto/create-schedule-process.dto';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueueService } from '#/queue/queue.service';
@@ -44,7 +44,7 @@ export class ScheduleProcessService {
         return this.scheduleProcessRepository.findOne({ where: { id }, relations });
     }
 
-    async create(scheduleProcessDto: CreateScheduleProcessDto, user: UserEntity) {
+    async create(scheduleProcessDto: CreateScheduleProcessDto, user: User) {
         const process = await this.processService
             .findByIdAndTenantId(scheduleProcessDto.process.id, user.tenantId)
             .catch(() => {

@@ -1,7 +1,7 @@
-import { UserDto } from './user.model';
+import { User } from './user.model';
 
 export interface Guest {
     ipHash: string;
-    user: UserDto;
+    user: User;
     executionsCount: number;
 }

@@ -1,11 +1,10 @@
 import { IScheduleProcess } from './schedule-process.model';
-import { UserDto } from './user.model';
+import { User } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
 import { ProcessOutput } from './process-output.model';
 import { ProcessCollection } from './process-collection.model';
-import { NotificationProcess } from './notification-process.model';
 
 export interface IProcess {
     id?: number;
@@ -20,13 +19,12 @@ export interface IProcess {
     lastRun?: string | null;
     executionInfo?: string | null;
     system?: IBotSystem | null;
-    createdBy?: UserDto | null;
+    createdBy?: User | null;
     schedules?: Omit<IScheduleProcess, 'process'>[] | null;
     botCollection?: IBotCollection | null;
     processCollection?: ProcessCollection | null;
-    editor?: UserDto | null;
+    editor?: User | null;
     tags?: Tag[];
-    notifications?: NotificationProcess[];
     output?: ProcessOutput;
 }
 

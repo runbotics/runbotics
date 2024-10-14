@@ -1,6 +1,6 @@
 import { IProcess } from "./process.model";
 import { IBot } from "./bot.model";
-import { UserDto } from "./user.model";
+import { User } from "./user.model";
 import { ITriggerEvent } from './trigger-event.model';
 
 export interface IProcessInstance {
@@ -14,7 +14,7 @@ export interface IProcessInstance {
     input?: string | null;
     output?: string | null;
     step?: string | null;
-    user?: UserDto;
+    user?: User;
     process?: IProcess;
     bot?: IBot;
     error?: string | null;

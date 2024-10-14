@@ -8,8 +8,6 @@ import { CredentialCollectionUser } from '../credential-collection-user/credenti
 
 @Entity({ name: 'jhi_user' })
 export class User {
-    login = 'login'; // TEMPORARY FOR COMPATIBILITY
-
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number;
 

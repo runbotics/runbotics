@@ -4,7 +4,7 @@ import { CredentialCollectionController } from './credential-collection.controll
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CredentialCollection } from './credential-collection.entity';
 import { CredentialCollectionUserModule } from '../credential-collection-user/credential-collection-user.module';
-import { UserModule } from '#/database/user/user.module';
+import { UserModule } from '#/scheduler-database/user/user.module';
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 
 @Module({

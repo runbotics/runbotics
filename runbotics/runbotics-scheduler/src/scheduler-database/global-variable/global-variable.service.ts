@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Logger } from '#/utils/logger';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
@@ -24,7 +24,7 @@ export class GlobalVariableService {
         private readonly processRepository: Repository<ProcessEntity>,
     ) {}
 
-    getAll(tenantId: string, user: UserEntity) {
+    getAll(tenantId: string, user: User) {
         const findOptions: FindOptionsWhere<GlobalVariable> = {
             tenantId,
             ...(!isTenantAdmin(user) && { creator: { id: user.id } })
@@ -36,7 +36,7 @@ export class GlobalVariableService {
                 .map(globalVariable => this.formatUserDTO(globalVariable)));
     }
 
-    getById(tenantId: string, user: UserEntity, id: number) {
+    getById(tenantId: string, user: User, id: number) {
         const findOptions: FindOptionsWhere<GlobalVariable> = {
             tenantId, id,
             ...(!isTenantAdmin(user) && { creator: { id: user.id } })
@@ -49,7 +49,7 @@ export class GlobalVariableService {
 
     async create(
         tenantId: string,
-        user: UserEntity,
+        user: User,
         globalVariableDto: CreateGlobalVariableDto
     ) {
         const existingGlobalVariable = await this.globalVariableRepository
@@ -75,7 +75,7 @@ export class GlobalVariableService {
 
     async update(
         tenantId: string,
-        user: UserEntity,
+        user: User,
         globalVariableDto: UpdateGlobalVariableDto,
         id: number
     ) {
@@ -100,7 +100,7 @@ export class GlobalVariableService {
             .then(this.formatUserDTO);
     }
 
-    async delete(tenantId: string, user: UserEntity, id: number) {
+    async delete(tenantId: string, user: User, id: number) {
         const processesAssociatedWithGlobalVariable = await this.processRepository
             .findBy({ globalVariables: { id } });
 
@@ -123,10 +123,22 @@ export class GlobalVariableService {
     }
 
     private formatUserDTO(globalVariable: GlobalVariable | null) {
-        return globalVariable ? {
-            ...globalVariable,
-            ...(globalVariable.user && { user: { id: globalVariable.user.id, login: globalVariable.user.login } }),
-            ...(globalVariable.creator && { creator: { id: globalVariable.creator.id, login: globalVariable.creator.login } })
-        } : null;
+        return globalVariable
+            ? {
+                  ...globalVariable,
+                  ...(globalVariable.user && {
+                      user: {
+                          id: globalVariable.user.id,
+                          email: globalVariable.user.email,
+                      },
+                  }),
+                  ...(globalVariable.creator && {
+                      creator: {
+                          id: globalVariable.creator.id,
+                          email: globalVariable.creator.email,
+                      },
+                  }),
+              }
+            : null;
     }
 }

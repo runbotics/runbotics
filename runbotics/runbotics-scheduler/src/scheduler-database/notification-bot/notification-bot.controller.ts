@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Par
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 
 import { createNotificationBotSchema, CreateNotificationBotDto } from './dto/create-notification-bot.dto';
 import { NotificationBotService } from './notification-bot.service';
@@ -25,7 +25,7 @@ export class NotificationBotController {
         @User() user: UserEntity,
     ) {
         this.logger.log('REST request to get all bot notifications by bot id: ', botId);
-        return this.notificationBotService.getAllByBotId(botId, user);
+        return this.notificationBotService.getAllByBotIdAndUser(botId, user);
     }
 
     @Post()

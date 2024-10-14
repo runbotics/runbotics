@@ -15,7 +15,7 @@ import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { CreateScheduleProcessDto, createScheduleProcessSchema } from './dto/create-schedule-process.dto';
 import { ScheduleProcessService } from './schedule-process.service';

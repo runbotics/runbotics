@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Par
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 
 import { CreateNotificationProcessDto, createNotificationProcessSchema } from './dto/create-notification-process.dto';
 import { NotificationProcessService } from './notification-process.service';
@@ -24,7 +24,7 @@ export class NotificationProcessController {
         @User() user: UserEntity,
     ) {
         this.logger.log('REST request to get all process notifications by process id: ', processId);
-        return this.notificationProcessService.getAllByProcessId(processId, user);
+        return this.notificationProcessService.getAllByProcessIdAndUser(processId, user);
     }
 
     @Post()

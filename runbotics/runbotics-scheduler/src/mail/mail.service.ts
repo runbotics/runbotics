@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
-import { IBot, IProcess, IProcessInstance, IUser, Role } from 'runbotics-common';
+import { IProcess, IProcessInstance, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 import { BotService } from '#/scheduler-database/bot/bot.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { mergeArraysWithoutDuplicates } from '#/utils/mergeArrays';
 import { ServerConfigService } from '#/config/server-config';
 import { CredentialChangeMailPayload, CredentialOperationType } from '#/scheduler-database/credential/credential.utils';
+import { User } from '#/scheduler-database/user/user.entity';
+import { NotificationProcessService } from '#/scheduler-database/notification-process/notification-process.service';
+import { BotEntity } from '#/database/bot/bot.entity';
+import { NotificationBotService } from '#/scheduler-database/notification-bot/notification-bot.service';
 
 export type SendMailInput = {
     to?: string;
@@ -30,6 +34,8 @@ export class MailService {
         private readonly mailerService: MailerService,
         private readonly botService: BotService,
         private readonly processService: ProcessService,
+        private readonly notificationProcessService: NotificationProcessService,
+        private readonly notificationBotService: NotificationBotService,
         private readonly serverConfigService: ServerConfigService
     ) {}
 
@@ -70,10 +76,14 @@ export class MailService {
         });
     }
 
-    public async sendBotDisconnectionNotificationMail(bot: IBot, installationId: string) {
+    public async sendBotDisconnectionNotificationMail(bot: BotEntity, installationId: string) {
         const disconnectedBot = await this.botService.findById(bot.id);
         const botAssignedUserEmail = disconnectedBot.user.email;
-        const subscribers = disconnectedBot.notifications.map(notification => notification.user);
+        const subscribers = await this.notificationBotService
+            .getAllByBotId(disconnectedBot.id)
+            .then((notifications) =>
+                notifications.map((notification) => notification.user)
+            );
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
@@ -100,7 +110,11 @@ export class MailService {
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
         const failedProcess = await this.processService.findById(process.id);
         const processCreatorEmail = failedProcess.createdBy.email;
-        const subscribers = failedProcess.notifications.map(notification => notification.user);
+        const subscribers = await this.notificationProcessService
+            .getAllByProcessId(failedProcess.id)
+            .then((notifications) =>
+                notifications.map((notification) => notification.user)
+            );
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
@@ -157,7 +171,7 @@ export class MailService {
         await this.sendMail({ ...emailInput, bcc: emailAddresses });
     }
 
-    private async handlePublicProcessesAndBotsNotificationEmail(subscribers: IUser[], emailInput: SendMailInput, assignedUserEmail: string) {
+    private async handlePublicProcessesAndBotsNotificationEmail(subscribers: User[], emailInput: SendMailInput, assignedUserEmail: string) {
         const subscribersAddresses =
             subscribers && subscribers.length
                 ? subscribers.map(({ email }) => email)

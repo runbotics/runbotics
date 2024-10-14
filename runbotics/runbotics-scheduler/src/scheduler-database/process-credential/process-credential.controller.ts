@@ -4,7 +4,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post
 import { ProcessCredentialService } from './process-credential.service';
 import { IProcess } from 'runbotics-common';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { CreateProcessCredentialDto, createProcessCredentialSchema } from './dto/create-process-credential.dto';
 
