@@ -28,6 +28,7 @@ import useTranslations, {
 import { useDispatch, useSelector } from '#src-app/store';
 import { register } from '#src-app/store/slices/Auth/Auth.thunks';
 import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants/Tenants.slice';
+import { setCustomError } from '#src-app/store/slices/Views/httpErrorSlice';
 import { Language } from '#src-app/translations/translations';
 import { SOURCE_PAGE, TRACK_LABEL, USER_TYPE, ENTERED_PAGE, ERROR_REASON } from '#src-app/utils/Mixpanel/types';
 
@@ -108,8 +109,7 @@ const RegisterPage: FC = () => {
                 if (error.statusCode === 400) {
                     const title = translate('Error.InviteCode.View.Title');
                     const message = translate('Error.InviteCode.View.Message');
-                    sessionStorage.setItem('errorTitle', title);
-                    sessionStorage.setItem('errorMessage', message);
+                    dispatch(setCustomError({ title, message }));
                     router.push('/error');
                 } else {
                     router.push(`/${error.statusCode}`);

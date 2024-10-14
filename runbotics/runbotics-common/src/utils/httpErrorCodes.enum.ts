@@ -1,7 +1,7 @@
 export enum HttpErrorCodes {
-    BadRequest = 400,
-    NotFound = 404,
-    Forbidden = 403,
-    InternalServerError = 500,
-    BadGateway = 502
+    BAD_REQUEST = 400,
+    NOT_FOUND = 404,
+    FORBIDDEN = 403,
+    INTERNAL_SERVER_ERROR = 500,
+    BAD_GATEWAY = 502
 }

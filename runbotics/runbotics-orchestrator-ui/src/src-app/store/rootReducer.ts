@@ -12,6 +12,7 @@ import { credentialsReducer as credentials } from './slices/Credentials';
 import { credentialTemplatesReducer as credentialTemplates } from './slices/CredentialTemplates';
 import { globalVariableReducer as globalVariable } from './slices/GlobalVariable';
 import { guestsReducer as guests } from './slices/Guests';
+import httpErrorReducer from './slices/Views/httpErrorSlice';
 import { processReducer as process } from './slices/Process';
 import { processCollectionReducer as processCollection } from './slices/ProcessCollection';
 import { processInstanceReducer as processInstance } from './slices/ProcessInstance';
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
     form,
     globalVariable,
     guests,
+    httpErrorReducer,
     process,
     processCollection,
     processInstance,

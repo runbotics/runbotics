@@ -15,8 +15,11 @@ import Logo from '#src-app/components/utils/Logo';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { useDispatch } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
+
+import { clearError } from '#src-app/store/slices/Views/httpErrorSlice';
+import { RootState } from '#src-app/store';
 
 import BackgroundLogo from './BackgroundLogo';
 
@@ -41,11 +44,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
     },
 }));
 
-interface ErrorViewProps {
-    errorCode?: number;
-    title?: string;
-    message?: string;
-}
+interface ErrorViewProps {}
 
 const ErrorView: FC<ErrorViewProps> = () => {
     const [errorTitle, setErrorTitle] = useState<string | null>(null);
@@ -58,7 +57,11 @@ const ErrorView: FC<ErrorViewProps> = () => {
     const { translate } = useTranslations();
     const router = useRouter();
 
-
+    const { code, title, message } = useSelector((state: RootState) => ({
+        code: state.httpErrorReducer.code,
+        title: state.httpErrorReducer.title,
+        message: state.httpErrorReducer.message,
+    }));
 
     useEffect(() => {
         const { code } = router.query;
@@ -66,17 +69,18 @@ const ErrorView: FC<ErrorViewProps> = () => {
         if (!isNaN(Number(code)) && Object.values(HttpErrorCodes).includes(Number(code))) {
             setErrorCode(Number(code));
         } else {
-            const storedTitle = sessionStorage.getItem('errorTitle');
-            const storedMessage = sessionStorage.getItem('errorMessage');
-            if (storedTitle && storedMessage) {
-                setErrorTitle(storedTitle);
-                setErrorMessage(storedMessage);
-                sessionStorage.removeItem('errorTitle');
-                sessionStorage.removeItem('errorMessage');
+            if (title && message) {
+                setErrorTitle(title);
+                setErrorMessage(message);
             } else {
                 router.replace('/404');
             }
         }
+
+        return () => {
+            dispatch(clearError());
+        };
+
     }, [router.query]);
 
     useEffect(() => {
@@ -87,7 +91,7 @@ const ErrorView: FC<ErrorViewProps> = () => {
     }, []);
 
     if (!errorCode && !errorTitle && !errorMessage) {
-        return null;
+        return <></>;
     }
 
     const getTranslationKey = (code: HttpErrorCodes, type: 'Meta.Title' | 'View.Title' | 'View.Message') => {
@@ -103,7 +107,7 @@ const ErrorView: FC<ErrorViewProps> = () => {
             <BackgroundLogo position='top' />
             <Container maxWidth='lg'>
                 <Box mt={0} display='flex' justifyContent='center'>
-                    <Logo height={mobileDevice ? 100 : 200} white />
+                    <Logo height={errorCode && !isNaN(errorCode) ? 100 : mobileDevice ? 100 : 200 } white />
                 </Box>
                 {errorCode && !isNaN(errorCode) && (
                     <Typography
@@ -122,9 +126,13 @@ const ErrorView: FC<ErrorViewProps> = () => {
                 )}
                 <Typography
                     align='center'
-                    variant={mobileDevice ? 'h4' : 'h1'}
                     color='textPrimary'
-                    sx={{ fontWeight: 600, fontSize: mobileDevice ? '24px' : '36px' }}
+                    sx={{ 
+                        fontWeight: 600, 
+                        fontSize: mobileDevice ? '24px' : '40px',
+                        lineHeight: '47px',
+                        paddingBottom: '15px'
+                    }}
                 >
                     {viewTitle}
                 </Typography>
