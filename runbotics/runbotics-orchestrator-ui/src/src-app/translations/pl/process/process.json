@@ -504,6 +504,8 @@
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Key": "Klucz",
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value": "Wartość",
     "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Upuść plik tutaj lub kliknij, aby wybrać plik (maksimum 4mb)",
+    "Process.Details.Modeler.Widgets.FileDropzone.TooLargeFileSize": "Rozmair plik jest za duży (maksimum 4mb)",
+    "Process.Details.Modeler.Widgets.FileDropzone.TooManyFiles": "Za dużo plików (maksimum 1 plik)",
     "Process.Details.Modeler.ActionPanel.Form.GatewayName.Title": "Nazwa bramki",
     "Process.Details.Modeler.ActionPanel.Form.FlowName.Title": "Nazwa przepływu",
     "Process.Details.Modeler.ActionPanel.Form.Disabled.Title": "Wyłączone",
