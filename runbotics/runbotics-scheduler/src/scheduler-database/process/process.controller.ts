@@ -42,7 +42,6 @@ import { Page } from '#/utils/page/page';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 
-
 @UseInterceptors(TenantInterceptor)
 @Controller('/api/scheduler/tenants/:tenantId/processes')
 export class ProcessController {
@@ -65,7 +64,6 @@ export class ProcessController {
         if (!canCreate) {
             throw new ForbiddenException('Guest can create only one process');
         }
-
 
         return this.processCrudService.create(user, processDto);
     }
@@ -184,16 +182,6 @@ export class ProcessController {
         @Pageable() paging: Paging, 
         @User() user: UserEntity,
     ): Promise<Page<ProcessEntity>> {
-        return this.processCrudService.getPage(user, specs, paging);
-    }
-
-    @Get('PageByCollection')
-    @FeatureKeys(FeatureKey.PROCESS_READ)
-    getPageByCollection(
-        @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
-        @Pageable() paging: Paging,
-        @User() user: UserEntity,
-    ) {
         return this.processCrudService.getPage(user, specs, paging);
     }
 

@@ -17,7 +17,7 @@ import {
     NotificationBot,
 } from 'runbotics-common';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
-import { BotSystemEntity } from '#/scheduler-database/bot-system/bot-system.entity';
+import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { NotificationBot as NotificationBotEntity } from '#/scheduler-database/notification-bot/notification-bot.entity';
 
@@ -42,7 +42,7 @@ export class BotEntity implements IBot {
     @Column({ type: 'varchar' })
     version: string;
 
-    @ManyToOne(() => BotSystemEntity)
+    @ManyToOne(() => BotSystem)
     @JoinColumn([{ name: 'system', referencedColumnName: 'name' }])
     system: IBotSystem;
 

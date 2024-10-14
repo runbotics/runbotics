@@ -1,4 +1,4 @@
-import { Or, FindOperator, FindOptionsWhereProperty } from 'typeorm';
+import { Or, FindOperator } from 'typeorm';
 
 export abstract class Filter {
     _type: 'filter' = 'filter';
@@ -6,7 +6,7 @@ export abstract class Filter {
 
     predicates: FindOperator<unknown>[] = [];
 
-    eval(): FindOptionsWhereProperty<unknown> {
+    eval(): FindOperator<unknown> {
         return this.predicates.length > 0 ? Or(...this.predicates) : undefined;
     } 
 

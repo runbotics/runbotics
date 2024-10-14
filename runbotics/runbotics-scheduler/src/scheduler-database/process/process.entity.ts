@@ -13,9 +13,9 @@ import {
     IBotCollection,
     IBotSystem,
     IScheduleProcess,
-    IUser, NotificationProcess, ProcessCollection,
+    IUser, NotificationProcess, ProcessCollection as IProcessCollection,
 } from 'runbotics-common';
-import { BotSystemEntity } from '#/scheduler-database/bot-system/bot-system.entity';
+import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 import { UserEntity } from '#/database/user/user.entity';
 import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
@@ -80,7 +80,7 @@ export class ProcessEntity {
     @Column({ name: 'output_type', type: 'varchar', length: 50, default: 'JSON' })
     outputType: string;
 
-    @ManyToOne(() => BotSystemEntity, system => system.processes)
+    @ManyToOne(() => BotSystem, system => system.processes)
     @JoinColumn({ name: 'system' })
     system: IBotSystem;
 
@@ -103,7 +103,7 @@ export class ProcessEntity {
 
     @ManyToOne(() => ProcessCollectionEntity)
     @JoinColumn({ name: 'process_collection' })
-    processCollection: ProcessCollection;
+    processCollection: IProcessCollection;
 
     @Column({ name: 'process_collection', nullable: true })
     processCollectionId: string;

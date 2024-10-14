@@ -8,7 +8,7 @@ export const Pageable = createParamDecorator(
     (_, ctx: ExecutionContext) => {
         const request = ctx.switchToHttp().getRequest();
         const params = (request as Request).query;
-        
+
         return getPaging(params);
     },
 );
@@ -37,19 +37,19 @@ const getPaging = (params: Request['query']): Paging => {
         const pageSize = (() => {
             if (typeof params['size'] !== 'string') {
                 throw new BadRequestException();
+            }
+
+            const size = parseInt(params['size']);
+            if (isFinite(size) && !isNaN(size)) {
+                return size;
             } else {
-                const size = parseInt(params['size']);
-                if (isFinite(size) && !isNaN(size)) {
-                    return size;
-                } else {
-                    throw new BadRequestException();
-                }
+                throw new BadRequestException();
             }
         })();
 
         return {
             skip: pageSize * page,
             take: pageSize,
-        }
+        };
     }
 };
