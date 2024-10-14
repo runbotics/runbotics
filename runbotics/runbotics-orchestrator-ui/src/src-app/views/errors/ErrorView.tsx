@@ -15,11 +15,11 @@ import Logo from '#src-app/components/utils/Logo';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { useDispatch, useSelector } from '#src-app/store';
+import { useDispatch, useSelector, RootState } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
 
 import { clearError } from '#src-app/store/slices/Views/httpErrorSlice';
-import { RootState } from '#src-app/store';
+// import { RootState } from '#src-app/store';
 
 import BackgroundLogo from './BackgroundLogo';
 
@@ -57,8 +57,7 @@ const ErrorView: FC<ErrorViewProps> = () => {
     const { translate } = useTranslations();
     const router = useRouter();
 
-    const { code, title, message } = useSelector((state: RootState) => ({
-        code: state.httpErrorReducer.code,
+    const { title, message } = useSelector((state: RootState) => ({
         title: state.httpErrorReducer.title,
         message: state.httpErrorReducer.message,
     }));
@@ -102,12 +101,15 @@ const ErrorView: FC<ErrorViewProps> = () => {
     const viewTitle = errorCode ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'View.Title')) : errorTitle;
     const viewMessage = errorCode ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'View.Message')) : errorMessage;
 
+    const logoHeight = (errorCode && !isNaN(errorCode) && 100) || (mobileDevice && 100) || 200;
+
+
     return (
         <StyledPage className={classes.root} title={metaTitle}>
             <BackgroundLogo position='top' />
             <Container maxWidth='lg'>
                 <Box mt={0} display='flex' justifyContent='center'>
-                    <Logo height={errorCode && !isNaN(errorCode) ? 100 : mobileDevice ? 100 : 200 } white />
+                    <Logo height={logoHeight} white />
                 </Box>
                 {errorCode && !isNaN(errorCode) && (
                     <Typography
