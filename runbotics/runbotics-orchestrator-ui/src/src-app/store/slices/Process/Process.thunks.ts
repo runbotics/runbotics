@@ -11,12 +11,12 @@ import {
 import { Socket } from 'socket.io-client';
 
 import { AppDispatch, RootState } from '#src-app/store';
+import LoadingType from '#src-app/types/loading';
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import Axios from '#src-app/utils/axios';
 import { Page } from '#src-app/utils/types/page';
 
 import { CreateProcessCredentialDto, StartProcessResponse, UpdateDiagramRequest } from './Process.state';
-import LoadingType from '#src-app/types/loading';
 
 const PROCESS_NOTIFICATION_PATH = 'notifications-process';
 const TAGS_PATH = 'tags';
@@ -34,15 +34,15 @@ export const fetchProcessById = createAsyncThunk<
         rejectValue: any;
         dispatch: AppDispatch;
     }
->('processes/fetchById', async (processId, { getState, requestId, dispatch }) => {
+>('processes/fetchById', async (processId, { getState, requestId, dispatch, rejectWithValue }) => {
     const { currentRequestId, loading } = getState().process.draft;
 
     if (loading !== LoadingType.PENDING || requestId !== currentRequestId) {
-        return;
+        rejectWithValue(undefined);
     }
 
     const result = await dispatch(getProcessById({ resourceId: processId }));
-    
+
     return result.payload;
 });
 
@@ -51,7 +51,6 @@ export const fetchGuestDemoProcess = createAsyncThunk<IProcess>(
     () => Axios.get<IProcess>('/api/guests/process')
         .then((response) => response.data),
 );
-
 
 export const updateProcess = ApiTenantResource.patch<IProcess, IProcess>('processes/getByName', PROCESSES_PATH);
 
@@ -92,7 +91,7 @@ export const updateDiagram = ApiTenantResource.patch<IProcess, UpdateDiagramRequ
     (id: string) => `${PROCESSES_PATH}/${id}/diagram`,
 );
 
-export const createProcess = ApiTenantResource.post<void, IProcess>(
+export const createProcess = ApiTenantResource.post<IProcess, IProcess>(
     'processes/create',
     PROCESSES_PATH,
 );
@@ -108,13 +107,13 @@ export const startProcess = createAsyncThunk<StartProcessResponse, {
     executionInfo?: Record<string, any>
 }>(
     'processes/startProcess',
-    ({
-         processId,
-         clientId,
-         executionInfo,
-     }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, {
+    ({ 
+        processId,
         clientId,
-        variables: executionInfo,
+        executionInfo,
+    }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, { 
+        clientId,
+        variables: executionInfo, 
     })
         .then((response) => response.data)
         .catch((error) => {
@@ -129,8 +128,6 @@ export const setDraft = createAsyncThunk('api/setDraft', (payload: { process: IP
 export const getProcesses = ApiTenantResource.get<IProcess[]>('process/getAll', PROCESSES_PATH);
 
 export const getProcessesPage = ApiTenantResource.get<Page<IProcess>>('process/getPage', `${PROCESSES_PATH}/Page`);
-
-export const getProcessesPageByCollection = ApiTenantResource.get<Page<IProcess>>('process/getPageByCollection', `${PROCESSES_PATH}/ByCollection`);
 
 export const deleteProcess = ApiTenantResource.delete<number>('process/delete', PROCESSES_PATH);
 

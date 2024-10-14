@@ -40,26 +40,28 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
     const isCollectionsTab = getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
 
     const handleSubmit = async () => {
-        await dispatch(processActions.deleteProcess({ processId: props.process.id }));
+        await dispatch(processActions.deleteProcess({ resourceId: props.process.id }));
         props.onDelete(props.process);
 
         if (isCollectionsTab) {
             await dispatch(
-                processActions.getProcessesPageByCollection({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim()
-                            })
+                processActions.getProcessesPage({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim(),
+                                }),
+                            },
+                            equals: {
+                                ...(collectionId !== null && { collectionId }),
+                            },
                         },
-                        equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
-                    }
+                    },
                 }),
             );
         } else {

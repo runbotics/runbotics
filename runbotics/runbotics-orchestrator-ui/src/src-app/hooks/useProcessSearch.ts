@@ -35,7 +35,7 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
 
         if (collectionId !== undefined) {
             dispatch(
-                processActions.getProcessesPageByCollection({
+                processActions.getProcessesPage({
                     pageParams: {
                         page,
                         size: pageSize,
@@ -48,7 +48,7 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                                 }),
                             },
                             equals: {
-                                ...(collectionId !== null && { collectionId }),
+                                ...(collectionId !== null && { processCollectionId: collectionId }),
                             },
                         },
                     },

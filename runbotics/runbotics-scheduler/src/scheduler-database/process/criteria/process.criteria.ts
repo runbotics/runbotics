@@ -12,7 +12,7 @@ export class ProcessCriteria extends Criteria {
     updated = new DatetimeFilter();
     botCollection = new BotCollectionCriteria();
     tag = new TagCriteria();
-    collectionId = new StringFilter();
+    processCollectionId = new StringFilter();
     createdBy = new CreatedByCriteria();
 }
 

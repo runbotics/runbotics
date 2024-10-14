@@ -1,18 +1,19 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, In, Repository, FindOptionsRelations } from 'typeorm';
+import { FindManyOptions, FindOptionsRelations, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
-import { BotSystemType, DefaultCollections, ProcessOutputType, Role } from 'runbotics-common';
-import { UserEntity } from '../../database/user/user.entity';
+import { BotSystemType, FeatureKey, ProcessOutputType, Role } from 'runbotics-common';
+import { UserEntity } from '#/database/user/user.entity';
 import { CreateProcessDto } from '#/scheduler-database/process/dto/create-process.dto';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
-import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
 import { UpdateProcessDto } from '#/scheduler-database/process/dto/update-process.dto';
 import { UpdateDiagramDto } from '#/scheduler-database/process/dto/update-diagram.dto';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { getPage } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
+import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
+import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
 
 const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     system: true,
@@ -25,10 +26,10 @@ export class ProcessCrudService {
     constructor(
         @InjectRepository(ProcessEntity)
         private processRepository: Repository<ProcessEntity>,
-        @InjectRepository(ProcessCollectionEntity)
-        private processCollectionRepository: Repository<ProcessCollectionEntity>,
         @InjectRepository(GlobalVariable)
         private globalVariableRepository: Repository<GlobalVariable>,
+        @InjectRepository(BotCollectionEntity)
+        private botCollectionRepository: Repository<BotCollectionEntity>,
     ) {
     }
 
@@ -42,7 +43,7 @@ export class ProcessCrudService {
         return true;
     }
 
-    create(user: UserEntity, processDto: CreateProcessDto) {
+    async create(user: UserEntity, processDto: CreateProcessDto) {
         const process = new ProcessEntity();
         process.tenantId = user.tenantId;
         process.createdBy = user;
@@ -56,7 +57,13 @@ export class ProcessCrudService {
 
         process.editor = user;
         process.processCollectionId = processDto.processCollection?.id;
-        process.botCollectionId = processDto.botCollection.id;
+        
+        if(processDto.botCollection){
+            process.botCollectionId = processDto.botCollection.id;
+        }
+        else {
+            process.botCollectionId = (await this.botCollectionRepository.findOneByOrFail({ name: BotCollectionDefaultCollections.PUBLIC })).id;
+        }
         process.outputType = processDto.outputType?.type;
         process.systemName = processDto.system.name;
 
@@ -78,7 +85,7 @@ export class ProcessCrudService {
         process.systemName = BotSystemType.LINUX;
         process.outputType = ProcessOutputType.TEXT;
 
-        const guestCollection = await this.processCollectionRepository.findOneBy({ name: DefaultCollections.GUEST });
+        const guestCollection = await this.botCollectionRepository.findOneBy({ name: BotCollectionDefaultCollections.GUEST });
 
         process.botCollectionId = guestCollection.id;
 
@@ -150,13 +157,15 @@ export class ProcessCrudService {
     getPage(user: UserEntity, specs: Specs<ProcessEntity>, paging: Paging) {
         const options: FindManyOptions<ProcessEntity> = {
             ...paging,
-            ...specs
+            ...specs,
         };
         
         options.where = {
+            ...options.where,
             tenantId: user.tenantId,
+            createdBy: user.hasFeatureKey(FeatureKey.TENANT_ALL_ACCESS) ? undefined : user,
         };
-        
+
         options.relations = RELATIONS;
 
         return getPage(this.processRepository, options);
@@ -180,12 +189,4 @@ export class ProcessCrudService {
 
         return id;
     }
-
-    count(user: UserEntity) {
-        return this.processRepository.countBy({
-            tenantId: user.tenantId,
-        });
-    }
-
-
 }

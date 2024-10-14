@@ -3,7 +3,7 @@ import { BotSystemType, IBotSystem } from 'runbotics-common';
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 
 @Entity({ name: 'bot_system' })
-export class BotSystemEntity implements IBotSystem {
+export class BotSystem implements IBotSystem {
     @PrimaryColumn({ type: 'varchar', length: 50 })
     name: BotSystemType;
 

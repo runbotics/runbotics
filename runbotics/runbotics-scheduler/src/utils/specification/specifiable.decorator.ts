@@ -1,5 +1,5 @@
 import { BadRequestException, createParamDecorator, ExecutionContext, Logger } from '@nestjs/common';
-import { FindManyOptions, FindOptionsOrder, FindOptionsOrderProperty } from 'typeorm';
+import { FindManyOptions, FindOptionsOrder } from 'typeorm';
 import { Request } from 'express';
 import { FindOptionsWhere } from 'typeorm';
 import { Specification } from '#/utils/specification/specification';
@@ -21,7 +21,7 @@ export const Specifiable = createParamDecorator<CriteriaClass>(
     (CriteriaClass: CriteriaClass, ctx: ExecutionContext): Specs<CriteriaClass> => {
         const request = ctx.switchToHttp().getRequest();
         const params = (request as Request).query;
-        
+
         const specification: Specification<Criteria> = {
             criteria: new CriteriaClass(),
         };
@@ -53,21 +53,33 @@ export const specificationToFindOptions = <T extends Criteria>(
     const where: FindOptionsWhere<T> = {};
 
     const getFilters = (criteria: Criteria) => {
-        return Object.keys(criteria).filter(field => criteria[field].type === 'filter');
+        return Object.keys(criteria).filter(field => criteria[field]._type === 'filter');
     };
-    const getCriterias = (criteria: Criteria) => {
-        return Object.keys(criteria).filter(field => criteria[field].type === 'criteria');
+    const getCriteria = (criteria: Criteria) => {
+        return Object.keys(criteria).filter(field => criteria[field]._type === 'criteria');
     };
 
     const evalRecursively = (criteria: Criteria, where: FindManyOptions['where']) => {
-        getCriterias(criteria).forEach(field => {
+
+        let hasFilters = false;
+        getCriteria(criteria).forEach(field => {
             where[field] = {};
-            evalRecursively(criteria[field] as Criteria, where[field]);
+            if (evalRecursively(criteria[field] as Criteria, where[field])) {
+                hasFilters = true;
+            } else {
+                delete where[field];
+            }
         });
 
         getFilters(criteria).forEach(field => {
-            where[field] = criteria[field].eval() as FindOptionsWhere<Criteria>;
+            const evaluated = (criteria[field] as Filter).eval();
+            if (evaluated) {
+                where[field] = evaluated;
+                hasFilters = true;
+            }
         });
+
+        return hasFilters;
     };
 
     evalRecursively(specification.criteria, where);
@@ -76,7 +88,7 @@ export const specificationToFindOptions = <T extends Criteria>(
     const order: FindOptionsOrder<T> = (specification.order ?
         {
             [specification.order.name]: 'desc',
-        } : {}) as { [P in keyof T]: P extends 'toString' ? unknown : FindOptionsOrderProperty<NonNullable<T[P]>> };
+        } : {}) as FindOptionsOrder<T>;
 
     return {
         where,

@@ -40,21 +40,23 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     useUpdateEffect(() => {
         if (collectionId !== undefined) {
             dispatch(
-                processActions.getProcessesPageByCollection({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim(),
-                            }),
+                processActions.getProcessesPage({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim(),
+                                }),
+                            },
+                            equals: {
+                                ...(collectionId !== null && { processCollectionId: collectionId }),
+                            },
                         },
-                        equals: {
-                            ...(collectionId !== null && { collectionId }),
-                        },
-                    },
+                    }
                 }),
             );
         } else {

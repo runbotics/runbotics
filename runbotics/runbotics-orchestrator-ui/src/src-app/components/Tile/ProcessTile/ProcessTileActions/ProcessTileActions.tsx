@@ -62,7 +62,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
             setIsDialogVisible(false);
             if (isCollectionsTab) {
                 await dispatch(
-                    processActions.getProcessesPageByCollection({
+                    processActions.getProcessesPage({
                         pageParams: {
                             page,
                             size: pageSize,
@@ -75,7 +75,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                                     })
                                 },
                                 equals: {
-                                    ...(collectionId !== null && { collectionId })
+                                    ...(collectionId !== null && { processCollectionId: collectionId })
                                 }
                             }
                         }
