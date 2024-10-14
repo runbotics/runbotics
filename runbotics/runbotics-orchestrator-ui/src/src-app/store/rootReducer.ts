@@ -12,7 +12,6 @@ import { credentialsReducer as credentials } from './slices/Credentials';
 import { credentialTemplatesReducer as credentialTemplates } from './slices/CredentialTemplates';
 import { globalVariableReducer as globalVariable } from './slices/GlobalVariable';
 import { guestsReducer as guests } from './slices/Guests';
-import httpErrorReducer from './slices/Views/httpErrorSlice';
 import { processCollectionReducer as processCollection } from './slices/ProcessCollection';
 import { processInstanceReducer as processInstance } from './slices/ProcessInstance';
 import { processInstanceEventReducer as processInstanceEvent } from './slices/ProcessInstanceEvent';
@@ -22,6 +21,7 @@ import { schedulerReducer as scheduler } from './slices/Scheduler';
 import { tenantsReducer as tenants } from './slices/Tenants';
 import { usersReducer as users } from './slices/Users';
 import { processReducer as process } from './slices/Process';
+import httpErrorReducer from './slices/Views/httpErrorSlice';
 
 const rootReducer = combineReducers({
     action,
