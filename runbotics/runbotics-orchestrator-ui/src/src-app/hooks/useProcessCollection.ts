@@ -18,7 +18,7 @@ interface UseProcessCollectionOutput {
     currentCollection: ProcessCollection | null;
 }
 
-const getBreadcrumbs = (pathCollections: ProcessCollection[]): CollectionBreadcrumb[] =>
+export const getBreadcrumbs = (pathCollections: ProcessCollection[]): CollectionBreadcrumb[] =>
     pathCollections.map((collection) => ({
         name: collection.name,
         collectionId: collection.id
