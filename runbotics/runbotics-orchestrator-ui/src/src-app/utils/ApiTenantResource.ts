@@ -13,7 +13,7 @@ interface PayloadWrap<T> {
     pageParams?: PageRequestParams;
 }
 
-type ResourcePath = string | ((resourceId: string) => string);
+type ResourcePath = string | ((resourceId: string | number) => string);
 
 interface PathElements {
     resourcePath?: ResourcePath;
@@ -58,7 +58,7 @@ class ApiTenantResource {
                     .catch(error => thunkApi.rejectWithValue(error.response.data));
             }
         );
-
+        
         return Object
             .assign((args: PayloadWrap<PayloadType> = {}) => asyncThunk(args), {
                 ...asyncThunk
@@ -76,9 +76,9 @@ class ApiTenantResource {
             ? `/${resourceId}` : '';
 
         const apiURL = typeof resourcePath === 'function' ?
-            `/api/scheduler/tenants/${user.tenant.id}/${resourcePath(resourceId.toString())}` 
+            `/api/scheduler/tenants/${user.tenant.id}/${resourcePath(resourceId)}` 
             : `/api/scheduler/tenants/${user.tenant.id}${resourcePathPart}${resourceIdPart}`;
-
+        
         return pageParams
             ? URLBuilder.url(apiURL).params(pageParams).build()
             : apiURL;

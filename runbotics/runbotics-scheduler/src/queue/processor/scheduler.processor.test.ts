@@ -1,13 +1,13 @@
 import { Test } from '@nestjs/testing';
 import { SchedulerProcessor } from './scheduler.processor';
-import { BotService } from '#/database/bot/bot.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { QueueService } from '#/queue/queue.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { BotEntity } from '#/database/bot/bot.entity';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { expect, vi } from 'vitest';
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { getQueueToken } from '@nestjs/bull';

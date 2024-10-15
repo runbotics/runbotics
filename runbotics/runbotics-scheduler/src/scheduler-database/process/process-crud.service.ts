@@ -12,8 +12,8 @@ import { GlobalVariable } from '#/scheduler-database/global-variable/global-vari
 import { getPage } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
-import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
-import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
+import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
+import { BotCollectionDefaultCollections } from '#/scheduler-database/bot-collection/bot-collection.consts';
 
 const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     system: true,
@@ -28,8 +28,8 @@ export class ProcessCrudService {
         private processRepository: Repository<ProcessEntity>,
         @InjectRepository(GlobalVariable)
         private globalVariableRepository: Repository<GlobalVariable>,
-        @InjectRepository(BotCollectionEntity)
-        private botCollectionRepository: Repository<BotCollectionEntity>,
+        @InjectRepository(BotCollection)
+        private botCollectionRepository: Repository<BotCollection>,
     ) {
     }
 

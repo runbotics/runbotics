@@ -1,19 +1,16 @@
 import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete, Button, CircularProgress, Dialog, DialogActions, Switch, TextField, Typography } from '@mui/material';
-import moment from 'moment';
 import { FeatureKey, IBotCollection, IUser } from 'runbotics-common';
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { usersActions } from '#src-app/store/slices/Users';
 
-import { useDispatch, useSelector } from '../../../../../store';
-import { botCollectionActions } from '../../../../../store/slices/BotCollections';
-import { PageRequestParams } from '../../../../../utils/types/page';
+import { useDispatch, useSelector } from '#src-app/store';
+import { botCollectionActions } from '#src-app/store/slices/BotCollections';
+import { PageRequestParams } from '#src-app/utils/types/page';
 import { Content, Form, Title } from '../../../../utils/FormDialog.styles';
-
-
 
 interface ModifyBotCollectionDialogProps {
     open?: boolean;
@@ -48,16 +45,13 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         all: nonAdmins.all.filter(user => user.email !== currentUser.email)
     }), [nonAdmins, currentUser.email, open]);
 
-    const isOwner = !collection || currentUser.login === collection?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
+    const isOwner = !collection || currentUser.login === collection?.createdByUser.login || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
 
     const createCollectionEntityToSend = (): IBotCollection => ({
         name,
         description,
         publicBotsIncluded,
         users: selectedUsers,
-        createdBy: allUsers.find((user) => user.login === currentUser.login),
-        created: collection ? collection.created : moment().toISOString(),
-        updated: moment().toISOString(),
         id: collection ? collection.id : null,
     });
 
@@ -69,21 +63,21 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         setError(null);
     };
 
-    const updateCollection = (body) => {
-        if (collection) return dispatch(botCollectionActions.updateOne({ id: collection.id, body }));
+    const updateCollection = (botCollection: IBotCollection) => {
+        if (collection) return dispatch(botCollectionActions.updateOne({ resourceId: collection.id, payload: botCollection }));
 
-        return dispatch(botCollectionActions.createOne({ body }));
+        return dispatch(botCollectionActions.createOne({ payload: botCollection }));
     };
 
     const handleSubmit = async () => {
         const body = createCollectionEntityToSend();
-        const { type, payload} = await updateCollection(body);
+        const { type, payload } = await updateCollection(body);
 
         if (type === REJECT_REQUEST_TYPE) {
-            setError(payload.response.data.errorKey);
+            setError(payload);
         } else {
             setError(null);
-            await dispatch(botCollectionActions.getByPage(pageParams));
+            await dispatch(botCollectionActions.getByPage({ pageParams }));
             onClose();
             resetFormStates();
         }
