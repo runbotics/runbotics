@@ -1,10 +1,8 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import { IBot } from 'runbotics-common';
 
 import { BotState } from './Bot.state';
 import {
     deleteById,
-    getAll,
     getPage,
     getById,
     subscribeBotNotifications,
@@ -24,22 +22,6 @@ const buildBotExtraReducers = (builder: ActionReducerMapBuilder<BotState>) => {
             state.bots.allIds = Array.from(new Set([...state.bots.allIds, action.payload.id.toString()]));
         })
         .addCase(getById.rejected, (state) => {
-            state.bots.loading = false;
-        })
-
-        // GET ALL
-        .addCase(getAll.pending, (state) => {
-            state.bots.loading = true;
-        })
-        .addCase(getAll.fulfilled, (state, action) => {
-            state.bots.loading = false;
-            state.bots.byId = action.payload.reduce<Record<string, IBot>>((accumulator, current) => {
-                accumulator[current.id] = current;
-                return accumulator;
-            }, {});
-            state.bots.allIds = Object.keys(state.bots.byId);
-        })
-        .addCase(getAll.rejected, (state) => {
             state.bots.loading = false;
         })
 

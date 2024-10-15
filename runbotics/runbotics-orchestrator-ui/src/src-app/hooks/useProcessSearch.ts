@@ -35,38 +35,42 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
 
         if (collectionId !== undefined) {
             dispatch(
-                processActions.getProcessesPageByCollection({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim(),
-                            })
+                processActions.getProcessesPage({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    'createdBy->name': search.trim(),
+                                    'tags->name': search.trim(),
+                                }),
+                            },
+                            equals: {
+                                ...(collectionId !== null && { processCollectionId: collectionId }),
+                            },
                         },
-                        equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
                     },
-                })
+                }),
             );
         } else {
             dispatch(
                 processActions.getProcessesPage({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(debouncedValue.trim() && {
-                                name: debouncedValue.trim(),
-                                createdByName: debouncedValue.trim(),
-                                tagName: debouncedValue.trim()
-                            })
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(debouncedValue.trim() && {
+                                    name: debouncedValue.trim(),
+                                    'createdBy->login': debouncedValue.trim(),
+                                    'tag->name': debouncedValue.trim(),
+                                }),
+                            },
                         },
                     },
-                })
+                }),
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

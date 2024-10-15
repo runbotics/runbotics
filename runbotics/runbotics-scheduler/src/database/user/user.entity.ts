@@ -1,10 +1,11 @@
-import { IAuthority, IUser } from 'runbotics-common';
+import { FeatureKey, IAuthority, IUser } from 'runbotics-common';
 import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { dateTransformer, numberTransformer } from '../database.utils';
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
 import { CredentialCollectionUser } from '#/scheduler-database/credential-collection-user/credential-collection-user.entity';
 import { Authority } from '#/scheduler-database/authority/authority.entity';
+import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
 @Entity({ name: 'jhi_user', synchronize: false })
 export class UserEntity implements IUser {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
@@ -81,4 +82,19 @@ export class UserEntity implements IUser {
             credentialCollectionUser.user,
     )
     credentialCollectionUser: CredentialCollectionUser[];
+
+    @OneToMany(
+        () => ProcessCollectionEntity,
+        processCollection =>
+            processCollection.createdByUser,
+    )
+    processCollections: ProcessCollectionEntity[];
+    
+    hasFeatureKey(featureKey: FeatureKey){
+        const userKeys = this.authorities
+            .flatMap((auth) => auth.featureKeys)
+            .map((featureKey) => featureKey.name);
+
+        return userKeys.includes(featureKey);
+    }
 }

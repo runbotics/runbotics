@@ -12,7 +12,7 @@ import { IBot, FeatureKey, ProcessInstanceStatus } from 'runbotics-common';
 import { BotSchedulerService } from './bot.scheduler.service';
 import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
-import { BotService } from '../../database/bot/bot.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
 import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 

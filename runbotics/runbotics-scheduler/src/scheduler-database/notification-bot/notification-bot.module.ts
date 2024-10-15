@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationBot } from './notification-bot.entity';
 import { NotificationBotController } from './notification-bot.controller';
 import { NotificationBotService } from './notification-bot.service';
-import { BotEntity } from '#/database/bot/bot.entity';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 
 
 @Module({

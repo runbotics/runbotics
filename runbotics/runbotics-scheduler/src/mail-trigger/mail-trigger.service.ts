@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { FetchQueryObject, ImapFlow, MessageEnvelopeObject } from 'imapflow';
 import { Logger } from '#/utils/logger';
 import { Attachment, simpleParser } from 'mailparser';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
 import { QueueService } from '#/queue/queue.service';

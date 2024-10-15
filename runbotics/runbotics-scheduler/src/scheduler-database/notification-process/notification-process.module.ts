@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationProcess } from './notification-process.entity';
 import { NotificationProcessController } from './notification-process.controller';
 import { NotificationProcessService } from './notification-process.service';
-import { ProcessModule } from '#/database/process/process.module';
+import { ProcessModule } from '#/scheduler-database/process/process.module';
 
 
 @Module({

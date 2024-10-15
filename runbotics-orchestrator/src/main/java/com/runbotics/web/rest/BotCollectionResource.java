@@ -224,5 +224,4 @@ public class BotCollectionResource {
             .map(botCollectionRepository::getBotCollectionByName)
             .anyMatch(botCollection -> botCollection.getId().equals(id));
     }
-
 }
