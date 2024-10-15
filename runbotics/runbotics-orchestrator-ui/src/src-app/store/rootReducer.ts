@@ -21,6 +21,7 @@ import { scheduleProcessReducer as scheduleProcess } from './slices/ScheduleProc
 import { schedulerReducer as scheduler } from './slices/Scheduler';
 import { tenantsReducer as tenants } from './slices/Tenants';
 import { usersReducer as users } from './slices/Users';
+import httpErrorReducer from './slices/Views/httpErrorSlice';
 
 const rootReducer = combineReducers({
     action,
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
     form,
     globalVariable,
     guests,
+    httpErrorReducer,
     process,
     processCollection,
     processInstance,

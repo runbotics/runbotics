@@ -10,6 +10,7 @@ declare module '@mui/system' {
 declare module '@mui/material/styles/createPalette' {
     interface TypeBackground extends MuiPaletteBackground {
         dark: string;
+        white: string;
     }
 }
 
