@@ -70,19 +70,20 @@ export class CredentialService {
       attributes,
     });
 
-    return this.credentialRepo.save(credential)
-      .then((credential) => {
-        this.notifyCredentialCollectionOwner({
-          executor: user,
-          collectionId: credential.collectionId,
-          credentialName: credential.name,
-          operationType: CredentialOperationType.CREATE,
-      });
-      })
-      .catch(async (error) => {
-        await this.validateName(credentialDto.name, collectionId, tenantId);
-        throw new BadRequestException(error.message);
-      });
+    return this.credentialRepo
+        .save(credential)
+        .then((credential) => {
+            this.notifyCredentialCollectionOwner({
+                executor: user,
+                collectionId: credential.collectionId,
+                credentialName: credential.name,
+                operationType: CredentialOperationType.CREATE,
+            });
+        })
+        .catch(async (error) => {
+            await this.validateName(credentialDto.name, collectionId, tenantId);
+            throw new BadRequestException(error.message);
+        });
   }
 
   async findAllAccessible(user: IUser) {
@@ -240,7 +241,7 @@ export class CredentialService {
                 executor: user,
                 collectionId: credential.collectionId,
                 credentialName: credential.name,
-                credentialOldName,
+                ...(credentialOldName && { credentialOldName }),
                 operationType: CredentialOperationType.EDIT,
             });
         })
@@ -361,7 +362,7 @@ export class CredentialService {
               collectionCreatorEmail: collectionCreator.email,
               collectionName: collection.name,
               credentialName,
-              credentialOldName,
+              ...(credentialOldName && { credentialOldName }),
               operationType,
               ...(operationType ===
                   CredentialOperationType.CHANGE_ATTRIBUTE && {

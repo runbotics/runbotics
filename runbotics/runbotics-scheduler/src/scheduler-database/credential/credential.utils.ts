@@ -24,7 +24,7 @@ interface BaseCredentialChangeMailPayload {
     collectionCreatorEmail: string;
     collectionName: string;
     credentialName: string;
-    credentialOldName?: string | undefined;
+    credentialOldName?: string;
 }
 
 interface BaseCredentialNotifyMailArgs {
