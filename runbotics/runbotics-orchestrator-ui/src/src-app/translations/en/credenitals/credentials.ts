@@ -1,5 +1,6 @@
 const credentials = {
     'Credentials.List.Header.Elements': '{{ count }} credentials',
+    'Credentials.List.Placeholder': 'No credentials yet',
     'Credentials.Add': 'Add new credential',
     'Credential.Title': 'Credential {{ name }}',
     'Credential.Add.CollectionNotFoundInfo': 'Create credential collection first',

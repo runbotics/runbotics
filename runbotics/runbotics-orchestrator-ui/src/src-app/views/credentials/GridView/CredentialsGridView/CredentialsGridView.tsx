@@ -17,7 +17,7 @@ import { CredentialsModals } from './CredentialModals';
 import { BasicCredentialDto } from '../../Credential/Credential.types';
 import CredentialsHeader from '../../Credentials/CredentialsHeader/CredentialsHeader';
 import CredentialsCollectionLocation from '../../CredentialsCollection/CredentialsCollectionLocation';
-import { TileGrid } from '../GridView.styles';
+import { TileGrid, TypographyPlaceholder } from '../GridView.styles';
 import Header, { CredentialsTabs } from '../Header';
 import Paging from '../Paging';
 import { getFilterItemsForPage } from '../Paging.utils';
@@ -46,7 +46,9 @@ const CredentialsGridView = () => {
     const router = useRouter();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
     const collectionSharedWithNumber =
-        collectionId && credentialCollections && credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length - 1;
+        collectionId &&
+        credentialCollections &&
+        credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length - 1;
 
     useEffect(() => {
         setFilteredCredentials(credentials);
@@ -109,7 +111,23 @@ const CredentialsGridView = () => {
                         sharedWithNumber={collectionId && collectionSharedWithNumber}
                     />
                 </Box>
-                <TileGrid>{credentialsTiles}</TileGrid>
+                {credentialsTiles.length > 0 ? (
+                    <>
+                        <TileGrid>{credentialsTiles}</TileGrid>
+                        <Box mt={6} display="flex" justifyContent="center">
+                            <Paging
+                                totalItems={filteredCredentials && filteredCredentials.length}
+                                itemsPerPage={pageSize}
+                                currentPage={page}
+                                setPage={setPage}
+                            />
+                        </Box>
+                    </>
+                ) : (
+                    <Box display="flex" alignItems="center" justifyContent="center" mt={6} mb={6}>
+                        <TypographyPlaceholder>{translate('Credentials.List.Placeholder')}</TypographyPlaceholder>
+                    </Box>
+                )}
             </If>
             {currentDialogCredential && (
                 <CredentialsModals
@@ -122,14 +140,6 @@ const CredentialsGridView = () => {
                     setCurrentDialogCredential={setCurrentDialogCredential}
                 />
             )}
-            <Box mt={6} display="flex" justifyContent="center">
-                <Paging
-                    totalItems={filteredCredentials && filteredCredentials.length}
-                    itemsPerPage={pageSize}
-                    currentPage={page}
-                    setPage={setPage}
-                />
-            </Box>
         </InternalPage>
     );
 };

@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import styled from 'styled-components';
 
 export const TileGrid = styled.div`
@@ -7,3 +8,7 @@ export const TileGrid = styled.div`
     min-height: 8rem;
     gap: 1rem;
 `;
+
+export const TypographyPlaceholder = styled(Typography)(({ theme }) => `
+    color: ${theme.palette.grey[500]};
+`);

@@ -46,7 +46,7 @@ const EditCredential: FC<EditCredentialProps> = ({}) => {
 
     return (
         <>
-            {readyToLoadCredential && (
+            {credential && readyToLoadCredential && (
                 <CredentialsInternalPage title={translate('Credential.Title', { name: credential.name })}>
                     <StyledGrid container justifyContent="space-between" my={2} ml={2} gap={2} width={'96%'}>
                         <Header

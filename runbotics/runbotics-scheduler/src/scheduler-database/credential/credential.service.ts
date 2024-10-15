@@ -70,12 +70,10 @@ export class CredentialService {
       attributes,
     });
 
-    this.credentialRepo.save(credential).catch(async error => {
+    return this.credentialRepo.save(credential).catch(async error => {
       await this.validateName(credentialDto.name, collectionId, tenantId);
         throw new BadRequestException(error.message);
     });
-
-    return this.mapToFrontDto(credential, user);
   }
 
   async findAllAccessible(user: IUser) {
@@ -85,20 +83,7 @@ export class CredentialService {
       return [];
     }
 
-    const credentials = accessibleCollections.flatMap((collection) => collection.credentials)
-    .map(credential => ({
-      ...credential,
-      createdBy: {
-        id: credential.createdBy.id,
-        login: credential.createdBy.login,
-      },
-      collection: {
-        id: credential.collection.id,
-        name: credential.collection.name
-      }
-    }));
-
-    const credentials2 = await Promise.all(accessibleCollections
+    const credentials = await Promise.all(accessibleCollections
       .flatMap(collection => collection.credentials)
       .map(async (credential) => await this.mapToFrontDto(credential, user))
     );
@@ -107,7 +92,7 @@ export class CredentialService {
       return [];
     }
 
-    return credentials2;
+    return credentials;
   }
 
   async findAllAccessibleByTemplateAndProcess(templateName: string, processId: string, user: IUser) {

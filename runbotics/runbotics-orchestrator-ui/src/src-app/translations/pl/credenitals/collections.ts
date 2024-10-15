@@ -2,6 +2,7 @@ import englishCredentialsCollections from '#src-app/translations/en/credenitals/
 
 const credentialsCollections: typeof englishCredentialsCollections = {
     'Credentials.Collection.List.Header.Elements': 'Liczba kolekcji: {{ count }}',
+    'Credentials.Collection.List.Placeholder': 'Brak kolekcji',
     'Credentials.Collection.Add': 'Dodaj nową kolekcję',
     'Credentials.Collection.Create.Title': 'Dodaj kolekcję',
     'Credentials.Collection.Edit.Title': 'Edytuj kolekcję',

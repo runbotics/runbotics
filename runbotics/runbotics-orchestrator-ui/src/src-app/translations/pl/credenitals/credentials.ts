@@ -2,6 +2,7 @@ import englishCredentials from '#src-app/translations/en/credenitals/credentials
 
 const credentials: typeof englishCredentials = {
     'Credentials.List.Header.Elements': 'Liczba poświadczeń: {{ count }}',
+    'Credentials.List.Placeholder': 'Brak poświadczeń',
     'Credentials.Add': 'Dodaj nowe poświadczenia',
     'Credential.Title': 'Poświadczenie {{ name }}',
     'Credential.Add.CollectionNotFoundInfo': 'Najpierw stwórz kolekcję',

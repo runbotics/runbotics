@@ -16,7 +16,7 @@ import { credentialCollectionsActions, credentialCollectionsSelector } from '#sr
 
 import { CredentialsCollectionModals } from './CredentialsCollectionModals';
 import CredentialsHeader from '../../Credentials/CredentialsHeader/CredentialsHeader';
-import { TileGrid } from '../GridView.styles';
+import { TileGrid, TypographyPlaceholder } from '../GridView.styles';
 import Header, { CredentialsTabs } from '../Header';
 import Paging from '../Paging';
 import { getFilterItemsForPage } from '../Paging.utils';
@@ -45,10 +45,9 @@ const CredentialCollectionsGridView = () => {
     }, [credentialCollections]);
 
     useEffect(() => {
-        dispatch(credentialCollectionsActions.fetchAllCredentialCollections())
-            .catch((error) => {
-                enqueueSnackbar(error.message, { variant: 'error' });
-            });
+        dispatch(credentialCollectionsActions.fetchAllCredentialCollections()).catch(error => {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        });
     }, []);
 
     const handleOpenEditDialog = (id: string) => {
@@ -62,16 +61,18 @@ const CredentialCollectionsGridView = () => {
     };
 
     const collectionTiles = currentPageCollections
-        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        .map(collection => (
-            <CredentialsCollectionTile
-                key={collection.id}
-                collection={collection}
-                handleOpenEditDialog={handleOpenEditDialog}
-                handleOpenDeleteDialog={handleOpenDeleteDialog}
-                setCurrentDialogCollection={setCurrentCollection}
-            />
-        ));
+        ? currentPageCollections
+            .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+            .map(collection => (
+                <CredentialsCollectionTile
+                    key={collection.id}
+                    collection={collection}
+                    handleOpenEditDialog={handleOpenEditDialog}
+                    handleOpenDeleteDialog={handleOpenDeleteDialog}
+                    setCurrentDialogCollection={setCurrentCollection}
+                />
+            ))
+        : [];
 
     return (
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
@@ -83,29 +84,38 @@ const CredentialCollectionsGridView = () => {
                         tabName={CredentialsTabs.COLLECTIONS}
                         items={credentialCollections}
                         setItems={setFilteredCollections}
-                        sharedWithNumber={null}/>
-                </Box>
-                <TileGrid>
-                    {collectionTiles}
-                    <If condition={currentCollection}>
-                        <CredentialsCollectionModals
-                            isEditDialogOpen={isEditDialogOpen}
-                            isDeleteDialogOpen={isDeleteDialogOpen}
-                            currentCollection={currentCollection}
-                            setIsEditDialogOpen={setIsEditDialogOpen}
-                            setIsDeleteDialogOpen={setIsDeleteDialogOpen}
-                            setCurrentCollection={setCurrentCollection}
-                        />
-                    </If>
-                </TileGrid>
-                <Box mt={6} display="flex" justifyContent="center">
-                    <Paging
-                        totalItems={filteredCollections && filteredCollections.length}
-                        itemsPerPage={pageSize}
-                        currentPage={page}
-                        setPage={setPage}
+                        sharedWithNumber={null}
                     />
                 </Box>
+                {collectionTiles.length > 0 ? (
+                    <>
+                        <TileGrid>
+                            {collectionTiles}
+                            <If condition={currentCollection}>
+                                <CredentialsCollectionModals
+                                    isEditDialogOpen={isEditDialogOpen}
+                                    isDeleteDialogOpen={isDeleteDialogOpen}
+                                    currentCollection={currentCollection}
+                                    setIsEditDialogOpen={setIsEditDialogOpen}
+                                    setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+                                    setCurrentCollection={setCurrentCollection}
+                                />
+                            </If>
+                        </TileGrid>
+                        <Box mt={6} display="flex" justifyContent="center">
+                            <Paging
+                                totalItems={filteredCollections && filteredCollections.length}
+                                itemsPerPage={pageSize}
+                                currentPage={page}
+                                setPage={setPage}
+                            />
+                        </Box>
+                    </>
+                ) : (
+                    <Box display="flex" alignItems="center" justifyContent="center" mt={6} mb={6}>
+                        <TypographyPlaceholder>{translate('Credentials.Collection.List.Placeholder')}</TypographyPlaceholder>
+                    </Box>
+                )}
             </If>
         </InternalPage>
     );
