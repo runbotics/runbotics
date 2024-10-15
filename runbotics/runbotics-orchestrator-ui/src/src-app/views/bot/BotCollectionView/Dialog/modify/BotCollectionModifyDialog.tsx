@@ -5,11 +5,11 @@ import { FeatureKey, IBotCollection, IUser } from 'runbotics-common';
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { usersActions } from '#src-app/store/slices/Users';
-
 import { useDispatch, useSelector } from '#src-app/store';
 import { botCollectionActions } from '#src-app/store/slices/BotCollections';
+import { usersActions } from '#src-app/store/slices/Users';
 import { PageRequestParams } from '#src-app/utils/types/page';
+
 import { Content, Form, Title } from '../../../../utils/FormDialog.styles';
 
 interface ModifyBotCollectionDialogProps {

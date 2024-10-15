@@ -73,7 +73,8 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
             page: currentPage,
             size: limit,
             ...(!(_.isEmpty(mappedBotCollections)) &&
-                collectionState.length && {
+                collectionState.length &&
+                {
                     filter: {
                         in: {
                             'collection->name': collectionState.map((collectionId) =>
