@@ -3,16 +3,14 @@ import { CreateCredentialCollectionDto } from './dto/create-credential-collectio
 import { UpdateCredentialCollectionDto } from './dto/update-credential-collection.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-    AccessType,
     CredentialCollection,
 } from './credential-collection.entity';
 import { In, Repository } from 'typeorm';
 import {
     CredentialCollectionUser,
-    PrivilegeType,
 } from '../credential-collection-user/credential-collection-user.entity';
 import { UserService } from '#/database/user/user.service';
-import { IUser, Tenant } from 'runbotics-common';
+import { AccessType, PrivilegeType, IUser, Tenant } from 'runbotics-common';
 
 const relations = ['credentialCollectionUser', 'credentialCollectionUser.user', 'credentialCollectionUser.credentialCollection', 'createdBy', 'credentials'];
 

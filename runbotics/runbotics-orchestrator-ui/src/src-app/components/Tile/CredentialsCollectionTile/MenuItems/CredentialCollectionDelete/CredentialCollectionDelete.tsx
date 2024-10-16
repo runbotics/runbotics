@@ -8,10 +8,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { deleteCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
-import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
+import { FrontCredentialCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 interface CredentialCollectionDeleteProps {
-    collection: BasicCredentialsCollectionDto;
+    collection: FrontCredentialCollectionDto;
     isDialogOpen: boolean;
     handleDialogClose(): void;
 }

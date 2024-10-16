@@ -17,4 +17,4 @@ export interface IUser {
     tenantId?: string;
 }
 
-export type UserDTO = Pick<IUser, 'id' | 'login'>;
+export type UserDTO = Pick<IUser, 'id' | 'login' | 'email'>;

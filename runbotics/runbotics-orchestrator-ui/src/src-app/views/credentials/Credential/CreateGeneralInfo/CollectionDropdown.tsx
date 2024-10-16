@@ -5,11 +5,11 @@ import { Grid, MenuItem, SelectChangeEvent, Typography } from '@mui/material';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import GeneralInfoDropdown from './CreateGeneralInfoDropdown';
-import { BasicCredentialsCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
+import { FrontCredentialCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
 
 interface CollectionDropdownProps {
     disabled: boolean;
-    credentialCollections: BasicCredentialsCollectionDto[];
+    credentialCollections: FrontCredentialCollectionDto[];
     selectedValue: string | undefined;
     handleChange: (event: SelectChangeEvent) => void;
     error: boolean;

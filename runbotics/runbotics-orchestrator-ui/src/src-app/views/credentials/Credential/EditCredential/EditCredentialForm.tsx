@@ -13,11 +13,11 @@ import { credentialsActions } from '#src-app/store/slices/Credentials';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
 import { inputErrorMessages, InputErrorType } from './EditCredential.utils';
-import { BasicCredentialDto } from '../Credential.types';
+import { FrontCredentialDto } from '../Credential.types';
 
 interface EditCredentialFormProps {
     open: boolean;
-    credential: BasicCredentialDto;
+    credential: FrontCredentialDto;
     collectionId: string;
     onClose: () => void;
 }

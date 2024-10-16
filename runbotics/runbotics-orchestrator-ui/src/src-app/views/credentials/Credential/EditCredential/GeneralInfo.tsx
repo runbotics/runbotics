@@ -2,19 +2,19 @@ import { FC } from 'react';
 
 import { Grid, Typography, Box } from '@mui/material';
 
+import { ColorNames } from 'runbotics-common';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
-
 import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
 import { ColorDot } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
-import { ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
-import { BasicCredentialDto } from '../Credential.types';
+import { FrontCredentialDto } from '../Credential.types';
 
 interface GeneralInfoProps {
-    credential: BasicCredentialDto;
+    credential: FrontCredentialDto;
     collectionColor: ColorNames;
     collectionName: string;
 }

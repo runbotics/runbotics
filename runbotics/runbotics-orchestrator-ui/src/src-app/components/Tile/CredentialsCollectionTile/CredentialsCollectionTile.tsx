@@ -5,11 +5,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Divider, Grid, Typography, Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
+import { AccessType } from 'runbotics-common';
+
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { AccessType, BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
+import { FrontCredentialCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 import { ColorDot } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
 
@@ -18,10 +20,10 @@ import MenuItems from './MenuItems/MenuItems';
 import Tile from '../Tile';
 
 interface CredentialsCollectionTileProps {
-    collection: BasicCredentialsCollectionDto;
+    collection: FrontCredentialCollectionDto;
     handleOpenEditDialog(id: string): void;
     handleOpenDeleteDialog(id: string): void;
-    setCurrentDialogCollection(collection: BasicCredentialsCollectionDto): void;
+    setCurrentDialogCollection(collection: FrontCredentialCollectionDto): void;
 }
 
 const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({

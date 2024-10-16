@@ -14,22 +14,7 @@ import {
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 import { Tenant } from '../tenant/tenant.entity';
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
-
-export enum AccessType {
-    PRIVATE = 'PRIVATE',
-    GROUP = 'GROUP',
-}
-
-export enum Color {
-    LIGHT_ORANGE = 'LIGHT_ORANGE',
-    DARK_ORANGE = 'DARK_ORANGE',
-    LIGHT_GREEN = 'LIGHT_GREEN',
-    DARK_GREEN = 'DARK_GREEN',
-    LIGHT_BLUE = 'LIGHT_BLUE',
-    DARK_BLUE = 'DARK_BLUE',
-    LIGHT_GREY = 'LIGHT_GREY',
-    DARK_GREY = 'DARK_GREY',
-}
+import { AccessType, Color } from 'runbotics-common';
 
 @Entity({ schema: 'scheduler', name: 'credential_collection' })
 @Unique(['name', 'tenantId', 'createdById'])

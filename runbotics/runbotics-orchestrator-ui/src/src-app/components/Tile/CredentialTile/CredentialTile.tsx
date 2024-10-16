@@ -5,11 +5,13 @@ import { CircularProgress, Typography } from '@mui/material';
 
 import { useRouter } from 'next/router';
 
+import { PrivilegeType } from 'runbotics-common';
+
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { BasicCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
-import { BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
+import { FrontCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
+import { FrontCredentialCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 import { collectionColors } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
 
 import { CredentialCard, CredentialCollection } from './CredentialTile.styles';
@@ -17,8 +19,8 @@ import MenuItems from '../CredentialsCollectionTile/MenuItems/MenuItems';
 import Tile from '../Tile';
 
 export interface CredentialTileProps {
-    credential: BasicCredentialDto;
-    collection: BasicCredentialsCollectionDto;
+    credential: FrontCredentialDto;
+    collection: FrontCredentialCollectionDto;
     templateName: string;
     loading: boolean;
     collectionId: string;
@@ -57,7 +59,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
                     {credential.name}
                 </Typography>
                 <If condition={!!collectionId}>
-                    <Typography sx={{ mb: 1 }}>{translate('Credential.Details.Description.Label')}: {credential.description}</Typography>
+                    <Typography sx={{ mb: 1 }}>{translate('Credential.Details.Description.Label')}: {credential.description ? credential.description : ''}</Typography>
                 </If>
                 <Typography sx={{ mb: 1 }}>{translate('Credential.Details.Template.Label')}: {templateName}</Typography>
                 <If condition={!collectionId}>

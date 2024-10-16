@@ -2,6 +2,8 @@ import { FC, useEffect } from 'react';
 
 import { Grid } from '@mui/material';
 
+import { PrivilegeType } from 'runbotics-common';
+
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useAuth from '#src-app/hooks/useAuth';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -9,16 +11,16 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { credentialsActions } from '#src-app/store/slices/Credentials';
 import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
-import { BasicCredentialsCollectionDto, PrivilegeType } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
+import { FrontCredentialCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 import TemplateAttribute from './TemplateAttribute';
-import { BasicCredentialDto } from '../../Credential.types';
+import { FrontCredentialDto } from '../../Credential.types';
 
 interface CredentialAttributesListProps {
-    credential: BasicCredentialDto;
+    credential: FrontCredentialDto;
     templateId: string;
     isNewCredential: boolean;
-    currentCollection: BasicCredentialsCollectionDto;
+    currentCollection: FrontCredentialCollectionDto;
 }
 
 const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credential, templateId, isNewCredential, currentCollection }) => {
@@ -37,6 +39,7 @@ const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credentia
     useEffect(() => {
         dispatch(credentialsActions.fetchOneCredential({ resourceId: credential.id }));
         if (!credentialTemplates) dispatch(credentialTemplatesActions.fetchAllTemplates());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (templatesLoading|| !credentialTemplates) return <LoadingScreen/>;

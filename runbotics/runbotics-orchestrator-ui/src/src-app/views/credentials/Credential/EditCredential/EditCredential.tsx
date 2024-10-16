@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { Grid, Typography } from '@mui/material';
 
@@ -17,16 +17,8 @@ import { CredentialsInternalPage, StyledGrid } from './EditCredential.styles';
 import { isCreatedNow } from './EditCredential.utils';
 import GeneralInfo from './GeneralInfo';
 import Header from './Header/Header';
-import { BasicCredentialDto } from '../Credential.types';
 
-interface EditCredentialProps {
-    credential: Credential
-    onClose: () => void;
-    onAdd: (credential: BasicCredentialDto) => void;
-    open?: boolean;
-}
-
-const EditCredential: FC<EditCredentialProps> = ({}) => {
+const EditCredential = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     const credentialId = getLastParamOfUrl(router);

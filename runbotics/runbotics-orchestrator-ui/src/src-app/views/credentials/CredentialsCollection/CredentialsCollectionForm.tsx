@@ -10,7 +10,7 @@ import { useDispatch } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import { BasicCredentialsCollectionDto, EditCredentialsCollectionDto } from './CredentialsCollection.types';
+import { FrontCredentialCollectionDto, EditCredentialsCollectionDto } from './CredentialsCollection.types';
 import {
     getInitialCredentialsCollectionData,
     initialCredentialsCollectionData,
@@ -25,7 +25,7 @@ import { SharedWithUsers } from './EditCredentialsCollection/SharedWithUsers/Sha
 
 interface CredentialCollectionFormProps {
     open: boolean;
-    collection: BasicCredentialsCollectionDto | null;
+    collection: FrontCredentialCollectionDto | null;
     onClose: () => void;
 }
 

@@ -2,13 +2,13 @@ import React, { FC } from 'react';
 
 import { CredentialCollectionDelete } from '#src-app/components/Tile/CredentialsCollectionTile/MenuItems/CredentialCollectionDelete/CredentialCollectionDelete';
 
-import { BasicCredentialsCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
+import { FrontCredentialCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
 import CredentialsCollectionForm from '../../CredentialsCollection/CredentialsCollectionForm';
 
 interface CredentialsCollectionModalsProps {
     isEditDialogOpen: boolean;
     isDeleteDialogOpen: boolean;
-    currentCollection: BasicCredentialsCollectionDto;
+    currentCollection: FrontCredentialCollectionDto;
     setIsEditDialogOpen: (state: boolean) => void
     setIsDeleteDialogOpen: (state: boolean) => void;
     setCurrentCollection: (state: null) => void;

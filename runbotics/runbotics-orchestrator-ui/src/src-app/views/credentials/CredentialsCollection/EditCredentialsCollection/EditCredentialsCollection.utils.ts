@@ -1,11 +1,9 @@
-import { IUser } from 'runbotics-common';
+import { AccessType, DEFAULT_COLLECTION_COLOR, IUser } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { SharedWithUser } from './SharedWithUsers/SharedWithUsers';
-import { AccessType, BasicCredentialsCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
-
-export const DEFAULT_COLLECTION_COLOR = 'DARK_ORANGE';
+import { FrontCredentialCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
 
 export enum InputErrorType {
     NAME_IS_REQUIRED = 'NAME_IS_REQUIRED'
@@ -46,7 +44,7 @@ export const getInitialCredentialsCollectionData = (collection: null | EditCrede
     };
 };
 
-export const mapToEditCredentialCollectionDto = (collection: BasicCredentialsCollectionDto): EditCredentialsCollectionDto => {
+export const mapToEditCredentialCollectionDto = (collection: FrontCredentialCollectionDto): EditCredentialsCollectionDto => {
     const sharedWithUsers = collection.credentialCollectionUser
         ? [...collection.credentialCollectionUser]
             .filter(credentialUser => credentialUser.userId !== collection.createdById)

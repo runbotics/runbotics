@@ -9,12 +9,12 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StyledTypography } from './CredentialsHeader.styles';
 import SharedWithInfo from './SharedWithInfo';
-import { BasicCredentialDto } from '../../Credential/Credential.types';
-import { BasicCredentialsCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
+import { FrontCredentialDto } from '../../Credential/Credential.types';
+import { FrontCredentialCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
 import { CredentialsTabs } from '../../GridView/Header';
 import Search from '../../GridView/Search/Search';
 
-interface CredentialsHeaderProps<T extends BasicCredentialDto | BasicCredentialsCollectionDto> {
+interface CredentialsHeaderProps<T extends FrontCredentialDto | FrontCredentialCollectionDto> {
     credentialCount: number;
     tabName: CredentialsTabs;
     items: (T[]);
@@ -22,7 +22,7 @@ interface CredentialsHeaderProps<T extends BasicCredentialDto | BasicCredentials
     sharedWithNumber: number;
 }
 
-const CredentialsHeader = <T extends BasicCredentialDto | BasicCredentialsCollectionDto>({ credentialCount, tabName, items, setItems, sharedWithNumber }: CredentialsHeaderProps<T>) => {
+const CredentialsHeader = <T extends FrontCredentialDto | FrontCredentialCollectionDto>({ credentialCount, tabName, items, setItems, sharedWithNumber }: CredentialsHeaderProps<T>) => {
     const { translate } = useTranslations();
     const elementsCountMessage =
         tabName === CredentialsTabs.CREDENTIALS

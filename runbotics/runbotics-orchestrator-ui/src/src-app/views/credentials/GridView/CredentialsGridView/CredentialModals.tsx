@@ -10,7 +10,7 @@ import { useDispatch } from '#src-app/store';
 
 import { credentialsActions } from '#src-app/store/slices/Credentials';
 
-import { BasicCredentialDto } from '../../Credential/Credential.types';
+import { FrontCredentialDto } from '../../Credential/Credential.types';
 import { EditCredentialForm } from '../../Credential/EditCredential/EditCredentialForm';
 
 
@@ -18,7 +18,7 @@ interface CredentialsModalsProps {
     collectionId: string;
     isEditDialogOpen: boolean;
     isDeleteDialogOpen: boolean;
-    currentDialogCredential: BasicCredentialDto;
+    currentDialogCredential: FrontCredentialDto;
     setIsDeleteDialogOpen: (state: boolean) => void;
     setIsEditDialogOpen: (state: boolean) => void;
     setCurrentDialogCredential: (state: null) => void;

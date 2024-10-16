@@ -14,7 +14,7 @@ import { credentialCollectionsActions, credentialCollectionsSelector } from '#sr
 import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
 
 import { CredentialsModals } from './CredentialModals';
-import { BasicCredentialDto } from '../../Credential/Credential.types';
+import { FrontCredentialDto } from '../../Credential/Credential.types';
 import CredentialsHeader from '../../Credentials/CredentialsHeader/CredentialsHeader';
 import CredentialsCollectionLocation from '../../CredentialsCollection/CredentialsCollectionLocation';
 import { TileGrid, TypographyPlaceholder } from '../GridView.styles';
@@ -36,10 +36,10 @@ const CredentialsGridView = () => {
     const pageSizeFromUrl = searchParams.get('pageSize');
     const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
 
-    const [filteredCredentials, setFilteredCredentials] = useState<BasicCredentialDto[]>([]);
+    const [filteredCredentials, setFilteredCredentials] = useState<FrontCredentialDto[]>([]);
     const currentPageCredentials = filteredCredentials ? getFilterItemsForPage(filteredCredentials, page, pageSize) : null;
 
-    const [currentDialogCredential, setCurrentDialogCredential] = useState<BasicCredentialDto>(null);
+    const [currentDialogCredential, setCurrentDialogCredential] = useState<FrontCredentialDto>(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
