@@ -1,36 +1,22 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import Editor from '@monaco-editor/react';
-import {
-    Grid,
-    TextField
-} from '@mui/material';
+import { Grid } from '@mui/material';
 
 import { useSnackbar } from 'notistack';
 
 import CustomDialog from '#src-app/components/CustomDialog';
-import ErrorBoundary from '#src-app/components/utils/ErrorBoundary';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { activityActions } from '#src-app/store/slices/Action';
-import {
-    setShowEditModal
-} from '#src-app/store/slices/Action/Action.thunks';
+import { setShowEditModal } from '#src-app/store/slices/Action/Action.thunks';
 import { IAction } from '#src-app/types/model/action.model';
 
+import { CustomEditor } from './CustomEditor';
+import { ExternalActionForm } from './ExternalActionForm';
 import { LiveView } from './LiveView';
-import { initialFormValidationState, isScriptNameValid, isValueEmpty } from '../action.utils';
+import { initialFormValidationState } from '../action.utils';
 
-export function isValidJson(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
-
-// eslint-disable-next-line max-lines-per-function
 export const Index = () => {
     const dispatch = useDispatch();
     const [draft, setDraft] = useState<IAction>({});
@@ -84,53 +70,6 @@ export const Index = () => {
         setFormValidationState(initialFormValidationState);
     };
 
-    const handleChange = (field: string, e: ChangeEvent<HTMLInputElement>) => {
-        setDraft(prev => ({
-            ...prev,
-            [e.target.name]: e.target.value
-        }));
-
-        if (field === 'script') {
-            setFormValidationState(prevState => ({
-                ...prevState,
-                script: isScriptNameValid(e.target.value)
-            }));
-        }
-
-        if (field === 'label') {
-            setFormValidationState(prevState => ({
-                ...prevState,
-                label: isValueEmpty(e.target.value)
-            }));
-        }
-    };
-
-    const handleEditorChange = (value: string) => {
-        if(!isValidJson(value)) {
-            setLoading(true);
-            return;
-        };
-        setDraft((prev) => ({
-            ...prev,
-            form: value
-        }));
-        setLoading(false);
-    };
-
-    const scriptInputErrorProperties = {
-        ...!formValidationState.script && {
-            error: true,
-            helperText: translate('Action.Details.Form.Script.Error'),
-        },
-    };
-
-    const labelInputErrorProperties = {
-        ...(!formValidationState.label && {
-            error: true,
-            helperText: translate('Action.Details.Form.Label.Error'),
-        }),
-    };
-
     return (
         <>
             <CustomDialog
@@ -142,60 +81,26 @@ export const Index = () => {
                 confirmButtonOptions={{
                     label: translate('Common.Save'),
                     onClick: handleSubmit,
-                    isDisabled: !checkIsFormValid(),
+                    isDisabled: !checkIsFormValid()
                 }}
                 cancelButtonOptions={{
                     label: translate('Common.Cancel'),
-                    onClick: handleClose,
+                    onClick: handleClose
                 }}
-                maxWidth={'xl'}>
+                maxWidth={'xl'}
+            >
                 <Grid container>
                     <Grid item xs={8} pr={2}>
-                        <form onSubmit={handleSubmit}>
-                            <TextField
-                                fullWidth
-                                label={translate('Action.Details.Script')}
-                                name="script"
-                                sx={{
-                                    margin: (theme) =>
-                                        `${theme.spacing(1)} 0`,
-                                }}
-                                value={draft.script}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('script', e)}
-                                autoComplete="off"
-                                {...scriptInputErrorProperties}
-                            />
-                            <TextField
-                                fullWidth
-                                label={translate('Action.Details.Label')}
-                                name="label"
-                                required
-                                sx={{
-                                    margin: (theme) =>
-                                        `${theme.spacing(
-                                            1
-                                        )} 0 ${theme.spacing(5)} 0`,
-                                }}
-                                value={draft.label}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('label', e)}
-                                autoComplete="off"
-                                {...labelInputErrorProperties}
-                            />
-                            <ErrorBoundary>
-                                <Editor
-                                    height="60vh"
-                                    defaultLanguage="json"
-                                    value={draft.form}
-                                    onChange={handleEditorChange}
-                                />
-                            </ErrorBoundary>
-                        </form>
+                        <ExternalActionForm
+                            draft={draft}
+                            setDraft={setDraft}
+                            formValidationState={formValidationState}
+                            setFormValidationState={setFormValidationState}
+                        />
+                        <CustomEditor setLoading={setLoading} setDraft={setDraft} draftForm={draft.form} />
                     </Grid>
                     <Grid item xs={4}>
-                        <LiveView
-                            draft={draft}
-                            loading={loading}
-                            setLoading={setLoading}/>
+                        <LiveView draft={draft} loading={loading} setLoading={setLoading} />
                     </Grid>
                 </Grid>
             </CustomDialog>

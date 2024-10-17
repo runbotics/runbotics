@@ -1,4 +1,9 @@
-export const initialFormValidationState = {
+export interface ExternalActionFormValidationState {
+    script: boolean;
+    label: boolean
+}
+
+export const initialFormValidationState: ExternalActionFormValidationState = {
     script: false,
     label: false
 };
@@ -19,3 +24,12 @@ export   const isScriptNameValid = (scriptName: string) => {
 
     return true;
 };
+
+export function isValidJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
