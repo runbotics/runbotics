@@ -2,21 +2,13 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import Editor from '@monaco-editor/react';
 import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     Grid,
-    LinearProgress,
-    TextField,
-    Typography
+    TextField
 } from '@mui/material';
 
 import { useSnackbar } from 'notistack';
-import { v4 as uuidv4 } from 'uuid';
 
+import CustomDialog from '#src-app/components/CustomDialog';
 import ErrorBoundary from '#src-app/components/utils/ErrorBoundary';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -25,8 +17,9 @@ import {
     setShowEditModal
 } from '#src-app/store/slices/Action/Action.thunks';
 import { IAction } from '#src-app/types/model/action.model';
-import JSONSchemaFormRenderer from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/renderers/JSONSchemaFormRenderer';
-import customWidgets from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets';
+
+import { LiveView } from './LiveView';
+import { initialFormValidationState, isScriptNameValid, isValueEmpty } from '../action.utils';
 
 export function isValidJson(str) {
     try {
@@ -41,34 +34,29 @@ export function isValidJson(str) {
 export const Index = () => {
     const dispatch = useDispatch();
     const [draft, setDraft] = useState<IAction>({});
-    const [live, setLive] = useState<any>();
-    const [loading, setLoading] = useState(false);
     const showEditModal = useSelector(state => state.action.showEditModal);
+    const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const draftState = useSelector(state => state.action.draft);
     const { translate } = useTranslations();
+    const [formValidationState, setFormValidationState] = useState(initialFormValidationState);
+
+    const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
 
     useEffect(() => {
         setDraft(draftState.action);
     }, [draftState.action]);
 
-    useEffect(() => {
-        setLoading(true);
-        const handler = setTimeout(() => {
-            setLive({
-                id: uuidv4(),
-                definition: JSON.parse(draft.form)
-            });
-            setLoading(false);
-        }, 1000);
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [draft.form]);
-
     const handleSubmit = () => {
         if (!draft.script.startsWith('external.')) {
             enqueueSnackbar(translate('Action.Details.ExternalScript.Error'), {
+                variant: 'error'
+            });
+            return;
+        }
+
+        if (!checkIsFormValid) {
+            enqueueSnackbar(translate('Action.Details.Form.Validation.Error'), {
                 variant: 'error'
             });
             return;
@@ -91,11 +79,30 @@ export const Index = () => {
         }
     };
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleClose = () => {
+        dispatch(setShowEditModal({ show: false }));
+        setFormValidationState(initialFormValidationState);
+    };
+
+    const handleChange = (field: string, e: ChangeEvent<HTMLInputElement>) => {
         setDraft(prev => ({
             ...prev,
             [e.target.name]: e.target.value
         }));
+
+        if (field === 'script') {
+            setFormValidationState(prevState => ({
+                ...prevState,
+                script: isScriptNameValid(e.target.value)
+            }));
+        }
+
+        if (field === 'label') {
+            setFormValidationState(prevState => ({
+                ...prevState,
+                label: isValueEmpty(e.target.value)
+            }));
+        }
     };
 
     const handleEditorChange = (value: string) => {
@@ -111,16 +118,14 @@ export const Index = () => {
     };
 
     const scriptInputErrorProperties = {
-        ...((draft.script === '' ||
-            (!draft.script?.startsWith('external.') ||
-                draft.script?.length < 10)) && {
+        ...!formValidationState.script && {
             error: true,
             helperText: translate('Action.Details.Form.Script.Error'),
-        }),
+        },
     };
 
     const labelInputErrorProperties = {
-        ...(draft.label === '' && {
+        ...(!formValidationState.label && {
             error: true,
             helperText: translate('Action.Details.Form.Label.Error'),
         }),
@@ -128,99 +133,72 @@ export const Index = () => {
 
     return (
         <>
-            <Dialog
-                open={showEditModal}
+            <CustomDialog
+                isOpen={showEditModal}
                 onClose={() => {}}
-                fullWidth
-                maxWidth="xl">
-                <DialogTitle>
-                    {translate('Action.Details.Dialog.SaveAction', {
-                        script: draft.script
-                    })}
-                </DialogTitle>
-                <DialogContent>
-                    <Grid container>
-                        <Grid item xs={8}>
-                            <form onSubmit={handleSubmit}>
-                                <TextField
-                                    fullWidth
-                                    label={translate('Action.Details.Script')}
-                                    name="script"
-                                    sx={{
-                                        margin: (theme) =>
-                                            `${theme.spacing(1)} 0`,
-                                    }}
-                                    value={draft.script}
-                                    onChange={handleChange}
-                                    {...scriptInputErrorProperties}
+                title={translate('Action.Details.Dialog.SaveAction', {
+                    script: draft.script
+                })}
+                confirmButtonOptions={{
+                    label: translate('Common.Save'),
+                    onClick: handleSubmit,
+                    isDisabled: !checkIsFormValid(),
+                }}
+                cancelButtonOptions={{
+                    label: translate('Common.Cancel'),
+                    onClick: handleClose,
+                }}
+                maxWidth={'xl'}>
+                <Grid container>
+                    <Grid item xs={8} pr={2}>
+                        <form onSubmit={handleSubmit}>
+                            <TextField
+                                fullWidth
+                                label={translate('Action.Details.Script')}
+                                name="script"
+                                sx={{
+                                    margin: (theme) =>
+                                        `${theme.spacing(1)} 0`,
+                                }}
+                                value={draft.script}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('script', e)}
+                                autoComplete="off"
+                                {...scriptInputErrorProperties}
+                            />
+                            <TextField
+                                fullWidth
+                                label={translate('Action.Details.Label')}
+                                name="label"
+                                required
+                                sx={{
+                                    margin: (theme) =>
+                                        `${theme.spacing(
+                                            1
+                                        )} 0 ${theme.spacing(5)} 0`,
+                                }}
+                                value={draft.label}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('label', e)}
+                                autoComplete="off"
+                                {...labelInputErrorProperties}
+                            />
+                            <ErrorBoundary>
+                                <Editor
+                                    height="60vh"
+                                    defaultLanguage="json"
+                                    value={draft.form}
+                                    onChange={handleEditorChange}
                                 />
-                                <TextField
-                                    fullWidth
-                                    label={translate('Action.Details.Label')}
-                                    name="label"
-                                    sx={{
-                                        margin: (theme) =>
-                                            `${theme.spacing(
-                                                1
-                                            )} 0 ${theme.spacing(2)} 0`,
-                                    }}
-                                    value={draft.label}
-                                    onChange={handleChange}
-                                    {...labelInputErrorProperties}
-                                />
-                                <ErrorBoundary>
-                                    <Editor
-                                        height="60vh"
-                                        defaultLanguage="json"
-                                        value={draft.form}
-                                        onChange={handleEditorChange}
-                                    />
-                                </ErrorBoundary>
-                            </form>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Box px={2} pt={1}>
-                                <Typography variant="h4" gutterBottom>
-                                    {translate(
-                                        'Action.Details.Dialog.LiveView'
-                                    )}
-                                </Typography>
-                            </Box>
-                            {loading && <LinearProgress />}
-
-                            {live && live.id && (
-                                <ErrorBoundary key={live.id}>
-                                    <JSONSchemaFormRenderer
-                                        id={live.id}
-                                        schema={live.definition.schema}
-                                        uiSchema={live.definition.uiSchema}
-                                        formData={live.definition.formData}
-                                        widgets={customWidgets}
-                                    />
-                                </ErrorBoundary>
-                            )}
-                        </Grid>
+                            </ErrorBoundary>
+                        </form>
                     </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        color="primary"
-                        onClick={() => {
-                            dispatch(setShowEditModal({ show: false }));
-                        }}>
-                        {translate('Common.Cancel')}
-                    </Button>
-                    <Button
-                        type="submit"
-                        disabled={loading}
-                        variant="contained"
-                        color="primary"
-                        autoFocus
-                        onClick={handleSubmit}>
-                        {translate('Common.Save')}
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    <Grid item xs={4}>
+                        <LiveView
+                            draft={draft}
+                            loading={loading}
+                            setLoading={setLoading}/>
+                    </Grid>
+                </Grid>
+            </CustomDialog>
         </>
     );
 };
