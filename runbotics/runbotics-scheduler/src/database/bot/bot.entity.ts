@@ -23,9 +23,6 @@ import { NotificationBot as NotificationBotEntity } from '#/scheduler-database/n
 
 @Entity({ name: 'bot', synchronize: false })
 export class BotEntity implements IBot {
-    @Column('uuid', { name: 'tenant_id' })
-    tenantId: string;
-    
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
