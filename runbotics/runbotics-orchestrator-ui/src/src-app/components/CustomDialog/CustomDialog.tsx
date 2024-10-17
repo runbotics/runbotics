@@ -8,7 +8,15 @@ import { CustomDialogProps } from './CustomDialog.types';
 import DialogButton from './DialogButton';
 
 
-const CustomDialog: FC<CustomDialogProps> = ({ isOpen, onClose, title, children, confirmButtonOptions, cancelButtonOptions, maxWidth }) => (
+const CustomDialog: FC<CustomDialogProps> = ({
+    isOpen,
+    onClose,
+    title,
+    children,
+    confirmButtonOptions,
+    cancelButtonOptions,
+    maxWidth
+}) => (
     <Dialog
         open={isOpen}
         onClose={onClose}
