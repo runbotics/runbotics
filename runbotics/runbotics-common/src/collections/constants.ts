@@ -1,4 +1,4 @@
 export enum DefaultCollections {
     PUBLIC = 'Public',
-    GUEST = 'Guest'
+    GUEST = 'Guest',
 }

@@ -14,7 +14,7 @@ import { isScheduledProcess, Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/pro
 import { BotService } from '#/database/bot/bot.service';
 import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, QueueEventType, WsMessage } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';

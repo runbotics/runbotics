@@ -3,8 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { IProcess } from 'runbotics-common';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '#/database/user/user.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
+import { ProcessCollectionService } from '#/database/process-collection/dto/process-collection.service';
+
 
 const relations = [
     'createdBy',
@@ -25,10 +27,12 @@ interface PartialUpdateProcess extends IProcess {
 export class ProcessService {
     constructor(
         @InjectRepository(ProcessEntity)
-        private processRepository: Repository<ProcessEntity>
-    ) {}
-
-    findById(id: number): Promise<IProcess> {
+        private readonly processRepository: Repository<ProcessEntity>,
+        private readonly processCollectionService: ProcessCollectionService,
+    ) {
+    }
+    
+    findById(id: number): Promise<IProcess | null> {
         return this.processRepository.findOne({ where: { id }, relations });
     }
 
@@ -80,5 +84,11 @@ export class ProcessService {
             .catch(() => {
                 throw new NotFoundException();
             });
+    }
+
+    async hasAccess(user: UserEntity, processId: number): Promise<boolean> {
+        const process = await this.processRepository.findOneByOrFail({id: processId});
+        
+        return this.processCollectionService.hasAccess(user, process.processCollectionId);
     }
 }

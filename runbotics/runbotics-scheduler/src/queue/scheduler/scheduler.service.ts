@@ -1,4 +1,4 @@
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { JobInformation, JobStatus, Queue } from 'bull';

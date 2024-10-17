@@ -58,23 +58,25 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
 
     const handleEdit = async (processToSave: IProcess) => {
         try {
-            await dispatch(processActions.updateProcess(processToSave));
+            await dispatch(processActions.updateProcess({ resourceId: processToSave.id, payload: processToSave }));
             setIsDialogVisible(false);
             if (isCollectionsTab) {
                 await dispatch(
-                    processActions.getProcessesPageByCollection({
-                        page,
-                        size: pageSize,
-                        filter: {
-                            contains: {
-                                ...(search.trim() && {
-                                    name: search.trim(),
-                                    createdByName: search.trim(),
-                                    tagName: search.trim()
-                                })
-                            },
-                            equals: {
-                                ...(collectionId !== null && { collectionId })
+                    processActions.getProcessesPage({
+                        pageParams: {
+                            page,
+                            size: pageSize,
+                            filter: {
+                                contains: {
+                                    ...(search.trim() && {
+                                        name: search.trim(),
+                                        createdByName: search.trim(),
+                                        tagName: search.trim()
+                                    })
+                                },
+                                equals: {
+                                    ...(collectionId !== null && { processCollectionId: collectionId })
+                                }
                             }
                         }
                     }),
@@ -82,15 +84,17 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
             } else {
                 await dispatch(
                     processActions.getProcessesPage({
-                        page,
-                        size: pageSize,
-                        filter: {
-                            contains: {
-                                ...(search.trim() && {
-                                    name: search.trim(),
-                                    createdByName: search.trim(),
-                                    tagName: search.trim()
-                                })
+                        pageParams: {
+                            page,
+                            size: pageSize,
+                            filter: {
+                                contains: {
+                                    ...(search.trim() && {
+                                        name: search.trim(),
+                                        createdByName: search.trim(),
+                                        tagName: search.trim()
+                                    })
+                                }
                             }
                         }
                     }),

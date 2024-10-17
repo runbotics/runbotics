@@ -32,7 +32,7 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     setPageSize,
     page,
     setPage,
-    collectionId
+    collectionId,
 }) => {
     const dispatch = useDispatch();
     const replaceQueryParams = useReplaceQueryParams();
@@ -40,35 +40,39 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     useUpdateEffect(() => {
         if (collectionId !== undefined) {
             dispatch(
-                processActions.getProcessesPageByCollection({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim(),
-                            })
+                processActions.getProcessesPage({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim(),
+                                }),
+                            },
+                            equals: {
+                                ...(collectionId !== null && { processCollectionId: collectionId }),
+                            },
                         },
-                        equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
-                    },
-                })
+                    }
+                }),
             );
         } else {
             dispatch(
                 processActions.getProcessesPage({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim()
-                            })
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim(),
+                                }),
+                            },
                         },
                     },
                 }),

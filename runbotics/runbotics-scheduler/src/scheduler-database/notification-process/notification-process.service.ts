@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '#/database/user/user.entity';
 import { NotificationProcess } from './notification-process.entity';
 import { CreateNotificationProcessDto } from './dto/create-notification-process.dto';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 
 
 @Injectable()

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { BotEntity } from './bot.entity';
 import {
     BotStatus,
-    BotSystem,
+    BotSystemType, 
     DefaultCollections,
     IBot,
     IBotCollection,
@@ -48,7 +48,7 @@ export class BotService {
     ): Promise<IBot[]> {
 
         const systemCondition = `${
-            system.name === BotSystem.ANY ? '' : 'bot.SYSTEM = :system'
+            system.name === BotSystemType.ANY ? '' : 'bot.SYSTEM = :system'
         }`;
 
         const statusCondition =

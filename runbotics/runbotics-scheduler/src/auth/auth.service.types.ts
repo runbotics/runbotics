@@ -1,8 +1,9 @@
-import { IBotCollection, IBotSystem, IUser } from 'runbotics-common';
+import { IBotCollection, IUser } from 'runbotics-common';
+import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 
 export interface MutableBotParams {
     collection: IBotCollection;
-    system: IBotSystem;
+    system: BotSystem;
     version: string;
     user: IUser;
 }
