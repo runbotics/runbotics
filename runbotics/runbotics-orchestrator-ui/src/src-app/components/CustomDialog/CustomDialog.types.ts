@@ -1,3 +1,5 @@
+import { Breakpoint } from '@mui/system';
+
 export interface CustomDialogProps {
     isOpen: boolean;
     onClose: () => void;
@@ -5,6 +7,8 @@ export interface CustomDialogProps {
     children?: React.ReactNode;
     confirmButtonOptions?: DialogButton;
     cancelButtonOptions?: DialogButton;
+    maxWidth?: false | Breakpoint;
+    fullWidth?: boolean;
 }
 
 export interface DialogButton {

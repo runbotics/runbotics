@@ -7,10 +7,22 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { CustomDialogProps } from './CustomDialog.types';
 import DialogButton from './DialogButton';
 
-const CustomDialog: FC<CustomDialogProps> = ({ isOpen, onClose, title, children, confirmButtonOptions, cancelButtonOptions }) => (
+
+const CustomDialog: FC<CustomDialogProps> = ({
+    isOpen,
+    onClose,
+    title,
+    children,
+    confirmButtonOptions,
+    cancelButtonOptions,
+    maxWidth,
+    fullWidth
+}) => (
     <Dialog
         open={isOpen}
         onClose={onClose}
+        maxWidth={maxWidth ? maxWidth : 'sm'}
+        fullWidth={fullWidth ? fullWidth : false}
     >
         <DialogTitle>
             <Typography variant='h4'>{title}</Typography>
