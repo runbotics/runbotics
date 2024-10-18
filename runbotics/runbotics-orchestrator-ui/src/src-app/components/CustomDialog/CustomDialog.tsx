@@ -15,12 +15,14 @@ const CustomDialog: FC<CustomDialogProps> = ({
     children,
     confirmButtonOptions,
     cancelButtonOptions,
-    maxWidth
+    maxWidth,
+    fullWidth
 }) => (
     <Dialog
         open={isOpen}
         onClose={onClose}
         maxWidth={maxWidth ? maxWidth : 'sm'}
+        fullWidth={fullWidth ? fullWidth : false}
     >
         <DialogTitle>
             <Typography variant='h4'>{title}</Typography>

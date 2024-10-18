@@ -88,6 +88,7 @@ export const Index = () => {
                     onClick: handleClose
                 }}
                 maxWidth={'xl'}
+                fullWidth={true}
             >
                 <Grid container>
                     <Grid item xs={8} pr={2}>

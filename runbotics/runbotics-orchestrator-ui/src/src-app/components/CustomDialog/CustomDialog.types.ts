@@ -7,7 +7,8 @@ export interface CustomDialogProps {
     children?: React.ReactNode;
     confirmButtonOptions?: DialogButton;
     cancelButtonOptions?: DialogButton;
-    maxWidth?: false | Breakpoint
+    maxWidth?: false | Breakpoint;
+    fullWidth?: boolean;
 }
 
 export interface DialogButton {
