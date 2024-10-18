@@ -16,7 +16,7 @@ export const isValueEmpty = (value: string) => {
     return true;
 };
 
-export   const isScriptNameValid = (scriptName: string) => {
+export const isScriptNameValid = (scriptName: string) => {
     if (!scriptName || !scriptName.startsWith('external.') ||
         scriptName.length < 10 || scriptName.trim() === 'external.') {
         return false;
@@ -25,11 +25,11 @@ export   const isScriptNameValid = (scriptName: string) => {
     return true;
 };
 
-export function isValidJson(str) {
+export const isValidJson = (str: string) => {
     try {
         JSON.parse(str);
     } catch (e) {
         return false;
     }
     return true;
-}
+};
