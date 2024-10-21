@@ -44,7 +44,7 @@ export class ProcessInstanceEvent {
     @Column({ type: 'time without time zone', transformer: dateTransformer })
     finished: string;
 
-    @Column({ type: 'enum', enum: ProcessInstanceEventStatus })
+    @Column({ type: 'character varying', length: 255 })
     status: ProcessInstanceEventStatus;
 
     @Column({ type: 'text', nullable: true })

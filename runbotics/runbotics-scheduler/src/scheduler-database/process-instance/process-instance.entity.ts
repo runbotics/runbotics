@@ -1,6 +1,5 @@
 import { BotEntity } from '#/database/bot/bot.entity';
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
-import { ProcessEntity } from '#/database/process/process.entity';
 import { UserEntity } from '#/database/user/user.entity';
 import {
     EmailTriggerData,
@@ -15,6 +14,7 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ProcessEntity } from '../process/process.entity';
 
 @Entity({ name: 'process_instance' })
 export class ProcessInstance {
@@ -30,7 +30,7 @@ export class ProcessInstance {
     @Column({ type: 'text', nullable: true })
     output?: string;
 
-    @Column({ type: 'enum', enum: ProcessInstanceStatus })
+    @Column({ type: 'character varying', length: 255 })
     status: ProcessInstanceStatus;
 
     @Column({ type: 'time without time zone', transformer: dateTransformer })
@@ -93,7 +93,7 @@ export class ProcessInstance {
     @Column({ type: 'text', nullable: true })
     error?: string;
 
-    @Column({ type: 'enum', enum: TriggerEvent })
+    @Column({ type: 'character varying', length: 255 })
     trigger: TriggerEvent;
 
     @Column({ name: 'trigger_data', type: 'jsonb', nullable: true })
