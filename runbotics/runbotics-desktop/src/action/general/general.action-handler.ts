@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
-import { GeneralAction, BotSystem, IProcess, ProcessInstanceStatus, TriggerEvent } from 'runbotics-common';
+import { GeneralAction, IProcess, ProcessInstanceStatus, TriggerEvent, BotSystemType } from 'runbotics-common';
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
@@ -44,6 +44,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
     async startProcess(
         request: DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
     ): Promise<StartProcessActionOutput> {
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve, reject) => {
             const response = await orchestratorAxios.get<IProcess>(
                 `/api/processes/${request.input.processId}`,
