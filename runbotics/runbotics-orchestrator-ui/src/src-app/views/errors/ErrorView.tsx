@@ -15,11 +15,10 @@ import Logo from '#src-app/components/utils/Logo';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { useDispatch, useSelector, RootState } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
 
-import { clearError } from '#src-app/store/slices/Views/httpErrorSlice';
-// import { RootState } from '#src-app/store';
+import { setErrorCode, clearError, httpErrorSelector } from '#src-app/store/slices/Views/httpErrorSlice';
 
 import BackgroundLogo from './BackgroundLogo';
 
@@ -44,12 +43,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
     },
 }));
 
-interface ErrorViewProps {}
-
-const ErrorView: FC<ErrorViewProps> = () => {
-    const [errorTitle, setErrorTitle] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [errorCode, setErrorCode] = useState<number | null>(null);
+const ErrorView: FC = () => {
     const theme = useTheme();
     const { user } = useAuth();
     const dispatch = useDispatch();
@@ -57,23 +51,15 @@ const ErrorView: FC<ErrorViewProps> = () => {
     const { translate } = useTranslations();
     const router = useRouter();
 
-    const { title, message } = useSelector((state: RootState) => ({
-        title: state.httpErrorReducer.title,
-        message: state.httpErrorReducer.message,
-    }));
+    const { code: errorCode, title: errorTitle, message: errorMessage } = useSelector(httpErrorSelector);
 
     useEffect(() => {
         const { code } = router.query;
 
         if (!isNaN(Number(code)) && Object.values(HttpErrorCodes).includes(Number(code))) {
-            setErrorCode(Number(code));
-        } else {
-            if (title && message) {
-                setErrorTitle(title);
-                setErrorMessage(message);
-            } else {
-                router.replace('/404');
-            }
+            dispatch(setErrorCode(Number(code)));
+        } else if (!(errorTitle && errorMessage)) {
+            router.replace('/404', undefined, {shallow: true})
         }
 
         return () => {

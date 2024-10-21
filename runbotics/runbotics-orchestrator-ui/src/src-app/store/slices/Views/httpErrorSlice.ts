@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { RootState } from '../../index';
+
 interface HttpErrorState {
     code: number | null;
     title: string | null;
@@ -16,8 +18,10 @@ const httpErrorSlice = createSlice({
     name: 'httpError',
     initialState,
     reducers: {
+        setErrorCode: (state, action: PayloadAction<number>) => {
+            state.code = action.payload;
+        },
         setCustomError: (state, action: PayloadAction<{ title: string; message: string }>) => {
-            state.code = null;
             state.title = action.payload.title;
             state.message = action.payload.message;
         },
@@ -29,8 +33,10 @@ const httpErrorSlice = createSlice({
     },
 });
 
-export const { setCustomError, clearError } = httpErrorSlice.actions;
+export const { setErrorCode, setCustomError, clearError } = httpErrorSlice.actions;
 
 export const httpErrorReducer = httpErrorSlice.reducer;
+
+export const httpErrorSelector = (state: RootState) => state.httpErrorReducer;
 
 export default httpErrorReducer;
