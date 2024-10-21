@@ -9,7 +9,6 @@ import {
     ParseIntPipe,
     Patch,
     Post,
-    Put,
     UseInterceptors,
 } from '@nestjs/common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -82,7 +81,7 @@ export class ProcessController {
         return this.processCrudService.createGuestProcess();
     }
 
-    @Put(':id')
+    @Patch(':id')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
     async update(
         @Param('id', new ParseIntPipe()) id: number,
@@ -163,7 +162,7 @@ export class ProcessController {
     ) {
         await this.checkAccess(user, id);
 
-        return this.processCrudService.update(user.tenantId, id, { outputType: updateOutputTypeDto.outputType });
+        return this.processCrudService.update(user.tenantId, id, { output: updateOutputTypeDto.output });
     }
 
     @Get()
@@ -179,7 +178,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     getPage(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
-        @Pageable() paging: Paging, 
+        @Pageable() paging: Paging,
         @User() user: UserEntity,
     ): Promise<Page<ProcessEntity>> {
         return this.processCrudService.getPage(user, specs, paging);

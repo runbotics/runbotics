@@ -1,4 +1,4 @@
-import { FindManyOptions, Repository } from "typeorm";
+import { FindManyOptions, Repository } from 'typeorm';
 
 export interface Page<T> {
     content: T[];
@@ -25,9 +25,9 @@ export const getPage = async <T>(repo: Repository<T>, options: FindManyOptions<T
         first: options.skip === 0,
         totalElements: count,
         totalPages,
-        last: totalPages === 0 || page + 1 === totalPages,
+        last: page === totalPages - 1,
         number: page,
         size: pageSize,
         numberOfElements: entities.length,
-    }
-}
+    };
+};

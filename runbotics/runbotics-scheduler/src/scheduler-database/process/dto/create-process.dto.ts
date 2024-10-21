@@ -21,7 +21,7 @@ export const createProcessSchema = z.object({
     botCollection: botCollectionReferenceSchema.optional(),
     processCollection: processCollectionReferenceSchema.optional(),
     globalVariables: z.array(createGlobalVariableSchema).default([]),
-    outputType: processOutputReferenceSchema
+    output: processOutputReferenceSchema
         .default({
             type: ProcessOutputType.JSON,
         }),
