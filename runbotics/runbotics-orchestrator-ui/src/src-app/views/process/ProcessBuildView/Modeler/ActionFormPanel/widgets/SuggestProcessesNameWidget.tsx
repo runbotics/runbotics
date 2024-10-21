@@ -4,7 +4,7 @@ import { TextField, Autocomplete, Button } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
 import { useRouter } from 'next/router';
-import { BotSystem } from 'runbotics-common';
+import { BotSystemType } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -39,7 +39,7 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     } = useSelector((state) => state.process.draft);
 
     const isProcessDisabled = (processSystem: string): boolean => (
-        !(parentProcessSystem === processSystem || processSystem === BotSystem.ANY)
+        !(parentProcessSystem === processSystem || processSystem === BotSystemType.ANY)
     );
 
     const options: ProcessOption[] = useMemo(

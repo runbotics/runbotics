@@ -27,7 +27,7 @@ export interface IProcess {
     editor?: IUser | null;
     tags?: Tag[];
     notifications?: NotificationProcess[];
-    outputType?: ProcessOutput;
+    output?: ProcessOutput;
 }
 
 export const defaultProcessValue: Readonly<IProcess> = {

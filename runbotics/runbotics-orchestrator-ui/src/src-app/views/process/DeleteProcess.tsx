@@ -40,12 +40,33 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
     const isCollectionsTab = getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
 
     const handleSubmit = async () => {
-        await dispatch(processActions.deleteProcess({ processId: props.process.id }));
+        await dispatch(processActions.deleteProcess({ resourceId: props.process.id }));
         props.onDelete(props.process);
 
         if (isCollectionsTab) {
             await dispatch(
-                processActions.getProcessesPageByCollection({
+                processActions.getProcessesPage({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim(),
+                                }),
+                            },
+                            equals: {
+                                ...(collectionId !== null && { collectionId }),
+                            },
+                        },
+                    },
+                }),
+            );
+        } else {
+            dispatch(processActions.getProcessesPage({
+                pageParams: {
                     page,
                     size: pageSize,
                     filter: {
@@ -53,26 +74,9 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
                             ...(search.trim() && {
                                 name: search.trim(),
                                 createdByName: search.trim(),
-                                tagName: search.trim()
-                            })
+                                tagName: search.trim(),
+                            }),
                         },
-                        equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
-                    }
-                }),
-            );
-        } else {
-            dispatch(processActions.getProcessesPage({
-                page,
-                size: pageSize,
-                filter: {
-                    contains: {
-                        ...(search.trim() && {
-                            name: search.trim(),
-                            createdByName: search.trim(),
-                            tagName: search.trim()
-                        })
                     },
                 },
             }));
