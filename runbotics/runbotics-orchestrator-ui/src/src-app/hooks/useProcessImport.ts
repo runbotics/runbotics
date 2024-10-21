@@ -1,5 +1,4 @@
-
-import { isValidJson } from '#src-app/views/action/action.utils';
+import { isValidJson } from '#src-app/utils/isValidJson';
 import { AdditionalInfo } from '#src-app/views/process/ProcessBuildView/Modeler/BpmnModeler';
 
 interface ImportInfo extends AdditionalInfo {

@@ -8,28 +8,14 @@ export const initialFormValidationState: ExternalActionFormValidationState = {
     label: false
 };
 
-export const isValueEmpty = (value: string) => {
-    if (!value || value.trim() === '') {
-        return false;
-    }
-
-    return true;
-};
-
 export const isScriptNameValid = (scriptName: string) => {
+    const MANDATORY_SCRIPT_NAME_PREFIX = '.external';
+    const MIN_SCRIPT_NAME_LENGTH = MANDATORY_SCRIPT_NAME_PREFIX.length + 1;
+
     if (!scriptName || !scriptName.startsWith('external.') ||
-        scriptName.length < 10 || scriptName.trim() === 'external.') {
+        scriptName.length < MIN_SCRIPT_NAME_LENGTH || scriptName.trim() === 'external.') {
         return false;
     }
 
-    return true;
-};
-
-export const isValidJson = (str: string) => {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
     return true;
 };

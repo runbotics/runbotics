@@ -6,7 +6,7 @@ import ErrorBoundary from '#src-app/components/utils/ErrorBoundary';
 
 import { IAction } from '#src-app/types/model/action.model';
 
-import { isValidJson } from '../action.utils';
+import { isValidJson } from '#src-app/utils/isValidJson';
 
 interface EditorProps {
     setLoading: (value: boolean) => void;

@@ -6,7 +6,9 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { IAction } from '#src-app/types/model/action.model';
 
-import { ExternalActionFormValidationState, isScriptNameValid, isValueEmpty } from '../action.utils';
+import { isStringValueEmpty } from '#src-app/utils/isStringValueEmpty';
+
+import { ExternalActionFormValidationState, isScriptNameValid } from '../action.utils';
 
 
 interface ExternalActionFormProps {
@@ -19,25 +21,28 @@ interface ExternalActionFormProps {
 export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraft, formValidationState, setFormValidationState }) => {
     const { translate } = useTranslations();
 
-    const handleChange = (field: string, e: ChangeEvent<HTMLInputElement>) => {
+    const handleScriptChange = (e: ChangeEvent<HTMLInputElement>) => {
         setDraft(prev => ({
             ...prev,
-            [e.target.name]: e.target.value
+            script: e.target.value
         }));
 
-        if (field === 'script') {
-            setFormValidationState(prevState => ({
-                ...prevState,
-                script: isScriptNameValid(e.target.value)
-            }));
-        }
+        setFormValidationState(prevState => ({
+            ...prevState,
+            script: isScriptNameValid(e.target.value)
+        }));
+    };
 
-        if (field === 'label') {
-            setFormValidationState(prevState => ({
-                ...prevState,
-                label: isValueEmpty(e.target.value)
-            }));
-        }
+    const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setDraft(prev => ({
+            ...prev,
+            label: e.target.value
+        }));
+
+        setFormValidationState(prevState => ({
+            ...prevState,
+            label: !isStringValueEmpty(e.target.value)
+        }));
     };
 
     const scriptInputErrorProperties = {
@@ -62,11 +67,10 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
                 label={translate('Action.Details.Script')}
                 name="script"
                 sx={{
-                    margin: (theme) =>
-                        `${theme.spacing(1)} 0`,
+                    margin: theme => `${theme.spacing(1)} 0`
                 }}
                 value={draft.script}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('script', e)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleScriptChange(e)}
                 autoComplete="off"
                 {...scriptInputErrorProperties}
             />
@@ -76,13 +80,10 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
                 name="label"
                 required
                 sx={{
-                    margin: (theme) =>
-                        `${theme.spacing(
-                            1
-                        )} 0 ${theme.spacing(5)} 0`,
+                    margin: theme => `${theme.spacing(1)} 0 ${theme.spacing(5)} 0`
                 }}
                 value={draft.label}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange('label', e)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleLabelChange(e)}
                 autoComplete="off"
                 {...labelInputErrorProperties}
             />

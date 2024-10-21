@@ -60,8 +60,15 @@ export const Index = () => {
                 .unwrap()
                 .then(() => {
                     dispatch(activityActions.getAllActions());
+                    dispatch(setShowEditModal({ show: false }));
+                }).catch((error) => {
+                    if (!error || !error.message) {
+                        enqueueSnackbar(translate('Common.Errors.Request.GeneralError'), { variant: 'error' });
+                        return;
+                    }
+
+                    enqueueSnackbar(error.message, { variant: 'error' });
                 });
-            dispatch(setShowEditModal({ show: false }));
         }
     };
 
