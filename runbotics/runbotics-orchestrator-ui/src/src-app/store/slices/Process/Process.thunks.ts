@@ -52,7 +52,7 @@ export const fetchGuestDemoProcess = createAsyncThunk<IProcess>(
         .then((response) => response.data),
 );
 
-export const updateProcess = ApiTenantResource.patch<IProcess, IProcess>('processes/getByName', PROCESSES_PATH);
+export const updateProcess = ApiTenantResource.patch<IProcess, IProcess>('processes/update', PROCESSES_PATH);
 
 export const partialUpdateProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
     'processes/partialUpdate',
@@ -107,13 +107,13 @@ export const startProcess = createAsyncThunk<StartProcessResponse, {
     executionInfo?: Record<string, any>
 }>(
     'processes/startProcess',
-    ({ 
+    ({
         processId,
         clientId,
         executionInfo,
-    }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, { 
+    }, thunkAPI) => Axios.post<StartProcessResponse>(`/scheduler/processes/${processId}/start`, {
         clientId,
-        variables: executionInfo, 
+        variables: executionInfo,
     })
         .then((response) => response.data)
         .catch((error) => {

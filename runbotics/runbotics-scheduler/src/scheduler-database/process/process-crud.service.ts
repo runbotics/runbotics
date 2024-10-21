@@ -9,7 +9,7 @@ import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { UpdateProcessDto } from '#/scheduler-database/process/dto/update-process.dto';
 import { UpdateDiagramDto } from '#/scheduler-database/process/dto/update-diagram.dto';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
-import { getPage } from '#/utils/page/page';
+import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
@@ -19,6 +19,9 @@ const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     system: true,
     botCollection: true,
     output: true,
+    createdBy: true,
+    editor: true,
+    tags: true,
 };
 
 @Injectable()
@@ -57,14 +60,14 @@ export class ProcessCrudService {
 
         process.editor = user;
         process.processCollectionId = processDto.processCollection?.id;
-        
+
         if(processDto.botCollection){
             process.botCollectionId = processDto.botCollection.id;
         }
         else {
             process.botCollectionId = (await this.botCollectionRepository.findOneByOrFail({ name: BotCollectionDefaultCollections.PUBLIC })).id;
         }
-        process.outputType = processDto.outputType?.type;
+        process.outputType = processDto.output.type;
         process.systemName = processDto.system.name;
 
         if (processDto.tags.length > 15) {
@@ -99,29 +102,25 @@ export class ProcessCrudService {
             throw new NotFoundException();
         }
 
-        const partial: Partial<ProcessEntity> = {};
-
         process.name = processDto.name;
         process.description = processDto.description;
         process.definition = processDto.definition;
         process.isPublic = processDto.isPublic;
-        partial.isAttended = processDto.isAttended;
-        partial.isTriggerable = processDto.isTriggerable;
+        process.isAttended = processDto.isAttended;
+        process.isTriggerable = processDto.isTriggerable;
 
-        partial.botCollectionId = processDto.botCollection?.id;
-        partial.outputType = processDto.outputType?.type;
-        partial.systemName = processDto.system?.name;
+        process.botCollectionId = processDto.botCollection?.id;
+        process.outputType = processDto.output?.type;
+        process.systemName = processDto.system?.name;
 
         if (processDto.tags?.length > 15) {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
-        // { id } is enough to persist a relation
-        partial.tags = processDto.tags as Tag[] | undefined;
+        // TODO: create/link tags to process
+        // partial.tags = processDto.tags as Tag[] | undefined;
 
-        await this.processRepository.update({ tenantId, id }, partial);
-
-        return this.processRepository.findOneBy({ tenantId, id });
+        return this.processRepository.save(process);
     }
 
     async updateDiagram(user: UserEntity, id: number, updateDiagramDto: UpdateDiagramDto) {
@@ -154,12 +153,12 @@ export class ProcessCrudService {
         return this.processRepository.find(options);
     }
 
-    getPage(user: UserEntity, specs: Specs<ProcessEntity>, paging: Paging) {
+    async getPage(user: UserEntity, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessEntity>> {
         const options: FindManyOptions<ProcessEntity> = {
             ...paging,
             ...specs,
         };
-        
+
         options.where = {
             ...options.where,
             tenantId: user.tenantId,
@@ -168,7 +167,12 @@ export class ProcessCrudService {
 
         options.relations = RELATIONS;
 
-        return getPage(this.processRepository, options);
+        const page = await getPage(this.processRepository, options);
+
+        return {
+            ...page,
+            content: page.content.map(this.formatUserDTO),
+        };
     }
 
     get(user: UserEntity, id: number) {
@@ -188,5 +192,19 @@ export class ProcessCrudService {
         });
 
         return id;
+    }
+
+    private formatUserDTO(process: ProcessEntity) {
+        return {
+            ...process,
+            createdBy: {
+                id: process.createdBy.id,
+                email: process.createdBy.email,
+            },
+            editor: {
+                id: process.createdBy.id,
+                email: process.createdBy.email,
+            },
+        };
     }
 }
