@@ -8,8 +8,8 @@ import { BotService } from '../database/bot/bot.service';
 import { UserService } from '../database/user/user.service';
 import { JWTPayload } from '../types';
 import { Logger } from '../utils/logger';
-import { BotStatus, BotSystem, IBot } from 'runbotics-common';
-import { BotSystemService } from '../database/bot-system/bot-system.service';
+import { BotStatus, BotSystemType, IBot } from 'runbotics-common';
+import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
 import { BotCollectionService } from '../database/bot-collection/bot-collection.service';
 import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
@@ -189,9 +189,9 @@ export class AuthService {
         }
     }
 
-    private validateBotSystem(system: BotSystem, client: Socket): void {
+    private validateBotSystem(system: BotSystemType, client: Socket): void {
         // this.logger.debug(`Validating bot - system (result:${Object.values(BotSystem).includes(system)})`);
-        if (Object.values(BotSystem).includes(system)) return;
+        if (Object.values(BotSystemType).includes(system)) return;
         client.disconnect();
         throw new WsException(`Bot system (${system}) is incompatible`);
     }

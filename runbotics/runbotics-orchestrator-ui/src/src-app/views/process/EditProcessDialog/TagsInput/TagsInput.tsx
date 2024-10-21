@@ -74,7 +74,7 @@ const TagsInput: FC<TagsInputProps> = ({
     const refreshTagList = (searchedValue: string) => {
         if (searchedValue === '') return;
 
-        dispatch(processActions.getTagsByName({ 
+        dispatch(processActions.getTagsByName({
             pageParams: { filter: { contains: { name: debouncedSearch } } } }
         ))
             .then(unwrapResult)
