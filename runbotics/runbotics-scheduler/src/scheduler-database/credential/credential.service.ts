@@ -79,6 +79,8 @@ export class CredentialService {
                 credentialName: credential.name,
                 operationType: CredentialOperationType.CREATE,
             });
+
+            return credential;
         })
         .catch(async (error) => {
             await this.validateName(credentialDto.name, collectionId, tenantId);
@@ -244,6 +246,8 @@ export class CredentialService {
                 ...(credentialOldName && { credentialOldName }),
                 operationType: CredentialOperationType.EDIT,
             });
+
+            return credential;
         })
         .catch(async (error) => {
             await this.validateName(
@@ -321,6 +325,8 @@ export class CredentialService {
             operationType: CredentialOperationType.CHANGE_ATTRIBUTE,
             attributeName,
         });
+
+        return credential;
     });
   }
 
