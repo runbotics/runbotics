@@ -1,6 +1,6 @@
 import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
 
-import { isValidJson } from '#src-app/views/action/ActionDetails';
+import { isValidJson } from '#src-app/utils/isValidJson';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 
