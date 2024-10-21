@@ -25,7 +25,7 @@ export const getPage = async <T>(repo: Repository<T>, options: FindManyOptions<T
         first: options.skip === 0,
         totalElements: count,
         totalPages,
-        last: page === totalPages - 1,
+        last: totalPages === 0 || page === totalPages - 1,
         number: page,
         size: pageSize,
         numberOfElements: entities.length,
