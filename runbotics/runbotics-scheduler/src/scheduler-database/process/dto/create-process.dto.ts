@@ -8,7 +8,7 @@ import { botCollectionReferenceSchema } from '#/database/bot-collection/dto/bot-
 import { BotSystemType, ProcessOutputType } from 'runbotics-common';
 
 export const createProcessSchema = z.object({
-    name: z.string().max(255),
+    name: z.string().trim().min(1).max(255),
     description: z.string(),
     definition: z.string(),
     isPublic: z.boolean(),
