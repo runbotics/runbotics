@@ -26,6 +26,7 @@ export const lightTheme: ThemeOptions = {
             default: 'rgb(251, 251, 253)',
             dark: 'rgb(251, 251, 253)',
             paper: 'rgb(251, 251, 253)',
+            white:'rgb(255, 255, 255)',
         },
         primary: {
             main: '#EA8E05',
