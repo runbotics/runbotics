@@ -54,7 +54,7 @@ export class ProcessInstanceLoopEvent {
     @Column({ type: 'time without time zone', transformer: dateTransformer })
     finished: string;
 
-    @Column({ type: 'enum', enum: ProcessInstanceEventStatus })
+    @Column({ type: 'character varying', length: 255 })
     status: ProcessInstanceEventStatus;
 
     @Column({ type: 'text', nullable: true })
@@ -64,5 +64,5 @@ export class ProcessInstanceLoopEvent {
     loopId: string;
 
     @Column({ name: 'iterator_element', type: 'jsonb', nullable: true })
-    iteratorElement: unknown[];
+    iteratorElement: JSON;
 }
