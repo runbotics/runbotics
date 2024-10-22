@@ -3,12 +3,8 @@ import React, { MouseEvent, useEffect, useState, VFC } from 'react';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
-
-
 import useBotCollectionSearch from '#src-app/hooks/useBotCollectionSearch';
-
 import useQuery from '#src-app/hooks/useQuery';
-
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 
 import BotCollectionGridView from './BotCollectionGridView';
@@ -26,7 +22,7 @@ const BotCollectionView: VFC = () => {
     const [displayMode, setDisplayMode] = useState<CollectionsDisplayMode>(CollectionsDisplayMode.GRID);
 
     const router = useRouter();
-    const  { firstValueFrom } = useQuery();
+    const { firstValueFrom } = useQuery();
     const pageFromUrl = firstValueFrom('page');
     const pageSizeFromUrl = firstValueFrom('pageSize');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 0);
@@ -48,9 +44,7 @@ const BotCollectionView: VFC = () => {
 
     useEffect(() => {
         const params = getBotCollectionPageParams(page, limit, debouncedSearch, searchField);
-        router.replace({ pathname: router.pathname, query: { page, pageSize: limit, search, searchField } });
-
-        dispatch(botCollectionActions.getByPage(params));
+        dispatch(botCollectionActions.getByPage({ pageParams: params }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, limit, displayMode, debouncedSearch, searchField]);
 

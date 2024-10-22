@@ -2,7 +2,7 @@ import { NotificationBotType } from 'runbotics-common';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 import { UserEntity } from '#/database/user/user.entity';
-import { BotEntity } from '#/database/bot/bot.entity';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 
 
 @Entity({ name: 'notification_bot' })

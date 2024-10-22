@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
-import { BotEntity } from '../bot/bot.entity';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { IProcess, IProcessInstance, IUser, ProcessInstanceStatus, IBot, ITriggerEvent, EmailTriggerData } from 'runbotics-common';
 import { dateTransformer } from '../database.utils';

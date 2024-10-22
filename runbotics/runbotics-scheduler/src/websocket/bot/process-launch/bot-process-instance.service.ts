@@ -6,7 +6,7 @@ import Axios from 'axios';
 import { Logger } from '#/utils/logger';
 import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
 import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
-import { BotService } from '#/database/bot/bot.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { MailTriggerService } from '#/mail-trigger/mail-trigger.service';
 import { ProcessFileService } from '#/queue/process/process-file.service';

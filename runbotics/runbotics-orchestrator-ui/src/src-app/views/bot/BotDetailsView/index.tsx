@@ -44,7 +44,7 @@ const BotListView: FC = () => {
             return;
         }
 
-        dispatch(botActions.getById({ id: botId }));
+        dispatch(botActions.getById({ resourceId: botId }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 

@@ -105,25 +105,28 @@ export class ProcessCrudService {
             throw new NotFoundException();
         }
 
+        const partial: Partial<ProcessEntity> = {};
+
         process.name = processDto.name;
         process.description = processDto.description;
         process.definition = processDto.definition;
         process.isPublic = processDto.isPublic;
-        process.isAttended = processDto.isAttended;
-        process.isTriggerable = processDto.isTriggerable;
-
-        process.botCollectionId = processDto.botCollection?.id;
-        process.outputType = processDto.output?.type;
-        process.systemName = processDto.system?.name;
+        partial.isAttended = processDto.isAttended;
+        partial.isTriggerable = processDto.isTriggerable;
+        partial.botCollectionId = processDto.botCollection?.id;
+        partial.outputType = processDto.outputType?.type;
+        partial.systemName = processDto.system?.name;
 
         if (processDto.tags?.length > 15) {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
         // TODO: create/link tags to process
-        // partial.tags = processDto.tags as Tag[] | undefined;
+        partial.tags = processDto.tags as Tag[] | undefined;
 
-        return this.processRepository.save(process);
+        await this.processRepository.update({ tenantId, id }, partial);
+
+        return this.processRepository.findOne({ where: { tenantId, id }, relations: RELATIONS });
     }
 
     async updateDiagram(user: UserEntity, id: number, updateDiagramDto: UpdateDiagramDto) {

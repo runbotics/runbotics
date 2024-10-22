@@ -3,7 +3,7 @@ import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
 import { IBot, IProcess, IProcessInstance, IUser, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
-import { BotService } from '#/database/bot/bot.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { mergeArraysWithoutDuplicates } from '#/utils/mergeArrays';
 import { ServerConfigService } from '#/config/server-config';

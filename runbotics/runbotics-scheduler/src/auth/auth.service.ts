@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { Connection } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { ServerConfigService } from '../config/server-config/server-config.service';
-import { BotEntity } from '../database/bot/bot.entity';
-import { BotService } from '../database/bot/bot.service';
-import { UserService } from '../database/user/user.service';
-import { JWTPayload } from '../types';
-import { Logger } from '../utils/logger';
+import { ServerConfigService } from '#/config/server-config';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
+import { BotService } from '#/scheduler-database/bot/bot.service';
+import { UserService } from '#/database/user/user.service';
+import { JWTPayload } from '#/types';
+import { Logger } from '#/utils/logger';
 import { BotStatus, BotSystemType, IBot } from 'runbotics-common';
 import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
-import { BotCollectionService } from '../database/bot-collection/bot-collection.service';
+import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
 import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
-import { Connection } from 'typeorm';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -150,7 +150,7 @@ export class AuthService {
 
         this.validateParameterFromBot(collection, 'missing collection in bot data', client);
 
-        const collectionEntity = await this.botCollectionService.findById(collection);
+        const collectionEntity = await this.botCollectionService.getById(collection);
         this.validateParameterFromBot(collectionEntity, 'collection with id from bot doesn\'t exist', client);
 
         const botSystem = await this.botSystemService.findByName(system);

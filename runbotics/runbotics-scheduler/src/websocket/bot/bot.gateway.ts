@@ -24,7 +24,7 @@ import { BotProcessEventService } from '#/websocket/bot/process-launch/bot-proce
 import { BotAuthSocket } from '#/types/auth-socket';
 import { WsBotJwtGuard } from '#/auth/guards';
 import { UiGateway } from '../ui/ui.gateway';
-import { BotService } from '#/database/bot/bot.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
 import { GuestService } from '#/database/guest/guest.service';
 import { MailService } from '#/mail/mail.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
