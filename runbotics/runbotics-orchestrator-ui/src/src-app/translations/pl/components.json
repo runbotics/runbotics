@@ -47,6 +47,7 @@
     "Component.Tile.Process.Content.Editor": "Edytujący",
     "Component.Tile.Process.Content.Editor.Placeholder": "RunBotics",
     "Component.Tile.Process.Content.Updated": "Zaktualizowano",
+    "Component.Tile.Process.Content.Updated.Placeholder": "Nigdy",
     "Component.Tile.Process.Content.Created": "Utworzono",
     "Component.Tile.Process.Content.Created.Placeholder": "Nigdy",
     "Component.Tile.Process.Content.LastRun": "Ostatnie uruchomienie",
