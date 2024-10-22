@@ -76,9 +76,9 @@ class ApiTenantResource {
             ? `/${resourceId}` : '';
 
         const apiURL = typeof resourcePath === 'function' ?
-            `/api/scheduler/tenants/${user.tenant.id}/${resourcePath(resourceId)}` 
+            `/api/scheduler/tenants/${user.tenant.id}/${resourcePath(resourceId)}`
             : `/api/scheduler/tenants/${user.tenant.id}${resourcePathPart}${resourceIdPart}`;
-        
+
         return pageParams
             ? URLBuilder.url(apiURL).params(pageParams).build()
             : apiURL;

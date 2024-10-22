@@ -4,11 +4,11 @@ import { processOutputReferenceSchema } from '#/scheduler-database/process-outpu
 import { tagReferenceSchema } from '#/scheduler-database/tags/dto/tag-reference';
 import { botSystemReferenceSchema } from '#/scheduler-database/bot-system/dto/bot-system-reference';
 import { processCollectionReferenceSchema } from '#/database/process-collection/dto/process-collection-reference';
-import { botCollectionReferenceSchema } from '#/scheduler-database/bot-collection/dto/bot-collection-reference';
+import { botCollectionReferenceSchema } from '#/database/bot-collection/dto/bot-collection-reference';
 import { BotSystemType, ProcessOutputType } from 'runbotics-common';
 
 export const createProcessSchema = z.object({
-    name: z.string().max(255),
+    name: z.string().trim().min(1).max(255),
     description: z.string(),
     definition: z.string(),
     isPublic: z.boolean(),
@@ -21,7 +21,7 @@ export const createProcessSchema = z.object({
     botCollection: botCollectionReferenceSchema.optional(),
     processCollection: processCollectionReferenceSchema.optional(),
     globalVariables: z.array(createGlobalVariableSchema).default([]),
-    outputType: processOutputReferenceSchema
+    output: processOutputReferenceSchema
         .default({
             type: ProcessOutputType.JSON,
         }),

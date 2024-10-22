@@ -9,16 +9,22 @@ import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { UpdateProcessDto } from '#/scheduler-database/process/dto/update-process.dto';
 import { UpdateDiagramDto } from '#/scheduler-database/process/dto/update-diagram.dto';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
-import { getPage } from '#/utils/page/page';
+import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
-import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
-import { BotCollectionDefaultCollections } from '#/scheduler-database/bot-collection/bot-collection.consts';
+import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
+import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
 
 const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     system: true,
     botCollection: true,
     output: true,
+    createdBy: true,
+    editor: true,
+    tags: true,
+    processCollection: {
+        users: true,
+    },
 };
 
 @Injectable()
@@ -28,8 +34,8 @@ export class ProcessCrudService {
         private processRepository: Repository<ProcessEntity>,
         @InjectRepository(GlobalVariable)
         private globalVariableRepository: Repository<GlobalVariable>,
-        @InjectRepository(BotCollection)
-        private botCollectionRepository: Repository<BotCollection>,
+        @InjectRepository(BotCollectionEntity)
+        private botCollectionRepository: Repository<BotCollectionEntity>,
     ) {
     }
 
@@ -57,14 +63,14 @@ export class ProcessCrudService {
 
         process.editor = user;
         process.processCollectionId = processDto.processCollection?.id;
-        
+
         if(processDto.botCollection){
             process.botCollectionId = processDto.botCollection.id;
         }
         else {
             process.botCollectionId = (await this.botCollectionRepository.findOneByOrFail({ name: BotCollectionDefaultCollections.PUBLIC })).id;
         }
-        process.outputType = processDto.outputType?.type;
+        process.outputType = processDto.output.type;
         process.systemName = processDto.system.name;
 
         if (processDto.tags.length > 15) {
@@ -107,7 +113,6 @@ export class ProcessCrudService {
         process.isPublic = processDto.isPublic;
         partial.isAttended = processDto.isAttended;
         partial.isTriggerable = processDto.isTriggerable;
-
         partial.botCollectionId = processDto.botCollection?.id;
         partial.outputType = processDto.outputType?.type;
         partial.systemName = processDto.system?.name;
@@ -116,12 +121,12 @@ export class ProcessCrudService {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
-        // { id } is enough to persist a relation
+        // TODO: create/link tags to process
         partial.tags = processDto.tags as Tag[] | undefined;
 
         await this.processRepository.update({ tenantId, id }, partial);
 
-        return this.processRepository.findOneBy({ tenantId, id });
+        return this.processRepository.findOne({ where: { tenantId, id }, relations: RELATIONS });
     }
 
     async updateDiagram(user: UserEntity, id: number, updateDiagramDto: UpdateDiagramDto) {
@@ -154,12 +159,12 @@ export class ProcessCrudService {
         return this.processRepository.find(options);
     }
 
-    getPage(user: UserEntity, specs: Specs<ProcessEntity>, paging: Paging) {
+    async getPage(user: UserEntity, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessEntity>> {
         const options: FindManyOptions<ProcessEntity> = {
             ...paging,
             ...specs,
         };
-        
+
         options.where = {
             ...options.where,
             tenantId: user.tenantId,
@@ -168,7 +173,12 @@ export class ProcessCrudService {
 
         options.relations = RELATIONS;
 
-        return getPage(this.processRepository, options);
+        const page = await getPage(this.processRepository, options);
+
+        return {
+            ...page,
+            content: page.content.map(this.formatUserDTO),
+        };
     }
 
     get(user: UserEntity, id: number) {
@@ -188,5 +198,19 @@ export class ProcessCrudService {
         });
 
         return id;
+    }
+
+    private formatUserDTO(process: ProcessEntity) {
+        return {
+            ...process,
+            createdBy: {
+                id: process.createdBy.id,
+                email: process.createdBy.email,
+            },
+            editor: {
+                id: process.createdBy.id,
+                email: process.createdBy.email,
+            },
+        };
     }
 }
