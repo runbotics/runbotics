@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { Box, Chip, Typography } from '@mui/material';
-import moment from 'moment';
+import { formatDistanceToNow } from 'date-fns';
 
 import ProcessCollectionPath from '#src-app/components/Tile/ProcessCollectionTile/ProcessCollectionPath';
 import If from '#src-app/components/utils/If';
@@ -27,15 +27,15 @@ export const GeneralInfoTab = ({ value, process }: DetailsInfoTabProps) => {
     } = useSelector(processCollectionSelector);
     const collectionId = process.processCollection?.id;
     const breadcrumbs = getBreadcrumbs(collectionAncestors);
-    const creator = process.createdBy.login
-        ? process.createdBy.login
+    const creator = process.createdBy.email
+        ? process.createdBy.email
         : translate('Component.Tile.Process.Content.Creator.Placeholder');
-    const created = moment(process.created).fromNow();
-    const editor = process.editor?.login
-        ? process.editor?.login
+    const created = formatDistanceToNow(new Date(process.created));
+    const editor = process.editor?.email
+        ? process.editor?.email
         : translate('Component.Tile.Process.Content.Editor.Placeholder');
     const updated = process.updated
-        ? moment(process.updated).fromNow()
+        ? formatDistanceToNow(new Date(process.updated))
         : translate('Component.Tile.Process.Content.Updated.Placeholder');
 
     useEffect(() => {
@@ -119,7 +119,6 @@ export const GeneralInfoTab = ({ value, process }: DetailsInfoTabProps) => {
                 </Typography>
                 <ProcessCollectionPath
                     sx={{ paddingBottom: 0 }}
-                    hrefPathname="processes/collections"
                     breadcrumbs={breadcrumbs}
                     currentCollectionId={collectionId}
                 />

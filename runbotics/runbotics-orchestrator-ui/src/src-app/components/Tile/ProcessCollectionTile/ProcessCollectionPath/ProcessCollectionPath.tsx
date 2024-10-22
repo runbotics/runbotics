@@ -13,14 +13,18 @@ interface ProcessCollectionPathProps {
     breadcrumbs: CollectionBreadcrumb[];
     currentCollectionId: string;
     sx?: SxProps<Theme>;
-    hrefPathname?: string;
 }
 
 const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
-    breadcrumbs, currentCollectionId, sx, hrefPathname
+    breadcrumbs,
+    currentCollectionId,
+    sx,
 }) => {
     const router = useRouter();
     const theme = useTheme();
+    const pathname = !router.pathname.includes('/collections')
+        ? `${router.pathname}/collections`
+        : router.pathname;
 
     const isRootFolder = breadcrumbs.length === 0;
 
@@ -29,7 +33,7 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
             <Breadcrumbs>
                 <StyledLink
                     href={{
-                        pathname: hrefPathname || 'collections',
+                        pathname,
                     }}
                 >
                     <HomeBox>
@@ -37,7 +41,7 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
                             sx={{
                                 color: isRootFolder
                                     ? theme.palette.secondary.main
-                                    : theme.palette.common.black
+                                    : theme.palette.common.black,
                             }}
                         />
                     </HomeBox>
@@ -46,19 +50,23 @@ const ProcessCollectionPath: FC<ProcessCollectionPathProps> = ({
                     <StyledLink
                         key={breadcrumb.name}
                         href={{
-                            pathname: hrefPathname || router.pathname,
+                            pathname,
                             query: {
                                 ...router.query,
-                                ...(breadcrumb.collectionId  && { collectionId: breadcrumb.collectionId }),
-                            }
+                                ...(breadcrumb.collectionId && {
+                                    collectionId: breadcrumb.collectionId,
+                                }),
+                            },
                         }}
                     >
                         <Typography
-                            variant='body2'
+                            variant="body2"
                             sx={{
-                                color: breadcrumb.collectionId === currentCollectionId
-                                    ? theme.palette.secondary.main
-                                    : theme.palette.common.black
+                                color:
+                                    breadcrumb.collectionId ===
+                                    currentCollectionId
+                                        ? theme.palette.secondary.main
+                                        : theme.palette.common.black,
                             }}
                         >
                             {breadcrumb.name}

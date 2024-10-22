@@ -49,7 +49,6 @@
     "Component.Tile.Process.Content.Updated": "Zaktualizowano",
     "Component.Tile.Process.Content.Updated.Placeholder": "Nigdy",
     "Component.Tile.Process.Content.Created": "Utworzono",
-    "Component.Tile.Process.Content.Created.Placeholder": "Nigdy",
     "Component.Tile.Process.Content.LastRun": "Ostatnie uruchomienie",
     "Component.Tile.Process.Content.LastRun.Placeholder": "Nigdy",
     "Component.Tile.Process.Footer.Icon.Tooltip.Private": "Proces prywatny",

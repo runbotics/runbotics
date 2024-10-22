@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 
 import { Box, Chip, Typography } from '@mui/material';
 import cronstrue from 'cronstrue/i18n';
+import { formatDistanceToNow } from 'date-fns';
 import i18n from 'i18next';
-import moment from 'moment';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -25,7 +25,7 @@ export const SchedulesTab = ({ value, process }: DetailsInfoTabProps) => {
     const processId = process.id;
     const hasSchedules = schedules.length > 0;
     const lastRun = process.lastRun
-        ? moment(process.lastRun).fromNow()
+        ? formatDistanceToNow(new Date(process.lastRun))
         : translate('Component.Tile.Process.Content.LastRun.Placeholder');
 
     const humanReadableCron = (cronExpression: string) =>
