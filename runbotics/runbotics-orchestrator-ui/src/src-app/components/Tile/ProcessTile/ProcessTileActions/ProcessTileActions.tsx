@@ -26,6 +26,7 @@ import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import { ProcessTileActionsProps } from './ProcessTileActions.types';
 
+// eslint-disable-next-line max-lines-per-function
 const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -69,7 +70,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const handleEdit = async (processToSave: IProcess) => {
         try {
             await dispatch(processActions.updateProcess({ resourceId: processToSave.id, payload: processToSave }));
-            setIsDialogVisible(false);
+            setIsEditDialogVisible(false);
             if (isCollectionsTab) {
                 await dispatch(
                     processActions.getProcessesPage({
