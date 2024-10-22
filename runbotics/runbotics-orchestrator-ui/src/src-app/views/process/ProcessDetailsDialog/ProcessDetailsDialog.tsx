@@ -82,10 +82,10 @@ export function ProcessDetailsDialog({
             <DialogContent>
                 <Box>
                     <Typography variant="h4" textTransform="none" mb={3}>
-                        {process?.name}
+                        {process.name}
                     </Typography>
                     <Typography variant="body1" mb={3}>
-                        {process?.description}
+                        {process.description}
                     </Typography>
                 </Box>
                 <StyledTabs

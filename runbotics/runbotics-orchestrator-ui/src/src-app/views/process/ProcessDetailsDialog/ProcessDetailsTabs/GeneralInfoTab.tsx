@@ -4,6 +4,7 @@ import { Box, Chip, Typography } from '@mui/material';
 import moment from 'moment';
 
 import ProcessCollectionPath from '#src-app/components/Tile/ProcessCollectionTile/ProcessCollectionPath';
+import If from '#src-app/components/utils/If';
 import { getBreadcrumbs } from '#src-app/hooks/useProcessCollection';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -19,22 +20,21 @@ import {
 
 export const GeneralInfoTab = ({ value, process }: DetailsInfoTabProps) => {
     const { translate } = useTranslations();
+    const hasTags = process.tags?.length > 0;
     const dispatch = useDispatch();
     const {
         active: { ancestors: collectionAncestors },
     } = useSelector(processCollectionSelector);
-    const collectionId = process?.processCollection?.id;
+    const collectionId = process.processCollection?.id;
     const breadcrumbs = getBreadcrumbs(collectionAncestors);
-    const creator = process?.createdBy?.login
-        ? process?.createdBy?.login
+    const creator = process.createdBy.login
+        ? process.createdBy.login
         : translate('Component.Tile.Process.Content.Creator.Placeholder');
-    const created = process?.created
-        ? moment(process.created).fromNow()
-        : translate('Component.Tile.Process.Content.Created.Placeholder');
-    const editor = process?.editor?.login
-        ? process?.editor?.login
+    const created = moment(process.created).fromNow();
+    const editor = process.editor?.login
+        ? process.editor?.login
         : translate('Component.Tile.Process.Content.Editor.Placeholder');
-    const updated = process?.updated
+    const updated = process.updated
         ? moment(process.updated).fromNow()
         : translate('Component.Tile.Process.Content.Updated.Placeholder');
 
@@ -88,7 +88,7 @@ export const GeneralInfoTab = ({ value, process }: DetailsInfoTabProps) => {
                         'Component.Tile.Process.DetailsDialog.TabContent.GeneralInfoLabel.System'
                     )}
                 </Typography>
-                <Typography>{process?.system?.name}</Typography>
+                <Typography>{process.system.name}</Typography>
             </Box>
             <Box display="flex" alignItems="center" gap={1} mb={1.5}>
                 <Typography variant="h5">
@@ -96,17 +96,20 @@ export const GeneralInfoTab = ({ value, process }: DetailsInfoTabProps) => {
                         'Component.Tile.Process.DetailsDialog.TabContent.GeneralInfoLabel.Tags'
                     )}
                 </Typography>
-                {process?.tags?.length ? (
-                    process?.tags.map((tag) => (
+                <If
+                    condition={hasTags}
+                    else={
+                        <Typography>
+                            {translate(
+                                'Component.Tile.Process.DetailsDialog.TabContent.GeneralInfoLabel.Tags.Placeholder'
+                            )}
+                        </Typography>
+                    }
+                >
+                    {process.tags.map((tag) => (
                         <Chip label={tag.name} key={tag.name} size="small" />
-                    ))
-                ) : (
-                    <Typography>
-                        {translate(
-                            'Component.Tile.Process.DetailsDialog.TabContent.GeneralInfoLabel.Tags.Placeholder'
-                        )}
-                    </Typography>
-                )}
+                    ))}
+                </If>
             </Box>
             <Box display="flex" alignItems="center" gap={1}>
                 <Typography variant="h5">

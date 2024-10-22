@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { Box, Chip, Typography } from '@mui/material';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
@@ -17,11 +18,10 @@ export const CredentialsTab = ({ value, process }: DetailsInfoTabProps) => {
     const {
         draft: { credentials: processCredentials },
     } = useSelector(processSelector);
-    const processId = process?.id;
+    const processId = process.id;
+    const hasCredentials = processCredentials?.length > 0;
 
     useEffect(() => {
-        if (!processId) return;
-
         dispatch(
             processActions.getProcessCredentials({
                 resourceId: String(processId),
@@ -43,17 +43,20 @@ export const CredentialsTab = ({ value, process }: DetailsInfoTabProps) => {
                         'Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials'
                     )}
                 </Typography>
-                {processCredentials?.length ? (
-                    processCredentials.map(({ credential: { id, name } }) => (
+                <If
+                    condition={hasCredentials}
+                    else={
+                        <Typography>
+                            {translate(
+                                'Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials.Placeholder'
+                            )}
+                        </Typography>
+                    }
+                >
+                    {processCredentials.map(({ credential: { id, name } }) => (
                         <Chip label={name} key={id} size="small" />
-                    ))
-                ) : (
-                    <Typography>
-                        {translate(
-                            'Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials.Placeholder'
-                        )}
-                    </Typography>
-                )}
+                    ))}
+                </If>
             </Box>
         </Box>
     );

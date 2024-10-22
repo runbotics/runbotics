@@ -1,5 +1,6 @@
 import { Box, Chip, Typography } from '@mui/material';
 
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import {
@@ -9,6 +10,7 @@ import {
 
 export const AccessTab = ({ value, process }: DetailsInfoTabProps) => {
     const { translate } = useTranslations();
+    const isSharedWith = process.processCollection?.users?.length > 0;
     return (
         <Box hidden={value !== ProcessDetailsTab.ACCESS}>
             <Box
@@ -23,17 +25,20 @@ export const AccessTab = ({ value, process }: DetailsInfoTabProps) => {
                         'Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith'
                     )}
                 </Typography>
-                {process?.processCollection?.users?.length ? (
-                    process.processCollection.users.map(({ id, login }) => (
+                <If
+                    condition={isSharedWith}
+                    else={
+                        <Typography>
+                            {translate(
+                                'Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith.Placeholder'
+                            )}
+                        </Typography>
+                    }
+                >
+                    {process.processCollection.users.map(({ id, login }) => (
                         <Chip label={login} key={id} size="small" />
-                    ))
-                ) : (
-                    <Typography>
-                        {translate(
-                            'Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith.Placeholder'
-                        )}
-                    </Typography>
-                )}
+                    ))}
+                </If>
             </Box>
         </Box>
     );
