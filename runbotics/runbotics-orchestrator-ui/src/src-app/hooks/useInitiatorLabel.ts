@@ -8,7 +8,7 @@ const useInitiatorLabel = () => {
     const { translate } = useTranslations();
 
     const mapInitiatorLabel = ({ user, trigger, triggerData }: InitiatorLabelParams) => {
-        switch (trigger) {
+        switch (trigger.name) {
             case TriggerEvent.SCHEDULER:
                 return translate('Component.HistoryTable.Rows.Initiator.Scheduler', { login: user?.login });
             case TriggerEvent.API:

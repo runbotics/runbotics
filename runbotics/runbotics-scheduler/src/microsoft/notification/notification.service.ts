@@ -69,7 +69,7 @@ export class NotificationService {
                     process,
                     input,
                     user: null,
-                    trigger: TriggerEvent.EMAIL,
+                    trigger: { name: TriggerEvent.EMAIL },
                     triggerData: {
                         emailId,
                         sender: email.sender.emailAddress.address.toLowerCase(),
@@ -98,7 +98,7 @@ export class NotificationService {
     }
 
     async sendProcessResultMail(processInstance: IProcessInstance) {
-        if (processInstance.trigger !== TriggerEvent.EMAIL
+        if (processInstance.trigger.name !== TriggerEvent.EMAIL
             || !isEmailTriggerData(processInstance.triggerData)) {
             return;
         }

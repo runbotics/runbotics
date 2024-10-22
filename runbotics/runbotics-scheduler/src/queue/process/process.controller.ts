@@ -43,7 +43,7 @@ export class ProcessController {
                 process,
                 input,
                 user: request.user,
-                trigger: TriggerEvent.MANUAL,
+                trigger: { name: TriggerEvent.MANUAL },
                 triggerData: { userEmail: request.user.email }
             });
 

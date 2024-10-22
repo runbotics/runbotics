@@ -16,7 +16,7 @@ export class ProcessInstanceEvent {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
 
-    @Column({ type: 'time without time zone', transformer: dateTransformer })
+    @Column({ type: 'timestamp without time zone', transformer: dateTransformer })
     created: string;
 
     @Column({ type: 'text' })
@@ -41,7 +41,7 @@ export class ProcessInstanceEvent {
     @Column({ type: 'text' })
     output?: string;
 
-    @Column({ type: 'time without time zone', transformer: dateTransformer })
+    @Column({ type: 'timestamp without time zone', transformer: dateTransformer })
     finished: string;
 
     @Column({ type: 'character varying', length: 255 })
