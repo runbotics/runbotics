@@ -32,6 +32,6 @@ export class CredentialCollectionUser {
     @Column({ name: 'user_id', type: 'bigint', transformer: numberTransformer })
     userId: number;
 
-    @Column({ name: 'privilege_type', type: 'character varying', length: 255, default: PrivilegeType.WRITE })
+    @Column({ name: 'privilege_type', type: 'enum', enum: PrivilegeType, default: PrivilegeType.WRITE })
     privilegeType: PrivilegeType;
 }

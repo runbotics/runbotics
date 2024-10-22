@@ -4,7 +4,7 @@ import { UserEntity } from '#/database/user/user.entity';
 import {
     EmailTriggerData,
     ProcessInstanceStatus,
-    TriggerEvent,
+    ITriggerEvent,
     UserTriggerData,
 } from 'runbotics-common';
 import {
@@ -21,7 +21,7 @@ export class ProcessInstance {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'time without time zone', transformer: dateTransformer })
+    @Column({ type: 'timestamp without time zone', transformer: dateTransformer })
     created: string;
 
     @Column({ type: 'text', nullable: true })
@@ -33,7 +33,7 @@ export class ProcessInstance {
     @Column({ type: 'character varying', length: 255 })
     status: ProcessInstanceStatus;
 
-    @Column({ type: 'time without time zone', transformer: dateTransformer })
+    @Column({ type: 'timestamp without time zone', transformer: dateTransformer })
     updated: string;
 
     @Column({
@@ -65,7 +65,8 @@ export class ProcessInstance {
 
     @Column({
         name: 'orchestrator_process_instance_id',
-        type: 'uuid',
+        type: 'character varying',
+        length: 255,
         nullable: true,
     })
     orchestratorProcessInstanceId?: string;
@@ -93,8 +94,8 @@ export class ProcessInstance {
     @Column({ type: 'text', nullable: true })
     error?: string;
 
-    @Column({ type: 'character varying', length: 255 })
-    trigger: TriggerEvent;
+    @Column({ type: 'character varying', length: 50 })
+    trigger: ITriggerEvent;
 
     @Column({ name: 'trigger_data', type: 'jsonb', nullable: true })
     triggerData?: EmailTriggerData | UserTriggerData;

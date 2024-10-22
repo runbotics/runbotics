@@ -196,7 +196,7 @@ export class QueueService implements OnModuleInit {
                 .map(process => this.createScheduledJob({
                     ...process,
                     orchestratorProcessInstanceId,
-                    trigger: TriggerEvent.SCHEDULER,
+                    trigger: { name: TriggerEvent.SCHEDULER },
                     triggerData: { userEmail: process.user?.email },
                     input: { variables: JSON.parse(process.inputVariables) }
                 }))

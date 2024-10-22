@@ -16,10 +16,10 @@ export class ProcessInstanceLoopEvent {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
 
-    @Column({ type: 'time without time zone', transformer: dateTransformer })
+    @Column({ type: 'timestamp without time zone', transformer: dateTransformer })
     created: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'character varying', length: 255 })
     log: string;
 
     @Column({ type: 'character varying', length: 255 })
@@ -51,7 +51,7 @@ export class ProcessInstanceLoopEvent {
     @JoinColumn({ name: 'process_instance_id', referencedColumnName: 'id' })
     processInstance: ProcessInstance;
 
-    @Column({ type: 'time without time zone', transformer: dateTransformer })
+    @Column({ type: 'timestamp without time zone', transformer: dateTransformer })
     finished: string;
 
     @Column({ type: 'character varying', length: 255 })

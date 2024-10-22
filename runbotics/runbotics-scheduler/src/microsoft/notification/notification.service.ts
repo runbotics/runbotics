@@ -98,7 +98,7 @@ export class NotificationService {
     }
 
     async sendProcessResultMail(processInstance: IProcessInstance) {
-        if (processInstance.trigger !== TriggerEvent.EMAIL
+        if (processInstance.trigger.name !== TriggerEvent.EMAIL
             || !isEmailTriggerData(processInstance.triggerData)) {
             return;
         }

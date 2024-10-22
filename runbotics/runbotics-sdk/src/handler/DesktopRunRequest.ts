@@ -5,7 +5,7 @@ interface CommonDesktopRunRequest {
     rootProcessInstanceId: string;
     userId: number;
     executionContext: BpmnExecutionEventMessageApi;
-    trigger: string;
+    trigger: { name: string };
     parentProcessInstanceId?: string;
     triggerData?: unknown;
     credentials: {
