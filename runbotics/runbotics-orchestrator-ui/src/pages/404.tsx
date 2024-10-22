@@ -12,7 +12,6 @@ const NotFoundPage = () => {
 
     useEffect(() => {
         dispatch(setErrorCode(404));
-        router.replace('/404', undefined, { shallow: true });
     }, [router, dispatch]);
 
     return <ErrorView />;
