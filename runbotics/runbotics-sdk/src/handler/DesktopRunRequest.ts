@@ -11,6 +11,7 @@ interface CommonDesktopRunRequest {
     credentials: {
         id: string;
         name: string;
+        order: number;
         template: string;
         attributes: {
             id: string;

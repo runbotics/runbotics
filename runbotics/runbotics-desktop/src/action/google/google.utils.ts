@@ -39,7 +39,7 @@ export const getCellsByValueInputSchema = googleSheetInputBaseSchema.and(
 
 export const setCellsInputSchema = googleSheetInputBaseSchema.and(
     z.object({
-        values: z.array(z.array(z.string().or(z.number()))).optional(),
+        values: z.array(z.array(z.string().or(z.number()))).or(z.string()).optional(),
         range: z
             .string({ required_error: 'Cell range is missing' })
             .regex(new RegExp(ActionRegex.CELL_RANGE), {

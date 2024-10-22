@@ -9,7 +9,7 @@ export type BeeOfficeActionRequest =
 | DesktopRunRequest<'beeOffice.deleteTimeTableActivity', BeeOfficeDeleteTimeTableActionInput>
 | DesktopRunRequest<'beeOffice.getActivityGroups', BeeOfficeGetActivityGroupsActionInput>
 | DesktopRunRequest<'beeOffice.getActivitiesByURLParameters', BeeOfficeGetActivitiesByURLParametersActionInput>
-| DesktopRunRequest<'beeOffice.createHolidayLeave', BeeOfficeCreateHolidayLeaveActionInput>
+| DesktopRunRequest<'beeOffice.createHolidayLeave', BeeOfficeCreateHolidayLeaveActionInput>;
 
 // ----
 export type BeeOfficeGetActivityGroupsActionInput = {

@@ -4,7 +4,7 @@ import fs from 'fs';
 import { IBot, IProcess, IProcessInstance, IUser, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 import { BotService } from '#/database/bot/bot.service';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { mergeArraysWithoutDuplicates } from '#/utils/mergeArrays';
 import { ServerConfigService } from '#/config/server-config';
 import { CredentialChangeMailPayload, CredentialOperationType } from '#/scheduler-database/credential/credential.utils';
@@ -130,12 +130,16 @@ export class MailService {
             collectionCreatorEmail,
             collectionName,
             credentialName,
+            credentialOldName,
             operationType,
         } = params;
 
         const attributeInfo = operationType === CredentialOperationType.CHANGE_ATTRIBUTE
             ? ` with name <i>${params.attributeName}</i> for` : '';
-        const message = `User with email <b>${editorEmail}</b> ${operationType}${attributeInfo} credential <b>${credentialName}</b> in collection <b>${collectionName}</b>`;
+        const oldNameInfo = CredentialOperationType.EDIT && credentialOldName
+            ? ` (name before change <b>${credentialOldName}</b>)` : '';
+
+        const message = `User with email <b>${editorEmail}</b> ${operationType}${attributeInfo} credential <b>${credentialName}</b>${oldNameInfo} in collection <b>${collectionName}</b>`;
 
         const sendMailInput: SendMailInput = {
             to: collectionCreatorEmail,

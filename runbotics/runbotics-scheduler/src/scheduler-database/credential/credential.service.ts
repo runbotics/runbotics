@@ -70,10 +70,22 @@ export class CredentialService {
       attributes,
     });
 
-    return this.credentialRepo.save(credential).catch(async error => {
-      await this.validateName(credentialDto.name, collectionId, tenantId);
-        throw new BadRequestException(error.message);
-    });
+    return this.credentialRepo
+        .save(credential)
+        .then((credential) => {
+            this.notifyCredentialCollectionOwner({
+                executor: user,
+                collectionId: credential.collectionId,
+                credentialName: credential.name,
+                operationType: CredentialOperationType.CREATE,
+            });
+
+            return credential;
+        })
+        .catch(async (error) => {
+            await this.validateName(credentialDto.name, collectionId, tenantId);
+            throw new BadRequestException(error.message);
+        });
   }
 
   async findAllAccessible(user: IUser) {
@@ -213,6 +225,9 @@ export class CredentialService {
       tenantId: credential.tenantId,
     });
 
+    const credentialOldName =
+        credential.name !== credentialDto.name ? credential.name : undefined;
+
     return this.credentialRepo
         .save(credentialToUpdate)
         .then((credential) => {
@@ -220,8 +235,11 @@ export class CredentialService {
                 executor: user,
                 collectionId: credential.collectionId,
                 credentialName: credential.name,
+                ...(credentialOldName && { credentialOldName }),
                 operationType: CredentialOperationType.EDIT,
             });
+
+            return credential;
         })
         .catch(async (error) => {
             await this.validateName(
@@ -255,7 +273,8 @@ export class CredentialService {
 
         const attribute = credential.attributes.find(attr => attr.name === attributeName);
 
-    const encryptedValue = this.secretService.encrypt('', user.tenantId);
+    const encryptedValue =
+      this.secretService.encrypt(attributeDto.value, user.tenantId);
     const secretEntity: Secret = {
       ...encryptedValue,
       tenantId: user.tenantId,
@@ -299,6 +318,8 @@ export class CredentialService {
             operationType: CredentialOperationType.CHANGE_ATTRIBUTE,
             attributeName,
         });
+
+        return credential;
     });
   }
 
@@ -325,7 +346,7 @@ export class CredentialService {
   private async notifyCredentialCollectionOwner(
     params: CredentialNotifyMailArgs
   ) {
-      const { executor, collectionId, credentialName, operationType } =
+      const { executor, collectionId, credentialName, credentialOldName, operationType } =
           params;
 
       const collection = await this.collectionService.findOneByCriteria(
@@ -340,6 +361,7 @@ export class CredentialService {
               collectionCreatorEmail: collectionCreator.email,
               collectionName: collection.name,
               credentialName,
+              ...(credentialOldName && { credentialOldName }),
               operationType,
               ...(operationType ===
                   CredentialOperationType.CHANGE_ATTRIBUTE && {

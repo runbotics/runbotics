@@ -42,6 +42,7 @@ export interface CredentialDto
 export interface DecryptedCredential {
     id: string;
     name: string;
+    order: number;
     template: string;
     attributes: (
         Pick<Attribute, 'id' | 'name'>

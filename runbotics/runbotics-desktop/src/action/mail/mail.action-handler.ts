@@ -4,6 +4,7 @@ import { MailService } from '#mailer/mailer.service';
 import { ServerConfigService } from '#config';
 import { MailCredential } from './mail.types';
 import fs from 'fs';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 export type MailActionRequest =
     | DesktopRunRequest<'mail.send', MailSendActionInput>;
@@ -73,11 +74,15 @@ export default class MailActionHandler extends StatelessActionHandler {
     }
 
     run(request: MailActionRequest) {
-        const mailCredential: MailCredential = { // @todo replace with method for matching credentialId/templateName with decrypted credentials
+        const matchedCredential =
+            credentialAttributesMapper<MailCredential>(request.credentials);
+
+        // @todo After completion of password manager switch fully to matchedCredential
+        const mailCredential: MailCredential = matchedCredential ?? {
             mailUsername: this.serverConfigService.mailUsername,
             mailPassword: this.serverConfigService.mailPassword,
             mailHost: this.serverConfigService.mailHost,
-            mailPort: Number(this.serverConfigService.mailPort),
+            mailPort: this.serverConfigService.mailPort,
         };
 
         switch (request.script) {

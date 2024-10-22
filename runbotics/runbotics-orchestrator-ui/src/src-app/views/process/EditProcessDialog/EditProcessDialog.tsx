@@ -75,7 +75,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
             if (!process.id) {
                 const processInfo: IProcess = { ...processFormState };
                 dispatch(
-                    processActions.createProcess(processInfo)
+                    processActions.createProcess({ payload: processInfo })
                 ).then((res) => onAdd(res.payload));
                 return;
             }

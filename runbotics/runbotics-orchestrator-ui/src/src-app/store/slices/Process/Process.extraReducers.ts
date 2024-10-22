@@ -16,7 +16,6 @@ import {
     subscribeProcessNotifications,
     unsubscribeProcessNotifications,
     getProcessSubscriptionInfo,
-    getProcessesPageByCollection,
     getProcessCredentials,
 } from './Process.thunks';
 
@@ -45,18 +44,6 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
         })
         .addCase(getProcessesPage.rejected, (state) => {
-            state.all.loading = false;
-        })
-
-        // GET PAGE BY COLLECTIONS
-        .addCase(getProcessesPageByCollection.pending, (state) => {
-            state.all.loading = true;
-        })
-        .addCase(getProcessesPageByCollection.fulfilled, (state, action) => {
-            state.all.page = action.payload;
-            state.all.loading = false;
-        })
-        .addCase(getProcessesPageByCollection.rejected, (state) => {
             state.all.loading = false;
         })
 
@@ -114,7 +101,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(deleteProcess.fulfilled, (state, action) => {
             state.all.loading = false;
-            delete state.all.byId[action.meta.arg.processId];
+            delete state.all.byId[action.meta.arg.resourceId];
         })
         .addCase(deleteProcess.rejected, (state) => {
             state.all.loading = false;

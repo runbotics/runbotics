@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
-import { GeneralAction, BotSystem, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
+import { GeneralAction, BotSystemType, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
@@ -54,7 +54,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
             const processSystem = process.system.name;
             const system = getBotSystem();
 
-            if (processSystem !== BotSystem.ANY && processSystem !== system) {
+            if (processSystem !== BotSystemType.ANY && processSystem !== system) {
                 reject(new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`));
             }
 

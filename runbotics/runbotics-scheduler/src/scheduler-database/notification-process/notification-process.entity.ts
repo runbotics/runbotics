@@ -1,7 +1,7 @@
 import { NotificationProcessType } from 'runbotics-common';
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
-import { ProcessEntity } from '#/database/process/process.entity';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { UserEntity } from '#/database/user/user.entity';
 
 

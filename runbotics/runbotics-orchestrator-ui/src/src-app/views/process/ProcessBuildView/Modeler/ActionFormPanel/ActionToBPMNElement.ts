@@ -263,6 +263,7 @@ export class ActionToBPMNElement {
         businessObject.implementation = action.runner;
         businessObject.validationError = false;
         businessObject.actionId = action.id;
+        businessObject.credentialType = action?.credentialType;
 
         const shape = this.elementFactory.createShape({
             type: `bpmn:${type}`,

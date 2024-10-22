@@ -17,6 +17,11 @@ export const RunboticModdleDescriptor = {
                     type: "String",
                 },
                 {
+                    name: "credentialType",
+                    isAttr: true,
+                    type: "String",
+                },
+                {
                     name: "label",
                     isAttr: true,
                     type: "String",
