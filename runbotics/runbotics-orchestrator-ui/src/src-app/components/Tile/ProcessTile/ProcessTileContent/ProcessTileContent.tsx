@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 
 import { Typography } from '@mui/material';
-import moment from 'moment';
+import { formatDistanceToNow } from 'date-fns';
 
 import HighlightText from '#src-app/components/HighlightText';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -21,7 +21,7 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
                         {process.lastRun
-                            ? moment(process.lastRun).fromNow()
+                            ? formatDistanceToNow(new Date(process.lastRun))
                             : translate('Component.Tile.Process.Content.LastRun.Placeholder')
                         }
                     </Typography>
@@ -31,7 +31,7 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                         {translate('Component.Tile.Process.Content.Updated')}
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
-                        {moment(process.updated).fromNow()}
+                        {formatDistanceToNow(new Date(process.updated))}
                     </Typography>
                 </StyledBox>
             </StyledContainer>
