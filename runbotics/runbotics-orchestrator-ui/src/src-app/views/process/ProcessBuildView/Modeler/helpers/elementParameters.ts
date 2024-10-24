@@ -72,6 +72,7 @@ export type BusinessObject = {
     actionId: string;
     disabled: boolean;
     runFromHere: boolean;
+    credentialType: string;
     processOutput: boolean;
     label: string;
     extensionElements?: ExtensionElements;

@@ -10,6 +10,7 @@ const FileDropzoneWidget = dynamic(() => import('./FileDropzone'), { ssr: false 
 const BrowserTargetWidget = dynamic(() => import('./BrowserTargetWidget'), { ssr: false });
 const TypographyWidget = dynamic(() => import('./TypographyWidget'), { ssr: false });
 const DatePickerWidget = dynamic(() => import('./DatePickerWidget'), { ssr: false });
+const CredentialWidget = dynamic(() => import('./CredentialWidget/CredentialWidget'), { ssr: false });
 
 const customWidgets = {
     TextWidget: CustomTextWidget,
@@ -21,7 +22,8 @@ const customWidgets = {
     FileDropzoneWidget,
     BrowserTargetWidget,
     TypographyWidget,
-    DatePickerWidget
+    DatePickerWidget,
+    CredentialWidget,
 };
 
 export default customWidgets;

@@ -34,6 +34,7 @@ export type IFormData = Record<string, any> & {
     output?: Record<string, any>;
     disabled?: boolean;
     runFromHere?: boolean;
+    credentialType?: ActionCredentialType;
     processOutput?: boolean;
     validationError?: boolean;
 };

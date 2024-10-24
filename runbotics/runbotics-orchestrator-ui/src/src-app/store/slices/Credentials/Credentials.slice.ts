@@ -8,7 +8,8 @@ import { RootState } from '../../index';
 const initialState: CredentialsState = {
     all: [],
     allByTemplateAndProcess: [],
-    loading: false
+    allProcessAssigned: [],
+    loading: false,
 };
 
 const slice = createSlice({
