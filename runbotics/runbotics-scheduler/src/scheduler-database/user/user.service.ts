@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { In, Repository } from 'typeorm';
-import { Role } from 'runbotics-common';
+import { FeatureKey, Role } from 'runbotics-common';
 
 const relations = ['authorities'];
 
@@ -43,5 +43,13 @@ export class UserService {
                 email: In(emails),
             },
         });
+    }
+
+    hasFeatureKey(user: User, featureKey: FeatureKey) {
+        const userKeys = user.authorities
+            .flatMap((auth) => auth.featureKeys)
+            .map((featureKey) => featureKey.name);
+
+        return userKeys.includes(featureKey);
     }
 }

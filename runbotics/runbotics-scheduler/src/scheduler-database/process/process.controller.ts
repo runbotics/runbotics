@@ -13,12 +13,12 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, ProcessDto } from 'runbotics-common';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { CreateProcessDto, createProcessSchema } from '#/scheduler-database/process/dto/create-process.dto';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 import { UpdateProcessDto, updateProcessSchema } from '#/scheduler-database/process/dto/update-process.dto';
 import { ProcessCrudService } from '#/scheduler-database/process/process-crud.service';
 import { UpdateDiagramDto, updateDiagramSchema } from '#/scheduler-database/process/dto/update-diagram.dto';

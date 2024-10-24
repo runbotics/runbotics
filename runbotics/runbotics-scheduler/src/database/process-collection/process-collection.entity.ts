@@ -2,7 +2,7 @@ import {
     Column, CreateDateColumn,
     Entity, Generated, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn,
 } from 'typeorm';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
@@ -44,18 +44,18 @@ export class ProcessCollectionEntity {
     @Column({ name: 'is_public' })
     isPublic: boolean;
 
-    @ManyToOne(() => UserEntity, user => user.processCollections)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'created_by' })
-    createdByUser: UserEntity;
+    createdByUser: User;
 
     @OneToMany(() => ProcessEntity, process => process.processCollection)
     processes: ProcessEntity[];
 
-    @ManyToMany(() => UserEntity)
+    @ManyToMany(() => User)
     @JoinTable({
         name: 'process_collection_user',
         joinColumn: { name: 'collection_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
     })
-    users: UserEntity[];
+    users: User[];
 }

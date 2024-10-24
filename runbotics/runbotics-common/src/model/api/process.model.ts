@@ -1,5 +1,5 @@
 import { IScheduleProcess } from './schedule-process.model';
-import { User } from './user.model';
+import { BasicUserDto, User, UserDto } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
@@ -27,6 +27,11 @@ export interface IProcess {
     tags?: Tag[];
     output?: ProcessOutput;
 }
+
+export type ProcessDto = Omit<IProcess, 'createdBy' | 'editor'> & {
+    createdBy: BasicUserDto;
+    editor: BasicUserDto;
+};
 
 export const defaultProcessValue: Readonly<IProcess> = {
     isPublic: false,
