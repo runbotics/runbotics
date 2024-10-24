@@ -2,6 +2,7 @@ import { MailAction, ActionCredentialType } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
 
@@ -40,6 +41,7 @@ const getMailActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Mail.Send.Content'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['to', 'subject', 'content'],
                     },
@@ -48,6 +50,7 @@ const getMailActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input'],
                 input: {
+                    customCredentialId: schemaCustomCredential,
                     content: {
                         'ui:widget': 'DraftJSEditor',
                         'ui:options': {
