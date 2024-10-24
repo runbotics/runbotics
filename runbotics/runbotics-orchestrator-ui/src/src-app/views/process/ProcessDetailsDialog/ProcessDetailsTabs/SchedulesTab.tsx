@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 
 import { Box, Chip, Typography } from '@mui/material';
 import cronstrue from 'cronstrue/i18n';
-import { formatDistanceToNow } from 'date-fns';
 import i18n from 'i18next';
 
 import If from '#src-app/components/utils/If';
@@ -12,6 +11,8 @@ import {
     scheduleProcessActions,
     scheduleProcessSelector,
 } from '#src-app/store/slices/ScheduleProcess';
+
+import { formatDistanceToNowMapper } from '#src-app/views/utils/formatDistanceToNowMapper';
 
 import {
     DetailsInfoTabProps,
@@ -25,7 +26,7 @@ export const SchedulesTab = ({ value, process }: DetailsInfoTabProps) => {
     const processId = process.id;
     const hasSchedules = schedules.length > 0;
     const lastRun = process.lastRun
-        ? formatDistanceToNow(new Date(process.lastRun))
+        ? formatDistanceToNowMapper(process.lastRun)
         : translate('Component.Tile.Process.Content.LastRun.Placeholder');
 
     const humanReadableCron = (cronExpression: string) =>
