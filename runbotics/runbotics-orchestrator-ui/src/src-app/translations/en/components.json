@@ -68,6 +68,7 @@
     "Component.Tile.Process.DetailsDialog.TabContent.SchedulesLabel.Scheduled.Placeholder": "No schedules",
     "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith": "Shared With:",
     "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith.Placeholder": "Process is not shared yet",
+    "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWithOrganization.Placeholder": "Process is shared with everyone in organization",
     "Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials": "Credentials:",
     "Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials.Placeholder": "No credentials",
 

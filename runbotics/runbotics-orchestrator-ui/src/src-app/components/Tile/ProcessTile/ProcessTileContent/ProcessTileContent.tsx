@@ -1,10 +1,11 @@
 import React, { forwardRef } from 'react';
 
 import { Typography } from '@mui/material';
-import { formatDistanceToNow } from 'date-fns';
 
 import HighlightText from '#src-app/components/HighlightText';
 import useTranslations from '#src-app/hooks/useTranslations';
+
+import { formatDistanceToNowMapper } from '#src-app/views/utils/formatDistanceToNowMapper';
 
 import { StyledContent, StyledBox, StyledContainer, VerticalLine } from './ProcessTileContent.styles';
 import { ProcessTileContentProps } from './ProcessTileContent.types';
@@ -21,7 +22,7 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
                         {process.lastRun
-                            ? formatDistanceToNow(new Date(process.lastRun))
+                            ? formatDistanceToNowMapper(process.lastRun)
                             : translate('Component.Tile.Process.Content.LastRun.Placeholder')
                         }
                     </Typography>
@@ -31,7 +32,7 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                         {translate('Component.Tile.Process.Content.Updated')}
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
-                        {formatDistanceToNow(new Date(process.updated))}
+                        {formatDistanceToNowMapper(process.updated)}
                     </Typography>
                 </StyledBox>
             </StyledContainer>
