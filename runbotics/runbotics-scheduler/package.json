@@ -85,6 +85,7 @@
         "@types/cron": "^2.0.0",
         "@typescript-eslint/eslint-plugin": "^5.60.1",
         "@typescript-eslint/parser": "^5.60.1",
+        "@types/uuid": "^8.3.0",
         "cross-env": "^7.0.3",
         "eslint": "^8.31.0",
         "vitest": "~1.6.0",

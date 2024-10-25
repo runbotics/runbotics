@@ -153,6 +153,7 @@ export class ProcessCrudService {
         options.relations = RELATIONS;
 
         options.where = {
+            ...options.where,
             tenantId: user.tenantId,
         };
 

@@ -72,9 +72,9 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         if (instanceId) {
             dispatch(processInstanceActions.getProcessInstancePageWithSpecificInstance({
                 size: pageSize,
-                instanceId,
                 filter: {
                     equals: {
+                        id: instanceId,
                         ...(botId && { botId }),
                         ...(processId && { processId }),
                     },

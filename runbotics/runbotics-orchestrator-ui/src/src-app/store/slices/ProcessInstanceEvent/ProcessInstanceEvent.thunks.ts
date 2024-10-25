@@ -11,7 +11,7 @@ export const getProcessInstanceEvents = createAsyncThunk<
     { processInstanceId: string }
 >('processInstanceEvent/getBotProcessInstanceEvents', ({ processInstanceId }) =>
     Axios.get<IProcessInstanceEvent[]>(
-        `/api/process-instance-events?processInstanceId.equals=${processInstanceId}&sort=finished&size=2000`
+        `/api/process-instance-events/Page?processInstanceId.equals=${processInstanceId}&sort=finished&size=2000`
     ).then((response) => response.data)
 );
 

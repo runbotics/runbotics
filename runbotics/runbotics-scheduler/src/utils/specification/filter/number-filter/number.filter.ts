@@ -12,13 +12,13 @@ enum NumberOperator {
 
 const parseNumber = (stringNumber: string) => {
     const number = Number(stringNumber);
-    
+
     if(!isFinite(number) || isNaN(number)){
         throw Error(`Can't parse ${stringNumber} to number`);
     }
-    
+
     return number;
-}
+};
 
 export class NumberFilter extends Filter {
     name: 'number';
@@ -51,7 +51,7 @@ export class NumberFilter extends Filter {
         if(!(Object.values(NumberOperator) as string[]).includes(operator)){
             throw Error(`${operator} is not an allowed datetime operator`);
         }
-        
+
         const parsed = parseNumber(value);
 
         switch (operator as NumberOperator){

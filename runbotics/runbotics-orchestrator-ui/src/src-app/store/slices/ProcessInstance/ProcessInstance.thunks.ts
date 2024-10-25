@@ -8,7 +8,7 @@ import URLBuilder from '#src-app/utils/URLBuilder';
 import { ProcessInstanceRequestCriteria } from './ProcessInstance.state';
 
 const processInstancePageURL = (params: PageRequestParams<ProcessInstanceRequestCriteria>) => URLBuilder
-    .url('/api/process-instances-page')
+    .url('/api/process-instances/Page')
     .param('sort', 'created,desc')
     .params(params)
     .build();
@@ -56,7 +56,7 @@ export const getSubprocesses = createAsyncThunk<Page<IProcessInstance>, {
     'processInstances/getSubprocesses',
     ({ processInstanceId, page, size }, { rejectWithValue }) => Axios.get<Page<IProcessInstance>>(
         URLBuilder
-            .url(`/api/process-instances/${processInstanceId}/subprocesses`)
+            .url(`/api/process-instances/${processInstanceId}/subprocesses/Page`)
             .params({ page, size })
             .build()
     )
@@ -81,7 +81,7 @@ export const getProcessInstancePage = createAsyncThunk<
 
 export const getProcessInstancePageWithSpecificInstance = createAsyncThunk<
     Page<IProcessInstance>,
-    PageRequestParams<ProcessInstanceRequestCriteria> & { instanceId: string }
+    PageRequestParams<ProcessInstanceRequestCriteria>
 >(
     'processInstances/getProcessInstancePageWithSpecificInstance',
     (params) => Axios.get<Page<IProcessInstance>>(processInstancePageURL(params))
