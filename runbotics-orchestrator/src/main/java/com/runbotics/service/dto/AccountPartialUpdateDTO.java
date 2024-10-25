@@ -18,11 +18,6 @@ public class AccountPartialUpdateDTO {
 
     private Long id;
 
-    @NotBlank
-    @Pattern(regexp = Constants.LOGIN_REGEX)
-    @Size(min = 1, max = 50)
-    private String login;
-
     @Size(max = 50)
     private String firstName;
 
@@ -45,7 +40,6 @@ public class AccountPartialUpdateDTO {
 
     public AccountPartialUpdateDTO(User user) {
         this.id = user.getId();
-        this.login = user.getLogin();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
@@ -59,14 +53,6 @@ public class AccountPartialUpdateDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public String getFirstName() {
@@ -113,7 +99,6 @@ public class AccountPartialUpdateDTO {
     @Override
     public String toString() {
         return "AccountPartialUpdateDTO{" +
-            "login='" + login + '\'' +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +

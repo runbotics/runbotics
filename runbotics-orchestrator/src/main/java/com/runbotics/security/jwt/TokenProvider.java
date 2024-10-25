@@ -91,7 +91,7 @@ public class TokenProvider {
         Date validity = new Date(now + this.guestTokenValidityInMilliseconds);
 
         return Jwts.builder()
-            .setSubject(guestUser.getLogin())
+            .setSubject(guestUser.getEmail())
             .claim(AUTHORITIES_KEY, authorities)
             .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(validity)

@@ -126,7 +126,7 @@ public class UserService {
     @Transactional(noRollbackFor = BadRequestAlertException.class)
     public User registerUser(AdminUserDTO userDTO, String password, UUID inviteCodeId) {
         userRepository
-            .findOneByLogin(userDTO.getLogin().toLowerCase())
+            .findOneByEmail(userDTO.getEmail())
             .ifPresent(
                 existingUser -> {
                     throw new UsernameAlreadyUsedException();
@@ -141,7 +141,7 @@ public class UserService {
             );
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
-        newUser.setLogin(userDTO.getLogin().toLowerCase());
+        newUser.setEmail(userDTO.getEmail().toLowerCase());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
@@ -194,7 +194,7 @@ public class UserService {
 
     public User createUser(AdminUserDTO userDTO) {
         User user = new User();
-        user.setLogin(userDTO.getLogin().toLowerCase());
+        user.setEmail(userDTO.getEmail().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         if (userDTO.getEmail() != null) {
@@ -243,7 +243,7 @@ public class UserService {
             .map(Optional::get)
             .map(
                 user -> {
-                    user.setLogin(userDTO.getLogin().toLowerCase());
+                    user.setEmail(userDTO.getEmail().toLowerCase());
                     user.setFirstName(userDTO.getFirstName());
                     user.setLastName(userDTO.getLastName());
                     if (userDTO.getEmail() != null) {
@@ -298,8 +298,8 @@ public class UserService {
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
+            .getCurrentUserEmail()
+            .flatMap(userRepository::findOneByEmail)
             .ifPresent(
                 user -> {
                     user.setFirstName(firstName);
@@ -348,7 +348,7 @@ public class UserService {
             .map(
                 existingUser -> {
                     userRepository
-                        .findOtherUserByLoginOrEmail(adminUserDTO.getId(), adminUserDTO.getEmail(), adminUserDTO.getLogin())
+                        .findOtherUserByEmail(adminUserDTO.getId(), adminUserDTO.getEmail())
                         .ifPresent(
                             user -> {
                                 if (user.getEmail().equals(adminUserDTO.getEmail())) {
@@ -407,7 +407,7 @@ public class UserService {
                     }
 
                     userRepository
-                        .findOtherUserByLoginOrEmail(adminUserDTO.getId(), adminUserDTO.getEmail(), adminUserDTO.getLogin())
+                        .findOtherUserByEmail(adminUserDTO.getId(), adminUserDTO.getEmail())
                         .ifPresent(
                             user -> {
                                 if (user.getEmail().equals(adminUserDTO.getEmail())) {
@@ -446,8 +446,8 @@ public class UserService {
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
+            .getCurrentUserEmail()
+            .flatMap(userRepository::findOneByEmail)
             .ifPresent(
                 user -> {
                     String currentEncryptedPassword = user.getPassword();
@@ -473,7 +473,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<AdminUserDTO> getAllManagedUsersLimited() {
-        return userRepository.findAll().stream().map(User::getLogin).map(AdminUserDTO::new).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(User::getEmail).map(AdminUserDTO::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -482,13 +482,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
+    public Optional<User> getUserWithAuthoritiesByEmail(String email) {
+        return userRepository.findOneWithAuthoritiesByEmail(email);
     }
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+        return SecurityUtils.getCurrentUserEmail().flatMap(userRepository::findOneWithAuthoritiesByEmail);
     }
 
     @Transactional(readOnly = true)
@@ -568,7 +568,7 @@ public class UserService {
             .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
             .forEach(
                 user -> {
-                    log.debug("Deleting not activated user {}", user.getLogin());
+                    log.debug("Deleting not activated user {}", user.getEmail());
                     userRepository.delete(user);
                 }
             );
