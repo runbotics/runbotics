@@ -5,7 +5,7 @@ import { CircularProgress, Typography } from '@mui/material';
 
 import { useRouter } from 'next/router';
 
-import { PrivilegeType } from 'runbotics-common';
+import { PrivilegeType, DEFAULT_COLLECTION_COLOR } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
@@ -45,6 +45,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
         user => user.user.email === currentUser.email &&
         user.privilegeType === PrivilegeType.WRITE
     );
+    const hexColor = collection ? collectionColors[collection?.color].hex : collectionColors[DEFAULT_COLLECTION_COLOR].hex;
 
     if (loading) return <CircularProgress />;
 
@@ -53,8 +54,8 @@ const CredentialTile: FC<CredentialTileProps> = ({
     };
 
     return (
-        <Tile leftBorderColor={`4px solid ${collectionColors[collection?.color].hex}`} minHeight='min-content'>
-            <CredentialCard collectionColor={collectionColors[collection.color].hex} onClick={handleClick}>
+        <Tile leftBorderColor={`4px solid ${hexColor}`} minHeight='min-content'>
+            <CredentialCard collectionColor={hexColor} onClick={handleClick}>
                 <Typography variant="h4" sx={{ paddingBottom: '16px' }}>
                     {credential.name}
                 </Typography>
