@@ -3,7 +3,7 @@ import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Raw, Repository } from 'typeorm';
 import { IUser } from 'runbotics-common';
 import { CredentialTemplateService } from '../credential-template/credential-template.service';
 import { SecretService } from '../secret/secret.service';
@@ -13,8 +13,11 @@ import { CredentialCollectionService } from '../credential-collection/credential
 import { ProcessCredential } from '../process-credential/process-credential.entity';
 import { MailService } from '#/mail/mail.service';
 import { CredentialNotifyMailArgs, CredentialOperationType } from './credential.utils';
+import { Specs } from '#/utils/specification/specifiable.decorator';
+import { Paging } from '#/utils/page/pageable.decorator';
+import { getPage, Page } from '#/utils/page/page';
 
-const relations = ['attributes', 'createdBy'];
+const RELATIONS = ['attributes', 'createdBy', 'collection.credentialCollectionUser'];
 
 @Injectable()
 export class CredentialService {
@@ -162,7 +165,7 @@ export class CredentialService {
         tenantId,
         ...criteria
       },
-      relations
+      relations: RELATIONS
     });
   }
 
@@ -178,13 +181,35 @@ export class CredentialService {
     return Promise.all(credentials.map(credential => this.mapToFrontDto(credential, user)));
   }
 
+  async getAllAccessiblePages(user: IUser, paging: Paging, specs: Specs<Credential>): Promise<Page<Credential>> {
+    const options: FindManyOptions<Credential> = {
+      ...paging,
+      ...specs
+    };
+
+    options.where = {
+      ...options.where,
+      tenantId: user.tenantId,
+      collection: { credentialCollectionUser: { userId: user.id } }
+    };
+
+    options.relations = RELATIONS;
+
+    const page = await getPage(this.credentialRepo, options);
+
+    return {
+      ...page,
+      content: page.content
+    };
+  }
+
   async findOneAccessibleById(id: string, tenantId: string, user: IUser) {
     const result = await this.credentialRepo.findOne({
       where: {
         id,
         tenantId,
       },
-      relations
+      relations: RELATIONS
     });
 
     if (!result) {
@@ -200,7 +225,7 @@ export class CredentialService {
         id,
         tenantId
       },
-      relations
+      relations: RELATIONS
     });
 
     if (!credential) {

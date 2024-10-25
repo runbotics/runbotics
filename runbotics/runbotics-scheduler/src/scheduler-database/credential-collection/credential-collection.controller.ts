@@ -27,6 +27,9 @@ import { User } from '#/utils/decorators/user.decorator';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, IUser } from 'runbotics-common';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
+import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
+import { Pageable, Paging } from '#/utils/page/pageable.decorator';
+import { CredentialCollectionCriteria } from './criteria/credential-collection.criteria';
 
 @UseInterceptors(TenantInterceptor)
 @FeatureKeys(FeatureKey.CREDENTIALS_PAGE_READ)
@@ -52,6 +55,16 @@ export class CredentialCollectionController {
 
         return collection;
     }
+
+    @Get('/Page')
+    getPages(
+        @Specifiable(CredentialCollectionCriteria) specs: Specs<Credential>,
+        @Pageable() paging: Paging,
+        @User() user: IUser
+      ) {
+        this.logger.log('REST request to get credential collections by page');
+        return this.credentialCollectionService.getAllAccessiblePages(user, specs, paging);
+      }
 
     @Get()
     findAll(@User() user: IUser) {
