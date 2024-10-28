@@ -7,7 +7,7 @@ import { IBpmnAction, Runner } from './types';
 
 
 const getMailActions: () => Record<string, IBpmnAction> = () => ({
-    'mail.send': {
+    [MailAction.SEND]: {
         id: MailAction.SEND,
         credentialType: ActionCredentialType.EMAIL,
         label: translate('Process.Details.Modeler.Actions.Mail.Send.Label'),

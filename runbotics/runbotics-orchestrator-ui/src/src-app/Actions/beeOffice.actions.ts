@@ -2,6 +2,7 @@ import { BeeOfficeAction, ActionRegex, ActionCredentialType } from 'runbotics-co
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -62,6 +63,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.Create.Variables.Text'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['employee', 'activity', 'date', 'duration'],
                     },
@@ -82,6 +84,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -131,6 +136,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeByEmail.Email'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['email'],
                     },
@@ -152,6 +158,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -194,6 +203,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.GetEmployeeById.Id'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['id'],
                     },
@@ -216,6 +226,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -257,6 +270,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 enum: ['Contains', 'Equals'],
                                 default: 'Contains',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['query'],
                     },
@@ -276,6 +290,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -325,6 +342,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.GetTimeTable.Date'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['employee', 'date'],
                     },
@@ -346,6 +364,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -385,6 +406,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['timeTableActivity'],
                     },
@@ -392,6 +414,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -424,6 +449,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.GetActivityGroups.Group'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['group'],
                     },
@@ -445,6 +471,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -491,6 +520,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['query'],
                     },
@@ -515,6 +545,9 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -582,6 +615,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 }
                             }
                         },
+                        customCredentialId: propertyCustomCredential,
                         required: ['employeeId', 'leaveConfigName', 'dateFrom', 'dateTo']
                     },
                 },
@@ -589,6 +623,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input'],
                 input: {
+                    customCredentialId: schemaCustomCredential,
                     leaveConfigName: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.LeaveConfig.Tooltip')

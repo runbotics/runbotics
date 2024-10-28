@@ -4,6 +4,8 @@ import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloud
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
+
 export const downloadCloudFileAction = {
     id: CloudFileAction.DOWNLOAD_FILE,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
@@ -63,6 +65,7 @@ export const downloadCloudFileAction = {
                                             ),
                                             type: 'string',
                                         },
+                                        customCredentialId: propertyCustomCredential,
                                     },
                                     required: ['siteRelativePath', 'listName', 'filePath'],
                                 },
@@ -83,6 +86,7 @@ export const downloadCloudFileAction = {
                                             ),
                                             type: 'string',
                                         },
+                                        customCredentialId: propertyCustomCredential,
                                     },
                                     required: ['filePath'],
                                 },
@@ -104,6 +108,7 @@ export const downloadCloudFileAction = {
         },
         uiSchema: {
             input: {
+                customCredentialId: schemaCustomCredential,
                 siteRelativePath: siteRelativePathUI,
                 listName: listNameUI,
             },

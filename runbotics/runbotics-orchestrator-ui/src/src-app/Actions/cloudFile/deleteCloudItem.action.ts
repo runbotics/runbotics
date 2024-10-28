@@ -4,6 +4,8 @@ import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloud
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
+
 export const deleteCloudItemAction = {
     id: CloudFileAction.DELETE_ITEM,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
@@ -51,6 +53,7 @@ export const deleteCloudItemAction = {
                                             ),
                                             type: 'string',
                                         },
+                                        customCredentialId: propertyCustomCredential,
                                     },
                                     required: ['siteRelativePath', 'listName', 'itemPath'],
                                 },
@@ -65,6 +68,7 @@ export const deleteCloudItemAction = {
                                             ),
                                             type: 'string',
                                         },
+                                        customCredentialId: propertyCustomCredential,
                                     },
                                     required: ['itemPath'],
                                 },
@@ -76,6 +80,7 @@ export const deleteCloudItemAction = {
         },
         uiSchema: {
             input: {
+                customCredentialId: schemaCustomCredential,
                 siteRelativePath: siteRelativePathUI,
                 listName: listNameUI,
             },

@@ -2,6 +2,7 @@ import { JiraServerAction, ActionRegex, ActionCredentialType } from 'runbotics-c
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
 const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
@@ -68,6 +69,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.Common.Date'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['date'],
                                     }, {
@@ -83,6 +85,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.EndDate'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['startDate', 'endDate'],
                                     }, {
@@ -94,6 +97,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.DatesList'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['dates']
                                     }],
@@ -116,6 +120,9 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                 },
                 uiSchema: {
                     'ui:order': ['input', 'output'],
+                    input: {
+                        customCredentialId: schemaCustomCredential,
+                    },
                     output: {
                         variableName: {
                             'ui:options': {

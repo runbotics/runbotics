@@ -1,4 +1,4 @@
-import { ProcessEntity } from '#/database/process/process.entity';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { Logger } from '#/utils/logger/logger';
 import { ACTION_GROUP, ActionCredentialType } from 'runbotics-common';
 import { MigrationInterface, QueryRunner } from 'typeorm';

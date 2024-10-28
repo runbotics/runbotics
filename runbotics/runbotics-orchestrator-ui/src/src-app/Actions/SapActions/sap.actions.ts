@@ -3,6 +3,7 @@ import { SapAction, ActionRegex, ActionCredentialType } from 'runbotics-common';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { SAPLanguages } from './sap.types';
+import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
 import { IBpmnAction, Runner, ActionSystem } from '../types';
 
 // eslint-disable-next-line max-lines-per-function
@@ -43,7 +44,8 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 type: 'string',
                                 enum: Object.values(SAPLanguages),
                                 default: SAPLanguages.English,
-                            }
+                            },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['user', 'password', 'connectionName'],
                     },
@@ -51,6 +53,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -75,13 +80,18 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                     input: {
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
-                        properties: {},
+                        properties: {
+                            customCredentialId: propertyCustomCredential,
+                        },
                         required: [],
                     },
                 },
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {},
@@ -108,6 +118,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.StartTransaction.Transaction'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['transaction'],
                     },
@@ -115,6 +126,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -133,11 +147,16 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         form: {
             schema: {
                 type: 'object',
-                properties: {},
+                properties: {
+                    customCredentialId: propertyCustomCredential,
+                },
                 required: [],
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {},
@@ -167,6 +186,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Type.Value'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'value'],
                     },
@@ -174,6 +194,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -270,6 +293,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                     'Ctrl+P',
                                 ],
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['virtualKey'],
                     },
@@ -277,6 +301,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -310,6 +337,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Index.Target'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -330,6 +358,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -373,6 +404,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.ReadText.Target'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -393,6 +425,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -430,6 +465,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Click.Target'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -437,6 +473,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -464,6 +503,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Focus.Target'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -471,6 +511,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -498,6 +541,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.DoubleClick.Target'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -505,6 +549,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -532,6 +579,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Select.Target'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -539,6 +587,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                }
             },
             formData: {
                 input: {
@@ -570,6 +621,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.OpenContextMenu.MenuId'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'menuId'],
                     },
@@ -577,6 +629,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -609,6 +664,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.OptionId'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'optionId'],
                     },
@@ -616,6 +672,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                }
             },
             formData: {
                 input: {
@@ -648,6 +707,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.ClickToolbarButton.ToolId'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'toolId'],
                     },
@@ -655,6 +715,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -686,6 +749,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.SelectTableRow.RowIndex'),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'rowIndex'],
                     },
@@ -693,6 +757,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {
@@ -724,6 +791,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Checked'),
                                 type: 'boolean'
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target']
                     },
@@ -731,6 +799,9 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
             },
             formData: {
                 input: {

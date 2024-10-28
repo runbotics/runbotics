@@ -4,6 +4,8 @@ import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloud
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
+
 export const createShareLinkAction = {
     id: CloudFileAction.CREATE_SHARE_LINK,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
@@ -73,6 +75,7 @@ export const createShareLinkAction = {
                                             ),
                                             type: 'string',
                                         },
+                                        customCredentialId: propertyCustomCredential,
                                     },
                                     required: ['siteRelativePath', 'listName', 'shareType', 'shareScope', 'itemPath'],
                                 },
@@ -103,6 +106,7 @@ export const createShareLinkAction = {
                                             ),
                                             type: 'string',
                                         },
+                                        customCredentialId: propertyCustomCredential,
                                     },
                                     required: ['shareType', 'shareScope', 'itemPath'],
                                 },
@@ -125,6 +129,7 @@ export const createShareLinkAction = {
         uiSchema: {
             'ui:order': ['input', 'output'],
             input: {
+                customCredentialId: schemaCustomCredential,
                 siteRelativePath: siteRelativePathUI,
                 listName: listNameUI,
             },
