@@ -33,18 +33,20 @@ export enum ACTION_GROUP {
     LOOP = 'loop',
     API = 'api',
     JAVASCRIPT = 'javascript',
+    JIRA_CLOUD = 'jiraCloud',
+    JIRA_SERVER = 'jiraServer',
     ASANA = 'asana',
     GOOGLE = 'google',
     JIRA = 'jira',
     FILE = 'file',
+    FOLDER = 'folder',
     CSV = 'csv',
     DESKTOP_OFFICE_ACTIONS = 'desktopOfficeActions',
     CLOUD_EXCEL = 'cloudExcel',
     CLOUD_FILE = 'cloudFile',
-    BEEOFFICE = 'beeoffice',
+    BEEOFFICE = 'beeOffice',
     SAP = 'sap',
     APPLICATION = 'application',
-    FOLDER = 'folder'
 }
 
 export enum VariableAction {

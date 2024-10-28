@@ -1,9 +1,10 @@
 
-import { Credential } from 'runbotics-common';
+import { Credential, ProcessCredential } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import { BasicCredentialDto, CreateCredentialDto, EditCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 import { EditAtributeDto } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/Attribute.types';
+
 
 const COLLECTION_CREDENTIAL_PATH = 'credential-collections/:collectionId/credentials';
 const CREDENTIAL_PATH = 'credentials';
@@ -31,3 +32,6 @@ export const deleteCredential = ApiTenantResource
 
 export const updateAttribute = ApiTenantResource
     .patch<BasicCredentialDto, EditAtributeDto>(':credentialId/UpdateAttribute/:attributeName', CREDENTIAL_PATH);
+
+export const fetchAllCredentialsAssignedToProcess = ApiTenantResource
+    .get<ProcessCredential[]>(':processId', 'process-credentials/processes');
