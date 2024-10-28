@@ -4,6 +4,7 @@ import { StringFilter } from '#/utils/specification/filter/string-filter/string.
 
 
 export class UserCriteria extends Criteria {
+    email = new StringFilter();
     activated = new BooleanFilter();
     tenantId = new StringFilter();
 }

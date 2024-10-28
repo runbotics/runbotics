@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { FindManyOptions, In, Repository } from 'typeorm';
@@ -6,18 +6,32 @@ import { BasicUserDto, FeatureKey, Role, UserDto } from 'runbotics-common';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { Authority } from '../authority/authority.entity';
+import { Logger } from '#/utils/logger';
+import { TenantService } from '../tenant/tenant.service';
+import { Tenant } from '../tenant/tenant.entity';
 
 // const relations = [];
 
 @Injectable()
 export class UserService {
+    private readonly logger = new Logger(UserService.name);
+
     constructor(
         @InjectRepository(User)
-        private userRepository: Repository<User>
+        private readonly userRepository: Repository<User>,
+        @InjectRepository(Authority)
+        private readonly authorityRepository: Repository<Authority>,
+        private readonly tenantService: TenantService
     ) {}
 
     findAll() {
         return this.userRepository.find();
+    }
+
+    findAllByTenant(tenantId: string) {
+        return this.userRepository.findBy({ tenantId });
     }
 
     findAllByRole(role: Role) {
@@ -61,6 +75,45 @@ export class UserService {
         return this.userRepository.findOne({ where: { email } });
     }
 
+    async update(userDto: UpdateUserDto, id: number, executor: User) {
+        const { roles, tenantId: tid, ...partialUser } = userDto;
+
+        const tenantRelation = await this.getTenantRelation(tid);
+
+        const authority = await (async () =>
+            roles
+                ? await this.authorityRepository
+                      .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
+                      .then((auth) => ({ authorities: [auth] }))
+                : {})();
+
+        const updatedUser = await this.userRepository
+            .findOneByOrFail({ id, tenantId: executor.tenantId })
+            .then((user) => ({
+                ...user,
+                ...partialUser,
+                ...authority,
+                ...(tenantRelation && { ...tenantRelation }),
+                lastModifiedBy: executor.email,
+            }))
+            .catch(() => {
+                this.logger.error('Cannot find user with id: ', id);
+                throw new BadRequestException('User not found', 'NotFound');
+            });
+
+        return this.userRepository.save(updatedUser).then(this.mapToUserDto);
+    }
+
+    async delete(id: number) {
+        await this.userRepository
+            .findOneByOrFail({ id })
+            .catch(() => {
+                throw new BadRequestException('Cannot find user with provided id');
+            });
+
+        await this.userRepository.delete(id);
+    }
+
     hasFeatureKey(user: User, featureKey: FeatureKey) {
         const userKeys = user.authorities
             .flatMap((auth) => auth.featureKeys)
@@ -97,5 +150,16 @@ export class UserService {
                 .map((featureKey) => featureKey.name),
             roles: user.authorities.map((auth) => auth.name),
         };
+    }
+
+    private getTenantRelation(
+        tenantId: string | null
+    ): Promise<{ tenant: Tenant } | null> {
+        return this.tenantService
+            .getById(tenantId)
+            .then((tenant) => tenant ? ({ tenant }) : null)
+            .catch(() => {
+                throw new BadRequestException('Wrong tenant id');
+            });
     }
 }
