@@ -15,7 +15,7 @@ const useInitiatorLabel = () => {
                 return translate('Component.HistoryTable.Rows.Initiator.Api', { login: user?.login });
             case TriggerEvent.EMAIL:
                 return translate('Component.HistoryTable.Rows.Initiator.Email', {
-                    email: (triggerData as EmailTriggerData).sender,
+                    email: (triggerData as EmailTriggerData)?.sender,
                 });
             default:
                 return user?.login;
