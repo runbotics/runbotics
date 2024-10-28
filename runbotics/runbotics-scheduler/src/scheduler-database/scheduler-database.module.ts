@@ -21,6 +21,7 @@ import { ProcessOutputModule } from './process-output/process-output.module';
 import { ProcessInstanceModule } from './process-instance/process-instance.module';
 import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
+import { TriggerEventModule } from './trigger-event/trigger-event.module';
 
 @Module({
     imports: [
@@ -46,6 +47,7 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
         ProcessInstanceModule,
         ProcessInstanceEventModule,
         ProcessInstanceLoopEventModule,
+        TriggerEventModule,
     ],
     exports: [],
 })
