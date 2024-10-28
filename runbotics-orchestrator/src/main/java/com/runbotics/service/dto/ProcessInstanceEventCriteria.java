@@ -4,14 +4,13 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.runbotics.domain.ProcessInstanceEvent;
-import com.runbotics.web.rest.ProcessInstanceEventResource;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link ProcessInstanceEvent} entity. This class is used
- * in {@link ProcessInstanceEventResource} to receive all the possible filtering options from
+ * to receive all the possible filtering options from
  * the Http GET request parameters.
  * For example the following could be a valid request:
  * {@code /process-instance-events?id.greaterThan=5&attr1.contains=something&attr2.specified=false}
