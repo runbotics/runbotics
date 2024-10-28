@@ -44,7 +44,7 @@ export enum ACTION_GROUP {
     DESKTOP_OFFICE_ACTIONS = 'desktopOfficeActions',
     CLOUD_EXCEL = 'cloudExcel',
     CLOUD_FILE = 'cloudFile',
-    BEEOFFICE = 'beeoffice',
+    BEEOFFICE = 'beeOffice',
     SAP = 'sap',
     APPLICATION = 'application',
 }

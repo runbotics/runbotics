@@ -14,10 +14,12 @@ const ACTION_ID_TO_CREDENTIAL_TYPE = {
 };
 
 export const getCredentialTypeFromActionGroup = (actionGroup: string) => {
-    if (!ACTION_ID_TO_CREDENTIAL_TYPE[actionGroup]) {
-        throw new Error(`No credential type found for actionId: ${actionGroup}`);
+    const credentialType = ACTION_ID_TO_CREDENTIAL_TYPE[actionGroup];
+    if (!credentialType) {
+        // eslint-disable-next-line no-console
+        console.error(`[getCredentialTypeFromActionGroup] No credential type found for actionId: ${actionGroup}`);
     }
-    return ACTION_ID_TO_CREDENTIAL_TYPE[actionGroup];
+    return credentialType;
 };
 
 
