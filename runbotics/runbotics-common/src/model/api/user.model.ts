@@ -1,4 +1,5 @@
-import { IAuthority } from './authority.model';
+import { IAuthority, Role } from './authority.model';
+import { FeatureKey } from './feature-key.model';
 import { BasicTenantDto } from './tenant.model';
 
 export interface User {
@@ -25,6 +26,17 @@ export type BasicUserDto = Pick<User, 'id' | 'email'>;
 
 export type PartialUserDto = Partial<User>;
 
-export type UserDto = Omit<User, 'activationKey' | 'resetDate' | 'resetKey' | 'tenantId' | 'imageUrl'> & {
+export type UserDto = Omit<
+    User,
+    | 'activationKey'
+    | 'resetDate'
+    | 'resetKey'
+    | 'tenantId'
+    | 'imageUrl'
+    | 'passwordHash'
+    | 'authorities'
+> & {
     tenant: BasicTenantDto;
-}
+    roles: Role[];
+    featureKeys: FeatureKey[];
+};

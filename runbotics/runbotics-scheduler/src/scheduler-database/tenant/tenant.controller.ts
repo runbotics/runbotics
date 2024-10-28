@@ -20,7 +20,7 @@ import { TenantInviteCodeDto, tenantInviteCodeSchema } from './dto/invite-code.d
 import { CreateTenantDto, createTenantSchema } from './dto/create-tenant.dto';
 import { UpdateTenantDto, updateTenantSchema } from './dto/update-tenant.dto';
 
-@Controller('/api/scheduler/tenants')
+@Controller('/api/scheduler')
 export class TenantController {
     private readonly logger = new Logger(TenantController.name);
 
@@ -71,14 +71,14 @@ export class TenantController {
 
     // -----------------------------------
 
-    @Get() // TODO: pagination & filtering
+    @Get('tenants') // TODO: pagination & filtering
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     getAllTenants() {
         this.logger.log('REST request to get all tenants');
         return this.tenantService.getAll();
     }
 
-    @Get('invite-code/:tenantId')
+    @Get('tenants/invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_GET_ALL_INVITE_CODE)
     async getActiveInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
         this.logger.log(`REST request to get tenant invite code for tenant with id: ${id}`);
@@ -92,7 +92,7 @@ export class TenantController {
         return inviteCodeDto;
     }
 
-    @Get(':id')
+    @Get('tenants/:id')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     async getTenantById(
         @Param('id', ParseUUIDPipe) id: Tenant['id']
@@ -108,7 +108,7 @@ export class TenantController {
         return tenant;
     }
 
-    @Post('invite-code')
+    @Post('tenants/invite-code')
     @Public()
     @HttpCode(HttpStatus.OK)
     validateInviteCode(
@@ -118,7 +118,7 @@ export class TenantController {
         return this.tenantService.validateInviteCode(inviteCodeDto);
     }
 
-    @Post()
+    @Post('tenants')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     createTenant(
         @Body(new ZodValidationPipe(createTenantSchema)) tenantDto: CreateTenantDto,
@@ -128,7 +128,7 @@ export class TenantController {
         return this.tenantService.create(tenantDto, user);
     }
 
-    @Post('invite-code/:tenantId')
+    @Post('tenants/invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_CREATE_ALL_INVITE_CODE)
     async createInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
         this.logger.log('REST request to create tenant invite code for tenant with id: ', id);
@@ -141,7 +141,7 @@ export class TenantController {
         return this.tenantService.createInviteCodeByTenantId(id);
     }
 
-    @Patch(':id')
+    @Patch('tenants/:id')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     updateTenant(
         @Param('id', ParseUUIDPipe) id: Tenant['id'],
@@ -152,7 +152,7 @@ export class TenantController {
         return this.tenantService.update(tenantDto, id, user);
     }
 
-    @Delete(':id')
+    @Delete('tenants/:id')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteTenant(@Param('id', ParseUUIDPipe) id: Tenant['id']) {

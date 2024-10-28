@@ -1,5 +1,5 @@
 import { dateTransformer } from '#/database/database.utils';
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
 import { IAuthority } from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
@@ -32,6 +32,10 @@ export class User {
     @Column({ name: 'tenant_id', type: 'uuid', default: 'b7f9092f-5973-c781-08db-4d6e48f78e98' })
     tenantId: string;
 
+    @ManyToOne(() => Tenant, { eager: true })
+    @JoinColumn({ name: 'tenant_id', referencedColumnName: 'id' })
+    tenant: Tenant;
+
     @Column({ type: 'boolean' })
     activated: boolean;
 
@@ -56,8 +60,7 @@ export class User {
     @Column({ name: 'last_modified_by', type: 'varchar', length: 50 })
     lastModifiedBy: string;
 
-
-    @ManyToMany(() => Authority)
+    @ManyToMany(() => Authority, { eager: true })
     @JoinTable({
         name: 'jhi_user_authority',
         joinColumn: { name: 'user_id', referencedColumnName: 'id' },
