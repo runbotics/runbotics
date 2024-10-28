@@ -19,6 +19,10 @@ export class UUIDFilter extends Filter {
     }
 
     consume(operator: string, value: string) {
+        if (!(Object.values(UUIDOperator) as string[]).includes(operator)) {
+            throw Error(`${operator} is not an allowed uuid operator`);
+        }
+
         if (!isValidUUID(value)) {
             throw Error(`'${value}' is not a valid uuid`);
         }
@@ -30,8 +34,6 @@ export class UUIDFilter extends Filter {
             case UUIDOperator.NOT_EQUALS:
                 this.notEquals(value);
                 break;
-            default:
-                throw Error(`${operator} is not an allowed uuid operator`);
         }
     }
 }

@@ -15,7 +15,7 @@ export const getScheduledJobs = createAsyncThunk<ScheduledJob[]>(
 
 export const getActiveJobs = createAsyncThunk<IProcessInstance[]>(
     'scheduledJobs/getActiveJobs',
-    () => axios.get(`/api/process-instances?status=${processStatuses.toString()}`)
+    () => axios.get(`/api/process-instances?status.in=${processStatuses.toString()}`)
         .then((response) => response.data),
 );
 
