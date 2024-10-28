@@ -1,7 +1,7 @@
 {
     "Action.DeleteAction.Dialog.Title": "Delete action {{ script }}",
     "Action.DeleteAction.Dialog.ConfirmationMessage": "Are you sure you want to delete action: {{ actionName }}",
-    
+
     "Action.List.Header.Title": "Actions",
     "Action.List.Header.AddAction": "Add action",
     "Action.List.Results.Id": "id",
@@ -9,10 +9,13 @@
     "Action.List.Results.Script": "script",
     "Action.List.Results.Actions": "Actions",
     "Action.List.Item.Disabled.Tooltip": "Runs on bots with {{ system }} system only",
-    
+
     "Action.Details.Script": "Script",
     "Action.Details.Label": "Label",
     "Action.Details.Form": "Form",
+    "Action.Details.Form.Script.Error": "Required. Must start with external.",
+    "Action.Details.Form.Label.Error": "Required",
+    "Action.Details.Form.Validation.Error": "Invalid form values",
     "Action.Details.ExternalScript.Error": "External script needs to start with external.",
     "Action.Details.Dialog.SaveAction": "Save action: {{ script }}",
     "Action.Details.Dialog.LiveView": "LIVE VIEW",

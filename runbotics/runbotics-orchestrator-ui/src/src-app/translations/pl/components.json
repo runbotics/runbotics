@@ -23,6 +23,11 @@
     "Component.ProcessQueueDetails.Processing": "Oczekiwanie na rozpoczęcie procesu, szukanie bota.",
     "Component.ProcessQueueDetails.Queue": "Oczekiwanie na przetwarzanie. Twój proces jest {{ queuePosition }} w kolejce.",
 
+    "Component.CredentialSelectSet.CollectionAuthor": "Autor kolekcji",
+    "Component.CredentialSelectSet.CollectionName": "Nazwa kolekcji",
+    "Component.CredentialSelectSet.CredentialName": "Nazwa poświadczeń",
+    "Component.CredentialSelectSet.NotFound": "Nie znaleziono pasujących poświadczeń",
+
     "Component.Tile.Avatar.AriaLabel": "Przepis",
     "Component.Tile.Process.Configure.Alt.ProcessTriggerableIcon": "Ikona procesu triggerowalnego",
     "Component.Tile.Process.Header.Alt.PlayIcon": "Ikona startu",
@@ -42,11 +47,30 @@
     "Component.Tile.Process.Content.Editor": "Edytujący",
     "Component.Tile.Process.Content.Editor.Placeholder": "RunBotics",
     "Component.Tile.Process.Content.Updated": "Zaktualizowano",
+    "Component.Tile.Process.Content.Updated.Placeholder": "Nigdy",
+    "Component.Tile.Process.Content.Created": "Utworzono",
     "Component.Tile.Process.Content.LastRun": "Ostatnie uruchomienie",
     "Component.Tile.Process.Content.LastRun.Placeholder": "Nigdy",
     "Component.Tile.Process.Footer.Icon.Tooltip.Private": "Proces prywatny",
     "Component.Tile.Process.Footer.Icon.Tooltip.Public": "Proces publiczny",
     "Component.Tile.Process.Footer.Icon.Tooltip.Scheduled": "Zaplanowany",
+
+    "Component.Tile.Process.DetailsDialog.Title": "Zobacz szczegóły",
+    "Component.Tile.Process.DetailsDialog.TabLabel.GeneralInfo": "Ogólne",
+    "Component.Tile.Process.DetailsDialog.TabLabel.Schedules": "Harmonogram",
+    "Component.Tile.Process.DetailsDialog.TabLabel.Credentials": "Poświadczenia",
+    "Component.Tile.Process.DetailsDialog.TabLabel.Access": "Dostępy",
+    "Component.Tile.Process.DetailsDialog.TabContent.GeneralInfoLabel.System": "System:",
+    "Component.Tile.Process.DetailsDialog.TabContent.GeneralInfoLabel.Tags": "Tagi:",
+    "Component.Tile.Process.DetailsDialog.TabContent.GeneralInfoLabel.Tags.Placeholder": "Brak tagów",
+    "Component.Tile.Process.DetailsDialog.TabContent.GeneralInfoLabel.Location": "Lokalizacja:",
+    "Component.Tile.Process.DetailsDialog.TabContent.SchedulesLabel.Scheduled": "Zaplanowane:",
+    "Component.Tile.Process.DetailsDialog.TabContent.SchedulesLabel.Scheduled.Placeholder": "Brak zaplanowanych",
+    "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith": "Udostępniono:",
+    "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith.Placeholder": "Proces nie jest udostępniony",
+    "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWithOrganization.Placeholder": "Proces jest dostępny dla wszystkich w organizacji",
+    "Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials": "Poświadczenia:",
+    "Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials.Placeholder": "Brak poświadczeń",
 
     "Component.Tile.BotCollection.Content.Created": "Utworzono:",
     "Component.Tile.BotCollection.Content.Creator": "Twórca:",
@@ -88,6 +112,9 @@
     "Component.HistoryTable.Rows.Initiator.Scheduler": "Harmonogram({{ login }})",
     "Component.HistoryTable.Rows.Initiator.Api": "API({{ login }})",
     "Component.HistoryTable.Rows.Initiator.Email": "Email({{ email }})",
+
+    "Component.HistoryTable.Special.LoadMore": "Załaduj kolejne {{ pageSize }} (pozostało {{ count }})",
+    "Component.HistoryTable.Special.LoadAll": "Załaduj wszystkie ({{ total }} łącznie)",
 
     "Component.HistoryTable.Step.StartEvent": "Rozpoczęto zdarzenie",
     "Component.HistoryTable.Step.EndEvent": "Zakończono zdarzenie",
@@ -183,5 +210,9 @@
 
     "Component.NotificationTable.View.Header": "Subskrybenci",
     "Component.NotificationTable.View.SearchBarPlaceholder": "Szukaj",
-    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów"
+    "Component.NotificationTable.Results.Error": "Nie znaleziono subskrybentów",
+
+    "Component.InviteCodeButton.Generate": "Wygeneruj link zaproszenia",
+    "Component.InviteCodeButton.Copy": "Kliknij aby skopiować link zaproszenia",
+    "Component.InviteCodeButton.Copied": "Link skopiowany!"
 }

@@ -7,7 +7,7 @@ import { IProcessInstance } from 'runbotics-common';
 
 
 import { Column } from '#src-app/components/tables/Table';
-import TableRowExpander from '#src-app/components/tables/Table/TableRowExpander';
+import TableRowExpander from '#src-app/components/tables/Table/components/TableRowExpander';
 import useInitiatorLabel from '#src-app/hooks/useInitiatorLabel';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ScheduledJob, QueueJob } from '#src-app/store/slices/Scheduler/Scheduler.state';
@@ -141,7 +141,7 @@ export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
         },
         {
             Header: translate('Scheduler.ScheduledProcess.Table.Header.Creator'),
-            accessor: ({ user }) => user.login,
+            accessor: ({ user }) => user?.login,
         },
         {
             Header: ' ',

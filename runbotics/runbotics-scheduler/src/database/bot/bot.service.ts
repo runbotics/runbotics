@@ -4,14 +4,14 @@ import { Repository } from 'typeorm';
 import { BotEntity } from './bot.entity';
 import {
     BotStatus,
-    BotSystem,
+    BotSystemType, 
     DefaultCollections,
     IBot,
     IBotCollection,
     IBotSystem,
 } from 'runbotics-common';
 
-const relations = ['user', 'system', 'collection', 'subscribers', 'collection.users'];
+const relations = ['user', 'system', 'collection', 'notifications.user', 'collection.users'];
 
 @Injectable()
 export class BotService {
@@ -48,7 +48,7 @@ export class BotService {
     ): Promise<IBot[]> {
 
         const systemCondition = `${
-            system.name === BotSystem.ANY ? '' : 'bot.SYSTEM = :system'
+            system.name === BotSystemType.ANY ? '' : 'bot.SYSTEM = :system'
         }`;
 
         const statusCondition =

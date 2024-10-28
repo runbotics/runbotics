@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Dialog } from '@mui/material';
 import { useRouter } from 'next/router';
-import { IBotSystem, IBotCollection, NotificationProcess } from 'runbotics-common';
+import { IBotSystem, IBotCollection, NotificationProcess, NotificationProcessType } from 'runbotics-common';
 
 import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.model';
 
@@ -26,34 +26,35 @@ import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
 import ProcessAttendedComponent from './ProcessAttended.component';
 import {
-    Container,
     AttendancePaper,
     StyledPaper,
     ContainerWrapper,
+    PageContainer,
+    SettingsContainer,
+    CredentialsContainer,
 } from './ProcessConfigureView.styles';
+import ProcessCredentials from './ProcessCredentials';
 import ProcessOutputComponent from './ProcessOutput.component';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
-    const { draft: { process, processSubscriptions, currentProcessSubscription }, all: { loading } } = useSelector(processSelector);
+    const { draft: { process, processSubscriptions }, all: { loading } } = useSelector(processSelector);
     const { id } = useRouter().query;
     const processId = Number(id);
 
-    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(process?.outputType);
+    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(process?.output);
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(
-        process?.system
+        process?.system,
     );
     const [selectedBotCollection, setSelectedBotCollection] =
-		useState<IBotCollection>(process?.botCollection);
+        useState<IBotCollection>(process?.botCollection);
     const [attended, setAttended] = useState(process?.isAttended);
     const [triggerable, setTriggerable] = useState(process?.isTriggerable);
 
     const { user } = useAuth();
-    const userId = user.id;
     const [open, setOpen] = useState(false);
-    const [subscribed, setSubscribed] = useState(false);
 
     const notificationTableColumns = useProcessNotificationColumns({ onDelete: handleDeleteSubscription });
 
@@ -65,8 +66,7 @@ const ProcessConfigureView: VFC = () => {
         })), [processSubscriptions]);
 
     const handleGetProcessSubscribers = async () => {
-        await dispatch(processActions.getProcessSubscriptionInfo(processId));
-        await dispatch(processActions.getProcessSubscriptionInfoByProcessIdAndUserId({ processId, userId }));
+        await dispatch(processActions.getProcessSubscriptionInfo({ resourceId: processId }));
     };
 
     useEffect(() => {
@@ -86,32 +86,28 @@ const ProcessConfigureView: VFC = () => {
 
         if (process?.isTriggerable) setTriggerable(process.isTriggerable);
 
-        if (process?.outputType) setProcessOutputType(process.outputType);
+        if (process?.output) setProcessOutputType(process.output);
     }, [process]);
-
-    useEffect(() => {
-        setSubscribed(Boolean(currentProcessSubscription));
-    }, [currentProcessSubscription]);
 
     const fetchProcess = async () => {
         await dispatch(processActions.fetchProcessById(process.id));
     };
 
-    const handleSelectProcessOutputType = async (outputType: ProcessOutput) => {
-        await dispatch(processActions.updateProcessOutputType({ id: process.id, outputType }));
-        setProcessOutputType(outputType);
+    const handleSelectProcessOutputType = async (output: ProcessOutput) => {
+        await dispatch(processActions.updateProcessOutputType({ resourceId: process.id, payload: { output } }));
+        setProcessOutputType(output);
         await fetchProcess();
     };
 
     const handleSelectBotSystem = async (system: IBotSystem) => {
-        await dispatch(processActions.updateBotSystem({ id: process.id, system }));
+        await dispatch(processActions.updateBotSystem({ resourceId: process.id, payload: { system } }));
         setSelectedBotSystem(system);
         await fetchProcess();
     };
 
     const handleSelectBotCollection = async (botCollection: IBotCollection) => {
         await dispatch(
-            processActions.updateBotCollection({ id: process.id, botCollection })
+            processActions.updateBotCollection({ resourceId: process.id, payload: { botCollection } }),
         );
         setSelectedBotCollection(botCollection);
         await fetchProcess();
@@ -119,7 +115,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(
-            processActions.updateAttendance({ id: process.id, isAttended })
+            processActions.updateAttendance({ resourceId: process.id, payload: { isAttended } }),
         );
         setAttended(isAttended);
         await fetchProcess();
@@ -127,7 +123,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
         await dispatch(
-            processActions.updateTriggerable({ id: process.id, isTriggerable })
+            processActions.updateTriggerable({ resourceId: process.id, payload: { isTriggerable } }),
         );
         setTriggerable(isTriggerable);
         await fetchProcess();
@@ -135,72 +131,83 @@ const ProcessConfigureView: VFC = () => {
 
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
-            ? await dispatch(processActions.subscribeProcessNotifications({ processId, userId }))
-            : await dispatch(processActions.unsubscribeProcessNotifications(currentProcessSubscription.id));
+            ? await dispatch(processActions.subscribeProcessNotifications({
+                payload: { processId, type: NotificationProcessType.PROCESS_ERROR },
+            }))
+            : await dispatch(processActions.unsubscribeProcessNotifications({
+                resourceId: processSubscriptions.find(sub => sub.user.id === user.id).id,
+            }));
 
         await handleGetProcessSubscribers();
     };
 
     async function handleDeleteSubscription(subscriptionInfo: ProcessNotificationRow) {
-        await dispatch(processActions.unsubscribeProcessNotifications(subscriptionInfo.id));
+        await dispatch(processActions.unsubscribeProcessNotifications({ resourceId: subscriptionInfo.id }));
         await handleGetProcessSubscribers();
     }
 
     return (
         <ContainerWrapper>
-            <Container>
-                <Box>
-                    <StyledPaper elevation={1}>
-                        <BotSystemComponent
-                            selectedBotSystem={selectedBotSystem}
-                            onSelectBotSystem={handleSelectBotSystem}
-                        />
-                    </StyledPaper>
-                </Box>
-                <Box>
-                    <StyledPaper elevation={1}>
-                        <BotCollectionComponent
-                            selectedBotCollection={selectedBotCollection}
-                            onSelectBotCollection={handleSelectBotCollection}
-                        />
-                    </StyledPaper>
-                </Box>
-                <Box>
-                    <StyledPaper elevation={1}>
-                        <ProcessOutputComponent
-                            selectedProcessOutput={processOutputType}
-                            onSelectProcessOutput={handleSelectProcessOutputType}
-                        />
-                    </StyledPaper>
-                </Box>
-                <Box>
-                    <AttendancePaper>
-                        <ProcessAttendedComponent
-                            isProcessAttended={attended}
-                            onAttendedChange={handleAttendanceChange}
-                        />
-                    </AttendancePaper>
-                </Box>
-                <Box>
+            <PageContainer>
+                <SettingsContainer>
+                    <Box>
+                        <StyledPaper elevation={1}>
+                            <BotSystemComponent
+                                selectedBotSystem={selectedBotSystem}
+                                onSelectBotSystem={handleSelectBotSystem}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper elevation={1}>
+                            <BotCollectionComponent
+                                selectedBotCollection={selectedBotCollection}
+                                onSelectBotCollection={handleSelectBotCollection}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper elevation={1}>
+                            <ProcessOutputComponent
+                                selectedProcessOutput={processOutputType}
+                                onSelectProcessOutput={handleSelectProcessOutputType}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <AttendancePaper>
+                            <ProcessAttendedComponent
+                                isProcessAttended={attended}
+                                onAttendedChange={handleAttendanceChange}
+                            />
+                        </AttendancePaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper>
+                            <ProcessTriggerableComponent
+                                isProcessTriggerable={triggerable}
+                                onTriggerableChange={handleTriggerableChange}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper>
+                            <NotificationSwitchComponent
+                                onClick={() => setOpen(true)}
+                                isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id)}
+                                onSubscriptionChange={handleSubscriptionChange}
+                                label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
+                                tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
+                            />
+                        </StyledPaper>
+                    </Box>
+                </SettingsContainer>
+                <CredentialsContainer>
                     <StyledPaper>
-                        <ProcessTriggerableComponent
-                            isProcessTriggerable={triggerable}
-                            onTriggerableChange={handleTriggerableChange}
-                        />
+                        <ProcessCredentials/>
                     </StyledPaper>
-                </Box>
-                <Box>
-                    <StyledPaper>
-                        <NotificationSwitchComponent
-                            onClick={() => setOpen(true)}
-                            isSubscribed={subscribed}
-                            onSubscriptionChange={handleSubscriptionChange}
-                            label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
-                            tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
-                        />
-                    </StyledPaper>
-                </Box>
-            </Container>
+                </CredentialsContainer>
+            </PageContainer>
             <Dialog
                 open={open}
                 onClose={() => setOpen(false)}

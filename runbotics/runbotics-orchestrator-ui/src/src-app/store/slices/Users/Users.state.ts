@@ -24,5 +24,15 @@ export interface UsersState {
         loading: boolean;
         all: IUser[];
         allByPage: Page<IUser> | null;
-    }
+    };
+    tenantActivated: {
+        loading: boolean;
+        all: IUser[];
+        allByPage: Page<IUser> | null;
+    };
+    tenantNotActivated: {
+        loading: boolean;
+        all: IUser[];
+        allByPage: Page<IUser> | null;
+    };
 }

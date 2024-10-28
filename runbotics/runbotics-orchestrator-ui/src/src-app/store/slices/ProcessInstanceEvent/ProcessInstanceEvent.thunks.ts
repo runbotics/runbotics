@@ -1,9 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import Axios from 'axios';
 import {
     IProcessInstanceEvent,
     IProcessInstanceLoopEvent,
 } from 'runbotics-common';
+
+import Axios from '#src-app/utils/axios';
 
 export const getProcessInstanceEvents = createAsyncThunk<
     IProcessInstanceEvent[],

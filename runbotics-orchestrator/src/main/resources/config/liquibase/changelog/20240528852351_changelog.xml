@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="gasiorowskaa" id="20240528852351-1">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="tenant_invite_code"/>
+        </preConditions>
+
+        <dropColumn tableName="tenant_invite_code" columnName="is_active"/>
+        <addColumn tableName="tenant_invite_code">
+            <column name="expiration_date" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="gasiorowskaa" id="20240528852351-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="feature_key"/>
+        </preConditions>
+
+        <sql>
+            INSERT INTO feature_key(name) VALUES
+            ('TENANT_GET_INVITE_CODE')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+
+    <changeSet author="gasiorowskaa" id="20240528852351-3">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="authority_feature_key"/>
+        </preConditions>
+
+        <sql>
+            INSERT INTO authority_feature_key(authority, feature_key) VALUES
+            ('ROLE_ADMIN', 'TENANT_GET_INVITE_CODE'),
+            ('ROLE_TENANT_ADMIN', 'TENANT_GET_INVITE_CODE')
+            ON CONFLICT DO NOTHING;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
-import { GeneralAction, BotSystem, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
+import { GeneralAction, BotSystemType, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
@@ -54,7 +54,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
             const processSystem = process.system.name;
             const system = getBotSystem();
 
-            if (processSystem !== BotSystem.ANY && processSystem !== system) {
+            if (processSystem !== BotSystemType.ANY && processSystem !== system) {
                 reject(new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`));
             }
 
@@ -67,13 +67,14 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                 rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
                 trigger: request.trigger as ITriggerEvent,
                 triggerData: request.triggerData,
+                credentials: request.credentials,
             });
 
             const subscription = this.runtimeService.processChange().subscribe((data) => {
                 if (data.processInstanceId === processInstanceId) {
                     switch (data.eventType) {
                         case ProcessInstanceStatus.COMPLETED:
-                        case ProcessInstanceStatus.STOPPED:
+                        case ProcessInstanceStatus.STOPPED: {
                             const result = {
                                 variables: {},
                             };
@@ -88,6 +89,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                             resolve(result);
                             subscription.unsubscribe();
                             break;
+                        }
                         case ProcessInstanceStatus.ERRORED:
                             reject(new Error('Process errored'));
                             subscription.unsubscribe();

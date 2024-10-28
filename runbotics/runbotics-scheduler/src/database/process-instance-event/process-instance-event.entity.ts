@@ -3,7 +3,7 @@ import { ProcessInstanceEntity } from '../process-instance/process-instance.enti
 import { IProcessInstance, IProcessInstanceEvent, ProcessInstanceEventStatus } from 'runbotics-common';
 import { dateTransformer, numberTransformer } from '../database.utils';
 
-@Entity({ name: 'process_instance_event' })
+@Entity({ name: 'process_instance_event', synchronize: false })
 export class ProcessInstanceEventEntity implements IProcessInstanceEvent {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })

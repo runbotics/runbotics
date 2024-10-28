@@ -1,3 +1,5 @@
+import { Configuration } from '@azure/msal-node';
+import { ActionCredentialType } from 'runbotics-common';
 /**
  * @see https://learn.microsoft.com/en-us/graph/api/resources/drive?view=graph-rest-1.0
  */
@@ -106,4 +108,19 @@ export interface Permission {
     grantedToIdentities?: unknown;
     grantedToV2?: unknown;
     grantedToIdentitiesV2?: unknown;
+}
+
+interface LoginCredential {
+    username: string;
+    password: string;
+}
+
+export interface MicrosoftCredential {
+    config: Configuration;
+    loginCredential: LoginCredential;
+}
+
+export interface ActionCredentialData {
+    templateName: ActionCredentialType;
+    credentialId?: string | null | undefined; // string for custom, null for default, ?undefined for imported?
 }

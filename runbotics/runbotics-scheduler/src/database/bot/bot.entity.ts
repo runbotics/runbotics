@@ -5,8 +5,8 @@ import {
     ManyToOne,
     JoinColumn,
     Generated,
-    ManyToMany,
-    JoinTable,
+    OneToMany,
+    CreateDateColumn,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import {
@@ -14,36 +14,37 @@ import {
     IBot,
     IUser,
     IBotCollection,
-    IBotSystem, Role,
+    NotificationBot,
 } from 'runbotics-common';
 import { BotCollectionEntity } from '../bot-collection/bot-collection.entity';
-import { BotSystemEntity } from '../bot-system/bot-system.entity';
+import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '../database.utils';
+import { NotificationBot as NotificationBotEntity } from '#/scheduler-database/notification-bot/notification-bot.entity';
 
-@Entity({ name: 'bot' })
+@Entity({ name: 'bot', synchronize: false })
 export class BotEntity implements IBot {
     @Generated()
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
 
-    @Column({ transformer: dateTransformer, type: 'varchar' })
+    @CreateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone' })
     created: string;
 
-    @Column({ name: 'installation_id', unique: true, type: 'varchar' })
+    @Column({ name: 'installation_id', unique: true, type: 'varchar', length: 255 })
     installationId: string;
 
-    @Column({ name: 'last_connected', transformer: dateTransformer, type: 'varchar' })
+    @Column({ name: 'last_connected', transformer: dateTransformer, type: 'timestamp without time zone' })
     lastConnected: string;
 
-    @Column({ enum: BotStatus, type: 'enum' })
+    @Column({ type: 'varchar', length: 50 })
     status: BotStatus;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', length: 20 })
     version: string;
 
-    @ManyToOne(() => BotSystemEntity)
-    @JoinColumn([{ name: 'system', referencedColumnName: 'name' }])
-    system: IBotSystem;
+    @ManyToOne(() => BotSystem)
+    @JoinColumn({ name: 'system' })
+    system: BotSystem;
 
     @ManyToOne(() => UserEntity)
     @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
@@ -53,11 +54,7 @@ export class BotEntity implements IBot {
     @JoinColumn([{ name: 'collection_id', referencedColumnName: 'id' }])
     collection: IBotCollection;
 
-    @ManyToMany(() => UserEntity)
-    @JoinTable({
-        name: 'notification_bot',
-        joinColumn: { name: 'bot_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    })
-    subscribers: IUser[];
+    @OneToMany(() => NotificationBotEntity, (notificationBot) => notificationBot.bot)
+    @JoinColumn({ name: 'bot_id', referencedColumnName: 'id' })
+    notifications: NotificationBot[];
 }

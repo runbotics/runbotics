@@ -8,17 +8,23 @@ import * as CloudExcelTypes from './cloud-excel.types';
 import { CloudExcelErrorMessage } from './cloud-excel.error-message';
 
 import { sortNumbersDescending } from '#action/microsoft/excel/excel.utils';
+import { MicrosoftCredential } from '#action/microsoft/common.types';
+import { MicrosoftAuth, ServerConfigService } from '#config';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 @Injectable()
 export class CloudExcelActionHandler extends StatefulActionHandler {
     private session: ExcelSession = null;
 
-    constructor(private readonly excelService: ExcelService) {
+    constructor(
+        private readonly excelService: ExcelService,
+        private readonly serverConfigService: ServerConfigService,
+    ) {
         super();
     }
 
-    async openFile(input: ExcelSessionInfo) {
-        this.session = await this.excelService.createSession(input);
+    async openFile(input: ExcelSessionInfo, credential: MicrosoftCredential) {
+        this.session = await this.excelService.createSession(input, credential);
     }
 
     async closeSession() {
@@ -124,8 +130,31 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
 
     run(request: CloudExcelTypes.CloudExcelActionRequest) {
         switch (request.script) {
-            case CloudExcelAction.OPEN_FILE:
-                return this.openFile(request.input);
+            case CloudExcelAction.OPEN_FILE: {
+                const matchedCredential =
+                    credentialAttributesMapper<MicrosoftAuth>(request.credentials);
+
+                // @todo After completion of password manager switch fully to matchedCredential
+                const credential: MicrosoftAuth =
+                    matchedCredential ??
+                    this.serverConfigService.microsoftAuth;
+
+                const matchedCredentials = {
+                    config: {
+                        auth: {
+                            clientId: credential.clientId,
+                            authority: credential.tenantId,
+                            clientSecret: credential.clientSecret,
+                        }
+                    },
+                    loginCredential: {
+                        username: credential.username,
+                        password: credential.password,
+                    }
+                };
+
+                return this.openFile(request.input, matchedCredentials);
+            }
             case CloudExcelAction.GET_WORKSHEET_CONTENT:
                 this.checkSession();
                 return this.getWorksheetContent(request.input);

@@ -1,6 +1,8 @@
 import { UiSchema } from '@rjsf/core';
 import { JSONSchema7 } from 'json-schema';
 
+import { ActionCredentialType } from 'runbotics-common';
+
 export enum Runner {
     BROWSER_BACKGROUND_SCRIPT = '${environment.services.backgroundScript()}',
     BROWSER_FRONTEND_SCRIPT = '${environment.services.run()}',
@@ -32,6 +34,7 @@ export type IFormData = Record<string, any> & {
     output?: Record<string, any>;
     disabled?: boolean;
     runFromHere?: boolean;
+    credentialType?: ActionCredentialType;
     processOutput?: boolean;
     validationError?: boolean;
 };
@@ -53,6 +56,7 @@ export type IBpmnAction = {
     input?: IActionInput;
     output?: IActionOutput;
     form?: IForm;
+    credentialType?: ActionCredentialType;
 };
 
 export type FormState = {

@@ -4,7 +4,7 @@ import {
     BpmnExecutionEventMessageContent,
 } from 'bpmn-engine';
 
-import { IProcess, ProcessInstanceEventStatus, ProcessInstanceStatus, IProcessInstance } from 'runbotics-common';
+import { IProcess, ProcessInstanceEventStatus, ProcessInstanceStatus, IProcessInstance, ActionCredentialType } from 'runbotics-common';
 import { StartProcessMessageBody } from '#core/websocket/listeners/process.listener.types';
 import { ActivityOwner } from '#core/bpm/bpmn.types';
 
@@ -41,6 +41,7 @@ export interface RunBoticsExecutionEnvironment extends BpmnEngineExecutionEnviro
     runbotic?: {
         disabled: boolean;
         processOutput: boolean;
+        credentialType?: ActionCredentialType;
     };
 }
 

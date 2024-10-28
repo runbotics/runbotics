@@ -3,10 +3,7 @@ package com.runbotics.service.criteria;
 import java.io.Serializable;
 import java.util.Objects;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.LongFilter;
-import tech.jhipster.service.filter.StringFilter;
+import tech.jhipster.service.filter.*;
 
 /**
  * Criteria class for the {@link com.runbotics.domain.User} entity. This class is used
@@ -24,11 +21,14 @@ public class UserCriteria implements Serializable, Criteria {
 
     private StringFilter email;
 
+    private UUIDFilter tenantId;
+
     public UserCriteria() {}
 
     public UserCriteria(UserCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.email = other.email == null ? null : other.email.copy();
+        this.tenantId = other.tenantId == null ? null : other.tenantId.copy();
     }
 
     @Override
@@ -66,6 +66,21 @@ public class UserCriteria implements Serializable, Criteria {
         this.email = email;
     }
 
+    public UUIDFilter getTenantId() {
+        return tenantId;
+    }
+
+    public UUIDFilter tenantID() {
+        if (tenantId == null) {
+            tenantId = new UUIDFilter();
+        }
+        return tenantId;
+    }
+
+    public void setTenantId(UUIDFilter tenantId) {
+        this.tenantId = tenantId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -77,18 +92,20 @@ public class UserCriteria implements Serializable, Criteria {
         final UserCriteria that = (UserCriteria) o;
         return (
             Objects.equals(id, that.id) &&
-            Objects.equals(email, that.email)
+            Objects.equals(email, that.email) &&
+            Objects.equals(tenantId, that.tenantId)
         );
     }
 
     @Override
-    public int hashCode() { return Objects.hash(id, email); }
+    public int hashCode() { return Objects.hash(id, email, tenantId); }
 
     @Override
     public String toString() {
         return "UserCriteria{" +
             (id != null ? "id=" + id + ", " : " ") +
             (email != null ? "email=" + email + ", " : " ") +
+            (tenantId != null ? "email=" + tenantId + ", " : " ") +
             "}";
     }
 }

@@ -1,13 +1,13 @@
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { JobInformation, JobStatus, Queue } from 'bull';
 import { Job } from '#/utils/process';
 import { Logger } from '#/utils/logger';
 
-import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import { JobData, WsMessage } from 'runbotics-common';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
+import { ScheduleProcessService } from '#/scheduler-database/schedule-process/schedule-process.service';
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
     'waiting',
@@ -31,7 +31,7 @@ export class SchedulerService {
         return Promise.all(
             scheduledJobs.map(async (scheduledJob) => {
                 const scheduledJobId = Number(scheduledJob.id);
-                const scheduleProcess = await this.scheduleProcessService.findById(scheduledJobId);
+                const scheduleProcess = await this.scheduleProcessService.getById(scheduledJobId);
 
                 return {
                     ...scheduledJob,

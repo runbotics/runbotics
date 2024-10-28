@@ -10,7 +10,6 @@ export default defineConfig({
     ],
     test: {
         globals: true,
-        setupFiles: ['dotenv/config'],
     },
     resolve: {
         alias: {
