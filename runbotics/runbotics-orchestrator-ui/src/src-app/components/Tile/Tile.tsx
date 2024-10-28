@@ -3,14 +3,14 @@ import React, { FunctionComponent } from 'react';
 import { Card } from '@mui/material';
 import styled from 'styled-components';
 
-const Wrapper = styled(Card)<TileProps>(({ theme, minHeight, leftBorderColor }) => `
+const Wrapper = styled(Card)<TileProps>(({ theme, minheight, leftborderbolor }) => `
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
     height: 100%;
-    min-height: ${minHeight ?? '13.125rem'};
-    border-left: ${leftBorderColor ?? 0};
+    min-height: ${minheight ?? '13.125rem'};
+    border-left: ${leftborderbolor ?? 0};
 
     && {
         box-shadow: ${theme.shadows[5]};
@@ -25,12 +25,12 @@ const Wrapper = styled(Card)<TileProps>(({ theme, minHeight, leftBorderColor }) 
 
 interface TileProps {
     hoverstyles?: boolean;
-    minHeight?: string;
-    leftBorderColor?: string
+    minheight?: string;
+    leftborderbolor?: string
 }
 
-const Tile: FunctionComponent<TileProps> = ({ children, hoverstyles, minHeight, leftBorderColor }) => (
-    <Wrapper hoverstyles={hoverstyles} minHeight={minHeight} leftBorderColor={leftBorderColor}>{children}</Wrapper>
+const Tile: FunctionComponent<TileProps> = ({ children, hoverstyles, minheight, leftborderbolor }) => (
+    <Wrapper hoverstyles={hoverstyles} minheight={minheight} leftborderbolor={leftborderbolor}>{children}</Wrapper>
 );
 
 export default Tile;

@@ -50,7 +50,7 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
     };
 
     return (
-        <StyledGridContainer spacing={1} xs={12}>
+        <StyledGridContainer item xs={12}>
             <Grid item xs={12}>
                 <Grid container alignItems="center">
                     <Grid item>

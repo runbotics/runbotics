@@ -9,14 +9,14 @@ export const StyledGridContainer = styled(Grid)(
     `
 );
 
-export const StyledAttributeCard = styled(Card)<{ isEditMode: boolean }>(
-    ({ theme, isEditMode }) => `
+export const StyledAttributeCard = styled(Card)<{ iseditmode: string }>(
+    ({ theme, iseditmode }) => `
     border: 1px solid ${grey[400]};
     padding: ${theme.spacing(1)};
     display: flex;
 
     &.MuiCard-root {
-        background-color: ${isEditMode ? grey[50] : grey[200]};
+        background-color: ${iseditmode ? grey[50] : grey[200]};
     }
     `
 );

@@ -37,10 +37,6 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
     });
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleEdit = () => {
-        setIsEditMode(true);
-    };
-
     const handleCancel = () => {
         setCurrentAttribute({
             masked: true,
@@ -82,7 +78,7 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
     };
 
     return (
-        <StyledAttributeCard isEditMode={isEditMode}>
+        <StyledAttributeCard iseditmode={isEditMode.toString()}>
             <StyledGridContainer container rowSpacing={2}>
                 <Grid item xs={12}>
                     <Typography variant="h6">{translate('Credential.Attribute.Name.Label')}</Typography>
@@ -100,7 +96,7 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
                     setIsEditMode={setIsEditMode}
                 />
                 <Collapse in={isEditMode} orientation="vertical" sx={{ width: '100%' }}>
-                    <Grid container xs={12} justifyContent="space-between">
+                    <Grid container justifyContent="space-between">
                         <Grid item>
                             <Button size="small" onClick={handleCancel} sx={{ padding: 0, color: grey[600] }}>
                                 <AttributeIcon>
