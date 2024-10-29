@@ -9,46 +9,70 @@ import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialsCollectionTile from '#src-app/components/Tile/CredentialsCollectionTile/CredentialsCollectionTile';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
+import useDebounce from '#src-app/hooks/useDebounce';
+import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
+
+import { DEBOUNCE_TIME } from '#src-app/views/process/EditProcessDialog/EditProcessDialog.utils';
 
 import { CredentialsCollectionModals } from './CredentialsCollectionModals';
 import CredentialsHeader from '../../Credentials/CredentialsHeader/CredentialsHeader';
 import { TileGrid, TypographyPlaceholder } from '../GridView.styles';
 import Header, { CredentialsTabs } from '../Header';
 import Paging from '../Paging';
-import { getFilterItemsForPage } from '../Paging.utils';
+
+const DEFAULT_COLLECTION_PAGE_SIZE = 9;
 
 const CredentialCollectionsGridView = () => {
     const dispatch = useDispatch();
-    const { credentialCollections, loading: isLoading } = useSelector(credentialCollectionsSelector);
     const searchParams = useSearchParams();
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
+    const replaceQueryParams = useReplaceQueryParams();
 
+    const { allCredentialCollectionsByPage, loading: isLoading } = useSelector(credentialCollectionsSelector);
+
+    const credentialCollections = allCredentialCollectionsByPage?.content;
     const pageFromUrl = searchParams.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl) : 0);
     const pageSizeFromUrl = searchParams.get('pageSize');
-    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
+    const searchFromUrl = searchParams.get('search');
+    const [searchValue, setSearchValue] = useState(searchFromUrl || '');
+    pageSizeFromUrl;
+    const debouncedValue = useDebounce<string>(searchValue.trim(), DEBOUNCE_TIME);
+    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : DEFAULT_COLLECTION_PAGE_SIZE;
 
     const [currentCollection, setCurrentCollection] = useState(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    const [filteredCollections, setFilteredCollections] = useState([]);
-    const currentPageCollections = filteredCollections ? getFilterItemsForPage(filteredCollections, page, pageSize) : [];
+    useEffect(() => {
+        const pageNotAvailable = allCredentialCollectionsByPage && page >= allCredentialCollectionsByPage.totalPages;
+
+        if (pageNotAvailable) {
+            setPage(0);
+            replaceQueryParams({ page: 0, pageSize, searchValue });
+        } else {
+            replaceQueryParams({ page, pageSize, searchValue });
+        }
+    }, [allCredentialCollectionsByPage]);
 
     useEffect(() => {
-        setFilteredCollections(credentialCollections);
-    }, [credentialCollections]);
-
-    useEffect(() => {
-        dispatch(credentialCollectionsActions.fetchAllCredentialCollections()).catch(error => {
+        dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: {
+            page,
+            size: pageSize,
+            filter: {
+                contains: {
+                    name: debouncedValue,
+                },
+            }
+        }})).catch(error => {
             enqueueSnackbar(error.message, { variant: 'error' });
         });
-    }, []);
+    }, [page, pageSize, debouncedValue]);
 
     const handleOpenEditDialog = (id: string) => {
         setCurrentCollection(credentialCollections.find(collection => collection.id === id));
@@ -60,8 +84,8 @@ const CredentialCollectionsGridView = () => {
         setIsDeleteDialogOpen(true);
     };
 
-    const collectionTiles = currentPageCollections
-        ? currentPageCollections
+    const collectionTiles = credentialCollections
+        ? [...credentialCollections]
             .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
             .map(collection => (
                 <CredentialsCollectionTile
@@ -78,15 +102,14 @@ const CredentialCollectionsGridView = () => {
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
             <Header />
             <If condition={!isLoading} else={<LoadingScreen />}>
-                <Box display="flex" flexDirection="row" justifyContent="space-between" mt={2} mb={2} alignItems="center">
-                    <CredentialsHeader
-                        credentialCount={credentialCollections && credentialCollections.length}
-                        tabName={CredentialsTabs.COLLECTIONS}
-                        items={credentialCollections}
-                        setItems={setFilteredCollections}
-                        sharedWithNumber={null}
-                    />
-                </Box>
+                <CredentialsHeader
+                    credentialCount={allCredentialCollectionsByPage?.totalElements}
+                    tabName={CredentialsTabs.COLLECTIONS}
+                    items={credentialCollections}
+                    setSearchValue={setSearchValue}
+                    searchValue={searchValue}
+                    sharedWithNumber={null}
+                />
                 {collectionTiles.length > 0 ? (
                     <>
                         <TileGrid>
@@ -104,7 +127,7 @@ const CredentialCollectionsGridView = () => {
                         </TileGrid>
                         <Box mt={6} display="flex" justifyContent="center">
                             <Paging
-                                totalItems={filteredCollections && filteredCollections.length}
+                                totalItems={allCredentialCollectionsByPage?.totalElements}
                                 itemsPerPage={pageSize}
                                 currentPage={page}
                                 setPage={setPage}

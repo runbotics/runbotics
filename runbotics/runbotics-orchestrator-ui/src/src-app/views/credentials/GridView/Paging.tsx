@@ -13,7 +13,7 @@ const Paging: FC<PagingProps> = ({
     totalItems,
     itemsPerPage,
     currentPage,
-    setPage
+    setPage,
 }) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 

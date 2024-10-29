@@ -8,10 +8,14 @@ import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
+import useDebounce from '#src-app/hooks/useDebounce';
+import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
 import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
+
+import { DEBOUNCE_TIME } from '#src-app/views/process/EditProcessDialog/EditProcessDialog.utils';
 
 import { CredentialsModals } from './CredentialModals';
 import { FrontCredentialDto } from '../../Credential/Credential.types';
@@ -20,24 +24,28 @@ import CredentialsCollectionLocation from '../../CredentialsCollection/Credentia
 import { TileGrid, TypographyPlaceholder } from '../GridView.styles';
 import Header, { CredentialsTabs } from '../Header';
 import Paging from '../Paging';
-import { getFilterItemsForPage } from '../Paging.utils';
+
+const DEFAULT_CREDENTIAL_PAGE_SIZE = 12;
 
 const CredentialsGridView = () => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
     const searchParams = useSearchParams();
+    const replaceQueryParams = useReplaceQueryParams();
 
-    const { all: credentials } = useSelector(credentialsSelector);
+    const { allByPage } = useSelector(credentialsSelector);
+    const credentials = allByPage?.content;
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
     const [loading, setLoading] = useState(true);
 
     const pageFromUrl = searchParams.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const pageSizeFromUrl = searchParams.get('pageSize');
-    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : 12;
-
-    const [filteredCredentials, setFilteredCredentials] = useState<FrontCredentialDto[]>([]);
-    const currentPageCredentials = filteredCredentials ? getFilterItemsForPage(filteredCredentials, page, pageSize) : null;
+    const searchFromUrl = searchParams.get('search');
+    const [searchValue, setSearchValue] = useState(searchFromUrl || '');
+    pageSizeFromUrl;
+    const debouncedValue = useDebounce<string>(searchValue.trim(), DEBOUNCE_TIME);
+    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : DEFAULT_CREDENTIAL_PAGE_SIZE;
 
     const [currentDialogCredential, setCurrentDialogCredential] = useState<FrontCredentialDto>(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -49,10 +57,38 @@ const CredentialsGridView = () => {
         collectionId &&
         credentialCollections &&
         credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length - 1;
+    const collectionName = credentialCollections?.find(collection => collectionId === collection.id)?.name;
 
     useEffect(() => {
-        setFilteredCredentials(credentials);
-    }, [credentials]);
+        const pageNotAvailable = allByPage && page >= allByPage.totalPages;
+
+        if (pageNotAvailable) {
+            setPage(0);
+            replaceQueryParams({ collectionId, page: 0, pageSize, searchValue });
+        } else {
+            replaceQueryParams({ collectionId, page, pageSize, searchValue });
+        }
+    }, [allByPage]);
+
+    useEffect(() => {
+        const fetchAllCollections = dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+
+        const fetchCredentials = dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenantByPage({ pageParams: {
+            page,
+            size: pageSize,
+            filter: {
+                contains: {
+                    name: debouncedValue,
+                },
+                equals: {
+                    collectionId: collectionId ? collectionId : ''}
+            }
+        }}));
+
+        Promise.allSettled([fetchAllCollections, fetchCredentials]).then(() => {
+            setLoading(false);
+        });
+    }, [page, pageSize, debouncedValue]);
 
     const handleEditDialogOpen = (id: string) => {
         setCurrentDialogCredential(credentials.find(credential => credential.id === id));
@@ -64,20 +100,8 @@ const CredentialsGridView = () => {
         setCurrentDialogCredential(credentials.find(credential => credential.id === id));
     };
 
-    useEffect(() => {
-        const fetchAllCollections = dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
-
-        const fetchCredentials = collectionId
-            ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials` }))
-            : dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
-
-        Promise.allSettled([fetchAllCollections, fetchCredentials]).then(() => {
-            setLoading(false);
-        });
-    }, []);
-
-    const credentialsTiles = currentPageCredentials
-        ? currentPageCredentials
+    const credentialsTiles = credentials
+        ? [...credentials]
             .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
             .map(credential => (
                 <CredentialTile
@@ -94,29 +118,28 @@ const CredentialsGridView = () => {
         : [];
 
     return (
-        <InternalPage title={translate('Credentials.Collections.Page.Title')}>
+        <InternalPage title={collectionId ? translate('CredentialsInCollection.Page.Title', {name: collectionName}) : translate('Credentials.Page.Title')}>
             <Header addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0} />
             <If condition={!loading} else={<LoadingScreen />}>
                 {collectionId && (
                     <CredentialsCollectionLocation
-                        collectionName={credentialCollections?.find(collection => collectionId === collection.id)?.name}
+                        collectionName={collectionName}
                     />
                 )}
-                <Box display="flex" flexDirection="row" justifyContent="space-between" mt={2} mb={2} alignItems="center">
-                    <CredentialsHeader
-                        credentialCount={filteredCredentials && filteredCredentials.length}
-                        tabName={CredentialsTabs.CREDENTIALS}
-                        items={credentials}
-                        setItems={setFilteredCredentials}
-                        sharedWithNumber={collectionId && collectionSharedWithNumber}
-                    />
-                </Box>
+                <CredentialsHeader
+                    credentialCount={allByPage?.totalElements}
+                    tabName={CredentialsTabs.CREDENTIALS}
+                    items={credentials}
+                    setSearchValue={setSearchValue}
+                    searchValue={searchValue}
+                    sharedWithNumber={collectionId && collectionSharedWithNumber}
+                />
                 {credentialsTiles.length > 0 ? (
                     <>
                         <TileGrid>{credentialsTiles}</TileGrid>
                         <Box mt={6} display="flex" justifyContent="center">
                             <Paging
-                                totalItems={filteredCredentials && filteredCredentials.length}
+                                totalItems={allByPage?.totalElements}
                                 itemsPerPage={pageSize}
                                 currentPage={page}
                                 setPage={setPage}

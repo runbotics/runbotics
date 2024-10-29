@@ -2,6 +2,7 @@
 import { Credential } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
+import { Page } from '#src-app/utils/types/page';
 import { CreateCredentialDto, EditCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
 import { EditAtributeDto } from '#src-app/views/credentials/Credential/EditCredential/CredentialAttribute/Attribute.types';
 
@@ -19,6 +20,9 @@ export const fetchAllCredentialsAccessibleInTenant = ApiTenantResource
 
 export const fetchAllCredentialsByTemplateAndProcess = ApiTenantResource
     .get<Credential[]>('credential/fetchAllByTemplateAndProcess', 'credentialsByTemplateAndProcess');
+
+export const fetchAllCredentialsAccessibleInTenantByPage = ApiTenantResource
+    .get<Page<Credential>>('credential/fetchAllByPage', `${CREDENTIAL_PATH}/Page`);
 
 export const fetchOneCredential = ApiTenantResource
     .get<Credential>('credential/fetchOne/:id', CREDENTIAL_PATH);

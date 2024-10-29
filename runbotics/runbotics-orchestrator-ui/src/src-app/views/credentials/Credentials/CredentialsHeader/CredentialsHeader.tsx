@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
-
-import { Divider, Grid } from '@mui/material';
+import { Box, Divider, Grid } from '@mui/material';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+
 
 
 import { StyledTypography } from './CredentialsHeader.styles';
@@ -17,29 +17,32 @@ import Search from '../../GridView/Search/Search';
 interface CredentialsHeaderProps<T extends FrontCredentialDto | FrontCredentialCollectionDto> {
     credentialCount: number;
     tabName: CredentialsTabs;
-    items: (T[]);
-    setItems: (items: T[]) => void;
+    items: T[];
+    setSearchValue: Dispatch<SetStateAction<string>>;
+    searchValue: string;
     sharedWithNumber: number;
 }
 
-const CredentialsHeader = <T extends FrontCredentialDto | FrontCredentialCollectionDto>({ credentialCount, tabName, items, setItems, sharedWithNumber }: CredentialsHeaderProps<T>) => {
+const CredentialsHeader = <T extends FrontCredentialDto | FrontCredentialCollectionDto>({
+    credentialCount,
+    tabName,
+    setSearchValue,
+    searchValue,
+    sharedWithNumber,
+}: CredentialsHeaderProps<T>) => {
     const { translate } = useTranslations();
+
     const elementsCountMessage =
         tabName === CredentialsTabs.CREDENTIALS
             ? translate('Credentials.List.Header.Elements', { count: credentialCount })
             : translate('Credentials.Collection.List.Header.Elements', { count: credentialCount });
 
-    const [searchValue, setSearchValue] = useState('');
-
     const handleSearch = (value: string) => {
         setSearchValue(value);
-        const foundItems = items.filter((item => item.name.toLowerCase().includes(value.toLocaleLowerCase())));
-
-        setItems(foundItems);
     };
 
     return (
-        <>
+        <><Box display="flex" flexDirection="row" justifyContent="space-between" mt={2} mb={2} alignItems="center">
             <Grid container display="flex" alignItems="center" justifyContent="flex-start">
                 <Grid item mr={6}>
                     <StyledTypography variant="h5" color="textPrimary">
@@ -47,14 +50,14 @@ const CredentialsHeader = <T extends FrontCredentialDto | FrontCredentialCollect
                     </StyledTypography>
                 </Grid>
                 <If condition={sharedWithNumber !== null}>
-                    <Divider orientation="vertical" flexItem/>
+                    <Divider orientation="vertical" flexItem />
                     <Grid item>
-                        <SharedWithInfo sharedWithNumber={sharedWithNumber}/>
+                        <SharedWithInfo sharedWithNumber={sharedWithNumber} />
                     </Grid>
                 </If>
             </Grid>
-            <Search searchValue={searchValue} handleSearch={handleSearch}/>
-        </>
+            <Search searchValue={searchValue} handleSearch={handleSearch} />
+        </Box></>
     );
 };
 

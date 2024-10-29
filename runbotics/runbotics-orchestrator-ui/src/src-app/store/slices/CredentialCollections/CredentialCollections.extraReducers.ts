@@ -6,6 +6,7 @@ import {
     createCredentialCollection,
     deleteCredentialCollections,
     fetchAllCredentialCollections,
+    fetchAllCredentialCollectionsByPage,
     fetchOneCredentialCollection,
     updateCredentialCollection
 } from './CredentialCollections.thunks';
@@ -21,6 +22,18 @@ const buildCredentialCollectionsExtraReducers = (builder: ActionReducerMapBuilde
             state.loading = false;
         })
         .addCase(fetchAllCredentialCollections.rejected, state => {
+            state.loading = false;
+        })
+
+        // fetch all by page
+        .addCase(fetchAllCredentialCollectionsByPage.pending, state => {
+            state.loading = true;
+        })
+        .addCase(fetchAllCredentialCollectionsByPage.fulfilled, (state, action) => {
+            state.allCredentialCollectionsByPage = action.payload;
+            state.loading = false;
+        })
+        .addCase(fetchAllCredentialCollectionsByPage.rejected, state => {
             state.loading = false;
         })
 
