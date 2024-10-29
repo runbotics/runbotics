@@ -3,7 +3,7 @@ import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
-import { FindManyOptions, Raw, Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { IUser } from 'runbotics-common';
 import { CredentialTemplateService } from '../credential-template/credential-template.service';
 import { SecretService } from '../secret/secret.service';
@@ -15,7 +15,7 @@ import { MailService } from '#/mail/mail.service';
 import { CredentialNotifyMailArgs, CredentialOperationType } from './credential.utils';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
-import { getPage, Page } from '#/utils/page/page';
+import { getPage } from '#/utils/page/page';
 
 const RELATIONS = ['attributes', 'createdBy', 'collection.credentialCollectionUser'];
 
@@ -181,7 +181,7 @@ export class CredentialService {
     return Promise.all(credentials.map(credential => this.mapToFrontDto(credential, user)));
   }
 
-  async getAllAccessiblePages(user: IUser, paging: Paging, specs: Specs<Credential>): Promise<Page<Credential>> {
+  async getAllAccessiblePages(user: IUser, paging: Paging, specs: Specs<Credential>) {
     const options: FindManyOptions<Credential> = {
       ...paging,
       ...specs
@@ -197,9 +197,13 @@ export class CredentialService {
 
     const page = await getPage(this.credentialRepo, options);
 
+    const credentials = await Promise.all(page.content
+      .map(async (credential) => await this.mapToFrontDto(credential, user))
+    );
+
     return {
       ...page,
-      content: page.content
+      content: credentials
     };
   }
 
