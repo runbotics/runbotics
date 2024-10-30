@@ -4,6 +4,8 @@ import { Grid, Typography, TextField } from '@mui/material';
 
 import { useSnackbar } from 'notistack';
 
+import { FrontCredentialDto } from 'runbotics-common';
+
 import CustomDialog from '#src-app/components/CustomDialog';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -13,7 +15,6 @@ import { credentialsActions } from '#src-app/store/slices/Credentials';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
 import { inputErrorMessages, InputErrorType } from './EditCredential.utils';
-import { FrontCredentialDto } from '../Credential.types';
 
 interface EditCredentialFormProps {
     open: boolean;

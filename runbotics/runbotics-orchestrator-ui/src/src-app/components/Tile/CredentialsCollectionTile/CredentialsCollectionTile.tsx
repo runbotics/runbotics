@@ -5,13 +5,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Divider, Grid, Typography, Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import { AccessType } from 'runbotics-common';
+import { AccessType, FrontCredentialCollectionDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
-
-import { FrontCredentialCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 import { ColorDot } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
 

@@ -7,7 +7,6 @@ import { IUser } from 'runbotics-common';
 import { User } from '#/utils/decorators/user.decorator';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
-import { isCredentialFilterQuery } from './credential.utils';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { CredentialCriteria } from './criteria/credential.criteria';

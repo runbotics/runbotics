@@ -100,7 +100,7 @@ export class CredentialService {
 
     const credentials = await Promise.all(accessibleCollections
       .flatMap(collection => collection.credentials)
-      .map(async (credential) => await this.mapToFrontDto(credential, user))
+      .map(async (credential) => await this.formatToFrontCredentialDto(credential, user))
     );
 
     if (!credentials.some((credential) => Boolean(credential))) {
@@ -178,7 +178,7 @@ export class CredentialService {
 
     const credentials = await this.findByCriteria(user.tenantId, { collectionId });
 
-    return Promise.all(credentials.map(credential => this.mapToFrontDto(credential, user)));
+    return Promise.all(credentials.map(credential => this.formatToFrontCredentialDto(credential, user)));
   }
 
   async getAllAccessiblePages(user: IUser, paging: Paging, specs: Specs<Credential>) {
@@ -198,7 +198,7 @@ export class CredentialService {
     const page = await getPage(this.credentialRepo, options);
 
     const credentials = await Promise.all(page.content
-      .map(async (credential) => await this.mapToFrontDto(credential, user))
+      .map(async (credential) => await this.formatToFrontCredentialDto(credential, user))
     );
 
     return {
@@ -220,7 +220,7 @@ export class CredentialService {
       throw new NotFoundException(`Could not find credential with id ${id}`);
     }
 
-      return this.mapToFrontDto(result, user);
+      return this.formatToFrontCredentialDto(result, user);
     }
 
   async findById(id: string, tenantId: string) {
@@ -400,7 +400,7 @@ export class CredentialService {
       }
   }
 
-    private async mapToFrontDto(credential: Credential, user: IUser) {
+    private async formatToFrontCredentialDto(credential: Credential, user: IUser) {
         if (!credential) return;
 
         const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
@@ -410,7 +410,8 @@ export class CredentialService {
             ...credential,
             createdBy: {
               id: credential.createdBy.id,
-              login: credential.createdBy.login
+              login: credential.createdBy.login,
+              email: credential.createdBy.email
             },
             template: {
                 id: template.id,

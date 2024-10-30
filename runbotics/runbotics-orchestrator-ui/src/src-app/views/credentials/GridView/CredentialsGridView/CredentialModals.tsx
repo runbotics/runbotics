@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 
 import { useSnackbar } from 'notistack';
 
+import { FrontCredentialDto } from 'runbotics-common';
+
 import CustomDialog from '#src-app/components/CustomDialog';
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -10,9 +12,7 @@ import { useDispatch } from '#src-app/store';
 
 import { credentialsActions } from '#src-app/store/slices/Credentials';
 
-import { FrontCredentialDto } from '../../Credential/Credential.types';
 import { EditCredentialForm } from '../../Credential/EditCredential/EditCredentialForm';
-
 
 interface CredentialsModalsProps {
     collectionId: string;
@@ -24,8 +24,16 @@ interface CredentialsModalsProps {
     setCurrentDialogCredential: (state: null) => void;
 }
 
-export const CredentialsModals: FC<CredentialsModalsProps> = ({ isEditDialogOpen, setIsDeleteDialogOpen, isDeleteDialogOpen, setIsEditDialogOpen, currentDialogCredential, setCurrentDialogCredential, collectionId }) => {
-    const {translate } = useTranslations();
+export const CredentialsModals: FC<CredentialsModalsProps> = ({
+    isEditDialogOpen,
+    setIsDeleteDialogOpen,
+    isDeleteDialogOpen,
+    setIsEditDialogOpen,
+    currentDialogCredential,
+    setCurrentDialogCredential,
+    collectionId
+}) => {
+    const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
 

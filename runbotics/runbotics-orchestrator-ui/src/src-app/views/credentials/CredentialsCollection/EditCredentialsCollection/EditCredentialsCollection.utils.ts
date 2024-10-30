@@ -1,9 +1,9 @@
-import { AccessType, DEFAULT_COLLECTION_COLOR, IUser } from 'runbotics-common';
+import { AccessType, DEFAULT_COLLECTION_COLOR, FrontCredentialCollectionDto, IUser } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { SharedWithUser } from './SharedWithUsers/SharedWithUsers';
-import { FrontCredentialCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
+import { EditCredentialsCollectionDto } from '../CredentialsCollection.types';
 
 export enum InputErrorType {
     NAME_IS_REQUIRED = 'NAME_IS_REQUIRED'

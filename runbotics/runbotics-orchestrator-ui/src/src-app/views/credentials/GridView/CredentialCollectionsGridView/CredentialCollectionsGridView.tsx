@@ -24,7 +24,7 @@ import { TileGrid, TypographyPlaceholder } from '../GridView.styles';
 import Header, { CredentialsTabs } from '../Header';
 import Paging from '../Paging';
 
-const DEFAULT_COLLECTION_PAGE_SIZE = 9;
+const DEFAULT_COLLECTION_PAGE_SIZE = 12;
 
 const CredentialCollectionsGridView = () => {
     const dispatch = useDispatch();

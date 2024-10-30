@@ -1,11 +1,11 @@
-import { Credential, ProcessCredential } from 'runbotics-common';
+import { Credential, FrontCredentialDto, ProcessCredential } from 'runbotics-common';
 
 import { Page } from '#src-app/utils/types/page';
 
 export interface CredentialsState {
-    all: Credential[];
+    all: FrontCredentialDto[];
     allByTemplateAndProcess: Credential[];
     allProcessAssigned: ProcessCredential[];
-    allByPage: Page<Credential>
+    allByPage: Page<FrontCredentialDto>
     loading: boolean;
 }

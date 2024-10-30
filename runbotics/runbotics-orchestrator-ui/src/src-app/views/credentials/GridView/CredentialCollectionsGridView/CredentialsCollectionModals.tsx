@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 
+import { FrontCredentialCollectionDto } from 'runbotics-common';
+
 import { CredentialCollectionDelete } from '#src-app/components/Tile/CredentialsCollectionTile/MenuItems/CredentialCollectionDelete/CredentialCollectionDelete';
 
-import { FrontCredentialCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
 import CredentialsCollectionForm from '../../CredentialsCollection/CredentialsCollectionForm';
 
 interface CredentialsCollectionModalsProps {
@@ -14,7 +15,14 @@ interface CredentialsCollectionModalsProps {
     setCurrentCollection: (state: null) => void;
 }
 
-export const CredentialsCollectionModals: FC<CredentialsCollectionModalsProps> = ({ isEditDialogOpen, isDeleteDialogOpen, currentCollection, setIsEditDialogOpen, setIsDeleteDialogOpen, setCurrentCollection }) => {
+export const CredentialsCollectionModals: FC<CredentialsCollectionModalsProps> = ({
+    isEditDialogOpen,
+    isDeleteDialogOpen,
+    currentCollection,
+    setIsEditDialogOpen,
+    setIsDeleteDialogOpen,
+    setCurrentCollection
+}) => {
     const handleCloseEditDialog = () => {
         setCurrentCollection(null);
         setIsEditDialogOpen(false);
@@ -27,7 +35,10 @@ export const CredentialsCollectionModals: FC<CredentialsCollectionModalsProps> =
 
     return (
         <>
-            <CredentialsCollectionForm open={isEditDialogOpen} onClose={handleCloseEditDialog} collection={currentCollection} />
+            <CredentialsCollectionForm
+                open={isEditDialogOpen}
+                onClose={handleCloseEditDialog}
+                collection={currentCollection} />
             <CredentialCollectionDelete
                 collection={currentCollection}
                 isDialogOpen={isDeleteDialogOpen}

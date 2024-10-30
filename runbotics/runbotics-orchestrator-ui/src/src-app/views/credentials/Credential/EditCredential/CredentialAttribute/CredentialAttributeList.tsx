@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 
 import { Grid } from '@mui/material';
 
-import { PrivilegeType } from 'runbotics-common';
+import { FrontCredentialCollectionDto, FrontCredentialDto, PrivilegeType } from 'runbotics-common';
 
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useAuth from '#src-app/hooks/useAuth';
@@ -11,10 +11,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { credentialsActions } from '#src-app/store/slices/Credentials';
 import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
-import { FrontCredentialCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
-
 import TemplateAttribute from './TemplateAttribute';
-import { FrontCredentialDto } from '../../Credential.types';
 
 interface CredentialAttributesListProps {
     credential: FrontCredentialDto;

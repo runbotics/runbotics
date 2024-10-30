@@ -2,13 +2,14 @@ import React, { FC } from 'react';
 
 import { useSnackbar } from 'notistack';
 
+import { FrontCredentialCollectionDto } from 'runbotics-common';
+
 import CustomDialog from '#src-app/components/CustomDialog';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { deleteCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
-import { FrontCredentialCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 interface CredentialCollectionDeleteProps {
     collection: FrontCredentialCollectionDto;

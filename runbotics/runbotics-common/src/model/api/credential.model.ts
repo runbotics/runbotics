@@ -33,6 +33,16 @@ export interface Attribute {
     credentialId: string;
 }
 
+export interface FrontCredentialDto
+    extends Pick<
+        Credential,
+        'id' | 'name' | 'collectionId' | 'templateId' | 'createdAt' | 'createdBy' | 'updatedAt' | 'description'
+    > {
+    attributes: Attribute[];
+    template: Omit<CredentialTemplate, 'description'>;
+    collection: Pick<CredentialCollection, 'id' | 'name' | 'color'>;
+}
+
 export interface CredentialDto
     extends Pick<Credential, "id" | "name" | "createdBy"> {
     template: Omit<CredentialTemplate, 'description'>;

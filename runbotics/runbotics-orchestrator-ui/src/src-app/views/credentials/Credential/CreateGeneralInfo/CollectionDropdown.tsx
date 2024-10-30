@@ -2,10 +2,11 @@ import { FC } from 'react';
 
 import { Grid, MenuItem, SelectChangeEvent, Typography } from '@mui/material';
 
+import { FrontCredentialCollectionDto } from 'runbotics-common';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import GeneralInfoDropdown from './CreateGeneralInfoDropdown';
-import { FrontCredentialCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
 
 interface CollectionDropdownProps {
     disabled: boolean;

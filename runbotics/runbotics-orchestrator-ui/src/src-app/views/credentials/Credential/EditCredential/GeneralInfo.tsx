@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { Grid, Typography, Box } from '@mui/material';
 
-import { ColorNames } from 'runbotics-common';
+import { ColorNames, FrontCredentialDto } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -11,7 +11,6 @@ import { useSelector } from '#src-app/store';
 import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
 import { ColorDot } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
-import { FrontCredentialDto } from '../Credential.types';
 
 interface GeneralInfoProps {
     credential: FrontCredentialDto;

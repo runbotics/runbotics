@@ -2,15 +2,13 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { Box, Divider, Grid } from '@mui/material';
 
+import { FrontCredentialCollectionDto, FrontCredentialDto } from 'runbotics-common';
+
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-
-
 import { StyledTypography } from './CredentialsHeader.styles';
 import SharedWithInfo from './SharedWithInfo';
-import { FrontCredentialDto } from '../../Credential/Credential.types';
-import { FrontCredentialCollectionDto } from '../../CredentialsCollection/CredentialsCollection.types';
 import { CredentialsTabs } from '../../GridView/Header';
 import Search from '../../GridView/Search/Search';
 

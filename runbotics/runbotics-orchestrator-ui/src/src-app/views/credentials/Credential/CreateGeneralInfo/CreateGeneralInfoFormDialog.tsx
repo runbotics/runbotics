@@ -16,7 +16,11 @@ import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 import { CollectionDropdown } from './CollectionDropdown';
 import { TemplateDropdown } from './TemplateDropdown';
 import { CreateCredentialDto } from '../Credential.types';
-import { getInitialCredentialData, getInitialFormValidationState, inputErrorMessages } from '../EditCredential/EditCredential.utils';
+import {
+    getInitialCredentialData,
+    getInitialFormValidationState,
+    inputErrorMessages
+} from '../EditCredential/EditCredential.utils';
 
 interface CreateGeneralInfoProps {
     onClose: () => void;

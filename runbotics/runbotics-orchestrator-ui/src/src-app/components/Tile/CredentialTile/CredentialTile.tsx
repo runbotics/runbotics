@@ -5,13 +5,11 @@ import { CircularProgress, Typography } from '@mui/material';
 
 import { useRouter } from 'next/router';
 
-import { PrivilegeType, DEFAULT_COLLECTION_COLOR } from 'runbotics-common';
+import { PrivilegeType, DEFAULT_COLLECTION_COLOR, FrontCredentialDto, FrontCredentialCollectionDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { FrontCredentialDto } from '#src-app/views/credentials/Credential/Credential.types';
-import { FrontCredentialCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 import { collectionColors } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
 
 import { CredentialCard, CredentialCollection } from './CredentialTile.styles';

@@ -2,6 +2,8 @@ import { FC, useEffect, useState } from 'react';
 
 import { useSnackbar } from 'notistack';
 
+import { FrontCredentialCollectionDto } from 'runbotics-common';
+
 import CustomDialog from '#src-app/components/CustomDialog';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -10,7 +12,7 @@ import { useDispatch } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import { FrontCredentialCollectionDto, EditCredentialsCollectionDto } from './CredentialsCollection.types';
+import { EditCredentialsCollectionDto } from './CredentialsCollection.types';
 import {
     getInitialCredentialsCollectionData,
     initialCredentialsCollectionData,

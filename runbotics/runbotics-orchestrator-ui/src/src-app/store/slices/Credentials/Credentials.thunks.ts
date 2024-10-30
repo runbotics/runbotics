@@ -1,5 +1,5 @@
 
-import { Credential, ProcessCredential } from 'runbotics-common';
+import { Credential, FrontCredentialDto, ProcessCredential } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import { Page } from '#src-app/utils/types/page';
@@ -14,19 +14,19 @@ export const createCredential = ApiTenantResource
     .post<Credential, CreateCredentialDto>('credential/create', 'credential-collections');
 
 export const fetchAllCredentialsInCollection = ApiTenantResource
-    .get<Credential[]>('credential/fetchAllInCollection', 'credential-collections');
+    .get<FrontCredentialDto[]>('credential/fetchAllInCollection', 'credential-collections');
 
 export const fetchAllCredentialsAccessibleInTenant = ApiTenantResource
-    .get<Credential[]>('credential/fetchAllInTenant', CREDENTIAL_PATH);
+    .get<FrontCredentialDto[]>('credential/fetchAllInTenant', CREDENTIAL_PATH);
 
 export const fetchAllCredentialsByTemplateAndProcess = ApiTenantResource
     .get<Credential[]>('credential/fetchAllByTemplateAndProcess', 'credentialsByTemplateAndProcess');
 
 export const fetchAllCredentialsAccessibleInTenantByPage = ApiTenantResource
-    .get<Page<Credential>>('credential/fetchAllByPage', `${CREDENTIAL_PATH}/Page`);
+    .get<Page<FrontCredentialDto>>('credential/fetchAllByPage', `${CREDENTIAL_PATH}/Page`);
 
 export const fetchOneCredential = ApiTenantResource
-    .get<Credential>('credential/fetchOne/:id', CREDENTIAL_PATH);
+    .get<FrontCredentialDto>('credential/fetchOne/:id', CREDENTIAL_PATH);
 
 export const updateCredential = ApiTenantResource
     .patch<Credential, EditCredentialDto>('credenital/update/:id', COLLECTION_CREDENTIAL_PATH);

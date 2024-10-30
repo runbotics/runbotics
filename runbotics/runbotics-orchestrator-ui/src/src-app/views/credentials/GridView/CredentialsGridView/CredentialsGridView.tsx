@@ -4,6 +4,8 @@ import { Box } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
+import { FrontCredentialDto } from 'runbotics-common';
+
 import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 import If from '#src-app/components/utils/If';
@@ -18,7 +20,6 @@ import { credentialsActions, credentialsSelector } from '#src-app/store/slices/C
 import { DEBOUNCE_TIME } from '#src-app/views/process/EditProcessDialog/EditProcessDialog.utils';
 
 import { CredentialsModals } from './CredentialModals';
-import { FrontCredentialDto } from '../../Credential/Credential.types';
 import CredentialsHeader from '../../Credentials/CredentialsHeader/CredentialsHeader';
 import CredentialsCollectionLocation from '../../CredentialsCollection/CredentialsCollectionLocation';
 import { TileGrid, TypographyPlaceholder } from '../GridView.styles';

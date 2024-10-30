@@ -1,4 +1,4 @@
-import { Credential } from './credential.model';
+import { Credential, FrontCredentialDto } from './credential.model';
 import { Tenant } from './tenant.model';
 import { UserDTO } from './user.model';
 
@@ -52,4 +52,22 @@ export interface CredentialCollection {
     createdAt: string;
     updatedAt: string;
     credentialCollectionUser: CredentialCollectionUser[]
+}
+
+export interface FrontCredentialCollectionDto
+    extends Pick<
+        CredentialCollection,
+        'id' |
+        'name' |
+        'tenantId' |
+        'description' |
+        'createdBy' |
+        'createdById' |
+        'color' |
+        'accessType' |
+        'createdAt' |
+        'updatedAt'
+    > {
+    credentialCollectionUser?: CredentialCollectionUser[];
+    credentials: FrontCredentialDto[];
 }

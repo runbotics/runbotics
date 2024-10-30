@@ -4,8 +4,9 @@ import Clear from '@mui/icons-material/Clear';
 import { TableBody, TableCell, TableHead, TableRow, IconButton, Select, MenuItem, FormControl, TableContainer, Table } from '@mui/material';
 
 
+import { PrivilegeType } from 'runbotics-common';
+
 import { SharedWithUser } from './SharedWithUsers';
-import { PrivilegeType } from '../../CredentialsCollection.types';
 
 interface UsersTableProps {
     users: SharedWithUser[];

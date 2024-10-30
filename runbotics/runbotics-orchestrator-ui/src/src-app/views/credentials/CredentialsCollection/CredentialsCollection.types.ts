@@ -1,15 +1,4 @@
-import { AccessType, ColorNames, CredentialCollection, PrivilegeType, CredentialCollectionUser } from 'runbotics-common';
-
-import { FrontCredentialDto } from '../Credential/Credential.types';
-
-export interface FrontCredentialCollectionDto
-    extends Pick<
-        CredentialCollection,
-        'id' | 'name' | 'tenantId' | 'description' | 'createdBy' | 'createdById' | 'color' | 'accessType' | 'createdAt' | 'updatedAt'
-    > {
-    credentialCollectionUser?: CredentialCollectionUser[];
-    credentials: FrontCredentialDto[];
-}
+import { AccessType, ColorNames, FrontCredentialCollectionDto, PrivilegeType } from 'runbotics-common';
 
 export interface EditCredentialsCollectionDto {
     id?: string;
