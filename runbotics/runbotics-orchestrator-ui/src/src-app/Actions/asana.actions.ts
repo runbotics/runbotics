@@ -2,6 +2,7 @@ import { AsanaAction, ActionRegex, ActionCredentialType } from 'runbotics-common
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
 const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
@@ -24,7 +25,9 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
                     input: {
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
-                        properties: {},
+                        properties: {
+                            customCredentialId: propertyCustomCredential,
+                        },
                         required: [],
                     },
                     output: {
@@ -44,6 +47,9 @@ const getAsanaActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                },
                 output: {
                     variableName: {
                         'ui:options': {

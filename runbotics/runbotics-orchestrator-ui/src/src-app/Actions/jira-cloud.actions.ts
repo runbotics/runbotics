@@ -3,6 +3,7 @@ import { JiraCloudAction, ActionRegex, JiraTaskStatus, JiraSprintState, ActionCr
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
 const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
@@ -69,6 +70,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.Common.Date'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['date'],
                                     }, {
@@ -84,6 +86,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.EndDate'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['startDate', 'endDate'],
                                     }, {
@@ -95,6 +98,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.DatesList'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['dates']
                                     }],
@@ -117,6 +121,9 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                 },
                 uiSchema: {
                     'ui:order': ['input', 'output'],
+                    input: {
+                        customCredentialId: schemaCustomCredential,
+                    },
                     output: {
                         variableName: {
                             'ui:options': {
@@ -174,6 +181,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.Common.Date'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['date'],
                                     }, {
@@ -189,6 +197,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.EndDate'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['startDate', 'endDate'],
                                     }, {
@@ -200,6 +209,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.DatesList'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['dates']
                                     }],
@@ -222,6 +232,9 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                 },
                 uiSchema: {
                     'ui:order': ['input', 'output'],
+                    input: {
+                        customCredentialId: schemaCustomCredential,
+                    },
                     output: {
                         variableName: {
                             'ui:options': {
@@ -263,6 +276,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                     enumNames: ['None', 'Closed', 'Active', 'Future'],
                                     default: undefined,
                                 },
+                                customCredentialId: propertyCustomCredential,
                             },
                             required: ['boardId']
                         },
@@ -281,6 +295,9 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                 },
                 uiSchema: {
                     'ui:order': ['input', 'output'],
+                    input: {
+                        customCredentialId: schemaCustomCredential,
+                    },
                     output: {
                         variableName: {
                             'ui:options': {
@@ -337,6 +354,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                     enumNames: ['None', dateMode.date.title, dateMode.period.title, dateMode.collection.title],
                                     default: undefined,
                                 },
+                                customCredentialId: propertyCustomCredential,
                             },
                             dependencies: {
                                 mode: {
@@ -403,6 +421,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                                 info: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Fields.Info'),
                             },
                         },
+                        customCredentialId: schemaCustomCredential,
                     },
                     output: {
                         variableName: {

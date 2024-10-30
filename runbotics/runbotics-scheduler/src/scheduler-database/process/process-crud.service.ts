@@ -22,6 +22,9 @@ const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     createdBy: true,
     editor: true,
     tags: true,
+    processCollection: {
+        users: true,
+    },
 };
 
 @Injectable()

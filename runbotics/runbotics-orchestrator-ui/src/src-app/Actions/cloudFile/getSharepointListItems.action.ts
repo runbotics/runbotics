@@ -4,6 +4,8 @@ import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloud
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
+
 export const getSharepointListItemsAction = {
     id: CloudFileAction.GET_SHAREPOINT_LIST_ITEMS,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
@@ -36,6 +38,7 @@ export const getSharepointListItemsAction = {
                             ),
                             type: 'string',
                         },
+                        customCredentialId: propertyCustomCredential,
                     },
                     required: ['siteRelativePath', 'listName'],
                 },
@@ -53,6 +56,7 @@ export const getSharepointListItemsAction = {
         },
         uiSchema: {
             input: {
+                customCredentialId: schemaCustomCredential,
                 siteRelativePath: siteRelativePathUI,
                 listName: listNameUI,
             },

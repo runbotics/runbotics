@@ -14,6 +14,7 @@ const relations = [
     'botCollection',
     'schedules',
     'editor',
+    'processCollection',
     'notifications.user.authorities',
     'processCredential.credential.attributes',
     'processCredential.credential.template',
