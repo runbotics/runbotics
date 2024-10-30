@@ -51,6 +51,7 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
         );
     }, [nonAdmins.all]);
 
+    // TODO - to be updated after users migration to include all users in tenant
     useEffect(() => {
         dispatch(usersActions.getActiveNonAdmins());
     }, []);
