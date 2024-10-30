@@ -22,7 +22,6 @@ const Search: FC<SearchProps> = ({ searchValue, handleSearch }) => {
                 value={searchValue}
                 onChange={(e) => handleSearch(e.target.value)}>
                 {translate('Common.Search')}
-
             </TextField>
         </Box>
     );

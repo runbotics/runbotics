@@ -33,7 +33,8 @@ const CredentialCollectionsGridView = () => {
     const { enqueueSnackbar } = useSnackbar();
     const replaceQueryParams = useReplaceQueryParams();
 
-    const { allCredentialCollectionsByPage, loading: isLoading } = useSelector(credentialCollectionsSelector);
+    const { allCredentialCollectionsByPage } = useSelector(credentialCollectionsSelector);
+    const [isLoading, setIsLoading] = useState(true);
 
     const credentialCollections = allCredentialCollectionsByPage?.content;
     const pageFromUrl = searchParams.get('page');
@@ -71,6 +72,8 @@ const CredentialCollectionsGridView = () => {
             }
         }})).catch(error => {
             enqueueSnackbar(error.message, { variant: 'error' });
+        }).finally(() => {
+            setIsLoading(false);
         });
     }, [page, pageSize, debouncedValue]);
 

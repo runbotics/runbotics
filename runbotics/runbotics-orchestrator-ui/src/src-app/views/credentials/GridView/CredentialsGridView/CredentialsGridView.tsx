@@ -36,7 +36,7 @@ const CredentialsGridView = () => {
     const { allByPage } = useSelector(credentialsSelector);
     const credentials = allByPage?.content;
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     const pageFromUrl = searchParams.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
@@ -86,7 +86,7 @@ const CredentialsGridView = () => {
         }}));
 
         Promise.allSettled([fetchAllCollections, fetchCredentials]).then(() => {
-            setLoading(false);
+            setIsLoading(false);
         });
     }, [page, pageSize, debouncedValue]);
 
@@ -109,7 +109,7 @@ const CredentialsGridView = () => {
                     credential={credential}
                     collection={credentialCollections.find(collection => credential.collectionId === collection.id)}
                     templateName={credential.template.name}
-                    loading={loading}
+                    loading={isLoading}
                     collectionId={collectionId}
                     handleEditDialogOpen={handleEditDialogOpen}
                     handleDeleteDialogOpen={handleDeleteDialogOpen}
@@ -118,9 +118,9 @@ const CredentialsGridView = () => {
         : [];
 
     return (
-        <InternalPage title={collectionId ? translate('CredentialsInCollection.Page.Title', {name: collectionName}) : translate('Credentials.Page.Title')}>
+        <InternalPage title={collectionId ? translate('CredentialsInCollection.Page.Title', { name: collectionName }) : translate('Credentials.Page.Title')}>
             <Header addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0} />
-            <If condition={!loading} else={<LoadingScreen />}>
+            <If condition={!isLoading} else={<LoadingScreen />}>
                 {collectionId && (
                     <CredentialsCollectionLocation
                         collectionName={collectionName}
