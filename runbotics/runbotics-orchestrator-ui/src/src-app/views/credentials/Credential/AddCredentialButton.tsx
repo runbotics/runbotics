@@ -1,8 +1,9 @@
 import React, { FC, useState } from 'react';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Button, SvgIcon, Tooltip } from '@mui/material';
+import { Button, SvgIcon } from '@mui/material';
 
+import ConditionalTooltip from '#src-app/components/ConditionalTooltip/ConditionalTooltip';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -18,21 +19,7 @@ const AddCredentialButton: FC<AddCredentialButtonProps> = ({ disabled }) => {
 
     return (
         <>
-            <Tooltip
-                disableHoverListener={!disabled}
-                title={translate('Credential.Add.CollectionNotFoundInfo')}
-                slotProps={{
-                    popper: {
-                        modifiers: [
-                            {
-                                name: 'offset',
-                                options: {
-                                    offset: [0, -14],
-                                },
-                            },
-                        ],
-                    },
-                }}>
+            <ConditionalTooltip display={disabled} title={translate('Credential.Add.CollectionNotFound.Info')}>
                 <span>
                     <Button
                         disabled={disabled}
@@ -48,7 +35,7 @@ const AddCredentialButton: FC<AddCredentialButtonProps> = ({ disabled }) => {
                         {translate('Credentials.Add')}
                     </Button>
                 </span>
-            </Tooltip>
+            </ConditionalTooltip>
             <If condition={showDialog}>
                 <CreateGeneralInfoFormDialog open={showDialog} onClose={() => setShowDialog(false)}/>
             </If>

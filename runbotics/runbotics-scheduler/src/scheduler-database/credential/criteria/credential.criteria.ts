@@ -6,7 +6,7 @@ import { Criteria } from '#/utils/specification/criteria/criteria';
 import { UUIDFilter } from '#/utils/specification/filter/uuid-filter/uuid.filter';
 
 export class CredentialCriteria extends Criteria {
-    id = new NumberFilter();
+    id = new UUIDFilter();
     name = new StringFilter();
     created = new DatetimeFilter();
     updated = new DatetimeFilter();

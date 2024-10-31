@@ -5,7 +5,7 @@ const credentials: typeof englishCredentials = {
     'Credentials.List.Placeholder': 'Brak poświadczeń',
     'Credentials.Add': 'Dodaj nowe poświadczenia',
     'Credential.Title': 'Poświadczenie {{ name }}',
-    'Credential.Add.CollectionNotFoundInfo': 'Najpierw stwórz kolekcję',
+    'Credential.Add.CollectionNotFound.Info': 'Najpierw stwórz kolekcję',
     'Credential.Edit.Title': 'Edytuj poświadczenia',
     'Credential.Edit.GoBack': 'Wróć do kolekcji o nazwie {{ collectionName }}',
     'Credential.Tile.Delete.Warning': 'Czy na pewno chcesz usunąć poświadczenie o nazwie {{ name }}?',

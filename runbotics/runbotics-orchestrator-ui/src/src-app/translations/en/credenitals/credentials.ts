@@ -3,7 +3,7 @@ const credentials = {
     'Credentials.List.Placeholder': 'No credentials yet',
     'Credentials.Add': 'Add new credential',
     'Credential.Title': 'Credential {{ name }}',
-    'Credential.Add.CollectionNotFoundInfo': 'Create credential collection first',
+    'Credential.Add.CollectionNotFound.Info': 'Create credential collection first',
     'Credential.Edit.Title': 'Edit credential',
     'Credential.Edit.GoBack': 'Back to {{ collectionName }} collection',
     'Credential.Tile.Delete.Warning': 'Are you sure you want to delete credential named {{ name }}?',
