@@ -13,6 +13,7 @@ interface CredentialsCollectionModalsProps {
     setIsEditDialogOpen: (state: boolean) => void
     setIsDeleteDialogOpen: (state: boolean) => void;
     setCurrentCollection: (state: null) => void;
+    pageSize: number;
 }
 
 export const CredentialsCollectionModals: FC<CredentialsCollectionModalsProps> = ({
@@ -21,7 +22,8 @@ export const CredentialsCollectionModals: FC<CredentialsCollectionModalsProps> =
     currentCollection,
     setIsEditDialogOpen,
     setIsDeleteDialogOpen,
-    setCurrentCollection
+    setCurrentCollection,
+    pageSize,
 }) => {
     const handleCloseEditDialog = () => {
         setCurrentCollection(null);
@@ -38,11 +40,13 @@ export const CredentialsCollectionModals: FC<CredentialsCollectionModalsProps> =
             <CredentialsCollectionForm
                 open={isEditDialogOpen}
                 onClose={handleCloseEditDialog}
-                collection={currentCollection} />
+                collection={currentCollection}
+                pageSize={pageSize}/>
             <CredentialCollectionDelete
                 collection={currentCollection}
                 isDialogOpen={isDeleteDialogOpen}
                 handleDialogClose={handleCloseDeleteDialog}
+                pageSize={pageSize}
             />
         </>
     );

@@ -103,7 +103,7 @@ const CredentialCollectionsGridView = () => {
 
     return (
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
-            <Header />
+            <Header pageSize={pageSize}/>
             <If condition={!isLoading} else={<LoadingScreen />}>
                 <CredentialsHeader
                     credentialCount={allCredentialCollectionsByPage?.totalElements}
@@ -125,6 +125,7 @@ const CredentialCollectionsGridView = () => {
                                     setIsEditDialogOpen={setIsEditDialogOpen}
                                     setIsDeleteDialogOpen={setIsDeleteDialogOpen}
                                     setCurrentCollection={setCurrentCollection}
+                                    pageSize={pageSize}
                                 />
                             </If>
                         </TileGrid>

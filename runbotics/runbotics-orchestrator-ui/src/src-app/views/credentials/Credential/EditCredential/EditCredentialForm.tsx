@@ -21,9 +21,10 @@ interface EditCredentialFormProps {
     credential: FrontCredentialDto;
     collectionId: string;
     onClose: () => void;
+    pageSize: number
 }
 
-export const EditCredentialForm: FC<EditCredentialFormProps> = ({ open: isOpen, onClose, credential, collectionId }) => {
+export const EditCredentialForm: FC<EditCredentialFormProps> = ({ open: isOpen, onClose, credential, collectionId, pageSize }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -44,9 +45,14 @@ export const EditCredentialForm: FC<EditCredentialFormProps> = ({ open: isOpen, 
             .unwrap()
             .then(() => {
                 enqueueSnackbar(translate('Credential.Form.Edit.Success', { name: credentialFormState.name }), { variant: 'success' });
-                collectionId
-                    ? dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }))
-                    : dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
+                dispatch(
+                    credentialsActions.fetchAllCredentialsAccessibleInTenantByPage({
+                        pageParams: { page: 0, size: pageSize, filter: {
+                            equals: {
+                                collectionId: collectionId ? collectionId : ''}
+                        } }
+                    })
+                );
                 closeDialog();
             })
             .catch(error => {

@@ -22,6 +22,7 @@ interface CredentialsModalsProps {
     setIsDeleteDialogOpen: (state: boolean) => void;
     setIsEditDialogOpen: (state: boolean) => void;
     setCurrentDialogCredential: (state: null) => void;
+    pageSize: number;
 }
 
 export const CredentialsModals: FC<CredentialsModalsProps> = ({
@@ -31,7 +32,8 @@ export const CredentialsModals: FC<CredentialsModalsProps> = ({
     setIsEditDialogOpen,
     currentDialogCredential,
     setCurrentDialogCredential,
-    collectionId
+    collectionId,
+    pageSize,
 }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
@@ -56,11 +58,11 @@ export const CredentialsModals: FC<CredentialsModalsProps> = ({
                 });
                 handleDeleteDialogClose();
 
-                if (collectionId) {
-                    dispatch(credentialsActions.fetchAllCredentialsInCollection({ resourceId: `${collectionId}/credentials/` }));
-                } else {
-                    dispatch(credentialsActions.fetchAllCredentialsAccessibleInTenant());
-                }
+                dispatch(
+                    credentialsActions.fetchAllCredentialsAccessibleInTenantByPage({
+                        pageParams: { page: 0, pageSize },
+                    })
+                );
             })
             .catch(error => {
                 enqueueSnackbar(error ? error.message : translate('Credential.Tile.Delete.Fail', { name: currentDialogCredential.name }), {
@@ -76,6 +78,7 @@ export const CredentialsModals: FC<CredentialsModalsProps> = ({
                 onClose={handleEditDialogClose}
                 credential={currentDialogCredential}
                 collectionId={collectionId}
+                pageSize={pageSize}
             />
             <CustomDialog
                 isOpen={isDeleteDialogOpen}

@@ -4,12 +4,13 @@ import { Box } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
-import { FrontCredentialDto } from 'runbotics-common';
+import { FrontCredentialDto, PrivilegeType } from 'runbotics-common';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
+import useAuth from '#src-app/hooks/useAuth';
 import useDebounce from '#src-app/hooks/useDebounce';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -38,6 +39,7 @@ const CredentialsGridView = () => {
     const credentials = allByPage?.content;
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
     const [isLoading, setIsLoading] = useState(true);
+    const { user: currentUser } = useAuth();
 
     const pageFromUrl = searchParams.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
@@ -54,11 +56,16 @@ const CredentialsGridView = () => {
 
     const router = useRouter();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
+    const currentCredentialsCollection = collectionId && credentialCollections ? credentialCollections.find(collection => collectionId === collection.id) : null;
     const collectionSharedWithNumber =
         collectionId &&
         credentialCollections &&
-        credentialCollections.find(collection => collectionId === collection.id)?.credentialCollectionUser.length - 1;
-    const collectionName = credentialCollections?.find(collection => collectionId === collection.id)?.name;
+        currentCredentialsCollection?.credentialCollectionUser.length - 1;
+    const collectionName = currentCredentialsCollection?.name;
+    const hasEditAccess = currentCredentialsCollection ? currentCredentialsCollection.credentialCollectionUser.some(
+        user => user.user.email === currentUser.email &&
+        user.privilegeType === PrivilegeType.WRITE
+    ) : true;
 
     useEffect(() => {
         const pageNotAvailable = allByPage && page >= allByPage.totalPages;
@@ -120,7 +127,7 @@ const CredentialsGridView = () => {
 
     return (
         <InternalPage title={collectionId ? translate('CredentialsInCollection.Page.Title', { name: collectionName }) : translate('Credentials.Page.Title')}>
-            <Header addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0} />
+            <Header addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0} pageSize={pageSize} hasEditAccess={hasEditAccess}/>
             <If condition={!isLoading} else={<LoadingScreen />}>
                 {collectionId && (
                     <CredentialsCollectionLocation
@@ -162,6 +169,7 @@ const CredentialsGridView = () => {
                     setIsEditDialogOpen={setIsEditDialogOpen}
                     setIsDeleteDialogOpen={setIsDeleteDialogOpen}
                     setCurrentDialogCredential={setCurrentDialogCredential}
+                    pageSize={pageSize}
                 />
             )}
         </InternalPage>

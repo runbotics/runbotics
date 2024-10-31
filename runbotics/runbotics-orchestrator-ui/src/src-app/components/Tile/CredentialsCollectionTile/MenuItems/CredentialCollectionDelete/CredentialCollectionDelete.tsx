@@ -15,9 +15,10 @@ interface CredentialCollectionDeleteProps {
     collection: FrontCredentialCollectionDto;
     isDialogOpen: boolean;
     handleDialogClose(): void;
+    pageSize: number;
 }
 
-export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = ({ collection, isDialogOpen, handleDialogClose }) => {
+export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = ({ collection, isDialogOpen, handleDialogClose, pageSize }) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
@@ -34,7 +35,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
                 enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Success', { name: collection.name }), {
                     variant: 'success'
                 });
-                dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: {page: 0, pageSize }}));
             })
             .catch(error => {
                 if (error.statusCode === 409) {

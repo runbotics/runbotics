@@ -29,9 +29,10 @@ interface CredentialCollectionFormProps {
     open: boolean;
     collection: FrontCredentialCollectionDto | null;
     onClose: () => void;
+    pageSize: number;
 }
 
-const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: isOpen, onClose, collection }) => {
+const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: isOpen, onClose, collection, pageSize }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -87,7 +88,7 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
         await dispatch(action)
             .unwrap()
             .then(() => {
-                dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: { page: 0, pageSize } }));
                 const successMessage = collection
                     ? translate('Credential.Form.Create.Success', { name: credentialsCollectionFormState.name })
                     : translate('Credential.Form.Edit.Success', { name: credentialsCollectionFormState.name });

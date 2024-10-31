@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { FC, useState } from 'react';
 
 import { Grid, TextField, Typography, SelectChangeEvent } from '@mui/material';
@@ -5,7 +6,10 @@ import { Grid, TextField, Typography, SelectChangeEvent } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
+import { PrivilegeType } from 'runbotics-common';
+
 import CustomDialog from '#src-app/components/CustomDialog';
+import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useDispatch, useSelector } from '#src-app/store';
@@ -33,11 +37,13 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
     const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
+    const { user: currentUser } = useAuth();
 
     const [credentialFormState, setCredentialFormState] = useState<CreateCredentialDto>(getInitialCredentialData(collectionId));
     const [formValidationState, setFormValidationState] = useState(getInitialFormValidationState(collectionId));
 
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
+    const availableCredentialCollections = credentialCollections?.filter(collection => collection.credentialCollectionUser.find(collectionUser => collectionUser.userId === currentUser.id && collectionUser.privilegeType === PrivilegeType.WRITE));
 
     const isFormValid = () => Object.values(formValidationState).every(Boolean);
 
@@ -156,7 +162,7 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
                         <Grid item xs={12} mt={2}>
                             <CollectionDropdown
                                 disabled={!!collectionId}
-                                credentialCollections={credentialCollections}
+                                credentialCollections={availableCredentialCollections}
                                 selectedValue={credentialFormState.collectionId}
                                 handleChange={(event: SelectChangeEvent) => handleDropdownChange('collectionId', event.target.value)}
                                 error={formValidationState.edited && !formValidationState.collectionId}
