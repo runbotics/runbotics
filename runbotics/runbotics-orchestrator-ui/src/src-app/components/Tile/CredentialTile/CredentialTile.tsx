@@ -52,7 +52,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
     };
 
     return (
-        <Tile leftborderbolor={`4px solid ${hexColor}`} minheight='min-content'>
+        <Tile leftbordercolor={`4px solid ${hexColor}`} minheight='min-content'>
             <CredentialCard onClick={handleClick}>
                 <Typography variant="h4" sx={{ paddingBottom: '16px' }}>
                     {credential.name}

@@ -4,7 +4,7 @@ import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
 import { FindManyOptions, Repository } from 'typeorm';
-import { IUser } from 'runbotics-common';
+import { IUser, PrivilegeType } from 'runbotics-common';
 import { CredentialTemplateService } from '../credential-template/credential-template.service';
 import { SecretService } from '../secret/secret.service';
 import { Secret } from '../secret/secret.entity';
@@ -33,36 +33,50 @@ export class CredentialService {
   async create(credentialDto: CreateCredentialDto, collectionId: string, user: IUser) {
     const template = await this.templateService.findOneById(credentialDto.templateId);
 
+    const collection = await this.collectionService.findOneAccessibleById(collectionId, user);
+
+    if (!collection) {
+      throw new NotFoundException(`Could not find collection with id ${collectionId}`);
+    }
+
+    const hasEditCollectionAccess = collection.credentialCollectionUser.find(
+        collectionUser => collectionUser.userId === user.id && collectionUser.privilegeType === PrivilegeType.WRITE
+    );
+
+    if (!hasEditCollectionAccess) {
+      throw new NotFoundException('You do not have access to edit this collection');
+    }
+
     if (!template) {
       throw new NotFoundException(`Could not find template with id ${credentialDto.templateId}`);
     }
 
     const tenantId = user.tenantId;
 
-        const attributes = await Promise.all(
-      template.attributes.map(async (attribute) => {
-        const encryptedValue = this.secretService.encrypt('', tenantId);
-        const secretEntity: Secret = {
-          ...encryptedValue,
-          tenantId,
-        };
+    const attributes = await Promise.all(
+        template.attributes.map(async attribute => {
+            const encryptedValue = this.secretService.encrypt('', tenantId);
+            const secretEntity: Secret = {
+                ...encryptedValue,
+                tenantId
+            };
 
-        const secret = await this.secretService.save(secretEntity)
-          .catch((error) => {
-            throw new BadRequestException(`Failed to save secret: ${error.message}`);
-          });
+            const secret = await this.secretService.save(secretEntity).catch(error => {
+                throw new BadRequestException(`Failed to save secret: ${error.message}`);
+            });
 
-        const secretId = secret.id;
+            const secretId = secret.id;
 
-        return {
-          name: attribute.name,
-          description: attribute.description,
-          templateId: attribute.templateId,
-          secretId: secretId,
-          tenantId,
-          masked: true,
-        };
-      }));
+            return {
+                name: attribute.name,
+                description: attribute.description,
+                templateId: attribute.templateId,
+                secretId: secretId,
+                tenantId,
+                masked: true
+            };
+        })
+    );
 
     const credential = this.credentialRepo.create({
       ...credentialDto,
@@ -159,7 +173,7 @@ export class CredentialService {
     return credentials;
   }
 
-  async findByCriteria(tenantId: string, criteria: Partial<Credential>, ) {
+  async findByCriteria(tenantId: string, criteria: Partial<Credential>) {
     return this.credentialRepo.find({
       where: {
         tenantId,

@@ -29,7 +29,7 @@ export const fetchOneCredential = ApiTenantResource
     .get<FrontCredentialDto>('credential/fetchOne/:id', CREDENTIAL_PATH);
 
 export const updateCredential = ApiTenantResource
-    .patch<Credential, EditCredentialDto>('credenital/update/:id', COLLECTION_CREDENTIAL_PATH);
+    .patch<Credential, EditCredentialDto>('credenital/update/:id', 'credential-collections');
 
 export const deleteCredential = ApiTenantResource
     .delete<void>('credential/delete/:id', COLLECTION_CREDENTIAL_PATH);

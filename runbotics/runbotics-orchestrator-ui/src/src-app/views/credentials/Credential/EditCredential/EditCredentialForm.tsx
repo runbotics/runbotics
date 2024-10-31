@@ -41,7 +41,12 @@ export const EditCredentialForm: FC<EditCredentialFormProps> = ({ open: isOpen, 
             return;
         }
 
-        dispatch(credentialsActions.updateCredential({ resourceId: credential.id, payload: credentialFormState }))
+        const payload = {
+            name: credentialFormState.name,
+            ...(credentialFormState.description && { description: credentialFormState.description })
+        };
+
+        dispatch(credentialsActions.updateCredential({ resourceId: `${collectionId}/credentials/${credential.id}`, payload }))
             .unwrap()
             .then(() => {
                 enqueueSnackbar(translate('Credential.Form.Edit.Success', { name: credentialFormState.name }), { variant: 'success' });
