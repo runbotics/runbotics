@@ -2,6 +2,8 @@ import React, { FC, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 
+import { AccessType, PrivilegeType } from 'runbotics-common';
+
 import Accordion from '#src-app/components/Accordion';
 
 import useAuth from '#src-app/hooks/useAuth';
@@ -10,7 +12,7 @@ import { usersActions } from '#src-app/store/slices/Users';
 
 import SearchBar from './SearchBar';
 import UsersTable from './UsersTable';
-import { AccessType, EditCredentialsCollectionDto, PrivilegeType } from '../../CredentialsCollection.types';
+import { EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
 import { filterSharableUsers } from '../EditCredentialsCollection.utils';
 
 export interface SharedWithUser {
@@ -49,6 +51,7 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
         );
     }, [nonAdmins.all]);
 
+    // TODO - to be updated after users migration to include all users in tenant
     useEffect(() => {
         dispatch(usersActions.getActiveNonAdmins());
     }, []);

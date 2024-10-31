@@ -2,21 +2,23 @@ import React, { FC } from 'react';
 
 import { useSnackbar } from 'notistack';
 
+import { FrontCredentialCollectionDto } from 'runbotics-common';
+
 import CustomDialog from '#src-app/components/CustomDialog';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { deleteCredentialCollections } from '#src-app/store/slices/CredentialCollections/CredentialCollections.thunks';
-import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 interface CredentialCollectionDeleteProps {
-    collection: BasicCredentialsCollectionDto;
+    collection: FrontCredentialCollectionDto;
     isDialogOpen: boolean;
     handleDialogClose(): void;
+    pageSize: number;
 }
 
-export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = ({ collection, isDialogOpen, handleDialogClose }) => {
+export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = ({ collection, isDialogOpen, handleDialogClose, pageSize }) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
@@ -33,7 +35,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
                 enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Success', { name: collection.name }), {
                     variant: 'success'
                 });
-                dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: {page: 0, pageSize }}));
             })
             .catch(error => {
                 if (error.statusCode === 409) {

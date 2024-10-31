@@ -1,21 +1,10 @@
 import { blueGrey, blue, green, orange } from '@mui/material/colors';
+import { ColorNames } from 'runbotics-common';
 
 interface CollectionColor {
     name: string;
     hex: string;
 }
-
-export const DEFAULT_CREDENTIALS_COLLECTION_COLOR = 'DARK_ORANGE';
-
-export type ColorNames =
-    | 'LIGHT_ORANGE'
-    | 'DARK_ORANGE'
-    | 'LIGHT_GREEN'
-    | 'DARK_GREEN'
-    | 'LIGHT_BLUE'
-    | 'DARK_BLUE'
-    | 'LIGHT_GREY'
-    | 'DARK_GREY';
 
 export const collectionColors: { [key in ColorNames]: CollectionColor } = {
     LIGHT_ORANGE: { name: 'light orange', hex: orange[300] },

@@ -8,18 +8,40 @@ export interface Credential {
     name: string;
     tenantId: string;
     tenant: Tenant;
-    description: string;
+    description?: string;
     collectionId: string;
     collection: CredentialCollection;
-    createdById: string;
+    createdById: number;
     createdBy: UserDTO;
     updatedBy: UserDTO;
-    updatedById: string;
+    updatedById: number;
     templateId: string;
     template: CredentialTemplate;
     createdAt: string;
     updatedAt: string;
-};
+    attributes: Attribute[];
+}
+
+export interface Attribute {
+    id: string;
+    name: string;
+    tenant: Tenant;
+    tenantId: string;
+    description?: string;
+    masked: boolean;
+    secretId: string;
+    credentialId: string;
+}
+
+export interface FrontCredentialDto
+    extends Pick<
+        Credential,
+        'id' | 'name' | 'collectionId' | 'templateId' | 'createdAt' | 'createdBy' | 'updatedAt' | 'description'
+    > {
+    attributes: Attribute[];
+    template: Omit<CredentialTemplate, 'description'>;
+    collection: Pick<CredentialCollection, 'id' | 'name' | 'color'>;
+}
 
 export interface CredentialDto
     extends Pick<Credential, "id" | "name" | "createdBy"> {
@@ -32,9 +54,8 @@ export interface DecryptedCredential {
     name: string;
     order: number;
     template: string;
-    attributes: {
-        id: string;
-        name: string;
-        value: string;
-    }[];
+    attributes: (
+        Pick<Attribute, 'id' | 'name'>
+        & { value: string }
+    )[];
 }

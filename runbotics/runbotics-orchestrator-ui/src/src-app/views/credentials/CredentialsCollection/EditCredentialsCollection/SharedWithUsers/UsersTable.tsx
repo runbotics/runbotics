@@ -4,8 +4,9 @@ import Clear from '@mui/icons-material/Clear';
 import { TableBody, TableCell, TableHead, TableRow, IconButton, Select, MenuItem, FormControl, TableContainer, Table } from '@mui/material';
 
 
+import { PrivilegeType } from 'runbotics-common';
+
 import { SharedWithUser } from './SharedWithUsers';
-import { PrivilegeType } from '../../CredentialsCollection.types';
 
 interface UsersTableProps {
     users: SharedWithUser[];
@@ -18,8 +19,8 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteUser, onChangeAc
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell sx={{ width: '65%' }}>Email</TableCell>
-                    <TableCell sx={{ width: '20%' }}>Access</TableCell>
+                    <TableCell sx={{ width: '60%' }}>Email</TableCell>
+                    <TableCell sx={{ width: '25%' }}>Access</TableCell>
                     <TableCell sx={{ width: '15%' }}></TableCell>
                 </TableRow>
             </TableHead>
@@ -30,11 +31,8 @@ const UsersTable: React.FC<UsersTableProps> = ({ users, onDeleteUser, onChangeAc
                         <TableCell>
                             <FormControl fullWidth>
                                 <Select
-                                    // TODO for the mvp purposes there is only write access atm
-                                    disabled={true}
                                     variant="standard"
                                     defaultValue={PrivilegeType.WRITE}
-                                    // end to TODO
                                     value={user.privilegeType}
                                     onChange={e =>
                                         onChangeAccessType({ email: user.email, privilegeType: e.target.value as PrivilegeType })

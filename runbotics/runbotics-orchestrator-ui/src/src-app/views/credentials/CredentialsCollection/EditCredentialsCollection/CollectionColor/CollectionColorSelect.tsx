@@ -3,10 +3,12 @@ import { FC } from 'react';
 import { FormControl, InputLabel, MenuItem, Typography } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
+import { ColorNames } from 'runbotics-common';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { ColorDot } from './CollectionColor.styles';
-import { collectionColors, ColorNames, getColorNameByHex } from './CollectionColor.utils';
+import { collectionColors, getColorNameByHex } from './CollectionColor.utils';
 import { EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
 
 interface CollectionColorSelectProps {

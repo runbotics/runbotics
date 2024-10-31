@@ -2,19 +2,18 @@ import { FC } from 'react';
 
 import { Grid, Typography, Box } from '@mui/material';
 
+import { ColorNames, FrontCredentialDto } from 'runbotics-common';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useSelector } from '#src-app/store';
 
-
 import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
 import { ColorDot } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
-import { ColorNames } from '../../CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
-import { BasicCredentialDto } from '../Credential.types';
 
 interface GeneralInfoProps {
-    credential: BasicCredentialDto;
+    credential: FrontCredentialDto;
     collectionColor: ColorNames;
     collectionName: string;
 }
@@ -23,7 +22,7 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor, collec
     const templateId = credential.templateId;
     const { translate } = useTranslations();
     const { credentialTemplates } = useSelector(credentialTemplatesSelector);
-    const credentialTemplate = credentialTemplates.find(template => template.id === templateId);
+    const credentialTemplate = credentialTemplates && credentialTemplates.find(template => template.id === templateId);
 
     return (
         <Box sx={{ display: 'flex', width: '90%', justifyContent: 'flexStart', marginBottom: '48px' }}>
@@ -46,7 +45,7 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor, collec
                         <Typography variant="h5" mb={1}>
                             {translate('Credential.Details.Collection.Label')}
                         </Typography>
-                        <Typography variant="body2" sx={{ display: 'flex', alignContent: 'center' }} ml={1}>
+                        <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center' }} ml={1}>
                             <ColorDot collectionColor={collectionColor} />
                             {collectionName}
                         </Typography>
@@ -68,7 +67,7 @@ const GeneralInfo: FC<GeneralInfoProps> = ({ credential, collectionColor, collec
                             {translate('Credential.Details.Template.Label')}
                         </Typography>
                         <Typography variant="body2" ml={1}>
-                            {credentialTemplate ? credentialTemplate.name : credential.templateId}
+                            {credentialTemplate && credentialTemplate.name}
                         </Typography>
                     </Box>
                 </Grid>

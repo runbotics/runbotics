@@ -7,7 +7,9 @@ import { IUser } from 'runbotics-common';
 import { User } from '#/utils/decorators/user.decorator';
 import { UpdateAttributeDto } from '../credential-attribute/dto/update-attribute.dto';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
-import { isCredentialFilterQuery } from './credential.utils';
+import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
+import { Pageable, Paging } from '#/utils/page/pageable.decorator';
+import { CredentialCriteria } from './criteria/credential.criteria';
 
 const COLLECTION_URL_PARTIAL = 'credential-collections/:collectionId/credentials/';
 @UseInterceptors(TenantInterceptor)
@@ -32,10 +34,20 @@ export class CredentialController {
     return this.credentialService.findAllAccessibleByCollectionId(user, collectionId);
   }
 
+  @Get('credentials/Page')
+  getPages(
+    @Specifiable(CredentialCriteria) specs: Specs<Credential>,
+    @Pageable() paging: Paging,
+    @User() user: IUser
+  ) {
+    this.logger.log('REST request to get credentials by page');
+    return this.credentialService.getAllAccessiblePages(user, paging, specs);
+  }
+
   @Get('credentials/:id')
   findOneUserAccessible(@Param('id') id: string, @User() user: IUser) {
     this.logger.log('REST request to get credential by id ' + id);
-    return this.credentialService.findOneAccessibleById(id, user.tenantId);
+    return this.credentialService.findOneAccessibleById(id, user.tenantId, user);
   }
 
   @Patch(COLLECTION_URL_PARTIAL + ':id')
@@ -56,6 +68,7 @@ export class CredentialController {
     return this.credentialService.removeById(id, user);
   }
 
+
   @Get('credentials')
   findAllAccessible(
     @User() user: IUser
@@ -64,6 +77,7 @@ export class CredentialController {
 
     return this.credentialService.findAllAccessible(user);
   }
+
 
   @Get('credentialsByTemplateAndProcess')
   findAllAccessibleByTemplateAndProcess(

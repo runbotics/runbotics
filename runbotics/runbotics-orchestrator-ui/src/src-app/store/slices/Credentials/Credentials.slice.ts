@@ -6,9 +6,10 @@ import * as credentialsThunks from './Credentials.thunks';
 import { RootState } from '../../index';
 
 const initialState: CredentialsState = {
-    all: [],
+    all: null,
     allByTemplateAndProcess: [],
     allProcessAssigned: [],
+    allByPage: null,
     loading: false,
 };
 

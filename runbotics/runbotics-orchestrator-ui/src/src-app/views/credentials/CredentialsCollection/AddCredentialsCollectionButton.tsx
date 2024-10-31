@@ -7,7 +7,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import CredentialsCollectionForm from './CredentialsCollectionForm';
 
-const AddCredentialsCollectionButton: FC = () => {
+interface AddCredentialsCollectionButtonProps {
+    pageSize: number;
+}
+
+const AddCredentialsCollectionButton: FC<AddCredentialsCollectionButtonProps> = ({ pageSize }) => {
     const { translate } = useTranslations();
     const [showDialog, setShowDialog] = useState(false);
 
@@ -29,6 +33,7 @@ const AddCredentialsCollectionButton: FC = () => {
                 open={showDialog}
                 onClose={() => setShowDialog(false)}
                 collection={null}
+                pageSize={pageSize}
             />
         </>
     );

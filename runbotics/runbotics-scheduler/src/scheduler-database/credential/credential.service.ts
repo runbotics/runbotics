@@ -3,8 +3,8 @@ import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
-import { Repository } from 'typeorm';
-import { IUser } from 'runbotics-common';
+import { FindManyOptions, Repository } from 'typeorm';
+import { IUser, PrivilegeType } from 'runbotics-common';
 import { CredentialTemplateService } from '../credential-template/credential-template.service';
 import { SecretService } from '../secret/secret.service';
 import { Secret } from '../secret/secret.entity';
@@ -13,22 +13,39 @@ import { CredentialCollectionService } from '../credential-collection/credential
 import { ProcessCredential } from '../process-credential/process-credential.entity';
 import { MailService } from '#/mail/mail.service';
 import { CredentialNotifyMailArgs, CredentialOperationType } from './credential.utils';
+import { Specs } from '#/utils/specification/specifiable.decorator';
+import { Paging } from '#/utils/page/pageable.decorator';
+import { getPage } from '#/utils/page/page';
 
-const relations = ['attributes'];
+const RELATIONS = ['attributes', 'createdBy', 'collection.credentialCollectionUser'];
 
 @Injectable()
 export class CredentialService {
-  constructor(
-    @InjectRepository(Credential)
-    private readonly credentialRepo: Repository<Credential>,
-    private readonly templateService: CredentialTemplateService,
-    private readonly secretService: SecretService,
-    private readonly collectionService: CredentialCollectionService,
-    private readonly mailService: MailService,
-  ) { }
+    constructor(
+        @InjectRepository(Credential)
+        private readonly credentialRepo: Repository<Credential>,
+        private readonly templateService: CredentialTemplateService,
+        private readonly secretService: SecretService,
+        private readonly collectionService: CredentialCollectionService,
+        private readonly mailService: MailService
+    ) {}
 
   async create(credentialDto: CreateCredentialDto, collectionId: string, user: IUser) {
     const template = await this.templateService.findOneById(credentialDto.templateId);
+
+    const collection = await this.collectionService.findOneAccessibleById(collectionId, user);
+
+    if (!collection) {
+      throw new NotFoundException(`Could not find collection with id ${collectionId}`);
+    }
+
+    const hasEditCollectionAccess = collection.credentialCollectionUser.find(
+        collectionUser => collectionUser.userId === user.id && collectionUser.privilegeType === PrivilegeType.WRITE
+    );
+
+    if (!hasEditCollectionAccess) {
+      throw new NotFoundException('You do not have access to edit this collection');
+    }
 
     if (!template) {
       throw new NotFoundException(`Could not find template with id ${credentialDto.templateId}`);
@@ -37,29 +54,29 @@ export class CredentialService {
     const tenantId = user.tenantId;
 
     const attributes = await Promise.all(
-      template.attributes.map(async (attribute) => {
-        const encryptedValue = this.secretService.encrypt('', tenantId);
-        const secretEntity: Secret = {
-          ...encryptedValue,
-          tenantId,
-        };
+        template.attributes.map(async attribute => {
+            const encryptedValue = this.secretService.encrypt('', tenantId);
+            const secretEntity: Secret = {
+                ...encryptedValue,
+                tenantId
+            };
 
-        const secret = await this.secretService.save(secretEntity)
-          .catch((error) => {
-            throw new BadRequestException(`Failed to save secret: ${error.message}`);
-          });
+            const secret = await this.secretService.save(secretEntity).catch(error => {
+                throw new BadRequestException(`Failed to save secret: ${error.message}`);
+            });
 
-        const secretId = secret.id;
+            const secretId = secret.id;
 
-        return {
-          name: attribute.name,
-          description: attribute.description,
-          templateId: attribute.templateId,
-          secretId: secretId,
-          tenantId,
-          masked: true,
-        };
-      }));
+            return {
+                name: attribute.name,
+                description: attribute.description,
+                templateId: attribute.templateId,
+                secretId: secretId,
+                tenantId,
+                masked: true
+            };
+        })
+    );
 
     const credential = this.credentialRepo.create({
       ...credentialDto,
@@ -95,18 +112,10 @@ export class CredentialService {
       return [];
     }
 
-    const credentials = accessibleCollections.flatMap((collection) => collection.credentials)
-      .map(credential => ({
-        ...credential,
-        createdBy: {
-          id: credential.createdBy.id,
-          login: credential.createdBy.login,
-        },
-        collection: {
-          id: credential.collection.id,
-          name: credential.collection.name
-        }
-      }));
+    const credentials = await Promise.all(accessibleCollections
+      .flatMap(collection => collection.credentials)
+      .map(async (credential) => await this.formatToFrontCredentialDto(credential, user))
+    );
 
     if (!credentials.some((credential) => Boolean(credential))) {
       return [];
@@ -170,7 +179,7 @@ export class CredentialService {
         tenantId,
         ...criteria
       },
-      relations
+      relations: RELATIONS
     });
   }
 
@@ -183,24 +192,50 @@ export class CredentialService {
 
     const credentials = await this.findByCriteria(user.tenantId, { collectionId });
 
-    return credentials;
+    return Promise.all(credentials.map(credential => this.formatToFrontCredentialDto(credential, user)));
   }
 
-  async findOneAccessibleById(id: string, tenantId: string) {
+  async getAllAccessiblePages(user: IUser, paging: Paging, specs: Specs<Credential>) {
+    const options: FindManyOptions<Credential> = {
+      ...paging,
+      ...specs
+    };
+
+    options.where = {
+      ...options.where,
+      tenantId: user.tenantId,
+      collection: { credentialCollectionUser: { userId: user.id } }
+    };
+
+    options.relations = RELATIONS;
+
+    const page = await getPage(this.credentialRepo, options);
+
+    const credentials = await Promise.all(page.content
+      .map(async (credential) => await this.formatToFrontCredentialDto(credential, user))
+    );
+
+    return {
+      ...page,
+      content: credentials
+    };
+  }
+
+  async findOneAccessibleById(id: string, tenantId: string, user: IUser) {
     const result = await this.credentialRepo.findOne({
       where: {
         id,
         tenantId,
       },
-      relations
+      relations: RELATIONS
     });
 
     if (!result) {
       throw new NotFoundException(`Could not find credential with id ${id}`);
     }
 
-    return result;
-  }
+      return this.formatToFrontCredentialDto(result, user);
+    }
 
   async findById(id: string, tenantId: string) {
     const credential = await this.credentialRepo.findOne({
@@ -208,7 +243,7 @@ export class CredentialService {
         id,
         tenantId
       },
-      relations
+      relations: RELATIONS
     });
 
     if (!credential) {
@@ -219,7 +254,7 @@ export class CredentialService {
   }
 
   async updateById(id: string, credentialDto: UpdateCredentialDto, user: IUser) {
-    const credential = await this.findOneAccessibleById(id, user.tenantId);
+    const credential = await this.findOneAccessibleById(id, user.tenantId, user);
 
     if (!credential) {
       throw new NotFoundException(`Could not find credential with id ${id}`);
@@ -260,7 +295,8 @@ export class CredentialService {
   }
 
   async removeById(id: string, user: IUser) {
-    const credential = await this.findOneAccessibleById(id, user.tenantId);
+    const credential = await this.findById(id, user.tenantId);
+
     return this.credentialRepo.remove(credential).then((credential) => {
         this.notifyCredentialCollectionOwner({
             executor: user,
@@ -272,13 +308,13 @@ export class CredentialService {
   }
 
   async updateAttribute(id: string, attributeName: string, attributeDto: UpdateAttributeDto, user: IUser) {
-    const credential = await this.findOneAccessibleById(id, user.tenantId);
+    const credential = await this.findOneAccessibleById(id, user.tenantId, user);
 
     if (!credential) {
       throw new NotFoundException(`Could not find credential with id ${id}`);
     }
 
-    const attribute = credential.attributes.find((attr) => attr.name === attributeName);
+        const attribute = credential.attributes.find(attr => attr.name === attributeName);
 
     const encryptedValue =
       this.secretService.encrypt(attributeDto.value, user.tenantId);
@@ -297,9 +333,9 @@ export class CredentialService {
       throw new NotFoundException(`Could not find attribute with name ${attributeName}`);
     }
 
-    const updatedAttribute = {
-      ...attribute,
-      ...attributeDto,
+        const updatedAttribute = {
+            ...attribute,
+            ...attributeDto,
       secret,
     };
 
@@ -377,4 +413,29 @@ export class CredentialService {
           });
       }
   }
+
+    private async formatToFrontCredentialDto(credential: Credential, user: IUser) {
+        if (!credential) return;
+
+        const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
+        const template = await this.templateService.findOneById(credential.templateId);
+
+        return {
+            ...credential,
+            createdBy: {
+              id: credential.createdBy.id,
+              login: credential.createdBy.login,
+              email: credential.createdBy.email
+            },
+            template: {
+                id: template.id,
+                name: template.name
+            },
+            collection: {
+                id: collection.id,
+                name: collection.name,
+                color: collection.color
+            }
+        };
+    }
 }
