@@ -103,7 +103,18 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
         if (processInstanceId) {
             dispatch(
                 processInstanceEventActions.getProcessInstanceEvents({
-                    processInstanceId,
+                    pageParams: {
+                        size: 2000,
+                        sort: {
+                            by: 'finished',
+                            order: 'desc',
+                        },
+                        filter: {
+                            equals: {
+                                processInstanceId,
+                            },
+                        },
+                    },
                 })
             );
         }

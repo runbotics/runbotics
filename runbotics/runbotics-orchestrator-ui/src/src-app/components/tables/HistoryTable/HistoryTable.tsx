@@ -71,12 +71,19 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
 
         if (instanceId) {
             dispatch(processInstanceActions.getProcessInstancePageWithSpecificInstance({
-                size: pageSize,
-                filter: {
-                    equals: {
-                        id: instanceId,
-                        ...(botId && { botId }),
-                        ...(processId && { processId }),
+                pageParams: {
+                    page,
+                    size: pageSize,
+                    sort: {
+                        by: 'created',
+                        order: 'desc',
+                    },
+                    filter: {
+                        equals: {
+                            id: instanceId,
+                            ...(botId && { botId }),
+                            ...(processId && { processId }),
+                        },
                     },
                 },
             }))
@@ -92,12 +99,18 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         }
 
         dispatch(processInstanceActions.getProcessInstancePage({
-            page,
-            size: pageSize,
-            filter: {
-                equals: {
-                    ...(botId && { botId }),
-                    ...(processId && { processId }),
+            pageParams: {
+                page,
+                size: pageSize,
+                sort: {
+                    by: 'created',
+                    order: 'desc',
+                },
+                filter: {
+                    equals: {
+                        ...(botId && { botId }),
+                        ...(processId && { processId }),
+                    },
                 },
             },
         }))
@@ -126,10 +139,23 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
             processInstance.status === ProcessInstanceStatus.IN_PROGRESS
         ) {
             await dispatch(
-                processInstanceEventActions.getProcessInstanceEvents({ processInstanceId: processInstance.id }),
+                processInstanceEventActions.getProcessInstanceEvents({
+                    pageParams: {
+                        size: 2000,
+                        sort: {
+                            by: 'finished',
+                            order: 'desc',
+                        },
+                        filter: {
+                            equals: {
+                                processInstanceId: processInstance.id,
+                            },
+                        },
+                    },
+                }),
             )
                 .then(unwrapResult)
-                .then((events) => dispatch(processInstanceActions.updateActiveEvents(events)));
+                .then(({ content: events }) => dispatch(processInstanceActions.updateActiveEvents(events)));
             dispatch(
                 processInstanceActions.updateOrchestratorProcessInstanceId(
                     processInstance.orchestratorProcessInstanceId,
@@ -167,7 +193,13 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
     };
 
     const getSubprocessesPage = ({ currRow, pageNum, size }: GetSubprocessesPageParams) => {
-        dispatch(processInstanceActions.getSubprocesses({ processInstanceId: currRow.original.id, page: pageNum, size }))
+        dispatch(processInstanceActions.getSubprocesses({
+            resourceId: currRow.original.id,
+            pageParams: {
+                page: pageNum,
+                size,
+            },
+        }))
             .then((response) => {
                 if((response as GetSubprocessesResponse)?.payload?.content?.length === 0) handleNoSubprocessesFound(currRow);
             })

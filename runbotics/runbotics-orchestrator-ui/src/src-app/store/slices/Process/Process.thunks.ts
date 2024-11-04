@@ -23,7 +23,7 @@ const TAGS_PATH = 'tags';
 const PROCESSES_PATH = 'processes';
 const PROCESS_CREDENTIALS_PATH = 'process-credentials';
 
-const getProcessById = ApiTenantResource.get<IProcess[]>('processes/getByName', PROCESSES_PATH);
+const getProcessById = ApiTenantResource.get<IProcess[]>('processes/getById', PROCESSES_PATH);
 
 export const fetchProcessById = createAsyncThunk<
     IProcess,
