@@ -32,7 +32,7 @@ export class ProcessInstanceController {
         return this.processInstanceService.getAll(user, specs);
     }
 
-    @Get('Page')
+    @Get('GetPage')
     getPage(
         @Specifiable(ProcessInstanceCriteria) specs: Specs<ProcessInstance>,
         @Pageable() paging: Paging,
@@ -46,7 +46,7 @@ export class ProcessInstanceController {
         return this.processInstanceService.getOne(id, user);
     }
 
-    @Get(':id/subprocesses/Page')
+    @Get(':id/subprocesses/GetPage')
     getSubprocesses(
         @Param('id') id: ProcessInstance['id'],
         @Pageable() paging: Paging,

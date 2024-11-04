@@ -9,7 +9,7 @@ import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import Axios from '#src-app/utils/axios';
 import { Page } from '#src-app/utils/types/page';
 
-const PROCESS_INSTANCE_EVENT_PAGE_PATH = 'process-instance-events/Page';
+const PROCESS_INSTANCE_EVENT_PAGE_PATH = 'process-instance-events/GetPage';
 
 export const getProcessInstanceEvents = ApiTenantResource
     .get<Page<IProcessInstanceEvent>>(

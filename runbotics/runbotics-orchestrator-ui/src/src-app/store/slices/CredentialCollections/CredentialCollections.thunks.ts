@@ -18,7 +18,7 @@ export const fetchAllCredentialCollections = ApiTenantResource
 export const fetchAllCredentialCollectionsByPage = ApiTenantResource
     .get<Page<CredentialCollection>>(
         'credentialCollection/getByPage',
-        `${CREDENTIALS_COLLECTION_PATH}/Page`
+        `${CREDENTIALS_COLLECTION_PATH}/GetPage`
     );
 
 export const fetchOneCredentialCollection = ApiTenantResource

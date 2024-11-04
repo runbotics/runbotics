@@ -23,7 +23,7 @@ export const fetchAllCredentialsByTemplateAndProcess = ApiTenantResource
     .get<Credential[]>('credential/fetchAllByTemplateAndProcess', 'credentialsByTemplateAndProcess');
 
 export const fetchAllCredentialsAccessibleInTenantByPage = ApiTenantResource
-    .get<Page<FrontCredentialDto>>('credential/fetchAllByPage', `${CREDENTIAL_PATH}/Page`);
+    .get<Page<FrontCredentialDto>>('credential/fetchAllByPage', `${CREDENTIAL_PATH}/GetPage`);
 
 export const fetchOneCredential = ApiTenantResource
     .get<FrontCredentialDto>('credential/fetchOne/:id', CREDENTIAL_PATH);

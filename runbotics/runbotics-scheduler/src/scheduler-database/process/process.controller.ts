@@ -174,7 +174,7 @@ export class ProcessController {
         return (await this.processCrudService.getAll(user, specs));
     }
 
-    @Get('Page')
+    @Get('GetPage')
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     getPage(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,

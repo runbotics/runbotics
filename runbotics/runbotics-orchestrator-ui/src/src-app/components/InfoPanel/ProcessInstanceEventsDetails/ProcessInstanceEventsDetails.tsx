@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, VFC } from 'react';
 
 import { Box, Typography, Divider } from '@mui/material';
 
-import { IProcessInstanceEvent } from 'runbotics-common';
+import { IProcessInstanceEvent, OrderDirection, OrderPropertyName } from 'runbotics-common';
 
 import { checkJobStatus } from '#src-app/components/utils/checkJobStatus';
 import If from '#src-app/components/utils/If';
@@ -106,8 +106,8 @@ const ProcessInstanceEventsDetails: VFC<ProcessInstanceEventsDetailsProps> = ({
                     pageParams: {
                         size: 2000,
                         sort: {
-                            by: 'finished',
-                            order: 'desc',
+                            by: OrderPropertyName.FINISHED,
+                            order: OrderDirection.DESC,
                         },
                         filter: {
                             equals: {

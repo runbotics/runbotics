@@ -6,9 +6,9 @@ import Axios from '#src-app/utils/axios';
 import { Page } from '#src-app/utils/types/page';
 
 const PROCESS_INSTANCE_PATH = 'process-instances';
-const PROCESS_INSTANCE_PAGE_PATH = 'process-instances/Page';
+const PROCESS_INSTANCE_PAGE_PATH = 'process-instances/GetPage';
 const getSubprocessPath = (resourceId: string) =>
-    `${PROCESS_INSTANCE_PATH}/${resourceId}/subprocesses/Page`;
+    `${PROCESS_INSTANCE_PATH}/${resourceId}/subprocesses/GetPage`;
 
 export const getAll = ApiTenantResource
     .get<IProcessInstance[]>(

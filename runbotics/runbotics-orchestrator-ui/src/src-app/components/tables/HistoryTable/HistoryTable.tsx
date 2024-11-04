@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey, IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+import { FeatureKey, IProcessInstance, OrderDirection, OrderPropertyName, ProcessInstanceStatus } from 'runbotics-common';
 
 import InfoPanel from '#src-app/components/InfoPanel';
 
@@ -75,8 +75,8 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                     page,
                     size: pageSize,
                     sort: {
-                        by: 'created',
-                        order: 'desc',
+                        by: OrderPropertyName.CREATED,
+                        order: OrderDirection.DESC,
                     },
                     filter: {
                         equals: {
@@ -103,8 +103,8 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                 page,
                 size: pageSize,
                 sort: {
-                    by: 'created',
-                    order: 'desc',
+                    by: OrderPropertyName.CREATED,
+                    order: OrderDirection.DESC,
                 },
                 filter: {
                     equals: {
@@ -143,8 +143,8 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                     pageParams: {
                         size: 2000,
                         sort: {
-                            by: 'finished',
-                            order: 'desc',
+                            by: OrderPropertyName.FINISHED,
+                            order: OrderDirection.DESC,
                         },
                         filter: {
                             equals: {

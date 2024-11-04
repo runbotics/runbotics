@@ -30,7 +30,7 @@ export class ProcessInstanceEventController {
         private readonly processInstanceEventService: ProcessInstanceEventService
     ) {}
 
-    @Get('Page')
+    @Get('GetPage')
     getPage(
         @Specifiable(ProcessInstanceEventCriteria)
         specs: Specs<ProcessInstanceEvent>,
