@@ -5,5 +5,4 @@ export const createProcessInstanceSchema = z.object({});
 
 export type CreateProcessInstanceDto = z.infer<
     typeof createProcessInstanceSchema
-> &
-    Omit<ProcessInstance, 'id' | 'user' | 'process' | 'bot'>;
+> & Omit<ProcessInstance, 'id' | 'user' | 'process' | 'bot'>;

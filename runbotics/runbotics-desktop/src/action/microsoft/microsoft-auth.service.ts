@@ -24,7 +24,6 @@ export class MicrosoftAuthService implements AuthenticationProvider {
     constructor(
         private readonly authCredentials: MicrosoftCredential,
     ) {
-        this.logger.debug('AUTH CREDENTIALS: ', authCredentials);
         if (!this.hasCredentials()) {
             this.logger.error('Microsoft credentials are not provided - Microsoft related features won\'t be available');
             return;

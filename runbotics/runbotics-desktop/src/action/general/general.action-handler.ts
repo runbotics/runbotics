@@ -44,33 +44,32 @@ export default class GeneralActionHandler extends StatelessActionHandler {
     async startProcess(
         request: DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
     ): Promise<StartProcessActionOutput> {
-        // eslint-disable-next-line no-async-promise-executor
-        return new Promise(async (resolve, reject) => {
-            const response = await orchestratorAxios.get<IProcess>(
-                `/api/processes/${request.input.processId}`,
-                { maxRedirects: 0 },
-            );
+        const response = await orchestratorAxios.get<IProcess>(
+            `/api/processes/${request.input.processId}`,
+            { maxRedirects: 0 },
+        );
 
-            const process = response.data;
-            const processSystem = process.system.name;
-            const system = getBotSystem();
+        const process = response.data;
+        const processSystem = process.system.name;
+        const system = getBotSystem();
 
-            if (processSystem !== BotSystemType.ANY && processSystem !== system) {
-                reject(new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`));
-            }
+        if (processSystem !== BotSystemType.ANY && processSystem !== system) {
+            throw new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`);
+        }
 
-            const processInstanceId = await this.runtimeService.startProcessInstance({
-                process: process,
-                variables: request.input.variables,
-                parentProcessInstanceId: request.processInstanceId,
-                userId: request.userId,
-                orchestratorProcessInstanceId: null,
-                rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
-                trigger: request.trigger as ITriggerEvent,
-                triggerData: request.triggerData,
-                credentials: request.credentials,
-            });
+        const processInstanceId = await this.runtimeService.startProcessInstance({
+            process: process,
+            variables: request.input.variables,
+            parentProcessInstanceId: request.processInstanceId,
+            userId: request.userId,
+            orchestratorProcessInstanceId: null,
+            rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
+            trigger: request.trigger as ITriggerEvent,
+            triggerData: request.triggerData,
+            credentials: request.credentials,
+        });
 
+        return new Promise((resolve, reject) => {
             const subscription = this.runtimeService.processChange().subscribe((data) => {
                 if (data.processInstanceId === processInstanceId) {
                     switch (data.eventType) {

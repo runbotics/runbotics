@@ -5,5 +5,4 @@ export const updateProcessInstanceLoopEventSchema = z.object({});
 
 export type UpdateProcessInstanceLoopEventDto = z.infer<
     typeof updateProcessInstanceLoopEventSchema
-> &
-    Partial<ProcessInstanceLoopEvent>;
+> & Partial<ProcessInstanceLoopEvent>;

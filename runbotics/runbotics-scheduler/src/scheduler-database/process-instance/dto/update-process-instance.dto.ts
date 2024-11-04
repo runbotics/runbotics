@@ -5,5 +5,4 @@ export const updateProcessInstanceSchema = z.object({});
 
 export type UpdateProcessInstanceDto = z.infer<
     typeof updateProcessInstanceSchema
-> &
-    Partial<ProcessInstance>;
+> & Partial<ProcessInstance>;

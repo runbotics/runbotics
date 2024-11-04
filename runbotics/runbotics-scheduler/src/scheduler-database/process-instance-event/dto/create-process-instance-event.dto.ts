@@ -5,5 +5,4 @@ export const createProcessInstanceEventSchema = z.object({});
 
 export type CreateProcessInstanceEventDto = z.infer<
     typeof createProcessInstanceEventSchema
-> &
-    Omit<ProcessInstanceEvent, 'id' | 'processInstance'>;
+> & Omit<ProcessInstanceEvent, 'id' | 'processInstance'>;
