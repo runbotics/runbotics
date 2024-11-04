@@ -9,6 +9,8 @@ import { Tenant } from '../tenant/tenant.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { UpdateUserDto, updateUserSchema } from './dto/update-user.dto';
 import { User } from '#/utils/decorators/user.decorator';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
+import { FeatureKey } from 'runbotics-common';
 
 
 @Controller('/api/scheduler')
@@ -18,6 +20,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @GetWithTenant('users/Page')
+    @FeatureKeys(FeatureKey.TENANT_READ_USER)
     getAllUsersByPageInTenant(
         @Param('tenantId') tenantId: Tenant['id'],
         @Specifiable(UserCriteria) specs: Specs<UserEntity>,
@@ -35,6 +38,7 @@ export class UserController {
     }
 
     @PatchWithTenant('users/:id')
+    @FeatureKeys(FeatureKey.TENANT_EDIT_USER)
     updateUserInTenant(
         @User() user: UserEntity,
         @Param('id', ParseIntPipe) userId: UserEntity['id'],
@@ -51,6 +55,7 @@ export class UserController {
     // -------------------------------------------
 
     @Get('users/Page')
+    @FeatureKeys(FeatureKey.USERS_PAGE_READ)
     getAllUsersByPage(
         @Specifiable(UserCriteria) specs: Specs<UserEntity>,
         @Pageable() paging: Paging
@@ -60,6 +65,7 @@ export class UserController {
     }
 
     @Patch('users/:id')
+    @FeatureKeys(FeatureKey.USERS_PAGE_READ)
     updateUser(
         @User() user: UserEntity,
         @Param('id', ParseIntPipe) userId: UserEntity['id'],
@@ -71,6 +77,7 @@ export class UserController {
 
     @Delete('users/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
+    @FeatureKeys(FeatureKey.USERS_PAGE_READ)
     async deleteUser(@Param('id', ParseIntPipe) userId: UserEntity['id']) {
         this.logger.log('REST request to delete user');
         await this.userService.delete(userId);
