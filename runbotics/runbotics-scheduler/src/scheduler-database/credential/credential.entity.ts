@@ -52,7 +52,7 @@ export class Credential {
     })
     createdAt: string;
 
-    @ManyToOne(() => User, user => user.createdCredentials)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'created_by_id' })
     createdBy: User;
 
@@ -66,7 +66,7 @@ export class Credential {
     })
     updatedAt: string;
 
-    @ManyToOne(() => User, user => user.updatedCredentials)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'updated_by_id' })
     updatedBy: User;
 

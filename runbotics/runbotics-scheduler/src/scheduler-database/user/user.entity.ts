@@ -1,10 +1,8 @@
 import { dateTransformer } from '#/database/database.utils';
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
 import { IAuthority } from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
-import { Credential } from '../credential/credential.entity';
-import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 
 @Entity({ name: 'jhi_user' })
 export class User {
@@ -67,20 +65,4 @@ export class User {
         inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' },
     })
     authorities: IAuthority[];
-
-    @OneToMany(() => Tenant, tenant => tenant.createdByUser)
-    tenants: Tenant[];
-
-    @OneToMany(() => Credential, credential => credential.createdBy)
-    createdCredentials: Credential[];
-
-    @OneToMany(() => Credential, credential => credential.updatedBy)
-    updatedCredentials: Credential[];
-
-    @OneToMany(
-        () => CredentialCollectionUser,
-        (credentialCollectionUser) =>
-            credentialCollectionUser.user,
-    )
-    credentialCollectionUser: CredentialCollectionUser[];
 }

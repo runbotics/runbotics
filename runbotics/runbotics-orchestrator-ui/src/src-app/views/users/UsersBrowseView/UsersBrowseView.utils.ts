@@ -1,5 +1,6 @@
-import { Role } from 'runbotics-common';
+import { FeatureKey, Role } from 'runbotics-common';
 
+import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { UsersTab } from '#src-app/utils/users-tab';
 
@@ -14,17 +15,24 @@ export const ROWS_PER_PAGE = [10, 20, 30];
 
 export const useUsersTabs = (): UsersTabsHookProps[]  => {
     const { translate } = useTranslations();
+    const { user: { featureKeys } } = useAuth();
 
-    return [
+    const userTabs = [
         {
             value: UsersTab.ALL_USERS,
-            label: translate('Users.Browse.Tabs.AllUsers.Label')
+            label: translate('Users.Browse.Tabs.AllUsers.Label'),
+            featureKeys: [FeatureKey.TENANT_READ_USER]
         },
         {
             value: UsersTab.WAITING_USERS,
-            label: translate('Users.Browse.Tabs.Registration.Label')
+            label: translate('Users.Browse.Tabs.Registration.Label'),
+            featureKeys: [FeatureKey.TENANT_READ_USER, FeatureKey.USERS_PAGE_READ]
         }
     ];
+
+    return userTabs.filter((tab) =>
+        tab.featureKeys.some((fk) => featureKeys.includes(fk))
+    );
 };
 
 export enum UserField {

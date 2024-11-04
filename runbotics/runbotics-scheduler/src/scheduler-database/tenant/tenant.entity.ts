@@ -16,7 +16,7 @@ export class Tenant {
     @Column({ type: 'varchar', length: 255, unique: true })
     name: string;
 
-    @ManyToOne(() => User, user => user.tenants)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'created_by' })
     createdByUser: User;
 

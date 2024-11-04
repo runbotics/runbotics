@@ -1,5 +1,5 @@
 import { IScheduleProcess } from './schedule-process.model';
-import { BasicUserDto, User, UserDto } from './user.model';
+import { BasicUserDto, User } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';

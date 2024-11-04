@@ -25,7 +25,7 @@ export class CredentialCollectionUser {
     @Column({ name: 'collection_id', type: 'uuid' })
     credentialCollectionId: string;
 
-    @ManyToOne(() => User, (user) => user.credentialCollectionUser, { onDelete: 'SET NULL' })
+    @ManyToOne(() => User, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_id' })
     user: User;
 
