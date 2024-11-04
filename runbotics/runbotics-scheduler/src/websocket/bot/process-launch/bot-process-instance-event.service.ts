@@ -79,6 +79,7 @@ export class BotProcessEventService {
 
             const updatedProcessInstanceEvent =
                 await this.processInstanceEventService.findOneByExecutionId(
+                    queryRunner,
                     processInstanceEvent.executionId
                 );
 
@@ -209,8 +210,10 @@ export class BotProcessEventService {
 
             const updatedProcessInstanceEvent =
                 await this.processInstanceLoopEventService.findOneByExecutionId(
+                    queryRunner,
                     processInstanceEvent.executionId
                 );
+
             if (
                 updatedProcessInstanceEvent.processInstance
                     .rootProcessInstanceId === null

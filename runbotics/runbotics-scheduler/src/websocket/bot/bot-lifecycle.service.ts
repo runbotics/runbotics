@@ -8,8 +8,8 @@ import { BotProcessEventService } from './process-launch/bot-process-instance-ev
 import { BotProcessService } from './process-launch/bot-process-instance.service';
 import { Connection } from 'typeorm';
 import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
-import { UpdateProcessInstanceDto } from '#/scheduler-database/process-instance/dto/update-process-instance.dto';
 import { ProcessInstanceEventService } from '#/scheduler-database/process-instance-event/process-instance-event.service';
+import { CreateProcessInstanceDto } from '#/scheduler-database/process-instance/dto/create-process-instance.dto';
 
 @Injectable()
 export class BotLifecycleService {
@@ -39,7 +39,8 @@ export class BotLifecycleService {
                 disconnectedInstance.status !== ProcessInstanceStatus.IN_PROGRESS
             ) return;
 
-            const newProcessInstance: UpdateProcessInstanceDto = {
+            const newProcessInstance: CreateProcessInstanceDto = {
+                ...disconnectedInstance,
                 status: ProcessInstanceStatus.ERRORED,
                 error: 'Bot has been shut down',
                 updated: dayjs().toISOString(),
@@ -47,10 +48,7 @@ export class BotLifecycleService {
 
             await this.updateInterruptedProcessInstance(newProcessInstance);
             await this.handleProcessInstanceEventInterruption(newProcessInstance);
-            await this.processInstanceService.update(
-                disconnectedInstance.id,
-                newProcessInstance
-            );
+            await this.processInstanceService.create(newProcessInstance);
         }));
     }
 

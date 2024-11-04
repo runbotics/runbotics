@@ -42,13 +42,13 @@ export class ProcessInstanceController {
     }
 
     @Get(':id')
-    getOne(@Param('id') id: string, @User() user: UserEntity) {
+    getOne(@Param('id') id: ProcessInstance['id'], @User() user: UserEntity) {
         return this.processInstanceService.getOne(id, user);
     }
 
     @Get(':id/subprocesses/Page')
     getSubprocesses(
-        @Param('id') id: string,
+        @Param('id') id: ProcessInstance['id'],
         @Pageable() paging: Paging,
         @User() user: UserEntity
     ) {

@@ -1,6 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOptionsRelations, Repository } from 'typeorm';
+import {
+    FindManyOptions,
+    FindOptionsRelations,
+    QueryRunner,
+    Repository,
+} from 'typeorm';
 import { ProcessInstanceEvent } from './process-instance-event.entity';
 import { ProcessInstanceEventStatus } from 'runbotics-common';
 import { ProcessInstance } from '../process-instance/process-instance.entity';
@@ -8,6 +13,7 @@ import { UserEntity } from '#/database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage, Page } from '#/utils/page/page';
+import { Logger } from '#/utils/logger';
 
 const RELATIONS: FindOptionsRelations<ProcessInstanceEvent> = {
     processInstance: {
@@ -17,6 +23,8 @@ const RELATIONS: FindOptionsRelations<ProcessInstanceEvent> = {
 
 @Injectable()
 export class ProcessInstanceEventService {
+    private readonly logger = new Logger(ProcessInstanceEventService.name);
+
     constructor(
         @InjectRepository(ProcessInstanceEvent)
         private processInstanceEventRepository: Repository<ProcessInstanceEvent>
@@ -72,17 +80,22 @@ export class ProcessInstanceEventService {
         return processInstanceEvent;
     }
 
-    findOneByExecutionId(executionId: ProcessInstanceEvent['executionId']) {
-        return this.processInstanceEventRepository.findOne({
+    findOneByExecutionId(
+        queryRunner: QueryRunner,
+        executionId: ProcessInstanceEvent['executionId']
+    ) {
+        return queryRunner.manager.findOne(ProcessInstanceEvent, {
             where: { executionId },
-            relations: ['processInstance'],
+            relations: RELATIONS,
         });
     }
 
     findAllActiveByProcessInstanceId(processInstanceId: ProcessInstance['id']) {
-        return this.processInstanceEventRepository.findBy({
-            processInstance: { id: processInstanceId },
-            status: ProcessInstanceEventStatus.IN_PROGRESS,
+        return this.processInstanceEventRepository.find({
+            where: {
+                processInstance: { id: processInstanceId },
+                status: ProcessInstanceEventStatus.IN_PROGRESS,
+            },
         });
     }
 }

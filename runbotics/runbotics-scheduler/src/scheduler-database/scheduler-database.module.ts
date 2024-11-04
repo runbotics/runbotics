@@ -49,6 +49,11 @@ import { TriggerEventModule } from './trigger-event/trigger-event.module';
         ProcessInstanceLoopEventModule,
         TriggerEventModule,
     ],
-    exports: [],
+    exports: [
+        DatabaseModule,
+        ProcessInstanceModule,
+        ProcessInstanceEventModule,
+        ProcessInstanceLoopEventModule,
+    ],
 })
 export class SchedulerDatabaseModule {}

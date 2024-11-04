@@ -25,7 +25,7 @@ import { SchedulerDatabaseModule } from '#/scheduler-database/scheduler-database
         QueueModule,
         MicrosoftModule,
         MailModule,
-        ProcessModule
+        ProcessModule,
     ],
     providers: [
         BotWebSocketGateway,
@@ -37,8 +37,6 @@ import { SchedulerDatabaseModule } from '#/scheduler-database/scheduler-database
         BotLifecycleService,
         Logger,
     ],
-    exports: [
-        BotWebSocketGateway, UiGateway, BotLogService, WebsocketService,
-    ]
+    exports: [BotWebSocketGateway, UiGateway, BotLogService, WebsocketService],
 })
 export class WebsocketModule {}

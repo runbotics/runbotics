@@ -6,6 +6,7 @@ import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 import { UserEntity } from '#/database/user/user.entity';
 import { User } from '#/utils/decorators/user.decorator';
+import { ProcessInstanceLoopEvent } from './process-instance-loop-event.entity';
 
 @UseInterceptors(TenantInterceptor)
 @FeatureKeys(FeatureKey.PROCESS_INSTANCE_EVENT_READ)
@@ -20,7 +21,10 @@ export class ProcessInstanceLoopEventController {
     ) {}
 
     @Get(':loopId')
-    getOne(@Param('loopId') loopId: string, @User() user: UserEntity) {
-        return this.processInstanceLoopEventService.getOne(loopId, user);
+    getLoopEvents(
+        @Param('loopId') loopId: ProcessInstanceLoopEvent['loopId'],
+        @User() user: UserEntity
+    ) {
+        return this.processInstanceLoopEventService.getLoopEvents(loopId, user);
     }
 }

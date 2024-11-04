@@ -1,8 +1,4 @@
-import {
-    BadRequestException,
-    Injectable,
-    NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProcessInstance } from './process-instance.entity';
 import {
@@ -15,11 +11,12 @@ import {
 import { IBot, ProcessInstanceStatus, Tenant } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 import { CreateProcessInstanceDto } from './dto/create-process-instance.dto';
-import { UpdateProcessInstanceDto } from './dto/update-process-instance.dto';
 import { UserEntity } from '#/database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage, Page } from '#/utils/page/page';
+
+type MappedProcessInstance = ProcessInstance & { hasSubprocesses: boolean };
 
 const RELATIONS: FindOptionsRelations<ProcessInstance> = {
     bot: true,
@@ -37,11 +34,8 @@ export class ProcessInstanceService {
         private readonly processInstanceRepository: Repository<ProcessInstance>
     ) {}
 
-    create(processInstanceDto: CreateProcessInstanceDto) {
-        const newProcessInstance =
-            this.processInstanceRepository.create(processInstanceDto);
-
-        return this.processInstanceRepository.save(newProcessInstance);
+    async create(processInstanceDto: CreateProcessInstanceDto) {
+        return this.processInstanceRepository.save(processInstanceDto);
     }
 
     async getAll(user: UserEntity, specs: Specs<ProcessInstance>) {
@@ -51,6 +45,7 @@ export class ProcessInstanceService {
 
         options.relations = RELATIONS;
         options.where = {
+            ...options.where,
             process: {
                 tenantId: user.tenantId,
             },
@@ -60,7 +55,11 @@ export class ProcessInstanceService {
             options
         );
 
-        return processInstances;
+        const mappedProcessInstances = (await this.processInstanceMapper(
+            processInstances
+        )) as MappedProcessInstance[];
+
+        return mappedProcessInstances;
     }
 
     async getPage(
@@ -86,7 +85,14 @@ export class ProcessInstanceService {
             options
         );
 
-        return processInstancePage;
+        const mappedProcessInstances = (await this.processInstanceMapper(
+            processInstancePage.content
+        )) as MappedProcessInstance[];
+
+        return {
+            ...processInstancePage,
+            content: mappedProcessInstances,
+        };
     }
 
     async getOne(id: ProcessInstance['id'], user: UserEntity) {
@@ -106,7 +112,11 @@ export class ProcessInstanceService {
                 );
             });
 
-        return processInstance;
+        const mappedProcessInstance = (await this.processInstanceMapper(
+            processInstance
+        )) as MappedProcessInstance;
+
+        return mappedProcessInstance;
     }
 
     async getSubprocesses(
@@ -140,22 +150,14 @@ export class ProcessInstanceService {
             options
         );
 
-        return subprocessesPage;
-    }
+        const mappedSubprocesses = (await this.processInstanceMapper(
+            subprocessesPage.content
+        )) as MappedProcessInstance[];
 
-    async update(
-        id: ProcessInstance['id'],
-        processInstanceDto: UpdateProcessInstanceDto
-    ) {
-        await this.processInstanceRepository
-            .findOneByOrFail({ id })
-            .catch(() => {
-                throw new BadRequestException(
-                    `Cannot find process instance with provided id ${id}`
-                );
-            });
-
-        return this.processInstanceRepository.update(id, processInstanceDto);
+        return {
+            ...subprocessesPage,
+            content: mappedSubprocesses,
+        };
     }
 
     findOneById(id: ProcessInstance['id']) {
@@ -178,13 +180,50 @@ export class ProcessInstanceService {
     findAllActiveByBotId(id: IBot['id']) {
         const date = new Date();
         date.setDate(date.getDate() - 7);
+        const sevenDaysFromNow = date.toISOString();
         return this.processInstanceRepository.find({
             where: {
                 bot: { id },
                 status: ProcessInstanceStatus.IN_PROGRESS,
-                created: MoreThan(date.toISOString()),
+                created: MoreThan(sevenDaysFromNow),
             },
             relations: RELATIONS,
         });
+    }
+
+    private async hasSubprocesses(id: ProcessInstance['id']) {
+        const result = await this.processInstanceRepository
+            .createQueryBuilder('process_instance')
+            .select(
+                'CASE WHEN EXISTS (SELECT sub.id FROM process_instance sub WHERE sub.parent_process_instance_id = :id OR sub.root_process_instance_id = :id) THEN TRUE ELSE FALSE END',
+                'hasSubprocesses'
+            )
+            .setParameter('id', id)
+            .getRawOne();
+
+        return result.hasSubprocesses as boolean;
+    }
+
+    private async processInstanceMapper(
+        data: ProcessInstance | ProcessInstance[]
+    ) {
+        if (Array.isArray(data)) {
+            return Promise.all(
+                data.map(async (instance) => {
+                    const hasSubprocesses = await this.hasSubprocesses(
+                        instance.id
+                    );
+                    return {
+                        ...instance,
+                        hasSubprocesses,
+                    };
+                })
+            );
+        }
+        const hasSubprocesses = await this.hasSubprocesses(data.id);
+        return {
+            ...data,
+            hasSubprocesses,
+        };
     }
 }

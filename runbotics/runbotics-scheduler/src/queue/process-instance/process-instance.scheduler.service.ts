@@ -30,8 +30,9 @@ export class ProcessInstanceSchedulerService {
             trigger: job.data.trigger,
             ...(job.data?.triggerData && { triggerData: job.data.triggerData }),
         };
-        await this.processInstanceService.create(processInstance);
-        this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);
+        const createdProcessInstance =
+            await this.processInstanceService.create(processInstance);
+        this.uiGateway.server.emit(WsMessage.PROCESS, createdProcessInstance);
     }
 
     async terminateProcessInstance(processInstanceId: string) {

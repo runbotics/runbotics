@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, QueryRunner, Repository } from 'typeorm';
 import { ProcessInstanceLoopEvent } from './process-instance-loop-event.entity';
 import { UserEntity } from '#/database/user/user.entity';
+import { Logger } from '#/utils/logger';
 
 const RELATIONS: FindOptionsRelations<ProcessInstanceLoopEvent> = {
     processInstance: {
@@ -12,38 +13,40 @@ const RELATIONS: FindOptionsRelations<ProcessInstanceLoopEvent> = {
 
 @Injectable()
 export class ProcessInstanceLoopEventService {
+    private readonly logger = new Logger(ProcessInstanceLoopEventService.name);
+
     constructor(
         @InjectRepository(ProcessInstanceLoopEvent)
         private processInstanceLoopEventRepository: Repository<ProcessInstanceLoopEvent>
     ) {}
 
-    async getOne(loopId: ProcessInstanceLoopEvent['loopId'], user: UserEntity) {
-        const processInstanceLoopEvent =
-            await this.processInstanceLoopEventRepository
-                .findOneOrFail({
-                    where: {
-                        loopId,
-                        processInstance: {
-                            process: {
-                                tenantId: user.tenantId,
-                            },
+    async getLoopEvents(
+        loopId: ProcessInstanceLoopEvent['loopId'],
+        user: UserEntity
+    ) {
+        const processInstanceLoopEvents =
+            await this.processInstanceLoopEventRepository.find({
+                where: {
+                    loopId,
+                    processInstance: {
+                        process: {
+                            tenantId: user.tenantId,
                         },
                     },
-                    relations: RELATIONS,
-                })
-                .catch(() => {
-                    throw new NotFoundException(
-                        `Could not find process instance loop event with loopId ${loopId}`
-                    );
-                });
+                },
+                relations: RELATIONS,
+            });
 
-        return processInstanceLoopEvent;
+        return processInstanceLoopEvents;
     }
 
-    findOneByExecutionId(executionId: ProcessInstanceLoopEvent['executionId']) {
-        return this.processInstanceLoopEventRepository.findOne({
+    findOneByExecutionId(
+        queryRunner: QueryRunner,
+        executionId: ProcessInstanceLoopEvent['executionId']
+    ) {
+        return queryRunner.manager.findOne(ProcessInstanceLoopEvent, {
             where: { executionId },
-            relations: ['processInstance'],
+            relations: RELATIONS,
         });
     }
 }

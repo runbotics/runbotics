@@ -42,7 +42,7 @@ export class ProcessInstanceEventController {
 
     @Get(':id')
     getOne(
-        @Param('id', new ParseIntPipe()) id: number,
+        @Param('id', new ParseIntPipe()) id: ProcessInstanceEvent['id'],
         @User() user: UserEntity
     ) {
         return this.processInstanceEventService.getOne(id, user);

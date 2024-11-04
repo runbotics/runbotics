@@ -94,7 +94,7 @@ export const specificationToFindOptions = <T extends Criteria>(
 
     const order: FindOptionsOrder<T> = (specification.order ?
         {
-            [specification.order.name]: 'desc',
+            [specification.order.name]: specification.order.direction,
         } : {}) as FindOptionsOrder<T>;
 
     return {
