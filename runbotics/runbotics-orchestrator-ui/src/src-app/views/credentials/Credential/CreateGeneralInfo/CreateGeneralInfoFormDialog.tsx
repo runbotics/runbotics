@@ -1,21 +1,24 @@
 /* eslint-disable max-lines-per-function */
 import { FC, useState } from 'react';
 
-import { Grid, TextField, Typography, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Grid, TextField, Typography, SelectChangeEvent } from '@mui/material';
 
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
+import { PrivilegeType } from 'runbotics-common';
+
 import CustomDialog from '#src-app/components/CustomDialog';
+import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
 import { credentialsActions } from '#src-app/store/slices/Credentials';
-import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import GeneralInfoDropdown from './CreateGeneralInfoDropdown';
+import { CollectionDropdown } from './CollectionDropdown';
+import { TemplateDropdown } from './TemplateDropdown';
 import { CreateCredentialDto } from '../Credential.types';
 import {
     getInitialCredentialData,
@@ -34,12 +37,13 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
     const router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
     const collectionId = router.query.collectionId ? (router.query.collectionId as string) : null;
+    const { user: currentUser } = useAuth();
 
     const [credentialFormState, setCredentialFormState] = useState<CreateCredentialDto>(getInitialCredentialData(collectionId));
     const [formValidationState, setFormValidationState] = useState(getInitialFormValidationState(collectionId));
 
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
-    const { credentialTemplates } = useSelector(credentialTemplatesSelector);
+    const availableCredentialCollections = credentialCollections?.filter(collection => collection.credentialCollectionUser.find(collectionUser => collectionUser.userId === currentUser.id && collectionUser.privilegeType === PrivilegeType.WRITE));
 
     const isFormValid = () => Object.values(formValidationState).every(Boolean);
 
@@ -79,18 +83,6 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
                 enqueueSnackbar(error.message, { variant: 'error' });
             });
     };
-
-    const collectionsToChoose = credentialCollections.map(collection => (
-        <MenuItem key={collection.id} value={collection.id}>
-            <Typography>{collection.name}</Typography>
-        </MenuItem>
-    ));
-
-    const templatesToChoose = credentialTemplates.map(template => (
-        <MenuItem key={template.id} value={template.id}>
-            <Typography>{template.name}</Typography>
-        </MenuItem>
-    ));
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -154,10 +146,7 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
                                 value={credentialFormState.name}
                                 onChange={handleInputChange}
                                 error={formValidationState.edited && !formValidationState.name}
-                                helperText={
-                                    formValidationState.edited &&
-                                    !formValidationState.name &&
-                                    inputErrorMessages.NAME_IS_REQUIRED}
+                                helperText={formValidationState.edited && !formValidationState.name && inputErrorMessages.NAME_IS_REQUIRED}
                             ></TextField>
                         </Grid>
                         <Grid item xs={12}>
@@ -171,27 +160,19 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
                             ></TextField>
                         </Grid>
                         <Grid item xs={12} mt={2}>
-                            <GeneralInfoDropdown
+                            <CollectionDropdown
                                 disabled={!!collectionId}
-                                selectLabel={translate('Credentials.Tab.Collections')}
-                                tooltipText={translate('Credential.Details.Disclaimer.Text')}
-                                selectOptions={collectionsToChoose}
+                                credentialCollections={availableCredentialCollections}
                                 selectedValue={credentialFormState.collectionId}
                                 handleChange={(event: SelectChangeEvent) => handleDropdownChange('collectionId', event.target.value)}
-                                required
                                 error={formValidationState.edited && !formValidationState.collectionId}
                                 helperText={formValidationState.edited && inputErrorMessages.COLLECTION_IS_REQUIRED}
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <GeneralInfoDropdown
-                                disabled={false}
-                                selectLabel={translate('Credential.Details.Template.Label')}
-                                tooltipText={translate('Credential.Details.Template.Info')}
-                                selectOptions={templatesToChoose}
+                            <TemplateDropdown
                                 selectedValue={credentialFormState.templateId}
                                 handleChange={(event: SelectChangeEvent) => handleDropdownChange('templateId', event.target.value)}
-                                required
                                 error={formValidationState.edited && !formValidationState.templateId}
                                 helperText={formValidationState.edited && inputErrorMessages.TEMPLATE_IS_REQUIRED}
                             />

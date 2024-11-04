@@ -1,29 +1,4 @@
-import { IUser } from 'runbotics-common';
-
-export interface BasicAttributeDto {
-    id: string;
-    name: string;
-    tenantId: string;
-    masked: boolean;
-    type: CredentialTemplateAttributeType;
-    secretId: string;
-    credentialId: string;
-    createdAt: string;
-    createdById: string;
-    tenant: {
-        id: string,
-        name: string;
-        createdById: string;
-        created: string;
-        updated: string;
-        lastModifiedBy: string;
-    };
-    createdBy?: IUser;
-    updatedBy?: IUser;
-    updatedAt?: string;
-    updatedById?: string;
-    description?: string;
-}
+import { Attribute } from 'runbotics-common';
 
 export interface CreateAttributeDto {
     name: string;
@@ -38,28 +13,14 @@ export interface EditAtributeDto {
     value: string;
 }
 
-export interface DisplayAttribute {
-    id: string,
-    name: string,
-    description?: string,
-    required?: boolean,
-    templateId?: string,
-    value?: string,
-    type?: CredentialTemplateAttributeType;
-    credentialId: string;
-    masked?: boolean;
-}
-
-export interface UnmaskedAttribute extends BasicAttributeDto {
+export interface UnmaskedAttribute extends Attribute {
     masked: false;
     value: string;
 }
 
-export interface MaskedAttribute extends BasicAttributeDto {
+export interface MaskedAttribute extends Attribute {
     masked: true;
 }
-
-export type CredentialTemplateAttributeType = 'string' | 'boolean' | 'number';
 
 export interface CredentialTemplateAttribute {
     id: string;
@@ -76,4 +37,4 @@ export interface CredentialTemplate {
     description?: string
 }
 
-export type Attribute = UnmaskedAttribute | MaskedAttribute;
+export type FrontAttribute = UnmaskedAttribute | MaskedAttribute;

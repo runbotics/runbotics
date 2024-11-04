@@ -5,11 +5,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Divider, Grid, Typography, Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
+import { AccessType, FrontCredentialCollectionDto } from 'runbotics-common';
+
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
-
-import { AccessType, BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
 
 import { ColorDot } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
 
@@ -18,10 +18,10 @@ import MenuItems from './MenuItems/MenuItems';
 import Tile from '../Tile';
 
 interface CredentialsCollectionTileProps {
-    collection: BasicCredentialsCollectionDto;
+    collection: FrontCredentialCollectionDto;
     handleOpenEditDialog(id: string): void;
     handleOpenDeleteDialog(id: string): void;
-    setCurrentDialogCollection(collection: BasicCredentialsCollectionDto): void;
+    setCurrentDialogCollection(collection: FrontCredentialCollectionDto): void;
 }
 
 const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
@@ -96,9 +96,9 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
                     </Grid>
                 </Grid>
                 <Divider sx={{ marginTop: '2rem' }} />
-                <If condition={isOwner}>
+                <If condition={isOwner} else={<Box minHeight="50px"/>}>
                     <MenuItems
-                        collectionId={collection?.id}
+                        itemId={collection?.id}
                         handleOpenEditDialog={handleOpenEditDialog}
                         handleOpenDeleteDialog={handleOpenDeleteDialog}
                     />

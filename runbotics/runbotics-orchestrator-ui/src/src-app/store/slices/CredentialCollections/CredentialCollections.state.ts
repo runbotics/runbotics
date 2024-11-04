@@ -1,6 +1,9 @@
-import { BasicCredentialsCollectionDto } from '#src-app/views/credentials/CredentialsCollection/CredentialsCollection.types';
+import { CredentialCollection } from 'runbotics-common';
+
+import { Page } from '#src-app/utils/types/page';
 
 export interface CredentialCollectionsState {
-    credentialCollections: BasicCredentialsCollectionDto[];
+    allCredentialCollectionsByPage: Page<CredentialCollection>;
+    credentialCollections: CredentialCollection[];
     loading: boolean;
 }

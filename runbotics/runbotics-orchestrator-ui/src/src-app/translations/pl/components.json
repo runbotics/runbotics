@@ -68,6 +68,7 @@
     "Component.Tile.Process.DetailsDialog.TabContent.SchedulesLabel.Scheduled.Placeholder": "Brak zaplanowanych",
     "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith": "Udostępniono:",
     "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWith.Placeholder": "Proces nie jest udostępniony",
+    "Component.Tile.Process.DetailsDialog.TabContent.AccessLabel.SharedWithOrganization.Placeholder": "Proces jest dostępny dla wszystkich w organizacji",
     "Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials": "Poświadczenia:",
     "Component.Tile.Process.DetailsDialog.TabContent.CredentialsLabel.Credentials.Placeholder": "Brak poświadczeń",
 

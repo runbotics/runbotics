@@ -8,11 +8,7 @@ import {
 } from 'typeorm';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { numberTransformer } from '#/database/database.utils';
-
-export enum PrivilegeType {
-    READ = 'READ',
-    WRITE = 'WRITE',
-}
+import { PrivilegeType } from 'runbotics-common';
 
 @Entity({
     name: 'credential_collection_user',

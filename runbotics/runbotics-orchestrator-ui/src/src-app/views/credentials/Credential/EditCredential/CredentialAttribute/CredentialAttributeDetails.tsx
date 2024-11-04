@@ -1,25 +1,35 @@
 import { FC, useState } from 'react';
 
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import EditIcon from '@mui/icons-material/Edit';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import { Grid, Popover, Typography, IconButton, FormControl, InputLabel, OutlinedInput, InputAdornment } from '@mui/material';
 
+import { grey } from '@mui/material/colors';
+
+import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { StyledGridContainer } from './Attribute.styles';
+import { CustomButtonIcon, StyledGridContainer } from './Attribute.styles';
 import { EditAtributeDto } from './Attribute.types';
 import { PopoverTypography } from '../EditCredential.styles';
 
 interface CredentialAttributeDetailsProps {
     handleFieldChange: (value: string) => void;
+    setIsEditMode: (state: boolean) => void;
     currentAttribute: EditAtributeDto;
     isEditMode: boolean;
+    canEdit: boolean;
 }
 
-const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handleFieldChange, currentAttribute, isEditMode }) => {
+const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handleFieldChange, currentAttribute, isEditMode, canEdit, setIsEditMode }) => {
     const { translate } = useTranslations();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [maskValue, setMaskValue] = useState(currentAttribute.masked);
+
+    const handleEdit = () => {
+        setIsEditMode(true);
+    };
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -40,7 +50,7 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
     };
 
     return (
-        <StyledGridContainer spacing={1} xs={12}>
+        <StyledGridContainer item xs={12}>
             <Grid item xs={12}>
                 <Grid container alignItems="center">
                     <Grid item>
@@ -55,8 +65,8 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={12}>
-                <FormControl variant="outlined" fullWidth disabled={!isEditMode}>
+            <Grid item xs={12} display="flex">
+                <FormControl variant="outlined" sx={{ width: '100%'}} disabled={!isEditMode}>
                     <InputLabel htmlFor={translate('Credential.Attribute.Value.Label')}>
                         {translate('Credential.Attribute.Value.Label')}
                     </InputLabel>
@@ -83,6 +93,11 @@ const CredentialAttributeDetails: FC<CredentialAttributeDetailsProps> = ({ handl
                         }
                     />
                 </FormControl>
+                <If condition={!isEditMode && canEdit}>
+                    <CustomButtonIcon size="small" onClick={handleEdit}>
+                        <EditIcon sx={{ color: grey[700] }} fontSize='medium' />
+                    </CustomButtonIcon>
+                </If>
             </Grid>
             <Popover
                 id={'mouse-over-popover'}

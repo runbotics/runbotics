@@ -2,7 +2,7 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 
 import { CredentialsState } from './Credentials.state';
-import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential, updateAttribute, fetchAllCredentialsByTemplateAndProcess } from './Credentials.thunks';
+import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential, updateAttribute, fetchAllCredentialsByTemplateAndProcess, fetchAllCredentialsAssignedToProcess, fetchAllCredentialsAccessibleInTenantByPage } from './Credentials.thunks';
 
 const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<CredentialsState>) => {
     builder
@@ -15,6 +15,18 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
             state.all = action.payload;
         })
         .addCase(fetchAllCredentialsInCollection.rejected, state => {
+            state.loading = false;
+        })
+
+        // fetch all accessible credentials in tenant by page
+        .addCase(fetchAllCredentialsAccessibleInTenantByPage.pending, state => {
+            state.loading = true;
+        })
+        .addCase(fetchAllCredentialsAccessibleInTenantByPage.fulfilled, (state, action) => {
+            state.loading = false;
+            state.allByPage = action.payload;
+        })
+        .addCase(fetchAllCredentialsAccessibleInTenantByPage.rejected, state => {
             state.loading = false;
         })
 
@@ -95,6 +107,18 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
             state.loading = false;
         })
         .addCase(deleteCredential.rejected, state => {
+            state.loading = false;
+        })
+
+        // fetch all credentials assigned to process
+        .addCase(fetchAllCredentialsAssignedToProcess.pending, state => {
+            state.loading = true;
+        })
+        .addCase(fetchAllCredentialsAssignedToProcess.fulfilled, (state, action) => {
+            state.loading = false;
+            state.allProcessAssigned = action.payload;
+        })
+        .addCase(fetchAllCredentialsAssignedToProcess.rejected, state => {
             state.loading = false;
         });
 };

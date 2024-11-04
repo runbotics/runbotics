@@ -4,6 +4,8 @@ import { listNameUI, siteRelativePathUI } from '#src-app/Actions/cloudFile/cloud
 import { IBpmnAction, Runner } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
+
 export const uploadCloudFileAction = {
     id: CloudFileAction.UPLOAD_FILE,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
@@ -57,6 +59,7 @@ export const uploadCloudFileAction = {
                                             ),
                                             type: 'string',
                                         },
+                                        customCredentialId: propertyCustomCredential,
                                     },
                                     required: ['siteRelativePath', 'listName', 'filePath', 'cloudDirectoryPath'],
                                 },
@@ -77,6 +80,7 @@ export const uploadCloudFileAction = {
                                             ),
                                             type: 'string',
                                         },
+                                        customCredentialId: propertyCustomCredential,
                                     },
                                     required: ['filePath', 'cloudDirectoryPath'],
                                 },
@@ -88,6 +92,7 @@ export const uploadCloudFileAction = {
         },
         uiSchema: {
             input: {
+                customCredentialId: schemaCustomCredential,
                 siteRelativePath: siteRelativePathUI,
                 listName: listNameUI,
             },

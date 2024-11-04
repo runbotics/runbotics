@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 
 import { Box, Chip, Typography } from '@mui/material';
-import { formatDistanceToNow } from 'date-fns';
+
+import { useRouter } from 'next/router';
 
 import ProcessCollectionPath from '#src-app/components/Tile/ProcessCollectionTile/ProcessCollectionPath';
 import If from '#src-app/components/utils/If';
@@ -13,12 +14,15 @@ import {
     processCollectionSelector,
 } from '#src-app/store/slices/ProcessCollection';
 
+import { formatDistanceToNowMapper } from '#src-app/views/utils/formatDistanceToNowMapper';
+
 import {
     DetailsInfoTabProps,
     ProcessDetailsTab,
 } from '../ProcessDetailsDialog.types';
 
 export const GeneralInfoTab = ({ value, process }: DetailsInfoTabProps) => {
+    const router = useRouter();
     const { translate } = useTranslations();
     const hasTags = process.tags?.length > 0;
     const dispatch = useDispatch();
@@ -27,21 +31,23 @@ export const GeneralInfoTab = ({ value, process }: DetailsInfoTabProps) => {
     } = useSelector(processCollectionSelector);
     const collectionId = process.processCollection?.id;
     const breadcrumbs = getBreadcrumbs(collectionAncestors);
+    const isProcessesView = !router.pathname.includes('/collections');
     const creator = process.createdBy.email
         ? process.createdBy.email
         : translate('Component.Tile.Process.Content.Creator.Placeholder');
-    const created = formatDistanceToNow(new Date(process.created));
+    const created = formatDistanceToNowMapper(process.created);
     const editor = process.editor?.email
         ? process.editor?.email
         : translate('Component.Tile.Process.Content.Editor.Placeholder');
     const updated = process.updated
-        ? formatDistanceToNow(new Date(process.updated))
+        ? formatDistanceToNowMapper(process.updated)
         : translate('Component.Tile.Process.Content.Updated.Placeholder');
 
     useEffect(() => {
-        const params = { filter: { equals: { parentId: collectionId } } };
-
-        dispatch(processCollectionActions.getAllWithAncestors(params));
+        if (isProcessesView) {
+            const params = { filter: { equals: { parentId: collectionId } } };
+            dispatch(processCollectionActions.getAllWithAncestors(params));
+        }
     }, []);
 
     return (

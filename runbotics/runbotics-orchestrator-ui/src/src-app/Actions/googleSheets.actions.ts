@@ -3,6 +3,7 @@ import { ActionRegex, GoogleAction, ActionCredentialType } from 'runbotics-commo
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
 const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
@@ -42,6 +43,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['spreadsheetId'],
                     },
@@ -65,6 +67,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
+                    customCredentialId: schemaCustomCredential,
                     spreadsheetId: {
                         'ui:options': {
                             info: translate(
@@ -128,6 +131,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['spreadsheetId', 'cell'],
                     },
@@ -151,6 +155,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
+                    customCredentialId: schemaCustomCredential,
                     spreadsheetId: {
                         'ui:options': {
                             info: translate(
@@ -221,6 +226,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['spreadsheetId', 'range'],
                     },
@@ -244,6 +250,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
+                    customCredentialId: schemaCustomCredential,
                     spreadsheetId: {
                         'ui:options': {
                             info: translate(
@@ -314,6 +321,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['spreadsheetId', 'value'],
                     },
@@ -337,6 +345,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
+                    customCredentialId: schemaCustomCredential,
                     spreadsheetId: {
                         'ui:options': {
                             info: translate(
@@ -406,6 +415,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['range'],
                     },
@@ -429,6 +439,7 @@ const getGoogleSheetsActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
+                    customCredentialId: schemaCustomCredential,
                     spreadsheetId: {
                         'ui:options': {
                             info: translate(

@@ -1,11 +1,9 @@
-import { IUser } from 'runbotics-common';
+import { AccessType, DEFAULT_COLLECTION_COLOR, FrontCredentialCollectionDto, IUser } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { SharedWithUser } from './SharedWithUsers/SharedWithUsers';
-import { AccessType, BasicCredentialsCollectionDto, EditCredentialsCollectionDto } from '../CredentialsCollection.types';
-
-export const DEFAULT_COLLECTION_COLOR = 'DARK_ORANGE';
+import { EditCredentialsCollectionDto } from '../CredentialsCollection.types';
 
 export enum InputErrorType {
     NAME_IS_REQUIRED = 'NAME_IS_REQUIRED'
@@ -15,7 +13,15 @@ export const inputErrorMessages: Record<InputErrorType, string> = {
     [InputErrorType.NAME_IS_REQUIRED]: translate('Credentials.Collection.Add.Form.Error.NameIsRequired')
 };
 
-export const initialFormValidationState = true;
+export interface CollectionFormValidation {
+    edited: boolean;
+    name: boolean
+}
+
+export const initialFormValidationState: CollectionFormValidation = {
+    edited: false,
+    name: false
+};
 
 export const initialCredentialsCollectionData: EditCredentialsCollectionDto = {
     name: '',
@@ -38,7 +44,7 @@ export const getInitialCredentialsCollectionData = (collection: null | EditCrede
     };
 };
 
-export const mapToEditCredentialCollectionDto = (collection: BasicCredentialsCollectionDto): EditCredentialsCollectionDto => {
+export const mapToEditCredentialCollectionDto = (collection: FrontCredentialCollectionDto): EditCredentialsCollectionDto => {
     const sharedWithUsers = collection.credentialCollectionUser
         ? [...collection.credentialCollectionUser]
             .filter(credentialUser => credentialUser.userId !== collection.createdById)

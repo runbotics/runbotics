@@ -2,6 +2,8 @@ import { FC, useEffect, useState } from 'react';
 
 import { useSnackbar } from 'notistack';
 
+import { FrontCredentialCollectionDto } from 'runbotics-common';
+
 import CustomDialog from '#src-app/components/CustomDialog';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -10,7 +12,7 @@ import { useDispatch } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import { BasicCredentialsCollectionDto, EditCredentialsCollectionDto } from './CredentialsCollection.types';
+import { EditCredentialsCollectionDto } from './CredentialsCollection.types';
 import {
     getInitialCredentialsCollectionData,
     initialCredentialsCollectionData,
@@ -25,11 +27,12 @@ import { SharedWithUsers } from './EditCredentialsCollection/SharedWithUsers/Sha
 
 interface CredentialCollectionFormProps {
     open: boolean;
-    collection: BasicCredentialsCollectionDto | null;
+    collection: FrontCredentialCollectionDto | null;
     onClose: () => void;
+    pageSize: number;
 }
 
-const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: isOpen, onClose, collection }) => {
+const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: isOpen, onClose, collection, pageSize }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -51,7 +54,10 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
 
     useEffect(() => {
         if (!credentialsCollectionFormState.name.trim() && !collectionData.name) {
-            setFormValidationState(false);
+            setFormValidationState((prevState) => ({
+                ...prevState,
+                name: false
+            }));
         } else if (credentialsCollectionFormState.name.trim()) {
             setInputErrorType(null);
         }
@@ -65,7 +71,7 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
     };
 
     const handleSubmit = async () => {
-        if (inputErrorType) {
+        if (credentialsCollectionFormState.name.trim() === '' || inputErrorType) {
             enqueueSnackbar(inputErrorMessages[InputErrorType.NAME_IS_REQUIRED], { variant: 'error' });
             return;
         }
@@ -82,7 +88,7 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
         await dispatch(action)
             .unwrap()
             .then(() => {
-                dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: { page: 0, pageSize } }));
                 const successMessage = collection
                     ? translate('Credential.Form.Create.Success', { name: credentialsCollectionFormState.name })
                     : translate('Credential.Form.Edit.Success', { name: credentialsCollectionFormState.name });

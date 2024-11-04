@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import { AccessType, Color } from '../credential-collection.entity';
-import { PrivilegeType } from '#/scheduler-database/credential-collection-user/credential-collection-user.entity';
 import { Reveal } from '#/utils/generic.types';
+import { AccessType, PrivilegeType, Color } from 'runbotics-common';
 
 export const createCredentialCollectionSchema = z
     .object({
