@@ -77,13 +77,7 @@ export default class MailActionHandler extends StatelessActionHandler {
         const matchedCredential =
             credentialAttributesMapper<MailCredential>(request.credentials);
 
-        // @todo After completion of password manager switch fully to matchedCredential
-        const mailCredential: MailCredential = matchedCredential ?? {
-            mailUsername: this.serverConfigService.mailUsername,
-            mailPassword: this.serverConfigService.mailPassword,
-            mailHost: this.serverConfigService.mailHost,
-            mailPort: this.serverConfigService.mailPort,
-        };
+        const mailCredential: MailCredential = matchedCredential;
 
         switch (request.script) {
             case 'mail.send':

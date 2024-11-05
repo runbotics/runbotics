@@ -298,14 +298,7 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
     }
 
     run(request: BeeOfficeActionRequest) {
-        const matchedCredential =
-            credentialAttributesMapper<BeeOfficeCredential>(request.credentials);
-
-        // @todo After completion of password manager switch fully to matchedCredential
-        const credential: BeeOfficeCredential = matchedCredential ?? {
-            ...(this.serverConfigService.beeAuth),
-            url: this.serverConfigService.beeUrl,
-        };
+        const credential = credentialAttributesMapper<BeeOfficeCredential>(request.credentials);
 
         switch (request.script) {
             case 'beeOffice.createNewTimetableActivity':
