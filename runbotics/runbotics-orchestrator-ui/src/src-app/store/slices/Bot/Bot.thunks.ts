@@ -16,7 +16,7 @@ export const getById = ApiTenantResource.get<IBot>(
 
 export const getPage = ApiTenantResource.get<Page<IBot>>(
     'bots/page',
-    `${BOT_PATH}/Page`,
+    `${BOT_PATH}/GetPage`,
 );
 
 export const deleteById = createAsyncThunk<void, { id: IBot['id'] }>(

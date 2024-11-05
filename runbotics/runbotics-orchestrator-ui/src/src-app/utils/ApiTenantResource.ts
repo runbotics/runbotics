@@ -43,7 +43,7 @@ class ApiTenantResource {
 
     private static request<ReturnType, PayloadType>(
         method: 'get' | 'post' | 'patch' | 'delete',
-        typePrefix: string, 
+        typePrefix: string,
         resourcePath?: ResourcePath,
     ) {
         const asyncThunk = createAsyncThunk<ReturnType, PayloadWrap<PayloadType>, { state: RootState }>(
@@ -58,7 +58,7 @@ class ApiTenantResource {
                     .catch(error => thunkApi.rejectWithValue(error.response.data));
             }
         );
-        
+
         return Object
             .assign((args: PayloadWrap<PayloadType> = {}) => asyncThunk(args), {
                 ...asyncThunk

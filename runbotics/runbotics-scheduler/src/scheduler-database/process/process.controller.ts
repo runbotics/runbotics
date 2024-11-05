@@ -163,7 +163,7 @@ export class ProcessController {
     ) {
         await this.checkAccess(user, id);
 
-        return this.processCrudService.update(user.tenantId, id, { outputType: updateOutputTypeDto.outputType });
+        return this.processCrudService.update(user.tenantId, id, { output: updateOutputTypeDto.output });
     }
 
     @Get()
@@ -179,7 +179,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     getPage(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
-        @Pageable() paging: Paging, 
+        @Pageable() paging: Paging,
         @User() user: UserEntity,
     ): Promise<Page<ProcessEntity>> {
         return this.processCrudService.getPage(user, specs, paging);

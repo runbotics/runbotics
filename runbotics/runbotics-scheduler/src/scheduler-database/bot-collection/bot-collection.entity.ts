@@ -43,7 +43,7 @@ export class BotCollection implements IBotCollection {
     @ManyToOne(() => UserEntity, { nullable: false })
     @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
     createdByUser: UserEntity;
-    
+
     @OneToMany(() => BotEntity, bot => bot.collection)
     bots: BotEntity[];
 

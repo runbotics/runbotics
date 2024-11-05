@@ -43,7 +43,7 @@ export class BotCollectionController {
         return this.botCollectionService.findForUser(user, specs);
     }
 
-    @Get('current-user/Page')
+    @Get('current-user/GetPage')
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getPageForCurrentUser(
         @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
@@ -52,7 +52,7 @@ export class BotCollectionController {
     ){
         return this.botCollectionService.findPageForUser(user, specs, paging);
     }
-    
+
     @Post()
     @FeatureKeys(FeatureKey.BOT_COLLECTION_ADD)
     create(
@@ -61,7 +61,7 @@ export class BotCollectionController {
     ){
         return this.botCollectionService.saveDto(user, collectionDto);
     }
-    
+
     @Patch(':id')
     @FeatureKeys(FeatureKey.BOT_COLLECTION_EDIT)
     async update(
@@ -72,10 +72,10 @@ export class BotCollectionController {
         if (await this.botCollectionService.isDefaultCollection(id)) {
             throw new BadRequestException('Can not modify default collection');
         }
-        
+
         return this.botCollectionService.updateDto(id, user, collectionDto);
     }
-    
+
     @Get()
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getAll(
@@ -85,7 +85,7 @@ export class BotCollectionController {
         return this.botCollectionService.findAll(user, specs);
     }
 
-    @Get('Page')
+    @Get('GetPage')
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getPage(
         @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
@@ -94,7 +94,7 @@ export class BotCollectionController {
     ){
         return this.botCollectionService.findAllPage(user, specs, paging);
     }
-    
+
     @Get(':id')
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getById(
@@ -103,7 +103,7 @@ export class BotCollectionController {
     ){
         return this.botCollectionService.findById(id, user);
     }
-    
+
     @Delete(':id')
     @FeatureKeys(FeatureKey.BOT_COLLECTION_DELETE)
     async delete(
@@ -113,7 +113,7 @@ export class BotCollectionController {
         if (await this.botCollectionService.isDefaultCollection(id)) {
             throw new BadRequestException('Can not delete default collection');
         }
-        
+
         return this.botCollectionService.delete(id, user);
     }
 }

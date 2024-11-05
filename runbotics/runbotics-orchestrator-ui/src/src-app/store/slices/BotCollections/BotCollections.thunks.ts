@@ -13,7 +13,7 @@ export const getAll = ApiTenantResource.get<IBotCollection[]>(
 
 export const getByPage = ApiTenantResource.get<Page<IBotCollection>>(
     'botCollection/getPageForUser',
-    `${BOT_COLLECTIONS_PATH}/current-user/Page`,
+    `${BOT_COLLECTIONS_PATH}/current-user/GetPage`,
 );
 
 export const deleteOne = ApiTenantResource.delete(

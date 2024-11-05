@@ -31,7 +31,7 @@ export class BotController {
         return this.botCrudService.findAll(user, specs);
     }
 
-    @Get('Page')
+    @Get('GetPage')
     @FeatureKeys(FeatureKey.BOT_READ)
     getAllPage(
         @Specifiable(BotCriteria) specs: Specs<BotEntity>,

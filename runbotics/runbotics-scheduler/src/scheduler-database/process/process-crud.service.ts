@@ -12,8 +12,8 @@ import { GlobalVariable } from '#/scheduler-database/global-variable/global-vari
 import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
-import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
 import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
+import { BotCollection } from '../bot-collection/bot-collection.entity';
 
 const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     system: true,
@@ -34,8 +34,8 @@ export class ProcessCrudService {
         private processRepository: Repository<ProcessEntity>,
         @InjectRepository(GlobalVariable)
         private globalVariableRepository: Repository<GlobalVariable>,
-        @InjectRepository(BotCollectionEntity)
-        private botCollectionRepository: Repository<BotCollectionEntity>,
+        @InjectRepository(BotCollection)
+        private botCollectionRepository: Repository<BotCollection>,
     ) {
     }
 
@@ -114,7 +114,7 @@ export class ProcessCrudService {
         partial.isAttended = processDto.isAttended;
         partial.isTriggerable = processDto.isTriggerable;
         partial.botCollectionId = processDto.botCollection?.id;
-        partial.outputType = processDto.outputType?.type;
+        partial.outputType = processDto.output?.type;
         partial.systemName = processDto.system?.name;
 
         if (processDto.tags?.length > 15) {

@@ -87,17 +87,17 @@ export class BotCrudService {
             { where: {}, order: { created: 'asc' } },
             { take: 1000, skip: 0 },
         );
-        
+
         const bot = await this.botRepository
-            .findOneBy({ tenantId: user.tenantId, id })
+            .findOneByOrFail({ tenantId: user.tenantId, id })
             .catch(() => {
                 throw new NotFoundException();
             });
-        
+
         if (!collectionIds.includes(bot.collectionId)) {
             throw new ForbiddenException();
         }
-        
+
         return bot;
     }
 }

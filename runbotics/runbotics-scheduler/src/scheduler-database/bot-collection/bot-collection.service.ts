@@ -90,7 +90,7 @@ export class BotCollectionService {
         options.order = specs.order;
         options.relations = RELATIONS;
 
-        this.botCollectionRepository.find(options);
+        return this.botCollectionRepository.find(options);
     }
 
     findAllPage(user: UserEntity, specs: Specs<BotCollection>, paging: Paging) {
