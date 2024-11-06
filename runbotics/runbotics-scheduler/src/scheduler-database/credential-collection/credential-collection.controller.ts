@@ -56,7 +56,7 @@ export class CredentialCollectionController {
         return collection;
     }
 
-    @Get('/Page')
+    @Get('/GetPage')
     getPages(
         @Specifiable(CredentialCollectionCriteria) specs: Specs<Credential>,
         @Pageable() paging: Paging,

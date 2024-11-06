@@ -17,7 +17,11 @@ import { ActionModule } from './action/action.module';
 import { ProcessCredentialModule } from './process-credential/process-credential.module';
 import { ScheduleProcessModule } from './schedule-process/schedule-process.module';
 import { CredentialAttributeModule } from './credential-attribute/credential-attribute.module';
-import { ProcessOutputModule } from '#/scheduler-database/process-output/process-output.module';
+import { ProcessOutputModule } from './process-output/process-output.module';
+import { ProcessInstanceModule } from './process-instance/process-instance.module';
+import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
+import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
+import { TriggerEventModule } from './trigger-event/trigger-event.module';
 
 @Module({
     imports: [
@@ -40,7 +44,16 @@ import { ProcessOutputModule } from '#/scheduler-database/process-output/process
         ScheduleProcessModule,
         CredentialAttributeModule,
         ProcessOutputModule,
+        ProcessInstanceModule,
+        ProcessInstanceEventModule,
+        ProcessInstanceLoopEventModule,
+        TriggerEventModule,
     ],
-    exports: [],
+    exports: [
+        DatabaseModule,
+        ProcessInstanceModule,
+        ProcessInstanceEventModule,
+        ProcessInstanceLoopEventModule,
+    ],
 })
 export class SchedulerDatabaseModule {}

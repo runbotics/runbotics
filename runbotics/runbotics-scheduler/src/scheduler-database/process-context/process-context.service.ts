@@ -44,7 +44,6 @@ export class ProcessContextService implements OnModuleInit {
         // await this.processContextRepository.manager.save(ProcessContextSecret, ctxSecret);
 
         // const result = await this.getDecryptedContext(1001, 'b7f9092f-5973-c781-08db-4d6e48f78e98');
-        // this.logger.debug('decrypted data', util.inspect(result.secrets[0].secret));
     }
 
     async getDecryptedContext(processId: number, tenantId: string): Promise<DecryptedProcessContextDto> {

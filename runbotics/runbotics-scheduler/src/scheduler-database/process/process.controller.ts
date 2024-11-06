@@ -38,7 +38,6 @@ import {
     updateProcessBotSystemSchema,
     UpdateProcessBotSystemDto,
 } from '#/scheduler-database/process/dto/update-process-bot-system.dto';
-import { Page } from '#/utils/page/page';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 
@@ -175,13 +174,13 @@ export class ProcessController {
         return (await this.processCrudService.getAll(user, specs));
     }
 
-    @Get('Page')
+    @Get('GetPage')
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     getPage(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
         @Pageable() paging: Paging,
         @User() user: UserEntity,
-    ): Promise<Page<ProcessEntity>> {
+    ) {
         return this.processCrudService.getPage(user, specs, paging);
     }
 

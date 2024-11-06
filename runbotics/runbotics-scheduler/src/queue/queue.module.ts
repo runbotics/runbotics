@@ -7,7 +7,6 @@ import { forwardRef, Module } from '@nestjs/common';
 import IORedis from 'ioredis';
 import { ProcessInputService } from 'src/queue/process/process-input.service';
 import { AuthModule } from '../auth/auth.module';
-import { DatabaseModule } from '../database/database.module';
 import { BotController } from './bot/bot.controller';
 import { BotSchedulerService } from './bot/bot.scheduler.service';
 import { ProcessInstanceController } from './process-instance/process-instance.controller';
@@ -25,11 +24,12 @@ import { ProcessGuestService } from './process/process-guest.service';
 import { QueueMessageService } from './queue-message.service';
 import { ScheduleProcessModule } from '#/scheduler-database/schedule-process/schedule-process.module';
 import { SecretModule } from '#/scheduler-database/secret/secret.module';
+import { SchedulerDatabaseModule } from '#/scheduler-database/scheduler-database.module';
 
 @Module({
     imports: [
         SecretModule,
-        DatabaseModule,
+        SchedulerDatabaseModule,
         AuthModule,
         MicrosoftModule,
         BullModule.registerQueueAsync({

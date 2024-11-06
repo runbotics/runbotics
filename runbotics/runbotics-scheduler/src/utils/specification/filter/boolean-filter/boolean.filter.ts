@@ -14,7 +14,7 @@ const parseBoolean = (value: string) => {
 };
 
 enum BooleanOperator {
-    EQUALS = 'equals', 
+    EQUALS = 'equals',
     NOT_EQUALS = 'notEquals',
 }
 
@@ -28,14 +28,14 @@ export class BooleanFilter extends Filter {
     notEquals(value: boolean){
         this.predicates.push(Not(Equal(value)));
     }
-    
+
     consume(operator: string, value: string) {
         if(!(Object.values(BooleanOperator) as string[]).includes(operator)){
             throw Error(`${operator} is not an allowed boolean operator`);
         }
-        
+
         const parsed = parseBoolean(value);
-        
+
         switch (operator as BooleanOperator){
             case BooleanOperator.EQUALS:
                 this.equals(parsed);

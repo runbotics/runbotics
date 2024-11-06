@@ -34,7 +34,7 @@ export class CredentialController {
     return this.credentialService.findAllAccessibleByCollectionId(user, collectionId);
   }
 
-  @Get('credentials/Page')
+  @Get('credentials/GetPage')
   getPages(
     @Specifiable(CredentialCriteria) specs: Specs<Credential>,
     @Pageable() paging: Paging,

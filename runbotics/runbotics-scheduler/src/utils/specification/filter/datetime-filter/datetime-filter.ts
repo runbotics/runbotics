@@ -36,7 +36,7 @@ export class DatetimeFilter extends Filter {
     lessThanOrEqual(value: string){
         this.predicates.push(LessThanOrEqual(value));
     }
-    
+
     consume(operator: string, value: string) {
         if(!(Object.values(DatetimeOperator) as string[]).includes(operator)){
             throw Error(`${operator} is not an allowed datetime operator`);

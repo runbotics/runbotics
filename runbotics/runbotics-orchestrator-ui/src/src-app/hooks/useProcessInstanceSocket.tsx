@@ -39,7 +39,7 @@ const useProcessInstanceSocket = ({
                 if (isProcessInstanceFinished(processInstance.status)) {
                     dispatch(
                         processInstanceActions.getProcessInstanceAndUpdatePage({
-                            processInstanceId: processInstance.id,
+                            resourceId: processInstance.id,
                         }),
                     );
                 }

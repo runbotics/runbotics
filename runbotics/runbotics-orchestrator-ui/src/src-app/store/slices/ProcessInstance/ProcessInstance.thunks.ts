@@ -1,92 +1,62 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { IProcessInstance } from 'runbotics-common';
 
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import Axios from '#src-app/utils/axios';
-import { Page, PageRequestParams } from '#src-app/utils/types/page';
-import URLBuilder from '#src-app/utils/URLBuilder';
+import { Page } from '#src-app/utils/types/page';
 
-import { ProcessInstanceRequestCriteria } from './ProcessInstance.state';
+const PROCESS_INSTANCE_PATH = 'process-instances';
+const PROCESS_INSTANCE_PAGE_PATH = 'process-instances/GetPage';
+const getSubprocessPath = (resourceId: string) =>
+    `${PROCESS_INSTANCE_PATH}/${resourceId}/subprocesses/GetPage`;
 
-const processInstancePageURL = (params: PageRequestParams<ProcessInstanceRequestCriteria>) => URLBuilder
-    .url('/api/process-instances-page')
-    .param('sort', 'created,desc')
-    .params(params)
-    .build();
+export const getAll = ApiTenantResource
+    .get<IProcessInstance[]>(
+        'processInstances/getAll',
+        PROCESS_INSTANCE_PATH,
+    );
 
-export const getAll = createAsyncThunk<IProcessInstance[]>(
-    'processInstances/getAll',
-    () => Axios.get<IProcessInstance[]>('/api/process-instances')
-        .then((response) => response.data),
-);
+export const getAllByProcessId = ApiTenantResource
+    .get<IProcessInstance[]>(
+        'processInstances/getAllByProcessId',
+        PROCESS_INSTANCE_PATH,
+    );
 
-export const getAllByProcessId = createAsyncThunk<IProcessInstance[], { processId: number }>(
-    'processInstances/getAllByProcess',
-    ({ processId }) => Axios.get<IProcessInstance[]>(`/api/process-instances?processId.equals=${processId}`)
-        .then((response) => response.data),
-);
+export const getBotProcessInstances = ApiTenantResource
+    .get<IProcessInstance[]>(
+        'processInstances/getBotProcessInstances',
+        PROCESS_INSTANCE_PATH,
+    );
 
-export const getBotProcessInstances = createAsyncThunk<IProcessInstance[], { botId: number }>(
-    'processInstances/getBotProcessInstances',
-    ({ botId }) => Axios.get<IProcessInstance[]>(`/api/process-instances?botId.equals=${botId}`)
-        .then((response) => response.data),
-);
+export const getProcessInstance = ApiTenantResource
+    .get<IProcessInstance>(
+        'processInstances/getProcessInstance',
+        PROCESS_INSTANCE_PATH,
+    );
 
-export const getProcessInstance = createAsyncThunk<IProcessInstance, {
-    processInstanceId?: string;
-    orchestratorProcessInstanceId?: string
-}>(
-    'processInstances/getBotProcessInstance',
-    async ({ processInstanceId, orchestratorProcessInstanceId }) => {
-        if (processInstanceId) {
-            const response = await Axios.get<IProcessInstance>(`/api/process-instances/${processInstanceId}`);
-            return response.data;
-        }
-        const response = await Axios.get<IProcessInstance[]>(
-            `/api/process-instances?orchestratorProcessInstanceId.equals=${orchestratorProcessInstanceId}`,
-        );
-        return response.data.length > 0 ? response.data[0] : null;
-    },
-);
+export const getSubprocesses = ApiTenantResource
+    .get<Page<IProcessInstance>>(
+        'processInstances/getSubprocesses',
+        getSubprocessPath,
+    );
 
-export const getSubprocesses = createAsyncThunk<Page<IProcessInstance>, {
-    processInstanceId: string;
-    page?: number;
-    size?: number;
-}>(
-    'processInstances/getSubprocesses',
-    ({ processInstanceId, page, size }, { rejectWithValue }) => Axios.get<Page<IProcessInstance>>(
-        URLBuilder
-            .url(`/api/process-instances/${processInstanceId}/subprocesses`)
-            .params({ page, size })
-            .build()
-    )
-        .then((response) => response.data)
-        .catch(error => rejectWithValue(error.response.data)),
-);
+export const getProcessInstanceAndUpdatePage = ApiTenantResource
+    .get<IProcessInstance>(
+        'processInstances/getProcessInstanceAndUpdatePage',
+        PROCESS_INSTANCE_PATH,
+    );
 
-export const getProcessInstanceAndUpdatePage = createAsyncThunk<IProcessInstance, { processInstanceId?: string }>(
-    'processInstances/getProcessInstanceAndUpdatePage',
-    ({ processInstanceId }) => Axios.get<IProcessInstance>(`/api/process-instances/${processInstanceId}`)
-        .then((response) => response.data),
-);
+export const getProcessInstancePage = ApiTenantResource
+    .get<Page<IProcessInstance>>(
+        'processInstances/getProcessInstancePage',
+        PROCESS_INSTANCE_PAGE_PATH,
+    );
 
-export const getProcessInstancePage = createAsyncThunk<
-    Page<IProcessInstance>,
-    PageRequestParams<ProcessInstanceRequestCriteria>
->(
-    'processInstances/getProcessInstancePage',
-    (params) => Axios.get<Page<IProcessInstance>>(processInstancePageURL(params))
-        .then((response) => response.data),
-);
-
-export const getProcessInstancePageWithSpecificInstance = createAsyncThunk<
-    Page<IProcessInstance>,
-    PageRequestParams<ProcessInstanceRequestCriteria> & { instanceId: string }
->(
-    'processInstances/getProcessInstancePageWithSpecificInstance',
-    (params) => Axios.get<Page<IProcessInstance>>(processInstancePageURL(params))
-        .then((response) => response.data),
-);
+export const getProcessInstancePageWithSpecificInstance = ApiTenantResource
+    .get<Page<IProcessInstance>>(
+        'processInstances/getProcessInstancePageWithSpecificInstance',
+        PROCESS_INSTANCE_PAGE_PATH,
+    );
 
 export const stopProcessInstance = createAsyncThunk<void, { processInstanceId: string }>(
     'processInstances/stopProcess',
