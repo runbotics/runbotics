@@ -28,6 +28,7 @@ import { ProcessCredential } from '#/scheduler-database/process-credential/proce
 import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { ProcessOutput } from '#/scheduler-database/process-output/process-output.entity';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Entity({ name: 'process' })
 export class ProcessEntity {
@@ -39,7 +40,7 @@ export class ProcessEntity {
         name: 'tenant_id',
         type: 'uuid',
         nullable: false,
-        default: 'b7f9092f-5973-c781-08db-4d6e48f78e98',
+        default: DEFAULT_TENANT_ID,
     })
     tenantId: string;
 

@@ -4,6 +4,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '#/database/user/user.entity';
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Entity({ name: 'process_collection' })
 export class ProcessCollectionEntity {
@@ -11,7 +12,7 @@ export class ProcessCollectionEntity {
     @PrimaryColumn('uuid')
     id: string;
 
-    @Column({ name: 'tenant_id', type: 'uuid', nullable: false, default: 'b7f9092f-5973-c781-08db-4d6e48f78e98' })
+    @Column({ name: 'tenant_id', type: 'uuid', nullable: false, default: DEFAULT_TENANT_ID })
     tenantId: string;
 
     @ManyToOne(

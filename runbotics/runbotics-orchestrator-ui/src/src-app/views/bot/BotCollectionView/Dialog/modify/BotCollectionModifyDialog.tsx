@@ -35,7 +35,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
     const { user: currentUser } = useSelector((state) => state.auth);
     const { all: allUsers, activated: { nonAdmins } } = useSelector((state) => state.users);
     const [name, setName] = useState(collection ? collection.name : '');
-    const [description, setDescription] = useState(collection ? collection.description : '');
+    const [description, setDescription] = useState(collection?.description ? collection.description : '');
     const [selectedUsers, setSelectedUsers] = useState<IUser[]>(collection ? collection.users : []);
     const [publicBotsIncluded, setPublicBotsIncluded] = useState(collection ? collection.publicBotsIncluded : true);
     const [error, setError] = useState(null);
@@ -52,7 +52,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         description,
         publicBotsIncluded,
         users: selectedUsers,
-        id: collection ? collection.id : null,
+        ...(collection?.id && { id: collection.id }),
     });
 
     const resetFormStates = () => {

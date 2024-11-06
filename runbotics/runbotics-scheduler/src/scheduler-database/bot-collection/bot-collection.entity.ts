@@ -6,18 +6,20 @@ import {
     ManyToMany,
     ManyToOne,
     OneToMany,
-    PrimaryGeneratedColumn, UpdateDateColumn,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import { IBotCollection } from 'runbotics-common';
 import { UserEntity } from '#/database/user/user.entity';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Entity({ name: 'bot_collection' })
 export class BotCollection implements IBotCollection {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ unique: true, type: 'varchar', length: 255,  })
+    @Column({ unique: true, type: 'varchar', length: 255 })
     name: string;
 
     @Column({ type: 'text', nullable: true })
@@ -36,7 +38,7 @@ export class BotCollection implements IBotCollection {
         name: 'tenant_id',
         type: 'uuid',
         nullable: false,
-        default: 'b7f9092f-5973-c781-08db-4d6e48f78e98',
+        default: DEFAULT_TENANT_ID,
     })
     tenantId: string;
 

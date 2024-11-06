@@ -134,8 +134,8 @@ export class BotCollectionService {
                         },
                         {
                             name: specs.where.name ?
-                                And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                                : DefaultCollections.GUEST,
+                                And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
+                                : DefaultCollections.PUBLIC,
                         },
                     ],
                     relations: RELATIONS,
@@ -164,8 +164,8 @@ export class BotCollectionService {
                 },
                 {
                     name: specs.where.name ?
-                        And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                        : DefaultCollections.GUEST,
+                        And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
+                        : DefaultCollections.PUBLIC,
                 },
             ],
         });
@@ -187,8 +187,8 @@ export class BotCollectionService {
                     },
                     {
                         name: specs.where.name ?
-                            And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                            : DefaultCollections.GUEST,
+                            And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
+                            : DefaultCollections.PUBLIC,
                     },
                 ],
                 relations: RELATIONS,
@@ -233,8 +233,8 @@ export class BotCollectionService {
                 },
                 {
                     name: specs.where.name ?
-                        And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                        : DefaultCollections.GUEST,
+                        And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
+                        : DefaultCollections.PUBLIC,
                 },
             ],
         };

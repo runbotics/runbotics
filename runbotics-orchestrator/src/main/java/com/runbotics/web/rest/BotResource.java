@@ -57,66 +57,66 @@ public class BotResource {
         this.userService = userService;
     }
 
-    /**
-     * {@code GET  /bots} : get all the bots.
-     *
-     * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bots in body.
-     */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
-    @GetMapping("/bots")
-    public ResponseEntity<List<BotDTO>> getAllBots(BotCriteria criteria) {
-        log.debug("REST request to get Bots by criteria: {}", criteria);
-        List<BotDTO> bots = botQueryService.findByCriteria(criteria);
-        return ResponseEntity.ok().body(bots);
-    }
-
-    /**
-     * {@code GET  /bots-page} : get page of the bots.
-     *
-     * @param pageable the pagination information.
-     * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bots in body.
-     */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
-    @GetMapping("/bots-page")
-    public ResponseEntity<Page<BotDTO>> getAllBots(BotCriteria criteria, Pageable pageable) {
-        log.debug("REST request to get Bots by criteria: {}", criteria);
-        User requester = userService.getUserWithAuthorities().get();
-        boolean hasRequesterRoleAdmin = userService.hasAdminRole(requester);
-
-        Page<BotDTO> page = hasRequesterRoleAdmin
-            ? botQueryService.findByCriteria(criteria, pageable)
-            : botService.getBotPageForUser(criteria, pageable, requester);
-
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page);
-    }
-
-    /**
-     * {@code GET  /bots/count} : count all the bots.
-     *
-     * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
-     */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
-    @GetMapping("/bots/count")
-    public ResponseEntity<Long> countBots(BotCriteria criteria) {
-        log.debug("REST request to count Bots by criteria: {}", criteria);
-        return ResponseEntity.ok().body(botQueryService.countByCriteria(criteria));
-    }
-
-    /**
-     * {@code GET  /bots/:id} : get the "id" bot.
-     *
-     * @param id the id of the botDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the botDTO, or with status {@code 404 (Not Found)}.
-     */
-    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
-    @GetMapping("/bots/{id}")
-    public ResponseEntity<BotDTO> getBot(@PathVariable Long id) {
-        log.debug("REST request to get Bot : {}", id);
-        Optional<BotDTO> botDTO = botService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(botDTO);
-    }
+//    /**
+//     * {@code GET  /bots} : get all the bots.
+//     *
+//     * @param criteria the criteria which the requested entities should match.
+//     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bots in body.
+//     */
+//    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
+//    @GetMapping("/bots")
+//    public ResponseEntity<List<BotDTO>> getAllBots(BotCriteria criteria) {
+//        log.debug("REST request to get Bots by criteria: {}", criteria);
+//        List<BotDTO> bots = botQueryService.findByCriteria(criteria);
+//        return ResponseEntity.ok().body(bots);
+//    }
+//
+//    /**
+//     * {@code GET  /bots-page} : get page of the bots.
+//     *
+//     * @param pageable the pagination information.
+//     * @param criteria the criteria which the requested entities should match.
+//     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bots in body.
+//     */
+//    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
+//    @GetMapping("/bots-page")
+//    public ResponseEntity<Page<BotDTO>> getAllBots(BotCriteria criteria, Pageable pageable) {
+//        log.debug("REST request to get Bots by criteria: {}", criteria);
+//        User requester = userService.getUserWithAuthorities().get();
+//        boolean hasRequesterRoleAdmin = userService.hasAdminRole(requester);
+//
+//        Page<BotDTO> page = hasRequesterRoleAdmin
+//            ? botQueryService.findByCriteria(criteria, pageable)
+//            : botService.getBotPageForUser(criteria, pageable, requester);
+//
+//        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+//        return ResponseEntity.ok().headers(headers).body(page);
+//    }
+//
+//    /**
+//     * {@code GET  /bots/count} : count all the bots.
+//     *
+//     * @param criteria the criteria which the requested entities should match.
+//     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+//     */
+//    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
+//    @GetMapping("/bots/count")
+//    public ResponseEntity<Long> countBots(BotCriteria criteria) {
+//        log.debug("REST request to count Bots by criteria: {}", criteria);
+//        return ResponseEntity.ok().body(botQueryService.countByCriteria(criteria));
+//    }
+//
+//    /**
+//     * {@code GET  /bots/:id} : get the "id" bot.
+//     *
+//     * @param id the id of the botDTO to retrieve.
+//     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the botDTO, or with status {@code 404 (Not Found)}.
+//     */
+//    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.BOT_READ + "')")
+//    @GetMapping("/bots/{id}")
+//    public ResponseEntity<BotDTO> getBot(@PathVariable Long id) {
+//        log.debug("REST request to get Bot : {}", id);
+//        Optional<BotDTO> botDTO = botService.findOne(id);
+//        return ResponseUtil.wrapOrNotFound(botDTO);
+//    }
 }

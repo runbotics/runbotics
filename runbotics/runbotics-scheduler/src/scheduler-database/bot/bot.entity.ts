@@ -22,6 +22,7 @@ import { dateTransformer, numberTransformer } from '#/database/database.utils';
 import {
     NotificationBot as NotificationBotEntity,
 } from '#/scheduler-database/notification-bot/notification-bot.entity';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Entity({ name: 'bot' })
 export class BotEntity implements IBot {
@@ -29,7 +30,7 @@ export class BotEntity implements IBot {
         name: 'tenant_id',
         type: 'uuid',
         nullable: false,
-        default: 'b7f9092f-5973-c781-08db-4d6e48f78e98',
+        default: DEFAULT_TENANT_ID,
     })
     tenantId: string;
 
