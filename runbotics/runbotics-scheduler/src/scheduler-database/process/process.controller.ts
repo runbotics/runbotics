@@ -9,6 +9,7 @@ import {
     ParseIntPipe,
     Patch,
     Post,
+    Put,
     UseInterceptors,
 } from '@nestjs/common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -81,7 +82,7 @@ export class ProcessController {
         return this.processCrudService.createGuestProcess();
     }
 
-    @Patch(':id')
+    @Put(':id')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
     async update(
         @Param('id', new ParseIntPipe()) id: number,

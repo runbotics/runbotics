@@ -13,7 +13,7 @@ interface PayloadWrap<T> {
     pageParams?: PageRequestParams;
 }
 
-type ResourcePath = string | ((resourceId: string) => string);
+type ResourcePath = string | ((resourceId: string | number) => string);
 
 interface PathElements {
     resourcePath?: ResourcePath;
@@ -43,7 +43,7 @@ class ApiTenantResource {
 
     private static request<ReturnType, PayloadType>(
         method: 'get' | 'post' | 'patch' | 'delete',
-        typePrefix: string, 
+        typePrefix: string,
         resourcePath?: ResourcePath,
     ) {
         const asyncThunk = createAsyncThunk<ReturnType, PayloadWrap<PayloadType>, { state: RootState }>(
@@ -76,7 +76,7 @@ class ApiTenantResource {
             ? `/${resourceId}` : '';
 
         const apiURL = typeof resourcePath === 'function' ?
-            `/api/scheduler/tenants/${user.tenant.id}/${resourcePath(resourceId.toString())}` 
+            `/api/scheduler/tenants/${user.tenant.id}/${resourcePath(resourceId)}`
             : `/api/scheduler/tenants/${user.tenant.id}${resourcePathPart}${resourceIdPart}`;
 
         return pageParams

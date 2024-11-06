@@ -1,5 +1,5 @@
 import { Filter } from '#/utils/specification/filter/filter';
-import { Equal, ILike, Not } from 'typeorm';
+import { Equal, ILike, In, Not } from 'typeorm';
 
 
 enum StringOperator {
@@ -7,6 +7,7 @@ enum StringOperator {
     NOT_EQUALS = 'notEquals',
     CONTAINS = 'contains',
     NOT_CONTAINS = 'notContains',
+    IN = 'in'
 }
 
 export class StringFilter extends Filter {
@@ -28,9 +29,13 @@ export class StringFilter extends Filter {
         this.predicates.push(Not(ILike(`%${value}%`)));
     }
 
+    in(values: string) {
+        this.predicates.push(In(values.split(',')));
+    }
+
     consume(operator: string, value: string) {
         if (!(Object.values(StringOperator) as string[]).includes(operator)) {
-            throw Error(`${operator} is not an allowed boolean operator`);
+            throw Error(`${operator} is not an allowed string operator`);
         }
 
         switch (operator as StringOperator) {
@@ -46,6 +51,8 @@ export class StringFilter extends Filter {
             case StringOperator.NOT_CONTAINS:
                 this.notContains(value);
                 break;
+            case StringOperator.IN:
+                this.in(value);
         }
     }
 }

@@ -8,9 +8,9 @@ import { IBotCollection } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { useDispatch } from '../../../../../store';
-import { botCollectionActions } from '../../../../../store/slices/BotCollections';
-import { PageRequestParams } from '../../../../../utils/types/page';
+import { useDispatch } from '#src-app/store';
+import { botCollectionActions } from '#src-app/store/slices/BotCollections';
+import { PageRequestParams } from '#src-app/utils/types/page';
 
 
 type DeleteBotCollectionDialogProps = {
@@ -22,14 +22,18 @@ type DeleteBotCollectionDialogProps = {
 };
 
 const BotCollectionDeleteDialog: VFC<DeleteBotCollectionDialogProps> = ({
-    open, botCollection, onClose, onDelete, pageParams,
+    open,
+    botCollection,
+    onClose,
+    onDelete,
+    pageParams, 
 }) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
 
     const handleSubmit = async () => {
-        await dispatch(botCollectionActions.deleteOne({ collectionId: botCollection.id }))
-            .then(() => dispatch(botCollectionActions.getByPage(pageParams)));
+        await dispatch(botCollectionActions.deleteOne({ resourceId: botCollection.id }))
+            .then(() => dispatch(botCollectionActions.getByPage({ pageParams })));
         onDelete(botCollection);
     };
 

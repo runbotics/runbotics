@@ -43,8 +43,8 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                             contains: {
                                 ...(search.trim() && {
                                     name: search.trim(),
-                                    createdByName: search.trim(),
-                                    tagName: search.trim(),
+                                    'createdBy->name': search.trim(),
+                                    'tags->name': search.trim(),
                                 }),
                             },
                             equals: {

@@ -11,7 +11,7 @@ export class ProcessCriteria extends Criteria {
     created = new DatetimeFilter();
     updated = new DatetimeFilter();
     botCollection = new BotCollectionCriteria();
-    tag = new TagCriteria();
+    tags = new TagCriteria();
     processCollectionId = new StringFilter();
     createdBy = new CreatedByCriteria();
 }

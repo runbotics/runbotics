@@ -18,7 +18,7 @@ import {
 import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 import { UserEntity } from '#/database/user/user.entity';
-import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
+import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import {
     NotificationProcess as NotificationProcessEntity,
@@ -28,6 +28,7 @@ import { ProcessCredential } from '#/scheduler-database/process-credential/proce
 import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { ProcessOutput } from '#/scheduler-database/process-output/process-output.entity';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Entity({ name: 'process' })
 export class ProcessEntity {
@@ -39,7 +40,7 @@ export class ProcessEntity {
         name: 'tenant_id',
         type: 'uuid',
         nullable: false,
-        default: 'b7f9092f-5973-c781-08db-4d6e48f78e98',
+        default: DEFAULT_TENANT_ID,
     })
     tenantId: string;
 
@@ -52,10 +53,10 @@ export class ProcessEntity {
     @Column('text')
     definition: string;
 
-    @CreateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone' })
+    @CreateDateColumn({ type: 'timestamp without time zone' })
     created: string;
 
-    @UpdateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone' })
+    @UpdateDateColumn({ type: 'timestamp without time zone' })
     updated: string;
 
     @Column({ name: 'is_public' })
@@ -94,7 +95,7 @@ export class ProcessEntity {
     @JoinColumn({ name: 'created_by_id', referencedColumnName: 'id' })
     createdBy: IUser;
 
-    @ManyToOne(() => BotCollectionEntity, { nullable: false })
+    @ManyToOne(() => BotCollection, { nullable: false })
     @JoinColumn({ name: 'bot_collection', referencedColumnName: 'id' })
     botCollection: IBotCollection;
 

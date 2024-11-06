@@ -26,6 +26,14 @@ export const Specifiable = createParamDecorator<CriteriaClass>(
             criteria: new CriteriaClass(),
         };
 
+        if (typeof params['sort'] === 'string') {
+            const [field, order] = params['sort'].split(',');
+            specification.order = {
+                name: field as keyof Criteria,
+                direction: order === 'asc' ? 'asc' : 'desc',
+            };
+        }
+
         Object.entries(params).forEach(([key, value]) => {
             const [field, operator] = key.split('.');
 
@@ -84,7 +92,6 @@ export const specificationToFindOptions = <T extends Criteria>(
 
     evalRecursively(specification.criteria, where);
 
-    // types in typeorm...
     const order: FindOptionsOrder<T> = (specification.order ?
         {
             [specification.order.name]: 'desc',

@@ -12,8 +12,8 @@ import { GlobalVariable } from '#/scheduler-database/global-variable/global-vari
 import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
-import { BotCollectionEntity } from '#/database/bot-collection/bot-collection.entity';
 import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
+import { BotCollection } from '../bot-collection/bot-collection.entity';
 
 const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     system: true,
@@ -34,8 +34,8 @@ export class ProcessCrudService {
         private processRepository: Repository<ProcessEntity>,
         @InjectRepository(GlobalVariable)
         private globalVariableRepository: Repository<GlobalVariable>,
-        @InjectRepository(BotCollectionEntity)
-        private botCollectionRepository: Repository<BotCollectionEntity>,
+        @InjectRepository(BotCollection)
+        private botCollectionRepository: Repository<BotCollection>,
     ) {
     }
 
@@ -105,25 +105,28 @@ export class ProcessCrudService {
             throw new NotFoundException();
         }
 
+        const partial: Partial<ProcessEntity> = {};
+
         process.name = processDto.name;
         process.description = processDto.description;
         process.definition = processDto.definition;
         process.isPublic = processDto.isPublic;
-        process.isAttended = processDto.isAttended;
-        process.isTriggerable = processDto.isTriggerable;
-
-        process.botCollectionId = processDto.botCollection?.id;
-        process.outputType = processDto.output?.type;
-        process.systemName = processDto.system?.name;
+        partial.isAttended = processDto.isAttended;
+        partial.isTriggerable = processDto.isTriggerable;
+        partial.botCollectionId = processDto.botCollection?.id;
+        partial.outputType = processDto.output?.type;
+        partial.systemName = processDto.system?.name;
 
         if (processDto.tags?.length > 15) {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
         // TODO: create/link tags to process
-        // partial.tags = processDto.tags as Tag[] | undefined;
+        partial.tags = processDto.tags as Tag[] | undefined;
 
-        return this.processRepository.save(process);
+        await this.processRepository.update({ tenantId, id }, partial);
+
+        return this.processRepository.findOne({ where: { tenantId, id }, relations: RELATIONS });
     }
 
     async updateDiagram(user: UserEntity, id: number, updateDiagramDto: UpdateDiagramDto) {

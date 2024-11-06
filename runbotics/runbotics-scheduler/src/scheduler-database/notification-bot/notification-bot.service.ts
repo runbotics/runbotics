@@ -7,7 +7,7 @@ import { NotificationBot } from './notification-bot.entity';
 import { CreateNotificationBotDto } from './dto/create-notification-bot.dto';
 
 import { UserEntity } from '#/database/user/user.entity';
-import { BotEntity } from '#/database/bot/bot.entity';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
 

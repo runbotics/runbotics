@@ -71,7 +71,7 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
         return (
             <TableRow hover key={collection.id} onClick={(ev) => handleRedirect(ev, collection.id)}>
                 <TableCell>{collection.name}</TableCell>
-                <TableCell>{collection.createdBy?.login}</TableCell>
+                <TableCell>{collection.createdByUser?.login}</TableCell>
                 <TableCell>{includedPublicBotMark}</TableCell>
                 <TableCell>{collection.created ? moment(collection.created).format('YYYY-MM-DD HH:mm') : ''}</TableCell>
                 <TableCell>{collection.updated ? moment(collection.updated).format('YYYY-MM-DD HH:mm') : ''}</TableCell>

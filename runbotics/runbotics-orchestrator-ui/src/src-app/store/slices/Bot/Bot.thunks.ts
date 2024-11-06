@@ -3,33 +3,20 @@ import { IBot, NotificationBot, NotificationBotType } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import Axios from '#src-app/utils/axios';
-import { Page, PageRequestParams } from '#src-app/utils/types/page';
-import URLBuilder from '#src-app/utils/URLBuilder';
+import { Page } from '#src-app/utils/types/page';
 
 const BOT_NOTIFICATION_PATH = 'notifications-bot';
 
+const BOT_PATH = 'bots';
 
-const botPageURL = (params: PageRequestParams<IBot>) => URLBuilder
-    .url('/api/bots-page')
-    .params(params)
-    .build();
-
-export const getById = createAsyncThunk<IBot, { id: IBot['id'] }>(
+export const getById = ApiTenantResource.get<IBot>(
     'bots/get',
-    ({ id }) => Axios.get<IBot>(`/api/bots/${id}`)
-        .then((response) => response.data),
+    BOT_PATH,
 );
 
-export const getAll = createAsyncThunk<IBot[], void>(
-    'bots/getAll',
-    () => Axios.get<IBot[]>('/api/bots')
-        .then((response) => response.data),
-);
-
-export const getPage = createAsyncThunk<Page<IBot>, PageRequestParams<IBot>>(
+export const getPage = ApiTenantResource.get<Page<IBot>>(
     'bots/page',
-    (params) => Axios.get<Page<IBot>>(botPageURL(params))
-        .then((response) => response.data),
+    `${BOT_PATH}/GetPage`,
 );
 
 export const deleteById = createAsyncThunk<void, { id: IBot['id'] }>(

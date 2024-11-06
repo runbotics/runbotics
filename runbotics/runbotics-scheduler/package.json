@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "2.11.0-SNAPSHOT.83",
+    "version": "2.11.0-SNAPSHOT.84",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -19,7 +19,7 @@
         "test:watch": "vitest dev",
         "test:cov": "vitest run --coverage",
         "test:debug": "vitest --inspect-brk --threads false",
-        "typeorm": "rm -rf ./dist && rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/ormconfig.ts",
+        "typeorm": "rm -rf ./dist && rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./dist/src/ormconfig.js",
         "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create"
     },
     "dependencies": {
