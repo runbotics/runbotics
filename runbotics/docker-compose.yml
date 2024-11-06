@@ -1,13 +1,13 @@
 services:
-  runbotics-portainer:
-    container_name: runbotics-portainer
-    image: portainer/portainer-ce:2.20.3-alpine
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-    ports:
-      - 127.0.0.1:9000:9000
+  # runbotics-portainer:
+  #   container_name: runbotics-portainer
+  #   image: portainer/portainer-ce:2.20.3-alpine
+  #   restart: always
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - portainer_data:/data
+  #   ports:
+  #     - 127.0.0.1:9000:9000
 
   runbotics-postgresql:
     container_name: runbotics-postgresql
@@ -23,48 +23,48 @@ services:
     ports:
       - 127.0.0.1:5432:5432
 
-  runbotics-orchestrator:
-    container_name: runbotics-orchestrator
-    image: runbotics/runbotics-orchestrator:latest
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://runbotics-postgresql:5432/runbotics
-      - SPRING_DATASOURCE_USERNAME=runbotics
-      - SPRING_DATASOURCE_PASSWORD=runbotics
-      - BOT_INSTALLATION_FILE=./installation/RunBotics_2.0.7.zip
-      - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
-    ports:
-      - 8080:8080
-    depends_on:
-      - runbotics-postgresql
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+  # runbotics-orchestrator:
+  #   container_name: runbotics-orchestrator
+  #   image: runbotics/runbotics-orchestrator:latest
+  #   environment:
+  #     - SPRING_PROFILES_ACTIVE=dev
+  #     - SPRING_DATASOURCE_URL=jdbc:postgresql://runbotics-postgresql:5432/runbotics
+  #     - SPRING_DATASOURCE_USERNAME=runbotics
+  #     - SPRING_DATASOURCE_PASSWORD=runbotics
+  #     - BOT_INSTALLATION_FILE=./installation/RunBotics_2.0.7.zip
+  #     - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
+  #   ports:
+  #     - 8080:8080
+  #   depends_on:
+  #     - runbotics-postgresql
+  #   extra_hosts:
+  #     - 'host.docker.internal:host-gateway'
 
-  runbotics-scheduler:
-    container_name: runbotics-scheduler
-    image: runbotics/runbotics-scheduler:latest
-    environment:
-      - RUNBOTICS_SCHEDULER_REDIS_HOST=runbotics-redis
-      - RUNBOTICS_SCHEDULER_REDIS_PORT=6379
-      - RUNBOTICS_DB_HOST=runbotics-postgresql
-      - RUNBOTICS_DB_PORT=5432
-      - RUNBOTICS_DB_USER=runbotics
-      - RUNBOTICS_DB_PASSWORD=runbotics
-      - RUNBOTICS_DB_DATABASE=runbotics
-      - BOT_LOGS_DIRECTORY=./bot_logs
-      - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
-      - MAIL_HOST=
-      - MAIL_PORT=
-      - MAIL_USERNAME=
-      - MAIL_PASSWORD=
-      - ENCRYPTION_KEY=O3OTmXJpIIyUb3ByT4t65xblgsxfDGQu
-    ports:
-      - 4000:4000
-    depends_on:
-      - runbotics-redis
-      - runbotics-postgresql
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+  # runbotics-scheduler:
+  #   container_name: runbotics-scheduler
+  #   image: runbotics/runbotics-scheduler:latest
+  #   environment:
+  #     - RUNBOTICS_SCHEDULER_REDIS_HOST=runbotics-redis
+  #     - RUNBOTICS_SCHEDULER_REDIS_PORT=6379
+  #     - RUNBOTICS_DB_HOST=runbotics-postgresql
+  #     - RUNBOTICS_DB_PORT=5432
+  #     - RUNBOTICS_DB_USER=runbotics
+  #     - RUNBOTICS_DB_PASSWORD=runbotics
+  #     - RUNBOTICS_DB_DATABASE=runbotics
+  #     - BOT_LOGS_DIRECTORY=./bot_logs
+  #     - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
+  #     - MAIL_HOST=
+  #     - MAIL_PORT=
+  #     - MAIL_USERNAME=
+  #     - MAIL_PASSWORD=
+  #     - ENCRYPTION_KEY=O3OTmXJpIIyUb3ByT4t65xblgsxfDGQu
+  #   ports:
+  #     - 4000:4000
+  #   depends_on:
+  #     - runbotics-redis
+  #     - runbotics-postgresql
+  #   extra_hosts:
+  #     - 'host.docker.internal:host-gateway'
 
   runbotics-redis:
     container_name: runbotics-redis
@@ -72,27 +72,27 @@ services:
     ports:
       - 6379:6379
 
-  runbotics-desktop:
-    container_name: runbotics-desktop
-    image: runbotics/runbotics-desktop:latest
-    environment:
-      - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
-      - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
-      - RUNBOTICS_INSTALLATION_ID=admin
-      - RUNBOTICS_USERNAME=runbotics
-      - RUNBOTICS_PASSWORD=runbotics
-      - RUNBOTICS_HOT_RELOAD=true
-      - RUNBOTICS_BOT_COLLECTION=30bdfb61-841b-519b-ce54-1d0e56877f73
-      - RUNBOTICS_LOGGER_FILE_MODE=false
-      - RUNBOTICS_EXTENSION_DIR=./extensions
-      - CHROME_ADDRESS=http://chrome:4444
-    restart: on-failure
-    depends_on:
-      - runbotics-scheduler
-      - runbotics-orchestrator
-      - chrome
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
+  # runbotics-desktop:
+  #   container_name: runbotics-desktop
+  #   image: runbotics/runbotics-desktop:latest
+  #   environment:
+  #     - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
+  #     - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
+  #     - RUNBOTICS_INSTALLATION_ID=admin
+  #     - RUNBOTICS_USERNAME=runbotics
+  #     - RUNBOTICS_PASSWORD=runbotics
+  #     - RUNBOTICS_HOT_RELOAD=true
+  #     - RUNBOTICS_BOT_COLLECTION=30bdfb61-841b-519b-ce54-1d0e56877f73
+  #     - RUNBOTICS_LOGGER_FILE_MODE=false
+  #     - RUNBOTICS_EXTENSION_DIR=./extensions
+  #     - CHROME_ADDRESS=http://chrome:4444
+  #   restart: on-failure
+  #   depends_on:
+  #     - runbotics-scheduler
+  #     - runbotics-orchestrator
+  #     - chrome
+  #   extra_hosts:
+  #     - 'host.docker.internal:host-gateway'
 
 #   runbotics-desktop-guest:
 #     container_name: runbotics-desktop-guest
