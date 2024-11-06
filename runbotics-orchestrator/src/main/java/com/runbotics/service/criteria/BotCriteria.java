@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /**
  * Criteria class for the {@link com.runbotics.domain.Bot} entity. This class is used
- * in {@link com.runbotics.web.rest.BotResource} to receive all the possible filtering options from
+ * to receive all the possible filtering options from
  * the Http GET request parameters.
  * For example the following could be a valid request:
  * {@code /bots?id.greaterThan=5&attr1.contains=something&attr2.specified=false}
