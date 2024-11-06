@@ -1,13 +1,13 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class ProcessInstance1730368010157 implements MigrationInterface {
-    name = 'ProcessInstance1730368010157'
+export class ProcessInstance1730889437788 implements MigrationInterface {
+    name = 'ProcessInstance1730889437788'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "process_instance" DROP CONSTRAINT "fk_process_instance_trigger_event"`);
         await queryRunner.query(`ALTER TABLE "process_instance" DROP CONSTRAINT "fk_process_instance_user_id"`);
         await queryRunner.query(`ALTER TABLE "process_instance" DROP CONSTRAINT "fk_process_instance_process_id"`);
         await queryRunner.query(`ALTER TABLE "process_instance" DROP CONSTRAINT "fk_process_instance_bot_id"`);
+        await queryRunner.query(`ALTER TABLE "process_instance" DROP CONSTRAINT "fk_process_instance_trigger_event"`);
         await queryRunner.query(`ALTER TABLE "process_instance" DROP CONSTRAINT "fk_process_instance_root_process_instance_id"`);
         await queryRunner.query(`ALTER TABLE "process_instance_event" DROP CONSTRAINT "fk_process_instance_event_process_instance_id"`);
         await queryRunner.query(`ALTER TABLE "process_instance_loop_event" DROP CONSTRAINT "fk_process_instance_loop_event_process_instance_id"`);
@@ -33,10 +33,10 @@ export class ProcessInstance1730368010157 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "process_instance_loop_event" ADD CONSTRAINT "fk_process_instance_loop_event_process_instance_id" FOREIGN KEY ("process_instance_id") REFERENCES "process_instance"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "process_instance_event" ADD CONSTRAINT "fk_process_instance_event_process_instance_id" FOREIGN KEY ("process_instance_id") REFERENCES "process_instance"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "process_instance" ADD CONSTRAINT "fk_process_instance_root_process_instance_id" FOREIGN KEY ("root_process_instance_id") REFERENCES "process_instance"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "process_instance" ADD CONSTRAINT "fk_process_instance_trigger_event" FOREIGN KEY ("trigger") REFERENCES "trigger_event"("name") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "process_instance" ADD CONSTRAINT "fk_process_instance_bot_id" FOREIGN KEY ("bot_id") REFERENCES "bot"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "process_instance" ADD CONSTRAINT "fk_process_instance_process_id" FOREIGN KEY ("process_id") REFERENCES "process"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "process_instance" ADD CONSTRAINT "fk_process_instance_user_id" FOREIGN KEY ("user_id") REFERENCES "jhi_user"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
-        await queryRunner.query(`ALTER TABLE "process_instance" ADD CONSTRAINT "fk_process_instance_trigger_event" FOREIGN KEY ("trigger") REFERENCES "trigger_event"("name") ON DELETE NO ACTION ON UPDATE NO ACTION`);
     }
 
 }
