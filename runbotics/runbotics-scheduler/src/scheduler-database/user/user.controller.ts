@@ -32,9 +32,9 @@ export class UserController {
     }
 
     @GetWithTenant('users')
-    getAllUsersInTenant(@Param('tenantId') tenantId: Tenant['id']) {
+    getAllActivatedUsersInTenant(@Param('tenantId') tenantId: Tenant['id']) {
         this.logger.log('REST request to get all users in tenant');
-        return this.userService.findAllByTenant(tenantId);
+        return this.userService.findAllActivatedByTenant(tenantId);
     }
 
     @PatchWithTenant('users/:id')

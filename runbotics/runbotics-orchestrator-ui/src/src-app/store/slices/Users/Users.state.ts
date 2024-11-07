@@ -15,10 +15,6 @@ export interface UsersState {
         loading: boolean;
         all: UserDto[];
         allByPage: Page<UserDto> | null;
-        nonAdmins: {
-            all: UserDto[];
-            loading: boolean;
-        };
     };
     notActivated: {
         loading: boolean;

@@ -30,8 +30,10 @@ export class UserService {
         return this.userRepository.find();
     }
 
-    findAllByTenant(tenantId: string) {
-        return this.userRepository.findBy({ tenantId });
+    findAllActivatedByTenant(tenantId: string) {
+        return this.userRepository
+            .findBy({ tenantId, activated: true })
+            .then((users) => users.map(this.mapToUserDto));
     }
 
     findAllByRole(role: Role) {
@@ -136,6 +138,7 @@ export class UserService {
             firstName: user.firstName,
             lastName: user.lastName,
             langKey: user.langKey,
+            imageUrl: user.imageUrl,
             activated: user.activated,
             createdBy: user.createdBy,
             createdDate: user.createdDate,

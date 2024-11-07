@@ -77,7 +77,7 @@ interface filterOptions {
     collectionCreatorId: number;
 }
 
-export const filteredSharableUsers = (value: string, allSharableUsers: UserDto[], {
+export const filterSharableUsers = (value: string, allSharableUsers: UserDto[], {
     sharedWithUsers =[],
     selectedUsers = [],
     collectionCreatorId

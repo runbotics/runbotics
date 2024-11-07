@@ -41,8 +41,8 @@ const AccessOptions: FC<AccessOptionsProps> = ({ collectionData, handleChange, i
                         id="process-collection-users-select"
                         disabled={!isOwner}
                         defaultValue={collectionData?.users}
-                        getOptionLabel={(user) => user.login}
-                        isOptionEqualToValue={(optionUser, valueUser) => optionUser.login === valueUser.login}
+                        getOptionLabel={(user) => user.email}
+                        isOptionEqualToValue={(optionUser, valueUser) => optionUser.email === valueUser.email}
                         options={shareableUsers.loading ? [] : shareableUsers.all}
                         filterSelectedOptions
                         disableCloseOnSelect

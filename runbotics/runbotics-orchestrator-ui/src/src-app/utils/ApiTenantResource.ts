@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { RootState } from '#src-app/store';
-import { User } from '#src-app/types/user';
+import { AuthState } from '#src-app/store/slices/Auth';
 import axios from '#src-app/utils/axios';
 
 import { PageRequestParams } from './types/page';
@@ -67,7 +67,7 @@ class ApiTenantResource {
 
     private static buildURL(
         { resourcePath, resourceId, pageParams }: PathElements,
-        user: User
+        user: AuthState['user']
     ) {
         const resourcePathPart = resourcePath
             ? `/${resourcePath}` : '';

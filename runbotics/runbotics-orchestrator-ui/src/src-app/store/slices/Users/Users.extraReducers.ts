@@ -2,7 +2,6 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { UsersState } from './Users.state';
 import {
-    getAll,
     getAllNotActivatedByPage,
     getAllActivatedByPage,
     getAllActivatedByPageAndTenant,
@@ -11,23 +10,22 @@ import {
     updateActivated,
     partialUpdate,
     deleteUser,
-    getActiveNonAdmins,
     updateNotActivatedByTenant,
     updateActivatedByTenant,
+    getAllUsersInTenant,
 } from './Users.thunks';
 
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
-        // GET ALL
-        .addCase(getAll.pending, (state) => {
-            state.loading = true;
+        .addCase(getAllUsersInTenant.pending, (state) => {
+            state.tenantActivated.loading = true;
         })
-        .addCase(getAll.fulfilled, (state, action) => {
-            state.loading = false;
-            state.all = action.payload;
+        .addCase(getAllUsersInTenant.fulfilled, (state, action) => {
+            state.tenantActivated.all = action.payload;
+            state.tenantActivated.loading = false;
         })
-        .addCase(getAll.rejected, (state) => {
-            state.loading = false;
+        .addCase(getAllUsersInTenant.rejected, (state) => {
+            state.tenantActivated.loading = true;
         })
 
         // PARTIAL ACCOUNT UPDATE
@@ -51,18 +49,6 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(getAllActivatedByPage.rejected, (state) => {
             state.activated.loading = false;
-        })
-
-        // GET ALL ACTIVATED NON-ADMINS
-        .addCase(getActiveNonAdmins.pending, (state) => {
-            state.activated.nonAdmins.loading = true;
-        })
-        .addCase(getActiveNonAdmins.fulfilled, (state, action) => {
-            state.activated.nonAdmins.loading = false;
-            state.activated.nonAdmins.all = action.payload;
-        })
-        .addCase(getActiveNonAdmins.rejected, (state) => {
-            state.activated.nonAdmins.loading = false;
         })
 
         // GET ALL ACTIVATED BY TENANT

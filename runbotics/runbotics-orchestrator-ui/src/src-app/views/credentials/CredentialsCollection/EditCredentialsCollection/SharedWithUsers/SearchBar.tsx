@@ -10,7 +10,6 @@ import useTranslations from '#src-app/hooks/useTranslations';
 interface SearchBarProps {
   onAddUser: (email: string) => void;
   availableUsers: UserDto[];
-  setAvailableUsers: (state: ((prevState: UserDto[]) => UserDto[])) => void;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {

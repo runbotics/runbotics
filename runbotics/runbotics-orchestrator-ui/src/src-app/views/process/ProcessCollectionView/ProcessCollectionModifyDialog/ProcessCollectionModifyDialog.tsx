@@ -28,24 +28,22 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
     const dispatch = useDispatch();
     const currentCollectionId = useSearchParams().get(COLLECTION_ID_PARAM) ?? ROOT_PROCESS_COLLECTION_ID;
 
-    const { activated: { nonAdmins } } = useSelector((state) => state.users);
+    const { tenantActivated } = useSelector((state) => state.users);
     const { user: currentUser } = useSelector((state) => state.auth);
 
     const [initialCollectionData, setInitialCollectionData] = useState<ProcessCollection>(prepareIncompleteCollectionEntity(currentUser, currentCollectionId, collection));
     const [collectionData, setCollectionData] = useState<ProcessCollection>(initialCollectionData);
 
     const shareableUsers = useMemo(() => ({
-        loading: nonAdmins.loading,
-        all: nonAdmins.all.filter(user => user.email !== currentUser.email)
-    }), [nonAdmins, currentUser.email]);
+        loading: tenantActivated.loading,
+        all: tenantActivated.all.filter(user => user.email !== currentUser.email)
+    }), [tenantActivated, currentUser.email]);
 
-    const isOwner = !collection || currentUser.login === collection?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
+    const isOwner = !collection || currentUser.email === collection?.createdBy.email || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
     const isUpdated = Boolean(collection);
 
     useEffect(() => {
-        if (isOpen) dispatch(usersActions.getAllLimited());
-        if (isOpen) dispatch(usersActions.getActiveNonAdmins());
-
+        if (isOpen) dispatch(usersActions.getAllUsersInTenant());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
 

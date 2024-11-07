@@ -22,44 +22,50 @@ interface ModifyBotCollectionDialogProps {
 
 const REJECT_REQUEST_TYPE = 'botCollection/createCollection/rejected';
 
+// TODO: types of collection.users to adjust after bot migration
+// eslint-disable-next-line max-lines-per-function
 const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collection, onClose, open, pageParams }) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
 
     useEffect(() => {
-        if (open) dispatch(usersActions.getAllLimited());
-        if (open) dispatch(usersActions.getActiveNonAdmins());
+        if (open) dispatch(usersActions.getAllUsersInTenant());
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
     const { user: currentUser } = useSelector((state) => state.auth);
-    const { all: allUsers, activated: { nonAdmins } } = useSelector((state) => state.users);
+    const { tenantActivated } = useSelector((state) => state.users);
     const [name, setName] = useState(collection ? collection.name : '');
     const [description, setDescription] = useState(collection ? collection.description : '');
-    const [selectedUsers, setSelectedUsers] = useState<UserDto[]>(collection ? collection.users : []);
+    // const [selectedUsers, setSelectedUsers] = useState<UserDto[]>(collection ? collection.users : []);
+    const [selectedUsers, setSelectedUsers] = useState<UserDto[]>([]);
     const [publicBotsIncluded, setPublicBotsIncluded] = useState(collection ? collection.publicBotsIncluded : true);
     const [error, setError] = useState(null);
 
     const shareableUsers = useMemo(() => ({
-        loading: nonAdmins.loading,
-        all: nonAdmins.all.filter(user => user.email !== currentUser.email)
-    }), [nonAdmins, currentUser.email, open]);
+        loading: tenantActivated.loading,
+        all: tenantActivated.all.filter(user => user.email !== currentUser.email)
+    }), [tenantActivated, currentUser.email, open]);
 
-    const isOwner = !collection || currentUser.login === collection?.createdByUser.login || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
+    const isOwner = !collection || currentUser.email === collection?.createdBy.email || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
 
-    const createCollectionEntityToSend = (): IBotCollection => ({
+    const createCollectionEntityToSend = () => ({
         name,
         description,
         publicBotsIncluded,
         users: selectedUsers,
-        ...(collection?.id && { id: collection.id }),
+        createdBy: tenantActivated.all.find((user) => user.email === currentUser.email),
+        created: collection ? collection.created : moment().toISOString(),
+        updated: moment().toISOString(),
+        id: collection ? collection.id : null,
     });
 
     const resetFormStates = () => {
         setName(collection ? collection.name : '');
         setDescription(collection ? collection.description : '');
-        setSelectedUsers(collection ? collection.users : []);
+        // setSelectedUsers(collection ? collection.users : []);
+        setSelectedUsers([]);
         setPublicBotsIncluded(collection ? collection.publicBotsIncluded : true);
         setError(null);
     };

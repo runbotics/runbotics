@@ -1,8 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
+import { UserDto } from 'runbotics-common';
 
-import { User } from '#src-app/types/user';
 import Axios from '#src-app/utils/axios';
+
+import { AuthState } from './Auth.state';
 
 export const setAccessToken = (accessToken: string | null): void => {
     if (accessToken) {
@@ -14,12 +16,9 @@ export const setAccessToken = (accessToken: string | null): void => {
     }
 };
 
-export const login = createAsyncThunk(
+export const login = createAsyncThunk<AuthState['user'], { email: string; password: string }>(
     'auth/login',
-    async (
-        payload: { email: string; password: string },
-        { rejectWithValue }
-    ) => {
+    async (payload, { rejectWithValue }) => {
         try {
             const response = await Axios.post<{ id_token: string }>(
                 '/api/authenticate',
@@ -32,7 +31,7 @@ export const login = createAsyncThunk(
             const { id_token: idToken } = response.data;
 
             setAccessToken(idToken);
-            const responseUser = await Axios.get<User>('/api/account');
+            const responseUser = await Axios.get<UserDto>('/api/account');
             const user = responseUser.data;
             return { ...user, authoritiesById: user?.roles };
         } catch (error) {
@@ -45,7 +44,7 @@ export const login = createAsyncThunk(
     }
 );
 
-export const createGuestAccount = createAsyncThunk<User, { langKey: string }>(
+export const createGuestAccount = createAsyncThunk<UserDto, { langKey: string }>(
     'auth/createGuestAccount',
     async ({ langKey }, { rejectWithValue }) => {
         try {
@@ -53,7 +52,7 @@ export const createGuestAccount = createAsyncThunk<User, { langKey: string }>(
             const token = response.data.id_token;
 
             setAccessToken(token);
-            const { data: responseUser } = await Axios.get<User>('/api/account');
+            const { data: responseUser } = await Axios.get<UserDto>('/api/account');
             return { ...responseUser, authoritiesById: responseUser?.roles };
         } catch (error) {
             if (!error.response) {
@@ -81,7 +80,7 @@ const isValidToken = (accessToken: string): boolean => {
 
 export const initialize = createAsyncThunk<{
     isAuthenticated: boolean;
-    user: User | null;
+    user: UserDto | null;
 }>('auth/initialize', async () => {
     try {
         const accessToken = window.localStorage.getItem('access_token');
@@ -89,7 +88,7 @@ export const initialize = createAsyncThunk<{
         if (accessToken && isValidToken(accessToken)) {
             setAccessToken(accessToken);
 
-            const response = await Axios.get<User>('/api/account');
+            const response = await Axios.get<UserDto>('/api/account');
             const user = response.data;
             return {
                 isAuthenticated: true,

@@ -1,9 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { UserDto } from 'runbotics-common';
 
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
+
+
+const USERS_PATH = 'users';
 
 
 const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
@@ -11,20 +15,8 @@ const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .params(params)
     .build();
 
-export const getAll = createAsyncThunk<UserDto[], void>(
-    'users/getAll',
-    () =>
-        axios
-            .get<UserDto[]>('/api/admin/users')
-            .then((response) => response.data)
-);
-
-export const getAllLimited = createAsyncThunk<UserDto[], void>(
-    'users/getAll',
-    () =>
-        axios
-            .get<UserDto[]>('/api/admin/users/limited')
-            .then((response) => response.data)
+export const getAllUsersInTenant = ApiTenantResource.get<UserDto[]>(
+    'users/getAllInTenant', USERS_PATH
 );
 
 export const partialUpdate = createAsyncThunk(
@@ -40,12 +32,6 @@ export const partialUpdate = createAsyncThunk(
 export const getAllActivatedByPage = createAsyncThunk<Page<UserDto>, PageRequestParams>(
     'users/getAllActivatedByPage',
     (params) => axios.get<Page<UserDto>>(buildPageURL(params, '/api/admin/users/activated'))
-        .then((response) => response.data),
-);
-
-export const getActiveNonAdmins = createAsyncThunk<UserDto[]>(
-    'users/getActiveNonAdmins',
-    () => axios.get<UserDto[]>('/api/admin/users/non-admins')
         .then((response) => response.data),
 );
 

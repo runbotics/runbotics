@@ -32,7 +32,6 @@ export type UserDto = Omit<
     | 'resetDate'
     | 'resetKey'
     | 'tenantId'
-    | 'imageUrl'
     | 'passwordHash'
     | 'authorities'
 > & {
