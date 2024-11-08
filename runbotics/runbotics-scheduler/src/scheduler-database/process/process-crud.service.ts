@@ -6,7 +6,7 @@ import { BotSystemType, FeatureKey, ProcessDto, ProcessOutputType, Role } from '
 import { User } from '#/scheduler-database/user/user.entity';
 import { CreateProcessDto } from '#/scheduler-database/process/dto/create-process.dto';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
-import { UpdateProcessDto } from '#/scheduler-database/process/dto/update-process.dto';
+import { PartialUpdateProcessDto, UpdateProcessDto } from '#/scheduler-database/process/dto/update-process.dto';
 import { UpdateDiagramDto } from '#/scheduler-database/process/dto/update-diagram.dto';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { getPage, Page } from '#/utils/page/page';
@@ -15,18 +15,9 @@ import { Specs } from '#/utils/specification/specifiable.decorator';
 import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
 import { BotCollection } from '../bot-collection/bot-collection.entity';
 import { UserService } from '../user/user.service';
+import { TagService } from '../tags/tag.service';
 
-const RELATIONS: FindOptionsRelations<ProcessEntity> = {
-    system: true,
-    botCollection: true,
-    output: true,
-    createdBy: true,
-    editor: true,
-    tags: true,
-    processCollection: {
-        users: true,
-    },
-};
+const relations = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
 
 @Injectable()
 export class ProcessCrudService {
@@ -38,6 +29,7 @@ export class ProcessCrudService {
         @InjectRepository(BotCollection)
         private botCollectionRepository: Repository<BotCollection>,
         private readonly userService: UserService,
+        private readonly tagService: TagService,
     ) {
     }
 
@@ -100,35 +92,67 @@ export class ProcessCrudService {
         return process;
     }
 
-    async update(tenantId: string, id: number, processDto: UpdateProcessDto) {
-        const process = await this.processRepository.findOneBy({ tenantId, id });
-
-        if (!process) {
-            throw new NotFoundException();
-        }
-
-        const partial: Partial<ProcessEntity> = {};
+    async update(user: UserEntity, id: number, processDto: UpdateProcessDto) {
+        const process = await this.processRepository
+            .findOneOrFail({
+                where: {
+                    id,
+                    tenantId: user.tenantId,
+                },
+                relations,
+            })
+            .catch(() => {
+                throw new NotFoundException();
+            });
 
         process.name = processDto.name;
         process.description = processDto.description;
         process.definition = processDto.definition;
         process.isPublic = processDto.isPublic;
-        partial.isAttended = processDto.isAttended;
-        partial.isTriggerable = processDto.isTriggerable;
-        partial.botCollectionId = processDto.botCollection?.id;
-        partial.outputType = processDto.output?.type;
-        partial.systemName = processDto.system?.name;
 
         if (processDto.tags?.length > 15) {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
-        // TODO: create/link tags to process
-        partial.tags = processDto.tags as Tag[] | undefined;
+        process.tags = await Promise.all((processDto.tags as Tag[]).map(async (tag) => {
+            const tagByName = await this.tagService.getByName(tag.name, user.tenantId);
+            if (!tagByName) {
+                const newTag = await this.tagService.create(user, tag);
+                return newTag;
+            }
+            return tagByName;
+        }));
 
-        await this.processRepository.update({ tenantId, id }, partial);
+        await this.processRepository.save(process);
 
-        return this.processRepository.findOne({ where: { tenantId, id }, relations: RELATIONS });
+        return this.processRepository.findOne({ where: { id, tenantId: user.tenantId }, relations });
+    }
+
+    async partialUpdate(user: UserEntity, id: number, processDto: PartialUpdateProcessDto) {
+        await this.processRepository
+            .findOneOrFail({
+                where: {
+                    id,
+                    tenantId: user.tenantId,
+                },
+                relations,
+            })
+            .catch(() => {
+                throw new NotFoundException();
+            });
+
+        const partial: Partial<ProcessEntity> = {};
+
+        partial.isAttended = processDto.isAttended;
+        partial.isTriggerable = processDto.isTriggerable;
+        partial.botCollectionId = processDto.botCollection?.id;
+        partial.systemName = processDto.system?.name;
+        partial.outputType = processDto.output?.type;
+        partial.executionInfo = processDto.executionInfo;
+
+        await this.processRepository.update({ id, tenantId: user.tenantId }, partial);
+
+        return this.processRepository.findOne({ where: { id, tenantId: user.tenantId }, relations });
     }
 
     async updateDiagram(user: User, id: number, updateDiagramDto: UpdateDiagramDto) {
@@ -156,7 +180,7 @@ export class ProcessCrudService {
         const options: FindManyOptions<ProcessEntity> = {
             ...specs,
         };
-        options.relations = RELATIONS;
+        options.relations = relations;
 
         options.where = {
             ...options.where,
@@ -183,7 +207,7 @@ export class ProcessCrudService {
                 : user,
         };
 
-        options.relations = RELATIONS;
+        options.relations = relations;
 
         const page = await getPage(this.processRepository, options);
 
@@ -199,7 +223,7 @@ export class ProcessCrudService {
                 tenantId: user.tenantId,
                 id,
             },
-            relations: RELATIONS,
+            relations: relations,
         });
     }
 

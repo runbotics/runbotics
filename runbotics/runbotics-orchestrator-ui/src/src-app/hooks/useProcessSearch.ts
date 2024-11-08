@@ -43,12 +43,13 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                             contains: {
                                 ...(search.trim() && {
                                     name: search.trim(),
-                                    'createdBy->name': search.trim(),
-                                    'tags->name': search.trim(),
+                                    // todo: consider whether the filter should operate in OR or AND mode
+                                    // 'createdBy->email': search.trim(),
+                                    // 'tags->name': search.trim(),
                                 }),
                             },
                             equals: {
-                                ...(collectionId !== null && { processCollectionId: collectionId }),
+                                processCollectionId: collectionId !== null ? collectionId : 'null',
                             },
                         },
                     },
@@ -64,8 +65,9 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                             contains: {
                                 ...(debouncedValue.trim() && {
                                     name: debouncedValue.trim(),
-                                    'createdBy->login': debouncedValue.trim(),
-                                    'tag->name': debouncedValue.trim(),
+                                    // todo: consider whether the filter should operate in OR or AND mode
+                                    // 'createdBy->email': search.trim(),
+                                    // 'tags->name': search.trim(),
                                 }),
                             },
                         },

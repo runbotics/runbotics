@@ -62,6 +62,11 @@ export const partialUpdateProcess = createAsyncThunk<ProcessDto, ProcessDto, { r
         .catch((error) => rejectWithValue(error.response.data)),
 );
 
+export const updateExecutionInfo = ApiTenantResource.patch<IProcess, Pick<IProcess, 'executionInfo'>>(
+    'processes/execution-info',
+    (id: string) => `${PROCESSES_PATH}/${id}/execution-info`,
+);
+
 export const updateBotCollection = ApiTenantResource.patch<IProcess, Pick<IProcess, 'botCollection'>>(
     'processes/bot-collection',
     (id: string) => `${PROCESSES_PATH}/${id}/bot-collection`,

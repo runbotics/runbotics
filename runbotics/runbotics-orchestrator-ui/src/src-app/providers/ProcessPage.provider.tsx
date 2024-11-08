@@ -48,12 +48,13 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                             contains: {
                                 ...(search.trim() && {
                                     name: search.trim(),
-                                    createdByName: search.trim(),
-                                    tagName: search.trim(),
+                                    // todo: consider whether the filter should operate in OR or AND mode
+                                    // 'createdBy->email': search.trim(),
+                                    // 'tags->name': search.trim(),
                                 }),
                             },
                             equals: {
-                                ...(collectionId !== null && { processCollectionId: collectionId }),
+                                processCollectionId: collectionId !== null ? collectionId : 'null',
                             },
                         },
                     }
@@ -69,8 +70,9 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                             contains: {
                                 ...(search.trim() && {
                                     name: search.trim(),
-                                    createdByName: search.trim(),
-                                    tagName: search.trim(),
+                                    // todo: consider whether the filter should operate in OR or AND mode
+                                    // 'createdBy->email': search.trim(),
+                                    // 'tags->name': search.trim(),
                                 }),
                             },
                         },

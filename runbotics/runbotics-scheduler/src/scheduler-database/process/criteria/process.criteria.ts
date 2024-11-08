@@ -18,7 +18,7 @@ export class ProcessCriteria extends Criteria {
 
 class CreatedByCriteria extends Criteria {
     id = new NumberFilter();
-    login = new StringFilter();
+    email = new StringFilter();
 }
 
 class TagCriteria extends Criteria {

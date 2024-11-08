@@ -13,6 +13,7 @@ export const createProcessSchema = z.object({
     definition: z.string(),
     isPublic: z.boolean(),
     isAttended: z.boolean().default(false),
+    executionInfo: z.string().trim().optional(),
     isTriggerable: z.boolean().default(false),
     system: botSystemReferenceSchema
         .default({

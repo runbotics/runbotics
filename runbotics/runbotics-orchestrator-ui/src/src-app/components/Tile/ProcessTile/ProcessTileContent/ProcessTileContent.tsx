@@ -43,13 +43,16 @@ const ProcessTileContent = forwardRef<HTMLDivElement, ProcessTileContentProps>((
                         {translate('Component.Tile.Process.Content.Creator')}
                     </Typography>
                     <Typography color='textSecondary' variant='body2'>
-                        <HighlightText
+                        {process.createdBy
+                            ? process.createdBy.email
+                            : translate('Component.Tile.Process.Content.Creator.Placeholder')}
+                        {/* <HighlightText
                             text={process.createdBy
                                 ? process.createdBy.email
                                 : translate('Component.Tile.Process.Content.Creator.Placeholder')
                             }
                             matchingText={searchValue}
-                        />
+                        /> */}
                     </Typography>
                 </StyledBox>
                 <StyledBox>

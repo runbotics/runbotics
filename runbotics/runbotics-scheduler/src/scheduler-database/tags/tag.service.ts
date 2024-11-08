@@ -30,6 +30,10 @@ export class TagService {
         return this.tagRepository.findOneBy({ id, tenantId: user.tenantId });
     }
 
+    getByName(name: Tag['name'], tenantId: User['tenantId']) {
+        return this.tagRepository.findOneBy({ name, tenantId });
+    }
+
     async create(user: User, tagDto: CreateTagDto) {
         const existingTag = await this.tagRepository.findOneBy({ tenantId: user.tenantId, name: tagDto.name });
 
