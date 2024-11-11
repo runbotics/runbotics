@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, ParseIntPipe, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { GetWithTenant, PatchWithTenant } from '#/utils/decorators/with-tenant.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
@@ -15,8 +15,6 @@ import { FeatureKey } from 'runbotics-common';
 
 @Controller('/api/scheduler')
 export class UserController {
-    private readonly logger = new Logger(UserController.name);
-
     constructor(private readonly userService: UserService) {}
 
     @GetWithTenant('users/Page')
@@ -26,14 +24,12 @@ export class UserController {
         @Specifiable(UserCriteria) specs: Specs<UserEntity>,
         @Pageable() paging: Paging
     ) {
-        this.logger.log('REST request to get all users by page in tenant');
         specs.where = { ...specs.where, tenantId };
         return this.userService.findAllByPageWithSpecs(specs, paging);
     }
 
     @GetWithTenant('users')
     getAllActivatedUsersInTenant(@Param('tenantId') tenantId: Tenant['id']) {
-        this.logger.log('REST request to get all users in tenant');
         return this.userService.findAllActivatedByTenant(tenantId);
     }
 
@@ -44,7 +40,6 @@ export class UserController {
         @Param('id', ParseIntPipe) userId: UserEntity['id'],
         @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto
     ) {
-        this.logger.log('REST request to update user in tenant');
         return this.userService.update(
             { ...userDto, tenantId: null },
             userId,
@@ -60,7 +55,6 @@ export class UserController {
         @Specifiable(UserCriteria) specs: Specs<UserEntity>,
         @Pageable() paging: Paging
     ) {
-        this.logger.log('REST request to get all users by page');
         return this.userService.findAllByPageWithSpecs(specs, paging);
     }
 
@@ -71,7 +65,6 @@ export class UserController {
         @Param('id', ParseIntPipe) userId: UserEntity['id'],
         @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto
     ) {
-        this.logger.log('REST request to update user');
         return this.userService.update(userDto, userId, user);
     }
 
@@ -79,7 +72,6 @@ export class UserController {
     @HttpCode(HttpStatus.NO_CONTENT)
     @FeatureKeys(FeatureKey.USERS_PAGE_READ)
     async deleteUser(@Param('id', ParseIntPipe) userId: UserEntity['id']) {
-        this.logger.log('REST request to delete user');
         await this.userService.delete(userId);
     }
 }
