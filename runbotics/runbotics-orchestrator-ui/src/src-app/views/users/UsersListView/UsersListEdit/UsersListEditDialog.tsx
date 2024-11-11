@@ -49,16 +49,14 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         setUser(getUserDataWithoutNulls(userData));
     }, [userData]);
 
-    const checkFormFieldsValidation = () => formValidationState.email && formValidationState.login;
+    const checkFormFieldsValidation = () => formValidationState &&formValidationState.email;
 
     const handleSave = (): void => {
         if (!checkFormFieldsValidation()) return;
 
-        const dataPayload: UserDto = getUserDataWithoutEmptyStrings(user);
-        const updateAction = isForAdmin
-            ? usersActions.updateActivated(dataPayload)
-            : usersActions.updateActivatedByTenant(dataPayload);
-        dispatch(updateAction).unwrap()
+        const dataPayload = getUserDataWithoutEmptyStrings(user);
+        dispatch(usersActions.updateInTenant({ payload: dataPayload, resourceId: dataPayload.id }))
+            .unwrap()
             .then(() => {
                 handleClose();
                 enqueueSnackbar(

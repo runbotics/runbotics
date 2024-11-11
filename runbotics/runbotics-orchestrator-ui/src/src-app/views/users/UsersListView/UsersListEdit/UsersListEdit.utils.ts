@@ -14,7 +14,6 @@ export const getUserDataWithoutNulls = (userData: UserDto) => ({
 export const getUserDataWithoutEmptyStrings = (userData: UserDto) => ({
     id: userData.id,
     email: userData.email,
-    login: userData.login,
     activated: userData.activated,
     firstName: (userData.firstName === '' ? null : userData.firstName),
     lastName: (userData.lastName === '' ? null : userData.lastName),
@@ -23,7 +22,6 @@ export const getUserDataWithoutEmptyStrings = (userData: UserDto) => ({
 
 export const initialValidationState: FormValidationState = {
     email: true,
-    login: true
 };
 
 export const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/;

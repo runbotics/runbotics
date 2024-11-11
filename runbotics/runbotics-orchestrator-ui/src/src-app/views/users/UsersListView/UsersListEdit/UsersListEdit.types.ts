@@ -9,7 +9,6 @@ export interface UsersListEditDialogProps {
 
 export interface FormValidationState {
     email: boolean;
-    login: boolean;
 };
 
 export interface UsersListEditFormProps {

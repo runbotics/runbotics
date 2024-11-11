@@ -2,21 +2,114 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { UsersState } from './Users.state';
 import {
-    getAllNotActivatedByPage,
-    getAllActivatedByPage,
-    getAllActivatedByPageAndTenant,
-    getAllNotActivatedByPageAndTenant,
-    updateNotActivated,
-    updateActivated,
     partialUpdate,
     deleteUser,
-    updateNotActivatedByTenant,
-    updateActivatedByTenant,
     getAllUsersInTenant,
+    getAllByPage,
+    getAllByPageInTenant,
+    update,
+    updateInTenant,
 } from './Users.thunks';
 
+// eslint-disable-next-line max-lines-per-function
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
+        // FOR ADMINS
+        .addCase(getAllByPage.pending, (state, action) => {
+
+            if (
+                action.meta.arg?.filter?.equals &&
+                'activated' in action.meta.arg.filter.equals
+            ) {
+                const activatedFilter = action.meta.arg.filter.equals.activated
+                    ? 'activated'
+                    : 'notActivated';
+
+                state[activatedFilter].loading = true;
+            } else {
+                state.loading = true;
+            }
+        })
+        .addCase(getAllByPage.fulfilled, (state, action) => {
+            if (
+                action.meta.arg?.filter?.equals &&
+                'activated' in action.meta.arg.filter.equals
+            ) {
+                const activatedFilter = action.meta.arg.filter.equals.activated
+                    ? 'activated'
+                    : 'notActivated';
+
+                state[activatedFilter].allByPage = action.payload;
+                state[activatedFilter].loading = false;
+            } else {
+                state.all = action.payload.content;
+                state.loading = false;
+            }
+        })
+        .addCase(getAllByPage.rejected, (state, action) => {
+            if (
+                action.meta.arg?.filter?.equals &&
+                'activated' in action.meta.arg.filter.equals
+            ) {
+                const activatedFilter = action.meta.arg.filter.equals.activated
+                    ? 'activated'
+                    : 'notActivated';
+
+                state[activatedFilter].loading = false;
+            } else {
+                state.loading = false;
+            }
+        })
+
+        // FOR TENANT ADMINS
+        .addCase(getAllByPageInTenant.pending, (state, action) => {
+            if (
+                action.meta.arg?.pageParams?.filter?.equals &&
+                'activated' in action.meta.arg.pageParams.filter.equals
+            ) {
+                const activatedFilter = action.meta.arg.pageParams.filter.equals
+                    .activated
+                    ? 'tenantActivated'
+                    : 'tenantNotActivated';
+
+                state[activatedFilter].loading = true;
+            } else {
+                state.loading = true;
+            }
+        })
+        .addCase(getAllByPageInTenant.fulfilled, (state, action) => {
+            if (
+                action.meta.arg?.pageParams?.filter?.equals &&
+                'activated' in action.meta.arg.pageParams.filter.equals
+            ) {
+                const activatedFilter = action.meta.arg.pageParams.filter.equals
+                    .activated
+                    ? 'tenantActivated'
+                    : 'tenantNotActivated';
+
+                state[activatedFilter].allByPage = action.payload;
+                state[activatedFilter].loading = false;
+            } else {
+                state.loading = false;
+            }
+        })
+        .addCase(getAllByPageInTenant.rejected, (state, action) => {
+            if (
+                action.meta.arg?.pageParams?.filter?.equals &&
+                'activated' in action.meta.arg.pageParams.filter.equals
+            ) {
+                const activatedFilter = action.meta.arg.pageParams.filter.equals
+                    .activated
+                    ? 'tenantActivated'
+                    : 'tenantNotActivated';
+
+                state[activatedFilter].loading = false;
+            } else {
+                state.loading = false;
+            }
+        })
+
+        // GET ALL USERS IN TENANT
         .addCase(getAllUsersInTenant.pending, (state) => {
             state.tenantActivated.loading = true;
         })
@@ -28,107 +121,31 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.tenantActivated.loading = true;
         })
 
-        // PARTIAL ACCOUNT UPDATE
-        .addCase(partialUpdate.pending, (state) => {
-            state.userUpdate.loading = true;
-        })
-        .addCase(partialUpdate.fulfilled, (state) => {
-            state.userUpdate.loading = false;
-        })
-        .addCase(partialUpdate.rejected, (state) => {
-            state.userUpdate.loading = false;
-        })
-
-        // GET ALL ACTIVATED
-        .addCase(getAllActivatedByPage.pending, (state) => {
+        // UPDATE USERS
+        .addCase(update.pending, (state) => {
+            state.notActivated.loading = true;
             state.activated.loading = true;
         })
-        .addCase(getAllActivatedByPage.fulfilled, (state, action) => {
+        .addCase(update.fulfilled, (state) => {
+            state.notActivated.loading = false;
             state.activated.loading = false;
-            state.activated.allByPage = { ...action.payload };
         })
-        .addCase(getAllActivatedByPage.rejected, (state) => {
+        .addCase(update.rejected, (state) => {
+            state.notActivated.loading = false;
             state.activated.loading = false;
         })
 
-        // GET ALL ACTIVATED BY TENANT
-        .addCase(getAllActivatedByPageAndTenant.pending, (state) => {
+        .addCase(updateInTenant.pending, (state) => {
             state.tenantActivated.loading = true;
-        })
-        .addCase(getAllActivatedByPageAndTenant.fulfilled, (state, action) => {
-            state.tenantActivated.loading = false;
-            state.tenantActivated.allByPage = { ...action.payload };
-        })
-        .addCase(getAllActivatedByPageAndTenant.rejected, (state) => {
-            state.tenantActivated.loading = false;
-        })
-
-        // GET ALL NOT ACTIVATED
-        .addCase(getAllNotActivatedByPage.pending, (state) => {
-            state.notActivated.loading = true;
-        })
-        .addCase(getAllNotActivatedByPage.fulfilled, (state, action) => {
-            state.notActivated.loading = false;
-            state.notActivated.allByPage = { ...action.payload };
-        })
-        .addCase(getAllNotActivatedByPage.rejected, (state) => {
-            state.notActivated.loading = false;
-        })
-
-        // GET ALL NOT ACTIVATED BY TENANT
-        .addCase(getAllNotActivatedByPageAndTenant.pending, (state) => {
             state.tenantNotActivated.loading = true;
         })
-        .addCase(getAllNotActivatedByPageAndTenant.fulfilled, (state, action) => {
-            state.tenantNotActivated.loading = false;
-            state.tenantNotActivated.allByPage = { ...action.payload };
-        })
-        .addCase(getAllNotActivatedByPageAndTenant.rejected, (state) => {
-            state.tenantNotActivated.loading = false;
-        })
-
-        // PATCH UPDATE NOT ACTIVATED USERS
-        .addCase(updateNotActivated.pending, (state) => {
-            state.notActivated.loading = true;
-        })
-        .addCase(updateNotActivated.fulfilled, (state) => {
-            state.notActivated.loading = false;
-        })
-        .addCase(updateNotActivated.rejected, (state) => {
-            state.notActivated.loading = false;
-        })
-
-        // PATCH UPDATE ACTIVATED USERS
-        .addCase(updateActivated.pending, (state) => {
-            state.activated.loading = true;
-        })
-        .addCase(updateActivated.fulfilled, (state) => {
-            state.activated.loading = false;
-        })
-        .addCase(updateActivated.rejected, (state) => {
-            state.activated.loading = false;
-        })
-
-        // PATCH UPDATE NOT ACTIVATED USERS BY TENANT
-        .addCase(updateNotActivatedByTenant.pending, (state) => {
-            state.tenantNotActivated.loading = true;
-        })
-        .addCase(updateNotActivatedByTenant.fulfilled, (state) => {
-            state.tenantNotActivated.loading = false;
-        })
-        .addCase(updateNotActivatedByTenant.rejected, (state) => {
-            state.tenantNotActivated.loading = false;
-        })
-
-        // PATCH UPDATE ACTIVATED USERS BY TENANT
-        .addCase(updateActivatedByTenant.pending, (state) => {
-            state.tenantActivated.loading = true;
-        })
-        .addCase(updateActivatedByTenant.fulfilled, (state) => {
+        .addCase(updateInTenant.fulfilled, (state) => {
             state.tenantActivated.loading = false;
+            state.tenantNotActivated.loading = false;
         })
-        .addCase(updateActivatedByTenant.rejected, (state) => {
+        .addCase(updateInTenant.rejected, (state) => {
             state.tenantActivated.loading = false;
+            state.tenantNotActivated.loading = false;
         })
 
         // DELETE USER
@@ -140,6 +157,17 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(deleteUser.rejected, (state) => {
             state.userDelete.loading = false;
+        })
+
+        // PARTIAL ACCOUNT UPDATE
+        .addCase(partialUpdate.pending, (state) => {
+            state.userUpdate.loading = true;
+        })
+        .addCase(partialUpdate.fulfilled, (state) => {
+            state.userUpdate.loading = false;
+        })
+        .addCase(partialUpdate.rejected, (state) => {
+            state.userUpdate.loading = false;
         });
 };
 

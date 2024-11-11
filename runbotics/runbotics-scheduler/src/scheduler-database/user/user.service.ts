@@ -11,8 +11,7 @@ import { Authority } from '../authority/authority.entity';
 import { Logger } from '#/utils/logger';
 import { TenantService } from '../tenant/tenant.service';
 import { Tenant } from '../tenant/tenant.entity';
-
-// const relations = [];
+import { isTenantAdmin } from '#/utils/authority.utils';
 
 @Injectable()
 export class UserService {
@@ -80,6 +79,7 @@ export class UserService {
     async update(userDto: UpdateUserDto, id: number, executor: User) {
         const { roles, tenantId: tid, ...partialUser } = userDto;
 
+        this.checkUpdateAllowedRole(executor, roles);
         const tenantRelation = await this.getTenantRelation(tid);
 
         const authority = await (async () =>
@@ -90,7 +90,10 @@ export class UserService {
                 : {})();
 
         const updatedUser = await this.userRepository
-            .findOneByOrFail({ id, tenantId: executor.tenantId })
+            .findOneByOrFail({
+                id,
+                ...(isTenantAdmin(executor) && { tenantId: executor.tenantId }),
+            })
             .then((user) => ({
                 ...user,
                 ...partialUser,
@@ -107,11 +110,9 @@ export class UserService {
     }
 
     async delete(id: number) {
-        await this.userRepository
-            .findOneByOrFail({ id })
-            .catch(() => {
-                throw new BadRequestException('Cannot find user with provided id');
-            });
+        await this.userRepository.findOneByOrFail({ id }).catch(() => {
+            throw new BadRequestException('Cannot find user with provided id');
+        });
 
         await this.userRepository.delete(id);
     }
@@ -155,12 +156,25 @@ export class UserService {
         };
     }
 
+    private checkUpdateAllowedRole(user: User, roles: Role[]) {
+        if (!roles) return;
+        const TENANT_ALLOWED_ROLES = [
+            Role.ROLE_USER,
+            Role.ROLE_TENANT_ADMIN,
+            Role.ROLE_EXTERNAL_USER,
+        ];
+
+        if (!isTenantAdmin(user) && !TENANT_ALLOWED_ROLES.includes(roles[0])) {
+            throw new BadRequestException('Wrong role');
+        }
+    }
+
     private getTenantRelation(
         tenantId: string | null
     ): Promise<{ tenant: Tenant } | null> {
         return this.tenantService
             .getById(tenantId)
-            .then((tenant) => tenant ? ({ tenant }) : null)
+            .then((tenant) => (tenant ? { tenant } : null))
             .catch(() => {
                 throw new BadRequestException('Wrong tenant id');
             });

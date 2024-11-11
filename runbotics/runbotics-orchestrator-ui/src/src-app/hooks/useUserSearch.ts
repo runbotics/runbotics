@@ -67,12 +67,15 @@ const useUserSearch = ({
         switch (searchType) {
             case UserSearchType.ALL_ACTIVATED:
                 dispatch(
-                    usersActions.getAllActivatedByPage({
+                    usersActions.getAllByPage({
                         page: newPage,
                         size: pageSize,
                         filter: {
                             contains: { 'email': debouncedValue },
-                            ...(tenantId && { equals: { 'tenantId': tenantId } })
+                            equals: {
+                                'activated': true,
+                                ...(tenantId && { 'tenantId': tenantId })
+                            }
                         },
                     })
                 )
@@ -84,12 +87,15 @@ const useUserSearch = ({
                 break;
             case UserSearchType.ALL_NOT_ACTIVATED:
                 dispatch(
-                    usersActions.getAllNotActivatedByPage({
+                    usersActions.getAllByPage({
                         page: newPage,
                         size: pageSize,
                         filter: {
                             contains: { 'email': debouncedValue },
-                            ...(tenantId && { equals: { 'tenantId': tenantId } })
+                            equals: {
+                                'activated': false,
+                                ...(tenantId && { 'tenantId': tenantId })
+                            }
                         },
                     })
                 )
@@ -101,12 +107,15 @@ const useUserSearch = ({
                 break;
             case UserSearchType.TENANT_ACTIVATED:
                 dispatch(
-                    usersActions.getAllActivatedByPageAndTenant({
-                        page: newPage,
-                        size: pageSize,
-                        filter: {
-                            contains: { 'email': debouncedValue },
-                        },
+                    usersActions.getAllByPageInTenant({
+                        pageParams: {
+                            page: newPage,
+                            size: pageSize,
+                            filter: {
+                                contains: { 'email': debouncedValue },
+                                equals: { 'activated': true },
+                            },
+                        }
                     })
                 )
                     .catch(() =>
@@ -117,12 +126,15 @@ const useUserSearch = ({
                 break;
             case UserSearchType.TENANT_NOT_ACTIVATED:
                 dispatch(
-                    usersActions.getAllNotActivatedByPageAndTenant({
-                        page: newPage,
-                        size: pageSize,
-                        filter: {
-                            contains: { 'email': debouncedValue },
-                        },
+                    usersActions.getAllByPageInTenant({
+                        pageParams: {
+                            page: newPage,
+                            size: pageSize,
+                            filter: {
+                                contains: { 'email': debouncedValue },
+                                equals: { 'activated': false },
+                            },
+                        }
                     })
                 )
                     .catch(() =>

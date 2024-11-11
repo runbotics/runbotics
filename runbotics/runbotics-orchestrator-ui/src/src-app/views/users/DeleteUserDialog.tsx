@@ -51,7 +51,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
         Promise
             .allSettled(
                 usersData.map((user) =>
-                    dispatch(usersActions.deleteUser({ userId: user.id }))
+                    dispatch(usersActions.deleteUser({ id: user.id }))
                 )
             )
             .then(() => {
