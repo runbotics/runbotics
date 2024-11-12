@@ -73,7 +73,7 @@ export const adjustShareWithProperty = (collection: EditCredentialsCollectionDto
 
 interface filterOptions {
     sharedWithUsers: SharedWithUser[];
-    selectedUsers: UserDto[];
+    selectedUsers: SharedWithUser[];
     collectionCreatorId: number;
 }
 
@@ -88,5 +88,5 @@ export const filterSharableUsers = (value: string, allSharableUsers: UserDto[], 
         sharableUser.id !== collectionCreatorId
         &&
         !sharedWithUsers?.some(sharedWithUser => sharedWithUser.email === sharableUser.email) &&
-        !selectedUsers?.some(selectedUser => selectedUser.id === sharableUser.id)
+        !selectedUsers?.some(selectedUser => selectedUser.email === sharableUser.email)
     );
