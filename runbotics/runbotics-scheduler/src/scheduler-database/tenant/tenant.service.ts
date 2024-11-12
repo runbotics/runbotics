@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan, MoreThanOrEqual, Repository } from 'typeorm';
+import { FindManyOptions, LessThan, MoreThanOrEqual, Repository } from 'typeorm';
 import dayjs from 'dayjs';
 
 import { User } from '#/scheduler-database/user/user.entity';
@@ -11,6 +11,9 @@ import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { TenantInviteCode } from './tenant-invite-code.entity';
 import { TenantInviteCodeDto } from './dto/invite-code.dto';
+import { Specs } from '#/utils/specification/specifiable.decorator';
+import { Paging } from '#/utils/page/pageable.decorator';
+import { getPage } from '#/utils/page/page';
 
 const relations = ['createdByUser'];
 
@@ -29,15 +32,25 @@ export class TenantService {
         return this.tenantRepository.findOneBy({ id });
     }
 
-    getAll() {
-        return this.tenantRepository.find({ relations })
-            .then((tenants) => tenants.map(tenant => ({
+    async getAllByPageWithSpecs(specs: Specs<Tenant>, paging: Paging) {
+        const options: FindManyOptions<Tenant> = {
+            ...paging,
+            ...specs,
+            relations
+        };
+
+        const page = await getPage(this.tenantRepository, options);
+
+        return {
+            ...page,
+            content: page.content.map(tenant => ({
                 ...tenant,
                 createdByUser: {
                     id: tenant.createdByUser.id,
                     email: tenant.createdByUser.email
                 }
-            })));
+            })),
+        };
     }
 
     async create(tenantDto: CreateTenantDto, requester: User): Promise<Tenant> {

@@ -18,7 +18,7 @@ const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => 
             filterable: false,
             flex: 0.6,
             renderCell: (params) => (
-                <Link 
+                <Link
                     href={`users?page=0&pageSize=${pageSize}&tenantId=${params.row.id}`}
                     style={{ textDecoration: 'none' }}
                 >
@@ -31,7 +31,7 @@ const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => 
             headerName: translate('Tenants.List.Table.Columns.CreatedBy'),
             filterable: false,
             flex: 0.6,
-            valueFormatter: (params: GridValueFormatterParams<UserDTO>) => params.value.login
+            valueFormatter: (params: GridValueFormatterParams<UserDTO>) => params.value.email
         },
         {
             field: TenantField.CREATED_DATE,

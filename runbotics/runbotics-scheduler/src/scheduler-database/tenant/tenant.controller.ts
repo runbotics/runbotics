@@ -19,6 +19,10 @@ import { TenantService } from './tenant.service';
 import { TenantInviteCodeDto, tenantInviteCodeSchema } from './dto/invite-code.dto';
 import { CreateTenantDto, createTenantSchema } from './dto/create-tenant.dto';
 import { UpdateTenantDto, updateTenantSchema } from './dto/update-tenant.dto';
+import { Pageable, Paging } from '#/utils/page/pageable.decorator';
+import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
+import { TenantCriteria } from './criteria/tenant.criteria';
+import { Tenant as TenantEntity } from './tenant.entity';
 
 @Controller('/api/scheduler')
 export class TenantController {
@@ -31,7 +35,6 @@ export class TenantController {
     @GetWithTenant('me')
     @FeatureKeys(FeatureKey.TENANT_READ)
     async getTenantByUser(@User('tenantId') id: Tenant['id']) {
-        this.logger.log('REST request to get user tenant with id: ', id);
         const tenant = await this.tenantService.getById(id);
 
         if (!tenant) {
@@ -45,7 +48,6 @@ export class TenantController {
     @GetWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_GET_INVITE_CODE)
     async getActiveInviteCode(@User('tenantId') id: Tenant['id']) {
-        this.logger.log('REST request to get active invite code for user tenant with id: ', id);
         const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(id);
 
         if (!inviteCodeDto) {
@@ -59,7 +61,6 @@ export class TenantController {
     @PostWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_CREATE_INVITE_CODE)
     async createInviteCode(@User('tenantId') id: Tenant['id']) {
-        this.logger.log('REST request to create invite code for user tenant with id: ', id);
 
         if (await this.tenantService.getActiveInviteCodeByTenantId(id)) {
             this.logger.error('Valid code exists for tenant with id: ', id);
@@ -71,17 +72,18 @@ export class TenantController {
 
     // -----------------------------------
 
-    @Get('tenants') // TODO: pagination & filtering
+    @Get('tenants/Page')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
-    getAllTenants() {
-        this.logger.log('REST request to get all tenants');
-        return this.tenantService.getAll();
+    getAllTenants(
+        @Pageable() paging: Paging,
+        @Specifiable(TenantCriteria) specs: Specs<TenantEntity>,
+    ) {
+        return this.tenantService.getAllByPageWithSpecs(specs, paging);
     }
 
     @Get('tenants/invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_GET_ALL_INVITE_CODE)
     async getActiveInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
-        this.logger.log(`REST request to get tenant invite code for tenant with id: ${id}`);
         const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(id);
 
         if (!inviteCodeDto) {
@@ -97,7 +99,6 @@ export class TenantController {
     async getTenantById(
         @Param('id', ParseUUIDPipe) id: Tenant['id']
     ) {
-        this.logger.log('REST request to get tenant by id: ', id);
         const tenant = await this.tenantService.getById(id);
 
         if (!tenant) {
@@ -114,7 +115,6 @@ export class TenantController {
     validateInviteCode(
         @Body(new ZodValidationPipe(tenantInviteCodeSchema)) inviteCodeDto: TenantInviteCodeDto
     ) {
-        this.logger.log('REST request to validate invite code');
         return this.tenantService.validateInviteCode(inviteCodeDto);
     }
 
@@ -124,14 +124,12 @@ export class TenantController {
         @Body(new ZodValidationPipe(createTenantSchema)) tenantDto: CreateTenantDto,
         @User() user: UserEntity
     ) {
-        this.logger.log('REST request to create tenant by user with id: ', user.id);
         return this.tenantService.create(tenantDto, user);
     }
 
     @Post('tenants/invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_CREATE_ALL_INVITE_CODE)
     async createInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
-        this.logger.log('REST request to create tenant invite code for tenant with id: ', id);
 
         if (await this.tenantService.getActiveInviteCodeByTenantId(id)) {
             this.logger.error('Valid code exists for tenant with id: ', id);
@@ -148,7 +146,6 @@ export class TenantController {
         @Body(new ZodValidationPipe(updateTenantSchema)) tenantDto: UpdateTenantDto,
         @User() user: UserEntity
     ) {
-        this.logger.log(`REST request to update tenant with id ${id} by user with id: ${user.id}`);
         return this.tenantService.update(tenantDto, id, user);
     }
 
@@ -156,7 +153,6 @@ export class TenantController {
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteTenant(@Param('id', ParseUUIDPipe) id: Tenant['id']) {
-        this.logger.log(`REST request to delete tenant with id ${id}`);
         await this.tenantService.delete(id);
     }
 }
