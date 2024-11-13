@@ -4,26 +4,24 @@ import { Chip, CircularProgress, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useRouter } from 'next/router';
-
 import LogoIcon from '#public/images/logos/all-for-one-logo.png';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { Language } from '#src-app/translations/translations';
 
 import styles from './FeedbackView.module.scss';
 
 const FeedbackView = () => {
     const [loading, setLoading] = useState(true);
     const { translate, switchLanguage } = useTranslations();
-    const { push, locale: activeLocale, asPath } = useRouter();
     const currentYear = new Date().getFullYear();
+    const companyName = translate('Feedback.Nav.CompanyName');
+    const companyDepartmentName = translate(
+        'Feedback.Footer.CompanyDepartmentName'
+    );
 
+    //todo: add language switch
     useEffect(() => {
-        switchLanguage(activeLocale as Language);
-        push(asPath, undefined, {
-            locale: activeLocale,
-        });
-    }, [activeLocale]);
+        switchLanguage('pl');
+    }, []);
 
     return (
         <div className={styles.feedbackWrapper}>
@@ -96,7 +94,7 @@ const FeedbackView = () => {
             <footer>
                 <div className={styles.container}>
                     <Typography className={styles.copyright}>
-                        &copy; {currentYear} All For One Poland
+                        &copy; {currentYear} {companyName}
                     </Typography>
                     <div className={styles.findUs}>
                         <Typography>
@@ -108,7 +106,7 @@ const FeedbackView = () => {
                                     href="https://www.all-for-one.pl"
                                     target="_blank"
                                 >
-                                    All For One Poland
+                                    {companyName}
                                 </Link>
                             </Typography>
                             <Typography className={styles.link}>
@@ -116,7 +114,7 @@ const FeedbackView = () => {
                                     href="https://softwarehouse.all-for-one.pl"
                                     target="_blank"
                                 >
-                                    Enterprise Software House
+                                    {companyDepartmentName}
                                 </Link>
                             </Typography>
                         </div>

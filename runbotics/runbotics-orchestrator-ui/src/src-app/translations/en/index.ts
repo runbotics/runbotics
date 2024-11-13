@@ -42,6 +42,6 @@ const translationResources = {
     ...blogTranslations,
     ...demoTranslations,
     ...usersTranslations,
-    ...feedbackTranslations
+    ...feedbackTranslations,
 };
 export default translationResources;

@@ -1,9 +1,11 @@
 {
+    "Feedback.Nav.CompanyName": "All For One Poland",
     "Feedback.Main.HeadSection.WeValueYourOpinion": "We value your opinion",
-    "Feedback.Main.HeadSection.WeWouldBeGrateful": ", so we would be grateful if you could tell us what you think of our participation in the conference.",
-    "Feedback.Main.Subsection.TakePartInSurvey": "Take part in a short survey so that we can better respond to your needs.",
+    "Feedback.Main.HeadSection.WeWouldBeGrateful": ", so we would appreciate it if you could share your thoughts on our participation in the conference.",
+    "Feedback.Main.Subsection.TakePartInSurvey": "Please take part in a short survey to help us better meet your needs.",
     "Feedback.Main.Hashtags.Planning": "#planning",
     "Feedback.Main.Hashtags.Digitalization": "#digitalization",
     "Feedback.Main.Hashtags.Automation": "#automation",
-    "Feedback.Footer.FindUs": "You can also find us here:"
+    "Feedback.Footer.FindUs": "You can also find us here:",
+    "Feedback.Footer.CompanyDepartmentName": "Enterprise Software House"
 }
