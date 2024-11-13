@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { Chip, CircularProgress, Typography } from '@mui/material';
+import getConfig from 'next/config';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -10,6 +11,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import styles from './FeedbackView.module.scss';
 
 const FeedbackView = () => {
+    const { publicRuntimeConfig } = getConfig();
     const [loading, setLoading] = useState(true);
     const { translate, switchLanguage } = useTranslations();
     const currentYear = new Date().getFullYear();
@@ -84,7 +86,7 @@ const FeedbackView = () => {
                             )}
                             <iframe
                                 loading="lazy"
-                                src={process.env.NEXT_PUBLIC_COPILOT_CHAT_URL}
+                                src={publicRuntimeConfig.copilotChatUrl}
                                 onLoad={() => setLoading(false)}
                             />
                         </div>
