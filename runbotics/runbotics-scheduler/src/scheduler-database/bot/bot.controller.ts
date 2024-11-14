@@ -6,7 +6,7 @@ import {
 import { FeatureKey } from 'runbotics-common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { BotCrudService } from '#/scheduler-database/bot/bot-crud.service';
@@ -44,7 +44,7 @@ export class BotController {
     @Get(':id')
     @FeatureKeys(FeatureKey.BOT_READ)
     get(
-        @Param('id', ParseIntPipe) id: number, 
+        @Param('id', ParseIntPipe) id: number,
         @User() user: UserEntity,
     ){
         return this.botCrudService.findOne(user, id);

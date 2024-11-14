@@ -17,7 +17,7 @@ import { BotService } from '#/scheduler-database/bot/bot.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
 import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 
 @Controller('scheduler/bots')
 export class BotController {

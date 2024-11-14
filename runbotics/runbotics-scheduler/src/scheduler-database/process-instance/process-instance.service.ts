@@ -11,7 +11,7 @@ import {
 import { IBot, ProcessInstanceStatus, Tenant } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 import { CreateProcessInstanceDto } from './dto/create-process-instance.dto';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage, Page } from '#/utils/page/page';
@@ -38,7 +38,7 @@ export class ProcessInstanceService {
         return this.processInstanceRepository.save(processInstanceDto);
     }
 
-    async getAll(user: UserEntity, specs: Specs<ProcessInstance>) {
+    async getAll(user: User, specs: Specs<ProcessInstance>) {
         const options: FindManyOptions<ProcessInstance> = {
             ...specs,
         };
@@ -63,7 +63,7 @@ export class ProcessInstanceService {
     }
 
     async getPage(
-        user: UserEntity,
+        user: User,
         specs: Specs<ProcessInstance>,
         paging: Paging
     ): Promise<Page<ProcessInstance>> {
@@ -95,7 +95,7 @@ export class ProcessInstanceService {
         };
     }
 
-    async getOne(id: ProcessInstance['id'], user: UserEntity) {
+    async getOne(id: ProcessInstance['id'], user: User) {
         const processInstance = await this.processInstanceRepository
             .findOneOrFail({
                 where: {
@@ -121,7 +121,7 @@ export class ProcessInstanceService {
 
     async getSubprocesses(
         id: ProcessInstance['id'],
-        user: UserEntity,
+        user: User,
         paging: Paging
     ): Promise<Page<ProcessInstance>> {
         const options: FindManyOptions<ProcessInstance> = {

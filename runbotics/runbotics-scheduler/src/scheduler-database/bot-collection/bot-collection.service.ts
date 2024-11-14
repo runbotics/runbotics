@@ -3,13 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsRelations, In, Repository, And, Equal, FindOperator } from 'typeorm';
 import { IBotCollection, FeatureKey } from 'runbotics-common';
 import { BotCollection } from './bot-collection.entity';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { CreateBotCollectionDto } from '#/scheduler-database/bot-collection/dto/create-bot-collection.dto';
 import { UpdateBotCollectionDto } from '#/scheduler-database/bot-collection/dto/update-bot-collection.dto';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { DefaultCollections } from 'runbotics-common';
+import { UserService } from '../user/user.service';
 
 const RELATIONS: FindOptionsRelations<BotCollection> = {
     createdByUser: true,
@@ -21,8 +22,9 @@ export class BotCollectionService {
     constructor(
         @InjectRepository(BotCollection)
         private botCollectionRepository: Repository<BotCollection>,
-        @InjectRepository(UserEntity)
-        private userRepository: Repository<UserEntity>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
+        private readonly userService: UserService,
     ) {
     }
 
@@ -35,7 +37,7 @@ export class BotCollectionService {
         return botCollection;
     }
 
-    async saveDto(user: UserEntity, collectionDto: CreateBotCollectionDto) {
+    async saveDto(user: User, collectionDto: CreateBotCollectionDto) {
         const collection = new BotCollection();
         collection.name = collectionDto.name;
         collection.description = collectionDto.description;
@@ -55,7 +57,7 @@ export class BotCollectionService {
         return this.botCollectionRepository.save(collection);
     }
 
-    async updateDto(id: string, user: UserEntity, collectionDto: UpdateBotCollectionDto) {
+    async updateDto(id: string, user: User, collectionDto: UpdateBotCollectionDto) {
         const collection = await this.botCollectionRepository
             .findOneByOrFail({ tenantId: user.tenantId, id })
             .catch(() => {
@@ -80,7 +82,7 @@ export class BotCollectionService {
         return collection;
     }
 
-    findAll(user: UserEntity, specs: Specs<BotCollection>) {
+    findAll(user: User, specs: Specs<BotCollection>) {
         const options: FindManyOptions<BotCollection> = {};
         options.where = {
             ...specs.where,
@@ -93,7 +95,7 @@ export class BotCollectionService {
         return this.botCollectionRepository.find(options);
     }
 
-    findAllPage(user: UserEntity, specs: Specs<BotCollection>, paging: Paging) {
+    findAllPage(user: User, specs: Specs<BotCollection>, paging: Paging) {
         const options: FindManyOptions<BotCollection> = {};
         options.where = {
             ...specs.where,
@@ -109,17 +111,17 @@ export class BotCollectionService {
         return getPage(this.botCollectionRepository, options);
     }
 
-    findById(id: string, user: UserEntity) {
+    findById(id: string, user: User) {
         return this.botCollectionRepository.find({ where: { tenantId: user.tenantId, id }, relations: RELATIONS });
     }
 
-    delete(id: string, user: UserEntity) {
+    delete(id: string, user: User) {
         return this.botCollectionRepository.delete({ id, tenantId: user.tenantId });
     }
 
 
-    findForUser(user: UserEntity, specs: Specs<BotCollection>) {
-        if (user.hasFeatureKey(FeatureKey.TENANT_ALL_ACCESS)) {
+    findForUser(user: User, specs: Specs<BotCollection>) {
+        if (this.userService.hasFeatureKey(user, FeatureKey.TENANT_ALL_ACCESS)) {
             return this.botCollectionRepository.find(
                 {
                     where: [
@@ -171,7 +173,7 @@ export class BotCollectionService {
         });
     }
 
-    async findIdsForAdmin(user: UserEntity, specs: Specs<BotCollection>, paging: Paging) {
+    async findIdsForAdmin(user: User, specs: Specs<BotCollection>, paging: Paging) {
         const options: FindManyOptions<BotCollection> =
             {
                 ...paging,
@@ -199,14 +201,14 @@ export class BotCollectionService {
         return page.content.map(collection => collection.id);
     }
 
-    async findIds(user: UserEntity, specs: Specs<BotCollection>, paging: Paging) {
-        if (user.hasFeatureKey(FeatureKey.TENANT_ALL_ACCESS)) {
+    async findIds(user: User, specs: Specs<BotCollection>, paging: Paging) {
+        if (this.userService.hasFeatureKey(user, FeatureKey.TENANT_ALL_ACCESS)) {
             return this.findIdsForAdmin(user, specs, paging);
         }
         return this.findIdsForUser(user, specs, paging);
     }
 
-    async findIdsForUser(user: UserEntity, specs: Specs<BotCollection>, paging: Paging) {
+    async findIdsForUser(user: User, specs: Specs<BotCollection>, paging: Paging) {
         const options: FindManyOptions<BotCollection> = {
             select: {
                 id: true,
@@ -244,9 +246,9 @@ export class BotCollectionService {
         return page.content.map(collection => collection.id);
     }
 
-    async findPageForUser(user: UserEntity, specs: Specs<BotCollection>, paging: Paging) {
+    async findPageForUser(user: User, specs: Specs<BotCollection>, paging: Paging) {
         // preserved java version functionality
-        if (user.hasFeatureKey(FeatureKey.TENANT_ALL_ACCESS)) {
+        if (this.userService.hasFeatureKey(user, FeatureKey.TENANT_ALL_ACCESS)) {
             const ids = await this.findIdsForAdmin(user, specs, paging);
             const options: FindManyOptions<BotCollection> = {
                 where: { tenantId: user.tenantId, id: In(ids) },

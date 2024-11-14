@@ -10,7 +10,7 @@ import { ServerConfigService } from '#/config/server-config';
 import { CredentialChangeMailPayload, CredentialOperationType } from '#/scheduler-database/credential/credential.utils';
 import { User } from '#/scheduler-database/user/user.entity';
 import { NotificationProcessService } from '#/scheduler-database/notification-process/notification-process.service';
-import { BotEntity } from '#/database/bot/bot.entity';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { NotificationBotService } from '#/scheduler-database/notification-bot/notification-bot.service';
 
 export type SendMailInput = {

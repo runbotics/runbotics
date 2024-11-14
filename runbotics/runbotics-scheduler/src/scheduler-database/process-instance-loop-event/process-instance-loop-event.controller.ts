@@ -4,7 +4,7 @@ import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { ProcessInstanceLoopEventService } from './process-instance-loop-event.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 import { User } from '#/utils/decorators/user.decorator';
 import { ProcessInstanceLoopEvent } from './process-instance-loop-event.entity';
 

@@ -14,7 +14,7 @@ import {
 } from '#/utils/specification/specifiable.decorator';
 import { ProcessInstanceEventCriteria } from './criteria/process-instance-event.criteria';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 import { User } from '#/utils/decorators/user.decorator';
 import { ProcessInstanceEvent } from './process-instance-event.entity';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
