@@ -26,6 +26,7 @@ import CredentialsCollectionLocation from '../../CredentialsCollection/Credentia
 import { TileGrid, TypographyPlaceholder } from '../GridView.styles';
 import Header, { CredentialsTabs } from '../Header';
 import Paging from '../Paging';
+import PagingProvider from '../Paging.provider';
 
 const DEFAULT_CREDENTIAL_PAGE_SIZE = 12;
 
@@ -126,52 +127,56 @@ const CredentialsGridView = () => {
         : [];
 
     return (
-        <InternalPage title={collectionId ? translate('CredentialsInCollection.Page.Title', { name: collectionName }) : translate('Credentials.Page.Title')}>
-            <Header addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0} pageSize={pageSize} hasEditAccess={hasEditAccess}/>
-            <If condition={!isLoading} else={<LoadingScreen />}>
-                {collectionId && (
-                    <CredentialsCollectionLocation
-                        collectionName={collectionName}
+        <InternalPage
+            title={
+                collectionId
+                    ? translate('CredentialsInCollection.Page.Title', { name: collectionName })
+                    : translate('Credentials.Page.Title')
+            }
+        >
+            <PagingProvider
+                page={page}
+                pageSize={pageSize}
+                search={searchValue}
+                setPage={setPage}
+                collectionId={collectionId}
+                totalItems={allByPage?.totalElements}
+            >
+                <Header
+                    addCredentialDisabled={!credentialCollections || credentialCollections?.length === 0}
+                    hasEditAccess={hasEditAccess}
+                />
+                <If condition={!isLoading} else={<LoadingScreen />}>
+                    {collectionId && <CredentialsCollectionLocation collectionName={collectionName} />}
+                    <CredentialsHeader
+                        tabName={CredentialsTabs.CREDENTIALS}
+                        setSearchValue={setSearchValue}
+                        sharedWithNumber={collectionId && collectionSharedWithNumber}
+                    />
+                    {credentialsTiles.length > 0 ? (
+                        <>
+                            <TileGrid>{credentialsTiles}</TileGrid>
+                            <Box mt={6} display="flex" justifyContent="center">
+                                <Paging />
+                            </Box>
+                        </>
+                    ) : (
+                        <Box display="flex" alignItems="center" justifyContent="center" mt={6} mb={6}>
+                            <TypographyPlaceholder>{translate('Credentials.List.Placeholder')}</TypographyPlaceholder>
+                        </Box>
+                    )}
+                </If>
+                {currentDialogCredential && (
+                    <CredentialsModals
+                        isEditDialogOpen={isEditDialogOpen}
+                        isDeleteDialogOpen={isDeleteDialogOpen}
+                        currentDialogCredential={currentDialogCredential}
+                        setIsEditDialogOpen={setIsEditDialogOpen}
+                        setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+                        setCurrentDialogCredential={setCurrentDialogCredential}
                     />
                 )}
-                <CredentialsHeader
-                    credentialCount={allByPage?.totalElements}
-                    tabName={CredentialsTabs.CREDENTIALS}
-                    items={credentials}
-                    setSearchValue={setSearchValue}
-                    searchValue={searchValue}
-                    sharedWithNumber={collectionId && collectionSharedWithNumber}
-                />
-                {credentialsTiles.length > 0 ? (
-                    <>
-                        <TileGrid>{credentialsTiles}</TileGrid>
-                        <Box mt={6} display="flex" justifyContent="center">
-                            <Paging
-                                totalItems={allByPage?.totalElements}
-                                itemsPerPage={pageSize}
-                                currentPage={page}
-                                setPage={setPage}
-                            />
-                        </Box>
-                    </>
-                ) : (
-                    <Box display="flex" alignItems="center" justifyContent="center" mt={6} mb={6}>
-                        <TypographyPlaceholder>{translate('Credentials.List.Placeholder')}</TypographyPlaceholder>
-                    </Box>
-                )}
-            </If>
-            {currentDialogCredential && (
-                <CredentialsModals
-                    collectionId={collectionId}
-                    isEditDialogOpen={isEditDialogOpen}
-                    isDeleteDialogOpen={isDeleteDialogOpen}
-                    currentDialogCredential={currentDialogCredential}
-                    setIsEditDialogOpen={setIsEditDialogOpen}
-                    setIsDeleteDialogOpen={setIsDeleteDialogOpen}
-                    setCurrentDialogCredential={setCurrentDialogCredential}
-                    pageSize={pageSize}
-                />
-            )}
+            </PagingProvider>
         </InternalPage>
     );
 };

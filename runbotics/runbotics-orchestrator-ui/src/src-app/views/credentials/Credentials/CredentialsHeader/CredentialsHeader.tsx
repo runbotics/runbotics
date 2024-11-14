@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
 
 import { Box, Divider, Grid } from '@mui/material';
 
@@ -10,25 +10,22 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { StyledTypography } from './CredentialsHeader.styles';
 import SharedWithInfo from './SharedWithInfo';
 import { CredentialsTabs } from '../../GridView/Header';
+import { PagingContext } from '../../GridView/Paging.provider';
 import Search from '../../GridView/Search/Search';
 
 interface CredentialsHeaderProps<T extends FrontCredentialDto | FrontCredentialCollectionDto> {
-    credentialCount: number;
     tabName: CredentialsTabs;
-    items: T[];
     setSearchValue: Dispatch<SetStateAction<string>>;
-    searchValue: string;
     sharedWithNumber: number;
 }
 
 const CredentialsHeader = <T extends FrontCredentialDto | FrontCredentialCollectionDto>({
-    credentialCount,
     tabName,
     setSearchValue,
-    searchValue,
     sharedWithNumber,
 }: CredentialsHeaderProps<T>) => {
     const { translate } = useTranslations();
+    const { totalItems: credentialCount } = useContext(PagingContext);
 
     const elementsCountMessage =
         tabName === CredentialsTabs.CREDENTIALS
@@ -54,7 +51,7 @@ const CredentialsHeader = <T extends FrontCredentialDto | FrontCredentialCollect
                     </Grid>
                 </If>
             </Grid>
-            <Search searchValue={searchValue} handleSearch={handleSearch} />
+            <Search handleSearch={handleSearch} />
         </Box></>
     );
 };

@@ -17,11 +17,10 @@ export enum CredentialsTabs {
 
 interface HeaderProps {
     addCredentialDisabled?: boolean;
-    pageSize: number;
     hasEditAccess?: boolean;
 }
 
-const Header: FC<HeaderProps> = ({ addCredentialDisabled, pageSize, hasEditAccess = true }) => {
+const Header: FC<HeaderProps> = ({ addCredentialDisabled, hasEditAccess = true }) => {
     const { translate } = useTranslations();
 
     const router = useRouter();
@@ -75,7 +74,7 @@ const Header: FC<HeaderProps> = ({ addCredentialDisabled, pageSize, hasEditAcces
                         <AddCredentialButton disabled={addCredentialDisabled}/>
                     </If>
                     <If condition={currentTab === CredentialsTabs.COLLECTIONS}>
-                        <AddCredentialsCollectionButton pageSize={pageSize}/>
+                        <AddCredentialsCollectionButton/>
                     </If>
                 </Stack>
             </Grid>

@@ -1,16 +1,18 @@
-import React, { FC } from 'react';
+import { FC, useContext } from 'react';
 
 import { Box, TextField } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { PagingContext } from '../Paging.provider';
+
 interface SearchProps {
-    searchValue: string;
     handleSearch: (value: string) => void;
 }
 
-const Search: FC<SearchProps> = ({ searchValue, handleSearch }) => {
+const Search: FC<SearchProps> = ({ handleSearch }) => {
     const { translate } = useTranslations();
+    const { search } = useContext(PagingContext);
 
     return (
         <Box width="30%">
@@ -19,7 +21,7 @@ const Search: FC<SearchProps> = ({ searchValue, handleSearch }) => {
                 fullWidth
                 size="small"
                 label={translate('Bot.Collection.Header.Search.Label')}
-                value={searchValue}
+                value={search}
                 onChange={(e) => handleSearch(e.target.value)}>
                 {translate('Common.Search')}
             </TextField>

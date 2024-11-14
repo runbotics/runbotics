@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -23,6 +23,7 @@ import CredentialsHeader from '../../Credentials/CredentialsHeader/CredentialsHe
 import { TileGrid, TypographyPlaceholder } from '../GridView.styles';
 import Header, { CredentialsTabs } from '../Header';
 import Paging from '../Paging';
+import PagingProvider from '../Paging.provider';
 
 const DEFAULT_COLLECTION_PAGE_SIZE = 12;
 
@@ -103,47 +104,48 @@ const CredentialCollectionsGridView = () => {
 
     return (
         <InternalPage title={translate('Credentials.Collections.Page.Title')}>
-            <Header pageSize={pageSize}/>
-            <If condition={!isLoading} else={<LoadingScreen />}>
-                <CredentialsHeader
-                    credentialCount={allCredentialCollectionsByPage?.totalElements}
-                    tabName={CredentialsTabs.COLLECTIONS}
-                    items={credentialCollections}
-                    setSearchValue={setSearchValue}
-                    searchValue={searchValue}
-                    sharedWithNumber={null}
-                />
-                {collectionTiles.length > 0 ? (
-                    <>
-                        <TileGrid>
-                            {collectionTiles}
-                            <If condition={currentCollection}>
-                                <CredentialsCollectionModals
-                                    isEditDialogOpen={isEditDialogOpen}
-                                    isDeleteDialogOpen={isDeleteDialogOpen}
-                                    currentCollection={currentCollection}
-                                    setIsEditDialogOpen={setIsEditDialogOpen}
-                                    setIsDeleteDialogOpen={setIsDeleteDialogOpen}
-                                    setCurrentCollection={setCurrentCollection}
-                                    pageSize={pageSize}
-                                />
-                            </If>
-                        </TileGrid>
-                        <Box mt={6} display="flex" justifyContent="center">
-                            <Paging
-                                totalItems={allCredentialCollectionsByPage?.totalElements}
-                                itemsPerPage={pageSize}
-                                currentPage={page}
-                                setPage={setPage}
-                            />
+            <PagingProvider
+                page={page}
+                pageSize={pageSize}
+                search={searchValue}
+                setPage={setPage}
+                collectionId={null}
+                totalItems={allCredentialCollectionsByPage?.totalElements}
+            >
+                <Header/>
+                <If condition={!isLoading} else={<LoadingScreen />}>
+                    <CredentialsHeader
+                        tabName={CredentialsTabs.COLLECTIONS}
+                        setSearchValue={setSearchValue}
+                        sharedWithNumber={null}
+                    />
+                    {collectionTiles.length > 0 ? (
+                        <>
+                            <TileGrid>
+                                {collectionTiles}
+                                <If condition={currentCollection}>
+                                    <CredentialsCollectionModals
+                                        isEditDialogOpen={isEditDialogOpen}
+                                        isDeleteDialogOpen={isDeleteDialogOpen}
+                                        currentCollection={currentCollection}
+                                        setIsEditDialogOpen={setIsEditDialogOpen}
+                                        setIsDeleteDialogOpen={setIsDeleteDialogOpen}
+                                        setCurrentCollection={setCurrentCollection}
+                                        pageSize={pageSize}
+                                    />
+                                </If>
+                            </TileGrid>
+                            <Box mt={6} display="flex" justifyContent="center">
+                                <Paging/>
+                            </Box>
+                        </>
+                    ) : (
+                        <Box display="flex" alignItems="center" justifyContent="center" mt={6} mb={6}>
+                            <TypographyPlaceholder>{translate('Credentials.Collection.List.Placeholder')}</TypographyPlaceholder>
                         </Box>
-                    </>
-                ) : (
-                    <Box display="flex" alignItems="center" justifyContent="center" mt={6} mb={6}>
-                        <TypographyPlaceholder>{translate('Credentials.Collection.List.Placeholder')}</TypographyPlaceholder>
-                    </Box>
-                )}
-            </If>
+                    )}
+                </If>
+            </PagingProvider>
         </InternalPage>
     );
 };
