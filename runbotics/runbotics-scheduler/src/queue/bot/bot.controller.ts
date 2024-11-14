@@ -1,7 +1,8 @@
 import {
     Controller,
     Delete,
-    Get, HttpException,
+    Get,
+    HttpException,
     Param,
     ParseIntPipe,
     Query,
@@ -12,10 +13,11 @@ import { IBot, FeatureKey, ProcessInstanceStatus } from 'runbotics-common';
 import { BotSchedulerService } from './bot.scheduler.service';
 import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
-import { BotService } from '../../database/bot/bot.service';
-import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-
+import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
+import { User } from '#/utils/decorators/user.decorator';
+import { UserEntity } from '#/database/user/user.entity';
 
 @Controller('scheduler/bots')
 export class BotController {
@@ -66,22 +68,24 @@ export class BotController {
 
     @FeatureKeys(FeatureKey.BOT_DELETE)
     @Delete(':id')
-    async deleteBot(@Param('id') id: IBot['id']) {
+    async deleteBot(@Param('id') id: IBot['id'], @User() user: UserEntity) {
         this.logger.log(`=> Deleting bot ${id}`);
 
-        const bot = (await this.botService.findById(id));
+        const bot = await this.botService.findById(id);
         const installationId = bot.installationId;
 
         await this.authService.unregisterBot(installationId);
 
-        const botProcessInstances = await this.processInstanceService.findAllByBotId(id);
+        const botProcessInstances =
+            await this.processInstanceService.findAllByBotId(id, user.tenantId);
 
-        botProcessInstances.forEach(async instance => {
-            if (instance.status === ProcessInstanceStatus.IN_PROGRESS
-                || instance.status === ProcessInstanceStatus.INITIALIZING
+        botProcessInstances.forEach(async (instance) => {
+            if (
+                instance.status === ProcessInstanceStatus.IN_PROGRESS ||
+                instance.status === ProcessInstanceStatus.INITIALIZING
             ) {
                 instance.status = ProcessInstanceStatus.TERMINATED;
-                await this.processInstanceService.save(instance);
+                await this.processInstanceService.create(instance);
             }
         });
 

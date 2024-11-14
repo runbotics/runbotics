@@ -9,6 +9,5 @@ export interface BotState {
         allIds: string[];
         page: Page<IBot> | null;
         botSubscriptions: NotificationBot[];
-        currentBotSubscription: NotificationBot;
     };
 }

@@ -33,18 +33,20 @@ export enum ACTION_GROUP {
     LOOP = 'loop',
     API = 'api',
     JAVASCRIPT = 'javascript',
+    JIRA_CLOUD = 'jiraCloud',
+    JIRA_SERVER = 'jiraServer',
     ASANA = 'asana',
     GOOGLE = 'google',
     JIRA = 'jira',
     FILE = 'file',
+    FOLDER = 'folder',
     CSV = 'csv',
     DESKTOP_OFFICE_ACTIONS = 'desktopOfficeActions',
     CLOUD_EXCEL = 'cloudExcel',
     CLOUD_FILE = 'cloudFile',
-    BEEOFFICE = 'beeoffice',
+    BEEOFFICE = 'beeOffice',
     SAP = 'sap',
     APPLICATION = 'application',
-    FOLDER = 'folder'
 }
 
 export enum VariableAction {
@@ -173,7 +175,8 @@ export enum CloudFileAction {
     CREATE_FOLDER = 'cloudFile.createFolder',
     MOVE_FILE = 'cloudFile.moveFile',
     DELETE_ITEM = 'cloudFile.deleteItem',
-    CREATE_SHARE_LINK = 'cloudFile.createShareLink'
+    CREATE_SHARE_LINK = 'cloudFile.createShareLink',
+    GET_SHAREPOINT_LIST_ITEMS = 'cloudFile.getSharePointListItems'
 }
 
 export enum BeeOfficeAction {

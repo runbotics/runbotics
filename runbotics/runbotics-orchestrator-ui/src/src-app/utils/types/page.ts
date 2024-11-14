@@ -1,3 +1,5 @@
+import { OrderDirection } from 'runbotics-common';
+
 import { ObjectOf } from './objectOf';
 
 export interface Page<T> {
@@ -8,7 +10,6 @@ export interface Page<T> {
     number: number;
     numberOfElements: number;
     size: number;
-    sort: { sorted: boolean, unsorted: boolean, empty: boolean };
     totalElements: number;
     totalPages: number;
 }
@@ -22,11 +23,12 @@ export interface PageRequestParams<T extends object = any> {
         equals?: ObjectOf<T>;
         in?: IdentifiersObjectOf<T>;
     };
+    [key: string]: unknown;
 }
 
 type SortType<T> = {
     by: keyof T;
-    order?: 'asc' | 'desc';
+    order?: OrderDirection;
 }
 
 type IdentifiersObjectOf<T> = {

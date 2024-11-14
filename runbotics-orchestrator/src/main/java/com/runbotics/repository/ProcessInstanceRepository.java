@@ -44,6 +44,16 @@ public interface ProcessInstanceRepository extends JpaRepository<ProcessInstance
     )
     List<ProcessInstance> findByParentId(UUID parentId);
 
+    @Query(
+        "SELECT COUNT(id) FROM ProcessInstance process_instance WHERE process_instance.parentProcessInstanceId = ?1 OR (process_instance.parentProcessInstanceId IS NULL AND process_instance.rootProcessInstanceId = ?1)"
+    )
+    int countChildrenByParentId(UUID parentId);
+
+    @Query(
+        "SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.parentProcessInstanceId = ?1 OR (process_instance.parentProcessInstanceId IS NULL AND process_instance.rootProcessInstanceId = ?1)"
+    )
+    Page<ProcessInstance> findByParentId(UUID parentId, Pageable pageable);
+
     @Modifying
     @Query("DELETE FROM ProcessInstance pi WHERE pi.process.id IS NULL")
     void deleteInstancesWithoutProcess();

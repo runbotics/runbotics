@@ -1,0 +1,1 @@
+export type Reveal<T> = { [P in keyof T]: T[P] };

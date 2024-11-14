@@ -20,6 +20,8 @@ import {
     QueueJob,
 } from '#src-app/store/slices/Scheduler';
 
+import { processInstanceStatuses } from '#src-app/store/slices/Scheduler/Scheduler.thunks';
+
 import Header from './Header';
 import {
     useActiveProcessColumns,
@@ -37,7 +39,15 @@ const SchedulerView = () => {
     useScheduledStatusSocket();
 
     useEffect(() => {
-        dispatch(schedulerActions.getActiveJobs());
+        dispatch(schedulerActions.getActiveJobs({
+            pageParams: {
+                filter: {
+                    in: {
+                        status: processInstanceStatuses,
+                    },
+                },
+            },
+        }));
         dispatch(schedulerActions.getScheduledJobs());
         dispatch(schedulerActions.getWaitingJobs());
         // eslint-disable-next-line react-hooks/exhaustive-deps

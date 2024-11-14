@@ -67,9 +67,6 @@ public class Process implements Serializable {
     @JoinColumn(name = "system", referencedColumnName = "name")
     private BotSystem system;
 
-    @OneToMany(mappedBy = "process")
-    private Set<ScheduleProcess> schedules;
-
     @ManyToOne
     @JoinColumn(name = "bot_collection")
     private BotCollection botCollection;
@@ -284,14 +281,6 @@ public class Process implements Serializable {
         this.botCollection = botCollection;
     }
 
-    public Set<ScheduleProcess> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(Set<ScheduleProcess> schedules) {
-        this.schedules = schedules;
-    }
-
     public ZonedDateTime getLastRun() {
         return lastRun;
     }
@@ -390,7 +379,6 @@ public class Process implements Serializable {
             ", executionInfo=" + executionInfo +
             ", createdBy=" + createdBy +
             ", system=" + system +
-            ", schedules=" + schedules +
             ", botCollection=" + botCollection +
             ", editor=" + editor +
             ", tags=" + tags +

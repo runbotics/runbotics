@@ -5,8 +5,7 @@ import { Box } from '@mui/material';
 import InternalPage from '#src-app/components/pages/InternalPage';
 
 import { useDispatch } from '#src-app/store';
-
-import { getActions } from '#src-app/store/slices/Action/Action.thunks';
+import { activityActions } from '#src-app/store/slices/Action';
 
 
 import Header from './Header';
@@ -20,7 +19,7 @@ const ActionListView: VFC = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getActions());
+        dispatch(activityActions.getAllActions());
     }, [dispatch]);
 
     return (

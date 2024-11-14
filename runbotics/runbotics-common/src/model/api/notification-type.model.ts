@@ -1,5 +1,8 @@
-import { Notification } from "../../notifications";
 
-export interface NotificationType {
-    type: Notification;
+export enum NotificationProcessType {
+    PROCESS_ERROR = 'PROCESS_ERROR',
+}
+
+export enum NotificationBotType {
+    BOT_DISCONNECTED = 'BOT_DISCONNECTED',
 }

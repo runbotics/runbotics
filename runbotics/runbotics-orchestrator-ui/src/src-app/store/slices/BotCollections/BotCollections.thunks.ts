@@ -1,57 +1,32 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { IBotCollection } from 'runbotics-common';
 
-import { IBotCollectionWithFilters } from '#src-app/views/bot/BotCollectionView/BotCollectionView.types';
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 
-import { Page, PageRequestParams } from '../../../utils/types/page';
-import URLBuilder from '../../../utils/URLBuilder';
+import { Page } from '../../../utils/types/page';
 
-export const getAll = createAsyncThunk<IBotCollection[], void>(
+const BOT_COLLECTIONS_PATH = 'bot-collections';
+
+export const getAll = ApiTenantResource.get<IBotCollection[]>(
     'botCollection/getAllForUser',
-    () => axios.get<IBotCollection[]>('/api/bot-collection/current-user')
-        .then((response) => response.data),
+    `${BOT_COLLECTIONS_PATH}/current-user`,
 );
 
-const processPageURL = (params: PageRequestParams<Partial<IBotCollection>>) => URLBuilder
-    .url('/api/bot-collection-page/current-user')
-    .params(params)
-    .build();
-
-export const getByPage = createAsyncThunk<Page<IBotCollection>, PageRequestParams<Partial<IBotCollectionWithFilters>>>(
+export const getByPage = ApiTenantResource.get<Page<IBotCollection>>(
     'botCollection/getPageForUser',
-    (params) => axios.get<Page<IBotCollection>>(processPageURL(params))
-        .then((response) => response.data),
+    `${BOT_COLLECTIONS_PATH}/current-user/GetPage`,
 );
 
-export const deleteOne = createAsyncThunk<void, { collectionId: string }>(
+export const deleteOne = ApiTenantResource.delete(
     'botCollection/delete',
-    async ({ collectionId }) => {
-        await axios.delete(`/api/bot-collection/${collectionId}`);
-    },
+    BOT_COLLECTIONS_PATH,
 );
 
-interface CollectionUpdateParams {
-    id: string;
-    body: IBotCollection;
-}
-
-export const updateOne = createAsyncThunk<IBotCollection, CollectionUpdateParams, { rejectValue: any }>(
+export const updateOne = ApiTenantResource.patch<IBotCollection, IBotCollection>(
     'botCollection/updateCollection',
-    ({ id, body }, { rejectWithValue }) =>
-        axios.put<IBotCollection>(`/api/bot-collection/${id}`, body)
-            .then((response) => response.data)
-            .catch(error => rejectWithValue(error))
+    BOT_COLLECTIONS_PATH,
 );
 
-interface CollectionCreateParams {
-    body: IBotCollection;
-}
-
-export const createOne = createAsyncThunk<IBotCollection, CollectionCreateParams, { rejectValue: any }>(
-    'botCollection/createCollection',
-    ({ body }, { rejectWithValue }) =>
-        axios.post<IBotCollection>('/api/bot-collection', body)
-            .then((response) => response.data)
-            .catch(error => rejectWithValue(error))
+export const createOne = ApiTenantResource.post<IBotCollection, IBotCollection>(
+    'botCollection/createOne',
+    BOT_COLLECTIONS_PATH,
 );

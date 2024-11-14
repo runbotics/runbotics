@@ -8,6 +8,7 @@ const ORCHESTRATOR_PROCESS_INSTANCE_ID = '3c24ec6c-e0a2-4bc4-bfe8-8ce430c6ede9';
 const UPLOADED_FILE_PATH = `RunBotics/${ORCHESTRATOR_PROCESS_INSTANCE_ID}/file.pdf`;
 
 const INSTANT_PROCESS: InstantProcess = {
+    orchestratorProcessInstanceId: 'dpa',
     process: {
         id: PROCESS_ID,
     },

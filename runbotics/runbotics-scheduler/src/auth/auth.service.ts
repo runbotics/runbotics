@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { Connection } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { ServerConfigService } from '../config/server-config/server-config.service';
-import { BotEntity } from '../database/bot/bot.entity';
-import { BotService } from '../database/bot/bot.service';
-import { UserService } from '../database/user/user.service';
-import { JWTPayload } from '../types';
-import { Logger } from '../utils/logger';
-import { BotStatus, BotSystem, IBot } from 'runbotics-common';
-import { BotSystemService } from '../database/bot-system/bot-system.service';
-import { BotCollectionService } from '../database/bot-collection/bot-collection.service';
+import { ServerConfigService } from '#/config/server-config';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
+import { BotService } from '#/scheduler-database/bot/bot.service';
+import { UserService } from '#/database/user/user.service';
+import { JWTPayload } from '#/types';
+import { Logger } from '#/utils/logger';
+import { BotStatus, BotSystemType, IBot } from 'runbotics-common';
+import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
+import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
 import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
-import { Connection } from 'typeorm';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -45,7 +45,6 @@ export class AuthService {
         } catch (e: unknown) {
             return Promise.reject(e);
         }
-        // this.logger.debug(`Validating token - ${jwtPayload.sub}`);
         return this.validatePayload(jwtPayload);
     }
 
@@ -150,7 +149,7 @@ export class AuthService {
 
         this.validateParameterFromBot(collection, 'missing collection in bot data', client);
 
-        const collectionEntity = await this.botCollectionService.findById(collection);
+        const collectionEntity = await this.botCollectionService.getById(collection);
         this.validateParameterFromBot(collectionEntity, 'collection with id from bot doesn\'t exist', client);
 
         const botSystem = await this.botSystemService.findByName(system);
@@ -162,12 +161,10 @@ export class AuthService {
                     this.logger.warn(`Bot cannot be registered. Provided version ${version} does not fulfill minimum ${this.serverConfigService.requiredBotVersion}`);
                     throw new WsException(`Bot ${bot.installationId} cannot be registered. Version does not meet the minimum requirements.`);
                 }
-                // this.logger.debug(`Bot can be registered`);
                 return bot;
             })
             .then((bot) => {
                 if (isGuard) return bot;
-                // this.logger.debug('Bot is not a guard');
                 return bot
                     ? this.registerBot(bot, mutableBotParams)
                     : this.registerNewBot({ installationId, ...mutableBotParams });
@@ -182,22 +179,19 @@ export class AuthService {
     }
 
     private validateParameterFromBot(parameter, exceptionMessage: string, client: Socket) {
-        // this.logger.debug(`Validating bot - ${exceptionMessage} (result:${!!parameter})`);
         if (!parameter) {
             client.disconnect();
             throw new WsException(exceptionMessage);
         }
     }
 
-    private validateBotSystem(system: BotSystem, client: Socket): void {
-        // this.logger.debug(`Validating bot - system (result:${Object.values(BotSystem).includes(system)})`);
-        if (Object.values(BotSystem).includes(system)) return;
+    private validateBotSystem(system: BotSystemType, client: Socket): void {
+        if (Object.values(BotSystemType).includes(system)) return;
         client.disconnect();
         throw new WsException(`Bot system (${system}) is incompatible`);
     }
 
     private validateBot(installationId: string) {
-        // this.logger.debug(`Validating bot - installationId (${installationId})`);
         return this.botService.findByInstallationId(installationId);
     }
 

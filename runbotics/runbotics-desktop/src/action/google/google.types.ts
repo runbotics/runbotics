@@ -27,3 +27,8 @@ export interface CellByValueActionOutput {
     cellAddress: string;
     cellValue: string;
 }
+
+export interface GoogleCredential {
+    email: string;
+    key: string;
+}

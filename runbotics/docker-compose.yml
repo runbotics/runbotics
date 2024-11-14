@@ -1,6 +1,14 @@
-version: '3.8'
-
 services:
+  runbotics-portainer:
+    container_name: runbotics-portainer
+    image: portainer/portainer-ce:2.20.3-alpine
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - 127.0.0.1:9000:9000
+
   runbotics-postgresql:
     container_name: runbotics-postgresql
     image: postgres:13.2
@@ -49,6 +57,7 @@ services:
       - MAIL_PORT=
       - MAIL_USERNAME=
       - MAIL_PASSWORD=
+      - ENCRYPTION_KEY=O3OTmXJpIIyUb3ByT4t65xblgsxfDGQu
     ports:
       - 4000:4000
     depends_on:
@@ -136,6 +145,8 @@ services:
 volumes:
   runbotics:
     name: runbotics
+    external: false
+  portainer_data:
     external: false
 
 networks:

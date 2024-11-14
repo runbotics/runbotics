@@ -44,7 +44,7 @@ const ProcessInstanceDetails: VFC<ProcessInstanceDetailsProps> = ({ processInsta
 
     useEffect(() => {
         if (processInstanceId) {
-            dispatch(processInstanceActions.getProcessInstance({ processInstanceId }))
+            dispatch(processInstanceActions.getProcessInstance({ resourceId: processInstanceId }))
                 .then(unwrapResult)
                 .catch(() => {
                     onClose?.();

@@ -8,7 +8,6 @@ import { RequestOptions } from './microsoft-graph.types';
 
 const errorMessage = 'No Microsoft credentials provided';
 
-@Injectable()
 export class MicrosoftGraphService {
     private readonly client: Client;
 

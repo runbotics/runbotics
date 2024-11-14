@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
-import { GeneralAction, BotSystem, IProcess, ITriggerEvent, ProcessInstanceStatus } from 'runbotics-common';
+import { GeneralAction, IProcess, ProcessInstanceStatus, ITriggerEvent, BotSystemType } from 'runbotics-common';
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
@@ -44,36 +44,37 @@ export default class GeneralActionHandler extends StatelessActionHandler {
     async startProcess(
         request: DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
     ): Promise<StartProcessActionOutput> {
-        return new Promise(async (resolve, reject) => {
-            const response = await orchestratorAxios.get<IProcess>(
-                `/api/processes/${request.input.processId}`,
-                { maxRedirects: 0 },
-            );
+        const response = await orchestratorAxios.get<IProcess>(
+            `/api/processes/${request.input.processId}`,
+            { maxRedirects: 0 },
+        );
 
-            const process = response.data;
-            const processSystem = process.system.name;
-            const system = getBotSystem();
+        const process = response.data;
+        const processSystem = process.system.name;
+        const system = getBotSystem();
 
-            if (processSystem !== BotSystem.ANY && processSystem !== system) {
-                reject(new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`));
-            }
+        if (processSystem !== BotSystemType.ANY && processSystem !== system) {
+            throw new Error(`Process with system (${processSystem}) cannot be run by the bot with system (${system})`);
+        }
 
-            const processInstanceId = await this.runtimeService.startProcessInstance({
-                process: process,
-                variables: request.input.variables,
-                parentProcessInstanceId: request.processInstanceId,
-                userId: request.userId,
-                orchestratorProcessInstanceId: null,
-                rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
-                trigger: request.trigger as ITriggerEvent,
-                triggerData: request.triggerData,
-            });
+        const processInstanceId = await this.runtimeService.startProcessInstance({
+            process: process,
+            variables: request.input.variables,
+            parentProcessInstanceId: request.processInstanceId,
+            userId: request.userId,
+            orchestratorProcessInstanceId: null,
+            rootProcessInstanceId: request.rootProcessInstanceId ?? request.processInstanceId,
+            trigger: request.trigger as ITriggerEvent,
+            triggerData: request.triggerData,
+            credentials: request.credentials,
+        });
 
+        return new Promise((resolve, reject) => {
             const subscription = this.runtimeService.processChange().subscribe((data) => {
                 if (data.processInstanceId === processInstanceId) {
                     switch (data.eventType) {
                         case ProcessInstanceStatus.COMPLETED:
-                        case ProcessInstanceStatus.STOPPED:
+                        case ProcessInstanceStatus.STOPPED: {
                             const result = {
                                 variables: {},
                             };
@@ -88,6 +89,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                             resolve(result);
                             subscription.unsubscribe();
                             break;
+                        }
                         case ProcessInstanceStatus.ERRORED:
                             reject(new Error('Process errored'));
                             subscription.unsubscribe();

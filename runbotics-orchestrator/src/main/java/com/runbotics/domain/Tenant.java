@@ -24,7 +24,7 @@ public class Tenant implements Serializable {
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "createdBy", nullable = false)
+    @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 
     @Column(name = "created")

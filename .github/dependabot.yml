@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directories:
+      - "/runbotics/runbotics-common"
+      - "/runbotics/runbotics-orchestrator-ui"
+      - "/runbotics/runbotics-desktop"
+      - "/runbotics/runbotics-scheduler"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 1
+    target-branch: "develop"
+    commit-message:
+      prefix: "[RPA-1715] "
+    assignees:
+      - "star-in-the-jar" # stanislaw-jarocki
+      - "marcin-depcik"
+    groups:
+      pnpm-dependencies:
+        patterns:
+          - "common/config/rush/pnpm-lock.yaml"
+          - "**/package.json"
+
+# if private registry is needed: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#registries
+# versioning strategy: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#versioning-strategy

@@ -1,9 +1,11 @@
 import { BotSchedulerService } from './bot/bot.scheduler.service';
-import { ProcessService } from '../database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { InjectQueue } from '@nestjs/bull';
 import {
     BadRequestException,
     ForbiddenException,
+    forwardRef,
+    Inject,
     Injectable,
     NotFoundException,
     OnModuleInit,
@@ -13,7 +15,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { ValidateProcessAccessProps } from '#/types/scheduled-process';
 import { Logger } from '#/utils/logger';
 import { StartProcessRequest } from '#/types';
-import { ScheduleProcessService } from '#/database/schedule-process/schedule-process.service';
 import {
     IProcess,
     WsMessage,
@@ -29,6 +30,7 @@ import { UiGateway } from '../websocket/ui/ui.gateway';
 import getVariablesFromSchema, { isObject } from '#/utils/variablesFromSchema';
 import difference from 'lodash/difference';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
+import { ScheduleProcessService } from '#/scheduler-database/schedule-process/schedule-process.service';
 import { QueueMessageService } from './queue-message.service';
 import { randomUUID } from 'crypto';
 
@@ -40,6 +42,7 @@ export class QueueService implements OnModuleInit {
     constructor(
         @InjectQueue('scheduler') private readonly processQueue: Queue<JobData>,
         private readonly processService: ProcessService,
+        @Inject(forwardRef(() => ScheduleProcessService))
         private readonly scheduleProcessService: ScheduleProcessService,
         private readonly botSchedulerService: BotSchedulerService,
         private readonly uiGateway: UiGateway,
@@ -186,7 +189,7 @@ export class QueueService implements OnModuleInit {
         this.logger.log('Initializing queue');
         await this.clearStaledSchedules();
         this.logger.log('Creating schedules');
-        const scheduledProcesses = await this.scheduleProcessService.findAll();
+        const scheduledProcesses = await this.scheduleProcessService.getAll();
         const orchestratorProcessInstanceId = randomUUID();
         await Promise.all(
             scheduledProcesses
@@ -194,7 +197,7 @@ export class QueueService implements OnModuleInit {
                     ...process,
                     orchestratorProcessInstanceId,
                     trigger: { name: TriggerEvent.SCHEDULER },
-                    triggerData: { userEmail: process.user.email },
+                    triggerData: { userEmail: process.user?.email },
                     input: { variables: JSON.parse(process.inputVariables) }
                 }))
         );

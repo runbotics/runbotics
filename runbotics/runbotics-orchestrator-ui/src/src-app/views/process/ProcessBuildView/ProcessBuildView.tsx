@@ -19,7 +19,7 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
-import { getActions } from '#src-app/store/slices/Action/Action.thunks';
+import { activityActions } from '#src-app/store/slices/Action';
 import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
 
 import { processActions } from '#src-app/store/slices/Process';
@@ -52,7 +52,7 @@ const ProcessBuildView: FC = () => {
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
-        hasActionsAccess && dispatch(getActions());
+        hasActionsAccess && dispatch(activityActions.getAllActions());
 
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,7 +74,7 @@ const ProcessBuildView: FC = () => {
             dispatch(processActions.clearModelerState());
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
+        [],
     );
 
     const onRefChange = useCallback((node: HTMLDivElement) => {
@@ -87,12 +87,16 @@ const ProcessBuildView: FC = () => {
             const globalVariableIds = retrieveGlobalVariableIds(modeler);
 
             await dispatch(
-                processActions.updateDiagram({
-                    id: process.id,
-                    definition,
-                    globalVariableIds,
-                    executionInfo: process.executionInfo
-                })
+                processActions.updateDiagram(
+                    {
+                        payload: {
+                            definition,
+                            globalVariableIds,
+                            executionInfo: process.executionInfo,
+                        },
+                        resourceId: process.id,
+                    },
+                ),
             );
 
             dispatch(processActions.clearErrors());
@@ -110,14 +114,14 @@ const ProcessBuildView: FC = () => {
             recordProcessSaveFail({
                 processName: process.name,
                 processId: String(process.id),
-                reason: translate('Process.MainView.Toast.Save.Failed')
+                reason: translate('Process.MainView.Toast.Save.Failed'),
             });
         }
     };
 
     const handleImport = (
         definition: string,
-        additionalInfo: AdditionalInfo
+        additionalInfo: AdditionalInfo,
     ) => {
         dispatch(processActions.clearErrors());
         dispatch(
@@ -127,7 +131,7 @@ const ProcessBuildView: FC = () => {
                     definition,
                     ...additionalInfo,
                 },
-            })
+            }),
         );
     };
 
@@ -140,12 +144,12 @@ const ProcessBuildView: FC = () => {
 
         saveAs(
             blob,
-            `${process.name}_${moment().format('YYYY_MM_DD_HH_mm')}.rbex`
+            `${process.name}_${moment().format('YYYY_MM_DD_HH_mm')}.rbex`,
         );
     };
 
     if (!process || process.id?.toString() !== id || actionsLoading) {
-        return <LoadingScreen />;
+        return <LoadingScreen/>;
     }
 
     return (

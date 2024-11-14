@@ -11,10 +11,10 @@ import {
 import { Logger } from '#/utils/logger';
 import { SECOND, sleep } from '#/utils/time';
 import { isScheduledProcess, Job, MAX_RETRY_BOT_AVAILABILITY } from '#/utils/process';
-import { BotService } from '#/database/bot/bot.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
 import { BotStatus, IBot, IBotCollection, IBotSystem, IProcess, QueueEventType, WsMessage } from 'runbotics-common';
 import { ProcessSchedulerService } from '../process/process-scheduler.service';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
@@ -43,6 +43,9 @@ export class SchedulerProcessor {
         if (!job.data) {
             throw new Error('Job data is empty');
         }
+
+        await this.validateTriggerData(job)
+            .catch((err) => Promise.reject(new Error(err)));
 
         const process = await this.processService.findById(job.data.process.id);
         if (!isScheduledProcess(job.data)) {
@@ -283,5 +286,15 @@ export class SchedulerProcessor {
             job.id
         );
         return orchestratorProcessInstanceId;
+    }
+
+    private async validateTriggerData(job: Job) {
+        if (!Object.keys(job.data.triggerData).length) {
+            await this.processInstanceSchedulerService.saveFailedProcessInstance(
+                job,
+                'User email not specified'
+            );
+            return Promise.reject();
+        }
     }
 }

@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import Axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
 import { User } from '#src-app/types/user';
+import Axios from '#src-app/utils/axios';
 
 export const setAccessToken = (accessToken: string | null): void => {
     if (accessToken) {
@@ -111,7 +111,7 @@ export const initialize = createAsyncThunk<{
 export const register = createAsyncThunk(
     'auth/register',
     async (
-        payload: { email: string; name: string; password: string, langKey: string },
+        payload: { email: string; name: string; password: string, langKey: string, inviteCode?: string },
         { rejectWithValue }
     ) => {
         try {
@@ -120,6 +120,7 @@ export const register = createAsyncThunk(
                 login: payload.email,
                 langKey: payload.langKey,
                 password: payload.password,
+                inviteCode: payload.inviteCode
             });
 
             return response;

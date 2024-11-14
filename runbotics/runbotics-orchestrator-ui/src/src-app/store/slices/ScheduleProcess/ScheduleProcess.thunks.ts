@@ -1,27 +1,13 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
 import { IScheduleProcess } from '#src-app/types/model/schedule-process.model';
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 
-export const scheduleProcess = createAsyncThunk<IScheduleProcess, IScheduleProcess>(
-    'scheduleProcess/scheduleProcess',
-    (payload) => axios.post<IScheduleProcess>('/scheduler/schedule-processes', payload)
-        .then((response) => response.data),
-);
+const SCHEDULE_PROCESS_PATH = 'schedule-processes';
 
-export const getScheduledProcesses = createAsyncThunk<IScheduleProcess[]>(
-    'scheduleProcess/getScheduledProcesses',
-    () => axios.get<IScheduleProcess[]>('/api/schedule-processes')
-        .then((response) => response.data),
-);
+export const scheduleProcess = ApiTenantResource
+    .post<IScheduleProcess, IScheduleProcess>('scheduleProcess/scheduleProcess', SCHEDULE_PROCESS_PATH);
 
-export const getSchedulesByProcess = createAsyncThunk<IScheduleProcess[], { processId: number }>(
-    'scheduleProcess/getSchedulesByProcess',
-    ({ processId }) => axios.get<IScheduleProcess[]>(`/api/schedule-processes?processId.equals=${processId}`)
-        .then((response) => response.data),
-);
+export const getSchedulesByProcess = ApiTenantResource
+    .get<IScheduleProcess[]>('scheduleProcess/getSchedulesByProcess', `${SCHEDULE_PROCESS_PATH}/processes`);
 
-export const removeScheduledProcess = createAsyncThunk<void, { scheduleProcessId: number }>(
-    'scheduleProcess/removeScheduledProcess',
-    ({ scheduleProcessId }) => axios.delete(`/scheduler/schedule-processes/${scheduleProcessId}`),
-);
+export const removeScheduledProcess = ApiTenantResource
+    .delete<void>('scheduleProcess/removeScheduledProcess', SCHEDULE_PROCESS_PATH);

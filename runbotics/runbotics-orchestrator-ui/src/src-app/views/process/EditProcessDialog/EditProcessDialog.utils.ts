@@ -10,7 +10,7 @@ export const MAX_NUMBER_OF_TAGS = 15;
 export const MAX_TAG_LENGTH = 20;
 
 export const initialFormValidationState: FormValidationState = {
-    name: true
+    name: false
 };
 
 export enum InputErrorType {

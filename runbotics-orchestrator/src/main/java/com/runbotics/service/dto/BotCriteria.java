@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.runbotics.domain.Bot;
-import com.runbotics.web.rest.BotResource;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
@@ -12,7 +11,7 @@ import tech.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
  * Criteria class for the {@link Bot} entity. This class is used
- * in {@link BotResource} to receive all the possible filtering options from
+ * to receive all the possible filtering options from
  * the Http GET request parameters.
  * For example the following could be a valid request:
  * {@code /bots?id.greaterThan=5&attr1.contains=something&attr2.specified=false}

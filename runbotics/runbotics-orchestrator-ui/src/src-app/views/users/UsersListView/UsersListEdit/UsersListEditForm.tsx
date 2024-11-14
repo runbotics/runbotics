@@ -2,8 +2,10 @@ import React, { FC, ChangeEvent } from 'react';
 
 import { TextField, MenuItem, Switch, Typography } from '@mui/material';
 
+import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { languages } from '#src-app/translations/translations';
+import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 import { emailRegex } from '#src-app/views/users/UsersListView/UsersListEdit/UsersListEdit.utils';
 
 import { UsersListEditFormProps } from './UsersListEdit.types';
@@ -15,6 +17,7 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
     setFormValidationState
 }) => {
     const { translate } = useTranslations();
+    const auth = useAuth();
 
     const handleEmailFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         const email = event.target.value;
@@ -88,7 +91,14 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
             </TextField>
             <Typography>
                 {translate('Users.List.Edit.Form.Switch.Activated')}
-                <Switch checked={user.activated} onChange={handleActivatedSwitchChange} />
+                <Switch
+                    checked={user.activated}
+                    onChange={handleActivatedSwitchChange}
+                    disabled={user.id === auth.user.id}
+                />
+                <InfoButtonTooltip
+                    message={translate('Users.List.Edit.Form.Switch.InfoTooltip')}
+                />
             </Typography>
         </>
     );

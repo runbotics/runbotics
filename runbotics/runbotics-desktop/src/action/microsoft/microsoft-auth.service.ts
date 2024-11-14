@@ -4,6 +4,8 @@ import { Injectable } from '@nestjs/common';
 
 import { RunboticsLogger } from '#logger';
 import { ServerConfigService } from '#config/server-config.service';
+import { auth } from 'googleapis/build/src/apis/abusiveexperiencereport';
+import { MicrosoftCredential } from './common.types';
 
 const scopes = [
     // Common
@@ -14,14 +16,13 @@ const scopes = [
     'Sites.ReadWrite.All', 'Sites.Read.All',
 ];
 
-@Injectable()
 export class MicrosoftAuthService implements AuthenticationProvider {
     private readonly logger = new RunboticsLogger(MicrosoftAuthService.name);
-    private readonly microsoftAuth: ConfidentialClientApplication = null; 
+    private microsoftAuth: ConfidentialClientApplication = null;
     private account: AccountInfo = null;
 
     constructor(
-        private readonly serverConfigService: ServerConfigService,
+        private readonly authCredentials: MicrosoftCredential,
     ) {
         if (!this.hasCredentials()) {
             this.logger.error('Microsoft credentials are not provided - Microsoft related features won\'t be available');
@@ -30,14 +31,14 @@ export class MicrosoftAuthService implements AuthenticationProvider {
 
         const config: Configuration = {
             auth: {
-                clientId: this.serverConfigService.microsoftAuth.clientId,
-                authority: `https://login.microsoftonline.com/${this.serverConfigService.microsoftAuth.tenantId}`,
-                clientSecret: this.serverConfigService.microsoftAuth.clientSecret,
+                clientId: this.authCredentials.config.auth.clientId,
+                authority: `https://login.microsoftonline.com/${this.authCredentials.config.auth.authority}`,
+                clientSecret: this.authCredentials.config.auth.clientSecret
             },
         };
         this.microsoftAuth = new ConfidentialClientApplication(config);
     }
-    
+
     async getAccessToken() {
         const authResponse = await this.microsoftAuth.acquireTokenSilent({
             account: this.account,
@@ -56,8 +57,8 @@ export class MicrosoftAuthService implements AuthenticationProvider {
     async getNewToken() {
         this.logger.log('Requesting new Microsoft access token');
         const config: UsernamePasswordRequest = {
-            username: this.serverConfigService.microsoftAuth.username,
-            password: this.serverConfigService.microsoftAuth.password,
+            username: this.authCredentials.loginCredential.username,
+            password: this.authCredentials.loginCredential.password,
             scopes,
         };
         const authResponse = await this.microsoftAuth.acquireTokenByUsernamePassword(config);
@@ -67,11 +68,11 @@ export class MicrosoftAuthService implements AuthenticationProvider {
     }
 
     hasCredentials() {
-        return this.serverConfigService.microsoftAuth.clientId
-            && this.serverConfigService.microsoftAuth.tenantId
-            && this.serverConfigService.microsoftAuth.clientSecret
-            && this.serverConfigService.microsoftAuth.username
-            && this.serverConfigService.microsoftAuth.password;
+        return this.authCredentials.config.auth.clientId
+            && this.authCredentials.config.auth.authority
+            && this.authCredentials.config.auth.clientSecret
+            && this.authCredentials.loginCredential.username
+            && this.authCredentials.loginCredential.password;
     }
 
 }

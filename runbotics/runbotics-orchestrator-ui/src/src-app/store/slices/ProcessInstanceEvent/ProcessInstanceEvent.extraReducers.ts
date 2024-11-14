@@ -25,7 +25,7 @@ const buildProcessInstanceEventExtraReducers = (
             state.all.eventsBreadcrumbTrail = [];
         })
         .addCase(getProcessInstanceEvents.fulfilled, (state, action) => {
-            state.all.events = action.payload;
+            state.all.events = action.payload.content;
             state.all.eventsBreadcrumbTrail = [
                 {
                     id: 'root',
