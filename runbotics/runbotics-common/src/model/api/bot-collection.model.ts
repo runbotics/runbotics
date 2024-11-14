@@ -8,6 +8,6 @@ export interface IBotCollection {
     description?: string;
     created?: string | null;
     updated?: string | null;
-    createdBy?: User;
+    createdByUser?: User;
     users?: User[];
 }

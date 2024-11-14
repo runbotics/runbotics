@@ -22,7 +22,6 @@ interface ModifyBotCollectionDialogProps {
 
 const REJECT_REQUEST_TYPE = 'botCollection/createCollection/rejected';
 
-// TODO: types of collection.users to adjust after bot migration
 // eslint-disable-next-line max-lines-per-function
 const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collection, onClose, open, pageParams }) => {
     const dispatch = useDispatch();
@@ -48,7 +47,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         all: tenantActivated.all.filter(user => user.email !== currentUser.email)
     }), [tenantActivated, currentUser.email, open]);
 
-    const isOwner = !collection || currentUser.email === collection?.createdBy.email || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
+    const isOwner = !collection || currentUser.email === collection?.createdByUser?.email || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
 
     const createCollectionEntityToSend = () => ({
         name,
@@ -149,9 +148,9 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
                         disabled={!isOwner}
                         id="bot-collection-users-select"
                         options={shareableUsers.loading ? [] : shareableUsers.all}
-                        isOptionEqualToValue={(optionUser, valueUser) => optionUser.login === valueUser.login}
+                        isOptionEqualToValue={(optionUser, valueUser) => optionUser.email === valueUser.email}
                         loading={shareableUsers.loading}
-                        getOptionLabel={(user) => user.login}
+                        getOptionLabel={(user) => user.email}
                         defaultValue={selectedUsers}
                         filterSelectedOptions
                         disableCloseOnSelect
