@@ -103,18 +103,20 @@ const RegisterPage: FC = () => {
 
 
     useEffect(() => {
-        dispatch(tenantsActions.fetchTenantNameByInviteCode(inviteCodeURL))
-            .unwrap()
-            .catch((error) => {
-                if (error.statusCode === 400) {
-                    const title = translate('Error.InviteCode.View.Title');
-                    const message = translate('Error.InviteCode.View.Message');
-                    dispatch(setCustomError({ title, message }));
-                    router.push('/error');
-                } else {
-                    router.push(`/${error.statusCode}`);
-                }
-            });
+        if (inviteCodeURL) {
+            dispatch(tenantsActions.fetchTenantNameByInviteCode(inviteCodeURL))
+                .unwrap()
+                .catch((error) => {
+                    if (error.statusCode === 400) {
+                        const title = translate('Error.InviteCode.View.Title');
+                        const message = translate('Error.InviteCode.View.Message');
+                        dispatch(setCustomError({ title, message }));
+                        router.push('/error');
+                    } else {
+                        router.push(`/${error.statusCode}`);
+                    }
+                });
+            }
     }, [inviteCodeURL]);
 
     useEffect(() => {
@@ -302,11 +304,16 @@ const RegisterPage: FC = () => {
                     <RouterLink href="/">
                         <Logo height={100} />
                     </RouterLink>
-                    <Typography  
+                    {inviteCodeURL && invitingTenant && (
+                        <Typography variant="h4">
+                            {invitingTenant}
+                        </Typography>
+                    )}
+                    {/* <Typography  
                         variant="h4"
                     >
                         {invitingTenant}
-                    </Typography>
+                    </Typography> */}
                 </Box>
                 <Card>
                     <CardContent className={classes.card}>
