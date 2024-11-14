@@ -3,7 +3,7 @@ import React, { VFC } from 'react';
 import {
     Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,
 } from '@mui/material';
-import { IBotCollection } from 'runbotics-common';
+import { BotCollectionDto } from 'runbotics-common';
 
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -15,10 +15,10 @@ import { PageRequestParams } from '#src-app/utils/types/page';
 
 type DeleteBotCollectionDialogProps = {
     open?: boolean;
-    botCollection: IBotCollection;
+    botCollection: BotCollectionDto;
     onClose: () => void;
-    onDelete: (botCollection: IBotCollection) => void;
-    pageParams: PageRequestParams<Partial<IBotCollection>>;
+    onDelete: (botCollection: BotCollectionDto) => void;
+    pageParams: PageRequestParams<Partial<BotCollectionDto>>;
 };
 
 const BotCollectionDeleteDialog: VFC<DeleteBotCollectionDialogProps> = ({
@@ -26,7 +26,7 @@ const BotCollectionDeleteDialog: VFC<DeleteBotCollectionDialogProps> = ({
     botCollection,
     onClose,
     onDelete,
-    pageParams, 
+    pageParams,
 }) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();

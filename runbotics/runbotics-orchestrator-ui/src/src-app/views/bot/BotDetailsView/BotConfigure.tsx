@@ -33,7 +33,7 @@ const BotConfigure: FC = () => {
     const notificationTableRows = useMemo(() => botSubscriptions
         .map<BotNotificationRow>((sub: NotificationBot) => ({
             id: sub.id,
-            user: sub.user.login,
+            user: sub.user.email,
             subscribedAt: sub.createdAt,
         })), [botSubscriptions]);
 

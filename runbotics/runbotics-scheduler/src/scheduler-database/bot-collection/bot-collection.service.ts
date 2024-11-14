@@ -170,7 +170,11 @@ export class BotCollectionService {
                         : DefaultCollections.PUBLIC,
                 },
             ],
-        });
+        }).then(collections => collections.map(collection => ({
+            ...collection,
+            createdByUser: this.userService.mapToBasicUserDto(collection.createdByUser),
+            users: collection.users.map(user => this.userService.mapToBasicUserDto(user)),
+        })));
     }
 
     async findIdsForAdmin(user: User, specs: Specs<BotCollection>, paging: Paging) {
@@ -255,7 +259,16 @@ export class BotCollectionService {
                 relations: RELATIONS,
             };
 
-            return getPage(this.botCollectionRepository, options);
+            const page = await getPage(this.botCollectionRepository, options);
+
+            return {
+                ...page,
+                content: page.content.map(collection => ({
+                    ...collection,
+                    createdByUser: this.userService.mapToBasicUserDto(collection.createdByUser),
+                    users: collection.users.map(user => this.userService.mapToBasicUserDto(user)),
+                }))
+            };
         }
 
         const ids = await this.findIdsForUser(user, specs, paging);
@@ -264,7 +277,16 @@ export class BotCollectionService {
             relations: RELATIONS,
         };
 
-        return getPage(this.botCollectionRepository, options);
+        const page = await getPage(this.botCollectionRepository, options);
+
+        return {
+            ...page,
+            content: page.content.map(collection => ({
+                ...collection,
+                createdByUser: this.userService.mapToBasicUserDto(collection.createdByUser),
+                users: collection.users.map(user => this.userService.mapToBasicUserDto(user)),
+            }))
+        };
     }
 
     async isDefaultCollection(id: string) {

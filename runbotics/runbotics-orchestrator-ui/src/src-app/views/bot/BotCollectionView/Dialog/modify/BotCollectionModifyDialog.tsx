@@ -2,7 +2,7 @@ import React, { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 
 import { Autocomplete, Button, CircularProgress, Dialog, DialogActions, Switch, TextField, Typography } from '@mui/material';
 import moment from 'moment';
-import { FeatureKey, IBotCollection, UserDto } from 'runbotics-common';
+import { BasicUserDto, BotCollectionDto, FeatureKey } from 'runbotics-common';
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -16,8 +16,8 @@ import { Content, Form, Title } from '../../../../utils/FormDialog.styles';
 interface ModifyBotCollectionDialogProps {
     open?: boolean;
     onClose: () => void;
-    pageParams: PageRequestParams<Partial<IBotCollection>>;
-    collection: IBotCollection;
+    pageParams: PageRequestParams<Partial<BotCollectionDto>>;
+    collection: BotCollectionDto;
 }
 
 const REJECT_REQUEST_TYPE = 'botCollection/createCollection/rejected';
@@ -37,8 +37,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
     const { tenantActivated } = useSelector((state) => state.users);
     const [name, setName] = useState(collection ? collection.name : '');
     const [description, setDescription] = useState(collection ? collection.description : '');
-    // const [selectedUsers, setSelectedUsers] = useState<UserDto[]>(collection ? collection.users : []);
-    const [selectedUsers, setSelectedUsers] = useState<UserDto[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<BasicUserDto[]>(collection ? collection.users : []);
     const [publicBotsIncluded, setPublicBotsIncluded] = useState(collection ? collection.publicBotsIncluded : true);
     const [error, setError] = useState(null);
 
@@ -63,13 +62,13 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
     const resetFormStates = () => {
         setName(collection ? collection.name : '');
         setDescription(collection ? collection.description : '');
-        // setSelectedUsers(collection ? collection.users : []);
+        setSelectedUsers(collection ? collection.users : []);
         setSelectedUsers([]);
         setPublicBotsIncluded(collection ? collection.publicBotsIncluded : true);
         setError(null);
     };
 
-    const updateCollection = (botCollection: IBotCollection) => {
+    const updateCollection = (botCollection) => {
         if (collection) return dispatch(botCollectionActions.updateOne({ resourceId: collection.id, payload: botCollection }));
 
         return dispatch(botCollectionActions.createOne({ payload: botCollection }));

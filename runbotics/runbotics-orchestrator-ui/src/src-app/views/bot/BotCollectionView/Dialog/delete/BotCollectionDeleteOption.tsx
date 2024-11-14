@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 
 import { MenuItem } from '@mui/material';
-import { IBotCollection } from 'runbotics-common';
+import { BotCollectionDto } from 'runbotics-common';
 
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -12,7 +12,7 @@ import { getLimitByDisplayMode, getBotCollectionPageParams } from '../../BotColl
 
 
 interface DeleteBotCollectionProps {
-    botCollection: IBotCollection;
+    botCollection: BotCollectionDto;
     displayMode: CollectionsDisplayMode;
 }
 

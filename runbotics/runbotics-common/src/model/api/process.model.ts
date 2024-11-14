@@ -29,10 +29,10 @@ export interface IProcess {
 }
 
 export type ProcessDto = Omit<IProcess, 'createdBy' | 'editor'> & {
-    createdBy: BasicUserDto;
-    editor: BasicUserDto;
+    createdBy?: BasicUserDto;
+    editor?: BasicUserDto;
 };
 
-export const defaultProcessValue: Readonly<IProcess> = {
+export const defaultProcessValue: Readonly<ProcessDto> = {
     isPublic: false,
 };

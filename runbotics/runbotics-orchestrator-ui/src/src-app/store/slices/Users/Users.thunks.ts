@@ -21,7 +21,7 @@ export const getAllUsersInTenant = ApiTenantResource.get<UserDto[]>(
 
 export const partialUpdate = createAsyncThunk(
     'account/update',
-    async (fieldsToUpdate: UserDto, { rejectWithValue }) => {
+    async (fieldsToUpdate: PartialUserDto, { rejectWithValue }) => {
         await axios
             .patch('/api/account', fieldsToUpdate)
             .then((response) => response.data)

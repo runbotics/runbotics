@@ -120,7 +120,7 @@ const Account: FC = () => {
                         </Typography>
                     </Box>
                 </Hidden>
-                <Avatar alt={translate('Account.User')} className={classes.avatar} src={auth.user.avatar} />
+                <Avatar alt={translate('Account.User')} className={classes.avatar} src={auth.user.imageUrl} />
             </Box>
             <Menu
                 onClose={handleClose}

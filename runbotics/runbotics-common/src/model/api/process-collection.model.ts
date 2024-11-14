@@ -1,4 +1,4 @@
-import { User, UserDto } from "./user.model";
+import { BasicUserDto } from "./user.model";
 
 export const ROOT_PROCESS_COLLECTION_ID: null = null;
 export type CollectionId = string | typeof ROOT_PROCESS_COLLECTION_ID;
@@ -10,8 +10,8 @@ export interface ProcessCollection {
     isPublic: boolean;
     parentId: CollectionId;
     description?: string;
-    users?: UserDto[];
-    createdBy?: User;
+    users?: BasicUserDto[];
+    createdBy?: BasicUserDto;
     created?: string;
     updated?: string;
 }

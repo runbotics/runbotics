@@ -1,7 +1,7 @@
-import { IProcess, IProcessInstance } from 'runbotics-common';
+import { ProcessDto, IProcessInstance } from 'runbotics-common';
 
 export interface ProcessTileFooterProps {
-    process: IProcess;
+    process: ProcessDto;
     processInstance: IProcessInstance;
     isJobWaiting?: boolean;
     isJobCreating?: boolean;

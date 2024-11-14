@@ -2,7 +2,7 @@ import { useState, VFC } from 'react';
 
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, Typography } from '@mui/material';
-import { IBotCollection } from 'runbotics-common';
+import { BotCollectionDto } from 'runbotics-common';
 import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -16,7 +16,7 @@ const CopyMessage = styled.div<{ copySuccess: boolean }>`
 
 type IdentifierBotCollectionDialogProps = {
     open?: boolean;
-    botCollection: IBotCollection;
+    botCollection: BotCollectionDto;
     onClose: () => void;
 };
 

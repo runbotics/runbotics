@@ -141,7 +141,7 @@ export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
         },
         {
             Header: translate('Scheduler.ScheduledProcess.Table.Header.Creator'),
-            accessor: ({ user }) => user?.login,
+            accessor: ({ user }) => user?.email,
         },
         {
             Header: ' ',
