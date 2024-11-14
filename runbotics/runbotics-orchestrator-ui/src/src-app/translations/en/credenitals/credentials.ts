@@ -49,7 +49,14 @@ const credentials = {
     'Credential.Attribute.Edit.Success': 'Successfully updated attribute',
     'Credential.Attribute.Edit.Fail.NoValue': 'Attribute not updated. No value provided',
     'Credential.Attribute.Tag.Required': 'Required',
-    'Credential.Attribute.Tag.Optional': 'Optional'
+    'Credential.Attribute.Tag.Optional': 'Optional',
+    'Credential.Template.Atlassian.Name': 'Atlassian',
+    'Credential.Template.BeeOffice.Name': 'Bee Office',
+    'Credential.Template.MicrosoftGraph.Name': 'MicrosoftGraph',
+    'Credential.Template.Sap.Name': 'SAP',
+    'Credential.Template.Mail.Name': 'E-mail',
+    'Credential.Template.Google.Name': 'Google',
+    'Credential.Template.Asana.Name': 'Asana',
 };
 
 export default credentials;
