@@ -20,7 +20,7 @@
 
 // NAVBAR
 .feedbackWrapper nav {
-    margin-bottom: 3rem;
+    margin-bottom: 2vh;
     padding: 1.25rem;
 }
 .feedbackWrapper nav .container img {
@@ -142,7 +142,7 @@
     }
 }
 
-@media (min-width: $breakpoint-lg) {
+@media (min-width: $breakpoint-lg) and (min-height: 550px) {
     // WRAPPER
     .feedbackWrapper {
         background-image: url('../../../../public/images/shapes/bg-stripes.svg'),
@@ -168,7 +168,7 @@
         display: grid;
         grid-template-columns: 30% 1fr;
         align-items: center;
-        gap: 4rem;
+        gap: 5rem;
         max-width: $breakpoint-md;
     }
     .feedbackWrapper main .container .headSection {
@@ -185,19 +185,20 @@
         position: absolute;
 
         &.planning {
-            top: 350px;
+            top: 250px;
         }
         &.digitalization {
-            top: 200px;
+            top: 100px;
             right: -50px;
         }
         &.automation {
-            top: 550px;
+            top: 350px;
             right: -25px;
         }
     }
     .feedbackWrapper main .container .chatWrapper iframe {
-        height: 765px;
+        height: 60vh;
+        max-height: 755px;
         width: 545px;
     }
 
