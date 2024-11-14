@@ -309,11 +309,6 @@ const RegisterPage: FC = () => {
                             {invitingTenant}
                         </Typography>
                     )}
-                    {/* <Typography  
-                        variant="h4"
-                    >
-                        {invitingTenant}
-                    </Typography> */}
                 </Box>
                 <Card>
                     <CardContent className={classes.card}>
