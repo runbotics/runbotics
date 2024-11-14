@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { Dispatch, FC, SetStateAction, useContext } from 'react';
 
 import { Box, Divider, Grid } from '@mui/material';
 
-import { FrontCredentialCollectionDto, FrontCredentialDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -13,17 +12,17 @@ import { CredentialsTabs } from '../../GridView/Header';
 import { PagingContext } from '../../GridView/Paging.provider';
 import Search from '../../GridView/Search/Search';
 
-interface CredentialsHeaderProps<T extends FrontCredentialDto | FrontCredentialCollectionDto> {
+interface CredentialsHeaderProps {
     tabName: CredentialsTabs;
     setSearchValue: Dispatch<SetStateAction<string>>;
     sharedWithNumber: number;
 }
 
-const CredentialsHeader = <T extends FrontCredentialDto | FrontCredentialCollectionDto>({
+const CredentialsHeader: FC<CredentialsHeaderProps> = ({
     tabName,
     setSearchValue,
     sharedWithNumber,
-}: CredentialsHeaderProps<T>) => {
+}) => {
     const { translate } = useTranslations();
     const { totalItems: credentialCount } = useContext(PagingContext);
 

@@ -36,7 +36,7 @@ const PagingProvider: FC<PagingProps> = ({
     const replaceQueryParams = useReplaceQueryParams();
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, currentPage: number) => {
-        replaceQueryParams({ page: currentPage, pageSize, search });
+        replaceQueryParams({ collectionId, page: currentPage, pageSize, search });
         setPage(currentPage - 1);
     };
 
