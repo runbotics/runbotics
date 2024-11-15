@@ -14,7 +14,7 @@ import {
 // eslint-disable-next-line max-lines-per-function
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
-        // FOR ADMINS
+        // GET PAGE FOR ADMINS
         .addCase(getAllByPage.pending, (state, action) => {
 
             if (
@@ -61,7 +61,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             }
         })
 
-        // FOR TENANT ADMINS
+        // GET PAGE FOR TENANT ADMINS
         .addCase(getAllByPageInTenant.pending, (state, action) => {
             if (
                 action.meta.arg?.pageParams?.filter?.equals &&
@@ -121,7 +121,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.tenantActivated.loading = true;
         })
 
-        // UPDATE USERS
+        // UPDATE USERS FOR ADMIN
         .addCase(update.pending, (state) => {
             state.notActivated.loading = true;
             state.activated.loading = true;
@@ -135,6 +135,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.activated.loading = false;
         })
 
+        // UPDATE USERS FOR TENANT ADMIN
         .addCase(updateInTenant.pending, (state) => {
             state.tenantActivated.loading = true;
             state.tenantNotActivated.loading = true;
@@ -148,7 +149,7 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.tenantNotActivated.loading = false;
         })
 
-        // DELETE USER
+        // DELETE USER FOR ADMIN
         .addCase(deleteUser.pending, (state) => {
             state.userDelete.loading = true;
         })

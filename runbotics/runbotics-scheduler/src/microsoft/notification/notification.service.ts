@@ -69,7 +69,7 @@ export class NotificationService {
                 await this.queueService.createInstantJob({
                     process,
                     input,
-                    user: (process?.createdBy as User) || null,
+                    user: process?.createdBy || null,
                     trigger: { name: TriggerEvent.EMAIL },
                     triggerData: {
                         emailId,

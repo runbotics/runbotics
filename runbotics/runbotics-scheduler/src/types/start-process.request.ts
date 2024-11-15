@@ -1,5 +1,4 @@
-import { User } from '#/scheduler-database/user/user.entity';
-import { IProcess, ProcessInput, Trigger } from 'runbotics-common';
+import { IProcess, ProcessInput, Trigger, User } from 'runbotics-common';
 
 
 export interface StartProcessRequest extends Trigger {

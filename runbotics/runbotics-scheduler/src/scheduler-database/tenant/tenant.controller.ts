@@ -5,7 +5,7 @@ import {
     NotFoundException, Param, ParseUUIDPipe,
     Patch, Post
 } from '@nestjs/common';
-import { FeatureKey, Tenant } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
@@ -22,7 +22,7 @@ import { UpdateTenantDto, updateTenantSchema } from './dto/update-tenant.dto';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { TenantCriteria } from './criteria/tenant.criteria';
-import { Tenant as TenantEntity } from './tenant.entity';
+import { Tenant } from './tenant.entity';
 
 @Controller('/api/scheduler')
 export class TenantController {
@@ -70,13 +70,13 @@ export class TenantController {
         return this.tenantService.createInviteCodeByTenantId(id);
     }
 
-    // -----------------------------------
+    // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
 
     @Get('tenants/Page')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     getAllTenants(
         @Pageable() paging: Paging,
-        @Specifiable(TenantCriteria) specs: Specs<TenantEntity>,
+        @Specifiable(TenantCriteria) specs: Specs<Tenant>,
     ) {
         return this.tenantService.getAllByPageWithSpecs(specs, paging);
     }

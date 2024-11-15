@@ -77,10 +77,10 @@ export class UserService {
     }
 
     async update(userDto: UpdateUserDto, id: number, executor: User) {
-        const { roles, tenantId: tid, ...partialUser } = userDto;
+        const { roles, tenantId, ...partialUser } = userDto;
 
         this.checkUpdateAllowedRole(executor, roles);
-        const tenantRelation = await this.getTenantRelation(tid);
+        const tenantRelation = await this.getTenantRelation(tenantId);
 
         const authority = await (async () =>
             roles

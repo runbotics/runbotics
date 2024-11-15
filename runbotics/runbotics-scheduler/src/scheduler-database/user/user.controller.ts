@@ -29,6 +29,7 @@ export class UserController {
     }
 
     @GetWithTenant('users')
+    @FeatureKeys(FeatureKey.TENANT_READ)
     getAllActivatedUsersInTenant(@Param('tenantId') tenantId: Tenant['id']) {
         return this.userService.findAllActivatedByTenant(tenantId);
     }
@@ -47,7 +48,7 @@ export class UserController {
         );
     }
 
-    // -------------------------------------------
+    // -------------- ENDPOINTS FOR ADMIN ------------------
 
     @Get('users/Page')
     @FeatureKeys(FeatureKey.USERS_PAGE_READ)

@@ -1,6 +1,6 @@
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @Entity({ name: 'schedule_process' })
 export class ScheduleProcess {

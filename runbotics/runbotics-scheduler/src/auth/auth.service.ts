@@ -6,14 +6,14 @@ import { Socket } from 'socket.io';
 import { ServerConfigService } from '#/config/server-config';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { BotService } from '#/scheduler-database/bot/bot.service';
+import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
+import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
+import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
 import { BotStatus, BotSystemType, IBot } from 'runbotics-common';
-import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
-import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
 import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
-import { UserService } from '#/scheduler-database/user/user.service';
 
 interface ValidatorBotWsProps {
     client: Socket;
