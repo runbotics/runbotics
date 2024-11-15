@@ -116,7 +116,7 @@ const RegisterPage: FC = () => {
                         router.push(`/${error.statusCode}`);
                     }
                 });
-            }
+        }
     }, [inviteCodeURL]);
 
     useEffect(() => {
