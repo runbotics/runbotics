@@ -37,7 +37,7 @@ const UsersListView: FC = () => {
     );
 
     const tenantParam = searchParams.get('tenantId');
-    const [tenantSelection, setTenantSelection] = useState(tenantParam);
+    const [tenantSelection, setTenantSelection] = useState(tenantParam || '');
     const { all: allTenants } = useSelector(tenantsSelector);
 
     const { activated, tenantActivated } = useSelector(usersSelector);

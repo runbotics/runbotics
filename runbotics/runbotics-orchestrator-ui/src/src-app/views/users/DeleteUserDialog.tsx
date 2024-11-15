@@ -6,6 +6,7 @@ import {
     ListItem,
 } from '@mui/material';
 
+import { useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { IUser } from 'runbotics-common';
@@ -41,10 +42,15 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
+    const searchParams = useSearchParams();
+    const pageFromUrl = searchParams.get('page');
+    const pageSizeFromUrl = searchParams.get('pageSize');
+    const page = pageFromUrl ? parseInt(pageFromUrl) : null;
+    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : null;
 
     const { userDelete } = useSelector(usersSelector);
-    const { refreshSearch: refreshSearchNotActivated } = useUserSearch({ searchType: UserSearchType.ALL_NOT_ACTIVATED });
-    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType: UserSearchType.ALL_ACTIVATED });
+    const { refreshSearch: refreshSearchNotActivated } = useUserSearch({ searchType: UserSearchType.ALL_NOT_ACTIVATED, page, pageSize });
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType: UserSearchType.ALL_ACTIVATED, page, pageSize });
     const [usersData, setUsersData] = useState<IUser[]>([]);
 
     const handleSubmit = () => {

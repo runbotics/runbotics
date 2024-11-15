@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { Dialog, Box } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { IUser } from 'runbotics-common';
 
@@ -19,6 +20,7 @@ import { getUserDataWithoutNulls, getUserDataWithoutEmptyStrings, initialValidat
 import UsersListEditForm from './UsersListEditForm';
 import DeleteUserDialog from '../../DeleteUserDialog';
 
+
 const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     open,
     onClose,
@@ -28,9 +30,14 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
+    const searchParams = useSearchParams();
+    const pageFromUrl = searchParams.get('page');
+    const pageSizeFromUrl = searchParams.get('pageSize');
+    const page = pageFromUrl ? parseInt(pageFromUrl) : null;
+    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : null;
 
     const searchType = isForAdmin ? UserSearchType.ALL_ACTIVATED : UserSearchType.TENANT_ACTIVATED;
-    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType });
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType, page, pageSize });
     const { activated } = useSelector(usersSelector);
 
     const [user, setUser] = useState<IUser>(userData);
