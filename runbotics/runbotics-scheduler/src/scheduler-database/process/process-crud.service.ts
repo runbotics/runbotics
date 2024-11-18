@@ -143,7 +143,11 @@ export class ProcessCrudService {
         process.executionInfo = updateDiagramDto.executionInfo;
         process.editor = user;
 
-        return this.processRepository.save(process);
+       return this.processRepository.save(process)
+           .then(entity => this.processRepository.findOne({
+               where: { id: entity.id },
+               relations: RELATIONS
+           }));
     }
 
     getAll(user: UserEntity, specs: Specs<ProcessEntity>) {
