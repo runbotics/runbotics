@@ -100,23 +100,23 @@ const RegisterPage: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const invitingTenant = useSelector((state) => tenantsSelector(state).invitingTenant);
-
+    const shouldShowTenant = Boolean(inviteCodeURL && invitingTenant);
 
     useEffect(() => {
-        if (inviteCodeURL) {
-            dispatch(tenantsActions.fetchTenantNameByInviteCode(inviteCodeURL))
-                .unwrap()
-                .catch((error) => {
-                    if (error.statusCode === 400) {
-                        const title = translate('Error.InviteCode.View.Title');
-                        const message = translate('Error.InviteCode.View.Message');
-                        dispatch(setCustomError({ title, message }));
-                        router.push('/error');
-                    } else {
-                        router.push(`/${error.statusCode}`);
-                    }
-                });
-        }
+        if (!inviteCodeURL) return;
+
+        dispatch(tenantsActions.fetchTenantNameByInviteCode(inviteCodeURL))
+            .unwrap()
+            .catch((error) => {
+                if (error.statusCode === 400) {
+                    const title = translate('Error.InviteCode.View.Title');
+                    const message = translate('Error.InviteCode.View.Message');
+                    dispatch(setCustomError({ title, message }));
+                    router.push('/error');
+                } else {
+                    router.push(`/${error.statusCode}`);
+                }
+            });
     }, [inviteCodeURL]);
 
     useEffect(() => {
@@ -304,7 +304,7 @@ const RegisterPage: FC = () => {
                     <RouterLink href="/">
                         <Logo height={100} />
                     </RouterLink>
-                    {inviteCodeURL && invitingTenant && (
+                    {shouldShowTenant && (
                         <Typography variant="h4">
                             {invitingTenant}
                         </Typography>

@@ -41,6 +41,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
         position: 'relative',
         overflow: 'hidden',
         zIndex: 1,
+        isolation: 'isolate',
     },
 }));
 
