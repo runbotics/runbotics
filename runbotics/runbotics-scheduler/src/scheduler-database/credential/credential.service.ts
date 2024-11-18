@@ -264,8 +264,6 @@ export class CredentialService {
     const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
     this.throwExceptionIfUserHasReadAcces(collection, user);
 
-    console.log('I go here');
-
     const credentialToUpdate = this.credentialRepo.create({
       ...credential,
       ...credentialDto,

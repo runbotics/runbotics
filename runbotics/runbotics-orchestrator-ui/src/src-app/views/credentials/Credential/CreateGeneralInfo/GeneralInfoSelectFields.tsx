@@ -30,14 +30,13 @@ export const GeneralInfoSelectFields: FC<GeneralInfoSelectFieldsProps> = ({ coll
     const availableCredentialCollections = credentialCollections?.filter(collection => collection.credentialCollectionUser.find(collectionUser => collectionUser.userId === currentUser.id && collectionUser.privilegeType === PrivilegeType.WRITE));
 
     const handleDropdownChange = (name: string, value: string) => {
-
-        let changeTo = value;
-
-        if (name === 'collectionId') {
-            const foundCollection = credentialCollections.find(collection => collection.id === value);
-
-            if (foundCollection) changeTo = foundCollection.id;
-        }
+        const changeTo = (() => {
+            if (name === 'collectionId') {
+                const foundCollection = credentialCollections.find(collection => collection.id === value);
+                return foundCollection ? foundCollection.id : value;
+            }
+            return value;
+        })();
 
         setCredentialFormState(prevState => ({
             ...prevState,
