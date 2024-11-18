@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { FeatureKey } from 'runbotics-common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { BotCrudService } from '#/scheduler-database/bot/bot-crud.service';
@@ -26,7 +26,7 @@ export class BotController {
     @FeatureKeys(FeatureKey.BOT_READ)
     getAll(
         @Specifiable(BotCriteria) specs: Specs<BotEntity>,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ){
         return this.botCrudService.findAll(user, specs);
     }
@@ -36,7 +36,7 @@ export class BotController {
     getAllPage(
         @Specifiable(BotCriteria) specs: Specs<BotEntity>,
         @Pageable() paging: Paging,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ){
         return this.botCrudService.findAllPage(user, specs, paging);
     }
@@ -44,8 +44,8 @@ export class BotController {
     @Get(':id')
     @FeatureKeys(FeatureKey.BOT_READ)
     get(
-        @Param('id', ParseIntPipe) id: number, 
-        @User() user: UserEntity,
+        @Param('id', ParseIntPipe) id: number,
+        @UserDecorator() user: User,
     ){
         return this.botCrudService.findOne(user, id);
     }

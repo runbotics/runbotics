@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { FeatureKey } from 'runbotics-common';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class ProcessCollectionService {
         private processCollectionRepository: Repository<ProcessCollectionEntity>,
     ) {
     }
-        async hasAccess(user: UserEntity, collectionId: string): Promise<boolean> {
+        async hasAccess(user: User, collectionId: string): Promise<boolean> {
             const featureKeys = user.authorities
                 .flatMap(authority => authority.featureKeys)
                 .map(key => key.name);
@@ -20,7 +20,7 @@ export class ProcessCollectionService {
             if (featureKeys.includes(FeatureKey.PROCESS_ALL_ACCESS)) {
             return true;
         }
-            
+
         const result = await this.processCollectionRepository.query(`
             WITH RECURSIVE ancestor AS
                                (SELECT pc.*, 1 AS depth

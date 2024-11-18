@@ -61,9 +61,11 @@ const Account: FC = () => {
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
-    const hasUserEditAccess = useFeatureKey([FeatureKey.TENANT_EDIT_USER, FeatureKey.USERS_PAGE_READ], { oneOf: true });
+    const hasUserReadAccess = useFeatureKey([FeatureKey.TENANT_READ_USER, FeatureKey.USERS_PAGE_READ], { oneOf: true });
 
     const { pathname } = useRouter();
+
+    const usersHref = `/app/users${hasAdminAccess ? '/pending' : ''}`;
 
     const handleOpen = (): void => {
         setOpen(true);
@@ -118,7 +120,7 @@ const Account: FC = () => {
                         </Typography>
                     </Box>
                 </Hidden>
-                <Avatar alt={translate('Account.User')} className={classes.avatar} src={auth.user.avatar} />
+                <Avatar alt={translate('Account.User')} className={classes.avatar} src={auth.user.imageUrl} />
             </Box>
             <Menu
                 onClose={handleClose}
@@ -131,8 +133,8 @@ const Account: FC = () => {
                 anchorEl={ref.current}
                 open={isOpen}
             >
-                <If condition={hasUserEditAccess}>
-                    <MenuLink href='/app/users'>
+                <If condition={hasUserReadAccess}>
+                    <MenuLink href={usersHref}>
                         <MenuItem>
                             {translate('Account.Users')}
                         </MenuItem>

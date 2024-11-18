@@ -91,7 +91,6 @@ public class GuestServiceImpl implements GuestService {
         User guestUser = new User();
 
         var name = String.format("Guest-%s", UUID.randomUUID().toString().substring(0, 20));
-        guestUser.setLogin(name);
         guestUser.setEmail(String.format("%s@runbotics.com", name.toLowerCase()));
         String encryptedPassword = passwordEncoder.encode(UUID.randomUUID().toString());
         guestUser.setPassword(encryptedPassword);

@@ -3,10 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { IProcess } from 'runbotics-common';
-import { UserEntity } from '#/database/user/user.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
+import { User } from '#/scheduler-database/user/user.entity';
 import { ProcessCollectionService } from '#/database/process-collection/dto/process-collection.service';
-
 
 const relations = [
     'createdBy',
@@ -30,9 +29,8 @@ export class ProcessService {
         @InjectRepository(ProcessEntity)
         private readonly processRepository: Repository<ProcessEntity>,
         private readonly processCollectionService: ProcessCollectionService,
-    ) {
-    }
-    
+    ) {}
+
     findById(id: number): Promise<IProcess | null> {
         return this.processRepository.findOne({ where: { id }, relations });
     }
@@ -57,7 +55,7 @@ export class ProcessService {
         return this.processRepository.update({ id: process.id }, process);
     }
 
-    async checkAccessAndGetById(processId: number, user: UserEntity) {
+    async checkAccessAndGetById(processId: number, user: User) {
         // TODO: to be updated after process migration to scheduler
         // Explanation: Process privileges should be based on process collections
         // and checking privileges should be adjusted
@@ -87,9 +85,9 @@ export class ProcessService {
             });
     }
 
-    async hasAccess(user: UserEntity, processId: number): Promise<boolean> {
+    async hasAccess(user: User, processId: number): Promise<boolean> {
         const process = await this.processRepository.findOneByOrFail({id: processId});
-        
+
         return this.processCollectionService.hasAccess(user, process.processCollectionId);
     }
 }

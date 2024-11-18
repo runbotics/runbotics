@@ -1,5 +1,5 @@
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 export interface ProcessTileProps {
-    process: IProcess;
+    process: ProcessDto;
 }

@@ -8,11 +8,13 @@ import { ProcessCollectionEntity } from '#/database/process-collection/process-c
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
 import { ProcessCollectionModule } from '#/database/process-collection/process-collection.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([ProcessEntity, ProcessCollectionEntity, GlobalVariable, BotCollection]),
         ProcessCollectionModule,
+        UserModule,
     ],
     exports: [ProcessService],
     providers: [ProcessService, ProcessCrudService],

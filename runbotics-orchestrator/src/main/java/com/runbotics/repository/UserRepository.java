@@ -29,17 +29,15 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 
-    Optional<User> findOneByLogin(String id);
+    Optional<User> findOneByEmail(String email);
 
     Optional<User> findOneById(Long id);
 
     @EntityGraph(attributePaths = "authorities")
-    Optional<User> findOneWithAuthoritiesByLogin(String login);
+    Optional<User> findOneWithAuthoritiesByEmail(String email);
 
     @EntityGraph(attributePaths = "authorities")
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
-
-    Page<User> findAllByLoginNot(Pageable pageable, String login);
 
     Page<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
 
@@ -72,6 +70,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     )
     List<User> findAllActivatedNonAdmins();
 
-    @Query("SELECT u FROM User u WHERE u.id != ?1 AND (u.email = ?2 OR u.login = ?3)")
-    Optional<User> findOtherUserByLoginOrEmail(Long id, String email, String login);
+    @Query("SELECT u FROM User u WHERE u.id != ?1 AND u.email = ?2")
+    Optional<User> findOtherUserByEmail(Long id, String email);
 }

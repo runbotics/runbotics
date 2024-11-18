@@ -18,7 +18,7 @@ import java.util.Optional;
 @Repository
 public interface BotRepository extends JpaRepository<Bot, Long>, JpaSpecificationExecutor<Bot> {
 
-    @Query("SELECT bot FROM Bot bot WHERE bot.user.login = ?#{principal.username}")
+    @Query("SELECT bot FROM Bot bot WHERE bot.user.email = ?#{principal.username}")
     List<Bot> findByUserIsCurrentUser();
 
     Optional<Bot> findByInstallationId(String installationId);

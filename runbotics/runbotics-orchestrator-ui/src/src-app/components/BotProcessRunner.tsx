@@ -11,7 +11,7 @@ import { Play as PlayIcon, X as XIcon } from 'react-feather';
 import {
     Role,
     FeatureKey,
-    IProcess,
+    ProcessDto,
     IProcessInstance,
     ProcessInstanceStatus,
     isProcessInstanceFinished,
@@ -68,7 +68,7 @@ const StyledActionButton = styled(LoadingButton)(
 
 interface BotProcessRunnerProps {
     className?: string;
-    process?: IProcess;
+    process?: ProcessDto;
     rerunProcessInstance?: IProcessInstance;
     onRunClick?: () => void;
     color?:

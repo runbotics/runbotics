@@ -136,7 +136,8 @@ export class BotProcessService {
         instanceToSave.trigger = processInstance.trigger;
         instanceToSave.triggerData = processInstance.triggerData;
         instanceToSave.parentProcessInstanceId = processInstance.parentProcessInstanceId;
-        return instanceToSave;
+
+        return { ...instanceToSave, user: processInstance.user };
     }
 
     private async setBotInProcessInstance(

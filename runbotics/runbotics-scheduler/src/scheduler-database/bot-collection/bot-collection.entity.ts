@@ -10,7 +10,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { IBotCollection } from 'runbotics-common';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
@@ -42,18 +42,18 @@ export class BotCollection implements IBotCollection {
     })
     tenantId: string;
 
-    @ManyToOne(() => UserEntity, { nullable: false })
+    @ManyToOne(() => User, { nullable: false })
     @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
-    createdByUser: UserEntity;
+    createdByUser: User;
 
     @OneToMany(() => BotEntity, bot => bot.collection)
     bots: BotEntity[];
 
-    @ManyToMany(() => UserEntity)
+    @ManyToMany(() => User)
     @JoinTable({
         name: 'bot_collection_user',
         joinColumn: { name: 'bot_collection_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
     })
-    users: UserEntity[];
+    users: User[];
 }

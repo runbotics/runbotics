@@ -14,8 +14,8 @@ import {
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
-import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { CreateScheduleProcessDto, createScheduleProcessSchema } from './dto/create-schedule-process.dto';
 import { ScheduleProcessService } from './schedule-process.service';
@@ -60,7 +60,7 @@ export class ScheduleProcessController {
     createScheduleProcess(
         @Body(new ZodValidationPipe(createScheduleProcessSchema))
         scheduleProcessDto: CreateScheduleProcessDto,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         this.logger.log('REST request to create new schedule for process with id: ', scheduleProcessDto.process.id);
         return this.scheduleProcessService.create(scheduleProcessDto, user);

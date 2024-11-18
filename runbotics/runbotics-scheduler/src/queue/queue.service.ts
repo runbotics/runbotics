@@ -175,7 +175,7 @@ export class QueueService implements OnModuleInit {
         const isAdmin = user?.authorities.filter(role => role.name === Role.ROLE_ADMIN).length > 0;
 
         if (!hasAccess && !isPublic && !isAdmin) {
-            this.logger.error(`User${user ? ' ' + user?.login : ''} does not have access to the process "${process?.id}"`);
+            this.logger.error(`User${user ? ' ' + user?.email : ''} does not have access to the process "${process?.id}"`);
             throw new ForbiddenException(`You do not have access to the process "${process?.id}"`);
         }
 

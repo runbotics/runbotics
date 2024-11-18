@@ -14,8 +14,8 @@ import {
 } from '#/utils/specification/specifiable.decorator';
 import { ProcessInstanceEventCriteria } from './criteria/process-instance-event.criteria';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
-import { UserEntity } from '#/database/user/user.entity';
-import { User } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { ProcessInstanceEvent } from './process-instance-event.entity';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
@@ -35,7 +35,7 @@ export class ProcessInstanceEventController {
         @Specifiable(ProcessInstanceEventCriteria)
         specs: Specs<ProcessInstanceEvent>,
         @Pageable() paging: Paging,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         return this.processInstanceEventService.getPage(user, specs, paging);
     }
@@ -43,7 +43,7 @@ export class ProcessInstanceEventController {
     @Get(':id')
     getOne(
         @Param('id', new ParseIntPipe()) id: ProcessInstanceEvent['id'],
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         return this.processInstanceEventService.getOne(id, user);
     }

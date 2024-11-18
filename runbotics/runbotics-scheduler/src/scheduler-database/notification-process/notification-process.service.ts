@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { NotificationProcess } from './notification-process.entity';
 import { CreateNotificationProcessDto } from './dto/create-notification-process.dto';
 import { ProcessService } from '#/scheduler-database/process/process.service';
@@ -18,7 +18,11 @@ export class NotificationProcessService {
         private readonly processService: ProcessService,
     ) {}
 
-    async getAllByProcessId(processId: number, user: UserEntity) {
+    async getAllByProcessId(processId: number) {
+        return this.notificationProcessRepository.findBy({ process: { id: processId } });
+    }
+
+    async getAllByProcessIdAndUser(processId: number, user: User) {
         const process = await this.processService.checkAccessAndGetById(
             processId, user
         );
@@ -30,7 +34,7 @@ export class NotificationProcessService {
 
     async create(
         createNotificationProcessDto: CreateNotificationProcessDto,
-        user: UserEntity
+        user: User
     ) {
         const process = await this.processService.checkAccessAndGetById(
             createNotificationProcessDto.processId, user
@@ -64,7 +68,7 @@ export class NotificationProcessService {
             id: notificationProcess.id,
             user: {
                 id: notificationProcess.user.id,
-                login: notificationProcess.user.login
+                email: notificationProcess.user.email
             },
             createdAt: notificationProcess.createdAt
         };

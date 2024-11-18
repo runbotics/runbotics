@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import cronstrue from 'cronstrue/i18n';
 import i18n from 'i18next';
 import { Trash as TrashIcon, Calendar as CalendarIcon, List as ListIcon } from 'react-feather';
-import { FeatureKey } from 'runbotics-common';
+import { FeatureKey, ProcessDto } from 'runbotics-common';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
@@ -82,7 +82,7 @@ const StyledContainer = styled(Container)(({ theme }) => ({
 }));
 
 interface SavedScheduleProps {
-    process: IProcess
+    process: ProcessDto;
 }
 
 const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {

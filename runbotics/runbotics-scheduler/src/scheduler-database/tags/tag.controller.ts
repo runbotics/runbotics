@@ -2,8 +2,8 @@ import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatu
 
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Logger } from '#/utils/logger';
-import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 
 import { TagService } from './tag.service';
 import { Tenant } from 'runbotics-common';
@@ -16,7 +16,7 @@ export class TagController {
     private readonly logger = new Logger(TagController.name);
 
     constructor(private readonly tagService: TagService) {}
-    
+
     @Get()
     getAllTags(
         @Param('tenantId', ParseUUIDPipe) tenantId: Tenant['id'],
@@ -29,12 +29,12 @@ export class TagController {
     @Get(':id')
     async getTag(
         @Param('id', ParseIntPipe) id: number,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         this.logger.log(`REST request to get one tag by id: ${id}`);
 
         const foundTag = await this.tagService.getById(id, user);
-        
+
         if (!foundTag) throw new BadRequestException(`Tag with id ${id} not found`);
 
         return this.tagService.getById(id, user);
@@ -43,7 +43,7 @@ export class TagController {
     @Post()
     createTag(
         @Body(new ZodValidationPipe(createTagSchema)) tagDto: CreateTagDto,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         this.logger.log(`REST request to create a tag by user with id, ${user.id} under tenant ${user.tenantId}`);
         return this.tagService.create(user, tagDto);

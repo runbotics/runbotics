@@ -1,13 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { RootState } from '#src-app/store';
-import { User } from '#src-app/types/user';
+import { AuthState } from '#src-app/store/slices/Auth';
 import axios from '#src-app/utils/axios';
 
 import { PageRequestParams } from './types/page';
 import URLBuilder from './URLBuilder';
 
-interface PayloadWrap<T> {
+export interface PayloadWrap<T> {
     payload?: T;
     resourceId?: string | number;
     pageParams?: PageRequestParams;
@@ -67,7 +67,7 @@ class ApiTenantResource {
 
     private static buildURL(
         { resourcePath, resourceId, pageParams }: PathElements,
-        user: User
+        user: AuthState['user']
     ) {
         const resourcePathPart = resourcePath
             ? `/${resourcePath}` : '';

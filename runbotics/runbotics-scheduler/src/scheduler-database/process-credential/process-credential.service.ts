@@ -1,4 +1,4 @@
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ProcessCredential } from './process-credential.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +18,7 @@ export class ProcessCredentialService {
         private readonly connection: Connection,
     ) {}
 
-    async findAllByProcessId(processId: number, user: UserEntity) {
+    async findAllByProcessId(processId: number, user: User) {
         await this.processService.checkAccessAndGetById(processId, user);
 
         return this.processCredentialRepository.find({
@@ -32,7 +32,7 @@ export class ProcessCredentialService {
         }).then(this.formatProcessCredentials);
     }
 
-    async create(processCredentialDto: CreateProcessCredentialDto, user: UserEntity) {
+    async create(processCredentialDto: CreateProcessCredentialDto, user: User) {
         const process = await this.processService.checkAccessAndGetById(
             +processCredentialDto.processId, user
         );
@@ -69,7 +69,7 @@ export class ProcessCredentialService {
         await this.processCredentialRepository.insert(newProcessCredential);
     }
 
-    async delete(id: string, user: UserEntity) {
+    async delete(id: string, user: User) {
         const processCredential = await this.processCredentialRepository.findOneOrFail({
             where: { id, credential: { tenantId: user.tenantId } },
             relations: ['process', 'credential.template']
@@ -132,7 +132,7 @@ export class ProcessCredentialService {
                 name: processCredential.credential.name,
                 createdBy: {
                     id: processCredential.credential.createdBy.id,
-                    login: processCredential.credential.createdBy.login,
+                    email: processCredential.credential.createdBy.email,
                 },
                 template: {
                     id: processCredential.credential.template.id,

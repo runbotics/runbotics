@@ -2,8 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsRelations, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
-import { BotSystemType, FeatureKey, ProcessOutputType, Role } from 'runbotics-common';
-import { UserEntity } from '#/database/user/user.entity';
+import { BotSystemType, FeatureKey, ProcessDto, ProcessOutputType, Role } from 'runbotics-common';
+import { User } from '#/scheduler-database/user/user.entity';
 import { CreateProcessDto } from '#/scheduler-database/process/dto/create-process.dto';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { UpdateProcessDto } from '#/scheduler-database/process/dto/update-process.dto';
@@ -14,6 +14,7 @@ import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
 import { BotCollection } from '../bot-collection/bot-collection.entity';
+import { UserService } from '../user/user.service';
 
 const RELATIONS: FindOptionsRelations<ProcessEntity> = {
     system: true,
@@ -36,10 +37,11 @@ export class ProcessCrudService {
         private globalVariableRepository: Repository<GlobalVariable>,
         @InjectRepository(BotCollection)
         private botCollectionRepository: Repository<BotCollection>,
+        private readonly userService: UserService,
     ) {
     }
 
-    async checkCreateProcessViability(user: UserEntity) {
+    async checkCreateProcessViability(user: User) {
         if (user.authorities.some(authority => authority.name === Role.ROLE_GUEST)) {
             const count = await this.processRepository.countBy({ createdBy: { id: user.id } });
 
@@ -49,7 +51,7 @@ export class ProcessCrudService {
         return true;
     }
 
-    async create(user: UserEntity, processDto: CreateProcessDto) {
+    async create(user: User, processDto: CreateProcessDto) {
         const process = new ProcessEntity();
         process.tenantId = user.tenantId;
         process.createdBy = user;
@@ -129,7 +131,7 @@ export class ProcessCrudService {
         return this.processRepository.findOne({ where: { tenantId, id }, relations: RELATIONS });
     }
 
-    async updateDiagram(user: UserEntity, id: number, updateDiagramDto: UpdateDiagramDto) {
+    async updateDiagram(user: User, id: number, updateDiagramDto: UpdateDiagramDto) {
         const process = await this.processRepository.findOneBy({ tenantId: user.tenantId, id });
         if (!process) {
             throw new NotFoundException();
@@ -150,7 +152,7 @@ export class ProcessCrudService {
            }));
     }
 
-    getAll(user: UserEntity, specs: Specs<ProcessEntity>) {
+    getAll(user: User, specs: Specs<ProcessEntity>) {
         const options: FindManyOptions<ProcessEntity> = {
             ...specs,
         };
@@ -164,7 +166,7 @@ export class ProcessCrudService {
         return this.processRepository.find(options);
     }
 
-    async getPage(user: UserEntity, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessEntity>> {
+    async getPage(user: User, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessDto>> {
         const options: FindManyOptions<ProcessEntity> = {
             ...paging,
             ...specs,
@@ -173,7 +175,12 @@ export class ProcessCrudService {
         options.where = {
             ...options.where,
             tenantId: user.tenantId,
-            createdBy: user.hasFeatureKey(FeatureKey.TENANT_ALL_ACCESS) ? undefined : user,
+            createdBy: this.userService.hasFeatureKey(
+                user,
+                FeatureKey.TENANT_ALL_ACCESS
+            )
+                ? undefined
+                : user,
         };
 
         options.relations = RELATIONS;
@@ -186,7 +193,7 @@ export class ProcessCrudService {
         };
     }
 
-    get(user: UserEntity, id: number) {
+    get(user: User, id: number) {
         return this.processRepository.findOne({
             where: {
                 tenantId: user.tenantId,
@@ -196,7 +203,7 @@ export class ProcessCrudService {
         });
     }
 
-    async delete(user: UserEntity, id: number) {
+    async delete(user: User, id: number) {
         await this.processRepository.delete({
             tenantId: user.tenantId,
             id,

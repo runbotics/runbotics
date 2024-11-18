@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { AuthRequest } from '#/types';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserEntity } from '#/scheduler-database/user/user.entity';
 
 export const User = createParamDecorator(
     (userProperty: keyof UserEntity | undefined, ctx: ExecutionContext) => {

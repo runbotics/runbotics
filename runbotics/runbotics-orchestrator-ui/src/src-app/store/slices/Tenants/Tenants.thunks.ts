@@ -20,10 +20,9 @@ export const getAll = createAsyncThunk<Tenant[]>(
         .then(response => response.data)
 );
 
-// TODO: change to scheduler after endpoint will be ready
 export const getAllByPage = createAsyncThunk<Page<Tenant>, PageRequestParams>(
     'tenants/getAllByPage',
-    (params) => axios.get<Page<Tenant>>(buildPageURL(params, '/api/admin/tenants/all-page'))
+    (params) => axios.get<Page<Tenant>>(buildPageURL(params, '/api/scheduler/tenants/Page'))
         .then(response => response.data)
 );
 
@@ -67,7 +66,7 @@ export const generateInviteCodeByTenantId = createAsyncThunk<TenantInviteCode, s
 
 export const fetchTenantNameByInviteCode = createAsyncThunk<{ tenantName: string }, string>(
     'tenants/fetchTenantNameByInviteCode',
-    (inviteCode, { rejectWithValue }) => 
+    (inviteCode, { rejectWithValue }) =>
         axios.post<{ tenantName: string }>('/api/scheduler/tenants/invite-code', { inviteCode })
             .then((response) => response.data)
             .catch((error) => rejectWithValue(error.response.data))

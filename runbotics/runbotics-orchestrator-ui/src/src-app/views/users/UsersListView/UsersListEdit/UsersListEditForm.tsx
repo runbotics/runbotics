@@ -28,12 +28,6 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
         }));
     };
 
-    const handleLoginFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
-        const login = event.target.value;
-        setUser((prevState) => ({ ...prevState, login }));
-        setFormValidationState((prevState) => ({ ...prevState, login: (login.trim() !== '' ) }));
-    };
-
     const handleFirstNameFieldInput = (event: ChangeEvent<HTMLInputElement>) => {
         setUser((prevState) => ({ ...prevState, firstName: event.target.value}));
     };
@@ -58,13 +52,6 @@ const UsersListEditForm: FC<UsersListEditFormProps> = ({
                 onChange={handleEmailFieldInput}
                 error={!formValidationState.email}
                 {...(!formValidationState.email && { helperText: translate('Users.List.Edit.Form.Error.Email') })}
-            />
-            <TextField
-                label={translate('Users.List.Edit.Form.Label.Login')}
-                value={user.login}
-                onChange={handleLoginFieldInput}
-                error={!formValidationState.login}
-                {...(!formValidationState.login && { helperText: translate('Users.List.Edit.Form.Error.FieldRequired') })}
             />
             <TextField
                 label={translate('Users.List.Edit.Form.Label.FirstName')}

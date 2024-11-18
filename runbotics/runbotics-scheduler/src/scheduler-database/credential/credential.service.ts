@@ -4,7 +4,7 @@ import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
 import { FindManyOptions, Repository } from 'typeorm';
-import { IUser, PrivilegeType } from 'runbotics-common';
+import { PrivilegeType } from 'runbotics-common';
 import { CredentialTemplateService } from '../credential-template/credential-template.service';
 import { SecretService } from '../secret/secret.service';
 import { Secret } from '../secret/secret.entity';
@@ -16,6 +16,7 @@ import { CredentialNotifyMailArgs, CredentialOperationType } from './credential.
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
+import { User } from '../user/user.entity';
 
 const RELATIONS = ['attributes', 'createdBy', 'collection.credentialCollectionUser'];
 
@@ -30,7 +31,7 @@ export class CredentialService {
         private readonly mailService: MailService
     ) {}
 
-  async create(credentialDto: CreateCredentialDto, collectionId: string, user: IUser) {
+  async create(credentialDto: CreateCredentialDto, collectionId: string, user: User) {
     const template = await this.templateService.findOneById(credentialDto.templateId);
 
     const collection = await this.collectionService.findOneAccessibleById(collectionId, user);
@@ -105,7 +106,7 @@ export class CredentialService {
         });
   }
 
-  async findAllAccessible(user: IUser) {
+  async findAllAccessible(user: User) {
     const accessibleCollections = await this.collectionService.findAllAccessibleWithUser(user);
 
     if (accessibleCollections.length === 0) {
@@ -124,7 +125,7 @@ export class CredentialService {
     return credentials;
   }
 
-  async findAllAccessibleByTemplateAndProcess(templateName: string, processId: string, user: IUser) {
+  async findAllAccessibleByTemplateAndProcess(templateName: string, processId: string, user: User) {
     const accessibleCollections = await this.collectionService.findAllAccessibleWithUser(user);
     if (!accessibleCollections.length) {
       return [];
@@ -161,7 +162,7 @@ export class CredentialService {
               ...credential,
               createdBy: {
                   id: credential.createdBy.id,
-                  login: credential.createdBy.login,
+                  email: credential.createdBy.email,
               },
               collection: {
                   id: credential.collection.id,
@@ -183,7 +184,7 @@ export class CredentialService {
     });
   }
 
-  async findAllAccessibleByCollectionId(user: IUser, collectionId: string) {
+  async findAllAccessibleByCollectionId(user: User, collectionId: string) {
     const collection = await this.collectionService.findOneAccessibleById(collectionId, user);
 
     if (!collection) {
@@ -195,7 +196,7 @@ export class CredentialService {
     return Promise.all(credentials.map(credential => this.formatToFrontCredentialDto(credential, user)));
   }
 
-  async getAllAccessiblePages(user: IUser, paging: Paging, specs: Specs<Credential>) {
+  async getAllAccessiblePages(user: User, paging: Paging, specs: Specs<Credential>) {
     const options: FindManyOptions<Credential> = {
       ...paging,
       ...specs
@@ -221,7 +222,7 @@ export class CredentialService {
     };
   }
 
-  async findOneAccessibleById(id: string, tenantId: string, user: IUser) {
+  async findOneAccessibleById(id: string, tenantId: string, user: User) {
     const result = await this.credentialRepo.findOne({
       where: {
         id,
@@ -253,7 +254,7 @@ export class CredentialService {
     return credential;
   }
 
-  async updateById(id: string, credentialDto: UpdateCredentialDto, user: IUser) {
+  async updateById(id: string, credentialDto: UpdateCredentialDto, user: User) {
     const credential = await this.findOneAccessibleById(id, user.tenantId, user);
 
     if (!credential) {
@@ -294,7 +295,7 @@ export class CredentialService {
         });
   }
 
-  async removeById(id: string, user: IUser) {
+  async removeById(id: string, user: User) {
     const credential = await this.findById(id, user.tenantId);
 
     return this.credentialRepo.remove(credential).then((credential) => {
@@ -307,7 +308,7 @@ export class CredentialService {
     });
   }
 
-  async updateAttribute(id: string, attributeName: string, attributeDto: UpdateAttributeDto, user: IUser) {
+  async updateAttribute(id: string, attributeName: string, attributeDto: UpdateAttributeDto, user: User) {
     const credential = await this.findOneAccessibleById(id, user.tenantId, user);
 
     if (!credential) {
@@ -414,7 +415,7 @@ export class CredentialService {
       }
   }
 
-    private async formatToFrontCredentialDto(credential: Credential, user: IUser) {
+    private async formatToFrontCredentialDto(credential: Credential, user: User) {
         if (!credential) return;
 
         const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
@@ -424,7 +425,6 @@ export class CredentialService {
             ...credential,
             createdBy: {
               id: credential.createdBy.id,
-              login: credential.createdBy.login,
               email: credential.createdBy.email
             },
             template: {

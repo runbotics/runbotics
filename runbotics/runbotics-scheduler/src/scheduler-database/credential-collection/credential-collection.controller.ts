@@ -23,9 +23,10 @@ import {
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { Logger } from '#/utils/logger';
 import { AuthRequest } from '#/types';
-import { User } from '#/utils/decorators/user.decorator';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { FeatureKey, IUser } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
+import { User } from '../user/user.entity';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
@@ -44,7 +45,7 @@ export class CredentialCollectionController {
     async create(
         @Body(new ZodValidationPipe(createCredentialCollectionSchema))
         createCredentialCollectionDto: CreateCredentialCollectionDto,
-        @User() user: IUser,
+        @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to create credential collection');
 
@@ -60,14 +61,14 @@ export class CredentialCollectionController {
     getPages(
         @Specifiable(CredentialCollectionCriteria) specs: Specs<Credential>,
         @Pageable() paging: Paging,
-        @User() user: IUser
+        @UserDecorator() user: User
       ) {
         this.logger.log('REST request to get credential collections by page');
         return this.credentialCollectionService.getAllAccessiblePages(user, specs, paging);
       }
 
     @Get()
-    findAll(@User() user: IUser) {
+    findAll(@UserDecorator() user: User) {
         this.logger.log('REST request to get credential collections');
 
         return this.credentialCollectionService.findAllAccessible(user);
@@ -88,7 +89,7 @@ export class CredentialCollectionController {
         @Param('id') id: string,
         @Body(new ZodValidationPipe(updateCredentialCollectionSchema))
         updateCredentialCollectionDto: UpdateCredentialCollectionDto,
-        @User() user: IUser,
+        @UserDecorator() user: User,
     ) {
         this.logger.log(`REST request to update credential collection with id (${id})`);
 
@@ -103,7 +104,7 @@ export class CredentialCollectionController {
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(
         @Param('id') id: string,
-        @User() user: IUser,
+        @UserDecorator() user: User,
     ) {
         this.logger.log(`REST request to delete credential collection with id (${id})`);
         await this.credentialCollectionService.delete(id, user);
