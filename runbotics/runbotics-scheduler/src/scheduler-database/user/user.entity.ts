@@ -1,5 +1,5 @@
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
-import { Column, CreateDateColumn, Entity, Generated, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
 import { IAuthority } from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
@@ -7,7 +7,6 @@ import { Tenant } from '../tenant/tenant.entity';
 @Entity({ name: 'jhi_user' })
 export class User {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
-    @Generated('increment')
     id: number;
 
     @Column({ type: 'varchar', length: 191 })
