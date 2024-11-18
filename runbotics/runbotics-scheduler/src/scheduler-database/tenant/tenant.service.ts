@@ -107,8 +107,10 @@ export class TenantService {
             tenantId: tenant.id,
             expirationDate: LessThan(new Date())
         }).then(codes => {
-            this.inviteCodeRepository.delete([...codes.map(code => code.inviteId)]);
-            this.logger.log('Removed expired invite codes for tenant with id: ', tenant.id);
+            if (codes.length > 0) {
+                this.inviteCodeRepository.delete([...codes.map(code => code.inviteId)]);
+                this.logger.log('Removed expired invite codes for tenant with id: ', tenant.id);
+            }
         });
 
         const newInviteCode = {
