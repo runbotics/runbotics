@@ -4,8 +4,8 @@ import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { ProcessInstanceLoopEventService } from './process-instance-loop-event.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
-import { User as UserEntity } from '#/scheduler-database/user/user.entity';
-import { User } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { ProcessInstanceLoopEvent } from './process-instance-loop-event.entity';
 
 @UseInterceptors(TenantInterceptor)
@@ -23,7 +23,7 @@ export class ProcessInstanceLoopEventController {
     @Get(':loopId')
     getLoopEvents(
         @Param('loopId') loopId: ProcessInstanceLoopEvent['loopId'],
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         return this.processInstanceLoopEventService.getLoopEvents(loopId, user);
     }

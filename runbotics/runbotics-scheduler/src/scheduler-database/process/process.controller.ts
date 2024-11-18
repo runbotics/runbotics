@@ -13,12 +13,12 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { FeatureKey, ProcessDto } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { CreateProcessDto, createProcessSchema } from '#/scheduler-database/process/dto/create-process.dto';
-import { User } from '#/utils/decorators/user.decorator';
-import { User as UserEntity } from '#/scheduler-database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 import { UpdateProcessDto, updateProcessSchema } from '#/scheduler-database/process/dto/update-process.dto';
 import { ProcessCrudService } from '#/scheduler-database/process/process-crud.service';
 import { UpdateDiagramDto, updateDiagramSchema } from '#/scheduler-database/process/dto/update-diagram.dto';
@@ -55,7 +55,7 @@ export class ProcessController {
     @Post()
     @FeatureKeys(FeatureKey.PROCESS_ADD)
     createProcess(
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(createProcessSchema)) processDto: CreateProcessDto,
     ) {
         const canCreate = this.processCrudService.checkCreateProcessViability(user);
@@ -70,7 +70,7 @@ export class ProcessController {
     @Post('guest')
     @FeatureKeys(FeatureKey.PROCESS_ADD)
     createGuestProcess(
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ) {
         const canCreate = this.processCrudService.checkCreateProcessViability(user);
 
@@ -85,7 +85,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
     async update(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessSchema)) processDto: UpdateProcessDto,
     ) {
         await this.checkAccess(user, id);
@@ -97,7 +97,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_EDIT_STRUCTURE)
     async setDiagram(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateDiagramSchema)) updateDiagramDto: UpdateDiagramDto,
     ) {
         await this.checkAccess(user, id);
@@ -109,7 +109,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_IS_ATTENDED_EDIT)
     async setIsAttended(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateAttendedSchema)) attendedDto: UpdateAttendedDto,
     ) {
         await this.checkAccess(user, id);
@@ -121,7 +121,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_IS_TRIGGERABLE_EDIT)
     async setIsTriggerable(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateTriggerableSchema)) triggerableDto: UpdateTriggerableDto,
     ) {
         await this.checkAccess(user, id);
@@ -133,7 +133,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_BOT_COLLECTION_EDIT)
     async setBotCollection(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessBotCollectionSchema)) updateBotCollectionDto: UpdateProcessBotCollectionDto,
     ) {
         await this.checkAccess(user, id);
@@ -145,7 +145,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_BOT_SYSTEM_EDIT)
     async setBotSystem(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessBotSystemSchema)) updateProcessBotSystemDto: UpdateProcessBotSystemDto,
     ) {
         await this.checkAccess(user, id);
@@ -157,7 +157,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_BOT_COLLECTION_EDIT)
     async setOutputType(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessOutputTypeSchema)) updateOutputTypeDto: UpdateProcessOutputTypeDto,
     ) {
         await this.checkAccess(user, id);
@@ -169,7 +169,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     async getAll(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ) {
         return (await this.processCrudService.getAll(user, specs));
     }
@@ -179,7 +179,7 @@ export class ProcessController {
     getPage(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
         @Pageable() paging: Paging,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ) {
         return this.processCrudService.getPage(user, specs, paging);
     }
@@ -188,7 +188,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_READ)
     async get(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ) {
         await this.checkAccess(user, id);
 
@@ -199,14 +199,14 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_DELETE)
     async delete(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ) {
         await this.checkAccess(user, id);
 
         return this.processCrudService.delete(user, id);
     }
 
-    async checkAccess(user: UserEntity, processId: number) {
+    async checkAccess(user: User, processId: number) {
         const hasAccess = await this.processService.hasAccess(user, processId);
 
         if (!hasAccess) {

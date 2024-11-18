@@ -3,12 +3,12 @@ import { UserService } from './user.service';
 import { GetWithTenant, PatchWithTenant } from '#/utils/decorators/with-tenant.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { UserCriteria } from './criteria/user.criteria';
-import { User as UserEntity } from './user.entity';
+import { User } from './user.entity';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Tenant } from '../tenant/tenant.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { UpdateUserDto, updateUserSchema } from './dto/update-user.dto';
-import { User } from '#/utils/decorators/user.decorator';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 
@@ -21,7 +21,7 @@ export class UserController {
     @FeatureKeys(FeatureKey.TENANT_READ_USER)
     getAllUsersByPageInTenant(
         @Param('tenantId') tenantId: Tenant['id'],
-        @Specifiable(UserCriteria) specs: Specs<UserEntity>,
+        @Specifiable(UserCriteria) specs: Specs<User>,
         @Pageable() paging: Paging
     ) {
         specs.where = { ...specs.where, tenantId };
@@ -37,8 +37,8 @@ export class UserController {
     @PatchWithTenant('users/:id')
     @FeatureKeys(FeatureKey.TENANT_EDIT_USER)
     updateUserInTenant(
-        @User() user: UserEntity,
-        @Param('id', ParseIntPipe) userId: UserEntity['id'],
+        @UserDecorator() user: User,
+        @Param('id', ParseIntPipe) userId: User['id'],
         @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto
     ) {
         return this.userService.update(
@@ -53,7 +53,7 @@ export class UserController {
     @Get('users/Page')
     @FeatureKeys(FeatureKey.USERS_PAGE_READ)
     getAllUsersByPage(
-        @Specifiable(UserCriteria) specs: Specs<UserEntity>,
+        @Specifiable(UserCriteria) specs: Specs<User>,
         @Pageable() paging: Paging
     ) {
         return this.userService.findAllByPageWithSpecs(specs, paging);
@@ -62,8 +62,8 @@ export class UserController {
     @Patch('users/:id')
     @FeatureKeys(FeatureKey.USERS_PAGE_READ)
     updateUser(
-        @User() user: UserEntity,
-        @Param('id', ParseIntPipe) userId: UserEntity['id'],
+        @UserDecorator() user: User,
+        @Param('id', ParseIntPipe) userId: User['id'],
         @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto
     ) {
         return this.userService.update(userDto, userId, user);
@@ -72,7 +72,7 @@ export class UserController {
     @Delete('users/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @FeatureKeys(FeatureKey.USERS_PAGE_READ)
-    async deleteUser(@Param('id', ParseIntPipe) userId: UserEntity['id']) {
+    async deleteUser(@Param('id', ParseIntPipe) userId: User['id']) {
         await this.userService.delete(userId);
     }
 }

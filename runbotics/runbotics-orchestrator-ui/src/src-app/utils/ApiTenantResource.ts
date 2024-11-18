@@ -7,7 +7,7 @@ import axios from '#src-app/utils/axios';
 import { PageRequestParams } from './types/page';
 import URLBuilder from './URLBuilder';
 
-interface PayloadWrap<T> {
+export interface PayloadWrap<T> {
     payload?: T;
     resourceId?: string | number;
     pageParams?: PageRequestParams;

@@ -49,7 +49,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         setUser(getUserDataWithoutNulls(userData));
     }, [userData]);
 
-    const checkFormFieldsValidation = () => formValidationState &&formValidationState.email;
+    const checkFormFieldsValidation = () => formValidationState && formValidationState.email;
 
     const handleSave = (): void => {
         if (!checkFormFieldsValidation()) return;

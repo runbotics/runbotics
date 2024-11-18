@@ -9,8 +9,8 @@ import { FeatureKey } from 'runbotics-common';
 
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
-import { User } from '#/utils/decorators/user.decorator';
-import { User as UserEntity } from '#/scheduler-database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 import { Logger } from '#/utils/logger';
 import { Public } from '#/auth/guards';
 import { GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
@@ -34,7 +34,7 @@ export class TenantController {
 
     @GetWithTenant('me')
     @FeatureKeys(FeatureKey.TENANT_READ)
-    async getTenantByUser(@User('tenantId') id: Tenant['id']) {
+    async getTenantByUser(@UserDecorator('tenantId') id: Tenant['id']) {
         const tenant = await this.tenantService.getById(id);
 
         if (!tenant) {
@@ -47,7 +47,7 @@ export class TenantController {
 
     @GetWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_GET_INVITE_CODE)
-    async getActiveInviteCode(@User('tenantId') id: Tenant['id']) {
+    async getActiveInviteCode(@UserDecorator('tenantId') id: Tenant['id']) {
         const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(id);
 
         if (!inviteCodeDto) {
@@ -60,7 +60,7 @@ export class TenantController {
 
     @PostWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_CREATE_INVITE_CODE)
-    async createInviteCode(@User('tenantId') id: Tenant['id']) {
+    async createInviteCode(@UserDecorator('tenantId') id: Tenant['id']) {
 
         if (await this.tenantService.getActiveInviteCodeByTenantId(id)) {
             this.logger.error('Valid code exists for tenant with id: ', id);
@@ -122,7 +122,7 @@ export class TenantController {
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
     createTenant(
         @Body(new ZodValidationPipe(createTenantSchema)) tenantDto: CreateTenantDto,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         return this.tenantService.create(tenantDto, user);
     }
@@ -144,7 +144,7 @@ export class TenantController {
     updateTenant(
         @Param('id', ParseUUIDPipe) id: Tenant['id'],
         @Body(new ZodValidationPipe(updateTenantSchema)) tenantDto: UpdateTenantDto,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         return this.tenantService.update(tenantDto, id, user);
     }

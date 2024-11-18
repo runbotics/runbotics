@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, Par
 
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
-import { User } from '#/utils/decorators/user.decorator';
-import { User as UserEntity } from '#/scheduler-database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 
 import { CreateNotificationProcessDto, createNotificationProcessSchema } from './dto/create-notification-process.dto';
 import { NotificationProcessService } from './notification-process.service';
@@ -21,7 +21,7 @@ export class NotificationProcessController {
     @Get('processes/:processId')
     getAllNotificationsByProcessId(
         @Param('processId', ParseIntPipe) processId: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to get all process notifications by process id: ', processId);
         return this.notificationProcessService.getAllByProcessIdAndUser(processId, user);
@@ -31,7 +31,7 @@ export class NotificationProcessController {
     createNotification(
         @Body(new ZodValidationPipe(createNotificationProcessSchema))
         notificationProcessDto: CreateNotificationProcessDto,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         this.logger.log(`REST request to create process notification by user id: ${user.id}`);
         return this.notificationProcessService.create(notificationProcessDto, user);
@@ -41,7 +41,7 @@ export class NotificationProcessController {
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteNotification(
         @Param('id', ParseUUIDPipe) id: string,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to delete process notification by id: ', id);
         await this.notificationProcessService.delete(id, user.id);

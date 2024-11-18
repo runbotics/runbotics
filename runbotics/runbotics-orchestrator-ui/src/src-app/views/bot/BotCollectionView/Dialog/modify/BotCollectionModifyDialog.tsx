@@ -56,7 +56,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         createdBy: tenantActivated.all.find((user) => user.email === currentUser.email),
         created: collection ? collection.created : moment().toISOString(),
         updated: moment().toISOString(),
-        id: collection ? collection.id : null,
+        ...(collection?.id && { id: collection.id }),
     });
 
     const resetFormStates = () => {

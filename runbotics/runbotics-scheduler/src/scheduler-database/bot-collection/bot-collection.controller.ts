@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { FeatureKey } from 'runbotics-common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { User } from '#/utils/decorators/user.decorator';
-import { User as UserEntity } from '#/scheduler-database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import {
     CreateBotCollectionDto,
@@ -38,7 +38,7 @@ export class BotCollectionController {
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getForCurrentUser(
         @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ){
         return this.botCollectionService.findForUser(user, specs);
     }
@@ -48,7 +48,7 @@ export class BotCollectionController {
     getPageForCurrentUser(
         @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
         @Pageable() paging: Paging,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ){
         return this.botCollectionService.findPageForUser(user, specs, paging);
     }
@@ -56,7 +56,7 @@ export class BotCollectionController {
     @Post()
     @FeatureKeys(FeatureKey.BOT_COLLECTION_ADD)
     create(
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(createBotCollectionSchema)) collectionDto: CreateBotCollectionDto,
     ){
         return this.botCollectionService.saveDto(user, collectionDto);
@@ -66,7 +66,7 @@ export class BotCollectionController {
     @FeatureKeys(FeatureKey.BOT_COLLECTION_EDIT)
     async update(
         @Param('id') id: string,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(createBotCollectionSchema)) collectionDto: UpdateBotCollectionDto,
     ) {
         if (await this.botCollectionService.isDefaultCollection(id)) {
@@ -80,7 +80,7 @@ export class BotCollectionController {
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getAll(
         @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ){
         return this.botCollectionService.findAll(user, specs);
     }
@@ -90,7 +90,7 @@ export class BotCollectionController {
     getPage(
         @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
         @Pageable() paging: Paging,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ){
         return this.botCollectionService.findAllPage(user, specs, paging);
     }
@@ -99,7 +99,7 @@ export class BotCollectionController {
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getById(
         @Param('id') id: string,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ){
         return this.botCollectionService.findById(id, user);
     }
@@ -108,7 +108,7 @@ export class BotCollectionController {
     @FeatureKeys(FeatureKey.BOT_COLLECTION_DELETE)
     async delete(
         @Param('id') id: string,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
     ){
         if (await this.botCollectionService.isDefaultCollection(id)) {
             throw new BadRequestException('Can not delete default collection');

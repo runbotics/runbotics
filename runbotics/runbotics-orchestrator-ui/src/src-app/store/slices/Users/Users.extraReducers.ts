@@ -1,4 +1,7 @@
-import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit';
+
+import { PayloadWrap } from '#src-app/utils/ApiTenantResource';
+import { PageRequestParams } from '#src-app/utils/types/page';
 
 import { UsersState } from './Users.state';
 import {
@@ -11,34 +14,51 @@ import {
     updateInTenant,
 } from './Users.thunks';
 
+const getActionAdminFilterContext = (
+    action: PayloadAction<unknown, string,
+        { arg: PageRequestParams<any>; }, never>
+) => {
+    if (
+        action.meta.arg?.filter?.equals &&
+        'activated' in action.meta.arg.filter.equals
+    ) {
+        return action.meta.arg.filter.equals.activated
+            ? 'activated'
+            : 'notActivated';
+    }
+    return undefined;
+};
+
+const getActionTenantAdminFilterContext = (
+    action: PayloadAction<unknown, string,
+        { arg: PayloadWrap<never>; }, never>
+) => {
+    if (
+        action.meta.arg?.pageParams?.filter?.equals &&
+        'activated' in action.meta.arg.pageParams.filter.equals
+    ) {
+        return action.meta.arg.pageParams.filter.equals
+            .activated
+            ? 'tenantActivated'
+            : 'tenantNotActivated';
+    }
+    return undefined;
+};
+
 // eslint-disable-next-line max-lines-per-function
 const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) => {
     builder
         // GET PAGE FOR ADMINS
         .addCase(getAllByPage.pending, (state, action) => {
+            const activatedFilter = getActionAdminFilterContext(action);
 
-            if (
-                action.meta.arg?.filter?.equals &&
-                'activated' in action.meta.arg.filter.equals
-            ) {
-                const activatedFilter = action.meta.arg.filter.equals.activated
-                    ? 'activated'
-                    : 'notActivated';
-
-                state[activatedFilter].loading = true;
-            } else {
-                state.loading = true;
-            }
+            if (activatedFilter) state[activatedFilter].loading = true;
+            else state.loading = true;
         })
         .addCase(getAllByPage.fulfilled, (state, action) => {
-            if (
-                action.meta.arg?.filter?.equals &&
-                'activated' in action.meta.arg.filter.equals
-            ) {
-                const activatedFilter = action.meta.arg.filter.equals.activated
-                    ? 'activated'
-                    : 'notActivated';
+            const activatedFilter = getActionAdminFilterContext(action);
 
+            if (activatedFilter) {
                 state[activatedFilter].allByPage = action.payload;
                 state[activatedFilter].loading = false;
             } else {
@@ -47,46 +67,23 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             }
         })
         .addCase(getAllByPage.rejected, (state, action) => {
-            if (
-                action.meta.arg?.filter?.equals &&
-                'activated' in action.meta.arg.filter.equals
-            ) {
-                const activatedFilter = action.meta.arg.filter.equals.activated
-                    ? 'activated'
-                    : 'notActivated';
+            const activatedFilter = getActionAdminFilterContext(action);
 
-                state[activatedFilter].loading = false;
-            } else {
-                state.loading = false;
-            }
+            if (activatedFilter) state[activatedFilter].loading = false;
+            else state.loading = false;
         })
 
         // GET PAGE FOR TENANT ADMINS
         .addCase(getAllByPageInTenant.pending, (state, action) => {
-            if (
-                action.meta.arg?.pageParams?.filter?.equals &&
-                'activated' in action.meta.arg.pageParams.filter.equals
-            ) {
-                const activatedFilter = action.meta.arg.pageParams.filter.equals
-                    .activated
-                    ? 'tenantActivated'
-                    : 'tenantNotActivated';
+            const activatedFilter = getActionTenantAdminFilterContext(action);
 
-                state[activatedFilter].loading = true;
-            } else {
-                state.loading = true;
-            }
+            if (activatedFilter) state[activatedFilter].loading = true;
+            else state.loading = true;
         })
         .addCase(getAllByPageInTenant.fulfilled, (state, action) => {
-            if (
-                action.meta.arg?.pageParams?.filter?.equals &&
-                'activated' in action.meta.arg.pageParams.filter.equals
-            ) {
-                const activatedFilter = action.meta.arg.pageParams.filter.equals
-                    .activated
-                    ? 'tenantActivated'
-                    : 'tenantNotActivated';
+            const activatedFilter = getActionTenantAdminFilterContext(action);
 
+            if (activatedFilter) {
                 state[activatedFilter].allByPage = action.payload;
                 state[activatedFilter].loading = false;
             } else {
@@ -94,19 +91,10 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             }
         })
         .addCase(getAllByPageInTenant.rejected, (state, action) => {
-            if (
-                action.meta.arg?.pageParams?.filter?.equals &&
-                'activated' in action.meta.arg.pageParams.filter.equals
-            ) {
-                const activatedFilter = action.meta.arg.pageParams.filter.equals
-                    .activated
-                    ? 'tenantActivated'
-                    : 'tenantNotActivated';
+            const activatedFilter = getActionTenantAdminFilterContext(action);
 
-                state[activatedFilter].loading = false;
-            } else {
-                state.loading = false;
-            }
+            if (activatedFilter) state[activatedFilter].loading = false;
+            else state.loading = false;
         })
 
         // GET ALL USERS IN TENANT
