@@ -1,4 +1,3 @@
-import { UserEntity } from '#/database/user/user.entity';
 import {
     Column,
     Entity,
@@ -9,6 +8,7 @@ import {
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { numberTransformer } from '#/database/database.utils';
 import { PrivilegeType } from 'runbotics-common';
+import { User } from '../user/user.entity';
 
 @Entity({
     name: 'credential_collection_user',
@@ -25,9 +25,9 @@ export class CredentialCollectionUser {
     @Column({ name: 'collection_id', type: 'uuid' })
     credentialCollectionId: string;
 
-    @ManyToOne(() => UserEntity, (user) => user.credentialCollectionUser, { onDelete: 'SET NULL' })
+    @ManyToOne(() => User, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'user_id' })
-    user: UserEntity;
+    user: User;
 
     @Column({ name: 'user_id', type: 'bigint', transformer: numberTransformer })
     userId: number;

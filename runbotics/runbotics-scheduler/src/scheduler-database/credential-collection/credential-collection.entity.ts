@@ -1,4 +1,3 @@
-import { UserEntity } from '#/database/user/user.entity';
 import { Credential } from '#/scheduler-database/credential/credential.entity';
 import {
     Column,
@@ -15,6 +14,7 @@ import { CredentialCollectionUser } from '../credential-collection-user/credenti
 import { Tenant } from '../tenant/tenant.entity';
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
 import { AccessType, Color } from 'runbotics-common';
+import { User } from '../user/user.entity';
 
 @Entity({ schema: 'scheduler', name: 'credential_collection' })
 @Unique(['name', 'tenantId', 'createdById'])
@@ -42,9 +42,9 @@ export class CredentialCollection {
     })
     createdAt: string;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'created_by_id' })
-    createdBy: UserEntity;
+    createdBy: User;
 
     @Column({ name: 'created_by_id', transformer: numberTransformer })
     createdById: number;
@@ -56,9 +56,9 @@ export class CredentialCollection {
     })
     updatedAt: string;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'updated_by_id' })
-    updatedBy: UserEntity;
+    updatedBy: User;
 
     @Column({ name: 'updated_by_id', transformer: numberTransformer  })
     updatedById: number;

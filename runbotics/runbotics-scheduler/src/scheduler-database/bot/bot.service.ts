@@ -11,7 +11,7 @@ import {
     IBotSystem,
 } from 'runbotics-common';
 
-const relations = ['user', 'system', 'collection', 'notifications.user', 'collection.users'];
+const relations = ['user', 'system', 'collection', 'collection.users'];
 
 @Injectable()
 export class BotService {

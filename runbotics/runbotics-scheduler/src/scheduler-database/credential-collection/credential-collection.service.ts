@@ -5,11 +5,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CredentialCollection } from './credential-collection.entity';
 import { FindManyOptions, In, Repository } from 'typeorm';
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
-import { UserService } from '#/database/user/user.service';
-import { AccessType, PrivilegeType, IUser, Tenant } from 'runbotics-common';
+import { UserService } from '#/scheduler-database/user/user.service';
+import { AccessType, PrivilegeType, Tenant } from 'runbotics-common';
 import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
+import { User } from '../user/user.entity';
 
 const RELATIONS = [
     'credentialCollectionUser',
@@ -31,7 +32,7 @@ export class CredentialCollectionService {
         private readonly userService: UserService
     ) {}
 
-    async create(createCredentialCollectionDto: CreateCredentialCollectionDto, user: IUser) {
+    async create(createCredentialCollectionDto: CreateCredentialCollectionDto, user: User) {
         const tenantId = user.tenantId;
         const { name, description, accessType, color, sharedWith } = createCredentialCollectionDto;
 
@@ -81,7 +82,7 @@ export class CredentialCollectionService {
         return this.credentialCollectionRepository.save(credentialCollection);
     }
 
-    findAllAccessible(user: IUser) {
+    findAllAccessible(user: User) {
         return this.credentialCollectionRepository
             .createQueryBuilder('credentialCollectionEntity')
             .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
@@ -105,7 +106,7 @@ export class CredentialCollectionService {
             .getMany();
     }
 
-    async getAllAccessiblePages(user: IUser, specs: Specs<CredentialCollection>, paging: Paging): Promise<Page<CredentialCollection>> {
+    async getAllAccessiblePages(user: User, specs: Specs<CredentialCollection>, paging: Paging): Promise<Page<CredentialCollection>> {
         const options: FindManyOptions<CredentialCollection> = {
             ...paging,
             ...specs,
@@ -128,7 +129,7 @@ export class CredentialCollectionService {
         };
     }
 
-    async findAllAccessibleWithUser(user: IUser) {
+    async findAllAccessibleWithUser(user: User) {
         const collections = await this.credentialCollectionRepository.find({
             where: {
                 tenantId: user.tenantId,
@@ -143,7 +144,7 @@ export class CredentialCollectionService {
         return collections;
     }
 
-    async findOneAccessibleById(id: string, user: IUser) {
+    async findOneAccessibleById(id: string, user: User) {
         const collection = await this.credentialCollectionRepository
             .createQueryBuilder('credentialCollectionEntity')
             .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
@@ -191,7 +192,7 @@ export class CredentialCollectionService {
         return collection;
     }
 
-    async update(id: string, updateCredentialCollectionDto: UpdateCredentialCollectionDto, user: IUser) {
+    async update(id: string, updateCredentialCollectionDto: UpdateCredentialCollectionDto, user: User) {
         const credentialCollection = await this.findOneAccessibleById(id, user);
 
         const { sharedWith, ...dto } = updateCredentialCollectionDto;
@@ -245,7 +246,7 @@ export class CredentialCollectionService {
         });
     }
 
-    async delete(id: string, user: IUser) {
+    async delete(id: string, user: User) {
         const collection = await this.credentialCollectionRepository.findOne({
             relations: RELATIONS,
             where: {
@@ -276,8 +277,8 @@ export class CredentialCollectionService {
     private async getCollectionUserArrayWithPrivileges(
         sharedWith: UpdateCredentialCollectionDto['sharedWith'],
         credentialCollection: CredentialCollection,
-        user: IUser,
-        tenantId: Tenant['id']
+        user: Omit<User, 'authorities'>,
+        tenantId: Tenant['id'],
     ) {
         const credentialCollectionCreator = this.credentialCollectionUserRepository.create({
             credentialCollectionId: credentialCollection.id,

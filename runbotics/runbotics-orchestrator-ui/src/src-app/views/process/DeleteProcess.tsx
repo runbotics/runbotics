@@ -12,7 +12,7 @@ import {
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
@@ -24,9 +24,9 @@ import { getLastParamOfUrl } from '../utils/routerUtils';
 
 type DeleteProcessDialogProps = {
     open?: boolean;
-    process: IProcess;
+    process: ProcessDto;
     onClose: () => void;
-    onDelete: (process: IProcess) => void;
+    onDelete: (process: ProcessDto) => void;
 };
 
 const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
@@ -120,7 +120,7 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
 };
 
 type DeleteProcessProps = {
-    process: IProcess;
+    process: ProcessDto;
     handleMenuClose(): void;
 };
 

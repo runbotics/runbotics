@@ -25,13 +25,13 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
 
     if (isBrowser && isInitialized && isAuthenticated) {
         if (!user.roles.includes(Role.ROLE_GUEST)) {
-            router.replace('/app/processes/collections', null, { locale: user?.langkey });
+            router.replace('/app/processes/collections', null, { locale: user.langKey });
         }
 
         if (user.roles.includes(Role.ROLE_GUEST) && router.query.guest !== 'true') {
             dispatch(authActions.logout())
                 .then(() => {
-                    router.replace('/', null, { locale: user?.langkey });
+                    router.replace('/', null, { locale: user.langKey });
                 });
         }
     }

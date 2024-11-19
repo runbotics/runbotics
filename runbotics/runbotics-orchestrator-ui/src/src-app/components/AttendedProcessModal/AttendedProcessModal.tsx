@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { ISubmitEvent } from '@rjsf/core';
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 import ErrorBoundary from '#src-app/components/utils/ErrorBoundary';
 import { translate } from '#src-app/hooks/useTranslations';
@@ -13,7 +13,7 @@ import FormRenderer from './FormRenderer';
 
 interface UserModalProps {
     open: boolean;
-    process: IProcess;
+    process: ProcessDto;
     setOpen: (open: boolean) => void;
     onSubmit: (executionInfo: Record<string, any>) => void;
     rerunInput?: {

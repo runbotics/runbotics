@@ -16,8 +16,8 @@ import { AuthService } from '#/auth/auth.service';
 import { BotService } from '#/scheduler-database/bot/bot.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
-import { User } from '#/utils/decorators/user.decorator';
-import { UserEntity } from '#/database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @Controller('scheduler/bots')
 export class BotController {
@@ -68,7 +68,7 @@ export class BotController {
 
     @FeatureKeys(FeatureKey.BOT_DELETE)
     @Delete(':id')
-    async deleteBot(@Param('id') id: IBot['id'], @User() user: UserEntity) {
+    async deleteBot(@Param('id') id: IBot['id'], @UserDecorator() user: User) {
         this.logger.log(`=> Deleting bot ${id}`);
 
         const bot = await this.botService.findById(id);

@@ -9,7 +9,7 @@ import {
 import { ProcessInstanceEvent } from './process-instance-event.entity';
 import { ProcessInstanceEventStatus } from 'runbotics-common';
 import { ProcessInstance } from '../process-instance/process-instance.entity';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage, Page } from '#/utils/page/page';
@@ -31,7 +31,7 @@ export class ProcessInstanceEventService {
     ) {}
 
     async getPage(
-        user: UserEntity,
+        user: User,
         specs: Specs<ProcessInstanceEvent>,
         paging: Paging
     ): Promise<Page<ProcessInstanceEvent>> {
@@ -58,7 +58,7 @@ export class ProcessInstanceEventService {
         return processInstanceEventPage;
     }
 
-    async getOne(id: ProcessInstanceEvent['id'], user: UserEntity) {
+    async getOne(id: ProcessInstanceEvent['id'], user: User) {
         const processInstanceEvent = await this.processInstanceEventRepository
             .findOneOrFail({
                 where: {

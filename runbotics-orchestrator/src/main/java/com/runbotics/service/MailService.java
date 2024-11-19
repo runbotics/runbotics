@@ -1,12 +1,10 @@
 package com.runbotics.service;
 
 import com.runbotics.domain.User;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -82,7 +80,6 @@ public class MailService {
         }
     }
 
-
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         this.sendEmail(to, null, subject, content, isMultipart, isHtml);
@@ -91,7 +88,7 @@ public class MailService {
     @Async
     public void sendEmailFromTemplate(User user, String templateName, String titleKey) {
         if (user.getEmail() == null) {
-            log.debug("Email doesn't exist for user '{}'", user.getLogin());
+            log.debug("Email doesn't exist for user '{}'", user.getEmail());
             return;
         }
         Locale locale = Locale.forLanguageTag(user.getLangKey());

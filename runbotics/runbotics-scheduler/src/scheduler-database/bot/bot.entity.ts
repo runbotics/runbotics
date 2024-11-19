@@ -8,11 +8,10 @@ import {
     OneToMany,
     CreateDateColumn,
 } from 'typeorm';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import {
     BotStatus,
     IBot,
-    IUser,
     NotificationBot,
     BotSystemType,
 } from 'runbotics-common';
@@ -65,9 +64,9 @@ export class BotEntity implements IBot {
     @Column({ name: 'system', default: BotSystemType.LINUX, length: 50 })
     systemName: BotSystemType;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => User)
     @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
-    user: IUser;
+    user: User;
 
     @ManyToOne(() => BotCollection, { nullable: false })
     @JoinColumn([{ name: 'collection_id', referencedColumnName: 'id' }])

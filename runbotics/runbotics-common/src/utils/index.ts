@@ -5,3 +5,4 @@ export * from "./actionCredentialType.enum";
 export * from "./memoryUnit.enum";
 export * from "./httpErrorCodes.enum";
 export * from "./criteria.enum";
+export * from "./language.enum";

@@ -108,7 +108,7 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
             hasUserAccessEveryCollection || processCollectionRepository.findUserAccessibleById(user, id).size() > 0;
         boolean isOwner =
             hasUserAccessEveryCollection ||
-            processCollectionRepository.findById(id).get().getCreatedBy().getLogin().equals(user.getLogin());
+            processCollectionRepository.findById(id).get().getCreatedBy().getEmail().equals(user.getEmail());
 
         if (!hasCollectionAccess) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access to process collection");
@@ -124,14 +124,14 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
     public ProcessCollectionDTO save(ProcessCollectionDTO processCollectionDTO) {
         log.debug("Request to save ProcessCollectionDTO : {}", processCollectionDTO);
         ProcessCollection processCollection = processCollectionMapper.toEntity(processCollectionDTO);
-        Optional<User> createdBy = userService.getUserWithAuthoritiesByLogin(processCollectionDTO.getCreatedBy().getLogin());
+        Optional<User> createdBy = userService.getUserWithAuthoritiesByEmail(processCollectionDTO.getCreatedBy().getEmail());
         processCollection.setCreatedBy(createdBy.isPresent() ? createdBy.get() : userService.getUserWithAuthorities().get());
         processCollection.setUsers(
             processCollection
                 .getUsers()
                 .stream()
-                .map(User::getLogin)
-                .map(user -> userService.getUserWithAuthoritiesByLogin(user).get())
+                .map(User::getEmail)
+                .map(user -> userService.getUserWithAuthoritiesByEmail(user).get())
                 .collect(Collectors.toSet())
         );
         processCollection.setTenant(createdBy.get().getTenant());

@@ -1,9 +1,9 @@
 import React, { FC, ReactNode } from 'react';
 
-import { FeatureKey, Role } from 'runbotics-common';
+import { FeatureKey, Role, UserDto } from 'runbotics-common';
 
 import useAuth from '#src-app/hooks/useAuth';
-import { User } from '#src-app/types/user';
+import { AuthState } from '#src-app/store/slices/Auth';
 
 export interface SecuredProps {
     authorities?: Role[];
@@ -15,34 +15,34 @@ export interface AccessUtility {
     oneOf?: boolean;
 }
 
-export const hasAuthorities = (user: User, authorities: any[]) => {
-    if (!user || !user.authoritiesById) 
+export const hasAuthorities = (user: AuthState['user'], authorities: any[]) => {
+    if (!user || !user.authoritiesById)
     { return false; }
-    
-    for (const authority of authorities) 
-    { if (!user.authoritiesById[authority]) 
+
+    for (const authority of authorities)
+    { if (!user.authoritiesById[authority])
     { return false; } }
-        
-    
+
+
 
     return true;
 };
 
-export const hasRoleAccess = (user: User, roles: Role[]) => {
+export const hasRoleAccess = (user: UserDto, roles: Role[]) => {
     if (roles.length === 0) return true;
 
-    if (!user || !user.roles) 
+    if (!user || !user.roles)
     { return false; }
-    
 
-    for (const role of roles) 
-    { if (!user.roles.includes(role)) 
+
+    for (const role of roles)
+    { if (!user.roles.includes(role))
     { return false; } }
-        
+
     return true;
 };
 
-export const hasFeatureKeyAccess = (user: User, featureKeys: FeatureKey[], options?: AccessUtility) => {
+export const hasFeatureKeyAccess = (user: UserDto, featureKeys: FeatureKey[], options?: AccessUtility) => {
     if (featureKeys.length === 0) return true;
 
     if (!user || !user.featureKeys || !user.roles) {
@@ -58,11 +58,11 @@ const Secured: FC<SecuredProps> = ({ children, featureKeys }) => {
     const { isAuthenticated, user } = useAuth();
 
     if (isAuthenticated) {
-        if (featureKeys) 
-        { if (hasFeatureKeyAccess(user, featureKeys)) 
+        if (featureKeys)
+        { if (hasFeatureKeyAccess(user, featureKeys))
         { return <>{children}</>; } }
-            
-        
+
+
 
         return <>{children}</>;
     }

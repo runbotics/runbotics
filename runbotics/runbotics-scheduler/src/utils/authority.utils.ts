@@ -1,4 +1,4 @@
 import { Role } from 'runbotics-common';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 
-export const isTenantAdmin = (user: UserEntity) => user.authorities.some(authority => authority.name === Role.ROLE_TENANT_ADMIN);
+export const isTenantAdmin = (user: User) => user.authorities.some(authority => authority.name === Role.ROLE_TENANT_ADMIN);

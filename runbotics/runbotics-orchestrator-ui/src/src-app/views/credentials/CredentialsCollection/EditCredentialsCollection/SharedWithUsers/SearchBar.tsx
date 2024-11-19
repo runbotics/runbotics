@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { TextField, Box, ListItemButton, ListItemText, Paper, List } from '@mui/material';
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -9,7 +9,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 interface SearchBarProps {
   onAddUser: (email: string) => void;
-  availableUsers: IUser[];
+  availableUsers: UserDto[];
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {
@@ -30,7 +30,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onAddUser, availableUsers }) => {
         setFilteredUsers(availableUsers.filter(user => user.email.toLowerCase().includes(value.toLowerCase())));
     };
 
-    const handleUserAdd = (user: IUser) => {
+    const handleUserAdd = (user: UserDto) => {
         setSearchInput('');
         onAddUser(user.email);
         setIsFocused(false);

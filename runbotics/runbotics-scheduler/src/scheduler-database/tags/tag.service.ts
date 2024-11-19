@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Logger } from '#/utils/logger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './tag.entity';
 
@@ -26,11 +26,11 @@ export class TagService {
             .getMany();
     }
 
-    getById(id: number, user: UserEntity) {
+    getById(id: number, user: User) {
         return this.tagRepository.findOneBy({ id, tenantId: user.tenantId });
     }
 
-    async create(user: UserEntity, tagDto: CreateTagDto) {
+    async create(user: User, tagDto: CreateTagDto) {
         const existingTag = await this.tagRepository.findOneBy({ tenantId: user.tenantId, name: tagDto.name });
 
         if (existingTag) {

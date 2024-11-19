@@ -298,7 +298,7 @@ public class ProcessServiceImpl implements ProcessService {
         log.debug("Request to check if current user can create process");
         var currentUser = this.userService.getUserWithAuthorities().get();
         var isGuest = currentUser.getAuthorities().contains(createGuestAuthority());
-        List<Process> userProcesses = processRepository.findByCreatedByUser(currentUser.getLogin(), currentUser.getLogin());
+        List<Process> userProcesses = processRepository.findByCreatedByUser(currentUser.getEmail());
         return !isGuest || userProcesses.size() == 0;
     }
 

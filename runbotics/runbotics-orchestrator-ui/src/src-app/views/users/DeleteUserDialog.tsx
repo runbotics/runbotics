@@ -8,7 +8,7 @@ import {
 
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 import styled from 'styled-components';
 
 import CustomDialog from '#src-app/components/CustomDialog';
@@ -29,7 +29,7 @@ interface DeleteUserDialogProps {
     open?: boolean;
     onClose: () => void;
     onDelete?: () => void;
-    getSelectedUsers: () => IUser[];
+    getSelectedUsers: () => UserDto[];
 }
 
 const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
@@ -45,13 +45,13 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const { userDelete } = useSelector(usersSelector);
     const { refreshSearch: refreshSearchNotActivated } = useUserSearch({ searchType: UserSearchType.ALL_NOT_ACTIVATED });
     const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType: UserSearchType.ALL_ACTIVATED });
-    const [usersData, setUsersData] = useState<IUser[]>([]);
+    const [usersData, setUsersData] = useState<UserDto[]>([]);
 
     const handleSubmit = () => {
         Promise
             .allSettled(
                 usersData.map((user) =>
-                    dispatch(usersActions.deleteUser({ userId: user.id }))
+                    dispatch(usersActions.deleteUser({ id: user.id }))
                 )
             )
             .then(() => {

@@ -22,6 +22,7 @@ import { ProcessInstanceModule } from './process-instance/process-instance.modul
 import { ProcessInstanceEventModule } from './process-instance-event/process-instance-event.module';
 import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/process-instance-loop-event.module';
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
+import { UserModule } from './user/user.module';
 
 @Module({
     imports: [
@@ -47,6 +48,7 @@ import { TriggerEventModule } from './trigger-event/trigger-event.module';
         ProcessInstanceModule,
         ProcessInstanceEventModule,
         ProcessInstanceLoopEventModule,
+        UserModule,
         TriggerEventModule,
     ],
     exports: [
@@ -54,6 +56,7 @@ import { TriggerEventModule } from './trigger-event/trigger-event.module';
         ProcessInstanceModule,
         ProcessInstanceEventModule,
         ProcessInstanceLoopEventModule,
+        UserModule,
     ],
 })
 export class SchedulerDatabaseModule {}

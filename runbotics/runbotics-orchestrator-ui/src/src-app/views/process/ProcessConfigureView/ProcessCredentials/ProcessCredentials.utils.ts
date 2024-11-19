@@ -13,7 +13,7 @@ export const sortByActionCredentialType = (
     const actions: ActionCredentials = credentialTypes.reduce((acc, type) => (acc[type] = [], acc), {});
     credentials.forEach(pc => {
         actions[pc.credential.template.name].push({
-            authorName: pc.credential.createdBy.login,
+            authorName: pc.credential.createdBy.email,
             collectionName: pc.credential.collection.name,
             name: pc.credential.name,
             order: pc.order,

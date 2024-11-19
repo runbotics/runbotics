@@ -13,11 +13,11 @@ import {
     IBotCollection,
     IBotSystem,
     IScheduleProcess,
-    IUser, NotificationProcess, ProcessCollection as IProcessCollection,
+    NotificationProcess, ProcessCollection as IProcessCollection,
 } from 'runbotics-common';
 import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
 import {
@@ -91,9 +91,9 @@ export class ProcessEntity {
     @OneToMany(() => ScheduleProcess, scheduleProcess => scheduleProcess.process)
     schedules: IScheduleProcess[];
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'created_by_id', referencedColumnName: 'id' })
-    createdBy: IUser;
+    createdBy: User;
 
     @ManyToOne(() => BotCollection, { nullable: false })
     @JoinColumn({ name: 'bot_collection', referencedColumnName: 'id' })
@@ -109,9 +109,9 @@ export class ProcessEntity {
     @Column({ name: 'process_collection', nullable: true })
     processCollectionId: string;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'editor_id', referencedColumnName: 'id' })
-    editor: IUser;
+    editor: User;
 
     @OneToOne(() => ProcessContext, processContext => processContext.process)
     context: ProcessContext | null;

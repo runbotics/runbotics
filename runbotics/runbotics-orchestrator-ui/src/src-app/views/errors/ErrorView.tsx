@@ -40,6 +40,8 @@ const StyledPage = styled(Page)(({ theme }) => ({
         paddingBottom: 80,
         position: 'relative',
         overflow: 'hidden',
+        zIndex: 1,
+        isolation: 'isolate',
     },
 }));
 

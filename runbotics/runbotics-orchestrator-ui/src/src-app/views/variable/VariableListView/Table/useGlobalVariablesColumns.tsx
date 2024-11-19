@@ -9,13 +9,12 @@ import {
 } from '@mui/x-data-grid';
 import moment from 'moment';
 
-import { Role } from 'runbotics-common';
+import { Role, BasicUserDto } from 'runbotics-common';
 
 import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
-import { IUser, UserDTO } from '#src-app/types/model/user.model';
 
 interface ColumnsActions {
     onDelete: (globalVariable: IGlobalVariable) => void;
@@ -67,8 +66,8 @@ const useGlobalVariablesColumns = ({
             headerName: translate('Variables.ListView.Table.Header.CreatedBy'),
             flex: 0.8,
             renderCell: (params: GridCellParams) => {
-                const creator = params.row.creator as UserDTO;
-                return creator?.login ?? '';
+                const creator = params.row.creator as BasicUserDto;
+                return creator?.email ?? '';
             },
         },
         {
@@ -76,8 +75,8 @@ const useGlobalVariablesColumns = ({
             headerName: translate('Variables.ListView.Table.Header.ModifiedBy'),
             flex: 0.8,
             renderCell: (params: GridCellParams) => {
-                const user = params.row.user as IUser;
-                return user?.login ?? '';
+                const user = params.row.user as BasicUserDto;
+                return user?.email ?? '';
             },
         },
         {
@@ -86,7 +85,7 @@ const useGlobalVariablesColumns = ({
             flex: 0.1,
             hide: isActionsColumnHidden,
             getActions: (params: GridRowParams<IGlobalVariable>) => {
-                const creator = params.row.creator as UserDTO;
+                const creator = params.row.creator as BasicUserDto;
 
                 const handleEditClick = () => {
                     if (onEdit) onEdit(params.row);

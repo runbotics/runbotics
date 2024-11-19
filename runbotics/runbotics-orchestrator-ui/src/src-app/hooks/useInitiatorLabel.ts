@@ -10,15 +10,15 @@ const useInitiatorLabel = () => {
     const mapInitiatorLabel = ({ user, trigger, triggerData }: InitiatorLabelParams) => {
         switch (trigger.name) {
             case TriggerEvent.SCHEDULER:
-                return translate('Component.HistoryTable.Rows.Initiator.Scheduler', { login: user?.login });
+                return translate('Component.HistoryTable.Rows.Initiator.Scheduler', { login: user?.email });
             case TriggerEvent.API:
-                return translate('Component.HistoryTable.Rows.Initiator.Api', { login: user?.login });
+                return translate('Component.HistoryTable.Rows.Initiator.Api', { login: user?.email });
             case TriggerEvent.EMAIL:
                 return translate('Component.HistoryTable.Rows.Initiator.Email', {
                     email: (triggerData as EmailTriggerData).sender,
                 });
             default:
-                return user?.login;
+                return user?.email;
         }
     };
 

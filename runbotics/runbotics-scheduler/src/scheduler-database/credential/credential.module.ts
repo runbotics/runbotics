@@ -3,7 +3,7 @@ import { CredentialService } from './credential.service';
 import { CredentialController } from './credential.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Credential } from './credential.entity';
-import { UserModule } from '#/database/user/user.module';
+import { UserModule } from '#/scheduler-database/user/user.module';
 import { CredentialTemplateModule } from '../credential-template/credential-template.module';
 import { SecretModule } from '../secret/secret.module';
 import { CredentialCollectionModule } from '../credential-collection/credential-collection.module';

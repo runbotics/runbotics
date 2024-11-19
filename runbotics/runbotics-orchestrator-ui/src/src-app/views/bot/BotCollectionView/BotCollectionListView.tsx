@@ -6,7 +6,7 @@ import { Box, Table, TableBody, TableCell, TableHead, TablePagination, TableRow,
 import { red } from '@mui/material/colors';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { IBotCollection } from 'runbotics-common';
+import { BotCollectionDto } from 'runbotics-common';
 
 
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
@@ -62,7 +62,7 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
         setSearch(event.target.value);
     };
 
-    const mapCollectionToRow = (collection: IBotCollection) => {
+    const mapCollectionToRow = (collection: BotCollectionDto) => {
         const includedPublicBotMark = collection.publicBotsIncluded ? (
             <CheckCircleOutlineOutlinedIcon color="success" />
         ) : (
@@ -71,7 +71,7 @@ const BotCollectionListView: VFC<BotCollectionViewProps> = ({
         return (
             <TableRow hover key={collection.id} onClick={(ev) => handleRedirect(ev, collection.id)}>
                 <TableCell>{collection.name}</TableCell>
-                <TableCell>{collection.createdByUser?.login}</TableCell>
+                <TableCell>{collection.createdByUser.email}</TableCell>
                 <TableCell>{includedPublicBotMark}</TableCell>
                 <TableCell>{collection.created ? moment(collection.created).format('YYYY-MM-DD HH:mm') : ''}</TableCell>
                 <TableCell>{collection.updated ? moment(collection.updated).format('YYYY-MM-DD HH:mm') : ''}</TableCell>

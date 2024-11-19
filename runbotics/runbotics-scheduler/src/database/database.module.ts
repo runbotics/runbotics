@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServerConfigService } from '#/config/server-config';
 import { ConfigModule } from '#/config/config.module';
-import { UserModule } from './user/user.module';
 import { BotModule } from '#/scheduler-database/bot/bot.module';
 import { BotCollectionModule } from '#/scheduler-database/bot-collection/bot-collection.module';
 import { BotSystemModule } from '#/scheduler-database/bot-system/bot-system.module';
@@ -31,7 +30,6 @@ import { ProcessModule } from '#/scheduler-database/process/process.module';
             },
             inject: [ServerConfigService]
         }),
-        UserModule,
         BotModule,
         BotCollectionModule,
         BotSystemModule,
@@ -41,7 +39,6 @@ import { ProcessModule } from '#/scheduler-database/process/process.module';
         TypeOrmModule,
     ],
     exports: [
-        UserModule,
         BotModule,
         BotCollectionModule,
         BotSystemModule,

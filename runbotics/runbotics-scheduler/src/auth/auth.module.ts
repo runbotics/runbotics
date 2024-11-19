@@ -4,14 +4,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '../config/config.module';
 import { ServerConfigService } from '../config/server-config/server-config.service';
-import { BotModule } from '#/scheduler-database/bot/bot.module';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
-import { UserModule } from '../database/user/user.module';
-import { BotSystemModule } from '#/scheduler-database/bot-system/bot-system.module';
-import { BotCollectionModule } from '#/scheduler-database/bot-collection/bot-collection.module';
 import { RoleGuard } from './guards';
 import { FeatureKeyGuard } from './guards/featureKey.guard';
+import { BotModule } from '#/scheduler-database/bot/bot.module';
+import { BotSystemModule } from '#/scheduler-database/bot-system/bot-system.module';
+import { BotCollectionModule } from '#/scheduler-database/bot-collection/bot-collection.module';
+import { UserModule } from '#/scheduler-database/user/user.module';
 
 const GlobalRoleGuard = {
     provide: APP_GUARD,

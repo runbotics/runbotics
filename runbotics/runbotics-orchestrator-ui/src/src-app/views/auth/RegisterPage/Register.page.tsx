@@ -100,9 +100,11 @@ const RegisterPage: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const invitingTenant = useSelector((state) => tenantsSelector(state).invitingTenant);
-
+    const shouldShowTenant = Boolean(inviteCodeURL && invitingTenant);
 
     useEffect(() => {
+        if (!inviteCodeURL) return;
+
         dispatch(tenantsActions.fetchTenantNameByInviteCode(inviteCodeURL))
             .unwrap()
             .catch((error) => {
@@ -302,11 +304,11 @@ const RegisterPage: FC = () => {
                     <RouterLink href="/">
                         <Logo height={100} />
                     </RouterLink>
-                    <Typography  
-                        variant="h4"
-                    >
-                        {invitingTenant}
-                    </Typography>
+                    {shouldShowTenant && (
+                        <Typography variant="h4">
+                            {invitingTenant}
+                        </Typography>
+                    )}
                 </Box>
                 <Card>
                     <CardContent className={classes.card}>

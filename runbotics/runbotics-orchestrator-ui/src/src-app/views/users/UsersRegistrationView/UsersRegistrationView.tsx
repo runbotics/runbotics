@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
-import { Role, IUser, Tenant } from 'runbotics-common';
+import { Role, UserDto, PartialUserDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useRole from '#src-app/hooks/useRole';
@@ -37,7 +37,7 @@ interface MapActivatedUserParams {
     id: number;
     email: string;
     roles: Role[];
-    tenant: Tenant;
+    tenantId: string;
     activated: boolean;
 }
 
@@ -111,16 +111,16 @@ const UsersRegistrationView: FC = () => {
             email,
             roles: [role],
             activated: true,
-            ...(tenantId && { tenant: { id: tenantId } })
+            ...(tenantId && { tenantId })
         };
     };
 
-    const handleSubmit = (usersData: IUser[]) =>
+    const handleSubmit = (usersData: PartialUserDto[]) =>
         Promise
             .allSettled(
                 hasAdminAccess
-                    ? usersData.map((user) => dispatch(usersActions.updateNotActivated(user)))
-                    : usersData.map((user) => dispatch(usersActions.updateNotActivatedByTenant(user)))
+                    ? usersData.map((user) => dispatch(usersActions.update(user)))
+                    : usersData.map((user) => dispatch(usersActions.updateInTenant({ payload: user, resourceId: user.id })))
             )
             .then(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Success.AcceptingUser'), { variant: 'success' });
@@ -132,7 +132,7 @@ const UsersRegistrationView: FC = () => {
 
     const handleDelete = () => setIsDeleteDialogVisible(true);
 
-    const getSelectedUsers = (): IUser[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
+    const getSelectedUsers = (): UserDto[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
 
     useEffect(() => {
         const allUsers = hasAdminAccess ? notActivated.allByPage : tenantNotActivated.allByPage;
@@ -155,33 +155,54 @@ const UsersRegistrationView: FC = () => {
 
     return (
         <>
-            <DeleteUserDialog
-                open={isDeleteDialogVisible}
-                onClose={() => setIsDeleteDialogVisible(false)}
-                getSelectedUsers={getSelectedUsers}
-            />
+            {isDeleteDialogVisible && (
+                <DeleteUserDialog
+                    open={isDeleteDialogVisible}
+                    onClose={() => setIsDeleteDialogVisible(false)}
+                    getSelectedUsers={getSelectedUsers}
+                />
+            )}
             <StyledActionsContainer>
                 <StyledSearchFilterBox>
                     <StyledTextField
                         margin='dense'
-                        placeholder={translate('Users.Registration.View.SearchBarPlaceholder')}
+                        placeholder={translate(
+                            'Users.Registration.View.SearchBarPlaceholder'
+                        )}
                         size='small'
                         value={search}
                         onChange={handleSearch}
                     />
                     <If condition={hasAdminAccess}>
                         <FormControl size='small'>
-                            <StyledInputLabel>{translate('Users.Registration.View.Select.Label')}</StyledInputLabel>
+                            <StyledInputLabel>
+                                {translate(
+                                    'Users.Registration.View.Select.Label'
+                                )}
+                            </StyledInputLabel>
                             <StyledSelect
-                                label={translate('Users.Registration.View.Select.Label')}
+                                label={translate(
+                                    'Users.Registration.View.Select.Label'
+                                )}
                                 value={tenantSelection}
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                onChange={(
+                                    e: ChangeEvent<HTMLInputElement>
+                                ) => {
                                     setTenantSelection(e.target.value);
                                 }}
                             >
-                                <MenuItem value=''>{translate('Users.Registration.View.Select.NoneTenant')}</MenuItem>
-                                {allTenants.map(tenant => (
-                                    <MenuItem value={tenant.id} key={tenant.name}>{tenant.name}</MenuItem>
+                                <MenuItem value=''>
+                                    {translate(
+                                        'Users.Registration.View.Select.NoneTenant'
+                                    )}
+                                </MenuItem>
+                                {allTenants.map((tenant) => (
+                                    <MenuItem
+                                        value={tenant.id}
+                                        key={tenant.name}
+                                    >
+                                        {tenant.name}
+                                    </MenuItem>
                                 ))}
                             </StyledSelect>
                         </FormControl>
@@ -197,14 +218,16 @@ const UsersRegistrationView: FC = () => {
                     >
                         {translate('Users.Registration.View.Button.Accept')}
                     </StyledButton>
-                    <DeleteButton
-                        type='submit'
-                        variant='contained'
-                        onClick={handleDelete}
-                        disabled={!selections.length}
-                    >
-                        {translate('Users.Registration.View.Button.Delete')}
-                    </DeleteButton>
+                    <If condition={hasAdminAccess}>
+                        <DeleteButton
+                            type='submit'
+                            variant='contained'
+                            onClick={handleDelete}
+                            disabled={!selections.length}
+                        >
+                            {translate('Users.Registration.View.Button.Delete')}
+                        </DeleteButton>
+                    </If>
                 </StyledButtonsContainer>
             </StyledActionsContainer>
             <UsersRegistrationTable
@@ -217,7 +240,7 @@ const UsersRegistrationView: FC = () => {
                 handleSelectedRolesChange={handleSelectedRolesChange}
                 handleSelectedTenantsChange={handleSelectedTenantsChange}
                 isForAdmin={hasAdminAccess}
-                isTenantSelected={!!tenantSelection  || !hasAdminAccess}
+                isTenantSelected={!!tenantSelection || !hasAdminAccess}
             />
         </>
     );

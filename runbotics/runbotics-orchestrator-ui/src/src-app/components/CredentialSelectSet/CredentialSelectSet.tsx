@@ -21,7 +21,7 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
 
     const [author, setAuthor] = useState<string>(null);
     const credentialsFilteredByAuthor = credentials.filter(
-        (credential) => credential.createdBy.login === author
+        (credential) => credential.createdBy.email === author
     );
 
     const [collectionName, setCollectionName] = useState<string>(null);
@@ -64,10 +64,10 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
                     >
                         {_.uniqBy(
                             credentials,
-                            (credential) => credential.createdBy.login
+                            (credential) => credential.createdBy.email
                         ).map(({ createdBy: creator }) => (
-                            <MenuItem value={creator.login} key={creator.login}>
-                                {creator.login}
+                            <MenuItem value={creator.email} key={creator.email}>
+                                {creator.email}
                             </MenuItem>
                         ))}
                     </Select>
