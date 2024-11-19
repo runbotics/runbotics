@@ -1,11 +1,10 @@
 import { IScheduleProcess } from './schedule-process.model';
-import { IUser } from './user.model';
+import { BasicUserDto, User } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
 import { ProcessOutput } from './process-output.model';
 import { ProcessCollection } from './process-collection.model';
-import { NotificationProcess } from './notification-process.model';
 
 export interface IProcess {
     id?: number;
@@ -20,16 +19,20 @@ export interface IProcess {
     lastRun?: string | null;
     executionInfo?: string | null;
     system?: IBotSystem | null;
-    createdBy?: IUser | null;
+    createdBy?: User | null;
     schedules?: Omit<IScheduleProcess, 'process'>[] | null;
     botCollection?: IBotCollection | null;
     processCollection?: ProcessCollection | null;
-    editor?: IUser | null;
+    editor?: User | null;
     tags?: Tag[];
-    notifications?: NotificationProcess[];
     output?: ProcessOutput;
 }
 
-export const defaultProcessValue: Readonly<IProcess> = {
+export type ProcessDto = Omit<IProcess, 'createdBy' | 'editor'> & {
+    createdBy?: BasicUserDto;
+    editor?: BasicUserDto;
+};
+
+export const defaultProcessValue: Readonly<ProcessDto> = {
     isPublic: false,
 };

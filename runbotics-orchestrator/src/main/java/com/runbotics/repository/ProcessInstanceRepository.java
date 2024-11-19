@@ -36,8 +36,8 @@ public interface ProcessInstanceRepository extends JpaRepository<ProcessInstance
     )
     List<ProcessInstance> findByStatus(List<ProcessInstanceStatus> status);
 
-    @Query("SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.user.login like %?1%")
-    Page<ProcessInstance> findAllByCreatedByName(String username, Pageable pageable);
+    @Query("SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.user.email like %?1%")
+    Page<ProcessInstance> findAllByCreatedByName(String email, Pageable pageable);
 
     @Query(
         "SELECT process_instance FROM ProcessInstance process_instance WHERE process_instance.parentProcessInstanceId = ?1 OR (process_instance.parentProcessInstanceId IS NULL AND process_instance.rootProcessInstanceId = ?1)"

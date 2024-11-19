@@ -77,11 +77,11 @@ public class ProcessQueryService extends QueryService<Process> {
     @Transactional(readOnly = true)
     public List<ProcessDTO> findByCriteria(ProcessCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
-        var userLogin = userService.getUserWithAuthorities().get().getLogin();
+        var userLogin = userService.getUserWithAuthorities().get().getEmail();
         final Specification<Process> specification = createSpecification(criteria);
         if (criteria.getCreatedByName() != null) {
             return processRepository
-                .findByCreatedByUser(criteria.getCreatedByName().getContains(), userLogin)
+                .findByCreatedByUser(criteria.getCreatedByName().getContains())
                 .stream()
                 .sorted(Comparator.comparing(Process::getUpdated).reversed())
                 .map(processMapper::toDto)
@@ -115,16 +115,14 @@ public class ProcessQueryService extends QueryService<Process> {
     @Transactional(readOnly = true)
     public Page<ProcessDTO> findByCriteria(ProcessCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
-        var userLogin = userService.getUserWithAuthorities().get().getLogin();
+        var userEmail = userService.getUserWithAuthorities().get().getEmail();
         final Specification<Process> specification = createSpecification(criteria);
         if (criteria.getCreatedByName() != null) {
-            return processRepository
-                .findByCreatedByUser(criteria.getCreatedByName().getContains(), userLogin, page)
-                .map(processMapper::toDto);
+            return processRepository.findByCreatedByUser(userEmail, page).map(processMapper::toDto);
         }
         if (criteria.getBotCollectionName() != null) {
             return processRepository
-                .findByBotCollection(criteria.getBotCollectionName().getContains(), userLogin, page)
+                .findByBotCollection(criteria.getBotCollectionName().getContains(), userEmail, page)
                 .map(processMapper::toDto);
         }
 

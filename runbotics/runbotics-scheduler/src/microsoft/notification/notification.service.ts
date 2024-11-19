@@ -11,6 +11,7 @@ import { Logger } from '#/utils/logger';
 import { Attachment, OutlookService, Recipient, ReplyEmailRequest } from '../outlook';
 import { SubscriptionService } from '../subscription';
 import { ExpiredLifecycleNotificationEvent, LifecycleEventDivision, LifecycleNotification, Notification } from './notification.types';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @Injectable()
 export class NotificationService {

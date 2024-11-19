@@ -15,11 +15,6 @@ public class AdminUserDTO {
 
     private Long id;
 
-    @NotBlank
-    @Pattern(regexp = Constants.LOGIN_REGEX)
-    @Size(min = 1, max = 50)
-    private String login;
-
     @Size(max = 50)
     private String firstName;
 
@@ -58,7 +53,6 @@ public class AdminUserDTO {
 
     public AdminUserDTO(User user) {
         this.id = user.getId();
-        this.login = user.getLogin();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
@@ -79,8 +73,8 @@ public class AdminUserDTO {
         this.tenant = new TenantDTO(user.getTenant());
     }
 
-    public AdminUserDTO(String login) {
-        this.login = login;
+    public AdminUserDTO(String email) {
+        this.email = email;
     }
 
     public Long getId() {
@@ -89,14 +83,6 @@ public class AdminUserDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public String getFirstName() {
@@ -207,7 +193,6 @@ public class AdminUserDTO {
     @Override
     public String toString() {
         return "AdminUserDTO{" +
-            "login='" + login + '\'' +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +

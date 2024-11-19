@@ -1,9 +1,9 @@
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 
 import { Page } from '#src-app/utils/types/page';
 
 export interface UsersState {
-    all: IUser[];
+    all: UserDto[];
     loading: boolean;
     userUpdate: {
         loading: boolean
@@ -13,26 +13,22 @@ export interface UsersState {
     };
     activated: {
         loading: boolean;
-        all: IUser[];
-        allByPage: Page<IUser> | null;
-        nonAdmins: {
-            all: IUser[];
-            loading: boolean;
-        };
+        all: UserDto[];
+        allByPage: Page<UserDto> | null;
     };
     notActivated: {
         loading: boolean;
-        all: IUser[];
-        allByPage: Page<IUser> | null;
+        all: UserDto[];
+        allByPage: Page<UserDto> | null;
     };
     tenantActivated: {
         loading: boolean;
-        all: IUser[];
-        allByPage: Page<IUser> | null;
+        all: UserDto[];
+        allByPage: Page<UserDto> | null;
     };
     tenantNotActivated: {
         loading: boolean;
-        all: IUser[];
-        allByPage: Page<IUser> | null;
+        all: UserDto[];
+        allByPage: Page<UserDto> | null;
     };
 }

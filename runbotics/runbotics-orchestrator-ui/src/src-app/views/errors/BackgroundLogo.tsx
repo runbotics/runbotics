@@ -22,6 +22,7 @@ const BackgroundLogo: FC<BackgroundLogoProps> = ({ position }) => {
                 margin: '0 auto',
                 display: 'flex',
                 justifyContent: 'center',
+                zIndex: -1,
             }}
         >
             <Image

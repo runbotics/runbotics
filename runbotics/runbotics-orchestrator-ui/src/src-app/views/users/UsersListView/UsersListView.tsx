@@ -4,7 +4,7 @@ import { FormControl, MenuItem } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { IUser, Role } from 'runbotics-common';
+import { UserDto, Role } from 'runbotics-common';
 
 import InviteCodeButton from '#src-app/components/InviteCodeButton';
 import If from '#src-app/components/utils/If';
@@ -49,7 +49,7 @@ const UsersListView: FC = () => {
         page
     });
 
-    const [userData, setUserData] = useState<IUser>();
+    const [userData, setUserData] = useState<UserDto>();
     const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
 
     const handleOpenEditDialog = (rowData) => {

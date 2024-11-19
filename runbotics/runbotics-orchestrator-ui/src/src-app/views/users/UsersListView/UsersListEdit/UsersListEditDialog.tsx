@@ -3,7 +3,7 @@ import React, { FC, useState, useEffect, useContext } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Dialog, Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -38,7 +38,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
 
     const { activated } = useSelector(usersSelector);
 
-    const [user, setUser] = useState<IUser>(userData);
+    const [user, setUser] = useState<UserDto>(userData);
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
 
@@ -54,16 +54,14 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         setUser(getUserDataWithoutNulls(userData));
     }, [userData]);
 
-    const checkFormFieldsValidation = () => formValidationState.email && formValidationState.login;
+    const checkFormFieldsValidation = () => formValidationState && formValidationState.email;
 
     const handleSave = (): void => {
         if (!checkFormFieldsValidation()) return;
 
-        const dataPayload: IUser = getUserDataWithoutEmptyStrings(user);
-        const updateAction = isForAdmin
-            ? usersActions.updateActivated(dataPayload)
-            : usersActions.updateActivatedByTenant(dataPayload);
-        dispatch(updateAction).unwrap()
+        const dataPayload = getUserDataWithoutEmptyStrings(user);
+        dispatch(usersActions.updateInTenant({ payload: dataPayload, resourceId: dataPayload.id }))
+            .unwrap()
             .then(() => {
                 handleClose();
                 enqueueSnackbar(

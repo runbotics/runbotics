@@ -1,9 +1,9 @@
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 export interface EditProcessDialogProps {
-    process: IProcess;
+    process: ProcessDto;
     onClose: () => void;
-    onAdd: (process: IProcess) => void;
+    onAdd: (process: ProcessDto) => void;
     open?: boolean;
 };
 

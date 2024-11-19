@@ -1,7 +1,7 @@
 import { CredentialCollection } from './credential-collection.model';
 import { CredentialTemplate } from './credential-template.model';
 import { Tenant } from './tenant.model';
-import { UserDTO } from './user.model';
+import { BasicUserDto } from './user.model';
 
 export interface Credential {
     id: string;
@@ -12,8 +12,8 @@ export interface Credential {
     collectionId: string;
     collection: CredentialCollection;
     createdById: number;
-    createdBy: UserDTO;
-    updatedBy: UserDTO;
+    createdBy: BasicUserDto;
+    updatedBy: BasicUserDto;
     updatedById: number;
     templateId: string;
     template: CredentialTemplate;

@@ -1,4 +1,4 @@
-import { IProcess, IUser, ProcessCollection } from 'runbotics-common';
+import { IProcess, UserDto, ProcessCollection, ProcessDto, BasicUserDto } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -25,13 +25,16 @@ export const inputErrorMessages: Record<InputErrorType, string> = {
     [InputErrorType.REQUIRED]: translate('Process.Add.Form.Error.Required')
 };
 
-export const getDefaultProcessInfo = (currentUser: IUser, currentCollection: ProcessCollection): IProcess => {
-    const defaultProcessInfo: IProcess = {
+export const getDefaultProcessInfo = (currentUser: BasicUserDto, currentCollection: ProcessCollection): ProcessDto => {
+    const defaultProcessInfo: ProcessDto = {
         isPublic: false,
         name: '',
         description: '',
         definition: emptyBpmn,
-        createdBy: { ...currentUser },
+        createdBy: {
+            id: currentUser.id,
+            email: currentUser.email,
+        },
         created: new Date().toISOString(),
         tags: [],
         ...(currentCollection && { processCollection: { ...currentCollection } }),

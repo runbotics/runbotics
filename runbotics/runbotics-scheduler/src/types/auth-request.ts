@@ -1,6 +1,6 @@
+import { User } from '#/scheduler-database/user/user.entity';
 import { Request } from 'express';
-import { IUser } from 'runbotics-common';
 
 export interface AuthRequest extends Request {
-    user: IUser;
+    user: User;
 }

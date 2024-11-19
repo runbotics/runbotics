@@ -6,6 +6,7 @@ import {
     NotificationProcess,
     NotificationProcessType,
     ProcessCredentialDto,
+    ProcessDto,
 } from 'runbotics-common';
 
 import { Socket } from 'socket.io-client';
@@ -26,7 +27,7 @@ const PROCESS_CREDENTIALS_PATH = 'process-credentials';
 const getProcessById = ApiTenantResource.get<IProcess[]>('processes/getById', PROCESSES_PATH);
 
 export const fetchProcessById = createAsyncThunk<
-    IProcess,
+    ProcessDto,
     number,
     {
         state: RootState;
@@ -46,7 +47,7 @@ export const fetchProcessById = createAsyncThunk<
     return result.payload;
 });
 
-export const fetchGuestDemoProcess = createAsyncThunk<IProcess>(
+export const fetchGuestDemoProcess = createAsyncThunk<ProcessDto>(
     'processes/guestDemo',
     () => Axios.get<IProcess>('/api/guests/process')
         .then((response) => response.data),
@@ -54,7 +55,7 @@ export const fetchGuestDemoProcess = createAsyncThunk<IProcess>(
 
 export const updateProcess = ApiTenantResource.patch<IProcess, IProcess>('processes/update', PROCESSES_PATH);
 
-export const partialUpdateProcess = createAsyncThunk<IProcess, IProcess, { rejectValue: any }>(
+export const partialUpdateProcess = createAsyncThunk<ProcessDto, ProcessDto, { rejectValue: any }>(
     'processes/partialUpdate',
     (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}`, process)
         .then((response) => response.data)
@@ -91,7 +92,7 @@ export const updateDiagram = ApiTenantResource.patch<IProcess, UpdateDiagramRequ
     (id: string) => `${PROCESSES_PATH}/${id}/diagram`,
 );
 
-export const createProcess = ApiTenantResource.post<IProcess, IProcess>(
+export const createProcess = ApiTenantResource.post<ProcessDto, ProcessDto>(
     'processes/create',
     PROCESSES_PATH,
 );
@@ -123,11 +124,11 @@ export const startProcess = createAsyncThunk<StartProcessResponse, {
         }),
 );
 
-export const setDraft = createAsyncThunk('api/setDraft', (payload: { process: IProcess }) => payload.process);
+export const setDraft = createAsyncThunk('api/setDraft', (payload: { process: ProcessDto }) => payload.process);
 
-export const getProcesses = ApiTenantResource.get<IProcess[]>('process/getAll', PROCESSES_PATH);
+export const getProcesses = ApiTenantResource.get<ProcessDto[]>('process/getAll', PROCESSES_PATH);
 
-export const getProcessesPage = ApiTenantResource.get<Page<IProcess>>('process/getPage', `${PROCESSES_PATH}/GetPage`);
+export const getProcessesPage = ApiTenantResource.get<Page<ProcessDto>>('process/getPage', `${PROCESSES_PATH}/GetPage`);
 
 export const deleteProcess = ApiTenantResource.delete<number>('process/delete', PROCESSES_PATH);
 

@@ -1,9 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 import { GlobalVariableType } from 'runbotics-common';
-
-import { UserEntity } from '#/database/user/user.entity';
-
 import { Tenant } from '../tenant/tenant.entity';
+import { User } from '../user/user.entity';
 
 @Entity({ name: 'global_variable' })
 @Unique(['name', 'tenantId'])
@@ -26,13 +24,13 @@ export class GlobalVariable {
     @UpdateDateColumn({ name: 'last_modified' })
     lastModified: Date;
 
-    @ManyToOne(() => UserEntity, user => user.id)
+    @ManyToOne(() => User, user => user.id)
     @JoinColumn({ name: 'user_id' })
-    user: UserEntity;
+    user: User;
 
-    @ManyToOne(() => UserEntity, user => user.id)
+    @ManyToOne(() => User, user => user.id)
     @JoinColumn({ name: 'creator_id' })
-    creator: UserEntity;
+    creator: User;
 
     @Column({ name: 'tenant_id', type: 'uuid' })
     tenantId: string;

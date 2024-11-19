@@ -1,6 +1,6 @@
 import { Credential, FrontCredentialDto } from './credential.model';
 import { Tenant } from './tenant.model';
-import { UserDTO } from './user.model';
+import { BasicUserDto } from './user.model';
 
 export enum AccessType {
     PRIVATE = 'PRIVATE',
@@ -33,7 +33,7 @@ export interface CredentialCollectionUser {
     credentialCollectionId: string;
     accessType: AccessType;
     privilegeType: PrivilegeType;
-    user: UserDTO;
+    user: BasicUserDto;
 }
 
 export interface CredentialCollection {
@@ -42,9 +42,9 @@ export interface CredentialCollection {
     tenantId: string;
     tenant: Tenant;
     description?: string;
-    createdBy: UserDTO;
+    createdBy: BasicUserDto;
     createdById: number;
-    updatedBy: UserDTO;
+    updatedBy: BasicUserDto;
     updatedById: number;
     credentials: Credential[];
     color: ColorNames;

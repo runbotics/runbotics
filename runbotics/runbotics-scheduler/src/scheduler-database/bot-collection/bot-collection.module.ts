@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BotCollectionService } from './bot-collection.service';
 import { BotCollection } from './bot-collection.entity';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { BotCollectionController } from '#/scheduler-database/bot-collection/bot-collection.controller';
+import { UserModule } from '../user/user.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([BotCollection, UserEntity])],
+    imports: [TypeOrmModule.forFeature([BotCollection, User]), UserModule],
     exports: [BotCollectionService],
     providers: [BotCollectionService],
     controllers: [BotCollectionController],

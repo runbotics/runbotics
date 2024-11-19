@@ -13,7 +13,7 @@ export class GuestService {
         private guestRepository: Repository<GuestEntity>,
     ) { }
 
-    async findByUserId(userId: number): Promise<Guest> {
+    async findByUserId(userId: number) {
         return this.guestRepository.findOne({ where: { user: { id: userId } }, relations });
     }
 

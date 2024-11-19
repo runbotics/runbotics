@@ -196,6 +196,9 @@ export enum FeatureKey {
     // Allows to edit the resources assigned to the tenant
     TENANT_EDIT = 'TENANT_EDIT',
 
+    // Allows to display/get users in tenant
+    TENANT_READ_USER = 'TENANT_READ_USER',
+
     // Allows to edit users assigned to the tenant
     TENANT_EDIT_USER = 'TENANT_EDIT_USER',
 

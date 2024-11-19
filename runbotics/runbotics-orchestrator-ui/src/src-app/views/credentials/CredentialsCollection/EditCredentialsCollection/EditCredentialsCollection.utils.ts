@@ -1,4 +1,4 @@
-import { AccessType, DEFAULT_COLLECTION_COLOR, FrontCredentialCollectionDto, IUser } from 'runbotics-common';
+import { AccessType, DEFAULT_COLLECTION_COLOR, FrontCredentialCollectionDto, UserDto } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -73,20 +73,20 @@ export const adjustShareWithProperty = (collection: EditCredentialsCollectionDto
 
 interface filterOptions {
     sharedWithUsers: SharedWithUser[];
-    selectedUsers: IUser[];
+    selectedUsers: SharedWithUser[];
     collectionCreatorId: number;
 }
 
-export const filterSharableUsers = (value: string, allSharableUsers: IUser[], {
+export const filterSharableUsers = (value: string, allSharableUsers: UserDto[], {
     sharedWithUsers =[],
     selectedUsers = [],
     collectionCreatorId
-}: filterOptions ): IUser[] =>
+}: filterOptions ): UserDto[] =>
     allSharableUsers.filter(
         sharableUser =>
             sharableUser.email.toLowerCase().includes(value.toLowerCase()) &&
         sharableUser.id !== collectionCreatorId
         &&
         !sharedWithUsers?.some(sharedWithUser => sharedWithUser.email === sharableUser.email) &&
-        !selectedUsers?.some(selectedUser => selectedUser.id === sharableUser.id)
+        !selectedUsers?.some(selectedUser => selectedUser.email === sharableUser.email)
     );

@@ -36,8 +36,8 @@ export const AccessTab = ({ value, process }: DetailsInfoTabProps) => {
                         <Typography>{sharedWithPlaceholder}</Typography>
                     }
                 >
-                    {process.processCollection?.users.map(({ id, login }) => (
-                        <Chip label={login} key={id} size="small" />
+                    {process.processCollection?.users.map(({ id, email }) => (
+                        <Chip label={email} key={id} size="small" />
                     ))}
                 </If>
             </Box>

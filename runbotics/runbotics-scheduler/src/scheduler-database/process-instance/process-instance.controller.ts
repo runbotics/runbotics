@@ -10,8 +10,8 @@ import {
 } from '#/utils/specification/specifiable.decorator';
 import { ProcessInstanceCriteria } from './criteria/process-instance.criteria';
 import { ProcessInstance } from './process-instance.entity';
-import { UserEntity } from '#/database/user/user.entity';
-import { User } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 
 @UseInterceptors(TenantInterceptor)
@@ -27,7 +27,7 @@ export class ProcessInstanceController {
     @Get()
     getAll(
         @Specifiable(ProcessInstanceCriteria) specs: Specs<ProcessInstance>,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         return this.processInstanceService.getAll(user, specs);
     }
@@ -36,13 +36,13 @@ export class ProcessInstanceController {
     getPage(
         @Specifiable(ProcessInstanceCriteria) specs: Specs<ProcessInstance>,
         @Pageable() paging: Paging,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         return this.processInstanceService.getPage(user, specs, paging);
     }
 
     @Get(':id')
-    getOne(@Param('id') id: ProcessInstance['id'], @User() user: UserEntity) {
+    getOne(@Param('id') id: ProcessInstance['id'], @UserDecorator() user: User) {
         return this.processInstanceService.getOne(id, user);
     }
 
@@ -50,7 +50,7 @@ export class ProcessInstanceController {
     getSubprocesses(
         @Param('id') id: ProcessInstance['id'],
         @Pageable() paging: Paging,
-        @User() user: UserEntity
+        @UserDecorator() user: User
     ) {
         return this.processInstanceService.getSubprocesses(id, user, paging);
     }

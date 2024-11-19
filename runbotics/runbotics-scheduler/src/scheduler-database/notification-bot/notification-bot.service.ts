@@ -6,7 +6,7 @@ import { Role } from 'runbotics-common';
 import { NotificationBot } from './notification-bot.entity';
 import { CreateNotificationBotDto } from './dto/create-notification-bot.dto';
 
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
@@ -22,7 +22,11 @@ export class NotificationBotService {
         private readonly botRepository: Repository<BotEntity>,
     ) {}
 
-    async getAllByBotId(botId: number, user: UserEntity) {
+    async getAllByBotId(botId: number) {
+        return this.notificationBotRepository.findBy({ bot: { id: botId } });
+    }
+
+    async getAllByBotIdAndUser(botId: number, user: User) {
         const bot = await this.checkBotAccessAndGetById(
             botId, user
         );
@@ -34,7 +38,7 @@ export class NotificationBotService {
 
     async create(
         createNotificationBotDto: CreateNotificationBotDto,
-        user: UserEntity
+        user: User
     ) {
         const bot = await this.checkBotAccessAndGetById(
             createNotificationBotDto.botId, user
@@ -50,7 +54,7 @@ export class NotificationBotService {
             .then(this.formatToDTO);
     }
 
-    async delete(notificationBotId: string, user: UserEntity) {
+    async delete(notificationBotId: string, user: User) {
         const findOptions = {
             id: notificationBotId,
             ...(!isTenantAdmin(user) && { user: { id: user.id } })
@@ -71,13 +75,13 @@ export class NotificationBotService {
             id: notificationBot.id,
             user: {
                 id: notificationBot.user.id,
-                login: notificationBot.user.login
+                email: notificationBot.user.email
             },
             createdAt: notificationBot.createdAt
         };
     }
 
-    private async checkBotAccessAndGetById(botId: number, user: UserEntity) {
+    private async checkBotAccessAndGetById(botId: number, user: User) {
         return user.authorities.find(authority => authority.name === Role.ROLE_TENANT_ADMIN)
             ? await this.botRepository
                 .createQueryBuilder('bot')

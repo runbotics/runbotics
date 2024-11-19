@@ -1,6 +1,6 @@
 import { BotEntity } from '../bot/bot.entity';
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import {
     EmailTriggerData,
     ProcessInstanceStatus,
@@ -98,11 +98,11 @@ export class ProcessInstance {
         default: 1,
         nullable: true,
     })
-    userId: UserEntity['id'];
+    userId: User['id'];
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
-    user: UserEntity;
+    user: User;
 
     @Column({ type: 'text', nullable: true })
     error?: string;

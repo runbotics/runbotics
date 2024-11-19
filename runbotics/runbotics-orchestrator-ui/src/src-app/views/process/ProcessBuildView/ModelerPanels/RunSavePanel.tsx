@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { Button, Grid, SvgIcon, Tooltip, Badge } from '@mui/material';
 import { Send as SendIcon } from 'react-feather';
-import { Role, IProcess } from 'runbotics-common';
+import { Role, ProcessDto } from 'runbotics-common';
 
 import Secured from '#src-app/components/utils/Secured';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -16,7 +16,7 @@ import TooltipError from './TooltipError';
 import FloatingGroup from '../FloatingGroup';
 
 interface RunSavePanelProps {
-    process: IProcess;
+    process: ProcessDto;
     onRunClick: () => void;
     onSave: () => void;
 }
@@ -30,7 +30,7 @@ const RunSavePanel: FC<RunSavePanelProps> = ({
     const { isSaveDisabled, errors, customValidationErrors } = useSelector(
         (state) => state.process.modeler
     );
-    
+
     const getTooltip = () => {
         const {
             formErrorElementsNames,

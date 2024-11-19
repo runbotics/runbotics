@@ -48,7 +48,6 @@ public class UserMapper {
         } else {
             User user = new User();
             user.setId(userDTO.getId());
-            user.setLogin(userDTO.getLogin());
             user.setFirstName(userDTO.getFirstName());
             user.setLastName(userDTO.getLastName());
             user.setEmail(userDTO.getEmail());
@@ -120,14 +119,14 @@ public class UserMapper {
     @Named("login")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "login", source = "login")
+    @Mapping(target = "email", source = "email")
     public UserDTO toDtoLogin(User user) {
         if (user == null) {
             return null;
         }
         UserDTO userDto = new UserDTO();
         userDto.setId(user.getId());
-        userDto.setLogin(user.getLogin());
+        userDto.setEmail(user.getEmail());
         return userDto;
     }
 

@@ -28,13 +28,13 @@ interface SharedWithUsersProps {
 export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectionFormState, setCredentialsCollectionFormState }) => {
     const dispatch = useDispatch();
     const {
-        activated: { nonAdmins }
+        tenantActivated: { all }
     } = useSelector(state => state.users);
 
     const { user: collectionCreator } = useAuth();
     const [selectedUsers, setSelectedUsers] = useState(credentialsCollectionFormState.sharedWith || []);
     const [availableUsers, setAvailableUsers] = useState(
-        filterSharableUsers('', nonAdmins.all, {
+        filterSharableUsers('', all, {
             sharedWithUsers: credentialsCollectionFormState.sharedWith,
             selectedUsers,
             collectionCreatorId: collectionCreator.id
@@ -43,17 +43,17 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
 
     useEffect(() => {
         setAvailableUsers(
-            filterSharableUsers('', nonAdmins.all, {
+            filterSharableUsers('', all, {
                 sharedWithUsers: credentialsCollectionFormState.sharedWith,
                 selectedUsers,
                 collectionCreatorId: collectionCreator.id
             })
         );
-    }, [nonAdmins.all]);
+    }, [all]);
 
     // TODO - to be updated after users migration to include all users in tenant
     useEffect(() => {
-        dispatch(usersActions.getActiveNonAdmins());
+        dispatch(usersActions.getAllUsersInTenant());
     }, []);
 
     useEffect(() => {
@@ -71,7 +71,7 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
 
     const handleDeleteUser = (email: string) => {
         setSelectedUsers(prevState => prevState.filter(user => user.email !== email));
-        setAvailableUsers(prevState => [...prevState, nonAdmins.all.find(user => user.email === email)]);
+        setAvailableUsers(prevState => [...prevState, all.find(user => user.email === email)]);
     };
 
     const handleChangeAccessType = ({ email, privilegeType }: SharedWithUser) => {

@@ -1,13 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, Dictionary } from '@reduxjs/toolkit';
 
-import { User } from '#src-app/types/user';
+import { UserDto } from 'runbotics-common';
 
 import extraAuthReducers from './Auth.extraReducers';
 import * as authThunks from './Auth.thunks';
 
 interface AuthState {
     isAuthenticated: boolean;
-    user: User | null;
+    user: UserDto & { authoritiesById?: Dictionary<any>; } | null;
     isInitialized: boolean;
 }
 

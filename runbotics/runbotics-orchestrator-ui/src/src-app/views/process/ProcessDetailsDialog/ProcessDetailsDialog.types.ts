@@ -1,12 +1,12 @@
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 export interface DetailsInfoTabProps {
-    process: IProcess;
+    process: ProcessDto;
     value: ProcessDetailsTab;
 }
 
 export interface ProcessDetailsDialogProps {
-    process: IProcess;
+    process: ProcessDto;
     isOpen: boolean;
     onClose: () => void;
 }

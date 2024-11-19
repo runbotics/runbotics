@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, QueryRunner, Repository } from 'typeorm';
 import { ProcessInstanceLoopEvent } from './process-instance-loop-event.entity';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { Logger } from '#/utils/logger';
 
 const RELATIONS: FindOptionsRelations<ProcessInstanceLoopEvent> = {
@@ -22,7 +22,7 @@ export class ProcessInstanceLoopEventService {
 
     async getLoopEvents(
         loopId: ProcessInstanceLoopEvent['loopId'],
-        user: UserEntity
+        user: User
     ) {
         const processInstanceLoopEvents =
             await this.processInstanceLoopEventRepository.find({

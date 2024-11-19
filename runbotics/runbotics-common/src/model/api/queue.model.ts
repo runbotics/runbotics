@@ -1,6 +1,6 @@
 import { TriggerEvent } from './trigger-event.model';
 import { IProcess } from './process.model';
-import { IUser } from './user.model';
+import { User } from './user.model';
 import { IProcessInstance } from './process-instance.model';
 
 export interface ProcessInput {
@@ -16,7 +16,7 @@ export type Trigger = Pick<IProcessInstance, 'trigger' | 'triggerData'>;
 export interface InstantProcess extends Trigger {
     process: IProcess;
     orchestratorProcessInstanceId: string;
-    user?: IUser;
+    user?: User;
     input?: ProcessInput;
     isActive?: boolean;
 }

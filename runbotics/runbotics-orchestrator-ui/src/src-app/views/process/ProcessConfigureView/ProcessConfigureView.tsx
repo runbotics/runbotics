@@ -61,7 +61,7 @@ const ProcessConfigureView: VFC = () => {
     const notificationTableRows = useMemo(() => processSubscriptions
         .map<ProcessNotificationRow>((sub: NotificationProcess) => ({
             id: sub.id,
-            user: sub.user.login,
+            user: sub.user.email,
             subscribedAt: sub.createdAt,
         })), [processSubscriptions]);
 

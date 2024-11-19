@@ -18,10 +18,6 @@ const initialState: UsersState = {
         loading: false,
         all: [],
         allByPage: null,
-        nonAdmins: {
-            all: [],
-            loading: false,
-        }
     },
     notActivated: {
         loading: false,

@@ -6,12 +6,13 @@ import {
     IBot,
     FeatureKey,
 } from 'runbotics-common';
-import { UserEntity } from '#/database/user/user.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
 import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
+import { UserService } from '../user/user.service';
 
 const relations = ['user', 'system', 'collection', 'collection.users'];
 
@@ -21,10 +22,11 @@ export class BotCrudService {
         @InjectRepository(BotEntity)
         private botRepository: Repository<BotEntity>,
         private botCollectionService: BotCollectionService,
+        private readonly userService: UserService,
     ) {
     }
 
-    async findAll(user: UserEntity, specs: Specs<BotEntity>): Promise<IBot[]> {
+    async findAll(user: User, specs: Specs<BotEntity>): Promise<IBot[]> {
         const collectionIds = await this.botCollectionService.findIds(
             user,
             { where: {}, order: { created: 'asc' } },
@@ -46,8 +48,8 @@ export class BotCrudService {
         return this.botRepository.find(options);
     }
 
-    async findAllPage(user: UserEntity, specs: Specs<BotEntity>, paging: Paging) {
-        const collectionIds = user.hasFeatureKey(FeatureKey.TENANT_ALL_ACCESS) ?
+    async findAllPage(user: User, specs: Specs<BotEntity>, paging: Paging) {
+        const collectionIds = this.userService.hasFeatureKey(user, FeatureKey.TENANT_ALL_ACCESS) ?
             await this.botCollectionService.findIdsForAdmin(
                 user,
                 {
@@ -81,7 +83,7 @@ export class BotCrudService {
         return getPage(this.botRepository, options);
     }
 
-    async findOne(user: UserEntity, id: number) {
+    async findOne(user: User, id: number) {
         const collectionIds = await this.botCollectionService.findIds(
             user,
             { where: {}, order: { created: 'asc' } },

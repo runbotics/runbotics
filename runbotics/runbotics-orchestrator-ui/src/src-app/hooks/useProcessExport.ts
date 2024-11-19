@@ -1,7 +1,7 @@
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 const useProcessExport = () => {
-    const formatAdditionalInfo = (process: IProcess) => `
+    const formatAdditionalInfo = (process: ProcessDto) => `
       <runbotics:additionalInfo>
           <runbotics:isTriggerable>
             ${process.isTriggerable}
@@ -19,7 +19,7 @@ const useProcessExport = () => {
           </runbotics:attendedForm>
       </runbotics:additionalInfo>\n`;
 
-    const createRbexFile = (definition: string, process: IProcess) => {
+    const createRbexFile = (definition: string, process: ProcessDto) => {
         const definitionEnd = definition.indexOf('</bpmn2:definitions>');
         return (
             definition.substring(0, definitionEnd) +
