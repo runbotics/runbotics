@@ -12,6 +12,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialsSelector, credentialsActions } from '#src-app/store/slices/Credentials/Credentials.slice';
 import { AddDialogContent, StyledButton } from '#src-app/views/process/ProcessConfigureView/ProcessCredentials/ProcessCredentials.styles';
+import InfoButtonTooltip from '../InfoTooltip/InfoButtonTooltip';
 
 interface CustomCredentialSelectDialogProps {
     isOpen: boolean;
@@ -74,29 +75,35 @@ export const CustomCredentialSelectDialog: FunctionComponent<CustomCredentialSel
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', px: 1 }}>
                     <Show>
                         <If condition={!credential}>
-                            <Button
-                                disabled
-                                variant='text'
-                                onClick={() => {
-                                    setCredential('');
-                                    handleClose();
-                                }}
-                                startIcon={<Done />}
-                            >
-                                {translate('Credential.ActionFormSelect.Dialog.SetToPrimary.Label')}
-                            </Button>
+                            <div>
+                                <Button
+                                    disabled
+                                    variant='text'
+                                    onClick={() => {
+                                        setCredential('');
+                                        handleClose();
+                                    }}
+                                    startIcon={<Done />}
+                                >
+                                    {translate('Credential.ActionFormSelect.Dialog.SetToPrimary.Label')}
+                                </Button>
+                                <InfoButtonTooltip message={translate('Credential.ActionFormSelect.Dialog.SetToPrimary.Info')} />
+                            </div>
                         </If>
                         <Else>
-                            <Button
-                                variant='text'
-                                onClick={() => {
-                                    setCredential('');
-                                    handleClose();
-                                }}
-                                startIcon={<Autorenew />}
-                            >
-                                {translate('Credential.ActionFormSelect.Dialog.ResetToPrimary.Label')}
-                            </Button>
+                            <div>
+                                <Button
+                                    variant='text'
+                                    onClick={() => {
+                                        setCredential('');
+                                        handleClose();
+                                    }}
+                                    startIcon={<Autorenew />}
+                                >
+                                    {translate('Credential.ActionFormSelect.Dialog.ResetToPrimary.Label')}
+                                </Button>
+                                <InfoButtonTooltip message={translate('Credential.ActionFormSelect.Dialog.ResetToPrimary.Info')} />
+                            </div>
                         </Else>
                     </Show>
                     <Box sx={{ display: 'flex' }}>
