@@ -12,6 +12,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialsSelector, credentialsActions } from '#src-app/store/slices/Credentials/Credentials.slice';
 import { AddDialogContent, StyledButton } from '#src-app/views/process/ProcessConfigureView/ProcessCredentials/ProcessCredentials.styles';
+
 import InfoButtonTooltip from '../InfoTooltip/InfoButtonTooltip';
 
 interface CustomCredentialSelectDialogProps {
@@ -41,7 +42,7 @@ export const CustomCredentialSelectDialog: FunctionComponent<CustomCredentialSel
     };
 
     const handleSelectCredential = () => {
-        setCredential(pickedCredential)
+        setCredential(pickedCredential);
         handleClose();
     };
 
