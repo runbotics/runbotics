@@ -7,8 +7,10 @@ import { Role } from 'runbotics-common';
 
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { DefaultPageValue } from '#src-app/views/users/UsersBrowseView/UsersBrowseView.utils';
+
 import { StyledActionsContainer, StyledTextField } from '#src-app/views/users/UsersListView/UsersListView.styles';
+
+import { DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
 
 import { StyledHeaderWrapper, StyledWrapper } from './NotificationTableComponent.styles';
 import { BotNotificationRow, ProcessNotificationRow } from './NotificationTableComponent.types';
@@ -71,7 +73,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
                 rowCount={filteredSubscribersList.length}
                 loading={loading}
                 disableSelectionOnClick
-                pageSize={DefaultPageValue.PAGE_SIZE}
+                pageSize={DEFAULT_TABLE_PAGING_VALUES.pageSize}
                 localeText={{
                     noRowsLabel: translate('Component.NotificationTable.Results.Error')
                 }}

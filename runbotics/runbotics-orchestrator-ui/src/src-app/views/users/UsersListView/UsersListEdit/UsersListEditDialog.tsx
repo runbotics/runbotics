@@ -1,8 +1,7 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { Dialog, Box } from '@mui/material';
-import { useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { IUser } from 'runbotics-common';
 
@@ -13,6 +12,8 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { usersSelector, usersActions } from '#src-app/store/slices/Users';
 import englishEditListTranslations from '#src-app/translations/en/users/list/edit';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
+
+import { TablePagingContext } from '#src-app/views/utils/TablePaging.provider';
 
 import { StyledButton, DeleteButton, StyledDialogActions } from './UsersListEdit.styles';
 import { FormValidationState, UsersListEditDialogProps } from './UsersListEdit.types';
@@ -30,14 +31,11 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
-    const searchParams = useSearchParams();
-    const pageFromUrl = searchParams.get('page');
-    const pageSizeFromUrl = searchParams.get('pageSize');
-    const page = pageFromUrl ? parseInt(pageFromUrl) : null;
-    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : null;
 
+    const { page, pageSize } = useContext(TablePagingContext);
     const searchType = isForAdmin ? UserSearchType.ALL_ACTIVATED : UserSearchType.TENANT_ACTIVATED;
     const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType, page, pageSize });
+
     const { activated } = useSelector(usersSelector);
 
     const [user, setUser] = useState<IUser>(userData);

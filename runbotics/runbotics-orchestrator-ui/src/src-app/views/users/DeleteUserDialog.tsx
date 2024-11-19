@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 
 import {
     Typography,
@@ -6,7 +6,6 @@ import {
     ListItem,
 } from '@mui/material';
 
-import { useSearchParams } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
 import { IUser } from 'runbotics-common';
@@ -16,6 +15,9 @@ import CustomDialog from '#src-app/components/CustomDialog';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
+
+import { TablePagingContext } from '../utils/TablePaging.provider';
+
 
 const StyledList = styled(List)`
     max-height: 200px;
@@ -42,15 +44,12 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
-    const searchParams = useSearchParams();
-    const pageFromUrl = searchParams.get('page');
-    const pageSizeFromUrl = searchParams.get('pageSize');
-    const page = pageFromUrl ? parseInt(pageFromUrl) : null;
-    const pageSize = pageSizeFromUrl ? parseInt(pageSizeFromUrl) : null;
-
     const { userDelete } = useSelector(usersSelector);
+
+    const { page, pageSize } = useContext(TablePagingContext);
     const { refreshSearch: refreshSearchNotActivated } = useUserSearch({ searchType: UserSearchType.ALL_NOT_ACTIVATED, page, pageSize });
     const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType: UserSearchType.ALL_ACTIVATED, page, pageSize });
+
     const [usersData, setUsersData] = useState<IUser[]>([]);
 
     const handleSubmit = () => {

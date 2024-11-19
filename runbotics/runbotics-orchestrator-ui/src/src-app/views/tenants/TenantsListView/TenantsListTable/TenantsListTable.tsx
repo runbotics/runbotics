@@ -7,9 +7,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { tenantsSelector } from '#src-app/store/slices/Tenants';
 
+import { AVAILABLE_ROWS_PER_PAGE } from '#src-app/views/utils/TablePaging.provider';
+
 import { DataGridStyle } from './TenantsListTable.styles';
 import useTenantsListColumns from './useTenantsListColumns';
-import { ROWS_PER_PAGE } from '../../TenantsBrowseView/TenantsBrowseView.utils';
+
 
 interface TenantListTableProps {
     page: number;
@@ -48,7 +50,7 @@ const TenantsListTable: VFC<TenantListTableProps> = ({
                         onPageSizeChange={(newPageSize) => onPageSizeChange(newPageSize)}
                         disableSelectionOnClick
                         paginationMode='server'
-                        rowsPerPageOptions={ROWS_PER_PAGE}
+                        rowsPerPageOptions={AVAILABLE_ROWS_PER_PAGE}
                         localeText={{
                             noRowsLabel: translate('Tenants.List.Table.Error.Rows')
                         }}

@@ -1,4 +1,4 @@
-import { VFC, useState, useEffect } from 'react';
+import { VFC, useState, useEffect, useContext } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { Box, Dialog } from '@mui/material';
@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 import englishEditListTranslations from '#src-app/translations/en/tenants/list/edit';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
+
+import { TablePagingContext } from '#src-app/views/utils/TablePaging.provider';
 
 import { DeleteButton, StyledButton, StyledDialogActions } from './TenantListEdit.styles';
 import { FormValidationState, TenantsListEditDialogProps } from './TenantsListEdit.types';
@@ -31,7 +33,9 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
 
-    const { refreshSearch } = useTenantSearch();
+    const { page, pageSize } = useContext(TablePagingContext);
+    const { refreshSearch } = useTenantSearch({ page, pageSize });
+
     const { loading } = useSelector(tenantsSelector);
     const [tenant, setTenant] = useState<Tenant>(tenantData);
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);

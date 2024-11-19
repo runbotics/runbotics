@@ -15,6 +15,8 @@ import { useDispatch } from '#src-app/store';
 import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
+import { AVAILABLE_ROWS_PER_PAGE, DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
+
 import UsersRegistrationTable from './UsersRegistrationTable';
 import {
     StyledButtonsContainer,
@@ -27,7 +29,6 @@ import {
     StyledInputLabel
 } from './UsersRegistrationView.styles';
 import DeleteUserDialog from '../DeleteUserDialog';
-import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
 interface SelectedRoles { [id: number]: Role };
 
@@ -52,11 +53,11 @@ const UsersRegistrationView: FC = () => {
 
     const currentPage = parseInt(searchParams.get('page'));
     const pageSizeFromUrl = parseInt(searchParams.get('pageSize'));
-    const [page, setPage] = useState(currentPage ? currentPage : DefaultPageValue.PAGE);
+    const [page, setPage] = useState(currentPage ? currentPage : DEFAULT_TABLE_PAGING_VALUES.page);
     const [limit, setLimit] = useState(
-        pageSizeFromUrl && ROWS_PER_PAGE.includes(pageSizeFromUrl)
+        pageSizeFromUrl && AVAILABLE_ROWS_PER_PAGE.includes(pageSizeFromUrl)
             ? pageSizeFromUrl
-            : DefaultPageValue.PAGE_SIZE
+            : DEFAULT_TABLE_PAGING_VALUES.pageSize
     );
     const tenantParam = searchParams.get('tenantId');
     const [tenantSelection, setTenantSelection] = useState(tenantParam);

@@ -12,8 +12,9 @@ import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
+
 import { DefaultPageSize } from './ProcessList/ProcessList.utils';
-import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
 import { getLastParamOfUrl } from '../../utils/routerUtils';
 import AddProcess from '../AddProcess';
 import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
@@ -48,7 +49,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
 
     const currentTab = getLastParamOfUrl(router);
 
-    const currentPage = parseInt(searchParams.get('page')) ?? DefaultPageValue.PAGE;
+    const currentPage = parseInt(searchParams.get('page')) ?? DEFAULT_TABLE_PAGING_VALUES.page;
     const pageSize = parseInt(searchParams.get('pageSize')) ?? DefaultPageSize.GRID;
 
     const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcessesTabs) => {
