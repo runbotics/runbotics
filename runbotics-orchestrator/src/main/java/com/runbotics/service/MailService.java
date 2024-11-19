@@ -82,6 +82,7 @@ public class MailService {
         }
     }
 
+
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         this.sendEmail(to, null, subject, content, isMultipart, isHtml);

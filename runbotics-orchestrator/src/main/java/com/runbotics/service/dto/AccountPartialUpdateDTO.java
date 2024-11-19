@@ -2,6 +2,7 @@ package com.runbotics.service.dto;
 
 import com.runbotics.config.Constants;
 import com.runbotics.domain.User;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

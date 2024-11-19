@@ -237,6 +237,7 @@ public class UserResource {
                 limitedUser.setEmail(user.getEmail());
                 return limitedUser;
             })
+            .collect(Collectors.toList());
 
         return new ResponseEntity<>(nonAdminUsers, HttpStatus.OK);
     }

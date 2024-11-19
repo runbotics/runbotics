@@ -46,6 +46,8 @@ public interface BotRepository extends JpaRepository<Bot, Long>, JpaSpecificatio
             "OR b.collection.createdBy.id = :userId " +
             "OR b.collection.name IN :commonCollections " +
             "OR b.user.id = :userId" +
+        ") " +
+        "AND b.collection.name IN :collectionNames"
     )
     Page<Bot> findAllByUserAndByCollectionNames(
         Pageable pageable,
