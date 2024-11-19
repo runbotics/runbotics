@@ -570,11 +570,11 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                         return;
                     }
 
-
                     const credentialType = runboticsExecutionEnvironment.runbotic?.credentialType;
+                    const credentialId = desktopTask?.input?.customCredentialId;
+
                     const credentialsForAction = script !== GeneralAction.START_PROCESS
-                        //@todo after implementation of custom credential, pass credentialId instead of null
-                        ? this.determineCredentialsForAction(null, credentialType, credentials)
+                        ? this.determineCredentialsForAction(credentialId, credentialType, credentials)
                         : credentials;
 
                     this.logger.log(
