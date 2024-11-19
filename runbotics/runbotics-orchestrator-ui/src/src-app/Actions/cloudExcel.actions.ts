@@ -693,12 +693,14 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
         form: {
             schema: {
                 properties: {
-                    Input: {
+                    input: {
+                        title: '',
+                        type: 'object',
                         properties: {
                             customCredentialId: propertyCustomCredential,
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             uiSchema: {
                 input: {
