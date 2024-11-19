@@ -65,7 +65,9 @@ public class AccountResource {
         if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.getInviteCode());
+        User user = userService.registerUser(
+            managedUserVM, managedUserVM.getPassword(), managedUserVM.getInviteCode()
+        );
         //        mailService.sendActivationEmail(user);
     }
 
@@ -122,10 +124,10 @@ public class AccountResource {
         String userEmail = SecurityUtils
             .getCurrentUserEmail()
             .orElseThrow(() -> new AccountResourceException("Current user email not found"));
-        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-        if (existingUser.isPresent() && (!existingUser.get().getEmail().equalsIgnoreCase(userEmail))) {
-            throw new EmailAlreadyUsedException();
-        }
+       Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+       if (existingUser.isPresent() && (!existingUser.get().getEmail().equalsIgnoreCase(userEmail))) {
+           throw new EmailAlreadyUsedException();
+       }
         Optional<User> user = userRepository.findOneByEmail(userEmail);
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");

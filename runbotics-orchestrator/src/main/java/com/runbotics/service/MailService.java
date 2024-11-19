@@ -1,10 +1,12 @@
 package com.runbotics.service;
 
 import com.runbotics.domain.User;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -79,7 +81,6 @@ public class MailService {
             log.warn("Email could not be sent to user '{}'", to, e);
         }
     }
-
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         this.sendEmail(to, null, subject, content, isMultipart, isHtml);

@@ -21,10 +21,14 @@ public interface ProcessRepository extends JpaRepository<Process, Long>, JpaSpec
     @Query("select process from Process process where process.createdBy.email = ?#{principal.username}")
     List<Process> findByCreatedByIsCurrentUser();
 
-    @Query("select process from Process process where process.createdBy.email = ?1 or process.isPublic = true")
+    @Query(
+        "select process from Process process where process.createdBy.email = ?1 or process.isPublic = true"
+    )
     List<Process> findByCreatedByUser(String email);
 
-    @Query("select process from Process process where process.createdBy.email = ?1 or process.isPublic = true")
+    @Query(
+        "select process from Process process where process.createdBy.email = ?1 or process.isPublic = true"
+    )
     Page<Process> findByCreatedByUser(String email, Pageable pageable);
 
     @Query(
