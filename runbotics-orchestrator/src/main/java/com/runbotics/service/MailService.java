@@ -81,6 +81,8 @@ public class MailService {
             log.warn("Email could not be sent to user '{}'", to, e);
         }
     }
+
+
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         this.sendEmail(to, null, subject, content, isMultipart, isHtml);
