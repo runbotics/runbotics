@@ -118,7 +118,9 @@ public class ProcessQueryService extends QueryService<Process> {
         var userEmail = userService.getUserWithAuthorities().get().getEmail();
         final Specification<Process> specification = createSpecification(criteria);
         if (criteria.getCreatedByName() != null) {
-            return processRepository.findByCreatedByUser(userEmail, page).map(processMapper::toDto);
+            return processRepository
+                .findByCreatedByUser(userEmail, page)
+                .map(processMapper::toDto);
         }
         if (criteria.getBotCollectionName() != null) {
             return processRepository

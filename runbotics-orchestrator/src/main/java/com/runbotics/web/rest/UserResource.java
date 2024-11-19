@@ -230,18 +230,13 @@ public class UserResource {
     public ResponseEntity<List<User>> getNonAdminUsers() {
         log.debug("REST request to get all non-admin users");
 
-        List<User> nonAdminUsers = userService
-            .getNonAdminUsers()
-            .stream()
-            .map(
-                user -> {
-                    User limitedUser = new User();
-                    limitedUser.setId(user.getId());
-                    limitedUser.setEmail(user.getEmail());
-                    return limitedUser;
-                }
-            )
-            .collect(Collectors.toList());
+        List<User> nonAdminUsers = userService.getNonAdminUsers()
+            .stream().map(user -> {
+                User limitedUser = new User();
+                limitedUser.setId(user.getId());
+                limitedUser.setEmail(user.getEmail());
+                return limitedUser;
+            })
 
         return new ResponseEntity<>(nonAdminUsers, HttpStatus.OK);
     }
