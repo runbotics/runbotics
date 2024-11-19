@@ -453,7 +453,7 @@ export class CredentialService {
         };
     }
 
-    private throwExceptionIfUserHasReadAcces(collection: CredentialCollection, user: IUser) {
+    private throwExceptionIfUserHasReadAcces(collection: CredentialCollection, user: User) {
         const hasEditCollectionAccess = collection.credentialCollectionUser
             .some(collectionUser =>
               collectionUser.userId === user.id &&
