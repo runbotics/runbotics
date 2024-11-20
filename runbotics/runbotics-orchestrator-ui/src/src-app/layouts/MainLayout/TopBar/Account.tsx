@@ -132,6 +132,7 @@ const Account: FC = () => {
                 PaperProps={{ className: classes.popover }}
                 anchorEl={ref.current}
                 open={isOpen}
+                onBlur={handleClose}
             >
                 <If condition={hasUserReadAccess}>
                     <MenuLink href={usersHref}>

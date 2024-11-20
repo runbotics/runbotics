@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 
 import {
     Typography,
@@ -15,6 +15,9 @@ import CustomDialog from '#src-app/components/CustomDialog';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
+
+import { TablePagingContext } from '../utils/TablePaging.provider';
+
 
 const StyledList = styled(List)`
     max-height: 200px;
@@ -41,10 +44,12 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
-
     const { userDelete } = useSelector(usersSelector);
-    const { refreshSearch: refreshSearchNotActivated } = useUserSearch({ searchType: UserSearchType.ALL_NOT_ACTIVATED });
-    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType: UserSearchType.ALL_ACTIVATED });
+
+    const { page, pageSize } = useContext(TablePagingContext);
+    const { refreshSearch: refreshSearchNotActivated } = useUserSearch({ searchType: UserSearchType.ALL_NOT_ACTIVATED, page, pageSize });
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType: UserSearchType.ALL_ACTIVATED, page, pageSize });
+
     const [usersData, setUsersData] = useState<UserDto[]>([]);
 
     const handleSubmit = () => {

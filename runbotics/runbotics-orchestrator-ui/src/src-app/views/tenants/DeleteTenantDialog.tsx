@@ -1,4 +1,4 @@
-import { VFC, useState, useEffect } from 'react';
+import { VFC, useState, useEffect, useContext } from 'react';
 
 import { Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -10,6 +10,8 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 import modalsActionsTranslations from '#src-app/translations/en/tenants/actions/modals';
+
+import { TablePagingContext } from '../utils/TablePaging.provider';
 
 interface DeleteTenantDialogProps {
     open: boolean;
@@ -27,10 +29,11 @@ const DeleteTenantDialog: VFC<DeleteTenantDialogProps> = ({
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
-
     const { loading } = useSelector(tenantsSelector);
-    const { refreshSearch } = useTenantSearch();
     const [tenantId, setTenantId] = useState(null);
+
+    const { page, pageSize } = useContext(TablePagingContext);
+    const { refreshSearch } = useTenantSearch({ page, pageSize });
 
     const handleSubmit = () => {
         dispatch(tenantsActions.deleteOne(tenantId))
