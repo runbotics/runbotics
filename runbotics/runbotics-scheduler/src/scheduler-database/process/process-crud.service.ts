@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOptionsRelations, In, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { BotSystemType, FeatureKey, ProcessDto, ProcessOutputType, Role } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';
@@ -11,13 +11,13 @@ import { UpdateDiagramDto } from '#/scheduler-database/process/dto/update-diagra
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
-import { Specs } from '#/utils/specification/specifiable.decorator';
+import { whereOptionsToWhereOptionsArray, Specs } from '#/utils/specification/specifiable.decorator';
 import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
 import { BotCollection } from '../bot-collection/bot-collection.entity';
 import { UserService } from '../user/user.service';
 import { TagService } from '../tags/tag.service';
 
-const relations = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
+const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
 
 @Injectable()
 export class ProcessCrudService {
@@ -71,7 +71,6 @@ export class ProcessCrudService {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
-        // { id } is enough to persist a relation
         process.tags = processDto.tags as Tag[];
 
         return this.processRepository.save(process);
@@ -92,14 +91,14 @@ export class ProcessCrudService {
         return process;
     }
 
-    async update(user: UserEntity, id: number, processDto: UpdateProcessDto) {
+    async update(user: User, id: number, processDto: UpdateProcessDto) {
         const process = await this.processRepository
             .findOneOrFail({
                 where: {
                     id,
                     tenantId: user.tenantId,
                 },
-                relations,
+                relations: RELATIONS,
             })
             .catch(() => {
                 throw new NotFoundException();
@@ -125,17 +124,17 @@ export class ProcessCrudService {
 
         await this.processRepository.save(process);
 
-        return this.processRepository.findOne({ where: { id, tenantId: user.tenantId }, relations });
+        return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
     }
 
-    async partialUpdate(user: UserEntity, id: number, processDto: PartialUpdateProcessDto) {
+    async partialUpdate(user: User, id: number, processDto: PartialUpdateProcessDto) {
         await this.processRepository
             .findOneOrFail({
                 where: {
                     id,
                     tenantId: user.tenantId,
                 },
-                relations,
+                relations: RELATIONS,
             })
             .catch(() => {
                 throw new NotFoundException();
@@ -152,7 +151,7 @@ export class ProcessCrudService {
 
         await this.processRepository.update({ id, tenantId: user.tenantId }, partial);
 
-        return this.processRepository.findOne({ where: { id, tenantId: user.tenantId }, relations });
+        return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
     }
 
     async updateDiagram(user: User, id: number, updateDiagramDto: UpdateDiagramDto) {
@@ -169,61 +168,89 @@ export class ProcessCrudService {
         process.executionInfo = updateDiagramDto.executionInfo;
         process.editor = user;
 
-       return this.processRepository.save(process)
-           .then(entity => this.processRepository.findOne({
-               where: { id: entity.id },
-               relations: RELATIONS
-           }));
+        await this.processRepository.save(process);
+
+        return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
     }
 
     getAll(user: User, specs: Specs<ProcessEntity>) {
+        const hasTenantAllAccess = this.userService.hasFeatureKey(
+            user,
+            FeatureKey.TENANT_ALL_ACCESS
+        );
         const options: FindManyOptions<ProcessEntity> = {
             ...specs,
         };
-        options.relations = relations;
+        options.relations = RELATIONS;
 
-        options.where = {
+        options.where = whereOptionsToWhereOptionsArray<ProcessEntity>({
+            ...(!hasTenantAllAccess && {
+                isPublic: true,
+                createdBy: {
+                    id: user.id,
+                },
+            })
+        }, {
             ...options.where,
             tenantId: user.tenantId,
-        };
+        });
 
         return this.processRepository.find(options);
     }
 
     async getPage(user: User, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessDto>> {
+        const hasTenantAllAccess = this.userService.hasFeatureKey(
+            user,
+            FeatureKey.TENANT_ALL_ACCESS
+        );
         const options: FindManyOptions<ProcessEntity> = {
             ...paging,
             ...specs,
         };
+        const { name, tags, createdBy, ...restOptions } =
+            options.where as FindOptionsWhere<ProcessEntity>;
 
-        options.where = {
-            ...options.where,
+        options.where = whereOptionsToWhereOptionsArray<ProcessEntity>({
+            name,
+            tags,
+            createdBy,
+        }, {
+            ...restOptions,
             tenantId: user.tenantId,
-            createdBy: this.userService.hasFeatureKey(
-                user,
-                FeatureKey.TENANT_ALL_ACCESS
-            )
-                ? undefined
-                : user,
-        };
+        });
 
-        options.relations = relations;
+        options.relations = RELATIONS;
 
         const page = await getPage(this.processRepository, options);
 
         return {
             ...page,
-            content: page.content.map(this.formatUserDTO),
+            content: page.content
+                .filter(({ isPublic, createdBy: { id } }) =>
+                    !hasTenantAllAccess ? (isPublic || id === user.id) : true
+                )
+                .map(this.formatUserDTO),
         };
     }
 
     get(user: User, id: number) {
+        const hasTenantAllAccess = this.userService.hasFeatureKey(
+            user,
+            FeatureKey.TENANT_ALL_ACCESS
+        );
         return this.processRepository.findOne({
-            where: {
-                tenantId: user.tenantId,
+            where: whereOptionsToWhereOptionsArray<ProcessEntity>({
+                ...(!hasTenantAllAccess && {
+                    isPublic: true,
+                    createdBy: {
+                        id: user.id,
+                    },
+                })
+            }, {
                 id,
-            },
-            relations: relations,
+                tenantId: user.tenantId,
+            }),
+            relations: RELATIONS,
         });
     }
 

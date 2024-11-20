@@ -1,4 +1,9 @@
-import { BadRequestException, createParamDecorator, ExecutionContext, Logger } from '@nestjs/common';
+import {
+    BadRequestException,
+    createParamDecorator,
+    ExecutionContext,
+    Logger,
+} from '@nestjs/common';
 import { FindManyOptions, FindOptionsOrder } from 'typeorm';
 import { Request } from 'express';
 import { FindOptionsWhere } from 'typeorm';
@@ -7,8 +12,8 @@ import { Criteria } from '#/utils/specification/criteria/criteria';
 import { Filter } from '#/utils/specification/filter/filter';
 
 export type Specs<T> = {
-    where: FindOptionsWhere<T>,
-    order: FindOptionsOrder<T>
+    where: FindOptionsWhere<T>;
+    order: FindOptionsOrder<T>;
 };
 
 export interface CriteriaClass {
@@ -49,22 +54,26 @@ export const Specifiable = createParamDecorator<CriteriaClass>(
         });
 
         return specificationToFindOptions(specification);
-    },
+    }
 );
 
 export const specificationToFindOptions = <T extends Criteria>(
-    specification: Specification<T>,
+    specification: Specification<T>
 ): {
-    where: FindOptionsWhere<T>,
-    order: FindOptionsOrder<T>,
+    where: FindOptionsWhere<T>;
+    order: FindOptionsOrder<T>;
 } => {
     const where: FindOptionsWhere<T> = {};
 
     const getFilters = (criteria: Criteria) => {
-        return Object.keys(criteria).filter(field => criteria[field]._type === 'filter');
+        return Object.keys(criteria).filter(
+            (field) => criteria[field]._type === 'filter'
+        );
     };
     const getCriteria = (criteria: Criteria) => {
-        return Object.keys(criteria).filter(field => criteria[field]._type === 'criteria');
+        return Object.keys(criteria).filter(
+            (field) => criteria[field]._type === 'criteria'
+        );
     };
 
     const evalRecursively = (criteria: Criteria, where: FindManyOptions['where']) => {
@@ -118,4 +127,21 @@ const getFilterRecursively = (field: string, criteria: Criteria) => {
     }
 
     return current;
+};
+
+export const whereOptionsToWhereOptionsArray = <E>(
+    where: FindOptionsWhere<E> = {},
+    additionalFindOptions: FindOptionsWhere<E> = {},
+) => {
+    const whereOptions = Object.entries(where);
+    if (!whereOptions.length) {
+        return [additionalFindOptions];
+    }
+    return Object.entries(where).map(
+        ([key, value]) =>
+            ({
+                ...additionalFindOptions,
+                [key]: value,
+            } as FindOptionsWhere<E>)
+    );
 };
