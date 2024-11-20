@@ -195,6 +195,24 @@ export class ProcessCrudService {
     }
 
     async getPage(user: User, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessDto>> {
+        const accessibleProcessIds = await this.processRepository
+            .find({
+                where: whereOptionsToWhereOptionsArray<ProcessEntity>(
+                    {
+                        ...(!this.hasTenantAllAccess(user) && {
+                            isPublic: true,
+                            createdBy: {
+                                id: user.id,
+                            },
+                        }),
+                    },
+                    {
+                        tenantId: user.tenantId,
+                    }
+                ),
+            })
+            .then((processes) => processes.map(({ id }) => id));
+
         const options: FindManyOptions<ProcessEntity> = {
             ...paging,
             ...specs,
@@ -202,14 +220,18 @@ export class ProcessCrudService {
         const { name, tags, createdBy, ...restOptions } =
             options.where as FindOptionsWhere<ProcessEntity>;
 
-        options.where = whereOptionsToWhereOptionsArray<ProcessEntity>({
-            name,
-            tags,
-            createdBy,
-        }, {
-            ...restOptions,
-            tenantId: user.tenantId,
-        });
+        options.where = whereOptionsToWhereOptionsArray<ProcessEntity>(
+            {
+                name,
+                tags,
+                createdBy,
+            },
+            {
+                ...restOptions,
+                id: In(accessibleProcessIds),
+                tenantId: user.tenantId,
+            }
+        );
 
         options.relations = RELATIONS;
 
@@ -217,13 +239,7 @@ export class ProcessCrudService {
 
         return {
             ...page,
-            content: page.content
-                .filter(({ isPublic, createdBy: { id } }) =>
-                    !this.hasTenantAllAccess(user) ?
-                        (isPublic || id === user.id)
-                        : true
-                )
-                .map(this.formatUserDTO),
+            content: page.content.map(this.formatUserDTO),
         };
     }
 
