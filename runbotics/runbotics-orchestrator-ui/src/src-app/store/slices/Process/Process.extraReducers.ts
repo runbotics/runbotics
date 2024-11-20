@@ -11,7 +11,7 @@ import {
     setDraft,
     deleteProcess,
     getProcessesPage,
-    partialUpdateProcess,
+    updateExecutionInfo,
     createGuestProcess,
     subscribeProcessNotifications,
     unsubscribeProcessNotifications,
@@ -107,11 +107,11 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
         })
 
-        // PARTIAL UPDATE
-        .addCase(partialUpdateProcess.fulfilled, (state, action) => {
+        // UPDATE EXECUTION INFO
+        .addCase(updateExecutionInfo.fulfilled, (state, action) => {
             state.draft.process = action.payload;
         })
-        .addCase(partialUpdateProcess.rejected, (state, action: any) => {
+        .addCase(updateExecutionInfo.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
         })
 

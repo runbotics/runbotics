@@ -9,12 +9,14 @@ import { GlobalVariable } from '#/scheduler-database/global-variable/global-vari
 import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
 import { ProcessCollectionModule } from '#/database/process-collection/process-collection.module';
 import { UserModule } from '../user/user.module';
+import { TagModule } from '../tags/tag.module';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([ProcessEntity, ProcessCollectionEntity, GlobalVariable, BotCollection]),
         ProcessCollectionModule,
         UserModule,
+        TagModule,
     ],
     exports: [ProcessService],
     providers: [ProcessService, ProcessCrudService],
