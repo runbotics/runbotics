@@ -49,7 +49,7 @@ const CreateGeneralInfoFormDialog: FC<CreateGeneralInfoProps> = ({ onClose, open
 
     const handleSubmit = () => {
         if (!isFormValid()) {
-            setFormValidationState(prevValues => ({...prevValues, edited: true}));
+            setFormValidationState(prevValues => ({ ...prevValues, edited: true }));
             enqueueSnackbar(translate('Credential.Add.ValidationFail.Info'), { variant: 'error' });
             return;
         }

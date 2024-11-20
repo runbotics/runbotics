@@ -8,7 +8,6 @@ interface PagingProps {
     search: string;
     setPage: Dispatch<SetStateAction<number>>;
     totalItems: number;
-    // setPageSize: Dispatch<SetStateAction<number>>;
     collectionId: string | null;
 }
 

@@ -263,7 +263,7 @@ export class CredentialService {
     }
 
     const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
-    this.throwExceptionIfUserHasReadAcces(collection, user);
+    this.ensureUserHasEditAccessOrThrow(collection, user);
 
     const credentialToUpdate = this.credentialRepo.create({
       ...credential,
@@ -307,7 +307,7 @@ export class CredentialService {
     }
 
     const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
-    this.throwExceptionIfUserHasReadAcces(collection, user);
+    this.ensureUserHasEditAccessOrThrow(collection, user);
 
     return this.credentialRepo.remove(credential).then((credential) => {
         this.notifyCredentialCollectionOwner({
@@ -327,7 +327,7 @@ export class CredentialService {
     }
 
     const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
-    this.throwExceptionIfUserHasReadAcces(collection, user);
+    this.ensureUserHasEditAccessOrThrow(collection, user);
 
     const attribute = credential.attributes.find(attr => attr.name === attributeName);
 
@@ -453,7 +453,7 @@ export class CredentialService {
         };
     }
 
-    private throwExceptionIfUserHasReadAcces(collection: CredentialCollection, user: User) {
+    private ensureUserHasEditAccessOrThrow(collection: CredentialCollection, user: User) {
         const hasEditCollectionAccess = collection.credentialCollectionUser
             .some(collectionUser =>
               collectionUser.userId === user.id &&
