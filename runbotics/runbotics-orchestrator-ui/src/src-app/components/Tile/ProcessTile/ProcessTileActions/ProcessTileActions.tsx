@@ -6,7 +6,7 @@ import { IconButton, Menu, MenuItem } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey, IProcess, Role } from 'runbotics-common';
+import { FeatureKey, IProcess, OrderDirection, OrderPropertyName, Role } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
@@ -77,6 +77,10 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                         pageParams: {
                             page,
                             size: pageSize,
+                            sort: {
+                                by: OrderPropertyName.UPDATED,
+                                order: OrderDirection.DESC,
+                            },
                             filter: {
                                 contains: {
                                     ...(search.trim() && {
@@ -87,7 +91,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                                 },
                                 equals: {
                                     processCollectionId: collectionId !== null ? collectionId : 'null',
-                                }
+                                },
                             }
                         }
                     }),
@@ -98,6 +102,10 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                         pageParams: {
                             page,
                             size: pageSize,
+                            sort: {
+                                by: OrderPropertyName.UPDATED,
+                                order: OrderDirection.DESC,
+                            },
                             filter: {
                                 contains: {
                                     ...(search.trim() && {

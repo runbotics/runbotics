@@ -12,7 +12,7 @@ import {
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { ProcessDto } from 'runbotics-common';
+import { OrderDirection, OrderPropertyName, ProcessDto } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
@@ -49,6 +49,10 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
                     pageParams: {
                         page,
                         size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
+                        },
                         filter: {
                             contains: {
                                 ...(search.trim() && {
@@ -69,6 +73,10 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
                 pageParams: {
                     page,
                     size: pageSize,
+                    sort: {
+                        by: OrderPropertyName.UPDATED,
+                        order: OrderDirection.DESC,
+                    },
                     filter: {
                         contains: {
                             ...(search.trim() && {

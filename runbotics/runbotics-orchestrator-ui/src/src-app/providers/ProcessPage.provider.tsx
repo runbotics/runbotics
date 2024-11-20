@@ -1,5 +1,7 @@
 import { FC, MouseEvent, createContext, Dispatch, SetStateAction } from 'react';
 
+import { OrderDirection, OrderPropertyName } from 'runbotics-common';
+
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
 import { useDispatch } from '#src-app/store';
@@ -44,6 +46,10 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                     pageParams: {
                         page,
                         size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
+                        },
                         filter: {
                             contains: {
                                 ...(search.trim() && {
@@ -65,6 +71,10 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                     pageParams: {
                         page,
                         size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
+                        },
                         filter: {
                             contains: {
                                 ...(search.trim() && {

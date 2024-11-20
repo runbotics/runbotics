@@ -5,6 +5,8 @@ import { GridFilterModel } from '@mui/x-data-grid';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
+import { OrderDirection, OrderPropertyName } from 'runbotics-common';
+
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
@@ -39,6 +41,10 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                     pageParams: {
                         page,
                         size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
+                        },
                         filter: {
                             contains: {
                                 ...(search.trim() && {
@@ -60,6 +66,10 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                     pageParams: {
                         page,
                         size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
+                        },
                         filter: {
                             contains: {
                                 ...(debouncedValue.trim() && {
