@@ -109,7 +109,7 @@ export class ProcessController {
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
     async setExecutionInfo(
         @Param('id', new ParseIntPipe()) id: number,
-        @User() user: UserEntity,
+        @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateExecutionInfoSchema)) updateExecutionInfoDto: UpdateExecutionInfoDto,
     ) {
         await this.checkAccess(user, id);
