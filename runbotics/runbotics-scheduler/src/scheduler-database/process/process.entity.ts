@@ -136,7 +136,7 @@ export class ProcessEntity {
     )
     processCredential: ProcessCredential[];
 
-    @ManyToMany(() => Tag, tag => tag.processes, { eager: true })
+    @ManyToMany(() => Tag, tag => tag.processes, { eager: true, cascade: true })
     @JoinTable({
         name: 'tag_process',
         joinColumn: { name: 'process_id', referencedColumnName: 'id' },

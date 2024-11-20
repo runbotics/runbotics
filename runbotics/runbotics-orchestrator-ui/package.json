@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "2.11.0-SNAPSHOT.90",
+    "version": "2.11.0-SNAPSHOT.91",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -105,7 +105,8 @@
         "ajv": "^6.12.4",
         "mixpanel-browser": "^2.47.0",
         "@mui/x-tree-view": "~6.17.0",
-        "date-fns": "2.13.0"
+        "date-fns": "2.13.0",
+        "multi-condition": "~1.0.2"
     },
     "devDependencies": {
         "@types/file-saver": "^2.0.1",

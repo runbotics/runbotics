@@ -144,14 +144,7 @@ export default class GoogleActionHandler extends StatelessActionHandler {
     }
 
     run(request: GoogleActionRequest) {
-        const matchedCredential =
-            credentialAttributesMapper<GoogleCredential>(request.credentials);
-
-        // @todo After completion of password manager switch fully to matchedCredential
-        const credential: GoogleCredential = matchedCredential ?? {
-            email: this.serverConfigService.googleAuth.serviceAccountEmail,
-            key: this.serverConfigService.googleAuth.privateKey,
-        };
+        const credential = credentialAttributesMapper<GoogleCredential>(request.credentials);
 
         switch (request.script) {
             case GoogleAction.SHEETS_GET_WORKSHEET:
@@ -172,7 +165,7 @@ export default class GoogleActionHandler extends StatelessActionHandler {
     private getGoogleSheets(credential: GoogleCredential) {
         const auth = new google.auth.JWT({
             email: credential.email,
-            key: Buffer.from(credential.key , 'base64').toString('utf-8'), // PK must alway be saved in base64 format
+            key: Buffer.from(credential.key, 'base64').toString('utf-8'), // PK must alway be saved in base64 format
             scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
 

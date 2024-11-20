@@ -1,5 +1,5 @@
 import { Filter } from '#/utils/specification/filter/filter';
-import { Equal, ILike, In, Not } from 'typeorm';
+import { Equal, ILike, In, IsNull, Not } from 'typeorm';
 
 
 enum StringOperator {
@@ -14,11 +14,17 @@ export class StringFilter extends Filter {
     name: 'string';
 
     equals(value: string) {
-        this.predicates.push(Equal(value));
+        const condition = value !== 'null'
+            ? Equal(value)
+            : IsNull();
+        this.predicates.push(condition);
     }
 
     notEquals(value: string) {
-        this.predicates.push(Not(Equal(value)));
+        const condition = value !== 'null'
+            ? Equal(value)
+            : IsNull();
+        this.predicates.push(Not(condition));
     }
 
     contains(value: string) {

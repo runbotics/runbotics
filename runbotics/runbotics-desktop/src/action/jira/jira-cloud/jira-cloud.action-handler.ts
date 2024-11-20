@@ -291,19 +291,11 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     }
 
     run(request: JiraActionRequest) {
-        const matchedCredential =
-            credentialAttributesMapper<AtlassianCredentials>(request.credentials);
-
-        // @todo After completion of password manager switch fully to matchedCredential
-        const atlassianCredentials: AtlassianCredentials = matchedCredential ?? {
-            originUrl: this.serverConfigService.jiraA41Url,
-            username: this.serverConfigService.jiraA41Username,
-            password: this.serverConfigService.jiraA41Token,
-        };
+        const credential = credentialAttributesMapper<AtlassianCredentials>(request.credentials);
 
         const inputWithAuth = {
             ...request.input,
-            ...atlassianCredentials,
+            ...credential,
         };
 
         switch (request.script) {
