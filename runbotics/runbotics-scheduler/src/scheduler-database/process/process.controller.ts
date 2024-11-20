@@ -9,7 +9,6 @@ import {
     ParseIntPipe,
     Patch,
     Post,
-    Put,
     UseInterceptors,
 } from '@nestjs/common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';

@@ -48,9 +48,8 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                             contains: {
                                 ...(search.trim() && {
                                     name: search.trim(),
-                                    // todo: consider whether the filter should operate in OR or AND mode
-                                    // 'createdBy->email': search.trim(),
-                                    // 'tags->name': search.trim(),
+                                    'createdBy->email': search.trim(),
+                                    'tags->name': search.trim(),
                                 }),
                             },
                             equals: {
@@ -70,9 +69,8 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
                             contains: {
                                 ...(search.trim() && {
                                     name: search.trim(),
-                                    // todo: consider whether the filter should operate in OR or AND mode
-                                    // 'createdBy->email': search.trim(),
-                                    // 'tags->name': search.trim(),
+                                    'createdBy->email': search.trim(),
+                                    'tags->name': search.trim(),
                                 }),
                             },
                         },

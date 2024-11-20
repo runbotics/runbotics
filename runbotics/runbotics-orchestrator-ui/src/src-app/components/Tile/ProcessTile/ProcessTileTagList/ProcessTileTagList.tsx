@@ -87,11 +87,10 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
                 , []).map(tag =>
                     <Chip
                         label={
-                            tag.name
-                            // <HighlightText
-                            //     text={tag.name}
-                            //     matchingText={searchValue}
-                            // />
+                            <HighlightText
+                                text={tag.name}
+                                matchingText={searchValue}
+                            />
                         }
                         key={tag.name}
                         size='small'

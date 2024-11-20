@@ -57,7 +57,7 @@ const ManageProcessForm: VFC = () => {
         await dispatch(processActions.updateExecutionInfo({
             resourceId: process.id,
             payload: {
-                executionInfo: '',
+                executionInfo: null,
             },
         }))
             .unwrap()

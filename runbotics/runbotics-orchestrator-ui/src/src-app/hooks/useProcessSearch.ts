@@ -43,9 +43,8 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                             contains: {
                                 ...(search.trim() && {
                                     name: search.trim(),
-                                    // todo: consider whether the filter should operate in OR or AND mode
-                                    // 'createdBy->email': search.trim(),
-                                    // 'tags->name': search.trim(),
+                                    'createdBy->email': search.trim(),
+                                    'tags->name': search.trim(),
                                 }),
                             },
                             equals: {
@@ -65,9 +64,8 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
                             contains: {
                                 ...(debouncedValue.trim() && {
                                     name: debouncedValue.trim(),
-                                    // todo: consider whether the filter should operate in OR or AND mode
-                                    // 'createdBy->email': search.trim(),
-                                    // 'tags->name': search.trim(),
+                                    'createdBy->email': search.trim(),
+                                    'tags->name': search.trim(),
                                 }),
                             },
                         },
