@@ -174,17 +174,13 @@ export class ProcessCrudService {
     }
 
     getAll(user: User, specs: Specs<ProcessEntity>) {
-        const hasTenantAllAccess = this.userService.hasFeatureKey(
-            user,
-            FeatureKey.TENANT_ALL_ACCESS
-        );
         const options: FindManyOptions<ProcessEntity> = {
             ...specs,
         };
         options.relations = RELATIONS;
 
         options.where = whereOptionsToWhereOptionsArray<ProcessEntity>({
-            ...(!hasTenantAllAccess && {
+            ...(!this.hasTenantAllAccess(user) && {
                 isPublic: true,
                 createdBy: {
                     id: user.id,
@@ -199,10 +195,6 @@ export class ProcessCrudService {
     }
 
     async getPage(user: User, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessDto>> {
-        const hasTenantAllAccess = this.userService.hasFeatureKey(
-            user,
-            FeatureKey.TENANT_ALL_ACCESS
-        );
         const options: FindManyOptions<ProcessEntity> = {
             ...paging,
             ...specs,
@@ -227,20 +219,18 @@ export class ProcessCrudService {
             ...page,
             content: page.content
                 .filter(({ isPublic, createdBy: { id } }) =>
-                    !hasTenantAllAccess ? (isPublic || id === user.id) : true
+                    !this.hasTenantAllAccess(user) ?
+                        (isPublic || id === user.id)
+                        : true
                 )
                 .map(this.formatUserDTO),
         };
     }
 
     get(user: User, id: number) {
-        const hasTenantAllAccess = this.userService.hasFeatureKey(
-            user,
-            FeatureKey.TENANT_ALL_ACCESS
-        );
         return this.processRepository.findOne({
             where: whereOptionsToWhereOptionsArray<ProcessEntity>({
-                ...(!hasTenantAllAccess && {
+                ...(!this.hasTenantAllAccess(user) && {
                     isPublic: true,
                     createdBy: {
                         id: user.id,
@@ -275,5 +265,12 @@ export class ProcessCrudService {
                 email: process.createdBy.email,
             },
         };
+    }
+
+    private hasTenantAllAccess(user: User) {
+        return this.userService.hasFeatureKey(
+            user,
+            FeatureKey.TENANT_ALL_ACCESS
+        );
     }
 }
