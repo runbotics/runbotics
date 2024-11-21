@@ -62,7 +62,7 @@ const DatePickerWidget: FC<WidgetProps> = ({ uiSchema, onChange, label, required
             {...params}
             label={label}
             required={required}
-            color={selectedDate && required === null ? 'error' : 'primary'}
+            color={selectedDate === null ? 'error' : 'primary'}
             sx={{
                 button: { marginRight: (theme) => theme.spacing(0.5) },
                 caretColor: 'transparent',
