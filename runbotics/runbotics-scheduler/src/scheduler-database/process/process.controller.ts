@@ -78,7 +78,7 @@ export class ProcessController {
             throw new ForbiddenException('Guest can create only one process');
         }
 
-        return this.processCrudService.createGuestProcess();
+        return this.processCrudService.createGuestProcess(user);
     }
 
     @Patch(':id')

@@ -16,6 +16,7 @@ import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-c
 import { BotCollection } from '../bot-collection/bot-collection.entity';
 import { TagService } from '../tags/tag.service';
 import { isTenantAdmin } from '#/utils/authority.utils';
+import { EMPTY_PROCESS_DEFINITION } from './consts/empty-process-definition';
 
 const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
 
@@ -75,19 +76,22 @@ export class ProcessCrudService {
         return this.processRepository.save(process);
     }
 
-    async createGuestProcess() {
+    async createGuestProcess(user: User) {
+        console.log('user: ', user);
         const process = new ProcessEntity();
         process.definition = EMPTY_PROCESS_DEFINITION;
         process.name = 'DEMO';
         process.isPublic = false;
         process.systemName = BotSystemType.LINUX;
         process.outputType = ProcessOutputType.TEXT;
+        process.description = 'DEMO Process';
+        process.createdBy = user;
 
         const guestCollection = await this.botCollectionRepository.findOneBy({ name: BotCollectionDefaultCollections.GUEST });
 
         process.botCollectionId = guestCollection.id;
 
-        return process;
+        return this.processRepository.save(process);
     }
 
     async update(user: User, id: number, processDto: UpdateProcessDto) {
