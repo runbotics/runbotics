@@ -45,23 +45,23 @@ const checkFormat = (format: any) => {
     return { inputFormat: format, views: inputTypes['date-time'].views };
 };
 
-const DatePickerWidget: FC<WidgetProps> = (props) => {
+const DatePickerWidget: FC<WidgetProps> = ({ uiSchema, onChange, label, required }) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const format = props.uiSchema['ui:options']?.format;
+    const format = uiSchema['ui:options']?.format;
     const { inputFormat, views } = checkFormat(format);
 
     const handleDateChange = (date: Date | null) => {
         setSelectedDate(date);
         if (date !== null) {
-            props.onChange(moment(date).format(inputFormat));
+            onChange(moment(date).format(inputFormat));
         }
     };
 
     const renderInput = (params: any) => (
         <TextField
             {...params}
-            label={props.label}
-            required={props.required}
+            label={label}
+            required={required}
             color={selectedDate === null ? 'error' : 'primary'}
             sx={{
                 button: { marginRight: (theme) => theme.spacing(0.5) },
@@ -86,7 +86,7 @@ const DatePickerWidget: FC<WidgetProps> = (props) => {
                         event.preventDefault();
                     },
                 }}
-                error={selectedDate === null}
+                error={required && selectedDate === null}
             />
         </LocalizationProvider>
     );
