@@ -9,7 +9,6 @@ import {
     ParseIntPipe,
     Patch,
     Post,
-    Put,
     UseInterceptors,
 } from '@nestjs/common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -40,6 +39,7 @@ import {
 } from '#/scheduler-database/process/dto/update-process-bot-system.dto';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
+import { UpdateExecutionInfoDto, updateExecutionInfoSchema } from './dto/update-execution-info.dto';
 
 @UseInterceptors(TenantInterceptor)
 @Controller('/api/scheduler/tenants/:tenantId/processes')
@@ -81,7 +81,7 @@ export class ProcessController {
         return this.processCrudService.createGuestProcess();
     }
 
-    @Put(':id')
+    @Patch(':id')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
     async update(
         @Param('id', new ParseIntPipe()) id: number,
@@ -90,7 +90,7 @@ export class ProcessController {
     ) {
         await this.checkAccess(user, id);
 
-        return this.processCrudService.update(user.tenantId, id, processDto);
+        return this.processCrudService.update(user, id, processDto);
     }
 
     @Patch(':id/diagram')
@@ -105,6 +105,18 @@ export class ProcessController {
         return this.processCrudService.updateDiagram(user, id, updateDiagramDto);
     }
 
+    @Patch(':id/execution-info')
+    @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
+    async setExecutionInfo(
+        @Param('id', new ParseIntPipe()) id: number,
+        @UserDecorator() user: User,
+        @Body(new ZodValidationPipe(updateExecutionInfoSchema)) updateExecutionInfoDto: UpdateExecutionInfoDto,
+    ) {
+        await this.checkAccess(user, id);
+
+        return this.processCrudService.partialUpdate(user, id, { executionInfo: updateExecutionInfoDto.executionInfo });
+    }
+
     @Patch(':id/is-attended')
     @FeatureKeys(FeatureKey.PROCESS_IS_ATTENDED_EDIT)
     async setIsAttended(
@@ -114,7 +126,7 @@ export class ProcessController {
     ) {
         await this.checkAccess(user, id);
 
-        return this.processCrudService.update(user.tenantId, id, { isAttended: attendedDto.isAttended });
+        return this.processCrudService.partialUpdate(user, id, { isAttended: attendedDto.isAttended });
     }
 
     @Patch(':id/is-triggerable')
@@ -126,7 +138,7 @@ export class ProcessController {
     ) {
         await this.checkAccess(user, id);
 
-        return this.processCrudService.update(user.tenantId, id, { isTriggerable: triggerableDto.isTriggerable });
+        return this.processCrudService.partialUpdate(user, id, { isTriggerable: triggerableDto.isTriggerable });
     }
 
     @Patch(':id/bot-collection')
@@ -138,7 +150,7 @@ export class ProcessController {
     ) {
         await this.checkAccess(user, id);
 
-        return this.processCrudService.update(user.tenantId, id, { botCollection: updateBotCollectionDto.botCollection });
+        return this.processCrudService.partialUpdate(user, id, { botCollection: updateBotCollectionDto.botCollection });
     }
 
     @Patch(':id/bot-system')
@@ -150,7 +162,7 @@ export class ProcessController {
     ) {
         await this.checkAccess(user, id);
 
-        return this.processCrudService.update(user.tenantId, id, updateProcessBotSystemDto);
+        return this.processCrudService.partialUpdate(user, id, updateProcessBotSystemDto);
     }
 
     @Patch(':id/output-type')
@@ -162,7 +174,7 @@ export class ProcessController {
     ) {
         await this.checkAccess(user, id);
 
-        return this.processCrudService.update(user.tenantId, id, { output: updateOutputTypeDto.output });
+        return this.processCrudService.partialUpdate(user, id, { output: updateOutputTypeDto.output });
     }
 
     @Get()

@@ -9,11 +9,12 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { tenantsSelector } from '#src-app/store/slices/Tenants';
 
+import TablePagingProvider, { AVAILABLE_ROWS_PER_PAGE, DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
+
 import TenantsListEditDialog from './TenantsListEdit';
 import TenantsListTable from './TenantsListTable/TenantsListTable';
 import { StyledActionsContainer, StyledButton, StyledTextField } from './TenantsListView.styles';
 import CreateTenantDialog from '../CreateTenantDialog';
-import { ROWS_PER_PAGE, DefaultPageValue } from '../TenantsBrowseView/TenantsBrowseView.utils';
 
 const TenantsListView: VFC = () => {
     const { translate } = useTranslations();
@@ -22,11 +23,11 @@ const TenantsListView: VFC = () => {
 
     const currentPage = parseInt(searchParams.get('page'));
     const pageSizeFromUrl = parseInt(searchParams.get('pageSize'));
-    const [page, setPage] = useState(currentPage ? currentPage : DefaultPageValue.PAGE);
+    const [page, setPage] = useState(currentPage ? currentPage : DEFAULT_TABLE_PAGING_VALUES.page);
     const [limit, setLimit] = useState(
-        pageSizeFromUrl && ROWS_PER_PAGE.includes(pageSizeFromUrl)
+        pageSizeFromUrl && AVAILABLE_ROWS_PER_PAGE.includes(pageSizeFromUrl)
             ? pageSizeFromUrl
-            : DefaultPageValue.PAGE_SIZE
+            : DEFAULT_TABLE_PAGING_VALUES.pageSize
     );
 
     const { allByPage } = useSelector(tenantsSelector);
@@ -69,7 +70,7 @@ const TenantsListView: VFC = () => {
     }, []);
 
     return (
-        <>
+        <TablePagingProvider page={page} pageSize={limit}>
             <CreateTenantDialog
                 open={isCreateDialogVisible}
                 onClose={closeCreateDialog}
@@ -102,7 +103,7 @@ const TenantsListView: VFC = () => {
                 onPageSizeChange={setLimit}
                 openTenantEditDialog={openEditDialog}
             />
-        </>
+        </TablePagingProvider>
     );
 };
 
