@@ -297,6 +297,12 @@ export default class BeeOfficeActionHandler extends StatelessActionHandler {
         }
     }
 
+    private verifyHasRequiredCredentials(credentials: BeeOfficeCredential) {
+        const missing = Object.entries(credentials).filter(([_, value]) => !value.trim()).map(([key]) => key);
+        if (missing.length) return;
+        throw new Error(`Some credential attributes are not specified. Missing: ${missing.join(',')}`);
+    }
+
     run(request: BeeOfficeActionRequest) {
         const credential = credentialAttributesMapper<BeeOfficeCredential>(request.credentials);
 
