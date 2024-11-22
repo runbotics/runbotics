@@ -129,18 +129,21 @@ const getFilterRecursively = (field: string, criteria: Criteria) => {
     return current;
 };
 
-export const whereOptionsToWhereOptionsArray = <E>(
-    where: FindOptionsWhere<E> = {},
-    additionalFindOptions: FindOptionsWhere<E> = {},
-) => {
-    const whereOptions = Object.entries(where);
-    if (!whereOptions.length) {
-        return [additionalFindOptions];
+export const mapToWhereOptionsArray = <E>({
+    orConditionProps = {},
+    andConditionProps = {},
+}: {
+    orConditionProps: FindOptionsWhere<E>,
+    andConditionProps: FindOptionsWhere<E>,
+}) => {
+    const orConditionEntries = Object.entries(orConditionProps);
+    if (!orConditionEntries.length) {
+        return [andConditionProps];
     }
-    return Object.entries(where).map(
+    return orConditionEntries.map(
         ([key, value]) =>
             ({
-                ...additionalFindOptions,
+                ...andConditionProps,
                 [key]: value,
             } as FindOptionsWhere<E>)
     );
