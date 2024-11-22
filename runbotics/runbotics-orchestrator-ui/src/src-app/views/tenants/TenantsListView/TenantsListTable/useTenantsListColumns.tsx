@@ -19,7 +19,7 @@ const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => 
             flex: 0.6,
             renderCell: (params) => (
                 <Link
-                    href={`users?page=0&pageSize=${pageSize}&tenantId=${params.row.id}`}
+                    href={`users/pending?page=0&pageSize=${pageSize}&tenantId=${params.row.id}`}
                     style={{ textDecoration: 'none' }}
                 >
                     {params.value}
