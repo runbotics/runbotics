@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from 'react';
+import { Dispatch, FC, SetStateAction, useMemo } from 'react';
 
 import { Grid, SelectChangeEvent } from '@mui/material';
 
@@ -24,10 +24,21 @@ interface GeneralInfoSelectFieldsProps {
     setFormValidationState: Dispatch<SetStateAction<CredentialFormValidationState>>;
 }
 
-export const GeneralInfoSelectFields: FC<GeneralInfoSelectFieldsProps> = ({ collectionId, credentialFormState, setCredentialFormState, formValidationState, setFormValidationState  }) => {
+export const GeneralInfoSelectFields: FC<GeneralInfoSelectFieldsProps> = ({
+    collectionId,
+    credentialFormState,
+    setCredentialFormState,
+    formValidationState,
+    setFormValidationState
+}) => {
     const { user: currentUser } = useAuth();
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
-    const availableCredentialCollections = credentialCollections?.filter(collection => collection.credentialCollectionUser.find(collectionUser => collectionUser.userId === currentUser.id && collectionUser.privilegeType === PrivilegeType.WRITE));
+    const availableCredentialCollections = useMemo(() => credentialCollections
+        ?.filter(collection => collection.credentialCollectionUser
+            .find(collectionUser => collectionUser.userId === currentUser.id
+            && collectionUser.privilegeType === PrivilegeType.WRITE
+            )
+        ), [credentialCollections, currentUser.id]);
 
     const handleDropdownChange = (name: string, value: string) => {
         const changeTo = (() => {

@@ -15,8 +15,17 @@ interface GeneralInfoTextFieldsProps {
 
 }
 
-export const GeneralInfoTextFields: FC<GeneralInfoTextFieldsProps> = ({ credentialFormState, setCredentialFormState, formValidationState, setFormValidationState }) => {
+export const GeneralInfoTextFields: FC<GeneralInfoTextFieldsProps> = ({
+    credentialFormState,
+    setCredentialFormState,
+    formValidationState,
+    setFormValidationState
+}) => {
     const { translate } = useTranslations();
+    const helperText = formValidationState.edited &&
+        !formValidationState.name &&
+        inputErrorMessages.NAME_IS_REQUIRED;
+    const isErrored = formValidationState.edited && !formValidationState.name;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -44,8 +53,8 @@ export const GeneralInfoTextFields: FC<GeneralInfoTextFieldsProps> = ({ credenti
                     InputLabelProps={{ shrink: true }}
                     value={credentialFormState.name}
                     onChange={handleInputChange}
-                    error={formValidationState.edited && !formValidationState.name}
-                    helperText={formValidationState.edited && !formValidationState.name && inputErrorMessages.NAME_IS_REQUIRED}
+                    error={isErrored}
+                    helperText={helperText}
                 ></TextField>
             </Grid>
             <Grid item xs={12}>
