@@ -49,6 +49,13 @@ const credentials: typeof englishCredentials = {
     'Credential.Attribute.Edit.Fail.NoValue': 'Nie zaktualizowano atrybutu. Nie podano wartości',
     'Credential.Attribute.Tag.Required': 'Wymagany',
     'Credential.Attribute.Tag.Optional': 'Opcjonalny',
+    'Credential.Template.Atlassian.Name': 'Atlassian',
+    'Credential.Template.BeeOffice.Name': 'Bee Office',
+    'Credential.Template.MicrosoftGraph.Name': 'Microsoft',
+    'Credential.Template.Sap.Name': 'SAP',
+    'Credential.Template.Mail.Name': 'E-mail',
+    'Credential.Template.Google.Name': 'Google',
+    'Credential.Template.Asana.Name': 'Asana',
 };
 
 export default credentials;

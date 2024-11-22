@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 
 import { Grid, Typography, TextField } from '@mui/material';
 
@@ -15,19 +15,20 @@ import { credentialsActions } from '#src-app/store/slices/Credentials';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
 import { inputErrorMessages, InputErrorType } from './EditCredential.utils';
+import { PagingContext } from '../../GridView/Paging.provider';
 
 interface EditCredentialFormProps {
     open: boolean;
     credential: FrontCredentialDto;
     collectionId: string;
     onClose: () => void;
-    pageSize: number
 }
 
-export const EditCredentialForm: FC<EditCredentialFormProps> = ({ open: isOpen, onClose, credential, collectionId, pageSize }) => {
+export const EditCredentialForm: FC<EditCredentialFormProps> = ({ open: isOpen, onClose, credential, collectionId }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    const { pageSize } = useContext(PagingContext);
 
     const [credentialFormState, setCredentialFormState] = useState({ name: credential.name, description: credential.description });
     const [isFormValid, setIsFormValid] = useState(true);

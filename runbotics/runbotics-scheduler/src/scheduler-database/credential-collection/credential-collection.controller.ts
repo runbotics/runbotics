@@ -31,6 +31,7 @@ import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { CredentialCollectionCriteria } from './criteria/credential-collection.criteria';
+import { CredentialCollection } from './credential-collection.entity';
 
 @UseInterceptors(TenantInterceptor)
 @FeatureKeys(FeatureKey.CREDENTIALS_PAGE_READ)
@@ -59,7 +60,7 @@ export class CredentialCollectionController {
 
     @Get('/GetPage')
     getPages(
-        @Specifiable(CredentialCollectionCriteria) specs: Specs<Credential>,
+        @Specifiable(CredentialCollectionCriteria) specs: Specs<CredentialCollection>,
         @Pageable() paging: Paging,
         @UserDecorator() user: User
       ) {
