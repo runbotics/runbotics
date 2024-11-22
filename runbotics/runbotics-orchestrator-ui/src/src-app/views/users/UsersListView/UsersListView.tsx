@@ -62,6 +62,8 @@ const UsersListView: FC = () => {
     };
 
     useEffect(() => {
+        dispatch(tenantsActions.getAll());
+
         const allUsers = hasAdminAccess ? activated.allByPage : tenantActivated.allByPage;
 
         const isPageNotAvailable = allUsers?.totalPages && page >= allUsers?.totalPages;
@@ -71,7 +73,7 @@ const UsersListView: FC = () => {
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activated.allByPage, tenantActivated.allByPage]);
+    }, [activated.allByPage, tenantActivated.allByPage, allTenants]);
 
     useEffect(() => {
         refreshSearch();
@@ -111,16 +113,20 @@ const UsersListView: FC = () => {
                                     setTenantSelection(e.target.value);
                                 }}
                             >
-                                <MenuItem value=''>{translate('Users.List.View.Select.NoneTenant')}</MenuItem>
+                                <MenuItem value=''>
+                                    {translate('Users.List.View.Select.NoneTenant')}
+                                </MenuItem>
                                 {allTenants.map(tenant => (
-                                    <MenuItem value={tenant.id} key={tenant.name}>{tenant.name}</MenuItem>
+                                    <MenuItem value={tenant.id} key={tenant.name}>
+                                        {tenant.name}
+                                    </MenuItem>
                                 ))}
                             </StyledSelect>
                         </FormControl>
                     </If>
                 </StyledSearchFilterBox>
                 <If condition={!hasAdminAccess}>
-                    <InviteCodeButton/>
+                    <InviteCodeButton />
                 </If>
             </StyledActionsContainer>
             <UsersListTable

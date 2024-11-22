@@ -32,6 +32,10 @@ export class TenantService {
         return this.tenantRepository.findOneBy({ id });
     }
 
+    getAll() {
+        return this.tenantRepository.find();
+    }
+
     async getAllByPageWithSpecs(specs: Specs<Tenant>, paging: Paging) {
         const options: FindManyOptions<Tenant> = {
             ...paging,

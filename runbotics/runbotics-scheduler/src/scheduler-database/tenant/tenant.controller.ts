@@ -72,9 +72,15 @@ export class TenantController {
 
     // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
 
+    @Get('tenants')
+    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
+    getAllTenants() {
+        return this.tenantService.getAll();
+    }
+
     @Get('tenants/Page')
     @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
-    getAllTenants(
+    getAllTenantsByPage(
         @Pageable() paging: Paging,
         @Specifiable(TenantCriteria) specs: Specs<Tenant>,
     ) {
