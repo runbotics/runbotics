@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "2.11.0-SNAPSHOT.95",
+    "version": "2.11.0-SNAPSHOT.96",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -65,7 +65,8 @@
         "winston-daily-rotate-file": "^4.6.0",
         "zod": "~3.22.4",
         "adm-zip": "~0.5.10",
-        "obj-walker": "1.10.0"
+        "obj-walker": "1.10.0",
+        "rxjs": "^7.5.5"
     },
     "build": {
         "productName": "RunBotics",
