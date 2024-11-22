@@ -46,6 +46,15 @@ export class ProcessService {
         });
     }
 
+    findGuestDemoProcess(user: User) {
+        return this.processRepository.findOneByOrFail({
+            createdBy: { id: user.id }
+        })
+        .catch(() => {
+            throw new NotFoundException();
+        });
+    }
+
     async save(process: IProcess) {
         await this.processRepository.save(process);
         return process;

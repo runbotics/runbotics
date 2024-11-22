@@ -47,10 +47,8 @@ export const fetchProcessById = createAsyncThunk<
     return result.payload;
 });
 
-export const fetchGuestDemoProcess = createAsyncThunk<ProcessDto>(
-    'processes/guestDemo',
-    () => Axios.get<IProcess>('/api/guests/process')
-        .then((response) => response.data),
+export const fetchGuestDemoProcess = ApiTenantResource.get<ProcessDto>(
+    'processes/guestDemo', `${PROCESSES_PATH}/guest`
 );
 
 export const updateProcess = ApiTenantResource.patch<IProcess, IProcess>('processes/update', PROCESSES_PATH);

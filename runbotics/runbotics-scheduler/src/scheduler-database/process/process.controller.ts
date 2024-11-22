@@ -177,6 +177,13 @@ export class ProcessController {
         return this.processCrudService.partialUpdate(user, id, { output: updateOutputTypeDto.output });
     }
 
+    @Get('guest')
+    getGuestProcess(
+        @UserDecorator() user: User,
+    ) {
+        return this.processService.findGuestDemoProcess(user);
+    }
+
     @Get()
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     async getAll(
