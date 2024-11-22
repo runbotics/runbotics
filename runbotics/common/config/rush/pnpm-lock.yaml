@@ -132,6 +132,9 @@ importers:
       runbotics-common:
         specifier: workspace:^1.0.0
         version: link:../runbotics-common
+      rxjs:
+        specifier: ^7.5.5
+        version: 7.8.1
       selenium-webdriver:
         specifier: 4.0.0-beta.4
         version: 4.0.0-beta.4
