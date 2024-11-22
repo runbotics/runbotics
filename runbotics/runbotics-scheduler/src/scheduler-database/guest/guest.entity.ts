@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '#/scheduler-database/user/user.entity';
 
-@Entity({ name: 'guest', synchronize: false })
-export class GuestEntity {
+@Entity({ name: 'guest' })
+export class Guest {
     @PrimaryColumn({ name: 'ip_hash', type: 'varchar', length: 100 })
     ipHash: string;
 

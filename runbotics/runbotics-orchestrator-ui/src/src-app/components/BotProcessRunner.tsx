@@ -249,7 +249,7 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
     const handleRunCompleted = () => {
         dispatch(processInstanceActions.removeFromJobsMap({ processId }));
 
-        isGuest && dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
+        isGuest && dispatch(guestsActions.getCurrentGuest());
 
         setStarted(true);
         setSubmitting(false);

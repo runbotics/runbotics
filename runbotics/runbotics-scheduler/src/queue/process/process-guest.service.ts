@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { IAuthority, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
-import { GuestService } from '#/database/guest/guest.service';
+import { GuestService } from '#/scheduler-database/guest/guest.service';
 import { User } from '#/scheduler-database/user/user.entity';
 
 const GUEST_EXECUTION_LIMIT = 10;
