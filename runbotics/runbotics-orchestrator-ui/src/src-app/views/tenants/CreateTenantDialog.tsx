@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, VFC } from 'react';
+import { ChangeEvent, useState, VFC, useContext } from 'react';
 
 import { Button, Dialog, DialogActions, TextField } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -10,6 +10,7 @@ import { useDispatch } from '#src-app/store';
 import { tenantsActions } from '#src-app/store/slices/Tenants';
 
 import { Content, Form, Title } from '../utils/FormDialog.styles';
+import { TablePagingContext } from '../utils/TablePaging.provider';
 
 interface CreateTenantDialogProps {
     open: boolean;
@@ -24,7 +25,9 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
 
-    const { refreshSearch } = useTenantSearch();
+    const { page, pageSize } = useContext(TablePagingContext);
+    const { refreshSearch } = useTenantSearch({ page, pageSize });
+
     const [name, setName] = useState(undefined);
     const isFieldEmpty = name?.trim() === '';
     const isNameTooShort = name?.length > 0 && name?.length < 2;

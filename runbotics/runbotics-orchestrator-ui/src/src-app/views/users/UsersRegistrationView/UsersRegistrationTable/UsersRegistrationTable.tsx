@@ -7,9 +7,10 @@ import { useSelector } from 'react-redux';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { usersSelector } from '#src-app/store/slices/Users';
 
+import { AVAILABLE_ROWS_PER_PAGE } from '#src-app/views/utils/TablePaging.provider';
+
 import { DataGridStyle} from './UsersRegistrationTable.styles';
 import useUsersRegistrationColumns from './useUsersRegistrationColumns';
-import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
 
 interface UsersRegistrationTableProps {
     page: number;
@@ -66,7 +67,7 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
                         onSelectionModelChange={(e) => handleSelectionChange(e)}
                         selectionModel={selections}
                         paginationMode='server'
-                        rowsPerPageOptions={ROWS_PER_PAGE}
+                        rowsPerPageOptions={AVAILABLE_ROWS_PER_PAGE}
                         localeText={{
                             noRowsLabel: translate('Users.Registration.Table.Error.Rows')
                         }}

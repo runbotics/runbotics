@@ -131,13 +131,7 @@ export class CloudExcelActionHandler extends StatefulActionHandler {
     run(request: CloudExcelTypes.CloudExcelActionRequest) {
         switch (request.script) {
             case CloudExcelAction.OPEN_FILE: {
-                const matchedCredential =
-                    credentialAttributesMapper<MicrosoftAuth>(request.credentials);
-
-                // @todo After completion of password manager switch fully to matchedCredential
-                const credential: MicrosoftAuth =
-                    matchedCredential ??
-                    this.serverConfigService.microsoftAuth;
+                const credential = credentialAttributesMapper<MicrosoftAuth>(request.credentials);
 
                 const matchedCredentials = {
                     config: {

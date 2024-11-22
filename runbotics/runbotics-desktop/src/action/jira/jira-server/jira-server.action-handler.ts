@@ -27,6 +27,7 @@ import { AtlassianCredentials, GetUserWorklogInput, IssueWorklogsParam, SearchIs
 import { JiraActionRequest, ServerJiraUser, SimpleServerJiraUser } from './jira-server.types';
 import { formatZodError } from '#utils/zodError';
 import { ServerConfigService } from '#config';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2
@@ -170,16 +171,11 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     }
 
     run(request: JiraActionRequest) {
-        // @todo method for matching credentialId (action template) with decrypted credential values
-        const atlassianCredentials: AtlassianCredentials = {
-            originUrl: this.serverConfigService.jiraUrl,
-            username: this.serverConfigService.jiraUsername,
-            password: this.serverConfigService.jiraPassword,
-        };
+        const credential = credentialAttributesMapper<AtlassianCredentials>(request.credentials);
 
         const inputWithAuth = {
             ...request.input,
-            ...atlassianCredentials,
+            ...credential,
         };
 
         switch (request.script) {

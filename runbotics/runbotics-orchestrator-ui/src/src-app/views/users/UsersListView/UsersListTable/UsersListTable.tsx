@@ -7,9 +7,10 @@ import { useSelector } from 'react-redux';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { usersSelector } from '#src-app/store/slices/Users';
 
+import { AVAILABLE_ROWS_PER_PAGE } from '#src-app/views/utils/TablePaging.provider';
+
 import { DataGridStyle} from './UsersListTable.styles';
 import useUsersListColumns from './useUsersListColumns';
-import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
 
 interface UsersListTableProps {
     page: number;
@@ -55,7 +56,7 @@ const UsersListTable: FC<UsersListTableProps> = ({
                         disableSelectionOnClick
                         onRowClick={({ row }) => openUserEditDialog(row)}
                         paginationMode='server'
-                        rowsPerPageOptions={ROWS_PER_PAGE}
+                        rowsPerPageOptions={AVAILABLE_ROWS_PER_PAGE}
                         localeText={{
                             noRowsLabel: translate('Users.List.Table.Error.Rows')
                         }}

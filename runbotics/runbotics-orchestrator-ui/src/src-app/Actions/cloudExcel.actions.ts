@@ -375,6 +375,7 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                     },
                     output: {
@@ -690,7 +691,17 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
         script: CloudExcelAction.CLOSE_SESSION,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
-            schema: {},
+            schema: {
+                properties: {
+                    input: {
+                        title: '',
+                        type: 'object',
+                        properties: {
+                            customCredentialId: propertyCustomCredential,
+                        },
+                    },
+                },
+            },
             uiSchema: {
                 input: {
                     customCredentialId: schemaCustomCredential,
