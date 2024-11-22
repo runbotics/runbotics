@@ -109,7 +109,8 @@ export class CredentialCollectionService {
     async getAllAccessiblePages(user: User, specs: Specs<CredentialCollection>, paging: Paging): Promise<Page<CredentialCollection>> {
         const options: FindManyOptions<CredentialCollection> = {
             ...paging,
-            ...specs
+            ...specs,
+            relationLoadStrategy: 'query',
         };
 
         options.where = {

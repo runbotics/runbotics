@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC, useContext } from 'react';
 
 import { useSnackbar } from 'notistack';
 
@@ -13,16 +13,15 @@ import { useDispatch } from '#src-app/store';
 import { credentialsActions } from '#src-app/store/slices/Credentials';
 
 import { EditCredentialForm } from '../../Credential/EditCredential/EditCredentialForm';
+import { PagingContext } from '../Paging.provider';
 
 interface CredentialsModalsProps {
-    collectionId: string;
     isEditDialogOpen: boolean;
     isDeleteDialogOpen: boolean;
     currentDialogCredential: FrontCredentialDto;
     setIsDeleteDialogOpen: (state: boolean) => void;
     setIsEditDialogOpen: (state: boolean) => void;
     setCurrentDialogCredential: (state: null) => void;
-    pageSize: number;
 }
 
 export const CredentialsModals: FC<CredentialsModalsProps> = ({
@@ -32,12 +31,11 @@ export const CredentialsModals: FC<CredentialsModalsProps> = ({
     setIsEditDialogOpen,
     currentDialogCredential,
     setCurrentDialogCredential,
-    collectionId,
-    pageSize,
 }) => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    const { pageSize, collectionId } = useContext(PagingContext);
 
     const handleEditDialogClose = () => {
         setCurrentDialogCredential(null);
@@ -78,7 +76,6 @@ export const CredentialsModals: FC<CredentialsModalsProps> = ({
                 onClose={handleEditDialogClose}
                 credential={currentDialogCredential}
                 collectionId={collectionId}
-                pageSize={pageSize}
             />
             <CustomDialog
                 isOpen={isDeleteDialogOpen}

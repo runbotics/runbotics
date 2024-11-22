@@ -2,7 +2,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { CreateCredentialDto } from '../Credential.types';
 
-interface credentialFormValidationState {
+export interface CredentialFormValidationState {
     edited: boolean;
     name: boolean;
     collectionId: boolean;
@@ -21,7 +21,7 @@ export const inputErrorMessages: Record<InputErrorType, string> = {
     [InputErrorType.TEMPLATE_IS_REQUIRED]: translate('Credential.Add.Form.Error.TemplateIsRequired')
 };
 
-export const getInitialFormValidationState = (collectionId: string): credentialFormValidationState => ({
+export const getInitialFormValidationState = (collectionId: string): CredentialFormValidationState => ({
     edited: false,
     name: false,
     collectionId: collectionId ? true : false,

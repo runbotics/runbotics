@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,6 +17,7 @@ import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { User } from '../user/user.entity';
+import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 
 const RELATIONS = ['attributes', 'createdBy', 'collection.credentialCollectionUser'];
 
@@ -45,7 +46,7 @@ export class CredentialService {
     );
 
     if (!hasEditCollectionAccess) {
-      throw new NotFoundException('You do not have access to edit this collection');
+      throw new ForbiddenException('You do not have access to edit this collection');
     }
 
     if (!template) {
@@ -261,6 +262,9 @@ export class CredentialService {
       throw new NotFoundException(`Could not find credential with id ${id}`);
     }
 
+    const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
+    this.ensureUserHasEditAccessOrThrow(collection, user);
+
     const credentialToUpdate = this.credentialRepo.create({
       ...credential,
       ...credentialDto,
@@ -298,6 +302,13 @@ export class CredentialService {
   async removeById(id: string, user: User) {
     const credential = await this.findById(id, user.tenantId);
 
+    if (!credential) {
+      throw new NotFoundException(`Could not find credential with id ${id}`);
+    }
+
+    const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
+    this.ensureUserHasEditAccessOrThrow(collection, user);
+
     return this.credentialRepo.remove(credential).then((credential) => {
         this.notifyCredentialCollectionOwner({
             executor: user,
@@ -315,7 +326,10 @@ export class CredentialService {
       throw new NotFoundException(`Could not find credential with id ${id}`);
     }
 
-        const attribute = credential.attributes.find(attr => attr.name === attributeName);
+    const collection = await this.collectionService.findOneAccessibleById(credential.collectionId, user);
+    this.ensureUserHasEditAccessOrThrow(collection, user);
+
+    const attribute = credential.attributes.find(attr => attr.name === attributeName);
 
     const encryptedValue =
       this.secretService.encrypt(attributeDto.value, user.tenantId);
@@ -437,5 +451,17 @@ export class CredentialService {
                 color: collection.color
             }
         };
+    }
+
+    private ensureUserHasEditAccessOrThrow(collection: CredentialCollection, user: User) {
+        const hasEditCollectionAccess = collection.credentialCollectionUser
+            .some(collectionUser =>
+              collectionUser.userId === user.id &&
+              collectionUser.privilegeType === PrivilegeType.WRITE
+        );
+
+        if (!hasEditCollectionAccess) {
+            throw new ForbiddenException('You cannot modify this collection');
+        }
     }
 }
