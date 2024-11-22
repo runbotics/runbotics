@@ -45,19 +45,4 @@ public class GuestResource {
             .headers(HeaderUtil.createAlert(applicationName, "guestManagement.deleted", "All"))
             .build();
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Guest> getGuestById(@PathVariable Long id) {
-        log.debug("REST request to get Guest : {}", id);
-        Optional<Guest> guest = guestService.findGuestById(id);
-        return ResponseUtil.wrapOrNotFound(guest);
-    }
-
-    @GetMapping("/process")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.GUEST + "\")")
-    public ResponseEntity<ProcessDTO> getGuestProcess() {
-        log.debug("REST request to get Guest demo process");
-        var process = this.guestService.getGuestDemoProcess();
-        return ResponseEntity.ok(process);
-    }
 }

@@ -77,7 +77,6 @@ export class ProcessCrudService {
     }
 
     async createGuestProcess(user: User) {
-        console.log('user: ', user);
         const process = new ProcessEntity();
         process.definition = EMPTY_PROCESS_DEFINITION;
         process.name = 'DEMO';
