@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
-import { BotSystemType, FeatureKey, ProcessDto, ProcessOutputType, Role } from 'runbotics-common';
+import { BotSystemType, ProcessDto, ProcessOutputType, Role } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';
 import { CreateProcessDto } from '#/scheduler-database/process/dto/create-process.dto';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
@@ -11,11 +11,11 @@ import { UpdateDiagramDto } from '#/scheduler-database/process/dto/update-diagra
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
-import { whereOptionsToWhereOptionsArray, Specs } from '#/utils/specification/specifiable.decorator';
+import { mapToWhereOptionsArray, Specs } from '#/utils/specification/specifiable.decorator';
 import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
 import { BotCollection } from '../bot-collection/bot-collection.entity';
-import { UserService } from '../user/user.service';
 import { TagService } from '../tags/tag.service';
+import { isTenantAdmin } from '#/utils/authority.utils';
 
 const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
 
@@ -28,7 +28,6 @@ export class ProcessCrudService {
         private globalVariableRepository: Repository<GlobalVariable>,
         @InjectRepository(BotCollection)
         private botCollectionRepository: Repository<BotCollection>,
-        private readonly userService: UserService,
         private readonly tagService: TagService,
     ) {
     }
@@ -179,22 +178,43 @@ export class ProcessCrudService {
         };
         options.relations = RELATIONS;
 
-        options.where = whereOptionsToWhereOptionsArray<ProcessEntity>({
-            ...(!this.hasTenantAllAccess(user) && {
-                isPublic: true,
-                createdBy: {
-                    id: user.id,
-                },
-            })
-        }, {
-            ...options.where,
-            tenantId: user.tenantId,
+        options.where = mapToWhereOptionsArray<ProcessEntity>({
+            orConditionProps: {
+                ...(!isTenantAdmin(user) && {
+                    isPublic: true,
+                    createdBy: {
+                        id: user.id,
+                    },
+                })
+            },
+            andConditionProps: {
+                ...options.where,
+                tenantId: user.tenantId,
+            },
         });
 
         return this.processRepository.find(options);
     }
 
     async getPage(user: User, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessDto>> {
+        const accessibleProcessIds = await this.processRepository
+            .find({
+                where: mapToWhereOptionsArray<ProcessEntity>({
+                    orConditionProps: {
+                        ...(!isTenantAdmin(user) && {
+                            isPublic: true,
+                            createdBy: {
+                                id: user.id,
+                            },
+                        }),
+                    },
+                    andConditionProps: {
+                        tenantId: user.tenantId,
+                    },
+                }),
+            })
+            .then((processes) => processes.map(({ id }) => id));
+
         const options: FindManyOptions<ProcessEntity> = {
             ...paging,
             ...specs,
@@ -202,13 +222,17 @@ export class ProcessCrudService {
         const { name, tags, createdBy, ...restOptions } =
             options.where as FindOptionsWhere<ProcessEntity>;
 
-        options.where = whereOptionsToWhereOptionsArray<ProcessEntity>({
-            name,
-            tags,
-            createdBy,
-        }, {
-            ...restOptions,
-            tenantId: user.tenantId,
+        options.where = mapToWhereOptionsArray<ProcessEntity>({
+            orConditionProps: {
+                name,
+                tags,
+                createdBy,
+            },
+            andConditionProps: {
+                ...restOptions,
+                id: In(accessibleProcessIds),
+                tenantId: user.tenantId,
+            },
         });
 
         options.relations = RELATIONS;
@@ -217,28 +241,25 @@ export class ProcessCrudService {
 
         return {
             ...page,
-            content: page.content
-                .filter(({ isPublic, createdBy: { id } }) =>
-                    !this.hasTenantAllAccess(user) ?
-                        (isPublic || id === user.id)
-                        : true
-                )
-                .map(this.formatUserDTO),
+            content: page.content.map(this.formatUserDTO),
         };
     }
 
     get(user: User, id: number) {
         return this.processRepository.findOne({
-            where: whereOptionsToWhereOptionsArray<ProcessEntity>({
-                ...(!this.hasTenantAllAccess(user) && {
-                    isPublic: true,
-                    createdBy: {
-                        id: user.id,
-                    },
-                })
-            }, {
-                id,
-                tenantId: user.tenantId,
+            where: mapToWhereOptionsArray<ProcessEntity>({
+                orConditionProps: {
+                    ...(!isTenantAdmin(user) && {
+                        isPublic: true,
+                        createdBy: {
+                            id: user.id,
+                        },
+                    })
+                },
+                andConditionProps: {
+                    id,
+                    tenantId: user.tenantId,
+                },
             }),
             relations: RELATIONS,
         });
@@ -265,12 +286,5 @@ export class ProcessCrudService {
                 email: process.createdBy.email,
             },
         };
-    }
-
-    private hasTenantAllAccess(user: User) {
-        return this.userService.hasFeatureKey(
-            user,
-            FeatureKey.TENANT_ALL_ACCESS
-        );
     }
 }

@@ -22,7 +22,7 @@ export class TagService {
         return await this.tagRepository
             .createQueryBuilder('tag')
             .where('tag.tenant_id = :tenantId', { tenantId })
-            .andWhere('tag.name LIKE :lookupPhrase', { lookupPhrase })
+            .andWhere('tag.name ILIKE :lookupPhrase', { lookupPhrase })
             .getMany();
     }
 
