@@ -32,54 +32,49 @@ export class ProcessCredentialService {
     }
 
     async create(processCredentialDto: CreateProcessCredentialDto, user: User) {
-        const { credential, lastCredentialOrder } =
-            await this.processCredentialRepository.manager.transaction(
-                async (manager) => {
-                    const credential = await manager
-                        .findOneByOrFail(Credential, {
-                            id: processCredentialDto.credentialId,
-                            tenantId: user.tenantId,
-                        })
-                        .catch(() => {
-                            throw new NotFoundException(
-                                'Cannot find credential with provided id'
-                            );
-                        });
-
-                    const lastCredentialOrder: number =
-                        await manager
-                            .createQueryBuilder(ProcessCredential, 'pc')
-                            .select('MAX(pc.order)', 'max')
-                            .innerJoin('pc.credential', 'credential')
-                            .innerJoin(
-                                'credential.template',
-                                'template',
-                                'template.name = :templateName',
-                                {
-                                    templateName:
-                                        processCredentialDto.templateName,
-                                }
-                            )
-                            .where('pc.processId = :processId', {
-                                processId: processCredentialDto.processId,
-                            })
-                            .getRawOne()
-                            .then((result) => result.max)
-                            .catch(() => 0);
-
-                    return { credential, lastCredentialOrder };
-                }
-            );
-
         const process = await this.processService.checkAccessAndGetById(
             +processCredentialDto.processId, user
         );
 
-        const newProcessCredential = new ProcessCredential();
-        newProcessCredential.process = process;
-        newProcessCredential.credential = credential;
-        newProcessCredential.order = lastCredentialOrder + 1;
-        await this.processCredentialRepository.insert(newProcessCredential);
+        await this.processCredentialRepository.manager.transaction(
+            async (manager) => {
+                const credential = await manager
+                    .findOneByOrFail(Credential, {
+                        id: processCredentialDto.credentialId,
+                        tenantId: user.tenantId,
+                    })
+                    .catch(() => {
+                        throw new NotFoundException(
+                            'Cannot find credential with provided id'
+                        );
+                    });
+
+                const lastCredentialOrder: number = await manager
+                    .createQueryBuilder(ProcessCredential, 'pc')
+                    .select('MAX(pc.order)', 'max')
+                    .innerJoin('pc.credential', 'credential')
+                    .innerJoin(
+                        'credential.template',
+                        'template',
+                        'template.name = :templateName',
+                        {
+                            templateName: processCredentialDto.templateName,
+                        }
+                    )
+                    .where('pc.processId = :processId', {
+                        processId: processCredentialDto.processId,
+                    })
+                    .getRawOne()
+                    .then((result) => result.max)
+                    .catch(() => 0);
+
+                const newProcessCredential = new ProcessCredential();
+                newProcessCredential.process = process;
+                newProcessCredential.credential = credential;
+                newProcessCredential.order = lastCredentialOrder + 1;
+                await manager.insert(ProcessCredential, newProcessCredential);
+            }
+        );
     }
 
     async delete(id: string, user: User) {
