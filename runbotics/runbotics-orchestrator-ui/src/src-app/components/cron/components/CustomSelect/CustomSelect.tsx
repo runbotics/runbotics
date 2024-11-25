@@ -22,15 +22,15 @@ const CustomSelect: FC<CustomSelectProps> = ({
     isMultiple = true,
 }) => {
     const stringValue = useMemo(
-        () => 
-            (value && Array.isArray(value)) 
+        () =>
+            (value && Array.isArray(value))
                 ? value.map((item: number) => item.toString())
                 : [],
         [value]
     );
 
     const options = useMemo(
-        () => optionsList 
+        () => optionsList
             ? (
                 optionsList.map(
                     (option, index) => {
@@ -42,7 +42,7 @@ const CustomSelect: FC<CustomSelectProps> = ({
                         };
                     }
                 )
-            ) 
+            )
             : (
                 [...Array(unit.total)].map((e, index) => {
                     const number = unit.min === 0 ? index : index + 1;
@@ -58,7 +58,7 @@ const CustomSelect: FC<CustomSelectProps> = ({
                         ),
                     };
                 })
-            ), 
+            ),
         [optionsList, unit, humanizeLabels, leadingZero, clockFormat],
     );
 
@@ -66,9 +66,9 @@ const CustomSelect: FC<CustomSelectProps> = ({
         (tagProps) => {
             const propsValue = tagProps;
 
-            if (!propsValue || Number.isNaN((propsValue[0]))) 
+            if (!propsValue || Number.isNaN((propsValue[0])))
             { return <></>; }
-            
+
 
             const parsedArray = parsePartArray(propsValue, unit);
             const cronValue = partToString(parsedArray, unit, humanizeLabels, leadingZero, clockFormat);
@@ -77,7 +77,7 @@ const CustomSelect: FC<CustomSelectProps> = ({
             return (
                 <div>
                     {testEveryValue[1]
-                        ? `${locale.everyText || DEFAULT_LOCALE_EN.everyText} 
+                        ? `${locale.everyText || DEFAULT_LOCALE_EN.everyText}
             ${testEveryValue[1]}`
                         : cronValue}
                 </div>
@@ -109,6 +109,8 @@ const CustomSelect: FC<CustomSelectProps> = ({
             renderValue={renderTag}
             autoWidth={false}
             disabled={disabled}
+            required
+            error={!value.length}
         >
             {options.map((obj) => (
                 <MenuItem key={obj.value} value={obj.value}>
