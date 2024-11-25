@@ -84,13 +84,11 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                 value={ProcessesTabs.COLLECTIONS}
                 label={translate('Process.Collection.Navigation.Collections.Label')}
             />
-            {hasAllProcessesReadAccess && (
-                <Tab
-                    key={ProcessesTabs.PROCESSES}
-                    value={ProcessesTabs.PROCESSES}
-                    label={translate('Process.Collection.Navigation.Processes.Label')}
-                />
-            )}
+            <Tab
+                key={ProcessesTabs.PROCESSES}
+                value={ProcessesTabs.PROCESSES}
+                label={translate('Process.Collection.Navigation.Processes.Label')}
+            />
         </Tabs>
     );
 
@@ -104,7 +102,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             {...rest}
         >
             <Grid item>
-                {procesTabs}
+                <If condition={hasAllProcessesReadAccess}>{procesTabs}</If>
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>

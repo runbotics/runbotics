@@ -5,10 +5,11 @@ import { GridFilterModel } from '@mui/x-data-grid';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
-import { OrderDirection, OrderPropertyName } from 'runbotics-common';
+import { FeatureKey, OrderDirection, OrderPropertyName } from 'runbotics-common';
 
+import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
-import { useDispatch } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
 import useDebounce from './useDebounce';
@@ -25,6 +26,9 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
     const dispatch = useDispatch();
     const debouncedValue = useDebounce<string>(search, DEBOUNCE_TIME);
 
+    const user = useSelector((state) => state.auth.user);
+    const hasAllProcessesAccess = hasFeatureKeyAccess(user, [FeatureKey.ALL_PROCESSES_READ]);
+
     useEffect(() => {
         replaceQueryParams({
             collectionId,
@@ -35,9 +39,13 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
             tab: router.query.tab,
         });
 
+        const action = hasAllProcessesAccess
+            ? processActions.getProcessesAllPage
+            : processActions.getProcessesPage;
+
         if (collectionId !== undefined) {
             dispatch(
-                processActions.getProcessesPage({
+                action({
                     pageParams: {
                         page,
                         size: pageSize,
@@ -62,7 +70,7 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
             );
         } else {
             dispatch(
-                processActions.getProcessesPage({
+                action({
                     pageParams: {
                         page,
                         size: pageSize,

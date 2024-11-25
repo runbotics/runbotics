@@ -5,6 +5,7 @@ import {
     Controller, Delete,
     ForbiddenException,
     Get,
+    NotFoundException,
     Param,
     ParseIntPipe,
     Patch,
@@ -185,7 +186,7 @@ export class ProcessController {
     }
 
     @Get()
-    @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
+    @FeatureKeys(FeatureKey.PROCESS_LIST_READ, FeatureKey.ALL_PROCESSES_READ)
     async getAll(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
         @UserDecorator() user: User,
@@ -200,6 +201,25 @@ export class ProcessController {
         @Pageable() paging: Paging,
         @UserDecorator() user: User,
     ) {
+        // @ts-expect-error property not in built-in type
+        const { _type, _value } = specs.where.processCollectionId?.valueOf()?.value.at(0) ?? {};
+
+        if (_type === 'isNull' || (_type === 'equal' && _value.trim())) {
+           return this.processCrudService.getPage(user, specs, paging);
+        }
+        throw new NotFoundException();
+    }
+
+    @Get('GetAllPage')
+    @FeatureKeys(FeatureKey.PROCESS_LIST_READ, FeatureKey.ALL_PROCESSES_READ)
+    getFilteredPage(
+        @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
+        @Pageable() paging: Paging,
+        @UserDecorator() user: User,
+    ) {
+        specs.where = {
+            ...specs.where,
+        };
         return this.processCrudService.getPage(user, specs, paging);
     }
 

@@ -133,6 +133,8 @@ export const getProcesses = ApiTenantResource.get<ProcessDto[]>('process/getAll'
 
 export const getProcessesPage = ApiTenantResource.get<Page<ProcessDto>>('process/getPage', `${PROCESSES_PATH}/GetPage`);
 
+export const getProcessesAllPage = ApiTenantResource.get<Page<ProcessDto>>('process/getPage', `${PROCESSES_PATH}/GetAllPage`);
+
 export const deleteProcess = ApiTenantResource.delete<number>('process/delete', PROCESSES_PATH);
 
 export const getTagsByName = ApiTenantResource.get<Tag[]>('tags/getByName', TAGS_PATH);
