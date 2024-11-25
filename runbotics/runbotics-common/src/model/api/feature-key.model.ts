@@ -14,6 +14,9 @@ export enum FeatureKey {
     // Allow to GET list of all processes & GET single process by id [ Processes page ]
     PROCESS_LIST_READ = 'PROCESS_LIST_READ',
 
+    // Allow to GET all processes view (except for processes inside collections) [ Processes Page ]
+    ALL_PROCESSES_READ = 'ALL_PROCESSES_READ', // @todo to be removed after finishing process collection migration and restoring correct permission checking
+
     // Show "ADD NEW PROCESS" button [ Processes page ]
     PROCESS_ADD = 'PROCESS_ADD',
 

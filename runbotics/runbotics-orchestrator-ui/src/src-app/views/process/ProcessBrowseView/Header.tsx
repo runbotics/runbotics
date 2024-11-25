@@ -41,6 +41,7 @@ export enum ProcessesTabs {
 const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
+    const hasAllProcessesReadAccess = useFeatureKey([FeatureKey.ALL_PROCESSES_READ]);
     const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
 
 
@@ -83,11 +84,13 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                 value={ProcessesTabs.COLLECTIONS}
                 label={translate('Process.Collection.Navigation.Collections.Label')}
             />
-            <Tab
-                key={ProcessesTabs.PROCESSES}
-                value={ProcessesTabs.PROCESSES}
-                label={translate('Process.Collection.Navigation.Processes.Label')}
-            />
+            {hasAllProcessesReadAccess && (
+                <Tab
+                    key={ProcessesTabs.PROCESSES}
+                    value={ProcessesTabs.PROCESSES}
+                    label={translate('Process.Collection.Navigation.Processes.Label')}
+                />
+            )}
         </Tabs>
     );
 
