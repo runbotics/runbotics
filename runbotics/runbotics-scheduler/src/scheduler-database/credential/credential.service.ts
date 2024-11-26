@@ -152,11 +152,10 @@ export class CredentialService {
       .leftJoin(
           ProcessCredential,
           'pc',
-          'pc.credentialId = credentials.id'
+          'pc.credentialId = credentials.id AND pc.processId = :processId',
+          { processId }
       )
-      .where('pc.processId != :processId OR pc.processId IS NULL', {
-          processId,
-      })
+      .where('pc.processId IS NULL')
       .getMany()
       .then(credentials =>
           credentials.map(credential => ({
