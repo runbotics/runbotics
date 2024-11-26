@@ -9,6 +9,8 @@ import { useSnackbar } from 'notistack';
 import { FeatureKey, IProcess, OrderDirection, OrderPropertyName, Role } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
+import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
+import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
@@ -37,7 +39,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const router = useRouter();
     const isCollectionsTab =
         getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
-
+    const { user } = useAuth();
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
     const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
     const [isDetailsDialogVisible, setIsDetailsDialogVisible] = useState(false);
@@ -71,9 +73,14 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
         try {
             await dispatch(processActions.updateProcess({ resourceId: processToSave.id, payload: processToSave }));
             setIsEditDialogVisible(false);
+            const hasAllProcessesAccess = hasFeatureKeyAccess(user, [FeatureKey.ALL_PROCESSES_READ]);
+            const action = hasAllProcessesAccess
+                ? processActions.getProcessesAllPage
+                : processActions.getProcessesPage;
+
             if (isCollectionsTab) {
                 await dispatch(
-                    processActions.getProcessesPage({
+                    action({
                         pageParams: {
                             page,
                             size: pageSize,
@@ -98,7 +105,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                 );
             } else {
                 await dispatch(
-                    processActions.getProcessesPage({
+                    action({
                         pageParams: {
                             page,
                             size: pageSize,

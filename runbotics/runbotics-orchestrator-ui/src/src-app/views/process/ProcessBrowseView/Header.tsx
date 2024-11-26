@@ -41,6 +41,7 @@ export enum ProcessesTabs {
 const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
+    const hasAllProcessesReadAccess = useFeatureKey([FeatureKey.ALL_PROCESSES_READ]);
     const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
 
 
@@ -101,7 +102,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             {...rest}
         >
             <Grid item>
-                {procesTabs}
+                <If condition={hasAllProcessesReadAccess}>{procesTabs}</If>
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>
