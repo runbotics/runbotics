@@ -78,7 +78,7 @@ export class ProcessController {
             throw new ForbiddenException('Guest can create only one process');
         }
 
-        return this.processCrudService.createGuestProcess();
+        return this.processCrudService.createGuestProcess(user);
     }
 
     @Patch(':id')
@@ -175,6 +175,13 @@ export class ProcessController {
         await this.checkAccess(user, id);
 
         return this.processCrudService.partialUpdate(user, id, { output: updateOutputTypeDto.output });
+    }
+
+    @Get('guest')
+    getGuestProcess(
+        @UserDecorator() user: User,
+    ) {
+        return this.processService.findGuestDemoProcess(user);
     }
 
     @Get()

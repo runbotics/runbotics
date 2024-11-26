@@ -7,7 +7,7 @@ import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, ProcessInput, TriggerEvent } from 'runbotics-common';
 import { ProcessGuestService } from './process-guest.service';
-import { GuestService } from '#/database/guest/guest.service';
+import { GuestService } from '#/scheduler-database/guest/guest.service';
 import { checkMessageProperty, checkStatusProperty } from '#/utils/error-message.utils';
 
 @Controller('scheduler/processes')
