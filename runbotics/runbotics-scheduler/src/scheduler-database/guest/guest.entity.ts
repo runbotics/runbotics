@@ -6,7 +6,7 @@ export class Guest {
     @PrimaryColumn({ name: 'ip_hash', type: 'varchar', length: 100 })
     ipHash: string;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, { nullable: false })
     @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
     user: User;
 
