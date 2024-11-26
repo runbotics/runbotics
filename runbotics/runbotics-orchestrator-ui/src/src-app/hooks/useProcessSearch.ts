@@ -9,9 +9,10 @@ import { FeatureKey, OrderDirection, OrderPropertyName } from 'runbotics-common'
 
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
-import { useDispatch, useSelector } from '#src-app/store';
+import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
+import useAuth from './useAuth';
 import useDebounce from './useDebounce';
 
 const DEBOUNCE_TIME = 400;
@@ -26,7 +27,7 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
     const dispatch = useDispatch();
     const debouncedValue = useDebounce<string>(search, DEBOUNCE_TIME);
 
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuth();
     const hasAllProcessesAccess = hasFeatureKeyAccess(user, [FeatureKey.ALL_PROCESSES_READ]);
 
     useEffect(() => {

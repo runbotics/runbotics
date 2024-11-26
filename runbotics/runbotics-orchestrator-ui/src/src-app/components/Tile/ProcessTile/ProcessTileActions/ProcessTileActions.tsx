@@ -10,12 +10,13 @@ import { FeatureKey, IProcess, OrderDirection, OrderPropertyName, Role } from 'r
 
 import If from '#src-app/components/utils/If';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
+import useAuth from '#src-app/hooks/useAuth';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
-import { useDispatch, useSelector } from '#src-app/store';
+import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
 import DeleteProcess from '#src-app/views/process/DeleteProcess';
@@ -38,7 +39,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const router = useRouter();
     const isCollectionsTab =
         getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
-    const user = useSelector((state) => state.auth.user);
+    const { user } = useAuth();
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
     const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
     const [isDetailsDialogVisible, setIsDetailsDialogVisible] = useState(false);
@@ -73,13 +74,13 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
             await dispatch(processActions.updateProcess({ resourceId: processToSave.id, payload: processToSave }));
             setIsEditDialogVisible(false);
             const hasAllProcessesAccess = hasFeatureKeyAccess(user, [FeatureKey.ALL_PROCESSES_READ]);
-            const thunk = hasAllProcessesAccess
+            const action = hasAllProcessesAccess
                 ? processActions.getProcessesAllPage
                 : processActions.getProcessesPage;
 
             if (isCollectionsTab) {
                 await dispatch(
-                    thunk({
+                    action({
                         pageParams: {
                             page,
                             size: pageSize,
@@ -104,7 +105,7 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
                 );
             } else {
                 await dispatch(
-                    thunk({
+                    action({
                         pageParams: {
                             page,
                             size: pageSize,
