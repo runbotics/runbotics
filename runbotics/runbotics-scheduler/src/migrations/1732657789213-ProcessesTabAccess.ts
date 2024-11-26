@@ -12,6 +12,7 @@ export class ProcessesTabAccess1732657789213 implements MigrationInterface {
         const authorityRepository = await queryRunner.manager.getRepository(Authority);
         const roleTenantAdmin = await authorityRepository.findOneOrFail({ where: { name: Role.ROLE_TENANT_ADMIN } });
         roleTenantAdmin.featureKeys.push({ name: FeatureKeyEnum.ALL_PROCESSES_READ });
+        await authorityRepository.save(roleTenantAdmin);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
