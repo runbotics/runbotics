@@ -29,7 +29,7 @@ const MenuItems: FC<MenuItemsProps> = ({ itemId, handleOpenEditDialog, handleOpe
     };
 
     return (
-        <Box display="flex" justifyContent="flex-end" padding="1rem">
+        <Box display="flex" justifyContent="flex-end" padding="0.8rem">
             <IconButton
                 onClick={e => {
                     e.stopPropagation();
