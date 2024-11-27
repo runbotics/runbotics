@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 
+import { useSortable } from '@dnd-kit/sortable';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Divider, List, ListItem, Typography } from '@mui/material';
@@ -16,12 +17,28 @@ interface ActionCredentialProps {
     authorName: string;
     credentialId: string;
     handleDeleteDialog: (credentialId: string) => void;
+    id: string;
 };
 
 const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
-    isPrimary, collectionName, credentialName, authorName, credentialId, handleDeleteDialog
+    isPrimary, collectionName, credentialName, authorName, credentialId, handleDeleteDialog, id
 }) => {
     const { translate } = useTranslations();
+
+    // const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    //     id: 'draggable',
+    // });
+    // const style = transform ? {
+    //     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    // } : undefined;
+
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+
+    const style = {
+        transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+        transition,
+        cursor: 'grab',
+    };
 
     return (
         <CredentialWrapper>
@@ -33,7 +50,7 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                     {translate('Process.Configure.Credentials.Action.PrimaryCredential')}
                 </StyledTypography>
             </If>
-            <CredentialTile $isPrimary={isPrimary}>
+            <CredentialTile $isPrimary={isPrimary} {...listeners} {...attributes} ref={setNodeRef} id={id} style={style}>
                 <CredentialSwipe>
                     <DragIndicatorIcon sx={{ fontSize: '30px', [':hover']: { cursor: 'pointer' } }}/>
                 </CredentialSwipe>

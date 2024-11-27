@@ -11,11 +11,8 @@ import useWindowSize from '#src-app/hooks/useWindowSize';
 import { useDispatch, useSelector } from '#src-app/store';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
 
-import ActionCredential from './ActionCredential';
-import ActionCredentialAdd from './ActionCredentialAdd';
 import {
-    ActionBox, ActionBoxContent,
-    ActionBoxHeader, ActionsColumns,
+    ActionsColumns,
     ActionsContainer, Container, Header, StyledImage,
 } from './ProcessCredentials.styles';
 import { ActionSortedColumns, CredentialId } from './ProcessCredentials.types';
@@ -27,6 +24,8 @@ import {
 } from './ProcessCredentials.utils';
 import { ProcessCredentialsAddDialog } from './ProcessCredentialsAddDialog';
 import { ProcessCredentialsDeleteDialog } from './ProcessCredentialsDeleteDialog';
+import { ProcessCredential } from '../ProcessCredential/ProcessCredential';
+
 
 
 const ProcessCredentials = () => {
@@ -47,8 +46,13 @@ const ProcessCredentials = () => {
     const [currentCredentialId, setCurrentCredentialId] = useState<CredentialId>(null);
     const [currentActionName, setCurrentActionName] = useState<string | null>(null);
 
+
     const { width: windowWidth } = useWindowSize();
     const rowCount = Math.max(Math.ceil((Math.abs(windowWidth - MARGIN_LIMIT)) / ACTION_MIN_WIDTH), 1);
+
+    console.log('actionCredentials', actionCredentials);
+    console.log('columns', columns);
+    console.log('rowCount', rowCount);
 
     const handleDelete = () => {
         dispatch(processActions.deleteProcessCredential({ resourceId: currentCredentialId }))
@@ -119,33 +123,35 @@ const ProcessCredentials = () => {
                 />
                 <Typography>{translate('Process.Configure.Credentials.Section.Title')}</Typography>
             </Header>
-            <ActionsContainer $rowCount={rowCount}>
+            <ActionsContainer $rowCount={rowCount} >
                 {columns.map((column, idx) => (
-                    <ActionsColumns key={column.count + String(idx)}>
+                    <ActionsColumns key={column.count + String(idx) } >
                         {column.actionCredentials.map(actionType => (
-                            <ActionBox key={actionType.name}>
-                                <ActionBoxHeader>
-                                    <Typography variant='h5' textTransform='uppercase'>
-                                        {actionType.name}
-                                    </Typography>
-                                </ActionBoxHeader>
-                                <ActionBoxContent>
-                                    {actionType.credentials.map(cred => (
-                                        <ActionCredential
-                                            key={cred.name}
-                                            isPrimary={cred.order === 1}
-                                            credentialName={cred.name}
-                                            credentialId={cred.id}
-                                            collectionName={cred.collectionName}
-                                            authorName={cred.authorName}
-                                            handleDeleteDialog={handleDeleteDialogOpen}
-                                        />
-                                    ))}
-                                    <ActionCredentialAdd
-                                        handleClick={() => handleAddDialogOpen(actionType.name)}
-                                    />
-                                </ActionBoxContent>
-                            </ActionBox>
+                            //         <ActionBox key={actionType.name}>
+                            //             <ActionBoxHeader>
+                            //                 <Typography variant='h5' textTransform='uppercase'>
+                            //                     {actionType.name}
+                            //                 </Typography>
+                            //             </ActionBoxHeader>
+                            //             <ActionBoxContent>
+                            //                 {actionType.credentials.map(cred => (
+                            //                     <ActionCredential
+                            //                         key={cred.name}
+                            //                         isPrimary={cred.order === 1}
+                            //                         credentialName={cred.name}
+                            //                         credentialId={cred.id}
+                            //                         collectionName={cred.collectionName}
+                            //                         authorName={cred.authorName}
+                            //                         handleDeleteDialog={handleDeleteDialogOpen}
+                            //                     />
+                            //                 ))}
+                            //                 <ActionCredentialAdd
+                            //                     handleClick={() => handleAddDialogOpen(actionType.name)}
+                            //                 />
+                            //             </ActionBoxContent>
+                            //         </ActionBox>
+
+                            <ProcessCredential key={actionType.name} actionType={actionType} handleAddDialogOpen={handleAddDialogOpen} handleDeleteDialogOpen={handleDeleteDialogOpen}/>
                         ))}
                     </ActionsColumns>
                 ))}
