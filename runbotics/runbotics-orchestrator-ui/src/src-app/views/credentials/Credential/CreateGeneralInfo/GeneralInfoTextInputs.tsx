@@ -32,7 +32,7 @@ export const GeneralInfoTextFields: FC<GeneralInfoTextFieldsProps> = ({
 
         setCredentialFormState(prevState => ({
             ...prevState,
-            [name]: value
+            [name]: value.trim()
         }));
 
         setFormValidationState(prevState => ({
