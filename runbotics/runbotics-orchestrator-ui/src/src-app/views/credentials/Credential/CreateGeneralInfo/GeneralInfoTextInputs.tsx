@@ -37,7 +37,7 @@ export const GeneralInfoTextFields: FC<GeneralInfoTextFieldsProps> = ({
 
         setFormValidationState(prevState => ({
             ...prevState,
-            [name]: value.trim() !== '',
+            [name]: name === 'description' ? true : value.trim() !== '',
             edited: true
         }));
     };

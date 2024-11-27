@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 import { useRouter } from 'next/router';
 
@@ -12,7 +12,7 @@ import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { collectionColors } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
 
-import { CredentialCard, CredentialCollection } from './CredentialTile.styles';
+import { CredentialCard, CredentialCardContainer, CredentialCollection } from './CredentialTile.styles';
 import MenuItems from '../CredentialsCollectionTile/MenuItems/MenuItems';
 import Tile from '../Tile';
 
@@ -52,30 +52,38 @@ const CredentialTile: FC<CredentialTileProps> = ({
     };
 
     return (
-        <Tile leftbordercolor={`4px solid ${hexColor}`} minheight='min-content'>
-            <CredentialCard onClick={handleClick}>
-                <Typography variant="h4" sx={{ paddingBottom: '16px' }}>
-                    {credential.name}
-                </Typography>
-                <If condition={!!collectionId}>
-                    <Typography sx={{ mb: 1 }}>{translate('Credential.Details.Description.Label')}: {credential.description ? credential.description : ''}</Typography>
-                </If>
-                <Typography sx={{ mb: 1 }}>{translate('Credential.Details.Template.Label')}: {templateName}</Typography>
-                <If condition={!collectionId}>
-                    <CredentialCollection>
-                        <FolderOpenIcon sx={{ paddingRight: '4px' }} />
-                        {collection.name}
-                    </CredentialCollection>
-                </If>
-                <If condition={isOwner || hasEditAccess}>
-                    <MenuItems
-                        itemId={credential?.id}
-                        handleOpenEditDialog={handleEditDialogOpen}
-                        handleOpenDeleteDialog={handleDeleteDialogOpen}
-                    />
-                </If>
-            </CredentialCard>
-        </Tile>
+        <CredentialCardContainer >
+            <Tile leftbordercolor={`4px solid ${hexColor}`}>
+                <CredentialCard onClick={handleClick}>
+                    <Typography variant="h4" sx={{ paddingBottom: '16px' }}>
+                        {credential.name}
+                    </Typography>
+                    <If condition={!!collectionId && !!credential.description}>
+                        <Typography mb={1}>
+                            {translate('Credential.Details.Description.Label')}: {credential.description}
+                        </Typography>
+                    </If>
+                    <Typography mb={1}>
+                        {translate('Credential.Details.Template.Label')}: {templateName}
+                    </Typography>
+                    <If condition={!collectionId}>
+                        <CredentialCollection>
+                            <FolderOpenIcon sx={{ paddingRight: '4px' }} />
+                            {collection.name}
+                        </CredentialCollection>
+                    </If>
+                </CredentialCard>
+                <Box>
+                    <If condition={isOwner || hasEditAccess}>
+                        <MenuItems
+                            itemId={credential?.id}
+                            handleOpenEditDialog={handleEditDialogOpen}
+                            handleOpenDeleteDialog={handleDeleteDialogOpen}
+                        />
+                    </If>
+                </Box>
+            </Tile>
+        </CredentialCardContainer>
     );
 };
 
