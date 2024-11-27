@@ -44,7 +44,7 @@ export const EditCredentialForm: FC<EditCredentialFormProps> = ({ open: isOpen, 
 
         const payload = {
             name: credentialFormState.name,
-            ...(credentialFormState.description && { description: credentialFormState.description })
+            description: credentialFormState.description.trim()
         };
 
         dispatch(credentialsActions.updateCredential({ resourceId: `${collectionId}/credentials/${credential.id}`, payload }))
