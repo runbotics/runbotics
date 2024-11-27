@@ -5,12 +5,17 @@ import getConfig from 'next/config';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useRouter } from 'next/router';
+
 import LogoIcon from '#public/images/logos/all-for-one-logo.png';
 import useTranslations from '#src-app/hooks/useTranslations';
+
+import { Language } from '#src-app/translations/translations';
 
 import styles from './FeedbackView.module.scss';
 
 const FeedbackView = () => {
+    const { locale, asPath, push } = useRouter();
     const { publicRuntimeConfig } = getConfig();
     const [loading, setLoading] = useState(true);
     const { translate, switchLanguage } = useTranslations();
@@ -22,8 +27,9 @@ const FeedbackView = () => {
 
     //todo: add language switch
     useEffect(() => {
-        switchLanguage('pl');
-    }, []);
+        switchLanguage(locale as Language);
+        push(asPath, null, { locale });
+    }, [locale]);
 
     return (
         <div className={styles.feedbackWrapper}>
