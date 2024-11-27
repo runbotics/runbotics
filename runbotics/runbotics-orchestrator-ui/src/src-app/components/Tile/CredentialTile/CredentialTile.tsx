@@ -10,7 +10,9 @@ import { PrivilegeType, DEFAULT_COLLECTION_COLOR, FrontCredentialDto, FrontCrede
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { getTranslatedTemplateName } from '#src-app/views/credentials/Credential/Credential.utils';
 import { collectionColors } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.utils';
+
 
 import { CredentialCard, CredentialCardContainer, CredentialCollection } from './CredentialTile.styles';
 import MenuItems from '../CredentialsCollectionTile/MenuItems/MenuItems';
@@ -44,6 +46,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
         user.privilegeType === PrivilegeType.WRITE
     );
     const hexColor = collection ? collectionColors[collection?.color].hex : collectionColors[DEFAULT_COLLECTION_COLOR].hex;
+    const template = getTranslatedTemplateName(templateName);
 
     if (loading) return <CircularProgress />;
 
@@ -64,7 +67,7 @@ const CredentialTile: FC<CredentialTileProps> = ({
                         </Typography>
                     </If>
                     <Typography mb={1}>
-                        {translate('Credential.Details.Template.Label')}: {templateName}
+                        {translate('Credential.Details.Template.Label')}: {template}
                     </Typography>
                     <If condition={!collectionId}>
                         <CredentialCollection>

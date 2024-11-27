@@ -2,14 +2,14 @@ import { FC, useEffect } from 'react';
 
 import { Grid, MenuItem, SelectChangeEvent, Typography } from '@mui/material';
 
-import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import useTranslations from '#src-app/hooks/useTranslations';
 
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 
-import { capitalizeFirstLetter } from '#src-landing/utils/utils';
 
 import GeneralInfoDropdown from './CreateGeneralInfoDropdown';
+import { getTranslatedTemplateName } from '../Credential.utils';
 
 interface TemplateDropdownProps {
     selectedValue: string;
@@ -29,10 +29,7 @@ export const TemplateDropdown: FC<TemplateDropdownProps> = ({ selectedValue, han
 
     const templatesToChoose = credentialTemplates
         ? credentialTemplates.map(template => {
-            const templateTranslationKey = `Credential.Template.${capitalizeFirstLetter(template.name)}.Name`;
-            const templateName = checkIfKeyExists(templateTranslationKey)
-                ? translate(templateTranslationKey)
-                : template.name;
+            const templateName = getTranslatedTemplateName(template.name);
 
             return (
                 <MenuItem key={template.id} value={template.id}>
