@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { CreateProcessCredentialDto } from './dto/create-process-credential.dto';
 import { Credential } from '../credential/credential.entity';
+import { EditProcessCredentialArrayDto } from './dto/update-process-credentials.dto';
 
 @Injectable()
 export class ProcessCredentialService {
@@ -75,6 +76,22 @@ export class ProcessCredentialService {
                 await manager.insert(ProcessCredential, newProcessCredential);
             }
         );
+    }
+
+    async update(processId: number, user: User, editDto: EditProcessCredentialArrayDto) {
+        try {
+            await Promise.all(editDto.map(async (credential) => {
+                const partial: Partial<ProcessCredential> = {};
+
+                partial.order = credential.order;
+
+                return this.processCredentialRepository.update({ id: credential.id }, partial);
+            }));
+
+            return this.findAllByProcessId(processId, user);
+        } catch (error) {
+            throw new Error('Failed to update credentials for processId');
+        }
     }
 
     async delete(id: string, user: User) {
