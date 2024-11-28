@@ -46,8 +46,8 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
 
                 {...attributes}
             >
-                <CredentialSwipe {...listeners}>
-                    <DragIndicatorIcon sx={{ fontSize: '30px', [':hover']: { cursor: 'grab' } }}/>
+                <CredentialSwipe {...listeners} $isPrimary={isPrimary}>
+                    <DragIndicatorIcon sx={{ fontSize: '32px', [':hover']: { cursor: 'grab' }}}/>
                 </CredentialSwipe>
                 <CredentialDetails>
                     <List sx={{ display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
@@ -79,12 +79,10 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                         </ListItem>
                     </List>
                 </CredentialDetails>
-                <CredentialDelete>
+                <CredentialDelete $isPrimary={isPrimary}>
                     <DeleteOutlineIcon
-                        color={isPrimary ? 'disabled' : 'error'}
                         onClick={() => handleDeleteDialog(credentialId)}
                         {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
-                        sx={{...(!isPrimary && { [':hover']: { cursor: 'pointer' } })}}
                     />
                 </CredentialDelete>
             </CredentialTile>
