@@ -79,19 +79,24 @@ export class ProcessCredentialService {
     }
 
     async update(processId: number, user: User, editDto: EditProcessCredentialArrayDto) {
-        try {
-            await Promise.all(editDto.map(async (credential) => {
-                const partial: Partial<ProcessCredential> = {};
+        return this.processCredentialRepository.manager.transaction(
+            async (manager) => {
+                return Promise.all(editDto.map(async (credential) => {
+                    const partial: Partial<ProcessCredential> = {};
 
-                partial.order = credential.order;
+                    partial.order = credential.order;
 
-                return this.processCredentialRepository.update({ id: credential.id }, partial);
-            }));
-
+                    return manager
+                    .getRepository(ProcessCredential)
+                    .update({ id: credential.id }, partial);
+                }));
+            }
+        ).then(() => {
             return this.findAllByProcessId(processId, user);
-        } catch (error) {
-            throw new Error('Failed to update credentials for processId');
-        }
+        })
+        .catch(() => {
+            throw new Error(`Failed to update credentials for processId: ${processId}`);
+        });
     }
 
     async delete(id: string, user: User) {
