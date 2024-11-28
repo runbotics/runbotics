@@ -25,20 +25,7 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
 }) => {
     const { translate } = useTranslations();
 
-    // const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    //     id: 'draggable',
-    // });
-    // const style = transform ? {
-    //     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    // } : undefined;
-
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-
-    const style = {
-        transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-        transition,
-        cursor: 'grab',
-    };
 
     return (
         <CredentialWrapper>
@@ -50,9 +37,17 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                     {translate('Process.Configure.Credentials.Action.PrimaryCredential')}
                 </StyledTypography>
             </If>
-            <CredentialTile $isPrimary={isPrimary} {...listeners} {...attributes} ref={setNodeRef} id={id} style={style}>
-                <CredentialSwipe>
-                    <DragIndicatorIcon sx={{ fontSize: '30px', [':hover']: { cursor: 'pointer' } }}/>
+            <CredentialTile
+                $isPrimary={isPrimary}
+                ref={setNodeRef}
+                id={id}
+                $transform={transform}
+                $transition={transition}
+
+                {...attributes}
+            >
+                <CredentialSwipe {...listeners}>
+                    <DragIndicatorIcon sx={{ fontSize: '30px', [':hover']: { cursor: 'grab' } }}/>
                 </CredentialSwipe>
                 <CredentialDetails>
                     <List sx={{ display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
@@ -87,11 +82,9 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                 <CredentialDelete>
                     <DeleteOutlineIcon
                         color={isPrimary ? 'disabled' : 'error'}
-                        sx={{[':hover']: { cursor: 'pointer' } }}
                         onClick={() => handleDeleteDialog(credentialId)}
-                        // Two lines to change after drag & drop (edit) functionality will be added
-                        // {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
-                        // sx={{...(!isPrimary && { [':hover']: { cursor: 'pointer' } })}}
+                        {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
+                        sx={{...(!isPrimary && { [':hover']: { cursor: 'pointer' } })}}
                     />
                 </CredentialDelete>
             </CredentialTile>

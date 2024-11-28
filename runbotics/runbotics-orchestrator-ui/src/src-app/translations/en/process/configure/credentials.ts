@@ -10,6 +10,7 @@ const credentialsTranslations = {
     'Process.Configure.Credentials.Modal.Add.Button.Add': 'Add',
     'Process.Configure.Credentials.Modal.Add.Info.Success': 'Successfully added process credential',
     'Process.Configure.Credentials.Modal.Add.Info.Error': 'Unexpected error occurred while adding process credential',
+    'Process.Configure.Credentials.ChangeOrder.Info.Error': 'Unexpected error occurred while updaing process credentials',
 };
 
 export default credentialsTranslations;

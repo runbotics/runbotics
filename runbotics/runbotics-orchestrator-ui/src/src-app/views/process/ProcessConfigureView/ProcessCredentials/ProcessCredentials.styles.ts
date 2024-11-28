@@ -30,7 +30,7 @@ export const ActionsColumns = styled.div`
     gap: 20px;
 `;
 
-export const ActionBox = styled.div(({ theme }) => ({
+export const ActionBox = styled.div<{ $isUpdating: boolean }>(({ theme, $isUpdating }) => ({
     display: 'flex',
     flexDirection: 'column',
     border: `2px solid ${theme.palette.grey[400]}`,
@@ -38,6 +38,8 @@ export const ActionBox = styled.div(({ theme }) => ({
     padding: '8px',
     minWidth: '300px',
     gap: '10px',
+    opacity: $isUpdating ? 0.5 : 1,
+    transition: 'opacity 0.3s ease'
 }));
 
 export const ActionBoxHeader = styled.div(({ theme }) => ({
