@@ -12,3 +12,5 @@ export interface ProcessCredentialDto
     extends Omit<ProcessCredential, "credential"> {
     credential: CredentialDto;
 }
+
+export interface UpdateProcessCredential extends Pick<ProcessCredential, "id" | "order"> {};
