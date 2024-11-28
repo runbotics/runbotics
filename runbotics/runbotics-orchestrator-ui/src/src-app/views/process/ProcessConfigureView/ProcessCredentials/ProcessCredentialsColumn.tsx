@@ -13,6 +13,8 @@ import { credentialsActions } from '#src-app/store/slices/Credentials';
 
 import { processActions } from '#src-app/store/slices/Process';
 
+import { getTranslatedTemplateName } from '#src-app/views/credentials/Credential/Credential.utils';
+
 import ActionCredential from './ActionCredential';
 import ActionCredentialAdd from './ActionCredentialAdd';
 import { ActionBox, ActionBoxContent, ActionBoxHeader } from './ProcessCredentials.styles';
@@ -70,7 +72,7 @@ export const ProcessCredentialsColumn: FC<ProcessCredentialProps> = ({
             <ActionBox $isUpdating={isUpdating}>
                 <ActionBoxHeader>
                     <Typography variant="h5" textTransform="uppercase">
-                        {actionType.name}
+                        {getTranslatedTemplateName(actionType.name)}
                     </Typography>
                 </ActionBoxHeader>
                 <SortableContext items={credentials.map((cred) => cred.name)} disabled={isUpdating}>
