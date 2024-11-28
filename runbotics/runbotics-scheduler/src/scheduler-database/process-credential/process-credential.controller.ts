@@ -7,7 +7,7 @@ import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { CreateProcessCredentialDto, createProcessCredentialSchema } from './dto/create-process-credential.dto';
-import { EditProcessCredentialArrayDto, editProcessCredentialArrayDto, editProcessCredentialSchema } from './dto/update-process-credentials.dto';
+import { EditProcessCredentialArrayDto, editProcessCredentialArrayDto } from './dto/update-process-credentials.dto';
 
 
 @UseInterceptors(TenantInterceptor)
@@ -38,11 +38,12 @@ export class ProcessCredentialController {
     @Patch('processes/:processId')
     update(
         @Param('processId', ParseIntPipe) processId: IProcess['id'],
-        @Body(new ZodValidationPipe(editProcessCredentialArrayDto)) editProcessCredentialArrayDto: EditProcessCredentialArrayDto,
+        @Body(new ZodValidationPipe(editProcessCredentialArrayDto))
+        processCredentialsDto: EditProcessCredentialArrayDto,
         @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to update credentials order');
-        return this.processCredentialService.update(processId, user, editProcessCredentialArrayDto);
+        return this.processCredentialService.update(processId, user, processCredentialsDto);
     }
 
     @Delete(':id')
