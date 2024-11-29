@@ -56,7 +56,7 @@ export class ProcessEntity {
     @CreateDateColumn({ type: 'timestamp without time zone' })
     created: string;
 
-    @UpdateDateColumn({ type: 'timestamp without time zone' })
+    @Column({ type: 'timestamp without time zone' })
     updated: string;
 
     @Column({ name: 'is_public' })
