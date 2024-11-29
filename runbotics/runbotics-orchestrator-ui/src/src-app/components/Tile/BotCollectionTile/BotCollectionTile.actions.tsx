@@ -78,7 +78,7 @@ const BotCollectionTileAction: VFC<BotCollectionTileProps> = ({
                 >
                     <MenuItem
                         onClick={() => {
-                            handleEdit(botCollection.id);
+                            handleEdit?.(botCollection.id);
                         }}
                     >
                         {translate('Bot.Collection.Actions.Modify')}
