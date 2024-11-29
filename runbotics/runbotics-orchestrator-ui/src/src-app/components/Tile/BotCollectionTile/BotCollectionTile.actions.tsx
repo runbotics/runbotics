@@ -1,7 +1,7 @@
 import React, { VFC } from 'react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IconButton, Menu } from '@mui/material';
+import { IconButton, Menu, MenuItem } from '@mui/material';
 import { FeatureKey, DefaultCollections } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
@@ -9,7 +9,6 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import BotCollectionDeleteOption from '#src-app/views/bot/BotCollectionView/Dialog/delete/BotCollectionDeleteOption';
 import BotCollectionIdentifierOption from '#src-app/views/bot/BotCollectionView/Dialog/identifier/BotCollectionIdentifierOption';
-import BotCollectionModifyOption from '#src-app/views/bot/BotCollectionView/Dialog/modify/BotCollectionModifyOption';
 
 import { BotCollectionTileProps } from './BotCollectionTile.types';
 
@@ -21,6 +20,7 @@ const publicAndGuestCollection = [
 const BotCollectionTileAction: VFC<BotCollectionTileProps> = ({
     botCollection,
     displayMode,
+    handleEdit
 }) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
     const { translate } = useTranslations();
@@ -76,10 +76,13 @@ const BotCollectionTileAction: VFC<BotCollectionTileProps> = ({
                         hasEditBotCollectionAccess && isDeleteAndModifyVisible
                     }
                 >
-                    <BotCollectionModifyOption
-                        botCollection={botCollection}
-                        displayMode={displayMode}
-                    />
+                    <MenuItem
+                        onClick={() => {
+                            handleEdit?.(botCollection.id);
+                        }}
+                    >
+                        {translate('Bot.Collection.Actions.Modify')}
+                    </MenuItem>
                 </If>
             </Menu>
         </>

@@ -8,7 +8,7 @@ import BotCollectionTileFooter from './BotCollectionTile.footer';
 import { BotCollectionTileProps } from './BotCollectionTile.types';
 import Tile, { TileAvatar } from '..';
 
-const BotCollectionTile: VFC<BotCollectionTileProps> = ({ botCollection, displayMode }) => {
+const BotCollectionTile: VFC<BotCollectionTileProps> = ({ botCollection, displayMode, handleEdit }) => {
     const router = useRouter();
 
     const handleRedirect = () => {
@@ -26,7 +26,11 @@ const BotCollectionTile: VFC<BotCollectionTileProps> = ({ botCollection, display
                 <BotCollectionTileContent botCollection={botCollection} />
             </CardActionArea>
             <Divider />
-            <BotCollectionTileFooter botCollection={botCollection} displayMode={displayMode} />
+            <BotCollectionTileFooter
+                botCollection={botCollection}
+                displayMode={displayMode}
+                handleEdit={handleEdit}
+            />
         </Tile>
     );
 };

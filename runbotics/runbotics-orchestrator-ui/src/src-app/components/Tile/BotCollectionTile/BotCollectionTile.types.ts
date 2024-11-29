@@ -5,4 +5,5 @@ import { CollectionsDisplayMode } from '../../../views/bot/BotBrowseView/BotBrow
 export interface BotCollectionTileProps {
     botCollection: BotCollectionDto;
     displayMode?: CollectionsDisplayMode;
+    handleEdit?: (collectionId: string) => void;
 }

@@ -44,7 +44,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
     const shareableUsers = useMemo(() => ({
         loading: tenantActivated.loading,
         all: tenantActivated.all.filter(user => user.email !== currentUser.email)
-    }), [tenantActivated, currentUser.email, open]);
+    }), [tenantActivated, currentUser.email]);
 
     const isOwner = !collection || currentUser.email === collection?.createdByUser?.email || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
 
@@ -63,7 +63,6 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         setName(collection ? collection.name : '');
         setDescription(collection ? collection.description : '');
         setSelectedUsers(collection ? collection.users : []);
-        setSelectedUsers([]);
         setPublicBotsIncluded(collection ? collection.publicBotsIncluded : true);
         setError(null);
     };
@@ -104,6 +103,13 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         setSelectedUsers(value);
     };
 
+    useEffect(() => {
+        setName(collection ? collection.name : '');
+        setDescription(collection ? collection.description : '');
+        setSelectedUsers(collection ? collection.users : []);
+        setPublicBotsIncluded(collection ? collection.publicBotsIncluded : true);
+    }, [collection]);
+
     return (
         <Dialog
             open={open}
@@ -123,7 +129,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
                     <TextField
                         label={translate('Bot.Collection.Dialog.Modify.Form.Name.Label')}
                         required
-                        defaultValue={name}
+                        value={name}
                         disabled={!isOwner}
                         onChange={handleNameChange}
                         size="small"
@@ -131,7 +137,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
                     />
                     <TextField
                         label={translate('Bot.Collection.Dialog.Modify.Form.Description.Label')}
-                        defaultValue={description}
+                        value={description}
                         disabled={!isOwner}
                         onChange={handleDescChange}
                         size="small"
@@ -151,6 +157,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
                         loading={shareableUsers.loading}
                         getOptionLabel={(user) => user.email}
                         defaultValue={selectedUsers}
+                        value={selectedUsers}
                         filterSelectedOptions
                         disableCloseOnSelect
                         readOnly={!isOwner}
