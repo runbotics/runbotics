@@ -5,7 +5,10 @@ export const editProcessCredentialSchema = z.object({
     order: z.number(),
 });
 
-export const editProcessCredentialArrayDto = z.array(editProcessCredentialSchema);
+export const editProcessCredentialsDto = z.object({
+    credentials: z.array(editProcessCredentialSchema),
+    templateId: z.string()
+});
 
 export type EditProcessCredentialDto = z.infer<typeof editProcessCredentialSchema>;
-export type EditProcessCredentialArrayDto = z.infer<typeof editProcessCredentialArrayDto>;
+export type EditProcessCredentialsDto = z.infer<typeof editProcessCredentialsDto>;

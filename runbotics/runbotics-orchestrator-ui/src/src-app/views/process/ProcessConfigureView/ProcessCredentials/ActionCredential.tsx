@@ -21,7 +21,13 @@ interface ActionCredentialProps {
 };
 
 const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
-    isPrimary, collectionName, credentialName, authorName, credentialId, handleDeleteDialog, id
+    isPrimary,
+    collectionName,
+    credentialName,
+    authorName,
+    credentialId,
+    handleDeleteDialog,
+    id
 }) => {
     const { translate } = useTranslations();
 

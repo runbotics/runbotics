@@ -9,6 +9,7 @@ import { useRequiredCredentialTypes } from '#src-app/credentials/useRequiredCred
 import useTranslations from '#src-app/hooks/useTranslations';
 import useWindowSize from '#src-app/hooks/useWindowSize';
 import { useDispatch, useSelector } from '#src-app/store';
+import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
 
 import {
@@ -46,6 +47,7 @@ const ProcessCredentials = () => {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [currentCredentialId, setCurrentCredentialId] = useState<CredentialId>(null);
     const [currentActionName, setCurrentActionName] = useState<string | null>(null);
+    const { credentialTemplates } = useSelector(credentialTemplatesSelector);
 
 
     const { width: windowWidth } = useWindowSize();
@@ -99,6 +101,7 @@ const ProcessCredentials = () => {
 
     useEffect(() => {
         dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
+        dispatch(credentialTemplatesActions.fetchAllTemplates());
     }, []);
 
     return (
@@ -124,14 +127,19 @@ const ProcessCredentials = () => {
             <ActionsContainer $rowCount={rowCount}>
                 {columns.map((column, idx) => (
                     <ActionsColumns key={column.count + String(idx)} >
-                        {column.actionCredentials.map(actionType =>
-                            (<ProcessCredentialsColumn
-                                key={actionType.name}
-                                actionType={actionType}
-                                handleAddDialogOpen={handleAddDialogOpen}
-                                handleDeleteDialogOpen={handleDeleteDialogOpen}
-                                processId={String(processId)}/>)
-                        )}
+                        {column.actionCredentials.map(actionType => {
+                            const templateId = credentialTemplates.find(template => template.name === actionType.name).id;
+
+                            return (
+                                <ProcessCredentialsColumn
+                                    key={actionType.name}
+                                    actionType={actionType}
+                                    processId={String(processId)}
+                                    templateId={templateId}
+                                    handleAddDialogOpen={handleAddDialogOpen}
+                                    handleDeleteDialogOpen={handleDeleteDialogOpen}
+                                />);
+                        })}
                     </ActionsColumns>
                 ))}
             </ActionsContainer>

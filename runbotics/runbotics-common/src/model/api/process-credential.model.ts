@@ -14,3 +14,8 @@ export interface ProcessCredentialDto
 }
 
 export type UpdateProcessCredential = Pick<ProcessCredential, "id" | "order">;
+
+export interface UpdateProcessCredentials {
+    credentials: UpdateProcessCredential[],
+    templateId: string
+}

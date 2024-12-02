@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 
 import { useSnackbar } from 'notistack';
 
+import { UpdateProcessCredentials } from 'runbotics-common';
+
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { credentialsActions } from '#src-app/store/slices/Credentials';
@@ -27,17 +29,19 @@ interface ProcessCredentialProps {
         credentials: CredentialInAction[];
     };
     processId: string;
+    templateId: string;
     handleAddDialogOpen: (actionName: string) => void;
-    handleDeleteDialogOpen: (credentialId: string) => void
+    handleDeleteDialogOpen: (credentialId: string) => void;
 };
 
 export const ProcessCredentialsColumn: FC<ProcessCredentialProps> = ({
     actionType,
     processId,
+    templateId,
     handleAddDialogOpen,
     handleDeleteDialogOpen
 }) => {
-    const [isUpdating, setIsUpadating] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const credentials = actionType.credentials;
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
@@ -50,17 +54,22 @@ export const ProcessCredentialsColumn: FC<ProcessCredentialProps> = ({
 
         if (oldIndex === newIndex) return;
 
-        setIsUpadating(true);
+        setIsUpdating(true);
         const updatedCredentials = changeCredentialOrder(credentials, oldIndex, newIndex);
 
-        const payload = updatedCredentials.map((credential, idx ) => ({ id: credential.id, order: idx + 1 }));
+        const credentialsToUpdate = updatedCredentials.map((credential, idx ) => ({ id: credential.id, order: idx + 1 }));
+
+        const payload: UpdateProcessCredentials = {
+            credentials: credentialsToUpdate,
+            templateId: templateId
+        };
 
         dispatch(credentialsActions.updateCredentialsAssignedToProcess({ resourceId: processId, payload }))
             .unwrap()
             .then(() => {
                 dispatch(processActions.getProcessCredentials({ resourceId: processId }))
                     .finally(() => {
-                        setIsUpadating(false);
+                        setIsUpdating(false);
                     });
             }).catch(() => {
                 enqueueSnackbar(translate('Process.Configure.Credentials.ChangeOrder.Info.Error'), {variant: 'error'});

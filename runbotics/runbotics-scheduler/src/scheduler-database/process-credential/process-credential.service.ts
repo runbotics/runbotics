@@ -6,7 +6,8 @@ import { Repository } from 'typeorm';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { CreateProcessCredentialDto } from './dto/create-process-credential.dto';
 import { Credential } from '../credential/credential.entity';
-import { EditProcessCredentialArrayDto } from './dto/update-process-credentials.dto';
+import { EditProcessCredentialsDto } from './dto/update-process-credentials.dto';
+import _ from 'lodash';
 
 @Injectable()
 export class ProcessCredentialService {
@@ -18,14 +19,16 @@ export class ProcessCredentialService {
         private readonly processService: ProcessService,
     ) {}
 
-    async findAllByProcessId(processId: number, user: User) {
+    async findAllByProcessId(processId: number, user: User, templateId?: string) {
         await this.processService.checkAccessAndGetById(processId, user);
+        const templateFindOption = templateId ? { templateId } : {};
 
         return this.processCredentialRepository.find({
             where: {
                 process: { id: processId },
                 credential: {
                     tenantId: user.tenantId,
+                    ...templateFindOption
                 }
             },
             relations: ['credential.template', 'credential.createdBy', 'credential.collection']
@@ -78,10 +81,28 @@ export class ProcessCredentialService {
         );
     }
 
-    async update(processId: number, user: User, processCredentialsToUpdate: EditProcessCredentialArrayDto) {
+    async update(processId: number, user: User, processCredentialsToUpdate: EditProcessCredentialsDto) {
+        await this.processService.checkAccessAndGetById(processId, user);
+
+        const currentProcessCredentialsForTemplate = await this.findAllByProcessId(
+            processId,
+            user,
+            processCredentialsToUpdate.templateId
+        );
+
+        const intersection = _.intersectionBy(
+            processCredentialsToUpdate.credentials,
+            currentProcessCredentialsForTemplate,
+            'id'
+        );
+
+        if (currentProcessCredentialsForTemplate.length !== intersection.length) {
+            throw new BadRequestException();
+        }
+
         return this.processCredentialRepository.manager.transaction(
             async (manager) => {
-                return Promise.all(processCredentialsToUpdate.map(async (credential) => {
+                return Promise.all(processCredentialsToUpdate.credentials.map(async (credential) => {
                     const partial: Partial<ProcessCredential> = {};
 
                     partial.order = credential.order;
