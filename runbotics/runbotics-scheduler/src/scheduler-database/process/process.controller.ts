@@ -186,7 +186,7 @@ export class ProcessController {
     }
 
     @Get()
-    @FeatureKeys(FeatureKey.PROCESS_LIST_READ, FeatureKey.ALL_PROCESSES_READ)
+    @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     async getAll(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
         @UserDecorator() user: User,
