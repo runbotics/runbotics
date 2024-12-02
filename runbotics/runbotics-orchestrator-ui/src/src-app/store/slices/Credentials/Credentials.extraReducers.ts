@@ -2,7 +2,19 @@ import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 
 import { CredentialsState } from './Credentials.state';
-import { fetchAllCredentialsInCollection, fetchAllCredentialsAccessibleInTenant, fetchOneCredential, createCredential, updateCredential, deleteCredential, updateAttribute, fetchAllCredentialsByTemplateAndProcess, fetchAllCredentialsAssignedToProcess, fetchAllCredentialsAccessibleInTenantByPage } from './Credentials.thunks';
+import {
+    fetchAllCredentialsInCollection,
+    fetchAllCredentialsAccessibleInTenant,
+    fetchOneCredential,
+    createCredential,
+    updateCredential,
+    deleteCredential,
+    updateAttribute,
+    fetchAllCredentialsByTemplateAndProcess,
+    fetchAllCredentialsAssignedToProcess,
+    fetchAllCredentialsAccessibleInTenantByPage,
+    updateCredentialsAssignedToProcess
+} from './Credentials.thunks';
 
 const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<CredentialsState>) => {
     builder
@@ -119,6 +131,18 @@ const builderCredentialsExtraReducers = (builder: ActionReducerMapBuilder<Creden
             state.allProcessAssigned = action.payload;
         })
         .addCase(fetchAllCredentialsAssignedToProcess.rejected, state => {
+            state.loading = false;
+        })
+
+        // update process credential order
+        .addCase(updateCredentialsAssignedToProcess.pending, state => {
+            state.loading = true;
+        })
+        .addCase(updateCredentialsAssignedToProcess.fulfilled, (state, action) => {
+            state.loading = false;
+            state.allProcessAssigned = action.payload;
+        })
+        .addCase(updateCredentialsAssignedToProcess.rejected, state => {
             state.loading = false;
         });
 };

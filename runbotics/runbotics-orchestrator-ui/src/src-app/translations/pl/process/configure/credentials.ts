@@ -12,6 +12,7 @@ const credentialsTranslations: typeof englishCredentialsTranslations = {
     'Process.Configure.Credentials.Modal.Add.Button.Add': 'Dodaj',
     'Process.Configure.Credentials.Modal.Add.Info.Success': 'Pomyślnie dodano poświadczenie do procesu',
     'Process.Configure.Credentials.Modal.Add.Info.Error': 'Wystąpił nieoczekiwany błąd podczas dodawania poświadczenia',
+    'Process.Configure.Credentials.ChangeOrder.Info.Error': 'Wystąpił nieoczekiwany błąd podczas aktualizacji poświadczeń',
 };
 
 export default credentialsTranslations;

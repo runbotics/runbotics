@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { ActionCredentialType, ProcessCredentialDto } from 'runbotics-common';
 
-import { ActionCredentials, ActionSortedColumns } from './ProcessCredentials.types';
+import { ActionCredentials, ActionSortedColumns, CredentialInAction } from './ProcessCredentials.types';
 
 export const ACTION_MIN_WIDTH = 400;
 export const MARGIN_LIMIT = 800;
@@ -35,3 +35,17 @@ export const sortByColumns = (actions: ActionCredentials, rowCount: number): Act
             acc[minIndex].count += actions[actionType].length + 1;
             return acc;
         }, _.range(rowCount).map(() => ({ count: 0, actionCredentials: [] })));
+
+export const changeCredentialOrder = (
+    array: CredentialInAction[],
+    fromIndex: number,
+    toIndex: number
+) => {
+    const item = array[fromIndex];
+    const newArray = [...array];
+
+    newArray.splice(fromIndex, 1);
+    newArray.splice(toIndex, 0, item);
+
+    return newArray;
+};

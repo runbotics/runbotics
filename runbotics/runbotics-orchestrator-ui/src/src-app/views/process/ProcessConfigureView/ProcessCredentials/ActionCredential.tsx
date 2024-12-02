@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 
+import { useSortable } from '@dnd-kit/sortable';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Divider, List, ListItem, Typography } from '@mui/material';
@@ -16,12 +17,21 @@ interface ActionCredentialProps {
     authorName: string;
     credentialId: string;
     handleDeleteDialog: (credentialId: string) => void;
+    id: string;
 };
 
 const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
-    isPrimary, collectionName, credentialName, authorName, credentialId, handleDeleteDialog
+    isPrimary,
+    collectionName,
+    credentialName,
+    authorName,
+    credentialId,
+    handleDeleteDialog,
+    id
 }) => {
     const { translate } = useTranslations();
+
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
     return (
         <CredentialWrapper>
@@ -33,9 +43,17 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                     {translate('Process.Configure.Credentials.Action.PrimaryCredential')}
                 </StyledTypography>
             </If>
-            <CredentialTile $isPrimary={isPrimary}>
-                <CredentialSwipe>
-                    <DragIndicatorIcon sx={{ fontSize: '30px', [':hover']: { cursor: 'pointer' } }}/>
+            <CredentialTile
+                $isPrimary={isPrimary}
+                ref={setNodeRef}
+                id={id}
+                $transform={transform}
+                $transition={transition}
+
+                {...attributes}
+            >
+                <CredentialSwipe {...listeners} $isPrimary={isPrimary}>
+                    <DragIndicatorIcon sx={{ fontSize: '32px', [':hover']: { cursor: 'grab' }}}/>
                 </CredentialSwipe>
                 <CredentialDetails>
                     <List sx={{ display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
@@ -67,14 +85,9 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                         </ListItem>
                     </List>
                 </CredentialDetails>
-                <CredentialDelete>
+                <CredentialDelete $isPrimary={isPrimary}>
                     <DeleteOutlineIcon
-                        color={isPrimary ? 'disabled' : 'error'}
-                        sx={{[':hover']: { cursor: 'pointer' } }}
-                        onClick={() => handleDeleteDialog(credentialId)}
-                        // Two lines to change after drag & drop (edit) functionality will be added
-                        // {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
-                        // sx={{...(!isPrimary && { [':hover']: { cursor: 'pointer' } })}}
+                        {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
                     />
                 </CredentialDelete>
             </CredentialTile>

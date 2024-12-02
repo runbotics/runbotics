@@ -1,11 +1,13 @@
 import { User } from '#/scheduler-database/user/user.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ProcessCredential } from './process-credential.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { CreateProcessCredentialDto } from './dto/create-process-credential.dto';
 import { Credential } from '../credential/credential.entity';
+import { EditProcessCredentialsDto } from './dto/update-process-credentials.dto';
+import _ from 'lodash';
 
 @Injectable()
 export class ProcessCredentialService {
@@ -17,14 +19,16 @@ export class ProcessCredentialService {
         private readonly processService: ProcessService,
     ) {}
 
-    async findAllByProcessId(processId: number, user: User) {
+    async findAllByProcessId(processId: number, user: User, templateId?: string) {
         await this.processService.checkAccessAndGetById(processId, user);
+        const templateFindOption = templateId ? { templateId } : {};
 
         return this.processCredentialRepository.find({
             where: {
                 process: { id: processId },
                 credential: {
                     tenantId: user.tenantId,
+                    ...templateFindOption
                 }
             },
             relations: ['credential.template', 'credential.createdBy', 'credential.collection']
@@ -75,6 +79,50 @@ export class ProcessCredentialService {
                 await manager.insert(ProcessCredential, newProcessCredential);
             }
         );
+    }
+
+    async update(processId: number, user: User, processCredentialsToUpdate: EditProcessCredentialsDto) {
+        const currentProcessCredentialsForTemplate = await this.findAllByProcessId(
+            processId,
+            user,
+            processCredentialsToUpdate.templateId
+        );
+
+        if (!currentProcessCredentialsForTemplate.length) throw new BadRequestException();
+
+        const intersection = _.intersectionBy(
+            processCredentialsToUpdate.credentials,
+            currentProcessCredentialsForTemplate,
+            'id'
+        );
+
+        if (currentProcessCredentialsForTemplate.length !== intersection.length) {
+            throw new BadRequestException();
+        }
+
+        return this.processCredentialRepository.manager.transaction(
+            async (manager) => {
+                await Promise.all(processCredentialsToUpdate.credentials.map(async (credential) => {
+                    const partial: Partial<ProcessCredential> = {};
+
+                    partial.order = credential.order;
+
+                    return manager
+                        .getRepository(ProcessCredential)
+                        .update({ id: credential.id }, partial);
+                }));
+            }
+        )
+        .then(() => {
+            return this.findAllByProcessId(processId, user);
+        })
+        .catch((error) => {
+            if (error.message) {
+                throw new BadRequestException(`Failed to update credentials. ${error.message}`);
+            }
+
+            throw new BadRequestException(`Failed to update credentials for processId: ${processId}`);
+        });
     }
 
     async delete(id: string, user: User) {
