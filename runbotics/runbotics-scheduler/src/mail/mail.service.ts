@@ -125,7 +125,7 @@ export class MailService {
         if (!failedProcess.isPublic) {
             const filteredSubscribers = subscribers.reduce((acc, subscriber) => {
                 const adminSubscriber = subscriber.authorities
-                    .find(authority => authority.name === Role.ROLE_ADMIN);
+                    .find(authority => [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN].includes(authority.name));
 
                 adminSubscriber && acc.push(subscriber.email);
 
