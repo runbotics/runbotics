@@ -19,9 +19,9 @@ export const updateProcessSchema = createProcessSchema.omit({
 export type UpdateProcessDto = z.infer<typeof updateProcessSchema>;
 
 export type PartialUpdateProcessDto =
-    UpdateExecutionInfoDto &
-    UpdateAttendedDto &
-    UpdateTriggerableDto &
-    UpdateProcessBotCollectionDto &
-    UpdateProcessBotSystemDto &
+    UpdateExecutionInfoDto |
+    UpdateAttendedDto |
+    UpdateTriggerableDto |
+    UpdateProcessBotCollectionDto |
+    UpdateProcessBotSystemDto |
     UpdateProcessOutputTypeDto;

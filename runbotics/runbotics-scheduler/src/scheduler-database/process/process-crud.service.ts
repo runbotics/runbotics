@@ -146,12 +146,22 @@ export class ProcessCrudService {
 
         const partial: Partial<ProcessEntity> = {};
 
-        partial.isAttended = processDto.isAttended;
-        partial.isTriggerable = processDto.isTriggerable;
-        partial.botCollectionId = processDto.botCollection?.id;
-        partial.systemName = processDto.system?.name;
-        partial.outputType = processDto.output?.type;
-        partial.executionInfo = processDto.executionInfo;
+        if ('executionInfo' in processDto) {
+            partial.executionInfo = processDto.executionInfo;
+        } else if ('isAttended' in processDto) {
+            partial.isAttended = processDto.isAttended;
+        } else if ('isTriggerable' in processDto) {
+            partial.isTriggerable = processDto.isTriggerable;
+        } else if ('botCollection' in processDto) {
+            partial.botCollectionId = processDto.botCollection?.id;
+        } else if ('system' in processDto) {
+            partial.systemName = processDto.system?.name;
+        } else if ('output' in processDto) {
+            partial.outputType = processDto.output?.type;
+        } else {
+            throw new BadRequestException();
+        }
+
         partial.updated = dayjs().toISOString();
 
         await this.processRepository.update({ id, tenantId: user.tenantId }, partial);
