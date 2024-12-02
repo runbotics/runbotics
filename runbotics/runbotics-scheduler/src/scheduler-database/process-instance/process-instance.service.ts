@@ -35,7 +35,13 @@ export class ProcessInstanceService {
     ) {}
 
     async create(processInstanceDto: CreateProcessInstanceDto) {
-        return this.processInstanceRepository.save(processInstanceDto);
+        const createdInstance = await this.processInstanceRepository.save(
+            processInstanceDto
+        );
+        return this.processInstanceRepository.findOne({
+            where: { id: createdInstance.id },
+            relations: RELATIONS,
+        });
     }
 
     async getAll(user: User, specs: Specs<ProcessInstance>) {

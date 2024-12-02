@@ -9,14 +9,19 @@ import { UpdateExecutionInfoDto } from './update-execution-info.dto';
 
 export const updateProcessSchema = createProcessSchema.omit({
     processCollection: true,
+    executionInfo: true,
+    isAttended: true,
+    isTriggerable: true,
+    system: true,
+    output: true,
 });
 
 export type UpdateProcessDto = z.infer<typeof updateProcessSchema>;
 
 export type PartialUpdateProcessDto =
-    UpdateExecutionInfoDto &
-    UpdateAttendedDto &
-    UpdateTriggerableDto &
-    UpdateProcessBotCollectionDto &
-    UpdateProcessBotSystemDto &
+    UpdateExecutionInfoDto |
+    UpdateAttendedDto |
+    UpdateTriggerableDto |
+    UpdateProcessBotCollectionDto |
+    UpdateProcessBotSystemDto |
     UpdateProcessOutputTypeDto;

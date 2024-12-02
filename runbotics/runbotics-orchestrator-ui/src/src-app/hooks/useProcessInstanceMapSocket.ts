@@ -33,10 +33,9 @@ const useProcessInstanceMapSocket = () => {
                 allActiveMap[processId]?.processInstance?.status !== ProcessInstanceStatus.IN_PROGRESS &&
                 processInstance.status === ProcessInstanceStatus.IN_PROGRESS
             ) {
-                const lastRun = (new Date()).toISOString();
                 dispatch(processActions.updateProcessPage({
                     id: processInstance.process.id,
-                    lastRun
+                    lastRun: processInstance?.process?.lastRun,
                 }));
             }
 

@@ -58,6 +58,7 @@ services:
       - MAIL_USERNAME=
       - MAIL_PASSWORD=
       - ENCRYPTION_KEY=O3OTmXJpIIyUb3ByT4t65xblgsxfDGQu
+      - TZ=UTC
     ports:
       - 4000:4000
     depends_on:
@@ -79,7 +80,7 @@ services:
       - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
       - RUNBOTICS_INSTALLATION_ID=admin
-      - RUNBOTICS_USERNAME=runbotics
+      - RUNBOTICS_USERNAME=runbotics@localhost
       - RUNBOTICS_PASSWORD=runbotics
       - RUNBOTICS_HOT_RELOAD=true
       - RUNBOTICS_BOT_COLLECTION=30bdfb61-841b-519b-ce54-1d0e56877f73

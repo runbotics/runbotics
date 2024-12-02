@@ -62,7 +62,7 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
                                 }),
                             },
                             equals: {
-                                ...(collectionId !== null && { collectionId }),
+                                processCollectionId: collectionId !== null ? collectionId : 'null',
                             },
                         },
                     },

@@ -17,6 +17,7 @@ import { BotCollection } from '../bot-collection/bot-collection.entity';
 import { TagService } from '../tags/tag.service';
 import { isTenantAdmin } from '#/utils/authority.utils';
 import { EMPTY_PROCESS_DEFINITION } from './consts/empty-process-definition';
+import dayjs from 'dayjs';
 
 const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
 
@@ -110,6 +111,7 @@ export class ProcessCrudService {
         process.description = processDto.description;
         process.definition = processDto.definition;
         process.isPublic = processDto.isPublic;
+        process.updated = dayjs().toISOString();
 
         if (processDto.tags?.length > 15) {
             throw new BadRequestException('Tag limit of 15 exceeded');
@@ -144,12 +146,23 @@ export class ProcessCrudService {
 
         const partial: Partial<ProcessEntity> = {};
 
-        partial.isAttended = processDto.isAttended;
-        partial.isTriggerable = processDto.isTriggerable;
-        partial.botCollectionId = processDto.botCollection?.id;
-        partial.systemName = processDto.system?.name;
-        partial.outputType = processDto.output?.type;
-        partial.executionInfo = processDto.executionInfo;
+        if ('executionInfo' in processDto) {
+            partial.executionInfo = processDto.executionInfo;
+        } else if ('isAttended' in processDto) {
+            partial.isAttended = processDto.isAttended;
+        } else if ('isTriggerable' in processDto) {
+            partial.isTriggerable = processDto.isTriggerable;
+        } else if ('botCollection' in processDto) {
+            partial.botCollectionId = processDto.botCollection?.id;
+        } else if ('system' in processDto) {
+            partial.systemName = processDto.system?.name;
+        } else if ('output' in processDto) {
+            partial.outputType = processDto.output?.type;
+        } else {
+            throw new BadRequestException();
+        }
+
+        partial.updated = dayjs().toISOString();
 
         await this.processRepository.update({ id, tenantId: user.tenantId }, partial);
 
@@ -169,6 +182,7 @@ export class ProcessCrudService {
         process.definition = updateDiagramDto.definition;
         process.executionInfo = updateDiagramDto.executionInfo;
         process.editor = user;
+        process.updated = dayjs().toISOString();
 
         await this.processRepository.save(process);
 
