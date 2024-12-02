@@ -1,5 +1,5 @@
 import { User } from '#/scheduler-database/user/user.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ProcessCredential } from './process-credential.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -78,24 +78,25 @@ export class ProcessCredentialService {
         );
     }
 
-    async update(processId: number, user: User, editDto: EditProcessCredentialArrayDto) {
+    async update(processId: number, user: User, processCredentialsToUpdate: EditProcessCredentialArrayDto) {
         return this.processCredentialRepository.manager.transaction(
             async (manager) => {
-                return Promise.all(editDto.map(async (credential) => {
+                return Promise.all(processCredentialsToUpdate.map(async (credential) => {
                     const partial: Partial<ProcessCredential> = {};
 
                     partial.order = credential.order;
 
                     return manager
-                    .getRepository(ProcessCredential)
-                    .update({ id: credential.id }, partial);
+                        .getRepository(ProcessCredential)
+                        .update({ id: credential.id }, partial);
                 }));
             }
-        ).then(() => {
+        )
+        .then(() => {
             return this.findAllByProcessId(processId, user);
         })
         .catch(() => {
-            throw new Error(`Failed to update credentials for processId: ${processId}`);
+            throw new BadRequestException(`Failed to update credentials for processId: ${processId}`);
         });
     }
 

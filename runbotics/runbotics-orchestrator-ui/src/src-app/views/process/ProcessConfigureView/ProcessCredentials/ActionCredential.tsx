@@ -81,7 +81,6 @@ const ActionCredential: FunctionComponent<ActionCredentialProps> = ({
                 </CredentialDetails>
                 <CredentialDelete $isPrimary={isPrimary}>
                     <DeleteOutlineIcon
-                        onClick={() => handleDeleteDialog(credentialId)}
                         {...(!isPrimary && { onClick: () => handleDeleteDialog(credentialId) })}
                     />
                 </CredentialDelete>

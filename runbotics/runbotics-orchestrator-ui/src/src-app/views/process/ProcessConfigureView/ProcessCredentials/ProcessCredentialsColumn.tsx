@@ -58,7 +58,7 @@ export const ProcessCredentialsColumn: FC<ProcessCredentialProps> = ({
         dispatch(credentialsActions.updateCredentialsAssignedToProcess({ resourceId: processId, payload }))
             .unwrap()
             .then(() => {
-                dispatch(processActions.getProcessCredentials({resourceId: processId}))
+                dispatch(processActions.getProcessCredentials({ resourceId: processId }))
                     .finally(() => {
                         setIsUpadating(false);
                     });

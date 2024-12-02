@@ -42,7 +42,6 @@ export class ProcessCredentialController {
         processCredentialsDto: EditProcessCredentialArrayDto,
         @UserDecorator() user: User,
     ) {
-        this.logger.log('REST request to update credentials order');
         return this.processCredentialService.update(processId, user, processCredentialsDto);
     }
 

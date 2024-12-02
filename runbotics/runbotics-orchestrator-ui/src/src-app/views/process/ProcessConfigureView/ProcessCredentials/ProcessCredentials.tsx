@@ -123,7 +123,7 @@ const ProcessCredentials = () => {
             </Header>
             <ActionsContainer $rowCount={rowCount}>
                 {columns.map((column, idx) => (
-                    <ActionsColumns key={column.count + String(idx) } >
+                    <ActionsColumns key={column.count + String(idx)} >
                         {column.actionCredentials.map(actionType =>
                             (<ProcessCredentialsColumn
                                 key={actionType.name}
