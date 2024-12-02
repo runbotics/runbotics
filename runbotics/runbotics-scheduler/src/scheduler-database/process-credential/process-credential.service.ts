@@ -82,13 +82,13 @@ export class ProcessCredentialService {
     }
 
     async update(processId: number, user: User, processCredentialsToUpdate: EditProcessCredentialsDto) {
-        await this.processService.checkAccessAndGetById(processId, user);
-
         const currentProcessCredentialsForTemplate = await this.findAllByProcessId(
             processId,
             user,
             processCredentialsToUpdate.templateId
         );
+
+        if (!currentProcessCredentialsForTemplate.length) throw new BadRequestException();
 
         const intersection = _.intersectionBy(
             processCredentialsToUpdate.credentials,
@@ -102,7 +102,7 @@ export class ProcessCredentialService {
 
         return this.processCredentialRepository.manager.transaction(
             async (manager) => {
-                return Promise.all(processCredentialsToUpdate.credentials.map(async (credential) => {
+                await Promise.all(processCredentialsToUpdate.credentials.map(async (credential) => {
                     const partial: Partial<ProcessCredential> = {};
 
                     partial.order = credential.order;
@@ -116,7 +116,11 @@ export class ProcessCredentialService {
         .then(() => {
             return this.findAllByProcessId(processId, user);
         })
-        .catch(() => {
+        .catch((error) => {
+            if (error.message) {
+                throw new BadRequestException(`Failed to update credentials. ${error.message}`);
+            }
+
             throw new BadRequestException(`Failed to update credentials for processId: ${processId}`);
         });
     }

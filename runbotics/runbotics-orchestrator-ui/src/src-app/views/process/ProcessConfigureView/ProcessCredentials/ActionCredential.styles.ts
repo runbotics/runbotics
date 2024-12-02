@@ -67,7 +67,7 @@ export const CredentialDelete = styled.div<{ $isPrimary: boolean }>(({ theme, $i
 
     [':hover']: {
         backgroundColor: !$isPrimary && theme.palette.grey[300],
-        cursor: !$isPrimary && 'pointer'
+        cursor: !$isPrimary ? 'pointer' : 'auto'
     }
 }));
 
