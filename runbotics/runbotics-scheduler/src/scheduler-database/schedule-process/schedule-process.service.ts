@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueueService } from '#/queue/queue.service';
 import { TriggerEvent } from 'runbotics-common';
+import dayjs from 'dayjs';
 
 const relations = ['process', 'user', 'process.system', 'process.botCollection'];
 
@@ -51,6 +52,11 @@ export class ScheduleProcessService {
                 throw new BadRequestException('Cannot find process');
             });
 
+        await this.processService.partialUpdate({
+            id: process.id,
+            updated: dayjs().toISOString(),
+        });
+
         const newScheduleProcess = new ScheduleProcess();
         newScheduleProcess.cron = scheduleProcessDto.cron;
         newScheduleProcess.inputVariables = scheduleProcessDto.inputVariables;
@@ -75,10 +81,15 @@ export class ScheduleProcessService {
     }
 
     async delete(id: number) {
-        await this.scheduleProcessRepository
-            .findOneByOrFail({ id }).catch(() => {
+        const scheduleProcess = await this.scheduleProcessRepository
+            .findOneOrFail({ where: { id }, relations }).catch(() => {
                 throw new BadRequestException('Cannot find schedule process with provided id');
             });
+
+        await this.processService.partialUpdate({
+            id: scheduleProcess.process.id,
+            updated: dayjs().toISOString(),
+        });
 
         await this.scheduleProcessRepository.delete(id);
         await this.queueService.deleteScheduledJob(id);
