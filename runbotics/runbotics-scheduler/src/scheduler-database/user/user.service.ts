@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { FindManyOptions, In, Repository } from 'typeorm';
@@ -12,6 +12,7 @@ import { Logger } from '#/utils/logger';
 import { TenantService } from '../tenant/tenant.service';
 import { Tenant } from '../tenant/tenant.entity';
 import { isTenantAdmin } from '#/utils/authority.utils';
+import postgresError from '#/utils/postgresError';
 
 @Injectable()
 export class UserService {
@@ -114,7 +115,13 @@ export class UserService {
             throw new BadRequestException('Cannot find user with provided id');
         });
 
-        await this.userRepository.delete(id);
+        await this.userRepository.delete(id).catch((err) => {
+            if (err.code === postgresError.foreign_key_violation) {
+                throw new ConflictException('User has related resources');
+            }
+
+            throw new BadRequestException();
+        });
     }
 
     hasFeatureKey(user: User, featureKey: FeatureKey) {

@@ -49,9 +49,15 @@ export const updateInTenant = ApiTenantResource.patch<UserDto, PartialUserDto>(
     'users/updateInTenant', USERS_PATH
 );
 
-export const deleteUser = createAsyncThunk<void, { id: number; }>(
-    'users/delete',
-    ({ id }) => axios.delete(`/api/scheduler/users/${id}`)
+export const deleteUser = createAsyncThunk<
+    void,
+    { id: number },
+    { rejectValue: { statusCode: number; message: string; } }
+>('users/delete', ({ id }, { rejectWithValue }) =>
+    axios
+        .delete(`/api/scheduler/users/${id}`)
+        .then((response) => response.data)
+        .catch((error) => rejectWithValue(error.response.data))
 );
 
 export const deleteUserInTenant = ApiTenantResource.delete<void>(

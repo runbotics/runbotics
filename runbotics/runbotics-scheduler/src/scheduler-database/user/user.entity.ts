@@ -9,7 +9,7 @@ export class User {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
 
-    @Column({ type: 'varchar', length: 191 })
+    @Column({ type: 'varchar', length: 191, unique: true })
     email: string;
 
     @Column({ name: 'password_hash', type: 'varchar', select: false, length: 60 })
