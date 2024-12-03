@@ -137,6 +137,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
         },
         [JiraCloudAction.GET_PROJECT_WORKLOGS]: {
             id: JiraCloudAction.GET_PROJECT_WORKLOGS,
+            credentialType: ActionCredentialType.ATLASSIAN,
             label: translate('Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Label'),
             script: JiraCloudAction.GET_PROJECT_WORKLOGS,
             runner: Runner.DESKTOP_SCRIPT,
@@ -248,6 +249,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
         },
         [JiraCloudAction.GET_BOARD_SPRINTS]: {
             id: JiraCloudAction.GET_BOARD_SPRINTS,
+            credentialType: ActionCredentialType.ATLASSIAN,
             label: translate('Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Label'),
             script: JiraCloudAction.GET_BOARD_SPRINTS,
             runner: Runner.DESKTOP_SCRIPT,
@@ -311,6 +313,7 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
         },
         [JiraCloudAction.GET_SPRINT_TASKS]: {
             id: JiraCloudAction.GET_SPRINT_TASKS,
+            credentialType: ActionCredentialType.ATLASSIAN,
             label: translate('Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Label'),
             script: JiraCloudAction.GET_SPRINT_TASKS,
             runner: Runner.DESKTOP_SCRIPT,
