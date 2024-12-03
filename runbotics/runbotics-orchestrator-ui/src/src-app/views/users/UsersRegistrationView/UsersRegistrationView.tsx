@@ -156,13 +156,11 @@ const UsersRegistrationView: FC = () => {
 
     return (
         <>
-            {isDeleteDialogVisible && (
-                <DeleteUserDialog
-                    open={isDeleteDialogVisible}
-                    onClose={() => setIsDeleteDialogVisible(false)}
-                    getSelectedUsers={getSelectedUsers}
-                />
-            )}
+            <DeleteUserDialog
+                open={isDeleteDialogVisible}
+                onClose={() => setIsDeleteDialogVisible(false)}
+                getSelectedUsers={getSelectedUsers}
+            />
             <StyledActionsContainer>
                 <StyledSearchFilterBox>
                     <StyledTextField
