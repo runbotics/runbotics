@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
@@ -18,6 +18,8 @@ import { TagService } from '../tags/tag.service';
 import { isTenantAdmin } from '#/utils/authority.utils';
 import { EMPTY_PROCESS_DEFINITION } from './consts/empty-process-definition';
 import dayjs from 'dayjs';
+import { findProcessActionTemplates } from '#/utils/bpmn/findProcessActionTemplates';
+import { ProcessCredentialService } from '../process-credential/process-credential.service';
 
 const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
 
@@ -30,6 +32,8 @@ export class ProcessCrudService {
         private globalVariableRepository: Repository<GlobalVariable>,
         @InjectRepository(BotCollection)
         private botCollectionRepository: Repository<BotCollection>,
+        @Inject(forwardRef(() => ProcessCredentialService))
+        private readonly processCredentialService: ProcessCredentialService,
         private readonly tagService: TagService,
     ) {
     }
@@ -177,6 +181,16 @@ export class ProcessCrudService {
 
         process.globalVariables = await this.globalVariableRepository.findBy({
             id: In(updateDiagramDto.globalVariableIds),
+        });
+
+        const allProcessCredentials = await this.processCredentialService.findAllByProcessId(process.id, user);
+
+        const credentialTypes = await findProcessActionTemplates(updateDiagramDto.definition);
+
+        allProcessCredentials.forEach(credential => {
+            if (!credentialTypes.includes(credential.credential.template.name)) {
+                this.processCredentialService.delete(credential.id, user);
+            }
         });
 
         process.definition = updateDiagramDto.definition;
