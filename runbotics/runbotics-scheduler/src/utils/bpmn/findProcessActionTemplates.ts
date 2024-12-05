@@ -22,12 +22,12 @@ export const findProcessActionTemplates = async (xmlStr: string) => {
 
     const bpmnElements = parsedProcessDefinition.elementsById;
 
-    const credentialTypes = Object.entries(bpmnElements).reduce((acc: string[], [elementId, element]) => {
-            if (isCredentialType(element) && !acc.includes(element.$attrs['camunda:credentialType'])) {
-                acc.push(element.$attrs['camunda:credentialType']);
+    const credentialTypes = Object.entries(bpmnElements).reduce((acc, [elementId, element]) => {
+            if (isCredentialType(element)) {
+                acc.add(element.$attrs['camunda:credentialType']);
             }
             return acc;
-        }, []);
+        }, new Set<string>());
 
-    return credentialTypes;
+    return [...credentialTypes];
 };

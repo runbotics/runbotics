@@ -1,6 +1,6 @@
 import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
+import { DataSource, FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { BotSystemType, ProcessDto, ProcessOutputType, Role } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';
@@ -35,6 +35,7 @@ export class ProcessCrudService {
         @Inject(forwardRef(() => ProcessCredentialService))
         private readonly processCredentialService: ProcessCredentialService,
         private readonly tagService: TagService,
+        private readonly dataSource: DataSource,
     ) {
     }
 
@@ -185,22 +186,27 @@ export class ProcessCrudService {
 
         const allProcessCredentials = await this.processCredentialService.findAllByProcessId(process.id, user);
 
-        const credentialTypes = await findProcessActionTemplates(updateDiagramDto.definition);
+        return await this.dataSource.transaction(async (manager) => {
+            const credentialTypes = await findProcessActionTemplates(updateDiagramDto.definition);
 
-        allProcessCredentials.forEach(credential => {
-            if (!credentialTypes.includes(credential.credential.template.name)) {
-                this.processCredentialService.delete(credential.id, user);
-            }
+            allProcessCredentials.forEach(async (credential) => {
+                if (!credentialTypes.includes(credential.credential.template.name)) {
+                    await this.processCredentialService.delete(credential.id, user);
+                }
+            });
+
+            process.definition = updateDiagramDto.definition;
+            process.executionInfo = updateDiagramDto.executionInfo;
+            process.editor = user;
+            process.updated = dayjs().toISOString();
+
+            await manager.save(process);
+
+            return await manager.getRepository(ProcessEntity).findOne({
+                where: { id },
+                relations: RELATIONS,
+            });
         });
-
-        process.definition = updateDiagramDto.definition;
-        process.executionInfo = updateDiagramDto.executionInfo;
-        process.editor = user;
-        process.updated = dayjs().toISOString();
-
-        await this.processRepository.save(process);
-
-        return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
     }
 
     getAll(user: User, specs: Specs<ProcessEntity>) {
