@@ -19,7 +19,7 @@ export const useUsersTabs = (): UsersTabsHookProps[]  => {
         {
             value: UsersTab.WAITING_USERS,
             label: translate('Users.Browse.Tabs.Registration.Label'),
-            featureKeys: [FeatureKey.TENANT_READ_USER, FeatureKey.USERS_PAGE_READ]
+            featureKeys: [FeatureKey.TENANT_READ_USER, FeatureKey.MANAGE_INACTIVE_USERS]
         }
     ];
 
