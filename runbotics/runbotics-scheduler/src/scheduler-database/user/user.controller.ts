@@ -51,7 +51,7 @@ export class UserController {
     // -------------- ENDPOINTS FOR ADMIN ------------------
 
     @Get('users/Page')
-    @FeatureKeys(FeatureKey.USERS_PAGE_READ)
+    @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS)
     getAllUsersByPage(
         @Specifiable(UserCriteria) specs: Specs<User>,
         @Pageable() paging: Paging
@@ -60,7 +60,7 @@ export class UserController {
     }
 
     @Patch('users/:id')
-    @FeatureKeys(FeatureKey.USERS_PAGE_READ)
+    @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS)
     updateUser(
         @UserDecorator() user: User,
         @Param('id', ParseIntPipe) userId: User['id'],
@@ -71,7 +71,7 @@ export class UserController {
 
     @Delete('users/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    @FeatureKeys(FeatureKey.USERS_PAGE_READ)
+    @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS)
     async deleteUser(@Param('id', ParseIntPipe) userId: User['id']) {
         await this.userService.delete(userId);
     }

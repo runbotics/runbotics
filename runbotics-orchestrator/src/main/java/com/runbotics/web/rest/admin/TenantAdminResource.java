@@ -19,7 +19,7 @@ import tech.jhipster.web.util.PaginationUtil;
 
 @RestController
 @RequestMapping("/api/admin/tenants")
-@PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_ALL_ACCESS + "')")
+@PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.MANAGE_ALL_TENANTS + "')")
 public class TenantAdminResource {
 
     @Value("${jhipster.clientApp.name}")
