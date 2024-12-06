@@ -20,6 +20,7 @@ import { EMPTY_PROCESS_DEFINITION } from './consts/empty-process-definition';
 import dayjs from 'dayjs';
 import { findProcessActionTemplates } from '#/utils/bpmn/findProcessActionTemplates';
 import { ProcessCredentialService } from '../process-credential/process-credential.service';
+import { ProcessCredential } from '../process-credential/process-credential.entity';
 
 const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
 
@@ -183,26 +184,35 @@ export class ProcessCrudService {
         });
 
         const allProcessCredentials = await this.processCredentialService.findAllByProcessId(process.id, user);
+        const credentialTypes = await findProcessActionTemplates(updateDiagramDto.definition);
 
-        await this.processRepository.manager.transaction(
-            async (manager) => {
-            const credentialTypes = await findProcessActionTemplates(updateDiagramDto.definition);
+        const queryRunner = this.processRepository.manager.connection.createQueryRunner();
+        await queryRunner.startTransaction();
 
-            allProcessCredentials.forEach(async (credential) => {
+        try {
+            for (const credential of allProcessCredentials) {
                 if (!credentialTypes.includes(credential.credential.template.name)) {
-                    await this.processCredentialService.delete(credential.id, user);
+                    await queryRunner.manager.delete(ProcessCredential, credential.id);
                 }
-            });
+            }
 
             process.definition = updateDiagramDto.definition;
             process.executionInfo = updateDiagramDto.executionInfo;
             process.editor = user;
             process.updated = dayjs().toISOString();
 
-            await manager.save(process);
-        });
+            await queryRunner.manager.save(ProcessEntity, process);
+
+            await queryRunner.commitTransaction();
+        } catch {
+            await queryRunner.rollbackTransaction();
+            throw new BadRequestException();
+        } finally {
+            await queryRunner.release();
+        }
 
         return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
+
     }
 
     getAll(user: User, specs: Specs<ProcessEntity>) {
