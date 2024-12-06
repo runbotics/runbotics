@@ -97,15 +97,20 @@ const ProcessBuildView: FC = () => {
                         resourceId: process.id,
                     },
                 ),
-            );
-
-            dispatch(processActions.clearErrors());
-            enqueueSnackbar(translate('Process.MainView.Toast.Save.Success'), {
-                variant: 'success',
-                autoHideDuration: SNACKBAR_DURATION,
-            });
-            recordProcessSaveSuccess({ processName: process.name, processId: String(process.id) });
-
+            )
+                .unwrap()
+                .then(() => {
+                    dispatch(processActions.clearErrors());
+                    enqueueSnackbar(translate('Process.MainView.Toast.Save.Success'), {
+                        variant: 'success',
+                        autoHideDuration: SNACKBAR_DURATION,
+                    });
+                    recordProcessSaveSuccess({ processName: process.name, processId: String(process.id) });
+                })
+                .catch((error) => {
+                    dispatch(processActions.fetchProcessById(process.id));
+                    throw new Error(error);
+                });
         } catch (error) {
             enqueueSnackbar(translate('Process.MainView.Toast.Save.Failed'), {
                 variant: 'error',
