@@ -34,9 +34,7 @@ export class ProcessCrudService {
         private botCollectionRepository: Repository<BotCollection>,
         @Inject(forwardRef(() => ProcessCredentialService))
         private readonly processCredentialService: ProcessCredentialService,
-        private readonly tagService: TagService,
-        private readonly dataSource: DataSource,
-    ) {
+        private readonly tagService: TagService,    ) {
     }
 
     async checkCreateProcessViability(user: User) {
@@ -186,7 +184,8 @@ export class ProcessCrudService {
 
         const allProcessCredentials = await this.processCredentialService.findAllByProcessId(process.id, user);
 
-        return await this.dataSource.transaction(async (manager) => {
+        await this.processRepository.manager.transaction(
+            async (manager) => {
             const credentialTypes = await findProcessActionTemplates(updateDiagramDto.definition);
 
             allProcessCredentials.forEach(async (credential) => {
@@ -201,12 +200,9 @@ export class ProcessCrudService {
             process.updated = dayjs().toISOString();
 
             await manager.save(process);
-
-            return await manager.getRepository(ProcessEntity).findOne({
-                where: { id },
-                relations: RELATIONS,
-            });
         });
+
+        return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
     }
 
     getAll(user: User, specs: Specs<ProcessEntity>) {
