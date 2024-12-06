@@ -191,7 +191,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 );
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [modeler, definition]);
+        }, [modeler, definition, process]);
 
         useEffect(() => {
             modelerRef.current = modeler;
