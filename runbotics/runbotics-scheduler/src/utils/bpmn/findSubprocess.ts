@@ -13,12 +13,12 @@ interface ExtensionElement {
     }[];
 }
 
-interface ModdleElement extends Pick<BaseElement, 'id' | '$attrs' | '$type'> {
+export interface ModdleElement extends Pick<BaseElement, 'id' | '$attrs' | '$type'> {
     implementation: string;
     extensionElements: ExtensionElement;
 }
 
-interface Definition extends Definitions {
+export interface Definition extends Definitions {
     elementsById: {
         [key: BaseElement['id']]: ModdleElement;
     };

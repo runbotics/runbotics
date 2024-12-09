@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
+import { DataSource, FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { BotSystemType, ProcessDto, ProcessOutputType, Role } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';
@@ -18,6 +18,9 @@ import { TagService } from '../tags/tag.service';
 import { isTenantAdmin } from '#/utils/authority.utils';
 import { EMPTY_PROCESS_DEFINITION } from './consts/empty-process-definition';
 import dayjs from 'dayjs';
+import { findProcessActionTemplates } from '#/utils/bpmn/findProcessActionTemplates';
+import { ProcessCredentialService } from '../process-credential/process-credential.service';
+import { ProcessCredential } from '../process-credential/process-credential.entity';
 
 const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
 
@@ -30,8 +33,9 @@ export class ProcessCrudService {
         private globalVariableRepository: Repository<GlobalVariable>,
         @InjectRepository(BotCollection)
         private botCollectionRepository: Repository<BotCollection>,
-        private readonly tagService: TagService,
-    ) {
+        @Inject(forwardRef(() => ProcessCredentialService))
+        private readonly processCredentialService: ProcessCredentialService,
+        private readonly tagService: TagService,    ) {
     }
 
     async checkCreateProcessViability(user: User) {
@@ -179,14 +183,36 @@ export class ProcessCrudService {
             id: In(updateDiagramDto.globalVariableIds),
         });
 
-        process.definition = updateDiagramDto.definition;
-        process.executionInfo = updateDiagramDto.executionInfo;
-        process.editor = user;
-        process.updated = dayjs().toISOString();
+        const allProcessCredentials = await this.processCredentialService.findAllByProcessId(process.id, user);
+        const credentialTypes = await findProcessActionTemplates(updateDiagramDto.definition);
 
-        await this.processRepository.save(process);
+        const queryRunner = this.processRepository.manager.connection.createQueryRunner();
+        await queryRunner.startTransaction();
+
+        try {
+            for (const credential of allProcessCredentials) {
+                if (!credentialTypes.includes(credential.credential.template.name)) {
+                    await queryRunner.manager.delete(ProcessCredential, credential.id);
+                }
+            }
+
+            process.definition = updateDiagramDto.definition;
+            process.executionInfo = updateDiagramDto.executionInfo;
+            process.editor = user;
+            process.updated = dayjs().toISOString();
+
+            await queryRunner.manager.save(ProcessEntity, process);
+
+            await queryRunner.commitTransaction();
+        } catch {
+            await queryRunner.rollbackTransaction();
+            throw new BadRequestException();
+        } finally {
+            await queryRunner.release();
+        }
 
         return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
+
     }
 
     getAll(user: User, specs: Specs<ProcessEntity>) {
