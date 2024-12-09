@@ -7,25 +7,25 @@ export class ProcessesTabAdminAccess1733152944444 implements MigrationInterface 
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const authorityRepository = await queryRunner.manager.getRepository(Authority);
-        const roleAdmin = await authorityRepository.findOneOrFail({ where: { name: Role.ROLE_ADMIN } });
-        roleAdmin.featureKeys.push(
+        const roleTenantAdmin = await authorityRepository.findOneOrFail({ where: { name: Role.ROLE_TENANT_ADMIN } });
+        roleTenantAdmin.featureKeys.push(
             { name: FeatureKeyEnum.ALL_PROCESSES_READ },
             { name: FeatureKeyEnum.PROCESS_COLLECTION_ALL_ACCESS },
             { name: FeatureKeyEnum.PROCESS_ALL_ACCESS, }
         );
-        await authorityRepository.save(roleAdmin);
+        await authorityRepository.save(roleTenantAdmin);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         const authorityRepository = await queryRunner.manager.getRepository(Authority);
-        const roleAdmin = await authorityRepository.findOneOrFail({ where: { name: Role.ROLE_ADMIN } });
-        roleAdmin.featureKeys = roleAdmin.featureKeys.filter(
+        const roleTenantAdmin = await authorityRepository.findOneOrFail({ where: { name: Role.ROLE_TENANT_ADMIN } });
+        roleTenantAdmin.featureKeys = roleTenantAdmin.featureKeys.filter(
             featureKey => ![
                 FeatureKeyEnum.ALL_PROCESSES_READ,
                 FeatureKeyEnum.PROCESS_COLLECTION_ALL_ACCESS,
                 FeatureKeyEnum.PROCESS_ALL_ACCESS,
             ].includes(featureKey.name)
         );
-        await authorityRepository.save(roleAdmin);
+        await authorityRepository.save(roleTenantAdmin);
     }
 }
