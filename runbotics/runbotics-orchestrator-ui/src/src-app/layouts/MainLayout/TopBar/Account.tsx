@@ -61,7 +61,7 @@ const Account: FC = () => {
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
-    const hasUserReadAccess = useFeatureKey([FeatureKey.TENANT_READ_USER, FeatureKey.USERS_PAGE_READ], { oneOf: true });
+    const hasUsersPageAccess = useFeatureKey([FeatureKey.TENANT_READ_USER, FeatureKey.MANAGE_INACTIVE_USERS], { oneOf: true });
 
     const { pathname } = useRouter();
 
@@ -134,7 +134,7 @@ const Account: FC = () => {
                 open={isOpen}
                 onBlur={handleClose}
             >
-                <If condition={hasUserReadAccess}>
+                <If condition={hasUsersPageAccess}>
                     <MenuLink href={usersHref}>
                         <MenuItem>
                             {translate('Account.Users')}
