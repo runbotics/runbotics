@@ -238,6 +238,7 @@
     "Process.Details.Modeler.Actions.File.WriteFile.FilePath": "File path (e.g. C://RunBotics/example.txt)",
     "Process.Details.Modeler.Actions.File.WriteFile.Content": "Content",
     "Process.Details.Modeler.Actions.General.Console.Log.Label": "Console Log",
+    "Process.Details.Modeler.Actions.General.Aichat.Label": "Chat AI (klasyfikator)",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Message": "Message",
     "Process.Details.Modeler.Actions.General.ConsoleLog.Variables": "Variables",
     "Process.Details.Modeler.Actions.General.ConsoleLog.ValidationError": "Field cannot be empty",

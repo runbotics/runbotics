@@ -5,6 +5,37 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { IBpmnAction, Runner } from './types';
 
 const getGeneralActions: () => Record<string, IBpmnAction> = () => ({
+    'general.aichat': {
+        id: 'general.aichat',
+        label: 'Chat AI',
+        script: 'general.aichat',
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            message: {
+                                title: 'Message to classify',
+                                type: 'string'
+                            },
+                            categories: {
+                                title: 'Categories',
+                                type: 'string'
+                            }
+                        }
+                    }
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+            },
+            formData: {},
+        },
+    },
     'general.console.log': {
         id: GeneralAction.CONSOLE_LOG,
         label: translate('Process.Details.Modeler.Actions.General.Console.Log.Label'),

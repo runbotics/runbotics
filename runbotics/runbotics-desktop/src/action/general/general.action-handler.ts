@@ -7,12 +7,16 @@ import { RuntimeService } from '#core/bpm/runtime';
 import { orchestratorAxios } from '#config';
 import getBotSystem from '#utils/botSystem';
 import { ConsoleLogActionInput, ConsoleLogActionOutput, DelayActionInput, DelayActionOutput, StartProcessActionInput, StartProcessActionOutput, ThrowErrorActionInput, ThrowErrorActionOutput } from './general.types';
+import { ChatPromptTemplate } from '@langchain/core/prompts';
+import { ChatOpenAI } from '@langchain/openai';
+import { z } from 'zod';
+
 
 export type GeneralActionRequest =
-| DesktopRunRequest<GeneralAction.DELAY, DelayActionInput>
-| DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
-| DesktopRunRequest<GeneralAction.CONSOLE_LOG, ConsoleLogActionInput>
-| DesktopRunRequest<GeneralAction.THROW_ERROR, ThrowErrorActionInput>;
+    | DesktopRunRequest<GeneralAction.DELAY, DelayActionInput>
+    | DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
+    | DesktopRunRequest<GeneralAction.CONSOLE_LOG, ConsoleLogActionInput>
+    | DesktopRunRequest<GeneralAction.THROW_ERROR, ThrowErrorActionInput>;
 
 @Injectable()
 export default class GeneralActionHandler extends StatelessActionHandler {
@@ -104,7 +108,35 @@ export default class GeneralActionHandler extends StatelessActionHandler {
         throw new Error(input.message);
     }
 
-    run(request: GeneralActionRequest) {
+    async chatAi(input: any) {
+        const taggingPrompt = ChatPromptTemplate.fromTemplate(
+            `Answer the message best with your knowledge to this question:
+            {input}
+            `
+        );
+
+        const classificationSchema = z.object({
+            answer: z.string().describe('the best answer for user question')
+        });
+
+        // LLM
+        const llm = new ChatOpenAI({
+            temperature: 0,
+            model: 'gpt-3.5-turbo-0125',
+            apiKey: process.env.aitoken,
+        });
+        // Name is optional, but gives the models more clues as to what your schema represents
+        const llmWihStructuredOutput = llm.withStructuredOutput(classificationSchema, {
+            name: 'extractor',
+        });
+
+        const taggingChain = taggingPrompt.pipe(llmWihStructuredOutput);
+        this.logger.debug('input.message', input.message);
+        const result = await taggingChain.invoke({ input: input.message });
+        return result;
+    }
+
+    run(request: any) {
         switch (request.script) {
             case GeneralAction.DELAY:
                 return this.delay(request.input);
@@ -114,8 +146,10 @@ export default class GeneralActionHandler extends StatelessActionHandler {
                 return this.startProcess(request);
             case GeneralAction.THROW_ERROR:
                 return this.throwError(request.input);
+            case 'general.aichat':
+                return this.chatAi(request.input);
             default:
-                throw new Error('Action not found');
+                return this.chatAi(request.input);
         }
     }
 }
