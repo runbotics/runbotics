@@ -25,9 +25,7 @@ export class AuthorityFeatureKeyUpdate1733313074050 implements MigrationInterfac
                 ('ROLE_TENANT_ADMIN', 'SCHEDULER_JOBS_DELETE'),
                 ('ROLE_TENANT_ADMIN', 'PROCESS_IS_TRIGGERABLE_EDIT'),
                 ('ROLE_TENANT_ADMIN', 'PROCESS_IS_TRIGGERABLE_READ'),
-                ('ROLE_TENANT_ADMIN', 'PROCESS_COLLECTION_ALL_ACCESS'),
-                ('ROLE_TENANT_ADMIN', 'BOT_COLLECTION_ALL_ACCESS'),
-                ('ROLE_TENANT_ADMIN', 'PROCESS_ALL_ACCESS')
+                ('ROLE_TENANT_ADMIN', 'BOT_COLLECTION_ALL_ACCESS')
         `);
     }
 
@@ -53,9 +51,7 @@ export class AuthorityFeatureKeyUpdate1733313074050 implements MigrationInterfac
                 'SCHEDULER_JOBS_DELETE',
                 'PROCESS_IS_TRIGGERABLE_EDIT',
                 'PROCESS_IS_TRIGGERABLE_READ',
-                'PROCESS_COLLECTION_ALL_ACCESS',
-                'BOT_COLLECTION_ALL_ACCESS',
-                'PROCESS_ALL_ACCESS'
+                'BOT_COLLECTION_ALL_ACCESS'
             )
         `);
     }
