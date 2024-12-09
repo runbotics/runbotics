@@ -31,13 +31,9 @@ export const hasAuthorities = (user: AuthState['user'], authorities: any[]) => {
 export const hasRoleAccess = (user: UserDto, roles: Role[]) => {
     if (roles.length === 0) return true;
 
-    if (!user || !user.roles)
-    { return false; }
+    if (!user || !user.roles) return false;
 
-
-    for (const role of roles)
-    { if (!user.roles.includes(role))
-    { return false; } }
+    if (!roles.some(role => user.roles.includes(role))) return false;
 
     return true;
 };
