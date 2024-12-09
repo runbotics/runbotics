@@ -134,7 +134,7 @@ const Account: FC = () => {
                 open={isOpen}
                 onBlur={handleClose}
             >
-                <If condition={hasUserReadAccess}>
+                <If condition={hasUsersPageAccess}>
                     <MenuLink href={usersHref}>
                         <MenuItem>
                             {translate('Account.Users')}
