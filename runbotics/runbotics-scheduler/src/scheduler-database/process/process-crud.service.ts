@@ -12,7 +12,7 @@ import { GlobalVariable } from '#/scheduler-database/global-variable/global-vari
 import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { mapToWhereOptionsArray, Specs } from '#/utils/specification/specifiable.decorator';
-import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
+import { BotCollectionDefaultCollections } from '#/scheduler-database/bot-collection/bot-collection.consts';
 import { BotCollection } from '../bot-collection/bot-collection.entity';
 import { TagService } from '../tags/tag.service';
 import { isTenantAdmin } from '#/utils/authority.utils';

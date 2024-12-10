@@ -18,14 +18,22 @@ export class ProcessContextSecret {
     @Column('uuid', { name: 'tenant_id' })
     tenantId: string;
 
-    @ManyToOne(() => ProcessContext, processContext => processContext.secrets)
+    @ManyToOne(
+        () => ProcessContext,
+        processContext => processContext.secrets,
+        { onDelete: 'CASCADE' },
+    )
     @JoinColumn({ name: 'process_context_id' })
     processContext: ProcessContext;
 
     @Column('uuid', { name: 'process_context_id' })
     processContextId: string;
 
-    @OneToOne(() => Secret, secret => secret.processContextSecret)
+    @OneToOne(
+        () => Secret,
+        secret => secret.processContextSecret,
+        { onDelete: 'CASCADE' },
+    )
     @JoinColumn({ name: 'secret_id' })
     secret: Secret;
 

@@ -17,7 +17,11 @@ export class Tag {
     @ManyToOne(() => Tenant, tenant => tenant.id, { nullable: false })
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
-    
-    @ManyToMany(() => ProcessEntity, process => process.tags)
+
+    @ManyToMany(
+        () => ProcessEntity,
+        process => process.tags,
+        { onDelete: 'CASCADE' },
+    )
     processes: ProcessEntity[];
 }

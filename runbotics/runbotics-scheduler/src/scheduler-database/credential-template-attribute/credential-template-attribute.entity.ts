@@ -13,7 +13,11 @@ export class CredentialTemplateAttribute {
     @Column({ name: 'description', nullable: true })
     description: string;
 
-    @ManyToOne(() => CredentialTemplate, credentialTemplate => credentialTemplate.attributes, { onDelete: 'CASCADE' })
+    @ManyToOne(
+        () => CredentialTemplate,
+        credentialTemplate => credentialTemplate.attributes,
+        { onDelete: 'CASCADE' },
+    )
     @JoinColumn({ name: 'template_id' })
     template: CredentialTemplate;
 

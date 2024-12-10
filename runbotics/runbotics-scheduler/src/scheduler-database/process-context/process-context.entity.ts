@@ -15,7 +15,11 @@ export class ProcessContext {
     @Column('uuid', { name: 'tenant_id' })
     tenantId: string;
 
-    @OneToOne(() => ProcessEntity, process => process.context)
+    @OneToOne(
+        () => ProcessEntity,
+        process => process.context,
+        { onDelete: 'CASCADE' },
+    )
     @JoinColumn({ name: 'process_id' })
     process: ProcessEntity;
 

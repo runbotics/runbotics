@@ -64,11 +64,19 @@ export class BotEntity implements IBot {
     @Column({ name: 'system', default: BotSystemType.LINUX, length: 50 })
     systemName: BotSystemType;
 
-    @ManyToOne(() => User)
+    @ManyToOne(
+        () => User,
+        { onDelete: 'CASCADE' },
+    )
     @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
     user: User;
 
-    @ManyToOne(() => BotCollection, { nullable: false })
+    @ManyToOne(
+        () => BotCollection,
+        {
+            nullable: false,
+            onDelete: 'CASCADE',
+        })
     @JoinColumn([{ name: 'collection_id', referencedColumnName: 'id' }])
     collection: BotCollection;
 

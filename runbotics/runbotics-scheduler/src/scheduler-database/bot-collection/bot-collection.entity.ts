@@ -42,14 +42,23 @@ export class BotCollection implements IBotCollection {
     })
     tenantId: string;
 
-    @ManyToOne(() => User, { nullable: false })
+    @ManyToOne(
+        () => User,
+        {
+            nullable: false,
+            onDelete: 'CASCADE',
+        },
+    )
     @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
     createdByUser: User;
 
     @OneToMany(() => BotEntity, bot => bot.collection)
     bots: BotEntity[];
 
-    @ManyToMany(() => User)
+    @ManyToMany(
+        () => User,
+        { onDelete: 'CASCADE' },
+    )
     @JoinTable({
         name: 'bot_collection_user',
         joinColumn: { name: 'bot_collection_id', referencedColumnName: 'id' },
