@@ -70,9 +70,10 @@ export class ProcessInstance {
     })
     processId: ProcessEntity['id'];
 
-    @ManyToOne(() => ProcessEntity, {
-        onDelete: 'CASCADE',
-    })
+    @ManyToOne(
+        () => ProcessEntity,
+        { onDelete: 'CASCADE' },
+    )
     @JoinColumn({ name: 'process_id' })
     process: ProcessEntity;
 
@@ -107,7 +108,10 @@ export class ProcessInstance {
     @Column({ type: 'text', nullable: true })
     error?: string;
 
-    @ManyToOne(() => TriggerEvent)
+    @ManyToOne(
+        () => TriggerEvent,
+        { onUpdate: 'CASCADE' },
+    )
     @Column({
         type: 'character varying',
         length: 50,

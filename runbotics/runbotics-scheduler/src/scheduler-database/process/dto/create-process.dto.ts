@@ -4,7 +4,7 @@ import { processOutputReferenceSchema } from '#/scheduler-database/process-outpu
 import { tagReferenceSchema } from '#/scheduler-database/tags/dto/tag-reference';
 import { botSystemReferenceSchema } from '#/scheduler-database/bot-system/dto/bot-system-reference';
 import { processCollectionReferenceSchema } from '#/database/process-collection/dto/process-collection-reference';
-import { botCollectionReferenceSchema } from '#/database/bot-collection/dto/bot-collection-reference';
+import { botCollectionReferenceSchema } from '#/scheduler-database/bot-collection/dto/bot-collection-reference';
 import { BotSystemType, ProcessOutputType } from 'runbotics-common';
 
 export const createProcessSchema = z.object({

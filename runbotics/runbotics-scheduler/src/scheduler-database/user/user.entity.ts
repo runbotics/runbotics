@@ -58,7 +58,13 @@ export class User {
     @Column({ name: 'last_modified_by', type: 'varchar', length: 50 })
     lastModifiedBy: string;
 
-    @ManyToMany(() => Authority, { eager: true })
+    @ManyToMany(
+        () => Authority,
+        {
+            eager: true,
+            onDelete: 'CASCADE',
+        },
+    )
     @JoinTable({
         name: 'jhi_user_authority',
         joinColumn: { name: 'user_id', referencedColumnName: 'id' },
