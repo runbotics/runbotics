@@ -33,7 +33,7 @@ export class GlobalVariableController {
         @UserDecorator() user: User
     ) {
         this.logger.log('REST request to get all global variables by user with id: ', user.id);
-        return this.globalVariableService.getAll(tenantId, user);
+        return this.globalVariableService.getAll(tenantId);
     }
 
     @Get(':id')
@@ -41,10 +41,9 @@ export class GlobalVariableController {
     async getGlobalVariable(
         @Param('id', ParseIntPipe) id: number,
         @Param('tenantId') tenantId: Tenant['id'],
-        @UserDecorator() user: User
     ) {
         this.logger.log('REST request to get global variable by id: ', id);
-        const globalVariable = await this.globalVariableService.getById(tenantId, user, id);
+        const globalVariable = await this.globalVariableService.getById(tenantId, id);
 
         if (!globalVariable) {
             this.logger.error('Cannot find global variable with id: ', id);
