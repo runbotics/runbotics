@@ -1,4 +1,4 @@
-import { Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import { Entity, JoinTable, ManyToMany, PrimaryColumn } from 'typeorm';
 import { FeatureKey } from '../feature-key/feature-key.entity';
 import { IFeatureKey, Role as RoleEnum } from 'runbotics-common';
 
@@ -7,7 +7,14 @@ export class Authority {
     @PrimaryColumn({ type: 'varchar', length: 50 })
     name: RoleEnum;
 
-    @ManyToMany(() => FeatureKey, { eager: true })
+    @ManyToMany(
+        () => FeatureKey,
+        {
+            eager: true,
+            onDelete: 'CASCADE',
+            onUpdate: 'CASCADE',
+        },
+    )
     @JoinTable({
         name: 'authority_feature_key',
         joinColumn: { name: 'authority', referencedColumnName: 'name' },

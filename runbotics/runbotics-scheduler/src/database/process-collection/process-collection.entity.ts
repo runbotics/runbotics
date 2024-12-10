@@ -18,7 +18,10 @@ export class ProcessCollectionEntity {
     @ManyToOne(
         () => ProcessCollectionEntity,
         processCollection => processCollection.children,
-        { nullable: true },
+        {
+            nullable: true,
+            onDelete: 'CASCADE',
+        },
     )
     @JoinColumn({ name: 'parent_id' })
     parent: ProcessCollectionEntity | null;

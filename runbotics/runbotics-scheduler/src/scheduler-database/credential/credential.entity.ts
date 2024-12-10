@@ -37,7 +37,8 @@ export class Credential {
 
     @ManyToOne(
         () => CredentialCollection,
-        (collection) => collection.credentials
+        (collection) => collection.credentials,
+        { onDelete: 'CASCADE' },
     )
     @JoinColumn({ name: 'collection_id' })
     collection: CredentialCollection;
@@ -75,7 +76,8 @@ export class Credential {
 
     @ManyToOne(
         () => CredentialTemplate,
-        (credentialTemplate) => credentialTemplate.credentials
+        (credentialTemplate) => credentialTemplate.credentials,
+        { onDelete: 'CASCADE' },
     )
     @JoinColumn({ name: 'template_id' })
     template: CredentialTemplate;
