@@ -40,7 +40,6 @@ const EditCredential = () => {
             })
             .catch(() => {
                 router.replace('/404');
-
             });
     }, [credentialId, credentialCollections]);
 
