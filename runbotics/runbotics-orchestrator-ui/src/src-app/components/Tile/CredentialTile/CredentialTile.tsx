@@ -55,9 +55,9 @@ const CredentialTile: FC<CredentialTileProps> = ({
     };
 
     return (
-        <CredentialCardContainer >
+        <CredentialCardContainer onClick={handleClick}>
             <Tile leftbordercolor={`4px solid ${hexColor}`}>
-                <CredentialCard onClick={handleClick}>
+                <CredentialCard>
                     <Typography variant="h4" sx={{ paddingBottom: '16px' }}>
                         {credential.name}
                     </Typography>

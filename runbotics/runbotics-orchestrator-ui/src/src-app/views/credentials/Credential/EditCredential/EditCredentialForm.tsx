@@ -53,10 +53,15 @@ export const EditCredentialForm: FC<EditCredentialFormProps> = ({ open: isOpen, 
                 enqueueSnackbar(translate('Credential.Form.Edit.Success', { name: credentialFormState.name }), { variant: 'success' });
                 dispatch(
                     credentialsActions.fetchAllCredentialsAccessibleInTenantByPage({
-                        pageParams: { page: 0, size: pageSize, filter: {
-                            equals: {
-                                collectionId: collectionId ? collectionId : ''}
-                        } }
+                        pageParams: {
+                            page: 0,
+                            size: pageSize,
+                            filter: {
+                                equals: {
+                                    collectionId: collectionId ? collectionId : ''
+                                }
+                            }
+                        }
                     })
                 );
                 closeDialog();
