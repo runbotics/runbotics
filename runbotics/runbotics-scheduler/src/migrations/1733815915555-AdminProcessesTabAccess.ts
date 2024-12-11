@@ -1,15 +1,15 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
-import { FeatureKey as FeatureKeyEnum, Role } from 'runbotics-common';
 import { Authority } from '#/scheduler-database/authority/authority.entity';
+import { Role, FeatureKey } from 'runbotics-common';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class ProcessesTabAdminAccess1733815815555 implements MigrationInterface {
-    name = 'ProcessesTabAdminAccess1733815815555 ';
+export class AdminProcessesTabAccess1733815915555 implements MigrationInterface {
+    name = 'AdminProcessesTabAccess1733815915555';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const authorityRepository = await queryRunner.manager.getRepository(Authority);
         const roleAdmin = await authorityRepository.findOneOrFail({ where: { name: Role.ROLE_ADMIN } });
         roleAdmin.featureKeys.push(
-            { name: FeatureKeyEnum.ALL_PROCESSES_READ },
+            { name: FeatureKey.ALL_PROCESSES_READ },
         );
         await authorityRepository.save(roleAdmin);
     }
@@ -18,7 +18,7 @@ export class ProcessesTabAdminAccess1733815815555 implements MigrationInterface 
         const authorityRepository = await queryRunner.manager.getRepository(Authority);
         const roleAdmin = await authorityRepository.findOneOrFail({ where: { name: Role.ROLE_ADMIN } });
         roleAdmin.featureKeys = roleAdmin.featureKeys.filter(
-            featureKey => FeatureKeyEnum.ALL_PROCESSES_READ !== featureKey.name
+            featureKey => FeatureKey.ALL_PROCESSES_READ !== featureKey.name
         );
         await authorityRepository.save(roleAdmin);
     }
