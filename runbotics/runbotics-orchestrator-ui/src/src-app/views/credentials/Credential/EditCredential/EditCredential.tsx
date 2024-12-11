@@ -3,11 +3,10 @@ import { useEffect } from 'react';
 import { Grid, Typography } from '@mui/material';
 
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { useSelector } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
 import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
@@ -32,8 +31,17 @@ const EditCredential = () => {
     const isNewCredential = isCreatedNow(credential?.createdAt);
 
     useEffect(() => {
-        dispatch(credentialsActions.fetchOneCredential({ resourceId: credentialId }));
-        if (!credentialCollections) dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+        dispatch(credentialsActions.fetchOneCredential({ resourceId: credentialId }))
+            .unwrap()
+            .then(() => {
+                if (!credentialCollections) {
+                    dispatch(credentialCollectionsActions.fetchAllCredentialCollections());
+                }
+            })
+            .catch(() => {
+                router.replace('/404');
+
+            });
     }, [credentialId, credentialCollections]);
 
     return (
