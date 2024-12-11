@@ -24,7 +24,7 @@
     "Login.Form.Password.Required": "Password is required",
     "Login.SwitchToRegisterMessage": "Don't have an account? Sign up",
     "Login.Error.NoInternet": "No internet connection",
-    "Login.Error.4xx": "Incorrect e-mail and/or password or the user already exists",
+    "Login.Error.4xx": "Bad credentials or the user does not exist",
     "Login.Error.5xx": "An unexpected server error has occurred. If the problem persists - contact us via the contact form on the homepage",
     "Login.Error.UnexpectedError": "Unhandled error has occurred. Contact us via the contact form on the homepage"
 }
