@@ -24,10 +24,9 @@ export class GlobalVariableService {
         private readonly processRepository: Repository<ProcessEntity>,
     ) {}
 
-    getAll(tenantId: string, user: User) {
+    getAll(tenantId: string) {
         const findOptions: FindOptionsWhere<GlobalVariable> = {
             tenantId,
-            ...(!isTenantAdmin(user) && { creator: { id: user.id } })
         };
 
         return this.globalVariableRepository
@@ -36,10 +35,10 @@ export class GlobalVariableService {
                 .map(globalVariable => this.formatUserDTO(globalVariable)));
     }
 
-    getById(tenantId: string, user: User, id: number) {
+    getById(tenantId: string, id: number) {
         const findOptions: FindOptionsWhere<GlobalVariable> = {
-            tenantId, id,
-            ...(!isTenantAdmin(user) && { creator: { id: user.id } })
+            id,
+            tenantId,
         };
 
         return this.globalVariableRepository

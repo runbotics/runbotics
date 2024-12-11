@@ -70,6 +70,7 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
     const tagNameFitSearch = (tagName: string) => Boolean(tagName.match(RegExp(searchValue, 'ig')));
 
     useEffect(() => {
+        if (!refProcessTileContent.current || Number.isNaN(refProcessTileContent.current.offsetHeight)) return;
         setExpandedHeight(refProcessTileContent.current.offsetHeight + COMBINED_TILE_CONTENT_PADDING_VALUE);
     }, [refProcessTileContent]);
 

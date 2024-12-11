@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "2.11.0-SNAPSHOT.112",
+    "version": "2.11.0-SNAPSHOT.118",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -88,7 +88,7 @@
         "socket.io-client": "^4.4.1",
         "tiny-svg": "^2.2.2",
         "classnames": "^2.3.1",
-        "json-schema": "^0.3.0",
+        "json-schema": "0.4.0",
         "runbotics-common": "workspace:^1.0.0",
         "styled-components": "^5.3.3",
         "cronstrue": "^1.123.0",

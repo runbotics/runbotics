@@ -121,7 +121,7 @@ export class BotCollectionService {
 
 
     findForUser(user: User, specs: Specs<BotCollection>) {
-        if (this.userService.hasFeatureKey(user, FeatureKey.TENANT_ALL_ACCESS)) {
+        if (this.userService.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS)) {
             return this.botCollectionRepository.find(
                 {
                     where: [
@@ -206,7 +206,7 @@ export class BotCollectionService {
     }
 
     async findIds(user: User, specs: Specs<BotCollection>, paging: Paging) {
-        if (this.userService.hasFeatureKey(user, FeatureKey.TENANT_ALL_ACCESS)) {
+        if (this.userService.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS)) {
             return this.findIdsForAdmin(user, specs, paging);
         }
         return this.findIdsForUser(user, specs, paging);
@@ -252,7 +252,7 @@ export class BotCollectionService {
 
     async findPageForUser(user: User, specs: Specs<BotCollection>, paging: Paging) {
         // preserved java version functionality
-        if (this.userService.hasFeatureKey(user, FeatureKey.TENANT_ALL_ACCESS)) {
+        if (this.userService.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS)) {
             const ids = await this.findIdsForAdmin(user, specs, paging);
             const options: FindManyOptions<BotCollection> = {
                 where: { tenantId: user.tenantId, id: In(ids) },

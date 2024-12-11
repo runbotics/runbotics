@@ -167,8 +167,8 @@ export enum FeatureKey {
     // used for api/admin/users/limited
     BASIC_USER_READ = 'BASIC_USER_READ',
 
-    // Access to users page, manage users
-    USERS_PAGE_READ = 'USERS_PAGE_READ',
+    // Access to manage inactive users in all tenants
+    MANAGE_INACTIVE_USERS = 'MANAGE_INACTIVE_USERS',
 
     // Allow to read process output types
     PROCESS_OUTPUT_TYPE_READ = 'PROCESS_OUTPUT_TYPE_READ',
@@ -190,8 +190,8 @@ export enum FeatureKey {
     // Allow to delete collection of processes (processes page -> COLLECTIONS tab -> 3 vertical dots -> "delete" option)
     PROCESS_COLLECTION_DELETE = 'PROCESS_COLLECTION_DELETE',
 
-    // Read/write access to every tenant resource
-    TENANT_ALL_ACCESS = 'TENANT_ALL_ACCESS',
+    // Access to manage tenants
+    MANAGE_ALL_TENANTS = 'MANAGE_ALL_TENANTS',
 
     // Allows to read the resources assigned to the tenant
     TENANT_READ = 'TENANT_READ',

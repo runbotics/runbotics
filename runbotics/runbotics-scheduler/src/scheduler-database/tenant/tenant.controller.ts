@@ -73,13 +73,13 @@ export class TenantController {
     // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
 
     @Get('tenants')
-    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
+    @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     getAllTenants() {
         return this.tenantService.getAll();
     }
 
     @Get('tenants/Page')
-    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
+    @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     getAllTenantsByPage(
         @Pageable() paging: Paging,
         @Specifiable(TenantCriteria) specs: Specs<Tenant>,
@@ -101,7 +101,7 @@ export class TenantController {
     }
 
     @Get('tenants/:id')
-    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
+    @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     async getTenantById(
         @Param('id', ParseUUIDPipe) id: Tenant['id']
     ) {
@@ -125,7 +125,7 @@ export class TenantController {
     }
 
     @Post('tenants')
-    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
+    @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     createTenant(
         @Body(new ZodValidationPipe(createTenantSchema)) tenantDto: CreateTenantDto,
         @UserDecorator() user: User
@@ -146,7 +146,7 @@ export class TenantController {
     }
 
     @Patch('tenants/:id')
-    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
+    @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     updateTenant(
         @Param('id', ParseUUIDPipe) id: Tenant['id'],
         @Body(new ZodValidationPipe(updateTenantSchema)) tenantDto: UpdateTenantDto,
@@ -156,7 +156,7 @@ export class TenantController {
     }
 
     @Delete('tenants/:id')
-    @FeatureKeys(FeatureKey.TENANT_ALL_ACCESS)
+    @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteTenant(@Param('id', ParseUUIDPipe) id: Tenant['id']) {
         await this.tenantService.delete(id);
