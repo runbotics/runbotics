@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { ActionCredentialType, ProcessCredentialDto } from 'runbotics-common';
 
+
+
 import { ActionCredentials, ActionSortedColumns, CredentialInAction } from './ProcessCredentials.types';
 
 export const ACTION_MIN_WIDTH = 400;
@@ -12,7 +14,7 @@ export const sortByActionCredentialType = (
 ): ActionCredentials => {
     const actions: ActionCredentials = credentialTypes.reduce((acc, type) => (acc[type] = [], acc), {});
     credentials.forEach(pc => {
-        actions[pc.credential.template.name].push({
+        actions[pc.credential.template.name]?.push({
             authorName: pc.credential.createdBy.email,
             collectionName: pc.credential.collection.name,
             name: pc.credential.name,
