@@ -96,7 +96,7 @@ const LoginPage: FC = () => {
                         sourcePage: SOURCE_PAGE.LOGIN,
                         reason: error.data.detail
                     });
-                    enqueueSnackbar(error.data.detail, {
+                    enqueueSnackbar(translate('Login.Error.UserNotActivated'), {
                         variant: 'error',
                         autoHideDuration: 10000
                     });
