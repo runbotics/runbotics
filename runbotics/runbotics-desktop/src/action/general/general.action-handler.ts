@@ -4,7 +4,7 @@ import { GeneralAction, IProcess, ProcessInstanceStatus, ITriggerEvent, BotSyste
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
-import { orchestratorAxios } from '#config';
+import { schedulerAxios, StorageService } from '#config';
 import getBotSystem from '#utils/botSystem';
 import { ConsoleLogActionInput, ConsoleLogActionOutput, DelayActionInput, DelayActionOutput, StartProcessActionInput, StartProcessActionOutput, ThrowErrorActionInput, ThrowErrorActionOutput } from './general.types';
 
@@ -21,6 +21,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
     constructor(
         @Inject(forwardRef(() => RuntimeService))
         private runtimeService: RuntimeService,
+        private readonly storageService: StorageService,
     ) {
         super();
     }
@@ -44,8 +45,9 @@ export default class GeneralActionHandler extends StatelessActionHandler {
     async startProcess(
         request: DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
     ): Promise<StartProcessActionOutput> {
-        const response = await orchestratorAxios.get<IProcess>(
-            `/api/processes/${request.input.processId}`,
+        const tenantId = this.storageService.getValue('tenantId');
+        const response = await schedulerAxios.get<IProcess>(
+            `/api/scheduler/tenants/${tenantId}/processes/${request.input.processId}`,
             { maxRedirects: 0 },
         );
 

@@ -53,13 +53,6 @@ export const fetchGuestDemoProcess = ApiTenantResource.get<ProcessDto>(
 
 export const updateProcess = ApiTenantResource.patch<IProcess, IProcess>('processes/update', PROCESSES_PATH);
 
-export const partialUpdateProcess = createAsyncThunk<ProcessDto, ProcessDto, { rejectValue: any }>(
-    'processes/partialUpdate',
-    (process, { rejectWithValue }) => Axios.patch(`/api/processes/${process.id}`, process)
-        .then((response) => response.data)
-        .catch((error) => rejectWithValue(error.response.data)),
-);
-
 export const updateExecutionInfo = ApiTenantResource.patch<IProcess, Pick<IProcess, 'executionInfo'>>(
     'processes/execution-info',
     (id: string) => `${PROCESSES_PATH}/${id}/execution-info`,
