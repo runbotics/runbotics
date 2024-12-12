@@ -24,7 +24,8 @@
     "Login.Form.Password.Required": "Hasło jest wymagane",
     "Login.SwitchToRegisterMessage": "Nie masz konta? Zarejestruj się",
     "Login.Error.NoInternet": "Brak połączenia z internetem",
-    "Login.Error.4xx": "Błędny email i/lub hasło lub użytkownik nie istnieje",
+    "Login.Error.4xx": "Błędne poświadczenia lub użytkownik nie istnieje",
     "Login.Error.5xx": "Wystąpił nieoczekiwany problem z serwerem. Gdyby problem się powtarzał skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Login.Error.UserNotActivated": "Użytkownik nie został jeszcze aktywowany. Poproś administratora o aktywację",
     "Login.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej"
 }

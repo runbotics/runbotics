@@ -5,7 +5,6 @@ import styled from 'styled-components';
 export const StyledGridContainer = styled(Grid)(
     ({ theme }) => `
     padding: ${theme.spacing(1)};
-    align-items: flex-end;
     `
 );
 
