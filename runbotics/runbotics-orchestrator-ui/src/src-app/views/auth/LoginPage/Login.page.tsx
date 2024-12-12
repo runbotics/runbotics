@@ -88,13 +88,12 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-
-                if (error.status === 401 && error.data.detail !== 'Bad credentials') {
+                if (error.status === 403) {
                     recordFailedLogin({
                         identifyBy: values.email,
                         trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
                         sourcePage: SOURCE_PAGE.LOGIN,
-                        reason: error.data.detail
+                        reason: error.data.title
                     });
                     enqueueSnackbar(translate('Login.Error.UserNotActivated'), {
                         variant: 'error',
