@@ -42,7 +42,7 @@ export class UserController {
         @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto
     ) {
         return this.userService.update(
-            { ...userDto, tenantId: null },
+            {...userDto},
             userId,
             user
         );

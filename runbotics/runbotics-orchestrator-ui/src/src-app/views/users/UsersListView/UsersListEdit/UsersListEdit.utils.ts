@@ -17,7 +17,8 @@ export const getUserDataWithoutEmptyStrings = (userData: UserDto) => ({
     activated: userData.activated,
     firstName: (userData.firstName === '' ? null : userData.firstName),
     lastName: (userData.lastName === '' ? null : userData.lastName),
-    langKey: userData.langKey
+    langKey: userData.langKey,
+    tenantId: userData.tenant.id,
 });
 
 export const initialValidationState: FormValidationState = {

@@ -62,7 +62,7 @@ const UsersListView: FC = () => {
     };
 
     useEffect(() => {
-        dispatch(tenantsActions.getAll());
+        hasAdminAccess && dispatch(tenantsActions.getAll());
 
         const allUsers = hasAdminAccess ? activated.allByPage : tenantActivated.allByPage;
 
