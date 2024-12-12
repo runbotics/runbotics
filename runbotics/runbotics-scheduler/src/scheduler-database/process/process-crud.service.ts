@@ -59,6 +59,7 @@ export class ProcessCrudService {
         process.isPublic = processDto.isPublic;
         process.isAttended = processDto.isAttended;
         process.isTriggerable = processDto.isTriggerable;
+        process.updated = dayjs().toISOString();
 
         process.editor = user;
         process.processCollectionId = processDto.processCollection?.id;
@@ -90,6 +91,7 @@ export class ProcessCrudService {
         process.outputType = ProcessOutputType.TEXT;
         process.description = 'DEMO Process';
         process.createdBy = user;
+        process.updated = dayjs().toISOString();
 
         const guestCollection = await this.botCollectionRepository.findOneBy({ name: BotCollectionDefaultCollections.GUEST });
 
