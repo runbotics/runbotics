@@ -36,6 +36,7 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
         value: ''
     });
     const { enqueueSnackbar } = useSnackbar();
+    const isEditable = canEdit && isEditMode;
 
     const handleCancel = () => {
         setCurrentAttribute({
@@ -79,47 +80,51 @@ const TemplateAttribute: FC<TemplateAttributeProps> = ({ credentialId, attribute
 
     return (
         <StyledAttributeCard iseditmode={isEditMode.toString()}>
-            <StyledGridContainer container rowSpacing={2}>
-                <Grid item xs={12}>
-                    <Typography variant="h6">{translate('Credential.Attribute.Name.Label')}</Typography>
-                    <AttributeInfoNotEdiable>{attribute.name}</AttributeInfoNotEdiable>
-                </Grid>
-                <Grid item xs={12} marginBottom="16px">
-                    <Typography variant="h6">{translate('Credential.Attribute.Description.Label')}</Typography>
-                    <AttributeInfoNotEdiable>{attribute.description}</AttributeInfoNotEdiable>
-                </Grid>
-                <CredentialAttributeDetails
-                    handleFieldChange={handleFieldChange}
-                    currentAttribute={currentAttribute}
-                    isEditMode={isEditMode}
-                    canEdit={canEdit}
-                    setIsEditMode={setIsEditMode}
-                />
-                <Collapse in={isEditMode} orientation="vertical" sx={{ width: '100%' }}>
-                    <Grid container justifyContent="space-between">
-                        <Grid item>
-                            <Button size="small" onClick={handleCancel} sx={{ padding: 0, color: grey[600] }}>
-                                <AttributeIcon>
-                                    <ClearIcon />
-                                </AttributeIcon>
-                                <Typography variant="h5">{translate('Common.Cancel').toUpperCase()}</Typography>
-                            </Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                size="small"
-                                color="secondary"
-                                onClick={() => handleConfirm(credentialId, attribute.name)}
-                                sx={{ padding: '0 8px 0 0' }}
-                            >
-                                <AttributeIcon color="inherit">
-                                    <DoneIcon />
-                                </AttributeIcon>
-                                <Typography variant="h5">{translate('Common.Confirm').toUpperCase()}</Typography>
-                            </Button>
-                        </Grid>
+            <StyledGridContainer container>
+                <Grid container xs={12} marginBottom="16px">
+                    <Grid item xs={12} marginBottom="16px">
+                        <Typography variant="h6">{translate('Credential.Attribute.Name.Label')}</Typography>
+                        <AttributeInfoNotEdiable>{attribute.name}</AttributeInfoNotEdiable>
                     </Grid>
-                </Collapse>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">{translate('Credential.Attribute.Description.Label')}</Typography>
+                        <AttributeInfoNotEdiable>{attribute.description}</AttributeInfoNotEdiable>
+                    </Grid>
+                </Grid>
+                <Grid item xs={12} alignSelf="flex-end">
+                    <CredentialAttributeDetails
+                        handleFieldChange={handleFieldChange}
+                        currentAttribute={currentAttribute}
+                        isEditMode={isEditable}
+                        canEdit={canEdit}
+                        setIsEditMode={setIsEditMode}
+                    />
+                    <Collapse in={isEditable} orientation="vertical" sx={{ width: '100%' }}>
+                        <Grid container justifyContent="space-between">
+                            <Grid item>
+                                <Button size="small" onClick={handleCancel} sx={{ padding: 0, color: grey[600] }}>
+                                    <AttributeIcon>
+                                        <ClearIcon />
+                                    </AttributeIcon>
+                                    <Typography variant="h5">{translate('Common.Cancel').toUpperCase()}</Typography>
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    size="small"
+                                    color="secondary"
+                                    onClick={() => handleConfirm(credentialId, attribute.name)}
+                                    sx={{ padding: '0 8px 0 0' }}
+                                >
+                                    <AttributeIcon color="inherit">
+                                        <DoneIcon />
+                                    </AttributeIcon>
+                                    <Typography variant="h5">{translate('Common.Confirm').toUpperCase()}</Typography>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Collapse>
+                </Grid>
             </StyledGridContainer>
         </StyledAttributeCard>
     );

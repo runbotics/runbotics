@@ -58,8 +58,12 @@ export const CredentialsModals: FC<CredentialsModalsProps> = ({
 
                 dispatch(
                     credentialsActions.fetchAllCredentialsAccessibleInTenantByPage({
-                        pageParams: { page: 0, pageSize },
-                    })
+                        pageParams: { page: 0, pageSize,
+                            filter: {
+                                equals: {
+                                    collectionId: collectionId ? collectionId : ''}
+                            }
+                        }})
                 );
             })
             .catch(error => {
