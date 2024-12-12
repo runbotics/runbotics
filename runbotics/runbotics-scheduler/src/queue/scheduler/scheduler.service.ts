@@ -1,6 +1,6 @@
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { JobInformation, JobStatus, Queue } from 'bull';
 import { Job } from '#/utils/process';
 import { Logger } from '#/utils/logger';
@@ -8,6 +8,7 @@ import { Logger } from '#/utils/logger';
 import { JobData, WsMessage } from 'runbotics-common';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ScheduleProcessService } from '#/scheduler-database/schedule-process/schedule-process.service';
+import { User } from '#/scheduler-database/user/user.entity';
 
 const QUEUE_JOB_STATUSES: JobStatus[] = [
     'waiting',
@@ -41,22 +42,27 @@ export class SchedulerService {
         );
     }
 
-    async getScheduledJobs() {
+    async getScheduledJobs(user: User) {
         this.logger.log('Getting scheduled jobs');
         const scheduledJobs = await this.processQueue.getRepeatableJobs();
         const extendedScheduledJobs = await this.addAdditionalInfoToScheduledJobs(
             scheduledJobs
         );
+        const filteredExtendedScheduledJobs = extendedScheduledJobs
+            .filter((job) => job.process?.tenantId === user.tenantId);
 
         this.logger.log(
-            `Successfully got ${extendedScheduledJobs.length} scheduled job(s)`
+            `Successfully got ${filteredExtendedScheduledJobs.length} scheduled job(s)`
         );
-        return extendedScheduledJobs;
+        return filteredExtendedScheduledJobs;
     }
 
-    async deleteJobFromQueue(id: string) {
+    async deleteJobFromQueue(id: string, user: User) {
         this.logger.log(`Deleting waiting job with id: ${id}`);
         const job = await this.processQueue.getJob(id);
+        if (job.data.process.tenantId === user.tenantId) {
+            throw new ForbiddenException();
+        }
 
         this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
         await job?.remove();
@@ -71,15 +77,17 @@ export class SchedulerService {
         }));
     }
 
-    async getJobs() {
+    async getJobs(user: User) {
         this.logger.log('Getting jobs');
         const jobs = await this.processQueue.getJobs(QUEUE_JOB_STATUSES);
         const jobsWithProcesses = await this.updateProcessForScheduledJob(jobs);
-        this.logger.log(`Successfully got ${jobs.length} job(s)`);
-        return jobsWithProcesses;
+        const filteredJobsWithProcesses = jobsWithProcesses
+            .filter(job => job.data.process.tenantId === user.tenantId);
+        this.logger.log(`Successfully got ${filteredJobsWithProcesses.length} job(s)`);
+        return filteredJobsWithProcesses;
     }
 
-    async getWaitingJobs(): Promise<Job[]> {
+    async getWaitingJobs(user: User): Promise<Job[]> {
         this.logger.log('Getting waiting jobs');
         const waitingJobs = await this.processQueue.getJobs(['waiting']) as Job[];
         const activeJobs = await this.processQueue.getJobs(['active']) as Job[];
@@ -90,10 +98,12 @@ export class SchedulerService {
             return job;
         });
         const jobs = [...waitingJobsWithProcesses, ...newActive];
+        const filteredJobs = jobs
+            .filter(job => job.data.process.tenantId === user.tenantId);
 
 
-        this.logger.log(`Successfully got ${jobs.length} waiting job(s)`);
-        return jobs;
+        this.logger.log(`Successfully got ${filteredJobs.length} waiting job(s)`);
+        return filteredJobs;
     }
 
     async getJobById(id: number | string) {

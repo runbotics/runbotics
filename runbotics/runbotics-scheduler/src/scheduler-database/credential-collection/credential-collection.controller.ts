@@ -6,7 +6,6 @@ import {
     Patch,
     Param,
     Delete,
-    Request,
     UseInterceptors,
     HttpCode,
     HttpStatus,
@@ -22,7 +21,6 @@ import {
 } from './dto/update-credential-collection.dto';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { Logger } from '#/utils/logger';
-import { AuthRequest } from '#/types';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
@@ -45,7 +43,7 @@ export class CredentialCollectionController {
     @Post()
     async create(
         @Body(new ZodValidationPipe(createCredentialCollectionSchema))
-        createCredentialCollectionDto: CreateCredentialCollectionDto,
+            createCredentialCollectionDto: CreateCredentialCollectionDto,
         @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to create credential collection');
@@ -62,14 +60,16 @@ export class CredentialCollectionController {
     getPages(
         @Specifiable(CredentialCollectionCriteria) specs: Specs<CredentialCollection>,
         @Pageable() paging: Paging,
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
       ) {
         this.logger.log('REST request to get credential collections by page');
         return this.credentialCollectionService.getAllAccessiblePages(user, specs, paging);
       }
 
     @Get()
-    findAll(@UserDecorator() user: User) {
+    findAll(
+        @UserDecorator() user: User,
+    ) {
         this.logger.log('REST request to get credential collections');
 
         return this.credentialCollectionService.findAllAccessible(user);
@@ -78,18 +78,18 @@ export class CredentialCollectionController {
     @Get(':id')
     findOne(
         @Param('id') id: string,
-        @Request() request: AuthRequest
+        @UserDecorator() user: User,
     ) {
         this.logger.log(`REST request to get collection with id (${id})`);
 
-        return this.credentialCollectionService.findOneAccessibleById(id, request.user);
+        return this.credentialCollectionService.findOneAccessibleById(id, user);
     }
 
     @Patch(':id')
     update(
         @Param('id') id: string,
         @Body(new ZodValidationPipe(updateCredentialCollectionSchema))
-        updateCredentialCollectionDto: UpdateCredentialCollectionDto,
+            updateCredentialCollectionDto: UpdateCredentialCollectionDto,
         @UserDecorator() user: User,
     ) {
         this.logger.log(`REST request to update credential collection with id (${id})`);

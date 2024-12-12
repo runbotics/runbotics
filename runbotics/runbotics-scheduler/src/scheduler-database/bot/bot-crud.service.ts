@@ -49,7 +49,7 @@ export class BotCrudService {
     }
 
     async findAllPage(user: User, specs: Specs<BotEntity>, paging: Paging) {
-        const collectionIds = this.userService.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) ?
+        const collectionIds = this.userService.hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS) ?
             await this.botCollectionService.findIdsForAdmin(
                 user,
                 {

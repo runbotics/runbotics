@@ -31,18 +31,20 @@ export class ScheduleProcessController {
     ) { }
 
     @Get('/processes/:processId')
+    @FeatureKeys(FeatureKey.SCHEDULE_READ)
     getAllScheduleProcessesByProcessId(
         @Param('processId', ParseIntPipe) processId: number,
-        @Param('tenantId') tenantId: string,
+        @UserDecorator() { tenantId }: User,
     ) {
         this.logger.log('REST request to get all schedule processes');
         return this.scheduleProcessService.getAllByProcessId(processId, tenantId);
     }
 
     @Get(':id')
+    @FeatureKeys(FeatureKey.SCHEDULE_READ)
     async getScheduleProcessById(
         @Param('id') id: number,
-        @Param('tenantId') tenantId: string,
+        @UserDecorator() { tenantId }: User,
     ) {
         this.logger.log('REST request to get schedule process by id: ', id);
         const scheduleProcess = await this.scheduleProcessService.getByIdAndTenantId(id, tenantId);
@@ -59,8 +61,8 @@ export class ScheduleProcessController {
     @FeatureKeys(FeatureKey.SCHEDULE_ADD)
     createScheduleProcess(
         @Body(new ZodValidationPipe(createScheduleProcessSchema))
-        scheduleProcessDto: CreateScheduleProcessDto,
-        @UserDecorator() user: User
+            scheduleProcessDto: CreateScheduleProcessDto,
+        @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to create new schedule for process with id: ', scheduleProcessDto.process.id);
         return this.scheduleProcessService.create(scheduleProcessDto, user);
@@ -69,8 +71,11 @@ export class ScheduleProcessController {
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @FeatureKeys(FeatureKey.SCHEDULE_DELETE)
-    async deleteScheduleProcess(@Param('id', ParseIntPipe) id: number) {
+    async deleteScheduleProcess(
+        @Param('id', ParseIntPipe) id: number,
+        @UserDecorator() { tenantId }: User,
+    ) {
         this.logger.log('REST request to delete schedule process with id: ', id);
-        await this.scheduleProcessService.delete(id);
+        await this.scheduleProcessService.delete(id, tenantId);
     }
 }

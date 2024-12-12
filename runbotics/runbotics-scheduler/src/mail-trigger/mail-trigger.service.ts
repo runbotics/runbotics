@@ -8,6 +8,7 @@ import { ServerConfigService } from '#/config/server-config/server-config.servic
 import { QueueService } from '#/queue/queue.service';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { EmailTriggerData, IProcessInstance, ProcessInstanceStatus, TriggerEvent } from 'runbotics-common';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 const FETCH_MAILS_CONFIG: FetchQueryObject = {
     source: true,
@@ -198,7 +199,13 @@ export class MailTriggerService implements OnModuleInit {
             throw new NotFoundException(`Process "${envelope.subject}" does not exist`);
         }
 
-        await this.queueService.validateProcessAccess({ process, triggered: true });
+        await this.queueService.validateProcessAccess({
+            process,
+            triggered: true,
+            user: {
+                tenantId: DEFAULT_TENANT_ID,
+            },
+        });
 
         return process;
     }

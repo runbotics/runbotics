@@ -1,6 +1,6 @@
 import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { BotSystemType, ProcessDto, ProcessOutputType, Role } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';

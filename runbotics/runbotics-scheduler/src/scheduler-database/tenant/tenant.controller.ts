@@ -34,11 +34,13 @@ export class TenantController {
 
     @GetWithTenant('me')
     @FeatureKeys(FeatureKey.TENANT_READ)
-    async getTenantByUser(@UserDecorator('tenantId') id: Tenant['id']) {
-        const tenant = await this.tenantService.getById(id);
+    async getTenantByUser(
+        @UserDecorator('tenantId') tenantId: User['tenantId'],
+    ) {
+        const tenant = await this.tenantService.getById(tenantId);
 
         if (!tenant) {
-            this.logger.error('Cannot find tenant with id: ', id);
+            this.logger.error('Cannot find tenant with id: ', tenantId);
             throw new NotFoundException('Tenant not found');
         }
 
@@ -47,11 +49,13 @@ export class TenantController {
 
     @GetWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_GET_INVITE_CODE)
-    async getActiveInviteCode(@UserDecorator('tenantId') id: Tenant['id']) {
-        const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(id);
+    async getActiveInviteCode(
+        @UserDecorator('tenantId') tenantId: User['tenantId'],
+    ) {
+        const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(tenantId);
 
         if (!inviteCodeDto) {
-            this.logger.error('Cannot find valid invite code for tenant with id: ', id);
+            this.logger.error('Cannot find valid invite code for tenant with id: ', tenantId);
             throw new NotFoundException('Invite code not found');
         }
 
@@ -60,14 +64,16 @@ export class TenantController {
 
     @PostWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_CREATE_INVITE_CODE)
-    async createInviteCode(@UserDecorator('tenantId') id: Tenant['id']) {
+    async createInviteCode(
+        @UserDecorator('tenantId') tenantId: User['tenantId'],
+    ) {
 
-        if (await this.tenantService.getActiveInviteCodeByTenantId(id)) {
-            this.logger.error('Valid code exists for tenant with id: ', id);
+        if (await this.tenantService.getActiveInviteCodeByTenantId(tenantId)) {
+            this.logger.error('Valid code exists for tenant with id: ', tenantId);
             throw new BadRequestException('Valid code exists for tenant');
         }
 
-        return this.tenantService.createInviteCodeByTenantId(id);
+        return this.tenantService.createInviteCodeByTenantId(tenantId);
     }
 
     // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
@@ -89,7 +95,9 @@ export class TenantController {
 
     @Get('tenants/invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_GET_ALL_INVITE_CODE)
-    async getActiveInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
+    async getActiveInviteCodeByTenant(
+        @Param('tenantId') id: Tenant['id'],
+    ) {
         const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(id);
 
         if (!inviteCodeDto) {
@@ -103,7 +111,7 @@ export class TenantController {
     @Get('tenants/:id')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     async getTenantById(
-        @Param('id', ParseUUIDPipe) id: Tenant['id']
+        @Param('id', ParseUUIDPipe) id: Tenant['id'],
     ) {
         const tenant = await this.tenantService.getById(id);
 
@@ -119,7 +127,7 @@ export class TenantController {
     @Public()
     @HttpCode(HttpStatus.OK)
     validateInviteCode(
-        @Body(new ZodValidationPipe(tenantInviteCodeSchema)) inviteCodeDto: TenantInviteCodeDto
+        @Body(new ZodValidationPipe(tenantInviteCodeSchema)) inviteCodeDto: TenantInviteCodeDto,
     ) {
         return this.tenantService.validateInviteCode(inviteCodeDto);
     }
@@ -128,14 +136,16 @@ export class TenantController {
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     createTenant(
         @Body(new ZodValidationPipe(createTenantSchema)) tenantDto: CreateTenantDto,
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         return this.tenantService.create(tenantDto, user);
     }
 
     @Post('tenants/invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_CREATE_ALL_INVITE_CODE)
-    async createInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
+    async createInviteCodeByTenant(
+        @Param('tenantId') id: Tenant['id'],
+    ) {
 
         if (await this.tenantService.getActiveInviteCodeByTenantId(id)) {
             this.logger.error('Valid code exists for tenant with id: ', id);
@@ -158,7 +168,9 @@ export class TenantController {
     @Delete('tenants/:id')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteTenant(@Param('id', ParseUUIDPipe) id: Tenant['id']) {
+    async deleteTenant(
+        @Param('id', ParseUUIDPipe) id: Tenant['id'],
+    ) {
         await this.tenantService.delete(id);
     }
 }

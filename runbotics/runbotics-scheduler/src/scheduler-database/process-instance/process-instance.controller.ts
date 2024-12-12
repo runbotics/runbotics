@@ -27,7 +27,7 @@ export class ProcessInstanceController {
     @Get()
     getAll(
         @Specifiable(ProcessInstanceCriteria) specs: Specs<ProcessInstance>,
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         return this.processInstanceService.getAll(user, specs);
     }
@@ -36,13 +36,16 @@ export class ProcessInstanceController {
     getPage(
         @Specifiable(ProcessInstanceCriteria) specs: Specs<ProcessInstance>,
         @Pageable() paging: Paging,
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         return this.processInstanceService.getPage(user, specs, paging);
     }
 
     @Get(':id')
-    getOne(@Param('id') id: ProcessInstance['id'], @UserDecorator() user: User) {
+    getOne(
+        @Param('id') id: ProcessInstance['id'],
+        @UserDecorator() user: User,
+    ) {
         return this.processInstanceService.getOne(id, user);
     }
 
@@ -50,7 +53,7 @@ export class ProcessInstanceController {
     getSubprocesses(
         @Param('id') id: ProcessInstance['id'],
         @Pageable() paging: Paging,
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         return this.processInstanceService.getSubprocesses(id, user, paging);
     }

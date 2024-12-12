@@ -57,6 +57,7 @@ export class NotificationBotService {
     async delete(notificationBotId: string, user: User) {
         const findOptions = {
             id: notificationBotId,
+            tenantId: user.tenantId,
             ...(!isTenantAdmin(user) && { user: { id: user.id } })
         };
 

@@ -11,7 +11,7 @@ import { Authority } from '../authority/authority.entity';
 import { Logger } from '#/utils/logger';
 import { TenantService } from '../tenant/tenant.service';
 import { Tenant } from '../tenant/tenant.entity';
-import { isTenantAdmin } from '#/utils/authority.utils';
+import { isAdmin, isTenantAdmin } from '#/utils/authority.utils';
 import postgresError from '#/utils/postgresError';
 
 @Injectable()
@@ -93,7 +93,7 @@ export class UserService {
         const updatedUser = await this.userRepository
             .findOneByOrFail({
                 id,
-                ...(isTenantAdmin(executor) && { tenantId: executor.tenantId }),
+                ...(!isAdmin(executor) && { tenantId: executor.tenantId }),
             })
             .then((user) => ({
                 ...user,

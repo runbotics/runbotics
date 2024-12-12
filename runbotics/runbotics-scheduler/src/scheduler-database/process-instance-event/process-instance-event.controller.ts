@@ -33,9 +33,9 @@ export class ProcessInstanceEventController {
     @Get('GetPage')
     getPage(
         @Specifiable(ProcessInstanceEventCriteria)
-        specs: Specs<ProcessInstanceEvent>,
+            specs: Specs<ProcessInstanceEvent>,
         @Pageable() paging: Paging,
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         return this.processInstanceEventService.getPage(user, specs, paging);
     }
@@ -43,7 +43,7 @@ export class ProcessInstanceEventController {
     @Get(':id')
     getOne(
         @Param('id', new ParseIntPipe()) id: ProcessInstanceEvent['id'],
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         return this.processInstanceEventService.getOne(id, user);
     }

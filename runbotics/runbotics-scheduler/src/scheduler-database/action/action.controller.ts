@@ -15,10 +15,12 @@ import {
 } from '@nestjs/common';
 import { ActionService } from './action.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { FeatureKey, Tenant } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { CreateActionDto, createActionSchema } from './dto/create-action.dto';
 import { UpdateActionDto, updateActionSchema } from './dto/update-action.dto';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '../user/user.entity';
 
 
 @UseInterceptors(TenantInterceptor)
@@ -33,7 +35,7 @@ export class ActionController {
     @Get()
     @FeatureKeys(FeatureKey.EXTERNAL_ACTION_READ)
     getAllActions(
-        @Param('tenantId') tenantId: Tenant['id']
+        @UserDecorator() { tenantId }: User,
     ) {
         this.logger.log('REST request to get all actions');
         return this.actionService.getAll(tenantId);
@@ -43,7 +45,7 @@ export class ActionController {
     @FeatureKeys(FeatureKey.EXTERNAL_ACTION_READ)
     getAction(
         @Param('id') id: string,
-        @Param('tenantId') tenantId: Tenant['id'],
+        @UserDecorator() { tenantId }: User,
     ) {
         this.logger.log('REST request to get action by id: ', id);
         const action = this.actionService.getById(tenantId, id);
@@ -59,7 +61,7 @@ export class ActionController {
     @Post()
     @FeatureKeys(FeatureKey.EXTERNAL_ACTION_ADD)
     createAction(
-        @Param('tenantId') tenantId: string,
+        @UserDecorator() { tenantId }: User,
         @Body(new ZodValidationPipe(createActionSchema)) createActionDto: CreateActionDto
     ) {
         this.logger.log('REST request to create new action');
@@ -70,7 +72,7 @@ export class ActionController {
     @FeatureKeys(FeatureKey.EXTERNAL_ACTION_EDIT)
     updateAction(
         @Param('id') id: string,
-        @Param('tenantId') tenantId: Tenant['id'],
+        @UserDecorator() { tenantId }: User,
         @Body(new ZodValidationPipe(updateActionSchema)) updateActionDto: UpdateActionDto
     ) {
         this.logger.log('REST request to edit action with id: ', id);
@@ -82,7 +84,7 @@ export class ActionController {
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteAction(
         @Param('id') id: string,
-        @Param('tenantId') tenantId: string,
+        @UserDecorator() { tenantId }: User,
     ) {
         this.logger.log('REST request to delete action with id: ', id);
         await this.actionService.delete(tenantId, id);

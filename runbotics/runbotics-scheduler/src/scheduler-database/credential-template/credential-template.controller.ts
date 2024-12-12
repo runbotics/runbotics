@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseInterceptors, Logger } from '@nestjs/common';
+import { Controller, Get, Param, UseInterceptors, Logger } from '@nestjs/common';
 import { CredentialTemplateService } from './credential-template.service';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -10,7 +10,9 @@ import { FeatureKey } from 'runbotics-common';
 export class CredentialTemplateController {
   private readonly logger = new Logger(CredentialTemplateController.name);
 
-  constructor(private readonly credentialTemplateService: CredentialTemplateService) {}
+  constructor(
+    private readonly credentialTemplateService: CredentialTemplateService,
+  ) {}
 
   @Get()
   findAll() {
@@ -19,7 +21,9 @@ export class CredentialTemplateController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(
+    @Param('id') id: string,
+  ) {
     this.logger.log('Getting credential template by id ' + id);
     return this.credentialTemplateService.findOneById(id);
   }

@@ -36,8 +36,14 @@ export class ScheduleProcessService {
     }
 
     getByIdAndTenantId(id: number, tenantId: string) {
-        return this.scheduleProcessRepository.findOneBy({
-            id, process: { tenantId }
+        return this.scheduleProcessRepository.findOne({
+            where: {
+                id,
+                process: {
+                    tenantId,
+                },
+            },
+            relations,
         });
     }
 
@@ -80,9 +86,9 @@ export class ScheduleProcessService {
         return scheduleProcess;
     }
 
-    async delete(id: number) {
+    async delete(id: number, tenantId: User['tenantId']) {
         const scheduleProcess = await this.scheduleProcessRepository
-            .findOneOrFail({ where: { id }, relations }).catch(() => {
+            .findOneOrFail({ where: { id, process: { tenantId } }, relations }).catch(() => {
                 throw new BadRequestException('Cannot find schedule process with provided id');
             });
 

@@ -22,7 +22,7 @@ export class ProcessInstanceLoopEventService {
 
     async getLoopEvents(
         loopId: ProcessInstanceLoopEvent['loopId'],
-        user: User
+        user: User,
     ) {
         const processInstanceLoopEvents =
             await this.processInstanceLoopEventRepository.find({

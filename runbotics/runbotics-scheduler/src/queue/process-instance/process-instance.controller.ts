@@ -3,6 +3,8 @@ import { ProcessInstanceSchedulerService } from './process-instance.scheduler.se
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @Controller('scheduler/process-instances')
 export class ProcessInstanceController {
@@ -13,11 +15,12 @@ export class ProcessInstanceController {
     @FeatureKeys(FeatureKey.PROCESS_INSTANCE_TERMINATE)
     @Post(':processInstanceId/terminate')
     async startProcess(
-        @Param('processInstanceId') processInstanceId: string
+        @Param('processInstanceId') processInstanceId: string,
+        @UserDecorator() user: User,
     ) {
         try {
             this.logger.log(`=> Terminating process instance ${processInstanceId}`);
-            await this.processInstanceSchedulerService.terminateProcessInstance(processInstanceId);
+            await this.processInstanceSchedulerService.terminateProcessInstance(processInstanceId, user);
             this.logger.log(`<= Process instance ${processInstanceId} successfully terminated`);
         } catch (error: unknown) {
             if (error instanceof Error) {
