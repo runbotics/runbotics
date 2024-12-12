@@ -1,6 +1,7 @@
 package com.runbotics.service.impl;
 
 import com.runbotics.domain.ProcessCollection;
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.repository.ProcessCollectionRepository;
 import com.runbotics.security.FeatureKeyConstants;
@@ -43,52 +44,58 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
     }
 
     public void checkCollectionAvailability(UUID collectionId, User user) throws ResponseStatusException {
-        if (processCollectionRepository.countCollectionsById(collectionId) == 0) {
+        Tenant tenant = user.getTenant();
+        boolean notFoundCollectionForTenantId = processCollectionRepository.countCollectionsById(collectionId, tenant) == 0;
+        if (notFoundCollectionForTenantId) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot find process collection");
         }
 
         List<String> userFeatureKeys = userService.findUserFeatureKeys();
         boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
         if (!hasUserAccessEveryCollection) {
-            boolean isCollectionAvailable = !(processCollectionRepository.countAvailableCollectionsById(collectionId, user) == 0);
-            if (!isCollectionAvailable) {
+            boolean notFoundAvailableCollection = processCollectionRepository.countAvailableCollectionsById(collectionId, tenant, user) == 0;
+            if (notFoundAvailableCollection) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No access to process collection");
             }
         }
     }
 
     public List<ProcessCollectionDTO> getChildrenCollectionsByRoot(User user) {
+        Tenant tenant = user.getTenant();
         List<String> userFeatureKeys = userService.findUserFeatureKeys();
         boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         if (hasUserAccessEveryCollection) {
-            return processCollectionMapper.toDto(processCollectionRepository.findAllRootCollections());
+            return processCollectionMapper.toDto(processCollectionRepository.findAllRootCollections(tenant));
         }
 
-        Set<ProcessCollection> result = processCollectionRepository.findAvailableRootCollections(user);
+        Set<ProcessCollection> result = processCollectionRepository.findAvailableRootCollections(tenant, user);
         return processCollectionMapper.toDto(new ArrayList<>(result));
     }
 
     public List<ProcessCollectionDTO> getChildrenCollectionsByParent(UUID parentId, User user) {
+        Tenant tenant = user.getTenant();
         List<String> userFeatureKeys = userService.findUserFeatureKeys();
         boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         if (hasUserAccessEveryCollection) {
-            return processCollectionMapper.toDto(processCollectionRepository.findAllChildrenCollections(parentId));
+            return processCollectionMapper.toDto(processCollectionRepository.findAllChildrenCollections(parentId, tenant));
         }
 
-        Set<ProcessCollection> result = processCollectionRepository.findAvailableChildrenCollections(parentId, user);
+        Set<ProcessCollection> result = processCollectionRepository.findAvailableChildrenCollections(parentId, tenant, user);
         return processCollectionMapper.toDto(new ArrayList<>(result));
     }
 
     public List<ProcessCollectionDTO> checkAndGetCollectionAllAncestors(UUID collectionId, User user) throws ResponseStatusException {
+        Tenant tenant = user.getTenant();
         List<String> userFeatureKeys = userService.findUserFeatureKeys();
         boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
-        List<ProcessCollection> breadcrumbs = processCollectionRepository.findAllAncestors(collectionId);
+        List<ProcessCollection> breadcrumbs = processCollectionRepository.findAllAncestors(collectionId, tenant.getId());
         if (!hasUserAccessEveryCollection) {
             int accessibleCollectionsCount = processCollectionRepository.countAvailableCollectionsByIds(
                 breadcrumbs.stream().map(ProcessCollection::getId).collect(Collectors.toList()),
+                tenant,
                 user
             );
 
@@ -102,10 +109,11 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
 
     @Override
     public void delete(UUID id, User user) {
+        Tenant tenant = user.getTenant();
         List<String> userFeatureKeys = userService.findUserFeatureKeys();
         boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
         boolean hasCollectionAccess =
-            hasUserAccessEveryCollection || processCollectionRepository.findUserAccessibleById(user, id).size() > 0;
+            hasUserAccessEveryCollection || processCollectionRepository.findUserAccessibleById(user, id, tenant).size() > 0;
         boolean isOwner =
             hasUserAccessEveryCollection ||
             processCollectionRepository.findById(id).get().getCreatedBy().getEmail().equals(user.getEmail());
@@ -141,17 +149,18 @@ public class ProcessCollectionServiceImpl implements ProcessCollectionService {
 
     @Override
     public List<ProcessCollectionDTO> getUserAccessible(User user) {
+        Tenant tenant = user.getTenant();
         User currentUser = userService.getUserWithAuthorities().get();
         List<String> userFeatureKeys = userService.findUserFeatureKeys();
         boolean hasUserAccessEveryCollection = userFeatureKeys.contains(FeatureKeyConstants.PROCESS_COLLECTION_ALL_ACCESS);
 
         if (hasUserAccessEveryCollection) {
-            List<ProcessCollection> allCollections = processCollectionRepository.getAll();
+            List<ProcessCollection> allCollections = processCollectionRepository.getAll(tenant.getId());
             log.debug("allCollections: {}", allCollections);
 
             return processCollectionMapper.toDto(allCollections);
         } else {
-            List<ProcessCollection> userAccessible = processCollectionRepository.findAllUserAccessible(currentUser);
+            List<ProcessCollection> userAccessible = processCollectionRepository.findAllUserAccessible(tenant, currentUser);
             log.debug("userAccessible: {}", userAccessible);
             return processCollectionMapper.toDto(userAccessible);
         }
