@@ -88,7 +88,22 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                const status = error.status >= 400 && error.status < 500 ? '4xx' : '5xx';
+
+                if (error.status === 401 && error.data.detail !== 'Bad credentials') {
+                    recordFailedLogin({
+                        identifyBy: values.email,
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                        sourcePage: SOURCE_PAGE.LOGIN,
+                        reason: error.data.detail
+                    });
+                    enqueueSnackbar(translate('Login.Error.UserNotActivated'), {
+                        variant: 'error',
+                        autoHideDuration: 10000
+                    });
+                    return;
+                }
+
+                const status = error.status>= 401 && error.status < 500 ? '4xx' : '5xx';
                 const errorKey = `Login.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
