@@ -69,7 +69,7 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
                 }),
             );
         } else {
-            dispatch(processActions.getProcessesPage({
+            dispatch(processActions.getProcessesAllPage({
                 pageParams: {
                     page,
                     size: pageSize,
