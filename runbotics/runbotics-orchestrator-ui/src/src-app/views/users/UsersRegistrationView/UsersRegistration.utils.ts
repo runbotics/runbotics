@@ -1,6 +1,8 @@
 import { UserDto } from 'runbotics-common';
 
-export const getSelectedTenants = (users: UserDto[]) => {
+export interface SelectedTenants { [id:number]: string };
+
+export const getSelectedTenants = (users: UserDto[]): SelectedTenants => {
     if (!users) return {};
 
     const usersTenant = users.reduce((acc, currentUser) => {

@@ -17,7 +17,7 @@ import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
 import { AVAILABLE_ROWS_PER_PAGE, DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
 
-import { getSelectedTenants } from './UsersRegistration.utils';
+import { getSelectedTenants, SelectedTenants } from './UsersRegistration.utils';
 import UsersRegistrationTable from './UsersRegistrationTable';
 import {
     StyledButtonsContainer,
@@ -32,8 +32,6 @@ import {
 import DeleteUserDialog from '../DeleteUserDialog';
 
 interface SelectedRoles { [id: number]: Role };
-
-interface SelectedTenants { [id:number]: string };
 
 interface MapActivatedUserParams {
     id: number;
@@ -138,9 +136,11 @@ const UsersRegistrationView: FC = () => {
 
     useEffect(() => {
         const allUsers = hasAdminAccess ? notActivated.allByPage : tenantNotActivated.allByPage;
-        setSelectedTenants(hasAdminAccess
-            ? getSelectedTenants(notActivated.allByPage?.content)
-            : getSelectedTenants(tenantNotActivated.allByPage?.content));
+        setSelectedTenants(
+            hasAdminAccess
+                ? getSelectedTenants(notActivated.allByPage?.content)
+                : getSelectedTenants(tenantNotActivated.allByPage?.content)
+        );
 
         const isPageNotAvailable = allUsers?.totalPages && page >= allUsers?.totalPages;
         if (isPageNotAvailable) {
