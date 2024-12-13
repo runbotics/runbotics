@@ -60,6 +60,7 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         if (!checkFormFieldsValidation()) return;
 
         const dataPayload = getUserDataWithoutEmptyStrings(user);
+
         dispatch(usersActions.updateInTenant({ payload: dataPayload, resourceId: dataPayload.id }))
             .unwrap()
             .then(() => {

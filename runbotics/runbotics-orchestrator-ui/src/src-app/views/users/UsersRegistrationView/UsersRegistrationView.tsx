@@ -17,6 +17,7 @@ import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
 import { AVAILABLE_ROWS_PER_PAGE, DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
 
+import { CombinedUserWithTenant, getCombinedUserWithTenantIds } from './UsersRegistration.utils';
 import UsersRegistrationTable from './UsersRegistrationTable';
 import {
     StyledButtonsContainer,
@@ -31,8 +32,6 @@ import {
 import DeleteUserDialog from '../DeleteUserDialog';
 
 interface SelectedRoles { [id: number]: Role };
-
-interface SelectedTenants { [id:number]: string };
 
 interface MapActivatedUserParams {
     id: number;
@@ -73,14 +72,14 @@ const UsersRegistrationView: FC = () => {
 
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
-    const [selectedTenants, setSelectedTenants] = useState<SelectedTenants>({});
+    const [combinedUserWithTenantIds, setCombinedUserWithTenantIds ] = useState<CombinedUserWithTenant>({});
     const [selections, setSelections] = useState<number[]>([]);
 
     const handleSelectedRolesChange = (id: number, value: Role) =>
         setSelectedRoles((prevState) => ({ ...prevState, [id]: value }));
 
     const handleSelectedTenantsChange = (id: number, value: string) =>
-        setSelectedTenants((prevState) => ({ ...prevState, [id]: value }));
+        setCombinedUserWithTenantIds((prevState) => ({ ...prevState, [id]: value }));
 
     const handleSelectionChange = (selection) => setSelections(selection);
 
@@ -95,7 +94,7 @@ const UsersRegistrationView: FC = () => {
 
         const payload = selections.map((userId) => {
             const role = selectedRoles[userId];
-            const tenantId = selectedTenants[userId];
+            const tenantId = combinedUserWithTenantIds[userId];
             return mapUserActivateRequest(userId, role, tenantId);
         });
 
@@ -137,6 +136,11 @@ const UsersRegistrationView: FC = () => {
 
     useEffect(() => {
         const allUsers = hasAdminAccess ? notActivated.allByPage : tenantNotActivated.allByPage;
+        setCombinedUserWithTenantIds(
+            hasAdminAccess
+                ? getCombinedUserWithTenantIds(notActivated.allByPage?.content)
+                : getCombinedUserWithTenantIds(tenantNotActivated.allByPage?.content)
+        );
 
         const isPageNotAvailable = allUsers?.totalPages && page >= allUsers?.totalPages;
         if (isPageNotAvailable) {
@@ -156,11 +160,11 @@ const UsersRegistrationView: FC = () => {
 
     return (
         <>
-            <DeleteUserDialog
+            {hasAdminAccess && <DeleteUserDialog
                 open={isDeleteDialogVisible}
                 onClose={() => setIsDeleteDialogVisible(false)}
                 getSelectedUsers={getSelectedUsers}
-            />
+            />}
             <StyledActionsContainer>
                 <StyledSearchFilterBox>
                     <StyledTextField
