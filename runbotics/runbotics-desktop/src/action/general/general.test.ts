@@ -10,8 +10,14 @@ describe ('GeneralActionHandler', () => {
         const module = await Test.createTestingModule({
             providers: [
                 GeneralActionHandler,
-                RuntimeService,
-                StorageService,
+                {
+                    provide: RuntimeService,
+                    useValue: {}
+                },
+                {
+                    provide: StorageService,
+                    useValue: {}
+                },
             ],
         }).compile();
         generalActionHandler = module.get(GeneralActionHandler);
