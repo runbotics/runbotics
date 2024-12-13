@@ -3,7 +3,7 @@ import {
     HttpStatus, NotFoundException, Param,
     ParseIntPipe, Patch, Post, UseInterceptors
 } from '@nestjs/common';
-import { FeatureKey, Tenant } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -29,10 +29,9 @@ export class GlobalVariableController {
     @Get() // TODO: pagination & filtering
     @FeatureKeys(FeatureKey.GLOBAL_VARIABLE_READ)
     getAllGlobalVariables(
-        @Param('tenantId') tenantId: Tenant['id'],
-        @UserDecorator() user: User
+        @UserDecorator() { id, tenantId }: User,
     ) {
-        this.logger.log('REST request to get all global variables by user with id: ', user.id);
+        this.logger.log('REST request to get all global variables by user with id: ', id);
         return this.globalVariableService.getAll(tenantId);
     }
 
@@ -40,7 +39,7 @@ export class GlobalVariableController {
     @FeatureKeys(FeatureKey.GLOBAL_VARIABLE_READ)
     async getGlobalVariable(
         @Param('id', ParseIntPipe) id: number,
-        @Param('tenantId') tenantId: Tenant['id'],
+        @UserDecorator() { tenantId }: User,
     ) {
         this.logger.log('REST request to get global variable by id: ', id);
         const globalVariable = await this.globalVariableService.getById(tenantId, id);
@@ -57,11 +56,10 @@ export class GlobalVariableController {
     @FeatureKeys(FeatureKey.GLOBAL_VARIABLE_ADD)
     createGlobalVariable(
         @Body(new ZodValidationPipe(createGlobalVariableSchema)) globalVariableDto: CreateGlobalVariableDto,
-        @Param('tenantId') tenantId: Tenant['id'],
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to create global variable by user with id: ', user.id);
-        return this.globalVariableService.create(tenantId, user, globalVariableDto);
+        return this.globalVariableService.create(user.tenantId, user, globalVariableDto);
     }
 
     @Patch(':id')
@@ -69,11 +67,10 @@ export class GlobalVariableController {
     updateGlobalVariable(
         @Param('id', ParseIntPipe) id: number,
         @Body(new ZodValidationPipe(updateGlobalVariableSchema)) globalVariableDto: UpdateGlobalVariableDto,
-        @Param('tenantId') tenantId: Tenant['id'],
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to update global variable with id: ', id);
-        return this.globalVariableService.update(tenantId, user, globalVariableDto, id);
+        return this.globalVariableService.update(user.tenantId, user, globalVariableDto, id);
     }
 
     @Delete(':id')
@@ -81,10 +78,9 @@ export class GlobalVariableController {
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteGlobalVariableBy(
         @Param('id', ParseIntPipe) id: number,
-        @Param('tenantId') tenantId: Tenant['id'],
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to delete global variable with id: ', id);
-        await this.globalVariableService.delete(tenantId, user, id);
+        await this.globalVariableService.delete(user.tenantId, user, id);
     }
 }

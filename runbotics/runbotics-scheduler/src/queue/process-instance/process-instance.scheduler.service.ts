@@ -7,6 +7,7 @@ import { UiGateway } from '#/websocket/ui/ui.gateway';
 import dayjs from 'dayjs';
 import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
 import { CreateProcessInstanceDto } from '#/scheduler-database/process-instance/dto/create-process-instance.dto';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @Injectable()
 export class ProcessInstanceSchedulerService {
@@ -35,13 +36,13 @@ export class ProcessInstanceSchedulerService {
         this.uiGateway.server.emit(WsMessage.PROCESS, createdProcessInstance);
     }
 
-    async terminateProcessInstance(processInstanceId: string) {
+    async terminateProcessInstance(processInstanceId: string, user: User) {
         const processInstance =
-            await this.processInstanceService.findOneById(processInstanceId);
+            await this.processInstanceService.getOne(processInstanceId, user);
 
         if (!processInstance) {
-            this.logger.error(`Process instance ${processInstanceId} does not exist`);
-            throw new NotFoundException(`Process instance (${processInstanceId}) does not exist`);
+            this.logger.error(`Process instance ${processInstanceId} not found`);
+            throw new NotFoundException(`Process instance (${processInstanceId}) not found`);
         }
 
         await this.websocketService.sendMessageByBotId(

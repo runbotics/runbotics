@@ -14,8 +14,6 @@ export class ProcessCredentialService {
     constructor(
         @InjectRepository(ProcessCredential)
         private readonly processCredentialRepository: Repository<ProcessCredential>,
-        @InjectRepository(Credential)
-        private readonly credentialRepository: Repository<Credential>,
         private readonly processService: ProcessService,
     ) {}
 

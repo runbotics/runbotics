@@ -12,6 +12,7 @@ import { Attachment, OutlookService, Recipient, ReplyEmailRequest } from '../out
 import { SubscriptionService } from '../subscription';
 import { ExpiredLifecycleNotificationEvent, LifecycleEventDivision, LifecycleNotification, Notification } from './notification.types';
 import { User } from '#/scheduler-database/user/user.entity';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Injectable()
 export class NotificationService {
@@ -196,7 +197,13 @@ export class NotificationService {
             throw new Error(message);
         }
 
-        await this.queueService.validateProcessAccess({ process, triggered: true });
+        await this.queueService.validateProcessAccess({
+            process,
+            triggered: true,
+            user: {
+                tenantId: DEFAULT_TENANT_ID,
+            },
+        });
 
         return process;
     }

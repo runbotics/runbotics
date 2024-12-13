@@ -20,7 +20,7 @@ export class TagController {
     @Get()
     getAllTags(
         @Param('tenantId', ParseUUIDPipe) tenantId: Tenant['id'],
-        @Query('name.contains') searchPhrase: string | undefined
+        @Query('name.contains') searchPhrase: string | undefined,
     ) {
         this.logger.log(`REST request to get all tags for the tenant: ${tenantId}`);
         return this.tagService.getAll(tenantId, searchPhrase);
@@ -29,7 +29,7 @@ export class TagController {
     @Get(':id')
     async getTag(
         @Param('id', ParseIntPipe) id: number,
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         this.logger.log(`REST request to get one tag by id: ${id}`);
 
@@ -43,7 +43,7 @@ export class TagController {
     @Post()
     createTag(
         @Body(new ZodValidationPipe(createTagSchema)) tagDto: CreateTagDto,
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         this.logger.log(`REST request to create a tag by user with id, ${user.id} under tenant ${user.tenantId}`);
         return this.tagService.create(user, tagDto);
@@ -53,7 +53,7 @@ export class TagController {
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteTagById(
         @Param('id', ParseIntPipe) id: number,
-        @Param('tenantId') tenantId: Tenant['id'],
+        @UserDecorator() { tenantId }: User,
     ) {
         this.logger.log(`REST request to delete a tag by id: ${id}`);
         await this.tagService.delete(id, tenantId);

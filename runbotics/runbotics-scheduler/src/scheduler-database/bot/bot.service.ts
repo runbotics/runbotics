@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { BotEntity } from './bot.entity';
 import {
     BotStatus,
-    BotSystemType, 
+    BotSystemType,
     DefaultCollections,
     IBot,
     IBotCollection,
@@ -55,7 +55,7 @@ export class BotService {
             '(bot.status = :connected OR bot.status = :busy)';
 
         const collectionCondition = `
-        (bot.collection_id = :collectionId
+        (bot.tenant_id = :tenantId AND bot.collection_id = :collectionId
         ${
             collection.publicBotsIncluded
                 ? 'OR bot_collection.name = :public OR bot_collection.name = :guest'
@@ -75,6 +75,7 @@ export class BotService {
                 busy: BotStatus.BUSY,
                 public: DefaultCollections.PUBLIC,
                 guest: DefaultCollections.GUEST,
+                tenantId: collection.tenantId,
             })
             .getMany();
     }

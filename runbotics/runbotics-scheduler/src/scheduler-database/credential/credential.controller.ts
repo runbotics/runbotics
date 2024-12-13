@@ -10,9 +10,12 @@ import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator'
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { CredentialCriteria } from './criteria/credential.criteria';
 import { User } from '../user/user.entity';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
+import { FeatureKey } from 'runbotics-common';
 
 const COLLECTION_URL_PARTIAL = 'credential-collections/:collectionId/credentials/';
 @UseInterceptors(TenantInterceptor)
+@FeatureKeys(FeatureKey.CREDENTIALS_PAGE_READ)
 @Controller('api/scheduler/tenants/:tenantId')
 export class CredentialController {
   private readonly logger = new Logger(CredentialController.name);
@@ -22,14 +25,17 @@ export class CredentialController {
   create(
     @Body(new ZodValidationPipe(createCredentialSchema)) credentialDto: CreateCredentialDto,
     @Param('collectionId') collectionId,
-    @UserDecorator() user: User
+    @UserDecorator() user: User,
   ) {
     this.logger.log('REST request to create new credential');
     return this.credentialService.create(credentialDto, collectionId, user);
   }
 
   @Get(COLLECTION_URL_PARTIAL)
-  findAllAccessibleInCollection(@UserDecorator() user: User, @Param('collectionId') collectionId: string) {
+  findAllAccessibleInCollection(
+    @UserDecorator() user: User,
+    @Param('collectionId') collectionId: string,
+  ) {
     this.logger.log('REST request to get all credentials from collection ' + collectionId);
     return this.credentialService.findAllAccessibleByCollectionId(user, collectionId);
   }
@@ -38,32 +44,47 @@ export class CredentialController {
   getPages(
     @Specifiable(CredentialCriteria) specs: Specs<Credential>,
     @Pageable() paging: Paging,
-    @UserDecorator() user: User
+    @UserDecorator() user: User,
   ) {
     this.logger.log('REST request to get credentials by page');
     return this.credentialService.getAllAccessiblePages(user, paging, specs);
   }
 
   @Get('credentials/:id')
-  findOneUserAccessible(@Param('id') id: string, @UserDecorator() user: User) {
+  findOneUserAccessible(
+    @Param('id') id: string,
+    @UserDecorator() user: User,
+  ) {
     this.logger.log('REST request to get credential by id ' + id);
     return this.credentialService.findOneAccessibleById(id, user.tenantId, user);
   }
 
   @Patch(COLLECTION_URL_PARTIAL + ':id')
-  update(@Param('id') id: string, @Body(new ZodValidationPipe(updateCredentialSchema)) credentialDto: UpdateCredentialDto, @UserDecorator() user: User) {
+  update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(updateCredentialSchema)) credentialDto: UpdateCredentialDto,
+    @UserDecorator() user: User,
+  ) {
     this.logger.log('REST request to update credential by id ' + id);
     return this.credentialService.updateById(id, credentialDto, user);
   }
 
   @Patch('credentials/:id/UpdateAttribute/:attributeName')
-  updateAttribute(@Param('id') id: string, @Param('attributeName') attributeName: string, @Body() attributeDto: UpdateAttributeDto, @UserDecorator() user: User) {
+  updateAttribute(
+    @Param('id') id: string,
+    @Param('attributeName') attributeName: string,
+    @Body() attributeDto: UpdateAttributeDto,
+    @UserDecorator() user: User,
+  ) {
     this.logger.log('REST request to update credential attribute by id ' + id);
     return this.credentialService.updateAttribute(id, attributeName, attributeDto, user);
   }
 
   @Delete(COLLECTION_URL_PARTIAL + ':id')
-  remove(@Param('id') id: string, @UserDecorator() user: User) {
+  remove(
+    @Param('id') id: string,
+    @UserDecorator() user: User,
+  ) {
     this.logger.log('REST request to delete credential by id ' + id);
     return this.credentialService.removeById(id, user);
   }
@@ -71,7 +92,7 @@ export class CredentialController {
 
   @Get('credentials')
   findAllAccessible(
-    @UserDecorator() user: User
+    @UserDecorator() user: User,
   ) {
     this.logger.log('REST request to get all accessible credentials');
 
@@ -82,7 +103,7 @@ export class CredentialController {
   @Get('credentialsByTemplateAndProcess')
   findAllAccessibleByTemplateAndProcess(
     @Query() query,
-    @UserDecorator() user: User
+    @UserDecorator() user: User,
   ) {
     this.logger.log('REST request to get all accessible credentials by template and process');
 

@@ -5,6 +5,7 @@ import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
 import { ProcessOutput } from './process-output.model';
 import { ProcessCollection } from './process-collection.model';
+import { Tenant } from './tenant.model';
 
 export interface IProcess {
     id?: number;
@@ -26,6 +27,7 @@ export interface IProcess {
     editor?: User | null;
     tags?: Tag[];
     output?: ProcessOutput;
+    tenantId?: Tenant['id'];
 }
 
 export type ProcessDto = Omit<IProcess, 'createdBy' | 'editor'> & {

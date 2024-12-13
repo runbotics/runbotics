@@ -31,8 +31,8 @@ export class NotificationBotController {
     @Post()
     createNotification(
         @Body(new ZodValidationPipe(createNotificationBotSchema))
-        notificationBotDto: CreateNotificationBotDto,
-        @UserDecorator() user: User
+            notificationBotDto: CreateNotificationBotDto,
+        @UserDecorator() user: User,
     ) {
         this.logger.log(`REST request to create bot notification by user id: ${user.id}`);
         return this.notificationBotService.create(notificationBotDto, user);

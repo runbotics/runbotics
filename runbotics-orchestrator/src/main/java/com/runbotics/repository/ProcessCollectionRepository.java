@@ -1,6 +1,7 @@
 package com.runbotics.repository;
 
 import com.runbotics.domain.ProcessCollection;
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.domain.User;
 import com.runbotics.service.dto.ProcessCollectionDTO;
@@ -16,50 +17,50 @@ import org.springframework.stereotype.Repository;
 public interface ProcessCollectionRepository extends JpaRepository<ProcessCollection, UUID>, JpaSpecificationExecutor<ProcessCollection> {
     Long countAllByTenantId(UUID tenantId);
 
-    @Query(value = "SELECT COUNT(*) FROM ProcessCollection pc WHERE pc.id = ?1")
-    int countCollectionsById(UUID id);
+    @Query(value = "SELECT COUNT(*) FROM ProcessCollection pc WHERE pc.id = ?1 AND pc.tenant = ?2")
+    int countCollectionsById(UUID id, Tenant tenant);
 
     @Query(
         value = "SELECT COUNT(DISTINCT pc.id) " +
         "FROM ProcessCollection pc " +
         "LEFT JOIN pc.users u " +
-        "WHERE pc.id = ?1 AND " +
-        "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
+        "WHERE pc.id = ?1 AND pc.tenant = ?2 AND " +
+        "(pc.isPublic = true OR pc.createdBy = ?3 OR u = ?3)"
     )
-    int countAvailableCollectionsById(UUID id, User user);
+    int countAvailableCollectionsById(UUID id, Tenant tenant, User user);
 
     @Query(
         value = "SELECT COUNT(DISTINCT pc.id) " +
         "FROM ProcessCollection pc " +
         "LEFT JOIN pc.users u " +
-        "WHERE pc.id IN ?1 AND " +
-        "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
+        "WHERE pc.id IN ?1 AND pc.tenant = ?2 AND " +
+        "(pc.isPublic = true OR pc.createdBy = ?3 OR u = ?3)"
     )
-    int countAvailableCollectionsByIds(List<UUID> ids, User user);
+    int countAvailableCollectionsByIds(List<UUID> ids, Tenant tenant, User user);
 
     @Query(
         value = "SELECT DISTINCT pc " +
         "FROM ProcessCollection pc " +
         "LEFT JOIN pc.users u " +
-        "WHERE pc.parentId = ?1 AND " +
-        "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
+        "WHERE pc.parentId = ?1 AND pc.tenant = ?2 AND " +
+        "(pc.isPublic = true OR pc.createdBy = ?3 OR u = ?3)"
     )
-    Set<ProcessCollection> findAvailableChildrenCollections(UUID parentId, User user);
+    Set<ProcessCollection> findAvailableChildrenCollections(UUID parentId, Tenant tenant, User user);
 
     @Query(
         value = "SELECT DISTINCT pc " +
         "FROM ProcessCollection pc " +
         "LEFT JOIN pc.users u " +
-        "WHERE pc.parentId IS NULL AND " +
-        "(pc.isPublic = true OR pc.createdBy = ?1 OR u = ?1)"
+        "WHERE pc.parentId IS NULL AND pc.tenant = ?1 AND " +
+        "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
     )
-    Set<ProcessCollection> findAvailableRootCollections(User user);
+    Set<ProcessCollection> findAvailableRootCollections(Tenant tenant, User user);
 
-    @Query(value = "SELECT pc " + "FROM ProcessCollection pc " + "WHERE pc.parentId = ?1")
-    List<ProcessCollection> findAllChildrenCollections(UUID parentId);
+    @Query(value = "SELECT pc " + "FROM ProcessCollection pc " + "WHERE pc.parentId = ?1 AND pc.tenant = ?2")
+    List<ProcessCollection> findAllChildrenCollections(UUID parentId, Tenant tenant);
 
-    @Query(value = "SELECT pc " + "FROM ProcessCollection pc " + "WHERE pc.parentId IS NULL")
-    List<ProcessCollection> findAllRootCollections();
+    @Query(value = "SELECT pc " + "FROM ProcessCollection pc " + "WHERE pc.parentId IS NULL AND pc.tenant = ?1")
+    List<ProcessCollection> findAllRootCollections(Tenant tenant);
 
     @Query(value = "SELECT pc " + "FROM ProcessCollection pc " + "WHERE pc.parentId = ?1")
     List<String> findAllChildrenCollectionNames(UUID parentId);
@@ -76,7 +77,7 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
     @Query(
         value = "WITH RECURSIVE bread_crumbs AS ( " +
         "SELECT pc.*, 1 AS lvl FROM process_collection pc " +
-        "WHERE pc.id = ?1 " +
+        "WHERE pc.id = ?1 AND pc.tenant_id = ?2 " +
         "UNION " +
         "SELECT pc.*, bc.lvl + 1 FROM bread_crumbs bc " +
         "JOIN process_collection pc ON pc.id = bc.parent_id " +
@@ -86,28 +87,28 @@ public interface ProcessCollectionRepository extends JpaRepository<ProcessCollec
         "ORDER BY bc.lvl DESC",
         nativeQuery = true
     )
-    List<ProcessCollection> findAllAncestors(UUID id);
+    List<ProcessCollection> findAllAncestors(UUID id, UUID tenantId);
 
     @Query(
         value = "SELECT DISTINCT pc " +
         "FROM ProcessCollection pc " +
         "LEFT JOIN pc.users u " +
-        "WHERE pc.isPublic = true OR " +
-        "pc.createdBy = ?1 OR u = ?1"
+        "WHERE pc.tenant = ?1 AND " +
+        "(pc.isPublic = true OR pc.createdBy = ?2 OR u = ?2)"
     )
-    List<ProcessCollection> findAllUserAccessible(User user);
+    List<ProcessCollection> findAllUserAccessible(Tenant tenant, User user);
 
-    @Query(value = "SELECT * FROM process_collection", nativeQuery = true)
-    List<ProcessCollection> getAll();
+    @Query(value = "SELECT * FROM process_collection pc WHERE pc.tenant_id = ?1", nativeQuery = true)
+    List<ProcessCollection> getAll(UUID tenantId);
 
     @Query(
         value = "SELECT pc " +
         "FROM ProcessCollection pc " +
         "LEFT JOIN pc.users u " +
-        "WHERE pc.id = ?2 AND " +
+        "WHERE pc.id = ?2 AND pc.tenant = ?3 AND " +
         "(pc.isPublic = true OR " +
         "pc.createdBy = ?1 OR " +
         "u = ?1)"
     )
-    List<ProcessCollection> findUserAccessibleById(User user, UUID id);
+    List<ProcessCollection> findUserAccessibleById(User user, UUID id, Tenant tenant);
 }

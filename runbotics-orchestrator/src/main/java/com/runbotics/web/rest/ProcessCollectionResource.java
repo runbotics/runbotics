@@ -156,6 +156,9 @@ public class ProcessCollectionResource {
     ) {
         log.debug("Request to update Process Collection. CollectionId: {}, ProcessCollection: {}", id, processCollectionDTO);
 
+        User user = userService.getUserWithAuthorities().get();
+        processCollectionService.checkCollectionAvailability(id, user);
+
         UUID parentId = processCollectionDTO.getParentId();
         String name = processCollectionDTO.getName();
         List<ProcessCollection> sameNameSiblings = parentId != null

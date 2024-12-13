@@ -2,7 +2,7 @@ import { BotStatus } from './bot-status.model';
 import { User } from './user.model';
 import { IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
-import { NotificationBot } from './notification-bot.model';
+import { Tenant } from './tenant.model';
 
 export interface IBot {
     id?: number;
@@ -14,4 +14,5 @@ export interface IBot {
     status?: BotStatus;
     collection?: IBotCollection;
     version?: string | null;
+    tenantId?: Tenant['id'];
 }

@@ -23,7 +23,7 @@ export class ProcessInstanceLoopEventController {
     @Get(':loopId')
     getLoopEvents(
         @Param('loopId') loopId: ProcessInstanceLoopEvent['loopId'],
-        @UserDecorator() user: User
+        @UserDecorator() user: User,
     ) {
         return this.processInstanceLoopEventService.getLoopEvents(loopId, user);
     }
