@@ -170,12 +170,12 @@ export class QueueService implements OnModuleInit {
 
     async validateProcessAccess({ process, user, triggered = false }: ValidateProcessAccessProps) {
         const hasTenantAccess = process.tenantId === user.tenantId;
-        const hasAccess = hasTenantAccess && process.createdBy?.id === user?.id;
+        const hasProcessAccess = hasTenantAccess && process.createdBy?.id === user?.id;
         const isPublic = hasTenantAccess && process.isPublic;
-        const isAdmin = hasTenantAccess && user?.authorities.filter(role => role.name === Role.ROLE_ADMIN || role.name === Role.ROLE_TENANT_ADMIN).length > 0;
+        const isAdmin = hasTenantAccess && user?.authorities.filter(role => [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN].includes(role.name)).length > 0;
         const isTriggerable = process?.isTriggerable;
 
-        if (!hasAccess && !isPublic && !isAdmin) {
+        if (!hasProcessAccess && !isPublic && !isAdmin) {
             this.logger.error(`User${user ? ' ' + user?.email : ''} does not have access to the process "${process?.id}"`);
             throw new ForbiddenException(`You do not have access to the process "${process?.id}"`);
         }

@@ -16,7 +16,7 @@ export class TagService {
         private readonly tagRepository: Repository<Tag>
     ) {}
 
-    async getAll(tenantId: string, searchPhrase: string | undefined) {
+    async getAll(tenantId: string, searchPhrase?: string) {
         const lookupPhrase = searchPhrase ? `%${searchPhrase}%` : '%%';
 
         return await this.tagRepository

@@ -35,7 +35,7 @@ export class TenantController {
     @GetWithTenant('me')
     @FeatureKeys(FeatureKey.TENANT_READ)
     async getTenantByUser(
-        @UserDecorator('tenantId') tenantId: User['tenantId'],
+        @UserDecorator() { tenantId }: User,
     ) {
         const tenant = await this.tenantService.getById(tenantId);
 
@@ -50,7 +50,7 @@ export class TenantController {
     @GetWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_GET_INVITE_CODE)
     async getActiveInviteCode(
-        @UserDecorator('tenantId') tenantId: User['tenantId'],
+        @UserDecorator() { tenantId }: User,
     ) {
         const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(tenantId);
 
@@ -65,7 +65,7 @@ export class TenantController {
     @PostWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_CREATE_INVITE_CODE)
     async createInviteCode(
-        @UserDecorator('tenantId') tenantId: User['tenantId'],
+        @UserDecorator() { tenantId }: User,
     ) {
 
         if (await this.tenantService.getActiveInviteCodeByTenantId(tenantId)) {
