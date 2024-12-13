@@ -6,7 +6,6 @@ import {
     JoinColumn, JoinTable, ManyToMany,
     ManyToOne, OneToMany, OneToOne,
     PrimaryColumn,
-    UpdateDateColumn,
 } from 'typeorm';
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
 import {
@@ -74,7 +73,11 @@ export class ProcessEntity {
     @Column({ name: 'execution_info', type: 'text', nullable: true })
     executionInfo: string;
 
-    @ManyToOne(() => ProcessOutput, processOutput => processOutput.processes)
+    @ManyToOne(
+        () => ProcessOutput,
+        processOutput => processOutput.processes,
+        { onUpdate: 'CASCADE' },
+    )
     @JoinColumn({ name: 'output_type' })
     output: ProcessOutput;
 
@@ -102,7 +105,10 @@ export class ProcessEntity {
     @Column({ name: 'bot_collection' })
     botCollectionId: string;
 
-    @ManyToOne(() => ProcessCollectionEntity)
+    @ManyToOne(
+        () => ProcessCollectionEntity,
+        { onDelete: 'CASCADE' },
+    )
     @JoinColumn({ name: 'process_collection' })
     processCollection: IProcessCollection;
 
@@ -136,7 +142,15 @@ export class ProcessEntity {
     )
     processCredential: ProcessCredential[];
 
-    @ManyToMany(() => Tag, tag => tag.processes, { eager: true, cascade: true })
+    @ManyToMany(
+        () => Tag,
+        tag => tag.processes,
+        {
+            eager: true,
+            cascade: true,
+            onDelete: 'CASCADE',
+        },
+    )
     @JoinTable({
         name: 'tag_process',
         joinColumn: { name: 'process_id', referencedColumnName: 'id' },

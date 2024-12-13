@@ -12,7 +12,7 @@ import { GlobalVariable } from '#/scheduler-database/global-variable/global-vari
 import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { mapToWhereOptionsArray, Specs } from '#/utils/specification/specifiable.decorator';
-import { BotCollectionDefaultCollections } from '#/database/bot-collection/bot-collection.consts';
+import { BotCollectionDefaultCollections } from '#/scheduler-database/bot-collection/bot-collection.consts';
 import { BotCollection } from '../bot-collection/bot-collection.entity';
 import { TagService } from '../tags/tag.service';
 import { isTenantAdmin } from '#/utils/authority.utils';
@@ -59,6 +59,7 @@ export class ProcessCrudService {
         process.isPublic = processDto.isPublic;
         process.isAttended = processDto.isAttended;
         process.isTriggerable = processDto.isTriggerable;
+        process.updated = dayjs().toISOString();
 
         process.editor = user;
         process.processCollectionId = processDto.processCollection?.id;
@@ -90,6 +91,7 @@ export class ProcessCrudService {
         process.outputType = ProcessOutputType.TEXT;
         process.description = 'DEMO Process';
         process.createdBy = user;
+        process.updated = dayjs().toISOString();
 
         const guestCollection = await this.botCollectionRepository.findOneBy({ name: BotCollectionDefaultCollections.GUEST });
 
