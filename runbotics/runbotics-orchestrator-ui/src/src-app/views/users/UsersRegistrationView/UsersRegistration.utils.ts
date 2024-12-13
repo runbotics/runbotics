@@ -1,8 +1,8 @@
 import { UserDto } from 'runbotics-common';
 
-export interface SelectedTenants { [id:number]: string };
+export interface CombinedUserWithTenant { [id:number]: string };
 
-export const getSelectedTenants = (users: UserDto[]): SelectedTenants => {
+export const getCombinedUserWithTenantIds = (users: UserDto[]): CombinedUserWithTenant => {
     if (!users) return {};
 
     const usersTenant = users.reduce((acc, currentUser) => {
