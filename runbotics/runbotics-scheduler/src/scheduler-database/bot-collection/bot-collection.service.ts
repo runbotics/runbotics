@@ -84,10 +84,22 @@ export class BotCollectionService {
 
     findAll(user: User, specs: Specs<BotCollection>) {
         const options: FindManyOptions<BotCollection> = {};
-        options.where = {
-            ...specs.where,
-            tenantId: user.tenantId,
-        };
+        options.where = [
+            {
+                ...specs.where,
+                tenantId: user.tenantId,
+            },
+            {
+                name: specs.where.name ?
+                    And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
+                    : DefaultCollections.GUEST,
+            },
+            {
+                name: specs.where.name ?
+                    And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
+                    : DefaultCollections.PUBLIC,
+            },
+        ];
 
         options.order = specs.order;
         options.relations = RELATIONS;
@@ -97,10 +109,22 @@ export class BotCollectionService {
 
     findAllPage(user: User, specs: Specs<BotCollection>, paging: Paging) {
         const options: FindManyOptions<BotCollection> = {};
-        options.where = {
-            ...specs.where,
-            tenantId: user.tenantId,
-        };
+        options.where = [
+            {
+                ...specs.where,
+                tenantId: user.tenantId,
+            },
+            {
+                name: specs.where.name ?
+                    And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
+                    : DefaultCollections.GUEST,
+            },
+            {
+                name: specs.where.name ?
+                    And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
+                    : DefaultCollections.PUBLIC,
+            },
+        ];
 
         options.order = specs.order;
 
@@ -257,7 +281,7 @@ export class BotCollectionService {
         if (this.userService.hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS)) {
             const ids = await this.findIdsForAdmin(user, specs, paging);
             const options: FindManyOptions<BotCollection> = {
-                where: { tenantId: user.tenantId, id: In(ids) },
+                where: { id: In(ids) },
                 relations: RELATIONS,
             };
 
@@ -275,7 +299,7 @@ export class BotCollectionService {
 
         const ids = await this.findIdsForUser(user, specs, paging);
         const options: FindManyOptions<BotCollection> = {
-            where: { tenantId: user.tenantId, id: In(ids) },
+            where: { id: In(ids) },
             relations: RELATIONS,
         };
 
