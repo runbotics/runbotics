@@ -40,7 +40,6 @@ export class BotCrudService {
                 collection: {
                     id: In(collectionIds),
                 },
-                tenantId: user.tenantId,
             },
             relations,
         };
@@ -91,7 +90,7 @@ export class BotCrudService {
         );
 
         const bot = await this.botRepository
-            .findOneByOrFail({ tenantId: user.tenantId, id })
+            .findOneByOrFail({ id })
             .catch(() => {
                 throw new NotFoundException();
             });

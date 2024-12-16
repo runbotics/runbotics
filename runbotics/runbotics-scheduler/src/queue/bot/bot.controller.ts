@@ -1,6 +1,7 @@
 import {
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     HttpException,
     Param,
@@ -8,7 +9,7 @@ import {
     Query,
 } from '@nestjs/common';
 import { BotLogService } from '#/websocket/bot/bot-log.service';
-import { IBot, FeatureKey, ProcessInstanceStatus } from 'runbotics-common';
+import { IBot, FeatureKey, ProcessInstanceStatus, BotStatus } from 'runbotics-common';
 import { BotSchedulerService } from './bot.scheduler.service';
 import { Logger } from '#/utils/logger';
 import { AuthService } from '#/auth/auth.service';
@@ -17,6 +18,7 @@ import { ProcessInstanceService } from '#/scheduler-database/process-instance/pr
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
 import { BotCrudService } from '#/scheduler-database/bot/bot-crud.service';
+import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
 
 @Controller('scheduler/bots')
 export class BotController {
@@ -27,6 +29,7 @@ export class BotController {
         private readonly botSchedulerService: BotSchedulerService,
         private readonly authService: AuthService,
         private readonly botCrudService: BotCrudService,
+        private readonly botCollectionService: BotCollectionService,
         private readonly processInstanceService: ProcessInstanceService,
     ) {}
 
@@ -79,6 +82,13 @@ export class BotController {
 
         const bot = await this.botCrudService.findOne(user, id);
         const installationId = bot.installationId;
+        const collectionId = bot.collectionId;
+
+        const isDefaultCollection = await this.botCollectionService.isDefaultCollection(collectionId);
+        const isBotConnected = [BotStatus.CONNECTED, BotStatus.BUSY].includes(bot.status);
+        if (isDefaultCollection && isBotConnected) {
+            throw new ForbiddenException('Cannot delete bot');
+        }
 
         await this.authService.unregisterBot(installationId);
 
