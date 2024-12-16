@@ -87,7 +87,7 @@ export class BotController {
         const isDefaultCollection = await this.botCollectionService.isDefaultCollection(collectionId);
         const isBotConnected = [BotStatus.CONNECTED, BotStatus.BUSY].includes(bot.status);
         if (isDefaultCollection && isBotConnected) {
-            throw new ForbiddenException('Can not delete bot');
+            throw new ForbiddenException('Cannot delete bot');
         }
 
         await this.authService.unregisterBot(installationId);

@@ -111,7 +111,7 @@ export class BotCollectionController {
         @UserDecorator() user: User,
     ){
         if (await this.botCollectionService.isDefaultCollection(id)) {
-            throw new BadRequestException('Can not delete default collection');
+            throw new BadRequestException('Cannot delete default collection');
         }
 
         return this.botCollectionService.delete(id, user);
