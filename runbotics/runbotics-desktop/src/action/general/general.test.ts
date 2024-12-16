@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import GeneralActionHandler from './general.action-handler';
 import { RuntimeService } from '../../core/bpm/runtime';
+import { StorageService } from '#config';
 
 describe ('GeneralActionHandler', () => {
     let generalActionHandler: GeneralActionHandler;
@@ -12,7 +13,11 @@ describe ('GeneralActionHandler', () => {
                 {
                     provide: RuntimeService,
                     useValue: {}
-                }
+                },
+                {
+                    provide: StorageService,
+                    useValue: {}
+                },
             ],
         }).compile();
         generalActionHandler = module.get(GeneralActionHandler);
