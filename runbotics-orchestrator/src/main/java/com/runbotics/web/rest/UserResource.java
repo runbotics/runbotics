@@ -115,17 +115,14 @@ public class UserResource {
 
         if (userDTO.getId() != null) {
             throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
-            // Lowercase the user login before comparing with database
-        } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
-            throw new LoginAlreadyUsedException();
         } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
             User newUser = userService.createUser(userDTO);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity
-                .created(new URI("/api/admin/users/" + newUser.getLogin()))
-                .headers(HeaderUtil.createAlert(applicationName, "userManagement.created", newUser.getLogin()))
+                .created(new URI("/api/admin/users/" + newUser.getEmail()))
+                .headers(HeaderUtil.createAlert(applicationName, "userManagement.created", newUser.getEmail()))
                 .body(newUser);
         }
     }
@@ -146,7 +143,7 @@ public class UserResource {
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
         }
-        existingUser = userRepository.findOneByLogin(userDTO.getLogin().toLowerCase());
+        existingUser = userRepository.findOneByEmail(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
@@ -154,7 +151,7 @@ public class UserResource {
 
         return ResponseUtil.wrapOrNotFound(
             updatedUser,
-            HeaderUtil.createAlert(applicationName, "userManagement.updated", userDTO.getLogin())
+            HeaderUtil.createAlert(applicationName, "userManagement.updated", userDTO.getEmail())
         );
     }
 
@@ -181,6 +178,22 @@ public class UserResource {
         log.debug("REST request to partial update User partially : {}, {}", id, adminUserDTO);
 
         Optional<AdminUserDTO> result = userService.partialUpdate(adminUserDTO);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, adminUserDTO.getId().toString())
+        );
+    }
+
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
+    @PatchMapping("/users/tenant/{id}")
+    public ResponseEntity<AdminUserDTO> partialUpdateInTenant(
+        @PathVariable(value = "id", required = true) Long id,
+        @NotNull @RequestBody AdminUserDTO adminUserDTO
+    ) {
+        log.debug("REST request to partial update User in tenant partially : {}, {}", id, adminUserDTO);
+
+        Optional<AdminUserDTO> result = userService.partialUpdateInTenant(adminUserDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -221,7 +234,6 @@ public class UserResource {
             .stream().map(user -> {
                 User limitedUser = new User();
                 limitedUser.setId(user.getId());
-                limitedUser.setLogin(user.getLogin());
                 limitedUser.setEmail(user.getEmail());
                 return limitedUser;
             })
@@ -244,7 +256,7 @@ public class UserResource {
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
+        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByEmail(login).map(AdminUserDTO::new));
     }
 
     /**
@@ -283,6 +295,46 @@ public class UserResource {
         }
 
         Page<AdminUserDTO> page = userService.getAllActivatedUsers(pageable, criteria);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
+    }
+
+    /**
+     * {@code GET /admin/users/activated-tenant} : get all activated users by tenant with all the details
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users in tenant.
+     */
+    @GetMapping("/users/not-activated-tenant")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
+    public ResponseEntity<Page<AdminUserDTO>> getAllNotActivatedUsersByTenant(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all by tenant activated User: {}, by criteria: {}", pageable, criteria);
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<AdminUserDTO> page = userService.getAllNotActivatedUsersByTenant(pageable, criteria);
+
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
+    }
+
+    /**
+     * {@code GET /admin/users/not-activated-tenant} : get all not activated users by tenant with all the details
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users in tenant.
+     */
+    @GetMapping("/users/activated-tenant")
+    @PreAuthorize("@securityService.checkFeatureKeyAccess('" + FeatureKeyConstants.TENANT_EDIT_USER + "')")
+    public ResponseEntity<Page<AdminUserDTO>> getAllActivatedUsersByTenant(UserCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get all by tenant activated User: {}, by criteria: {}", pageable, criteria);
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<AdminUserDTO> page = userService.getAllActivatedUsersByTenant(pageable, criteria);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page, headers, HttpStatus.OK);

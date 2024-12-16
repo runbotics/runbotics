@@ -7,9 +7,10 @@ import { useSelector } from 'react-redux';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { usersSelector } from '#src-app/store/slices/Users';
 
+import { AVAILABLE_ROWS_PER_PAGE } from '#src-app/views/utils/TablePaging.provider';
+
 import { DataGridStyle} from './UsersRegistrationTable.styles';
 import useUsersRegistrationColumns from './useUsersRegistrationColumns';
-import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
 
 interface UsersRegistrationTableProps {
     page: number;
@@ -19,6 +20,9 @@ interface UsersRegistrationTableProps {
     selections: GridInputSelectionModel;
     handleSelectionChange: (selection: object) => void;
     handleSelectedRolesChange: (id: number, value: string) => void;
+    handleSelectedTenantsChange: (id: number, value: string) => void;
+    isForAdmin: boolean;
+    isTenantSelected: boolean;
 }
 
 const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
@@ -28,11 +32,20 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
     onPageSizeChange,
     selections,
     handleSelectionChange,
-    handleSelectedRolesChange
+    handleSelectedRolesChange,
+    handleSelectedTenantsChange,
+    isForAdmin,
+    isTenantSelected
 }) => {
-    const userRegistrationColumns = useUsersRegistrationColumns(handleSelectedRolesChange);
-    const { notActivated } = useSelector(usersSelector);
+    const userRegistrationColumns = useUsersRegistrationColumns(
+        handleSelectedRolesChange,
+        handleSelectedTenantsChange,
+        isForAdmin
+    );
+    const { notActivated, tenantNotActivated } = useSelector(usersSelector);
     const { translate } = useTranslations();
+
+    const userData = isForAdmin ? notActivated : tenantNotActivated;
 
     return (
         <Card>
@@ -41,10 +54,11 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
                     <DataGrid
                         sx={DataGridStyle}
                         autoHeight
+                        columnVisibilityModel={{ tenant: !isTenantSelected }}
                         columns={userRegistrationColumns}
-                        rows={notActivated.allByPage?.content ?? []}
-                        rowCount={notActivated.allByPage?.totalElements ?? 0}
-                        loading={notActivated.loading}
+                        rows={userData.allByPage?.content ?? []}
+                        rowCount={userData.allByPage?.totalElements ?? 0}
+                        loading={userData.loading}
                         page={page}
                         onPageChange={(newPage) => onPageChange(newPage)}
                         pageSize={pageSize}
@@ -53,7 +67,7 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
                         onSelectionModelChange={(e) => handleSelectionChange(e)}
                         selectionModel={selections}
                         paginationMode='server'
-                        rowsPerPageOptions={ROWS_PER_PAGE}
+                        rowsPerPageOptions={AVAILABLE_ROWS_PER_PAGE}
                         localeText={{
                             noRowsLabel: translate('Users.Registration.Table.Error.Rows')
                         }}

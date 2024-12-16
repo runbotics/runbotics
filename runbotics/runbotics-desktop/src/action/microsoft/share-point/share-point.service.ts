@@ -1,26 +1,26 @@
-import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { createWriteStream } from 'fs';
 import { IncomingMessage } from 'http';
-
-import { RunboticsLogger } from '#logger';
 
 import { CollectionResponse, MicrosoftGraphService } from '../microsoft-graph';
 import {
     CreateFolderParams, DownloadFileParams, GetFileByPathParams,
     Site, UploadFileParams, MoveFileParams, DeleteItemParams,
-    CreateShareLinkParams
+    CreateShareLinkParams, ODataCollection, SharepointListItem,
 } from './share-point.types';
 import { Drive, DriveItem, Permission } from '../common.types';
 import { saveFileStream, verifyDestinationPath } from '../common.utils';
 
-@Injectable()
 export class SharePointService {
-    private readonly logger = new RunboticsLogger(SharePointService.name);
-
     constructor(
         private readonly microsoftGraphService: MicrosoftGraphService,
     ) {}
+
+    async getListItems (siteId: string, listName: string): Promise<SharepointListItem[]> {
+        const result = await this.microsoftGraphService
+            .get(`/sites/${siteId}/lists/${listName}/items?expand=fields`) as ODataCollection<SharepointListItem>;
+        return result.value;
+    }
 
     async downloadFileByPath({
         siteId, driveId, filePath, localDirectory,

@@ -14,6 +14,9 @@ export enum FeatureKey {
     // Allow to GET list of all processes & GET single process by id [ Processes page ]
     PROCESS_LIST_READ = 'PROCESS_LIST_READ',
 
+    // Allow to GET all processes view (except for processes inside collections) [ Processes Page ]
+    ALL_PROCESSES_READ = 'ALL_PROCESSES_READ', // @todo to be removed after finishing process collection migration and restoring correct permission checking
+
     // Show "ADD NEW PROCESS" button [ Processes page ]
     PROCESS_ADD = 'PROCESS_ADD',
 
@@ -164,8 +167,8 @@ export enum FeatureKey {
     // used for api/admin/users/limited
     BASIC_USER_READ = 'BASIC_USER_READ',
 
-    // Access to users page, manage users
-    USERS_PAGE_READ = 'USERS_PAGE_READ',
+    // Access to manage inactive users in all tenants
+    MANAGE_INACTIVE_USERS = 'MANAGE_INACTIVE_USERS',
 
     // Allow to read process output types
     PROCESS_OUTPUT_TYPE_READ = 'PROCESS_OUTPUT_TYPE_READ',
@@ -187,14 +190,35 @@ export enum FeatureKey {
     // Allow to delete collection of processes (processes page -> COLLECTIONS tab -> 3 vertical dots -> "delete" option)
     PROCESS_COLLECTION_DELETE = 'PROCESS_COLLECTION_DELETE',
 
-    // Read/write access to every tenant resource
-    TENANT_ALL_ACCESS = 'TENANT_ALL_ACCESS',
+    // Access to manage tenants
+    MANAGE_ALL_TENANTS = 'MANAGE_ALL_TENANTS',
 
     // Allows to read the resources assigned to the tenant
     TENANT_READ = 'TENANT_READ',
 
     // Allows to edit the resources assigned to the tenant
     TENANT_EDIT = 'TENANT_EDIT',
+
+    // Allows to display/get users in tenant
+    TENANT_READ_USER = 'TENANT_READ_USER',
+
+    // Allows to edit users assigned to the tenant
+    TENANT_EDIT_USER = 'TENANT_EDIT_USER',
+
+    // Allows to get invite code for admin of specific tenant
+    TENANT_GET_INVITE_CODE = 'TENANT_GET_INVITE_CODE',
+
+    // Allows to get invite code for every tenant
+    TENANT_GET_ALL_INVITE_CODE = 'TENANT_GET_ALL_INVITE_CODE',
+
+    // Allows to create invite code for admin of specific tenant
+    TENANT_CREATE_INVITE_CODE = 'TENANT_CREATE_INVITE_CODE',
+
+    // Allows to create invite code for all tenants
+    TENANT_CREATE_ALL_INVITE_CODE = 'TENANT_CREATE_ALL_INVITE_CODE',
+
+    // Allows to read credentials page
+    CREDENTIALS_PAGE_READ = 'CREDENTIALS_PAGE_READ',
 }
 
 export interface IFeatureKey {

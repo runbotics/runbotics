@@ -1,5 +1,4 @@
-import { Body, Controller, Delete, HttpException, HttpStatus, Param, Post, Request, UsePipes } from '@nestjs/common';
-import { AuthRequest } from '#/types';
+import { Body, Controller, Delete, HttpException, HttpStatus, Param, Post, UsePipes } from '@nestjs/common';
 import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
 import { startProcessSchema } from '#/utils/pipes';
 import { Logger } from '#/utils/logger';
@@ -9,6 +8,8 @@ import { QueueService } from '../queue.service';
 import { Job, JobId } from 'bull';
 import { SchedulerService } from '../scheduler/scheduler.service';
 import { checkMessageProperty, checkStatusProperty } from '#/utils/error-message.utils';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @Controller('scheduler/trigger')
 export class TriggerController {
@@ -25,19 +26,19 @@ export class TriggerController {
     async triggerProcess(
         @Param('processId') processId: number,
         @Body() input: ProcessInput,
-        @Request() request: AuthRequest,
+        @UserDecorator() user: User,
     ) {
         try {
             this.logger.log(`=> Starting process ${processId}`);
             const process = await this.queueService.getProcessById(processId);
-            await this.queueService.validateProcessAccess({ process: process, user: request.user, triggered: true });
+            await this.queueService.validateProcessAccess({ process: process, user, triggered: true });
 
             const { orchestratorProcessInstanceId } = await this.queueService.createInstantJob({
                 process,
                 input,
-                user: request.user,
+                user,
                 trigger: { name: TriggerEvent.API },
-                triggerData: { userEmail: request.user.email }
+                triggerData: { userEmail: user.email }
             });
             this.logger.log(`<= Process ${processId} successfully started`);
 
@@ -55,14 +56,14 @@ export class TriggerController {
     @Delete(':jobId')
     async removeProcess(
         @Param('jobId') jobId: JobId,
-        @Request() request: AuthRequest,
+        @UserDecorator() user: User,
     ) {
         try {
             this.logger.log(`Trying to remove job (${jobId}) from queue`);
 
             const job: Job<JobData> = await this.schedulerService.getJobById(jobId);
             const process = await this.queueService.getProcessById(job.data.process?.id);
-            await this.queueService.validateProcessAccess({ process: process, user: request.user, triggered: true });
+            await this.queueService.validateProcessAccess({ process: process, user, triggered: true });
 
             this.logger.log(`=> Removing job (${jobId}) from queue`);
 

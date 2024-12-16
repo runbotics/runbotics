@@ -7,8 +7,10 @@ function _interopRequireDefault(obj) {
 
 const isExpressionPattern = /^\${(.+?)}$/;
 const expressionPattern = /\${(.+?)}/;
-const jexlPattern = /#{(.+?)}/g;
+const jexlPattern = /#{(.+?)}/;
 const jexlServicePattern = /#{(.+?)\((.*)\)}/;
+const jexlServiceMethodPattern = /(.+?)\((.*)\)/;
+const jexlMatchingBracketsPattern = /#\{((?:[^{}]|#\{(?:[^{}]|#\{[^{}]*\})*\})*)\}/;
 const digitPattern = /^-?\d+(\.?\d+)?$/;
 
 export class Expressions {
@@ -37,7 +39,9 @@ export class Expressions {
         } else if (context.environment?.variables?.content?.type === 'bpmn:SubProcess') {
             const elementVariableName = context.environment.variables?.content?.input?.elementVariable;
             context.environment.variables[elementVariableName] = context.environment.variables?.content?.[elementVariableName];
-        } else if (jexlServicePattern.test(templatedString)) {
+        }
+
+        if (jexlServicePattern.test(templatedString)) {
             templatedString = Expressions.getFullServiceMethodCall(templatedString, context, expressionFnContext);
         }
 
@@ -68,21 +72,63 @@ export class Expressions {
             context?.environment?.output?.variableName;
     }
 
-    private static getFullServiceMethodCall(templatedString, context, expressionFnContext) {
-        const extractedMethod = jexlServicePattern.exec(templatedString);
-        const methodName = extractedMethod[1];
-        const args = extractedMethod[2].trim().split(",");
+    private static getFullServiceMethodCall(templatedString: string, context, expressionFnContext) {
+        const jexlMatchingBracketsRegExp = new RegExp(jexlMatchingBracketsPattern, 'g');
+        const matches = templatedString.match(jexlMatchingBracketsRegExp);
+        if (!matches) {
+            return templatedString;
+        }
 
-        const mappedArgs = args.map((arg) => {
-            const trimmedArg = arg.trim();
-            if (jexlServicePattern.test(trimmedArg)) {
-                return Expressions.resolveExpression(trimmedArg, context, expressionFnContext);
-            } else if (Expressions.isVariableArgument(trimmedArg)) {
-                return 'environment.variables.' + trimmedArg;
+        let result = templatedString;
+        for (const expressionMatch of matches) {
+            const recursivelyExtractedExpression =
+                jexlMatchingBracketsRegExp.exec(templatedString);
+            if (!recursivelyExtractedExpression) continue;
+
+            const extractedMethod =
+                jexlServiceMethodPattern.exec(recursivelyExtractedExpression[1]);
+            if (!extractedMethod) continue;
+
+            const [_, methodName, methodArgs] = extractedMethod;
+            const args = methodArgs.length
+                ? methodArgs.trim().split(",")
+                : [];
+
+            const mappedArgs = args.map((arg) => {
+                const trimmedArg = arg.trim();
+                if (jexlServicePattern.test(trimmedArg)) {
+                    return Expressions.resolveExpression(trimmedArg, context, expressionFnContext);
+                } else if (trimmedArg === 'iterator') {
+                    return context.environment.variables.content.index;
+                } else if (Expressions.isVariableArgument(trimmedArg)) {
+                    return 'environment.variables.' + trimmedArg;
+                }
+                return trimmedArg;
+            });
+
+            const serviceMethodCall =
+                '${environment.services.' + methodName + '(' + mappedArgs.join(',') + ')}';
+
+            const resolvedServiceExpression =
+                Expressions
+                    .internalResolveExpression(
+                        serviceMethodCall,
+                        context,
+                        expressionFnContext,
+                    );
+
+            if (expressionMatch === templatedString) {
+                result = resolvedServiceExpression;
+                continue;
             }
-            return trimmedArg;
-        });
-        return '${environment.services.' + methodName + '(' + mappedArgs.join(',') + ')}';
+
+            result = result.replace(
+                expressionMatch,
+                resolvedServiceExpression,
+            );
+        }
+
+        return result;
     }
 
     private static isVariableArgument(arg) {
@@ -111,8 +157,13 @@ export class Expressions {
 
             response.jexl = true;
 
+            const jexlRegExp = new RegExp(jexlPattern, 'g');
             const property = templatedString.replace(
-                jexlPattern, (expressionMatch, innerProperty) => {
+                jexlRegExp, (expressionMatch, innerProperty) => {
+                    if (innerProperty === "iterator") {
+                        return jexlContext.index;
+                    }
+
                     const evaluatedProperty = Jexl.evalSync(innerProperty, jexlContext);
                     const isPropertyCollection = this.checkIsCollection(evaluatedProperty);
 
@@ -156,8 +207,6 @@ export class Expressions {
                 return false;
             } else if (innerProperty === "null") {
                 return null;
-            } else if (innerProperty === "iterator") {
-                return context.environment.variables.content.index;
             } else {
                 const n = Number(innerProperty);
                 if (!isNaN(n)) return n;

@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler, DesktopRunRequest } from '@runbotics/runbotics-sdk';
-import { MailerService } from '@nestjs-modules/mailer';
-import fs from 'fs';
+import { MailService } from '#mailer/mailer.service';
 import { ServerConfigService } from '#config';
+import { MailCredential } from './mail.types';
+import fs from 'fs';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 export type MailActionRequest =
-| DesktopRunRequest<'mail.send', MailSendActionInput>;
+    | DesktopRunRequest<'mail.send', MailSendActionInput>;
 
 export type MailSendActionInput = {
     to: string;
@@ -18,14 +20,15 @@ export type MailSendActionOutput = any;
 
 @Injectable()
 export default class MailActionHandler extends StatelessActionHandler {
+
     constructor(
-        private readonly mailerService: MailerService,
         private readonly serverConfigService: ServerConfigService,
+        private readonly mailService: MailService,
     ) {
         super();
     }
 
-    async sendMail(input: MailSendActionInput): Promise<MailSendActionOutput> {
+    async sendMail(input: MailSendActionInput, credential: MailCredential): Promise<MailSendActionOutput> {
         const regex1 = new RegExp('&lt;');
         const regex2 = new RegExp('&gt;');
         let content = input.content;
@@ -37,38 +40,48 @@ export default class MailActionHandler extends StatelessActionHandler {
         const attachment = input.attachment;
         if (attachment) {
             const fileName = attachment.substring(attachment.lastIndexOf('\\') + 1);
-            await this.mailerService.sendMail({
-                to: input.to,
-                cc: input.cc,
-                from: this.serverConfigService.mailUsername, // sender address
-                subject: input.subject,
-                // text: input.content, // plaintext body
-                html: content, // HTML body content
-                attachments: [
-                    {
-                        // buffer as an attachment
-                        filename: fileName,
-                        content: fs.readFileSync(attachment),
-                    },
-                ],
-            });
+            await this.mailService.sendMail(
+                {
+                    to: input.to,
+                    cc: input.cc,
+                    from: credential.mailUsername,
+                    subject: input.subject,
+                    html: content,
+                    attachments: [
+                        {
+                            // buffer as an attachment
+                            filename: fileName,
+                            content: fs.readFileSync(attachment),
+                        },
+                    ],
+                },
+                credential,
+            );
         } else {
-            await this.mailerService.sendMail({
-                to: input.to,
-                cc: input.cc,
-                from: this.serverConfigService.mailUsername, // sender address
-                subject: input.subject,
-                // text: input.content, // plaintext body
-                html: content, // HTML body content
-            });
+            await this.mailService.sendMail(
+                {
+                    to: input.to,
+                    cc: input.cc,
+                    from: credential.mailUsername,
+                    subject: input.subject,
+                    html: content,
+                },
+                credential,
+            );
         }
         return {};
+
     }
 
     run(request: MailActionRequest) {
+        const matchedCredential =
+            credentialAttributesMapper<MailCredential>(request.credentials);
+
+        const mailCredential: MailCredential = matchedCredential;
+
         switch (request.script) {
             case 'mail.send':
-                return this.sendMail(request.input);
+                return this.sendMail(request.input, mailCredential);
             default:
                 throw new Error('Action not found');
         }

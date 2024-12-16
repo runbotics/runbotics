@@ -1,10 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
+import axios from '#src-app/utils/axios';
 
 import { ScheduledJob, QueueJob } from './Scheduler.state';
 
-const processStatuses = [ProcessInstanceStatus.IN_PROGRESS, ProcessInstanceStatus.INITIALIZING];
+const PROCESS_INSTANCE_PATH = 'process-instances';
+
+export const processInstanceStatuses =
+    [ProcessInstanceStatus.IN_PROGRESS, ProcessInstanceStatus.INITIALIZING].toString();
 
 export const getScheduledJobs = createAsyncThunk<ScheduledJob[]>(
     'scheduledJobs/getScheduledJobs',
@@ -12,11 +17,11 @@ export const getScheduledJobs = createAsyncThunk<ScheduledJob[]>(
         .then((response) => response.data),
 );
 
-export const getActiveJobs = createAsyncThunk<IProcessInstance[]>(
-    'scheduledJobs/getActiveJobs',
-    () => axios.get(`/api/process-instances?status=${processStatuses.toString()}`)
-        .then((response) => response.data),
-);
+export const getActiveJobs = ApiTenantResource
+    .get<IProcessInstance[]>(
+        'scheduledJobs/getActiveJobs',
+        PROCESS_INSTANCE_PATH,
+    );
 
 export const getWaitingJobs = createAsyncThunk<QueueJob[]>(
     'scheduledJobs/getWaitingJobs',

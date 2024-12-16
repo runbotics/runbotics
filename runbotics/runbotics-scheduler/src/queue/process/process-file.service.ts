@@ -46,23 +46,31 @@ export class ProcessFileService {
 
         const prefix = base64File.split(';');
 
-        if (filenamePrefix.test(base64File)) {
-            const fileName = prefix[0].split(':')[1];
-            const contentType = prefix[1].split(':')[1];
-            return {
-                fileName,
-                extension: mime.extension(contentType),
-                contentType
-            };
+        const isFilenamePrefix = filenamePrefix.test(base64File);
+        const isStandardPrefix = standardPrefix.test(base64File);
+
+        if (!isFilenamePrefix && !isStandardPrefix) {
+            throw new Error('Expected following file format: filename:<name>data:<content-type>;base64,base64string or data:<content-type>;base64,base64string');
         }
 
-        if (standardPrefix.test(base64File)) {
-            const contentType = prefix[0].split(':')[1];
-            const fileName = randomUUID();
-            return { contentType, extension: mime.extension(contentType), fileName };
+        const fileName = isFilenamePrefix
+            ? prefix[0].split(':')[1]
+            : randomUUID();
+
+        const contentType = isFilenamePrefix
+            ? prefix[1].split(':')[1]
+            : prefix[0].split(':')[1];
+
+        const extension = mime.extension(contentType);
+        if (!extension) {
+            throw new Error('Unable to determine the extension');
         }
 
-        throw new Error('Expected following file format: filename:<name>data:<content-type>;base64,base64string or data:<content-type>;base64,base64string');
+        return {
+            fileName,
+            extension,
+            contentType,
+        };
     }
 
     private isObject(obj: unknown): obj is object {

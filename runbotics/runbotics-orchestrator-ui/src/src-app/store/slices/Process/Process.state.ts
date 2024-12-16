@@ -1,4 +1,4 @@
-import { IProcess, IProcessInstance, NotificationProcess } from 'runbotics-common';
+import { IProcessInstance, NotificationProcess, ProcessCredential, ProcessCredentialDto, ProcessDto } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
 import { Options, Variable } from '#src-app/hooks/useOptions';
@@ -42,19 +42,19 @@ export interface ModelerState {
 
 export interface ProcessState {
     draft: {
-        process: IProcess;
+        process: ProcessDto;
         loading: LoadingType;
         currentRequestId: any;
         error: any;
         processSubscriptions: NotificationProcess[];
-        currentProcessSubscription: NotificationProcess;
+        credentials: ProcessCredentialDto[];
     };
     modeler: ModelerState;
     all: {
         loading: boolean;
-        byId: Record<string, IProcess>;
+        byId: Record<string, ProcessDto>;
         ids: string[];
-        page: Page<IProcess> | null;
+        page: Page<ProcessDto> | null;
     };
 }
 
@@ -63,6 +63,11 @@ export interface UpdateDiagramRequest {
     definition?: string | null;
     globalVariableIds?: string[];
     executionInfo?: string | null;
+}
+
+export interface CreateProcessCredentialDto
+    extends Pick<ProcessCredential, 'credentialId' | 'processId'> {
+    templateName: string;
 }
 
 export type StartProcessResponse = Pick<

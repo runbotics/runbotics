@@ -7,8 +7,10 @@ import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey, ProcessInput, TriggerEvent } from 'runbotics-common';
 import { ProcessGuestService } from './process-guest.service';
-import { GuestService } from '#/database/guest/guest.service';
+import { GuestService } from '#/scheduler-database/guest/guest.service';
 import { checkMessageProperty, checkStatusProperty } from '#/utils/error-message.utils';
+import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @Controller('scheduler/processes')
 export class ProcessController {
@@ -26,25 +28,25 @@ export class ProcessController {
     async startProcess(
         @Param('processId') processId: number,
         @Body() input: ProcessInput,
-        @Request() request: AuthRequest,
+        @UserDecorator() user: User,
     ) {
-        const userId = request.user.id;
-        const isUserGuest = this.processGuestService.getIsGuest(request.user.authorities);
+        const userId = user.id;
+        const isUserGuest = this.processGuestService.getIsGuest(user.authorities);
         const initialExecutionsCount = isUserGuest ? await this.processGuestService.getExecutionsCount(userId) : null;
         try {
             this.logger.log(`Checking if user (${userId}) is a guest and can start process ${processId}`);
-            await this.processGuestService.checkCanStartProcess(request.user);
+            await this.processGuestService.checkCanStartProcess(user);
 
-            this.logger.log(`=> Starting process ${processId}`);
             const process = await this.queueService.getProcessById(processId);
-            await this.queueService.validateProcessAccess({ process: process, user: request.user });
+            await this.queueService.validateProcessAccess({ process: process, user });
 
+            this.logger.log(`=> Creating job for process ${processId}`);
             const { orchestratorProcessInstanceId } = await this.queueService.createInstantJob({
                 process,
                 input,
-                user: request.user,
+                user,
                 trigger: { name: TriggerEvent.MANUAL },
-                triggerData: { userEmail: request.user.email }
+                triggerData: { userEmail: user.email }
             });
 
             this.logger.log(`<= Process ${processId} successfully started`);

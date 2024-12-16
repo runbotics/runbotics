@@ -12,8 +12,9 @@ import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
+
 import { DefaultPageSize } from './ProcessList/ProcessList.utils';
-import { DefaultPageValue } from '../../users/UsersBrowseView/UsersBrowseView.utils';
 import { getLastParamOfUrl } from '../../utils/routerUtils';
 import AddProcess from '../AddProcess';
 import AddCollectionButton from '../ProcessCollectionView/AddCollection/AddCollectionButton';
@@ -40,6 +41,7 @@ export enum ProcessesTabs {
 const Header: FC<HeaderProps> = ({ className, ...rest }) => {
     const { translate } = useTranslations();
     const hasProcessAddAccess = useFeatureKey([FeatureKey.PROCESS_ADD]);
+    const hasAllProcessesReadAccess = useFeatureKey([FeatureKey.ALL_PROCESSES_READ]);
     const hasAddCollectionAccess = useFeatureKey([FeatureKey.PROCESS_COLLECTION_ADD]);
 
 
@@ -48,7 +50,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
 
     const currentTab = getLastParamOfUrl(router);
 
-    const currentPage = parseInt(searchParams.get('page')) ?? DefaultPageValue.PAGE;
+    const currentPage = parseInt(searchParams.get('page')) ?? DEFAULT_TABLE_PAGING_VALUES.page;
     const pageSize = parseInt(searchParams.get('pageSize')) ?? DefaultPageSize.GRID;
 
     const onTabChange = (event: ChangeEvent<HTMLInputElement>, value: ProcessesTabs) => {
@@ -100,7 +102,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
             {...rest}
         >
             <Grid item>
-                {procesTabs}
+                <If condition={hasAllProcessesReadAccess}>{procesTabs}</If>
             </Grid>
             <Grid item>
                 <Stack direction="row" spacing={2}>

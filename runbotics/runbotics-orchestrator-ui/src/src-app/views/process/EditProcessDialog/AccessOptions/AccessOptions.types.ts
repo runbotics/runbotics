@@ -1,8 +1,8 @@
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 export interface AccessOptionsProps {
-    processData: IProcess;
-    setProcessData: (IProcess) => void;
+    processData: ProcessDto;
+    setProcessData: (ProcessDto) => void;
     isOwner: boolean;
     isEditDialogOpen: boolean;
 }

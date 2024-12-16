@@ -2,12 +2,13 @@ import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { FetchQueryObject, ImapFlow, MessageEnvelopeObject } from 'imapflow';
 import { Logger } from '#/utils/logger';
 import { Attachment, simpleParser } from 'mailparser';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { createTransport, Transporter, SentMessageInfo} from 'nodemailer';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
 import { QueueService } from '#/queue/queue.service';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { EmailTriggerData, IProcessInstance, ProcessInstanceStatus, TriggerEvent } from 'runbotics-common';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 const FETCH_MAILS_CONFIG: FetchQueryObject = {
     source: true,
@@ -111,7 +112,7 @@ export class MailTriggerService implements OnModuleInit {
         await this.client.mailboxOpen(mailbox);
 
         const processedMails: number[] = [];
-        
+
         try {
             const messages = await this.client.fetch({ seen: false }, FETCH_MAILS_CONFIG);
 
@@ -128,7 +129,7 @@ export class MailTriggerService implements OnModuleInit {
 
                     const process = await this.validateTitle(msg.envelope);
                     const variables = await this.extractMailBody(msg.source);
-                    
+
                     const input = {
                         variables: {
                             ...variables,
@@ -181,7 +182,7 @@ export class MailTriggerService implements OnModuleInit {
         if (processInstance.status === ProcessInstanceStatus.ERRORED) {
             return `An error occurred during process ${processInstance.process.id} execution:\n\n` + processInstance.error;
         }
-        
+
         if (processInstance.status === ProcessInstanceStatus.TERMINATED) {
             return `Process ${processInstance.process.id} execution was terminated`;
         }
@@ -198,7 +199,13 @@ export class MailTriggerService implements OnModuleInit {
             throw new NotFoundException(`Process "${envelope.subject}" does not exist`);
         }
 
-        await this.queueService.validateProcessAccess({ process, triggered: true });
+        await this.queueService.validateProcessAccess({
+            process,
+            triggered: true,
+            user: {
+                tenantId: DEFAULT_TENANT_ID,
+            },
+        });
 
         return process;
     }
@@ -256,4 +263,4 @@ export class MailTriggerService implements OnModuleInit {
             || this.serverConfigService.emailTriggerConfig.domainWhitelist.includes(senderDomain);
     }
 
-} 
+}

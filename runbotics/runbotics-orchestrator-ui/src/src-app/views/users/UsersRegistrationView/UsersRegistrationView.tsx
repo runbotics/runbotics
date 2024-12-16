@@ -1,54 +1,85 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 
+import { FormControl, MenuItem } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
-import { Role, IUser } from 'runbotics-common';
+import { Role, UserDto, PartialUserDto } from 'runbotics-common';
 
+import If from '#src-app/components/utils/If';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
-import useUserSearch from '#src-app/hooks/useUserSearch';
+import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { useDispatch } from '#src-app/store';
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
+import { AVAILABLE_ROWS_PER_PAGE, DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
+
+import { CombinedUserWithTenant, getCombinedUserWithTenantIds } from './UsersRegistration.utils';
 import UsersRegistrationTable from './UsersRegistrationTable';
-import { StyledButtonsContainer, StyledButton, DeleteButton, StyledActionsContainer, StyledTextField } from './UsersRegistrationView.styles';
+import {
+    StyledButtonsContainer,
+    StyledButton,
+    DeleteButton,
+    StyledActionsContainer,
+    StyledSearchFilterBox,
+    StyledTextField,
+    StyledSelect,
+    StyledInputLabel
+} from './UsersRegistrationView.styles';
 import DeleteUserDialog from '../DeleteUserDialog';
-import { DefaultPageValue, ROWS_PER_PAGE } from '../UsersBrowseView/UsersBrowseView.utils';
 
 interface SelectedRoles { [id: number]: Role };
+
 interface MapActivatedUserParams {
     id: number;
     email: string;
     roles: Role[];
+    tenantId: string;
     activated: boolean;
 }
 
+// eslint-disable-next-line max-lines-per-function
 const UsersRegistrationView: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
 
     const currentPage = parseInt(searchParams.get('page'));
     const pageSizeFromUrl = parseInt(searchParams.get('pageSize'));
-    const [page, setPage] = useState(currentPage ? currentPage : DefaultPageValue.PAGE);
+    const [page, setPage] = useState(currentPage ? currentPage : DEFAULT_TABLE_PAGING_VALUES.page);
     const [limit, setLimit] = useState(
-        pageSizeFromUrl && ROWS_PER_PAGE.includes(pageSizeFromUrl)
+        pageSizeFromUrl && AVAILABLE_ROWS_PER_PAGE.includes(pageSizeFromUrl)
             ? pageSizeFromUrl
-            : DefaultPageValue.PAGE_SIZE
+            : DEFAULT_TABLE_PAGING_VALUES.pageSize
     );
+    const tenantParam = searchParams.get('tenantId');
+    const [tenantSelection, setTenantSelection] = useState(tenantParam);
+    const { all: allTenants } = useSelector(tenantsSelector);
 
-    const { notActivated } = useSelector(usersSelector);
-    const { search, handleSearch, refreshSearch: refreshSearchNotActivated } = useUserSearch({ pageSize: limit, page });
+    const { notActivated, tenantNotActivated } = useSelector(usersSelector);
+    const { search, handleSearch, refreshSearch } = useUserSearch({
+        searchType: hasAdminAccess ? UserSearchType.ALL_NOT_ACTIVATED : UserSearchType.TENANT_NOT_ACTIVATED,
+        tenantId: tenantSelection,
+        pageSize: limit,
+        page
+    });
 
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
+    const [combinedUserWithTenantIds, setCombinedUserWithTenantIds ] = useState<CombinedUserWithTenant>({});
     const [selections, setSelections] = useState<number[]>([]);
 
     const handleSelectedRolesChange = (id: number, value: Role) =>
         setSelectedRoles((prevState) => ({ ...prevState, [id]: value }));
+
+    const handleSelectedTenantsChange = (id: number, value: string) =>
+        setCombinedUserWithTenantIds((prevState) => ({ ...prevState, [id]: value }));
 
     const handleSelectionChange = (selection) => setSelections(selection);
 
@@ -63,24 +94,37 @@ const UsersRegistrationView: FC = () => {
 
         const payload = selections.map((userId) => {
             const role = selectedRoles[userId];
-            return mapUserActivateRequest(userId, role);
+            const tenantId = combinedUserWithTenantIds[userId];
+            return mapUserActivateRequest(userId, role, tenantId);
         });
 
         handleSubmit(payload);
     };
 
-    const mapUserActivateRequest = (id: number, role: Role): MapActivatedUserParams => {
-        const { email } = notActivated.allByPage.content.find((row) => row.id === id);
-        return { id, email, roles: [role], activated: true };
+    const mapUserActivateRequest = (id: number, role: Role, tenantId: string): MapActivatedUserParams => {
+        const { email } = hasAdminAccess
+            ? notActivated.allByPage.content.find((row) => row.id === id)
+            : tenantNotActivated.allByPage.content.find((row) => row.id === id);
+
+        return {
+            id,
+            email,
+            roles: [role],
+            activated: true,
+            ...(tenantId && { tenantId })
+        };
     };
 
-    const handleSubmit = (usersData: IUser[]) =>
+    const handleSubmit = (usersData: PartialUserDto[]) =>
         Promise
             .allSettled(
-                usersData.map((user) => dispatch(usersActions.updateNotActivated(user))))
+                hasAdminAccess
+                    ? usersData.map((user) => dispatch(usersActions.update(user)))
+                    : usersData.map((user) => dispatch(usersActions.updateInTenant({ payload: user, resourceId: user.id })))
+            )
             .then(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Success.AcceptingUser'), { variant: 'success' });
-                refreshSearchNotActivated();
+                refreshSearch();
             })
             .catch(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Error.AcceptFailed'), { variant: 'error' });
@@ -88,38 +132,85 @@ const UsersRegistrationView: FC = () => {
 
     const handleDelete = () => setIsDeleteDialogVisible(true);
 
-    const getSelectedUsers = (): IUser[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
+    const getSelectedUsers = (): UserDto[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
 
     useEffect(() => {
-        const isPageNotAvailable = notActivated.allByPage?.totalPages && page >= notActivated.allByPage?.totalPages;
+        const allUsers = hasAdminAccess ? notActivated.allByPage : tenantNotActivated.allByPage;
+        setCombinedUserWithTenantIds(
+            hasAdminAccess
+                ? getCombinedUserWithTenantIds(notActivated.allByPage?.content)
+                : getCombinedUserWithTenantIds(tenantNotActivated.allByPage?.content)
+        );
+
+        const isPageNotAvailable = allUsers?.totalPages && page >= allUsers?.totalPages;
         if (isPageNotAvailable) {
             router.replace({ pathname: router.pathname, query: { page: 0, pageSize: limit } });
             setPage(0);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [notActivated.allByPage]);
+    }, [notActivated.allByPage, tenantNotActivated.allByPage]);
 
     useEffect(() => {
-        refreshSearchNotActivated();
+        refreshSearch();
+
+        if (hasAdminAccess) dispatch(tenantsActions.getAll());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <>
-            <DeleteUserDialog
+            {hasAdminAccess && <DeleteUserDialog
                 open={isDeleteDialogVisible}
                 onClose={() => setIsDeleteDialogVisible(false)}
                 getSelectedUsers={getSelectedUsers}
-            />
+            />}
             <StyledActionsContainer>
-                <StyledTextField
-                    margin='dense'
-                    placeholder={translate('Users.Registration.View.SearchBarPlaceholder')}
-                    size='small'
-                    value={search}
-                    onChange={handleSearch}
-                />
+                <StyledSearchFilterBox>
+                    <StyledTextField
+                        margin='dense'
+                        placeholder={translate(
+                            'Users.Registration.View.SearchBarPlaceholder'
+                        )}
+                        size='small'
+                        value={search}
+                        onChange={handleSearch}
+                    />
+                    <If condition={hasAdminAccess}>
+                        <FormControl size='small'>
+                            <StyledInputLabel>
+                                {translate(
+                                    'Users.Registration.View.Select.Label'
+                                )}
+                            </StyledInputLabel>
+                            <StyledSelect
+                                label={translate(
+                                    'Users.Registration.View.Select.Label'
+                                )}
+                                value={tenantSelection}
+                                onChange={(
+                                    e: ChangeEvent<HTMLInputElement>
+                                ) => {
+                                    setTenantSelection(e.target.value);
+                                }}
+                            >
+                                <MenuItem value=''>
+                                    {translate(
+                                        'Users.Registration.View.Select.NoneTenant'
+                                    )}
+                                </MenuItem>
+                                {allTenants.map((tenant) => (
+                                    <MenuItem
+                                        value={tenant.id}
+                                        key={tenant.name}
+                                    >
+                                        {tenant.name}
+                                    </MenuItem>
+                                ))}
+                            </StyledSelect>
+                        </FormControl>
+                    </If>
+                </StyledSearchFilterBox>
                 <StyledButtonsContainer>
                     <StyledButton
                         type='submit'
@@ -130,14 +221,16 @@ const UsersRegistrationView: FC = () => {
                     >
                         {translate('Users.Registration.View.Button.Accept')}
                     </StyledButton>
-                    <DeleteButton
-                        type='submit'
-                        variant='contained'
-                        onClick={handleDelete}
-                        disabled={!selections.length}
-                    >
-                        {translate('Users.Registration.View.Button.Delete')}
-                    </DeleteButton>
+                    <If condition={hasAdminAccess}>
+                        <DeleteButton
+                            type='submit'
+                            variant='contained'
+                            onClick={handleDelete}
+                            disabled={!selections.length}
+                        >
+                            {translate('Users.Registration.View.Button.Delete')}
+                        </DeleteButton>
+                    </If>
                 </StyledButtonsContainer>
             </StyledActionsContainer>
             <UsersRegistrationTable
@@ -148,6 +241,9 @@ const UsersRegistrationView: FC = () => {
                 selections={selections}
                 handleSelectionChange={handleSelectionChange}
                 handleSelectedRolesChange={handleSelectedRolesChange}
+                handleSelectedTenantsChange={handleSelectedTenantsChange}
+                isForAdmin={hasAdminAccess}
+                isTenantSelected={!!tenantSelection || !hasAdminAccess}
             />
         </>
     );

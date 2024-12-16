@@ -11,13 +11,12 @@ import {
     setDraft,
     deleteProcess,
     getProcessesPage,
-    partialUpdateProcess,
+    updateExecutionInfo,
     createGuestProcess,
     subscribeProcessNotifications,
     unsubscribeProcessNotifications,
     getProcessSubscriptionInfo,
-    getProcessSubscriptionInfoByProcessIdAndUserId,
-    getProcessesPageByCollection
+    getProcessCredentials,
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
@@ -45,18 +44,6 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
         })
         .addCase(getProcessesPage.rejected, (state) => {
-            state.all.loading = false;
-        })
-
-        // GET PAGE BY COLLECTIONS
-        .addCase(getProcessesPageByCollection.pending, (state) => {
-            state.all.loading = true;
-        })
-        .addCase(getProcessesPageByCollection.fulfilled, (state, action) => {
-            state.all.page = action.payload;
-            state.all.loading = false;
-        })
-        .addCase(getProcessesPageByCollection.rejected, (state) => {
             state.all.loading = false;
         })
 
@@ -114,17 +101,17 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
         .addCase(deleteProcess.fulfilled, (state, action) => {
             state.all.loading = false;
-            delete state.all.byId[action.meta.arg.processId];
+            delete state.all.byId[action.meta.arg.resourceId];
         })
         .addCase(deleteProcess.rejected, (state) => {
             state.all.loading = false;
         })
 
-        // PARTIAL UPDATE
-        .addCase(partialUpdateProcess.fulfilled, (state, action) => {
+        // UPDATE EXECUTION INFO
+        .addCase(updateExecutionInfo.fulfilled, (state, action) => {
             state.draft.process = action.payload;
         })
-        .addCase(partialUpdateProcess.rejected, (state, action: any) => {
+        .addCase(updateExecutionInfo.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
         })
 
@@ -135,8 +122,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         .addCase(subscribeProcessNotifications.fulfilled, (state) => {
             state.all.loading = false;
         })
-        .addCase(subscribeProcessNotifications.rejected, (state, action: any) => {
-            state.draft.error = action.payload.status;
+        .addCase(subscribeProcessNotifications.rejected, (state) => {
             state.all.loading = false;
         })
 
@@ -147,8 +133,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         .addCase(unsubscribeProcessNotifications.fulfilled, (state) => {
             state.all.loading = false;
         })
-        .addCase(unsubscribeProcessNotifications.rejected, (state, action: any) => {
-            state.draft.error = action.payload.status;
+        .addCase(unsubscribeProcessNotifications.rejected, (state) => {
             state.all.loading = false;
         })
 
@@ -160,22 +145,13 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
             state.draft.processSubscriptions = action.payload;
         })
-        .addCase(getProcessSubscriptionInfo.rejected, (state, action: any) => {
-            state.draft.error = action.payload.status;
+        .addCase(getProcessSubscriptionInfo.rejected, (state) => {
             state.all.loading = false;
         })
 
-        // GET ALL PROCESS SUBSCRIPTIONS
-        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.pending, (state) => {
-            state.all.loading = true;
-        })
-        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.fulfilled, (state, action) => {
-            state.all.loading = false;
-            state.draft.currentProcessSubscription = action.payload;
-        })
-        .addCase(getProcessSubscriptionInfoByProcessIdAndUserId.rejected, (state, action: any) => {
-            state.draft.error = action.payload.status;
-            state.all.loading = false;
+        // GET ALL PROCESS CREDENTIALS
+        .addCase(getProcessCredentials.fulfilled, (state, action) => {
+            state.draft.credentials = action.payload;
         });
 };
 

@@ -22,7 +22,7 @@ const Cron: FC<CronProps> = ({
     setValue,
     onError,
     className,
-    defaultPeriod = PeriodType.MINUTE,
+    defaultPeriod = PeriodType.DAY,
     humanizeLabels = true,
     humanizeValue = false,
     disabled = false,
@@ -37,8 +37,8 @@ const Cron: FC<CronProps> = ({
     const [period, setPeriod] = useState<PeriodType>();
     const [isError, setIsError] = useState<boolean>(false);
     const localeJSON = JSON.stringify(locale);
-    
-    useEffect(() => {            
+
+    useEffect(() => {
         setValuesFromCronString({
             cronString: value,
             setIsError,
@@ -51,9 +51,9 @@ const Cron: FC<CronProps> = ({
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    
+
     useEffect(() => {
-        if (value !== internalValueRef.current) { 
+        if (value !== internalValueRef.current) {
             setValuesFromCronString({
                 cronString: value,
                 setIsError,
@@ -87,7 +87,7 @@ const Cron: FC<CronProps> = ({
     }, [period, cronState, humanizeValue]);
 
     const handleClear = useCallback(() => {
-        cronDispatch({ 
+        cronDispatch({
             type: CRON_ACTIONS.CLEAR_ALL,
         });
 
@@ -144,7 +144,7 @@ const Cron: FC<CronProps> = ({
                 />
             </If>
             <If condition={isWeekPeriodDisplayed}>
-                <WeekDaysSection 
+                <WeekDaysSection
                     locale={locale}
                     humanizeLabels={humanizeLabels}
                     disabled={disabled}

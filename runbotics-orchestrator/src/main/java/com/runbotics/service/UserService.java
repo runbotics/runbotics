@@ -1,13 +1,8 @@
 package com.runbotics.service;
 
 import com.runbotics.config.Constants;
-import com.runbotics.domain.Authority;
-import com.runbotics.domain.FeatureKey;
-import com.runbotics.domain.Tenant;
-import com.runbotics.domain.User;
-import com.runbotics.repository.AuthorityRepository;
-import com.runbotics.repository.ProcessRepository;
-import com.runbotics.repository.UserRepository;
+import com.runbotics.domain.*;
+import com.runbotics.repository.*;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.security.SecurityUtils;
 import com.runbotics.service.criteria.UserCriteria;
@@ -20,6 +15,7 @@ import com.runbotics.service.mapper.UserMapper;
 import com.runbotics.utils.Utils;
 import com.runbotics.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,6 +48,10 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final TenantInviteCodeRepository tenantInviteCodeRepository;
+
+    private final TenantRepository tenantRepository;
+
     private final AccountPartialUpdateMapper accountPartialUpdateMapper;
 
     private final AdminUserMapper adminUserMapper;
@@ -63,6 +63,8 @@ public class UserService {
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         ProcessRepository processRepository,
+        TenantInviteCodeRepository tenantInviteCodeRepository,
+        TenantRepository tenantRepository,
         UserMapper userMapper,
         AccountPartialUpdateMapper accountPartialUpdateMapper,
         AdminUserMapper adminUserMapper
@@ -71,6 +73,8 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.processRepository = processRepository;
+        this.tenantInviteCodeRepository = tenantInviteCodeRepository;
+        this.tenantRepository = tenantRepository;
         this.userMapper = userMapper;
         this.accountPartialUpdateMapper = accountPartialUpdateMapper;
         this.adminUserMapper = adminUserMapper;
@@ -119,30 +123,25 @@ public class UserService {
             );
     }
 
-    public User registerUser(AdminUserDTO userDTO, String password) {
+    @Transactional(noRollbackFor = BadRequestAlertException.class)
+    public User registerUser(AdminUserDTO userDTO, String password, UUID inviteCodeId) {
         userRepository
-            .findOneByLogin(userDTO.getLogin().toLowerCase())
+            .findOneByEmail(userDTO.getEmail())
             .ifPresent(
                 existingUser -> {
-                    boolean removed = removeNonActivatedUser(existingUser);
-                    if (!removed) {
-                        throw new UsernameAlreadyUsedException();
-                    }
+                    throw new UsernameAlreadyUsedException();
                 }
             );
         userRepository
             .findOneByEmailIgnoreCase(userDTO.getEmail())
             .ifPresent(
                 existingUser -> {
-                    boolean removed = removeNonActivatedUser(existingUser);
-                    if (!removed) {
-                        throw new EmailAlreadyUsedException();
-                    }
+                    throw new EmailAlreadyUsedException();
                 }
             );
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
-        newUser.setLogin(userDTO.getLogin().toLowerCase());
+        newUser.setEmail(userDTO.getEmail().toLowerCase());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
@@ -160,8 +159,24 @@ public class UserService {
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
 
-        // Temporary solution for keeping tenant id not null
-        newUser.setTenant(Utils.getDefaultTenant());
+        if (inviteCodeId != null) {
+            TenantInviteCode tenantInviteCode = tenantInviteCodeRepository
+                .findById(inviteCodeId)
+                .orElseThrow(() -> new BadRequestAlertException("Bad invite code", ENTITY_NAME, "badInviteCode"));
+
+            if (tenantInviteCode.getExpirationDate().isBefore(ZonedDateTime.now())) {
+                log.debug("Removed expired invite codes for tenant with id: {}", tenantInviteCode.getTenantId());
+                tenantInviteCodeRepository.delete(tenantInviteCode);
+                throw new BadRequestAlertException("Invite code has expired", ENTITY_NAME, "expiredInviteCode");
+            }
+
+            Tenant foundTenant = tenantRepository
+                .findByInviteCode(inviteCodeId).get();
+
+            newUser.setTenant(foundTenant);
+        } else {
+            newUser.setTenant(Utils.getDefaultTenant());
+        }
 
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
@@ -179,7 +194,7 @@ public class UserService {
 
     public User createUser(AdminUserDTO userDTO) {
         User user = new User();
-        user.setLogin(userDTO.getLogin().toLowerCase());
+        user.setEmail(userDTO.getEmail().toLowerCase());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         if (userDTO.getEmail() != null) {
@@ -228,7 +243,7 @@ public class UserService {
             .map(Optional::get)
             .map(
                 user -> {
-                    user.setLogin(userDTO.getLogin().toLowerCase());
+                    user.setEmail(userDTO.getEmail().toLowerCase());
                     user.setFirstName(userDTO.getFirstName());
                     user.setLastName(userDTO.getLastName());
                     if (userDTO.getEmail() != null) {
@@ -283,8 +298,8 @@ public class UserService {
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
+            .getCurrentUserEmail()
+            .flatMap(userRepository::findOneByEmail)
             .ifPresent(
                 user -> {
                     user.setFirstName(firstName);
@@ -322,19 +337,83 @@ public class UserService {
     public Optional<AdminUserDTO> partialUpdate(AdminUserDTO adminUserDTO) {
         log.debug("Request to partially update User : {}", adminUserDTO);
 
+        User requester = getUserWithAuthorities().get();
+        if(!adminUserDTO.isActivated() && Objects.equals(requester.getId(), adminUserDTO.getId())) {
+            throw new BadRequestAlertException("User cannot deactivate itself", ENTITY_NAME, "SelfDeactivate");
+        }
+
         excludeAdminUserDTOFields(adminUserDTO);
         return userRepository
             .findById(adminUserDTO.getId())
             .map(
                 existingUser -> {
                     userRepository
-                        .findOtherUserByLoginOrEmail(adminUserDTO.getId(), adminUserDTO.getEmail(), adminUserDTO.getLogin())
+                        .findOtherUserByEmail(adminUserDTO.getId(), adminUserDTO.getEmail())
                         .ifPresent(
                             user -> {
                                 if (user.getEmail().equals(adminUserDTO.getEmail())) {
-                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "BadEmail");
+                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "AlreadyUsedEmail");
                                 } else {
-                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "BadLogin");
+                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "AlreadyUsedLogin");
+                                }
+                            }
+                        );
+
+                    if (adminUserDTO.getTenant() != null) {
+                        Tenant newTenant = tenantRepository.findById(adminUserDTO.getTenant().getId()).orElseThrow(
+                            () -> new BadRequestAlertException("Tenant not found", ENTITY_NAME, "TenantNotFound")
+                        );
+                        adminUserDTO.setTenant(null);
+                        adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+                        existingUser.setTenant(newTenant);
+                    } else {
+                        adminUserMapper.partialUpdate(existingUser, adminUserDTO);
+                    }
+
+                    if (adminUserDTO.getRoles() != null) {
+                        Set<Authority> managedAuthorities = existingUser.getAuthorities();
+                        managedAuthorities.clear();
+                        adminUserDTO
+                            .getRoles()
+                            .stream()
+                            .map(authorityRepository::findById)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .forEach(managedAuthorities::add);
+                    }
+
+                    return existingUser;
+                }
+            )
+            .map(userRepository::save)
+            .map(userMapper::userToAdminUserDTO);
+    }
+
+    public Optional<AdminUserDTO> partialUpdateInTenant(AdminUserDTO adminUserDTO) {
+        User requester = getUserWithAuthorities().get();
+
+        if(!adminUserDTO.isActivated() && Objects.equals(requester.getId(), adminUserDTO.getId())) {
+            throw new BadRequestAlertException("User cannot deactivate itself", ENTITY_NAME, "SelfDeactivate");
+        }
+
+        adminUserDTO.setTenant(null);
+        excludeAdminUserDTOFields(adminUserDTO);
+        return userRepository
+            .findById(adminUserDTO.getId())
+            .map(
+                existingUser -> {
+                    if (!requester.getTenant().getId().equals(existingUser.getTenant().getId())) {
+                        throw new BadRequestAlertException("Edited user is not from the same tenant", ENTITY_NAME, "NotValidTenant");
+                    }
+
+                    userRepository
+                        .findOtherUserByEmail(adminUserDTO.getId(), adminUserDTO.getEmail())
+                        .ifPresent(
+                            user -> {
+                                if (user.getEmail().equals(adminUserDTO.getEmail())) {
+                                    throw new BadRequestAlertException("Email already in use", ENTITY_NAME, "AlreadyUsedEmail");
+                                } else {
+                                    throw new BadRequestAlertException("Login already in use", ENTITY_NAME, "AlreadyUsedLogin");
                                 }
                             }
                         );
@@ -342,6 +421,10 @@ public class UserService {
                     adminUserMapper.partialUpdate(existingUser, adminUserDTO);
 
                     if (adminUserDTO.getRoles() != null) {
+                        if (!checkTenantAllowedRoles(adminUserDTO.getRoles())) {
+                            throw new BadRequestAlertException("Not allowed role", ENTITY_NAME, "NotAllowedRole");
+                        }
+
                         Set<Authority> managedAuthorities = existingUser.getAuthorities();
                         managedAuthorities.clear();
                         adminUserDTO
@@ -363,8 +446,8 @@ public class UserService {
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
+            .getCurrentUserEmail()
+            .flatMap(userRepository::findOneByEmail)
             .ifPresent(
                 user -> {
                     String currentEncryptedPassword = user.getPassword();
@@ -390,7 +473,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<AdminUserDTO> getAllManagedUsersLimited() {
-        return userRepository.findAll().stream().map(User::getLogin).map(AdminUserDTO::new).collect(Collectors.toList());
+        return userRepository.findAll().stream().map(User::getEmail).map(AdminUserDTO::new).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -399,13 +482,18 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
+    public Optional<User> getUserWithAuthoritiesByEmail(String email) {
+        return userRepository.findOneWithAuthoritiesByEmail(email);
     }
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthorities() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByLogin);
+        return SecurityUtils.getCurrentUserEmail().flatMap(userRepository::findOneWithAuthoritiesByEmail);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isUserActivated() {
+        return this.getUserWithAuthorities().get().isActivated();
     }
 
     @Transactional(readOnly = true)
@@ -424,22 +512,49 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllNotActivatedUsers(Pageable pageable, UserCriteria criteria) {
-        if (criteria.getEmail() == null) {
+        if (criteria.getTenantId() == null && criteria.getEmail() == null) {
             return userRepository.findAllByActivatedIsFalse(pageable).map(AdminUserDTO::new);
         }
-        return userRepository
-            .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
-            .map(AdminUserDTO::new);
+
+        if (criteria.getTenantId() == null && criteria.getEmail() != null) {
+            return userRepository
+                .findAllByActivatedIsFalseAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+                .map(AdminUserDTO::new);
+        }
+
+        Tenant tenant = tenantRepository.findById(criteria.getTenantId().getEquals()).orElseThrow(
+            () -> new BadRequestAlertException("Cannot find tenant", ENTITY_NAME, "tenantNotFound")
+        );
+
+        return fetchAllNotActivatedUsersByTenant(pageable, criteria, tenant);
     }
 
     @Transactional(readOnly = true)
     public Page<AdminUserDTO> getAllActivatedUsers(Pageable pageable, UserCriteria criteria) {
-        if (criteria.getEmail() == null) {
+        if (criteria.getTenantId() == null && criteria.getEmail() == null) {
             return userRepository.findAllByActivatedIsTrue(pageable).map(AdminUserDTO::new);
         }
-        return userRepository
-            .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
-            .map(AdminUserDTO::new);
+        if (criteria.getTenantId() == null && criteria.getEmail() != null) {
+            return userRepository
+                .findAllByActivatedIsTrueAndEmailIsContaining(pageable, criteria.getEmail().getContains())
+                .map(AdminUserDTO::new);
+        }
+
+        Tenant tenant = tenantRepository.findById(criteria.getTenantId().getEquals()).orElseThrow(
+            () -> new BadRequestAlertException("Cannot find tenant", ENTITY_NAME, "tenantNotFound")
+        );
+
+        return fetchAllActivatedUsersByTenant(pageable, criteria, tenant);
+    }
+
+    public Page<AdminUserDTO> getAllActivatedUsersByTenant(Pageable pageable, UserCriteria criteria) {
+        Tenant tenant = getUserWithAuthorities().get().getTenant();
+        return fetchAllActivatedUsersByTenant(pageable, criteria, tenant);
+    }
+
+    public Page<AdminUserDTO> getAllNotActivatedUsersByTenant(Pageable pageable, UserCriteria criteria) {
+        Tenant tenant = getUserWithAuthorities().get().getTenant();
+        return fetchAllNotActivatedUsersByTenant(pageable, criteria, tenant);
     }
 
     /**
@@ -453,7 +568,7 @@ public class UserService {
             .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
             .forEach(
                 user -> {
-                    log.debug("Deleting not activated user {}", user.getLogin());
+                    log.debug("Deleting not activated user {}", user.getEmail());
                     userRepository.delete(user);
                 }
             );
@@ -510,5 +625,40 @@ public class UserService {
         if (adminUserDTO.getFeatureKeys() != null) {
             throw new BadRequestAlertException("Not allowed field", ENTITY_NAME, "featureKeys");
         }
+    }
+
+    private boolean checkTenantAllowedRoles(Set<String> userRoles) {
+        Set<String> allowedRoles = new HashSet<>();
+        allowedRoles.add(AuthoritiesConstants.USER);
+        allowedRoles.add(AuthoritiesConstants.EXTERNAL_USER);
+        allowedRoles.add(AuthoritiesConstants.TENANT_ADMIN);
+
+        return userRoles.stream().allMatch(allowedRoles::contains);
+    }
+
+    private Page<AdminUserDTO> fetchAllNotActivatedUsersByTenant(Pageable pageable, UserCriteria criteria, Tenant tenant) {
+        if (criteria.getEmail() == null) {
+            return userRepository
+                .findAllByActivatedIsFalseAndTenant(pageable, tenant)
+                .map(AdminUserDTO::new);
+        }
+
+        return userRepository
+            .findAllByActivatedIsFalseAndEmailIsContainingAndTenant(
+                pageable, criteria.getEmail().getContains(), tenant
+            ).map(AdminUserDTO::new);
+    }
+
+    private Page<AdminUserDTO> fetchAllActivatedUsersByTenant(Pageable pageable, UserCriteria criteria, Tenant tenant) {
+        if (criteria.getEmail() == null) {
+            return userRepository
+                .findAllByActivatedIsTrueAndTenant(pageable, tenant)
+                .map(AdminUserDTO::new);
+        }
+
+        return userRepository
+            .findAllByActivatedIsTrueAndEmailIsContainingAndTenant(
+                pageable, criteria.getEmail().getContains(), tenant
+            ).map(AdminUserDTO::new);
     }
 }

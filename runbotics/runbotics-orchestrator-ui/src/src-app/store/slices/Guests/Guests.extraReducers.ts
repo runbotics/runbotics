@@ -1,14 +1,14 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { GuestsState } from './Guests.state';
-import { getGuestExecutionCount } from './Guests.thunks';
+import { getCurrentGuest } from './Guests.thunks';
 
 export const buildGuestsExtraReducers = (builder: ActionReducerMapBuilder<GuestsState>) => {
     builder
-        .addCase(getGuestExecutionCount.fulfilled, (state, { payload }) => {
+        .addCase(getCurrentGuest.fulfilled, (state, { payload }) => {
             state.executionsCount = payload.executionsCount;
         })
-        .addCase(getGuestExecutionCount.rejected, (state) => {
+        .addCase(getCurrentGuest.rejected, (state) => {
             state.executionsCount = 0;
         });
 };

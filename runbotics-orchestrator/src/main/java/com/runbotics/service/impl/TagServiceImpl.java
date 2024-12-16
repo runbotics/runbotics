@@ -61,21 +61,6 @@ public class TagServiceImpl implements TagService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<TagDTO> getOneTagById(Long id) {
-        return tagRepository.findById(id).map(tagMapper::toDto);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<TagDTO> getOneTagByName(String name) {
-        return tagRepository.findOneByName(name).map(tagMapper::toDto);
-    }
-
-    @Transactional(readOnly = true)
-    public List<TagDTO> getAllTags() {
-        return tagRepository.findAll().stream().map(TagDTO::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public Set<TagDTO> createNewTags(Set<TagDTO> tags) {
         return tags.stream().map(this::save).collect(Collectors.toSet());
     }

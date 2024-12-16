@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 
-import { IBotCollection } from 'runbotics-common';
+import { BotCollectionDto } from 'runbotics-common';
 
 import { CollectionsDisplayMode } from '../BotBrowseView/BotBrowseView.utils';
 
@@ -22,6 +22,6 @@ export interface BotCollectionHeaderProps {
     onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export interface IBotCollectionWithFilters extends IBotCollection{
+export interface IBotCollectionWithFilters extends BotCollectionDto{
     createdByName?: string | null;
 }

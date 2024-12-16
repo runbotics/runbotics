@@ -5,10 +5,14 @@ import { GridFilterModel } from '@mui/x-data-grid';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
+import { FeatureKey, OrderDirection, OrderPropertyName } from 'runbotics-common';
+
+import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
+import useAuth from './useAuth';
 import useDebounce from './useDebounce';
 
 const DEBOUNCE_TIME = 400;
@@ -23,6 +27,9 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
     const dispatch = useDispatch();
     const debouncedValue = useDebounce<string>(search, DEBOUNCE_TIME);
 
+    const { user } = useAuth();
+    const hasAllProcessesAccess = hasFeatureKeyAccess(user, [FeatureKey.ALL_PROCESSES_READ]);
+
     useEffect(() => {
         replaceQueryParams({
             collectionId,
@@ -33,40 +40,56 @@ const useProcessSearch = (collectionId, pageSize = 12, page = 0) => {
             tab: router.query.tab,
         });
 
+        const action = hasAllProcessesAccess
+            ? processActions.getProcessesAllPage
+            : processActions.getProcessesPage;
+
         if (collectionId !== undefined) {
             dispatch(
-                processActions.getProcessesPageByCollection({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim(),
-                            })
+                action({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
                         },
-                        equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    'createdBy->email': search.trim(),
+                                    'tags->name': search.trim(),
+                                }),
+                            },
+                            equals: {
+                                processCollectionId: collectionId !== null ? collectionId : 'null',
+                            },
+                        },
                     },
-                })
+                }),
             );
         } else {
             dispatch(
-                processActions.getProcessesPage({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(debouncedValue.trim() && {
-                                name: debouncedValue.trim(),
-                                createdByName: debouncedValue.trim(),
-                                tagName: debouncedValue.trim()
-                            })
+                action({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
+                        },
+                        filter: {
+                            contains: {
+                                ...(debouncedValue.trim() && {
+                                    name: debouncedValue.trim(),
+                                    'createdBy->email': search.trim(),
+                                    'tags->name': search.trim(),
+                                }),
+                            },
                         },
                     },
-                })
+                }),
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,5 +1,7 @@
 import { FC, MouseEvent, createContext, Dispatch, SetStateAction } from 'react';
 
+import { OrderDirection, OrderPropertyName } from 'runbotics-common';
+
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
 import { useDispatch } from '#src-app/store';
@@ -32,7 +34,7 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     setPageSize,
     page,
     setPage,
-    collectionId
+    collectionId,
 }) => {
     const dispatch = useDispatch();
     const replaceQueryParams = useReplaceQueryParams();
@@ -40,35 +42,47 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
     useUpdateEffect(() => {
         if (collectionId !== undefined) {
             dispatch(
-                processActions.getProcessesPageByCollection({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim(),
-                            })
+                processActions.getProcessesPage({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
                         },
-                        equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
-                    },
-                })
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    'createdBy->email': search.trim(),
+                                    'tags->name': search.trim(),
+                                }),
+                            },
+                            equals: {
+                                processCollectionId: collectionId !== null ? collectionId : 'null',
+                            },
+                        },
+                    }
+                }),
             );
         } else {
             dispatch(
                 processActions.getProcessesPage({
-                    page,
-                    size: pageSize,
-                    filter: {
-                        contains: {
-                            ...(search.trim() && {
-                                name: search.trim(),
-                                createdByName: search.trim(),
-                                tagName: search.trim()
-                            })
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
+                        },
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    'createdBy->email': search.trim(),
+                                    'tags->name': search.trim(),
+                                }),
+                            },
                         },
                     },
                 }),

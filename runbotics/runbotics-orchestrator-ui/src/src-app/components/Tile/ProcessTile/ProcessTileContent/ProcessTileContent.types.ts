@@ -1,6 +1,6 @@
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 export interface ProcessTileContentProps {
-    process: IProcess;
+    process: ProcessDto;
     searchValue: string;
 }

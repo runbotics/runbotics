@@ -1,16 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { EmailTriggerData, IProcessInstance, isEmailTriggerData, TriggerEvent } from 'runbotics-common';
+import { Injectable, PayloadTooLargeException } from '@nestjs/common';
+import { EmailTriggerData, IProcessInstance, isEmailTriggerData, MemoryUnit, TriggerEvent } from 'runbotics-common';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 
 import { ServerConfigService } from '#/config/server-config';
-import { ProcessService } from '#/database/process/process.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { QueueService } from '#/queue/queue.service';
 import { Logger } from '#/utils/logger';
 import { Attachment, OutlookService, Recipient, ReplyEmailRequest } from '../outlook';
 import { SubscriptionService } from '../subscription';
 import { ExpiredLifecycleNotificationEvent, LifecycleEventDivision, LifecycleNotification, Notification } from './notification.types';
+import { User } from '#/scheduler-database/user/user.entity';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Injectable()
 export class NotificationService {
@@ -46,6 +48,11 @@ export class NotificationService {
                 if (email.hasAttachments) {
                     const attachments = (await this.outlookService.getAttachments(email.id)).value;
                     attachments.forEach((attachment) => {
+                        if (!this.isFileSizeAllowed(attachment.size)) {
+                            throw new PayloadTooLargeException(
+                                `Cannot start the process "${processId}". Uploaded attachment is too large (max 4MB).`
+                            );
+                        }
                         const { filename, fileContent } = this.mapAttachment(attachment);
                         variables[filename] = fileContent;
                     });
@@ -190,7 +197,13 @@ export class NotificationService {
             throw new Error(message);
         }
 
-        await this.queueService.validateProcessAccess({ process, triggered: true });
+        await this.queueService.validateProcessAccess({
+            process,
+            triggered: true,
+            user: {
+                tenantId: DEFAULT_TENANT_ID,
+            },
+        });
 
         return process;
     }
@@ -209,5 +222,10 @@ export class NotificationService {
         //         acc[key.trim()] = value.trim().replace(/['"]/g, '');
         //         return acc;
         //     }, {});
+    }
+
+    private isFileSizeAllowed(size: number) {
+        const MAX_FILE_SIZE = MemoryUnit.MB * 4;
+        return size <= MAX_FILE_SIZE;
     }
 }

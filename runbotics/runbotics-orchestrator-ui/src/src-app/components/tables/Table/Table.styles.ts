@@ -10,12 +10,14 @@ export const RowsSelectWrapper = styled.div`
     align-items: center;
 `;
 
-export const RowCustomExpandedSpan = styled.span<{ isExpanded: boolean }>`
+export const RowCustomExpandedSpan = styled.span<{ isExpanded: boolean, depthIndent: number }>`
     & > button > svg {
         transform: ${({ isExpanded }) => (isExpanded ? 'rotate(90deg)' : 'rotate(0)')};
         transition: transform 0.3s ease-out;
         max-width: unset;
     }
+
+    padding-left: ${({ depthIndent }) => `${depthIndent}px`};
 `;
 
 export const DataTableWrapper = styled.div(({ theme }) => `
@@ -62,6 +64,6 @@ export const DataTableRow = styled(TableRow) <{
 export const LoadingRow = styled(LinearProgress)`
     && {
         width: 40%;
-        margin: auto;        
+        margin: auto;
     }
 `;

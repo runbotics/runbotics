@@ -1,8 +1,9 @@
-import { IBot, IUser } from 'runbotics-common';
+import { User } from '#/scheduler-database/user/user.entity';
+import { IBot } from 'runbotics-common';
 import { Socket } from 'socket.io';
 
 export interface AuthSocket extends Socket {
-    user: IUser;
+    user: User;
 }
 
 export interface BotAuthSocket extends AuthSocket {

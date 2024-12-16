@@ -1,4 +1,4 @@
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Select, Box, InputLabel } from '@mui/material';
 import styled from 'styled-components';
 
 export const StyledActionsContainer = styled.div`
@@ -44,5 +44,21 @@ export const DeleteButton = styled(Button)(({theme}) => `
         &:hover {
             background-color: ${theme.palette.common.black};
         }
+    }
+`);
+
+export const StyledSelect = styled(Select)`
+    width: 300px;
+    height: 40px;
+`;
+
+export const StyledSearchFilterBox = styled(Box)`
+    display: flex;
+    gap: 10px;
+`;
+
+export const StyledInputLabel = styled(InputLabel)(({ theme }) => `
+    && {
+        color: ${theme.palette.grey[700]};
     }
 `);

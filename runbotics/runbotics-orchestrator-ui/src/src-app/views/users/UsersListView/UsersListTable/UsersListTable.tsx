@@ -7,9 +7,10 @@ import { useSelector } from 'react-redux';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { usersSelector } from '#src-app/store/slices/Users';
 
+import { AVAILABLE_ROWS_PER_PAGE } from '#src-app/views/utils/TablePaging.provider';
+
 import { DataGridStyle} from './UsersListTable.styles';
 import useUsersListColumns from './useUsersListColumns';
-import { ROWS_PER_PAGE } from '../../UsersBrowseView/UsersBrowseView.utils';
 
 interface UsersListTableProps {
     page: number;
@@ -17,6 +18,8 @@ interface UsersListTableProps {
     pageSize: number;
     onPageSizeChange: (pageSize: number) => void;
     openUserEditDialog: (row) => void;
+    isForAdmin: boolean;
+    isTenantSelected: boolean;
 }
 
 const UsersListTable: FC<UsersListTableProps> = ({
@@ -24,11 +27,15 @@ const UsersListTable: FC<UsersListTableProps> = ({
     onPageChange,
     pageSize,
     onPageSizeChange,
-    openUserEditDialog
+    openUserEditDialog,
+    isForAdmin,
+    isTenantSelected
 }) => {
     const usersListColumns = useUsersListColumns();
-    const { activated } = useSelector(usersSelector);
+    const { activated, tenantActivated } = useSelector(usersSelector);
     const { translate } = useTranslations();
+
+    const userData = isForAdmin ? activated : tenantActivated;
 
     return (
         <Card>
@@ -37,10 +44,11 @@ const UsersListTable: FC<UsersListTableProps> = ({
                     <DataGrid
                         sx={DataGridStyle}
                         autoHeight
+                        columnVisibilityModel={{ tenant: !isTenantSelected }}
                         columns={usersListColumns}
-                        rows={activated.allByPage?.content ?? []}
-                        rowCount={activated.allByPage?.totalElements ?? 0}
-                        loading={activated.loading}
+                        rows={userData.allByPage?.content ?? []}
+                        rowCount={userData.allByPage?.totalElements ?? 0}
+                        loading={userData.loading}
                         page={page}
                         onPageChange={(newPage) => onPageChange(newPage)}
                         pageSize={pageSize}
@@ -48,7 +56,7 @@ const UsersListTable: FC<UsersListTableProps> = ({
                         disableSelectionOnClick
                         onRowClick={({ row }) => openUserEditDialog(row)}
                         paginationMode='server'
-                        rowsPerPageOptions={ROWS_PER_PAGE}
+                        rowsPerPageOptions={AVAILABLE_ROWS_PER_PAGE}
                         localeText={{
                             noRowsLabel: translate('Users.List.Table.Error.Rows')
                         }}

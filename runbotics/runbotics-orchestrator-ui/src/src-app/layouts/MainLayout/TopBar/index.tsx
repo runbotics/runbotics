@@ -82,7 +82,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
     useEffect(() => {
         if (isGuest) {
             dispatch(guestsActions.getRemainingSessionTime());
-            dispatch(guestsActions.getGuestExecutionCount({ userId: user.id }));
+            dispatch(guestsActions.getCurrentGuest());
         }
     }, []);
 

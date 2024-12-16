@@ -1,4 +1,4 @@
-import React, { VFC, useState, useContext, FC } from 'react';
+import { VFC, useState, useContext, FC } from 'react';
 
 import {
     Button,
@@ -12,7 +12,7 @@ import {
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { IProcess } from 'runbotics-common';
+import { OrderDirection, OrderPropertyName, ProcessDto } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { ProcessPageContext } from '#src-app/providers/ProcessPage.provider';
@@ -24,9 +24,9 @@ import { getLastParamOfUrl } from '../utils/routerUtils';
 
 type DeleteProcessDialogProps = {
     open?: boolean;
-    process: IProcess;
+    process: ProcessDto;
     onClose: () => void;
-    onDelete: (process: IProcess) => void;
+    onDelete: (process: ProcessDto) => void;
 };
 
 const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
@@ -40,39 +40,51 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
     const isCollectionsTab = getLastParamOfUrl(router) === ProcessesTabs.COLLECTIONS;
 
     const handleSubmit = async () => {
-        await dispatch(processActions.deleteProcess({ processId: props.process.id }));
+        await dispatch(processActions.deleteProcess({ resourceId: props.process.id }));
         props.onDelete(props.process);
 
         if (isCollectionsTab) {
             await dispatch(
-                processActions.getProcessesPageByCollection({
+                processActions.getProcessesPage({
+                    pageParams: {
+                        page,
+                        size: pageSize,
+                        sort: {
+                            by: OrderPropertyName.UPDATED,
+                            order: OrderDirection.DESC,
+                        },
+                        filter: {
+                            contains: {
+                                ...(search.trim() && {
+                                    name: search.trim(),
+                                    createdByName: search.trim(),
+                                    tagName: search.trim(),
+                                }),
+                            },
+                            equals: {
+                                processCollectionId: collectionId !== null ? collectionId : 'null',
+                            },
+                        },
+                    },
+                }),
+            );
+        } else {
+            dispatch(processActions.getProcessesAllPage({
+                pageParams: {
                     page,
                     size: pageSize,
+                    sort: {
+                        by: OrderPropertyName.UPDATED,
+                        order: OrderDirection.DESC,
+                    },
                     filter: {
                         contains: {
                             ...(search.trim() && {
                                 name: search.trim(),
                                 createdByName: search.trim(),
-                                tagName: search.trim()
-                            })
+                                tagName: search.trim(),
+                            }),
                         },
-                        equals: {
-                            ...(collectionId !== null && { collectionId })
-                        }
-                    }
-                }),
-            );
-        } else {
-            dispatch(processActions.getProcessesPage({
-                page,
-                size: pageSize,
-                filter: {
-                    contains: {
-                        ...(search.trim() && {
-                            name: search.trim(),
-                            createdByName: search.trim(),
-                            tagName: search.trim()
-                        })
                     },
                 },
             }));
@@ -116,10 +128,11 @@ const DeleteProcessDialog: VFC<DeleteProcessDialogProps> = (props) => {
 };
 
 type DeleteProcessProps = {
-    process: IProcess;
+    process: ProcessDto;
+    handleMenuClose(): void;
 };
 
-const DeleteProcess: FC<DeleteProcessProps> = ({ process }) => {
+const DeleteProcess: FC<DeleteProcessProps> = ({ process, handleMenuClose }) => {
     const [show, setShow] = useState(false);
     const { translate } = useTranslations();
 
@@ -129,7 +142,12 @@ const DeleteProcess: FC<DeleteProcessProps> = ({ process }) => {
 
     return (
         <>
-            <MenuItem onClick={() => setShow(true)}>{translate('Process.Delete.ActionName')}</MenuItem>
+            <MenuItem onClick={() => {
+                setShow(true);
+                handleMenuClose();
+            }}>
+                {translate('Process.Delete.ActionName')}
+            </MenuItem>
             <DeleteProcessDialog
                 process={process}
                 open={show}

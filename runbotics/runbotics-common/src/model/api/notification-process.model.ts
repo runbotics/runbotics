@@ -1,11 +1,9 @@
-import { Notification } from "../../notifications";
-import { IProcess } from "./process.model";
-import { IUser } from "./user.model";
+import { NotificationProcessType } from "./notification-type.model";
+import { User } from "./user.model";
 
 export interface NotificationProcess {
-    id: number;
-    user: IUser;
-    process: IProcess;
-    type: Notification.PROCESS_ERROR;
+    id: string;
+    user: User;
+    type: NotificationProcessType;
     createdAt: string;
 }

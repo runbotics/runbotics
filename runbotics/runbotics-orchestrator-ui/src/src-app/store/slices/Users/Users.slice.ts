@@ -18,16 +18,22 @@ const initialState: UsersState = {
         loading: false,
         all: [],
         allByPage: null,
-        nonAdmins: {
-            all: [],
-            loading: false,
-        }
     },
     notActivated: {
         loading: false,
         all: [],
         allByPage: null,
     },
+    tenantActivated: {
+        loading: false,
+        all: [],
+        allByPage: null,
+    },
+    tenantNotActivated: {
+        loading: false,
+        all: [],
+        allByPage: null
+    }
 };
 
 export const slice = createSlice({

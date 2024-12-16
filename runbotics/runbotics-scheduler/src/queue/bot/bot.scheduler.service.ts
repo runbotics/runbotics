@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Logger } from '../../utils/logger';
-import { BotService } from '../../database/bot/bot.service';
-import { BotStatus, IUser, WsMessage } from 'runbotics-common';
-import { UiGateway } from '../../websocket/ui/ui.gateway';
+import { Logger } from '#/utils/logger';
+import { BotService } from '#/scheduler-database/bot/bot.service';
+import { BotStatus, WsMessage } from 'runbotics-common';
+import { User } from '#/scheduler-database/user/user.entity';
+import { UiGateway } from '#/websocket/ui/ui.gateway';
 
 
 @Injectable()
@@ -15,16 +16,16 @@ export class BotSchedulerService {
         private readonly uiGateway: UiGateway,
     ) {}
 
-    async getBotStatusForUser(user: IUser) {
-        this.logger.log(`Getting bot status for user ${user.login}`);
-        const bot = await this.botService.findByInstallationId(user.login);
+    async getBotStatusForUser(user: User) {
+        this.logger.log(`Getting bot status for user ${user.email}`);
+        const bot = await this.botService.findByInstallationId(user.email);
 
         if (bot && bot.status === BotStatus.CONNECTED) {
             this.logger.warn(`Bot ${bot.installationId} is connected`);
             return { connected: true };
         }
 
-        this.logger.warn(`Bot of user ${user.login} is disconnected or not found`);
+        this.logger.warn(`Bot of user ${user.email} is disconnected or not found`);
         return { connected: false };
     }
 

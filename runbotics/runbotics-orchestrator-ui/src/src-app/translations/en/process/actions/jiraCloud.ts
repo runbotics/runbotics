@@ -1,8 +1,5 @@
 const jiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Label': 'Get User Worklogs',
-    'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Origin': 'Origin - Environment Variable',
-    'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Username': 'Username - Environment Variable',
-    'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Password': 'Password - Environment Variable',
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.DateMode': 'Date Mode',
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.StartDate': 'Start Date',
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.EndDate': 'End Date',
@@ -11,9 +8,6 @@ const jiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Output.Info': 'Array of user\'s worklogs or map of user\'s worklogs grouped by day',
 
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Label': 'Get Project Worklogs',
-    'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Origin': 'Origin - Environment Variable',
-    'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Username': 'Username - Environment Variable',
-    'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Password': 'Password - Environment Variable',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.DateMode': 'Date Mode',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.StartDate': 'Start Date',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.EndDate': 'End Date',
@@ -23,17 +17,11 @@ const jiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Output.Info': 'Array of project\'s worklogs or map of project\'s worklogs grouped by day',
 
     'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Label': 'Get Board Sprints',
-    'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Origin': 'Origin - Environment Variable',
-    'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Username': 'Username - Environment Variable',
-    'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Password': 'Password - Environment Variable',
     'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Board': 'Board ID',
     'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.State': 'State of the sprint',
     'Process.Details.Modeler.Actions.JiraCloud.GetBoardSprints.Output.Info': 'Array of project\'s sprints',
 
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Label': 'Get Sprint Tasks',
-    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Origin': 'Origin - Environment Variable',
-    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Username': 'Username - Environment Variable',
-    'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.Password': 'Password - Environment Variable',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.DateMode': 'Date Mode of Task Status Change',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.StartDate': 'Start Date',
     'Process.Details.Modeler.Actions.JiraCloud.GetSprintTasks.EndDate': 'End Date',

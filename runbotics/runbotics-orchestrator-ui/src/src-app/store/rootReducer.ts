@@ -7,6 +7,9 @@ import { authReducer as auth } from './slices/Auth/index';
 import { botReducer as bot } from './slices/Bot';
 import { botCollectionReducer as botCollection } from './slices/BotCollections';
 import { botSystemsReducer as botSystem } from './slices/BotSystem';
+import { credentialCollectionsReducer as credentialCollections} from './slices/CredentialCollections';
+import { credentialsReducer as credentials } from './slices/Credentials';
+import { credentialTemplatesReducer as credentialTemplates } from './slices/CredentialTemplates';
 import { globalVariableReducer as globalVariable } from './slices/GlobalVariable';
 import { guestsReducer as guests } from './slices/Guests';
 import { processReducer as process } from './slices/Process';
@@ -16,7 +19,9 @@ import { processInstanceEventReducer as processInstanceEvent } from './slices/Pr
 import { processOutputReducer as processOutput } from './slices/ProcessOutput';
 import { scheduleProcessReducer as scheduleProcess } from './slices/ScheduleProcess';
 import { schedulerReducer as scheduler } from './slices/Scheduler';
+import { tenantsReducer as tenants } from './slices/Tenants';
 import { usersReducer as users } from './slices/Users';
+import httpErrorReducer from './slices/Views/httpErrorSlice';
 
 const rootReducer = combineReducers({
     action,
@@ -28,6 +33,7 @@ const rootReducer = combineReducers({
     form,
     globalVariable,
     guests,
+    httpErrorReducer,
     process,
     processCollection,
     processInstance,
@@ -36,6 +42,10 @@ const rootReducer = combineReducers({
     scheduler,
     users,
     processOutput,
+    tenants,
+    credentials,
+    credentialCollections,
+    credentialTemplates,
 });
 
 export default rootReducer;

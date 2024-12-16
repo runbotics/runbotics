@@ -6,6 +6,7 @@ import com.runbotics.repository.ProcessInstanceRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.ProcessInstanceService;
 import com.runbotics.service.UserService;
+import com.runbotics.service.dto.ProcessDTO;
 import com.runbotics.service.dto.ProcessInstanceDTO;
 import com.runbotics.service.exception.ProcessInstanceAccessDenied;
 import com.runbotics.service.mapper.ProcessInstanceMapper;
@@ -109,9 +110,18 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     }
 
     @Override
-    public List<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId) {
-        log.debug("Request to get all subprocesses for ProcessInstance : {}", processInstanceId);
-        List<ProcessInstance> subprocesses = processInstanceRepository.findByParentId(processInstanceId);
-        return processInstanceMapper.toDto(subprocesses);
+    public Page<ProcessInstanceDTO> findSubprocesses(UUID processInstanceId, Pageable pageable) {
+        Page<ProcessInstance> subprocesses = processInstanceRepository.findByParentId(processInstanceId, pageable);
+        Page<ProcessInstanceDTO> subprocessesMapped = subprocesses.map(processInstanceMapper::toDto);
+
+        subprocessesMapped.forEach(dto -> {
+            dto.setBot(null);
+            ProcessDTO process = dto.getProcess();
+            if (process != null) {
+                process.setBotCollection(null);
+            }
+        });
+
+        return subprocessesMapped;
     }
 }

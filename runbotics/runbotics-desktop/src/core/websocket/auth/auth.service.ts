@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { RunboticsLogger } from '../../../logger/RunboticsLogger';
 import { ServerConfigService } from '../../../config/server-config.service';
 import { StorageService } from '../../../config/storage.service';
-import { orchestratorAxios } from '../../../config/axios-configuration';
+import { orchestratorAxios, schedulerAxios } from '../../../config/axios-configuration';
 import { v4 as uuidv4 } from 'uuid';
 import getBotSystem from '#utils/botSystem';
 
@@ -18,6 +18,7 @@ export class AuthService {
     async getCredentials() {
         this.logger.log('=> Authenticating with server: ' + this.serverConfigService.entrypointUrl);
         orchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
+        schedulerAxios.defaults.baseURL = this.serverConfigService.entrypointSchedulerUrl;
         const response = await orchestratorAxios.post(
             '/api/authenticate',
             {
@@ -36,7 +37,17 @@ export class AuthService {
 
         const token = response.data['id_token'];
         orchestratorAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
+        schedulerAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
         this.storageService.setValue('token', token);
+
+        const authUser = await orchestratorAxios.get<{ tenant: { id: string } }>('/api/account')
+            .then(res => res.data)
+            .catch((error) => {
+                this.logger.error('<= Error getting user from server: ' + this.serverConfigService.entrypointSchedulerUrl, error);
+                throw error;
+            });
+        this.storageService.setValue('tenantId', authUser.tenant.id);
+
         const installationId = await this.getInstallationId();
         this.logger.log('<= Authenticated with server: ' + this.serverConfigService.entrypointUrl);
 

@@ -1,13 +1,10 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
 import { TextField, Autocomplete } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
-import { useSelector } from 'react-redux';
-import { Role } from 'runbotics-common';
+import { useDispatch, useSelector } from 'react-redux';
 
-import useAuth from '#src-app/hooks/useAuth';
-import useRole from '#src-app/hooks/useRole';
-import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
+import { globalVariableActions, globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 
 interface GlobalVariableOption {
     id: number;
@@ -15,20 +12,14 @@ interface GlobalVariableOption {
 }
 
 const GlobalVariableSelectWidget: FC<WidgetProps> = (props) => {
-    const { user } = useAuth();
-    const isAdmin = useRole([Role.ROLE_ADMIN]);
+    const dispatch = useDispatch();
     const { globalVariables } = useSelector(globalVariableSelector);
 
-    const options = useMemo(() => {
-        const userGlobalVariables = isAdmin
-            ? globalVariables
-            : globalVariables.filter((variable) => variable.creator.id === user.id);
-
-        return userGlobalVariables.map<GlobalVariableOption>((variable) => ({
+    const options = useMemo(() => globalVariables
+        .map<GlobalVariableOption>((variable) => ({
             id: variable.id,
             name: variable.name,
-        }));
-    }, [globalVariables]);
+        })), [globalVariables]);
 
     const label = props.label
         ? `${props.label} ${props.required ? '*' : ''}`
@@ -46,6 +37,11 @@ const GlobalVariableSelectWidget: FC<WidgetProps> = (props) => {
             ? { id: globalVariable.id, name: globalVariable.name }
             : undefined;
     };
+
+    useEffect(() => {
+        dispatch(globalVariableActions.getGlobalVariables());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <Autocomplete

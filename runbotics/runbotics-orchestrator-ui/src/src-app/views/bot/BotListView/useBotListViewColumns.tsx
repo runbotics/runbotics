@@ -40,7 +40,7 @@ const useBotListViewColumns = ({
             filterable: false,
             disableColumnMenu: true,
             flex: 0.4,
-            renderCell: (params: GridCellParams) => params.row.user?.login,
+            renderCell: (params: GridCellParams) => params.row.user.email,
         },
         {
             field: 'status',

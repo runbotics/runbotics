@@ -1,17 +1,41 @@
-import { IAuthority } from './authority.model';
+import { IAuthority, Role } from './authority.model';
+import { FeatureKey } from './feature-key.model';
+import { BasicTenantDto } from './tenant.model';
 
-export interface IUser {
-    id?: number;
-    login?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    activated?: boolean;
-    langKey?: string;
-    authorities?: IAuthority[];
-    createdBy?: string;
-    createdDate?: string | null;
-    lastModifiedBy?: string;
-    lastModifiedDate?: string | null;
-    password?: string;
+export interface User {
+    id: number;
+    email: string;
+    passwordHash?: string;
+    firstName: string | null;
+    lastName: string | null;
+    imageUrl: string | null;
+    langKey: string;
+    activated: boolean;
+    activationKey?: string | null;
+    resetKey?: string | null;
+    createdBy: string;
+    createdDate: string;
+    resetDate: string | null;
+    lastModifiedDate: string;
+    lastModifiedBy: string;
+    tenantId: string;
+    authorities: IAuthority[];
 }
+
+export type BasicUserDto = Pick<User, 'id' | 'email'>;
+
+export type PartialUserDto = Partial<User>;
+
+export type UserDto = Omit<
+    User,
+    | 'activationKey'
+    | 'resetDate'
+    | 'resetKey'
+    | 'tenantId'
+    | 'passwordHash'
+    | 'authorities'
+> & {
+    tenant: BasicTenantDto;
+    roles: Role[];
+    featureKeys: FeatureKey[];
+};

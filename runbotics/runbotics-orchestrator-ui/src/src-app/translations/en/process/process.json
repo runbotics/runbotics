@@ -503,6 +503,8 @@
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Key": "Key",
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value": "Value",
     "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Drop file here or click to select file (max 4mb)",
+    "Process.Details.Modeler.Widgets.FileDropzone.TooLargeFileSize": "File size is too large (max 4mb)",
+    "Process.Details.Modeler.Widgets.FileDropzone.TooManyFiles": "Too many files (max 1 file)",
     "Process.Details.Modeler.ActionPanel.Form.GatewayName.Title": "Gateway name",
     "Process.Details.Modeler.ActionPanel.Form.FlowName.Title": "Flow name",
     "Process.Details.Modeler.ActionPanel.Form.Disabled.Title": "Disabled",

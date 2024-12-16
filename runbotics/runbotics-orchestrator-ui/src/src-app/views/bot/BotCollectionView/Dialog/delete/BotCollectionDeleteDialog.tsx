@@ -3,33 +3,37 @@ import React, { VFC } from 'react';
 import {
     Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,
 } from '@mui/material';
-import { IBotCollection } from 'runbotics-common';
+import { BotCollectionDto } from 'runbotics-common';
 
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { useDispatch } from '../../../../../store';
-import { botCollectionActions } from '../../../../../store/slices/BotCollections';
-import { PageRequestParams } from '../../../../../utils/types/page';
+import { useDispatch } from '#src-app/store';
+import { botCollectionActions } from '#src-app/store/slices/BotCollections';
+import { PageRequestParams } from '#src-app/utils/types/page';
 
 
 type DeleteBotCollectionDialogProps = {
     open?: boolean;
-    botCollection: IBotCollection;
+    botCollection: BotCollectionDto;
     onClose: () => void;
-    onDelete: (botCollection: IBotCollection) => void;
-    pageParams: PageRequestParams<Partial<IBotCollection>>;
+    onDelete: (botCollection: BotCollectionDto) => void;
+    pageParams: PageRequestParams<Partial<BotCollectionDto>>;
 };
 
 const BotCollectionDeleteDialog: VFC<DeleteBotCollectionDialogProps> = ({
-    open, botCollection, onClose, onDelete, pageParams,
+    open,
+    botCollection,
+    onClose,
+    onDelete,
+    pageParams,
 }) => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
 
     const handleSubmit = async () => {
-        await dispatch(botCollectionActions.deleteOne({ collectionId: botCollection.id }))
-            .then(() => dispatch(botCollectionActions.getByPage(pageParams)));
+        await dispatch(botCollectionActions.deleteOne({ resourceId: botCollection.id }))
+            .then(() => dispatch(botCollectionActions.getByPage({ pageParams })));
         onDelete(botCollection);
     };
 
