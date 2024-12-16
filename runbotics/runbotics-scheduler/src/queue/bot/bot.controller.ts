@@ -1,7 +1,7 @@
 import {
-    BadRequestException,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     HttpException,
     Param,
@@ -87,7 +87,7 @@ export class BotController {
         const isDefaultCollection = await this.botCollectionService.isDefaultCollection(collectionId);
         const isBotConnected = [BotStatus.CONNECTED, BotStatus.BUSY].includes(bot.status);
         if (isDefaultCollection && isBotConnected) {
-            throw new BadRequestException('Can not delete bot');
+            throw new ForbiddenException('Can not delete bot');
         }
 
         await this.authService.unregisterBot(installationId);
