@@ -107,7 +107,7 @@ export class ProcessCrudService {
                     id,
                     tenantId: user.tenantId,
                 },
-                relations: RELATIONS,
+                relations: ['tags'],
             })
             .catch(() => {
                 throw new NotFoundException();
@@ -117,6 +117,7 @@ export class ProcessCrudService {
         process.description = processDto.description;
         process.definition = processDto.definition;
         process.isPublic = processDto.isPublic;
+        process.processCollectionId = processDto.processCollection ? processDto.processCollection.id : null;
         process.updated = dayjs().toISOString();
 
         if (processDto.tags?.length > 15) {

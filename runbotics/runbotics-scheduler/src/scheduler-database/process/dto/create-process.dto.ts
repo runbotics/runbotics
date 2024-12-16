@@ -20,7 +20,7 @@ export const createProcessSchema = z.object({
             name: BotSystemType.ANY,
         }),
     botCollection: botCollectionReferenceSchema.optional(),
-    processCollection: processCollectionReferenceSchema.optional(),
+    processCollection: processCollectionReferenceSchema.or(z.null()).optional(),
     globalVariables: z.array(createGlobalVariableSchema).default([]),
     output: processOutputReferenceSchema
         .default({
