@@ -8,7 +8,6 @@ import { UpdateTriggerableDto } from './update-triggerable.dto';
 import { UpdateExecutionInfoDto } from './update-execution-info.dto';
 
 export const updateProcessSchema = createProcessSchema.omit({
-    processCollection: true,
     executionInfo: true,
     isAttended: true,
     isTriggerable: true,
