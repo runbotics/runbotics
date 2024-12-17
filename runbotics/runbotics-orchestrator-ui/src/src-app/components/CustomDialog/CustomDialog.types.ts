@@ -5,8 +5,8 @@ export interface CustomDialogProps {
     onClose: () => void;
     title: string;
     children?: React.ReactNode;
-    confirmButtonOptions?: DialogButton;
-    cancelButtonOptions?: DialogButton;
+    confirmButtonOptions: DialogButton;
+    cancelButtonOptions: DialogButton;
     maxWidth?: false | Breakpoint;
     fullWidth?: boolean;
 }

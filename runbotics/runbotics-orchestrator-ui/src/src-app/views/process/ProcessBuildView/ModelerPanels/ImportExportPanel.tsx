@@ -31,6 +31,7 @@ const ImportExportPanel: FC<ImportExportPanelProps> = ({
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
     const { extractImportInfo } = useProcessImport();
+
     const handleImport = async (event: SyntheticEvent) => {
         const { files } = event.target as HTMLInputElement;
         const file = files.item(0);

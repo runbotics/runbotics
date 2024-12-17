@@ -42,6 +42,7 @@ export interface AdditionalInfo {
     executionInfo?: ProcessDto['executionInfo'];
     isAttended?: ProcessDto['isAttended'];
     isTriggerable?: ProcessDto['isTriggerable'];
+    credentials?: ProcessDto['credentials'];
     system?: ProcessDto['system'];
 }
 

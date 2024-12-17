@@ -28,6 +28,7 @@ export interface IProcess {
     tags?: Tag[];
     output?: ProcessOutput;
     tenantId?: Tenant['id'];
+    credentials?: string[];
 }
 
 export type ProcessDto = Omit<IProcess, 'createdBy' | 'editor'> & {

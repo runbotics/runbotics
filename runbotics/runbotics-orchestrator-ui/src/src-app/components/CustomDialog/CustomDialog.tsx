@@ -10,7 +10,6 @@ import DialogButton from './DialogButton';
 
 const CustomDialog: FC<CustomDialogProps> = ({
     isOpen,
-    onClose,
     title,
     children,
     confirmButtonOptions,
@@ -20,7 +19,6 @@ const CustomDialog: FC<CustomDialogProps> = ({
 }) => (
     <Dialog
         open={isOpen}
-        onClose={onClose}
         maxWidth={maxWidth}
         fullWidth={fullWidth}
     >
@@ -33,12 +31,12 @@ const CustomDialog: FC<CustomDialogProps> = ({
         <DialogActions>
             <DialogButton options={cancelButtonOptions}>
                 <Typography variant='body2' fontWeight='medium'>
-                    {cancelButtonOptions.label ?? translate('Common.Cancel')}
+                    {cancelButtonOptions?.label ?? translate('Common.Cancel')}
                 </Typography>
             </DialogButton>
             <DialogButton options={confirmButtonOptions} variant='contained'>
                 <Typography variant='body2' fontWeight='medium'>
-                    {confirmButtonOptions.label ?? translate('Common.Confirm')}
+                    {confirmButtonOptions?.label ?? translate('Common.Confirm')}
                 </Typography>
             </DialogButton>
         </DialogActions>

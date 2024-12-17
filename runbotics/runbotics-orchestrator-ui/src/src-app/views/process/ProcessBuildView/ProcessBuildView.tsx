@@ -13,6 +13,7 @@ import { useSnackbar } from 'notistack';
 
 import { FeatureKey } from 'runbotics-common';
 
+import CustomDialog from '#src-app/components/CustomDialog';
 import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
@@ -37,6 +38,7 @@ import { StyledCard } from './ProcessBuildView.styled';
 const BORDER_SIZE = 2;
 const SNACKBAR_DURATION = 1500;
 
+// eslint-disable-next-line max-lines-per-function
 const ProcessBuildView: FC = () => {
     const dispatch = useDispatch();
     const { createRbexFile } = useProcessExport();
@@ -49,6 +51,9 @@ const ProcessBuildView: FC = () => {
     const { process } = useSelector((state) => state.process.draft);
     const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
     const hasActionsAccess = useFeatureKey([FeatureKey.EXTERNAL_ACTION_READ]);
+    const [isImportCredentialsDialogOpen, setIsImportCredentialsDialogOpen] = useState(false);
+    const [processDefinition, setProcessDefinition] = useState('');
+    const [additionalProperties, setAdditionalProperties] = useState<AdditionalInfo>(null);
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
@@ -124,10 +129,7 @@ const ProcessBuildView: FC = () => {
         }
     };
 
-    const handleImport = (
-        definition: string,
-        additionalInfo: AdditionalInfo,
-    ) => {
+    const importDraft = (definition: string, additionalInfo: AdditionalInfo) => {
         dispatch(processActions.clearErrors());
         dispatch(
             processActions.setDraft({
@@ -138,6 +140,31 @@ const ProcessBuildView: FC = () => {
                 },
             }),
         );
+    };
+
+    const handleImport = (
+        definition: string,
+        additionalInfo: AdditionalInfo,
+    ) => {
+        // if (additionalInfo?.credentials?.length) {
+        setIsImportCredentialsDialogOpen(true);
+        setProcessDefinition(definition);
+        setAdditionalProperties(additionalInfo);
+        // return;
+        // }
+        // importDraft(definition, additionalInfo);
+    };
+
+    const clearCustomCredentials = (definition: string) => {
+        const regex = /<camunda:inputParameter name="customCredentialId">.*?<\/camunda:inputParameter>\n?/g;
+        const definitionWithoutCustomCredentials = definition.replace(regex, '');
+        return definitionWithoutCustomCredentials;
+    };
+
+    const handleClearImportedCredentials = (definition: string, additionalInfo: AdditionalInfo) => {
+        setIsImportCredentialsDialogOpen(false);
+        const definitionWithoutCustomCredentials = clearCustomCredentials(definition);
+        importDraft(definitionWithoutCustomCredentials, additionalInfo);
     };
 
     const handleExport = async () => {
@@ -161,6 +188,26 @@ const ProcessBuildView: FC = () => {
         <StyledCard offsetTop={offSet}>
             <DialogContent ref={onRefChange} sx={{ padding: 0 }}>
                 <Box position="relative">
+                    <CustomDialog
+                        title="Importowanie procesu"
+                        isOpen={isImportCredentialsDialogOpen}
+                        onClose={() => setIsImportCredentialsDialogOpen(false)}
+                        confirmButtonOptions={{
+                            label: 'Wyczyść',
+                            onClick: () => handleClearImportedCredentials(processDefinition, additionalProperties),
+                        }}
+                        cancelButtonOptions={{
+                            label: 'Zachowaj',
+                            onClick: () => { setIsImportCredentialsDialogOpen(false); importDraft(processDefinition, additionalProperties); },
+                        }}
+                    >
+                        <p>Importowany proces korzystał z następujących poświadczeń:</p>
+                        {/* <ul>
+                            {additionalProperties?.credentials?.map((credential) => (
+                                <li key={credential.id}>{credential.name}</li>
+                            ))}
+                        </ul> */}
+                    </CustomDialog>
                     <BpmnModeler
                         ref={BpmnModelerRef}
                         definition={process.definition}
