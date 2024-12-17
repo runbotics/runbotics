@@ -8,7 +8,7 @@ import com.runbotics.service.criteria.BotCollectionCriteria;
 import com.runbotics.service.dto.BotCollectionDTO;
 import com.runbotics.service.mapper.BotCollectionMapper;
 import com.runbotics.utils.Utils;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,8 +52,8 @@ public class BotCollectionServiceImpl implements BotCollectionService {
             botCollection
                 .getUsers()
                 .stream()
-                .map(User::getLogin)
-                .map(user -> userService.getUserWithAuthoritiesByLogin(user).get())
+                .map(User::getEmail)
+                .map(user -> userService.getUserWithAuthoritiesByEmail(user).get())
                 .collect(Collectors.toSet())
         );
         botCollection.setTenant(requester.getTenant());

@@ -215,9 +215,12 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                     // eslint-disable-next-line array-callback-return
                     if (!filteredItems.length) return;
 
-                    return { ...group, items: filteredItems };
+                    const sortedItems = filteredItems.sort((a, b) => a.label.localeCompare(b.label));
+                    
+                    return { ...group, items: sortedItems };
                 })
-                .filter(el => el),
+                .sort((groupA, groupB) => groupA.label.localeCompare(groupB.label))
+                .filter(Boolean),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [actionGroups, filters]
     );

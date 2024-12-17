@@ -32,7 +32,7 @@ const BotCollectionTileContent: FunctionComponent<BotCollectionTileProps> = ({ b
                     {translate('Component.Tile.BotCollection.Content.Creator')}
                 </Typography>
                 <Typography color="textPrimary" variant="h6">
-                    {botCollection.createdBy?.login}
+                    {botCollection.createdByUser?.email}
                 </Typography>
             </Box>
             <Box>

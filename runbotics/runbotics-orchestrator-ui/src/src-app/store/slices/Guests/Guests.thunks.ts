@@ -1,21 +1,8 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import Axios from 'axios';
-
 import { Guest } from '#src-app/types/guest';
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 
-export const getGuestExecutionCount = createAsyncThunk<Guest, { userId: number }>(
-    'guests/getGuestExecutionCount',
-    async (payload: { userId: number }, { rejectWithValue }) => {
-        try {
-            const response = await Axios.get<Guest>(`/api/guests/${payload.userId}`);
-            const guest = response.data;
-            return { ...guest };
-        } catch (error) {
-            if (!error.response) {
-                throw error;
-            }
+const GUESTS_PATH = 'guests';
 
-            return rejectWithValue(error.response.data);
-        }
-    }
+export const getCurrentGuest = ApiTenantResource.get<Guest>(
+    'guests/getCurrentGuest', `${GUESTS_PATH}/user`
 );

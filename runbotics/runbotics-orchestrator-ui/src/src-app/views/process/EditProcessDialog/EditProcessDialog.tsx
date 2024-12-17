@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import { useSnackbar } from 'notistack';
-import { FeatureKey, IProcess } from 'runbotics-common';
+import { FeatureKey, ProcessDto } from 'runbotics-common';
 
 import CustomDialog from '#src-app/components/CustomDialog';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
@@ -24,7 +24,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
 }) => {
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialFormValidationState);
     const [inputErrorType, setInputErrorType] = useState<InputErrorType>(null);
-    const [processFormState, setProcessFormState] = useState<IProcess>({ ...process });
+    const [processFormState, setProcessFormState] = useState<ProcessDto>({ ...process });
     const [isNameDirty, setIsNameDirty] = useState<boolean>(false);
 
     const resetState = () => {
@@ -43,7 +43,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     const { translate } = useTranslations();
     const { user: currentUser } = useSelector((state) => state.auth);
 
-    const isOwner = !process || currentUser.login === process?.createdBy.login || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
+    const isOwner = !process || currentUser.email === process?.createdBy.email || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
 
     const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
     const dispatch = useDispatch();
@@ -73,9 +73,9 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                 return;
             }
             if (!process.id) {
-                const processInfo: IProcess = { ...processFormState };
+                const processInfo: ProcessDto = { ...processFormState };
                 dispatch(
-                    processActions.createProcess(processInfo)
+                    processActions.createProcess({ payload: processInfo })
                 ).then((res) => onAdd(res.payload));
                 return;
             }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { MenuItem } from '@mui/material';
-import { IBotCollection } from 'runbotics-common';
+import { BotCollectionDto } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -10,7 +10,7 @@ import BotCollectionIdentifierDialog from './BotCollectionIdentifierDialog';
 
 
 type IdentifierBotCollectionProps = {
-    botCollection: IBotCollection;
+    botCollection: BotCollectionDto;
 };
 
 const BotCollectionIdentifierOption = (props: IdentifierBotCollectionProps) => {

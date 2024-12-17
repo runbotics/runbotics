@@ -1,17 +1,19 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import { Dialog, Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { IUser } from 'runbotics-common';
+import { UserDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
-import useUserSearch from '#src-app/hooks/useUserSearch';
+import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { useDispatch, useSelector } from '#src-app/store';
 import { usersSelector, usersActions } from '#src-app/store/slices/Users';
 import englishEditListTranslations from '#src-app/translations/en/users/list/edit';
 import { Form, Title, Content } from '#src-app/views/utils/FormDialog.styles';
+
+import { TablePagingContext } from '#src-app/views/utils/TablePaging.provider';
 
 import { StyledButton, DeleteButton, StyledDialogActions } from './UsersListEdit.styles';
 import { FormValidationState, UsersListEditDialogProps } from './UsersListEdit.types';
@@ -19,18 +21,24 @@ import { getUserDataWithoutNulls, getUserDataWithoutEmptyStrings, initialValidat
 import UsersListEditForm from './UsersListEditForm';
 import DeleteUserDialog from '../../DeleteUserDialog';
 
+
 const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
     open,
     onClose,
-    userData
+    userData,
+    isForAdmin
 }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
 
-    const { refreshSearch: refreshSearchActivated } = useUserSearch({ isActivatedUsersOnly: true });
+    const { page, pageSize } = useContext(TablePagingContext);
+    const searchType = isForAdmin ? UserSearchType.ALL_ACTIVATED : UserSearchType.TENANT_ACTIVATED;
+    const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType, page, pageSize });
+
     const { activated } = useSelector(usersSelector);
-    const [user, setUser] = useState<IUser>(userData);
+
+    const [user, setUser] = useState<UserDto>(userData);
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
 
@@ -46,13 +54,15 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
         setUser(getUserDataWithoutNulls(userData));
     }, [userData]);
 
-    const checkFormFieldsValidation = () => formValidationState.email && formValidationState.login;
+    const checkFormFieldsValidation = () => formValidationState && formValidationState.email;
 
     const handleSave = (): void => {
         if (!checkFormFieldsValidation()) return;
 
-        const dataPayload: IUser = getUserDataWithoutEmptyStrings(user);
-        dispatch(usersActions.updateActivated(dataPayload)).unwrap()
+        const dataPayload = getUserDataWithoutEmptyStrings(user);
+
+        dispatch(usersActions.updateInTenant({ payload: dataPayload, resourceId: dataPayload.id }))
+            .unwrap()
             .then(() => {
                 handleClose();
                 enqueueSnackbar(
@@ -80,12 +90,14 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
 
     return (
         <>
-            <DeleteUserDialog
-                open={isDeleteDialogVisible}
-                onClose={handleCloseDeleteDialog}
-                onDelete={handleClose}
-                getSelectedUsers={() => [user]}
-            />
+            <If condition={isForAdmin}>
+                <DeleteUserDialog
+                    open={isDeleteDialogVisible}
+                    onClose={handleCloseDeleteDialog}
+                    onDelete={handleClose}
+                    getSelectedUsers={() => [user]}
+                />
+            </If>
             <If condition={open}>
                 <Dialog open>
                     <Title>
@@ -102,13 +114,17 @@ const UsersListEditDialog: FC<UsersListEditDialogProps> = ({
                         </Form>
                     </Content>
                     <StyledDialogActions>
-                        <DeleteButton
-                            onClick={handleOpenDeleteDialog}
-                            variant='contained'
-                            loading={activated.loading}
-                        >
-                            {translate('Users.List.Edit.Form.Button.Delete')}
-                        </DeleteButton>
+                        <Box>
+                            <If condition={isForAdmin}>
+                                <DeleteButton
+                                    onClick={handleOpenDeleteDialog}
+                                    variant='contained'
+                                    loading={activated.loading}
+                                >
+                                    {translate('Users.List.Edit.Form.Button.Delete')}
+                                </DeleteButton>
+                            </If>
+                        </Box>
                         <Box>
                             <StyledButton
                                 onClick={handleClose}

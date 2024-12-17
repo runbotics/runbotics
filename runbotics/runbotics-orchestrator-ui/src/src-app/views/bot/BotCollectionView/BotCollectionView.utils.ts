@@ -1,3 +1,5 @@
+import { OrderDirection, OrderPropertyName } from 'runbotics-common';
+
 import { IBotCollectionWithFilters } from './BotCollectionView.types';
 import { PageRequestParams } from '../../../utils/types/page';
 import { CollectionsDisplayMode, DefaultPageSize } from '../BotBrowseView/BotBrowseView.utils';
@@ -11,8 +13,8 @@ export const getBotCollectionPageParams = (
     page,
     size,
     sort: {
-        by: 'updated',
-        order: 'desc',
+        by: OrderPropertyName.UPDATED,
+        order: OrderDirection.DESC,
     },
     filter: {
         contains: {

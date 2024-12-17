@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from './mail.service';
-import { UserModule } from '#/database/user/user.module';
 import { Logger } from '#/utils/logger';
 import { ServerConfigService } from '#/config/server-config/server-config.service';
-import { BotModule } from '#/database/bot/bot.module';
-import { ProcessModule } from '#/database/process/process.module';
+import { BotModule } from '#/scheduler-database/bot/bot.module';
+import { ProcessModule } from '#/scheduler-database/process/process.module';
+import { UserModule } from '#/scheduler-database/user/user.module';
+import { NotificationProcessModule } from '#/scheduler-database/notification-process/notification-process.module';
+import { NotificationBotModule } from '#/scheduler-database/notification-bot/notification-bot.module';
 
 @Module({
     imports: [
@@ -27,11 +29,12 @@ import { ProcessModule } from '#/database/process/process.module';
                 },
             }),
         }),
-        UserModule,
         Logger,
         BotModule,
         ProcessModule,
         UserModule,
+        NotificationProcessModule,
+        NotificationBotModule,
     ],
     providers: [MailService],
     exports: [MailService],

@@ -4,6 +4,7 @@
     "Account.SignIn": "Zaloguj się",
     "Account.User": "Użytkownik",
     "Account.Users": "Użytkownicy",
+    "Account.Tenants": "Organizacje",
     "Account.Monitoring": "Monitoring",
     "Account.Logout": "Wyloguj się"
 }

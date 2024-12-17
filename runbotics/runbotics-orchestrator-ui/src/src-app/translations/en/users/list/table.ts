@@ -1,5 +1,6 @@
 const tableListTranslations = {
     'Users.List.Table.Columns.Email': 'Email',
+    'Users.List.Table.Columns.Tenant': 'Tenant',
     'Users.List.Table.Columns.Roles': 'Roles',
     'Users.List.Table.Columns.CreatedBy': 'Created by',
     'Users.List.Table.Columns.CreatedDate': 'Created date',

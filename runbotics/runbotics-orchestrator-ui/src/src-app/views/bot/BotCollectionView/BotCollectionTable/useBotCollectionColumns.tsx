@@ -39,7 +39,7 @@ const useBotCollectionColumns = (): GridColDef[] => {
             disableColumnMenu: false,
             renderCell: (params: GridCellParams) => (
                 <Typography color="textPrimary" variant="h6">
-                    {params.row.createdBy ? params.row.createdBy.login : 'RunBotics'}
+                    {params.row.createdByUser ? params.row.createdByUser.email : 'RunBotics'}
                 </Typography>
             ),
         },

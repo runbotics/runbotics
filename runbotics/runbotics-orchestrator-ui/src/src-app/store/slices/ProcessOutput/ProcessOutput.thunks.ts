@@ -1,9 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.model';
+
+import axios from '#src-app/utils/axios';
 
 export const getAll = createAsyncThunk(
     'processOutput/getAll',
-    () => axios.get<ProcessOutput[]>('/api/process-outputs')
+    () => axios.get<ProcessOutput[]>('/api/scheduler/process-outputs')
         .then((response) => response.data),
 );

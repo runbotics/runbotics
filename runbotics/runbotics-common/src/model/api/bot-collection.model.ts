@@ -1,12 +1,18 @@
-import { IUser } from './user.model';
+import { BasicUserDto, User } from "./user.model";
 
 export interface IBotCollection {
+    tenantId?: string;
     id: string;
     name: string;
     publicBotsIncluded: boolean;
     description?: string;
     created?: string | null;
     updated?: string | null;
-    createdBy?: IUser;
-    users?: IUser[];
+    createdByUser?: User;
+    users?: User[];
 }
+
+export type BotCollectionDto = Omit<IBotCollection, 'user' | 'createdByUser'> & {
+    users?: BasicUserDto[];
+    createdByUser?: BasicUserDto;
+};

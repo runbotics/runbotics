@@ -47,12 +47,12 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
     const [currentPage, setCurrentPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const [limit, setLimit] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
     const [collectionState, setCollectionState] = useState(collectionFromUrl);
-    const mappedBotCollections = useMemo(() =>
-        botCollections?.reduce((acc, collection) => ({
+    const mappedBotCollections = useMemo(() => {
+        return botCollections?.reduce((acc, collection) => ({
             ...acc,
             [collection.id]: collection.name,
-        }), {})
-    , [botCollections]);
+        }), {});
+    }, [botCollections]);
 
     const [open, setOpen] = useState(false);
     const [botToDelete, setBotToDelete] = useState<IBot>(null);
@@ -73,16 +73,17 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
             page: currentPage,
             size: limit,
             ...(!(_.isEmpty(mappedBotCollections)) &&
-                collectionState.length && {
-                filter: {
-                    in: {
-                        collection: collectionState.map((collectionId) =>
-                            mappedBotCollections[collectionId]),
+                collectionState.length &&
+                {
+                    filter: {
+                        in: {
+                            'collection->name': collectionState.map((collectionId) =>
+                                mappedBotCollections[collectionId]),
+                        },
                     },
-                },
-            }),
+                }),
         };
-        dispatch(botActions.getPage(params));
+        dispatch(botActions.getPage({ pageParams: params }));
     };
 
     const handlePageChange = (newPage: number) => {
@@ -108,7 +109,7 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
         if (pageNotAvailable) {
             setCurrentPage(0);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
 
     useEffect(() => {
@@ -118,7 +119,7 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
             pageSize: limit,
             collection: collectionState,
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, limit, collectionState, mappedBotCollections]);
 
     return (
@@ -131,7 +132,7 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
                     value={collectionState}
                     onChange={handleFilterCollection}
                     renderInput={(params) => (
-                        <TextField {...params} label={translate('Bot.ListView.Results.Collections')} />
+                        <TextField {...params} label={translate('Bot.ListView.Results.Collections')}/>
                     )}
                     filterSelectedOptions
                     disableCloseOnSelect
@@ -153,7 +154,7 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
                     onPageChange={handlePageChange}
                     pageSize={limit}
                     onPageSizeChange={handleLimitChange}
-                    paginationMode='server'
+                    paginationMode="server"
                     loading={loadingBots || loadingCollections}
                     onCellClick={(param) => {
                         if (param.field !== 'actions') handleRedirect(param.row.id);

@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey, IProcessInstance, ProcessInstanceStatus } from 'runbotics-common';
+import { FeatureKey, IProcessInstance, OrderDirection, OrderPropertyName, ProcessInstanceStatus } from 'runbotics-common';
 
 import InfoPanel from '#src-app/components/InfoPanel';
 
@@ -17,9 +17,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
+
 import useProcessInstanceColumns from './HistoryTable.columns';
 import { Wrapper } from './HistoryTable.styles';
-import { HistoryTableProps, PanelInfoState } from './HistoryTable.types';
+import { GetSubprocessesPageParams, GetSubprocessesResponse, HistoryTableProps, PanelInfoState, ProcessInstanceRow } from './HistoryTable.types';
 import { useDispatch, useSelector } from '../../../store';
 import {
     processInstanceActions,
@@ -70,12 +71,19 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
 
         if (instanceId) {
             dispatch(processInstanceActions.getProcessInstancePageWithSpecificInstance({
-                size: pageSize,
-                instanceId,
-                filter: {
-                    equals: {
-                        ...(botId && { botId }),
-                        ...(processId && { processId }),
+                pageParams: {
+                    page,
+                    size: pageSize,
+                    sort: {
+                        by: OrderPropertyName.CREATED,
+                        order: OrderDirection.DESC,
+                    },
+                    filter: {
+                        equals: {
+                            id: instanceId,
+                            ...(botId && { botId }),
+                            ...(processId && { processId }),
+                        },
                     },
                 },
             }))
@@ -91,12 +99,18 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         }
 
         dispatch(processInstanceActions.getProcessInstancePage({
-            page,
-            size: pageSize,
-            filter: {
-                equals: {
-                    ...(botId && { botId }),
-                    ...(processId && { processId }),
+            pageParams: {
+                page,
+                size: pageSize,
+                sort: {
+                    by: OrderPropertyName.CREATED,
+                    order: OrderDirection.DESC,
+                },
+                filter: {
+                    equals: {
+                        ...(botId && { botId }),
+                        ...(processId && { processId }),
+                    },
                 },
             },
         }))
@@ -125,10 +139,23 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
             processInstance.status === ProcessInstanceStatus.IN_PROGRESS
         ) {
             await dispatch(
-                processInstanceEventActions.getProcessInstanceEvents({ processInstanceId: processInstance.id }),
+                processInstanceEventActions.getProcessInstanceEvents({
+                    pageParams: {
+                        size: 2000,
+                        sort: {
+                            by: OrderPropertyName.FINISHED,
+                            order: OrderDirection.DESC,
+                        },
+                        filter: {
+                            equals: {
+                                processInstanceId: processInstance.id,
+                            },
+                        },
+                    },
+                }),
             )
                 .then(unwrapResult)
-                .then((events) => dispatch(processInstanceActions.updateActiveEvents(events)));
+                .then(({ content: events }) => dispatch(processInstanceActions.updateActiveEvents(events)));
             dispatch(
                 processInstanceActions.updateOrchestratorProcessInstanceId(
                     processInstance.orchestratorProcessInstanceId,
@@ -156,8 +183,30 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
         setInstanceId(null);
         setPageSize(newPageSize);
     };
-    
-    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess);
+
+    const handleNoSubprocessesFound = (currRow: ProcessInstanceRow) => {
+        enqueueSnackbar(
+            translate('History.Table.Error.SubprocessesNotFound'),
+            { variant: 'error' },
+        );
+        dispatch(processInstanceActions.updateProcessInstance({ id: currRow.original.id, hasSubprocesses: false }));
+    };
+
+    const getSubprocessesPage = ({ currRow, pageNum, size }: GetSubprocessesPageParams) => {
+        dispatch(processInstanceActions.getSubprocesses({
+            resourceId: currRow.original.id,
+            pageParams: {
+                page: pageNum,
+                size,
+            },
+        }))
+            .then((response) => {
+                if((response as GetSubprocessesResponse)?.payload?.content?.length === 0) handleNoSubprocessesFound(currRow);
+            })
+            .catch(() => { handleNoSubprocessesFound(currRow); });
+    };
+
+    const processInstanceColumns = useProcessInstanceColumns(rerunEnabled, handleRerunProcess, getSubprocessesPage);
 
     return (
         <Wrapper>
@@ -174,9 +223,10 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
                         pageSize={pageSize}
                         setPageSize={handleSetPageSize}
                         loading={loadingPage}
-                        subRowProperty='subprocesses'      
+                        subRowProperty='subprocesses'
                         singleSelect={hasProcessInstanceEventReadAccess}
                         instanceId={instanceId}
+                        getSubprocessesPage={getSubprocessesPage}
                     />
                 </Box>
                 <If condition={panelInfoState.show && hasProcessInstanceEventReadAccess}>

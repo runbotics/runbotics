@@ -3,7 +3,7 @@ import React, { VFC, ChangeEvent } from 'react';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import { MenuItem, Select } from '@mui/material';
 
-import { FeatureKey, IBotCollection } from 'runbotics-common';
+import { BotCollectionDto, FeatureKey, IBotCollection } from 'runbotics-common';
 
 
 import If from '#src-app/components/utils/If';
@@ -17,8 +17,8 @@ import { StyledLabel, Wrapper } from './BotComponent.styles';
 
 
 interface BotCollectionProps {
-    selectedBotCollection: IBotCollection;
-    onSelectBotCollection?: (collection: IBotCollection) => void;
+    selectedBotCollection: BotCollectionDto;
+    onSelectBotCollection?: (collection: BotCollectionDto) => void;
 }
 
 const BotCollectionComponent: VFC<BotCollectionProps> = ({

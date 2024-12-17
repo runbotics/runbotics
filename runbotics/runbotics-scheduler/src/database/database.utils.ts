@@ -15,7 +15,7 @@ export const dateTransformer: TypedTransformer<Date | string, string> = {
             ? value
             : dayjs(value).utcOffset(0, true).toISOString();
     },
-    to: (value: string) => value ?? null,
+    to: (value: string) => value,
 } as const;
 
 export const numberTransformer: TypedTransformer<string | number, number> = {

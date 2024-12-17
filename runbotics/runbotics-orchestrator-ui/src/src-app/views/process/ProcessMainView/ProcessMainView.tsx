@@ -95,7 +95,7 @@ const ProcessMainView: FC = () => {
                 </Grid>
                 <Grid item xs={true} mb={1} mt={1}>
                     <ProcessTitle variant="h3" color="textPrimary">
-                        {process.name}
+                        {process?.name}
                     </ProcessTitle>
                 </Grid>
             </Grid>

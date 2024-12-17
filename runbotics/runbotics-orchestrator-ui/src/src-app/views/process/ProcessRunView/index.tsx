@@ -51,20 +51,24 @@ const ProcessRunView: FC = () => {
     useEffect(() => {
         if (hasReadSchedulesAccess)
         { dispatch(
-            scheduleProcessActions.getSchedulesByProcess({ processId })
+            scheduleProcessActions.getSchedulesByProcess({
+                resourceId: processId
+            })
         ); }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
     const handleProcessSchedule = async (data: Record<string, string>) => {
         await dispatch(scheduleProcessActions.scheduleProcess({
-            cron: data.cron,
-            process: {
-                id: processId,
-            },
-            inputVariables: data.inputVariables
+            payload: {
+                cron: data.cron,
+                process: { id: processId },
+                inputVariables: data.inputVariables
+            }
         }));
-        dispatch(scheduleProcessActions.getSchedulesByProcess({ processId }));
+        dispatch(scheduleProcessActions.getSchedulesByProcess({
+            resourceId: processId
+        }));
     };
 
     if (!process

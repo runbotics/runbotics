@@ -34,7 +34,7 @@ public class SecurityService {
     @Transactional
     public boolean checkFeatureKeyAccess(String featureKey) {
         User currentUser = userService.getUserWithAuthorities().orElseGet(User::new);
-        log.info("Checking if user {} has access to feature key {}", currentUser.getLogin(), featureKey);
+        log.info("Checking if user {} has access to feature key {}", currentUser.getEmail(), featureKey);
         boolean isAllowed = currentUser
             .getAuthorities()
             .stream()
@@ -44,7 +44,7 @@ public class SecurityService {
             .collect(Collectors.toSet())
             .contains(featureKey);
         if (!isAllowed) {
-            log.warn("Access denied: User {} doesn't have feature key {}", currentUser.getLogin(), featureKey);
+            log.warn("Access denied: User {} doesn't have feature key {}", currentUser.getEmail(), featureKey);
         }
         return isAllowed;
     }
@@ -53,12 +53,6 @@ public class SecurityService {
     public boolean isProcessOwner(Long processId) {
         Long processOwnerId = processService.findOne(processId).get().getCreatedBy().getId();
         return this.isOwner(processOwnerId);
-    }
-
-    @Transactional
-    public boolean isGlobalVariableOwner(Long globalVariableId) {
-        Long globalVariableOwnerId = globalVariableService.findOne(globalVariableId).get().getCreator().getId();
-        return this.isOwner(globalVariableOwnerId);
     }
 
     private boolean isOwner(Long id) {

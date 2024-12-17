@@ -23,7 +23,12 @@ const ManageProcessForm: VFC = () => {
     const closeModal = () => setModalOpen(false);
 
     const handleSubmit = async (executionInfoSchema: string) => {
-        await dispatch(processActions.partialUpdateProcess({ id: process.id, executionInfo: executionInfoSchema }))
+        await dispatch(processActions.updateExecutionInfo({
+            resourceId: process.id,
+            payload: {
+                executionInfo: executionInfoSchema,
+            },
+        }))
             .unwrap()
             .then(() => {
                 enqueueSnackbar(
@@ -49,7 +54,12 @@ const ManageProcessForm: VFC = () => {
     };
 
     const handleDelete = async () => {
-        await dispatch(processActions.partialUpdateProcess({ ...process, executionInfo: '' }))
+        await dispatch(processActions.updateExecutionInfo({
+            resourceId: process.id,
+            payload: {
+                executionInfo: null,
+            },
+        }))
             .unwrap()
             .then(() => {
                 enqueueSnackbar(

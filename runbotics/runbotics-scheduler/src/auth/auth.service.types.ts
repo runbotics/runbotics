@@ -1,13 +1,16 @@
-import { IBotCollection, IBotSystem, IUser } from 'runbotics-common';
+import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
+
+import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
+import { User } from '#/scheduler-database/user/user.entity';
 
 export interface MutableBotParams {
-    collection: IBotCollection;
-    system: IBotSystem;
+    collection: BotCollection;
+    system: BotSystem;
     version: string;
-    user: IUser;
+    user: User;
 }
 
 export interface RegisterNewBotParams extends MutableBotParams {
-    user: IUser;
+    user: User;
     installationId: string;
 }

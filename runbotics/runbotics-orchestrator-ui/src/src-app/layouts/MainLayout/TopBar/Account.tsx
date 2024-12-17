@@ -5,11 +5,12 @@ import { useTheme } from '@mui/material/styles';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { Role } from 'runbotics-common';
+import { FeatureKey, Role } from 'runbotics-common';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
@@ -60,7 +61,11 @@ const Account: FC = () => {
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
+    const hasUsersPageAccess = useFeatureKey([FeatureKey.TENANT_READ_USER, FeatureKey.MANAGE_INACTIVE_USERS], { oneOf: true });
+
     const { pathname } = useRouter();
+
+    const usersHref = `/app/users${hasAdminAccess ? '/pending' : ''}`;
 
     const handleOpen = (): void => {
         setOpen(true);
@@ -106,11 +111,16 @@ const Account: FC = () => {
                 sx={{ color: theme.palette.primary.contrastText }}
             >
                 <Hidden lgDown>
-                    <Typography variant="h5" sx={{ fontSize: '0.875rem' }}>
-                        {auth.user.email}
-                    </Typography>
+                    <Box display="flex" flexDirection="column" alignItems="flex-end">
+                        <Typography variant="h5" sx={{ fontSize: '0.875rem' }} align="right">
+                            {auth.user.email}
+                        </Typography>
+                        <Typography variant="subtitle1" sx={{ fontSize: '0.75rem' }}>
+                            {auth.user.tenant.name}
+                        </Typography>
+                    </Box>
                 </Hidden>
-                <Avatar alt={translate('Account.User')} className={classes.avatar} src={auth.user.avatar} />
+                <Avatar alt={translate('Account.User')} className={classes.avatar} src={auth.user.imageUrl} />
             </Box>
             <Menu
                 onClose={handleClose}
@@ -122,18 +132,26 @@ const Account: FC = () => {
                 PaperProps={{ className: classes.popover }}
                 anchorEl={ref.current}
                 open={isOpen}
+                onBlur={handleClose}
             >
-                <If condition={hasAdminAccess}>
-                    <MenuItem>
-                        <MenuLink href='/app/users'>
+                <If condition={hasUsersPageAccess}>
+                    <MenuLink href={usersHref}>
+                        <MenuItem>
                             {translate('Account.Users')}
-                        </MenuLink>
-                    </MenuItem>
-                    <MenuItem>
-                        <MenuLink href='/monitoring/grafana'>
+                        </MenuItem>
+                    </MenuLink>
+                </If>
+                <If condition={hasAdminAccess}>
+                    <MenuLink href='/app/tenants'>
+                        <MenuItem>
+                            {translate('Account.Tenants')}
+                        </MenuItem>
+                    </MenuLink>
+                    <MenuLink href='/monitoring/grafana'>
+                        <MenuItem>
                             {translate('Account.Monitoring')}
-                        </MenuLink>
-                    </MenuItem>
+                        </MenuItem>
+                    </MenuLink>
                 </If>
                 <MenuItem onClick={handleLogout}>{translate('Account.Logout')}</MenuItem>
             </Menu>

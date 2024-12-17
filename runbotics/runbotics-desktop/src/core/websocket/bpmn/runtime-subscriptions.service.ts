@@ -57,7 +57,7 @@ export class RuntimeSubscriptionsService {
                         event.activity.owner as ActivityOwner
                     ).behaviour;
                     switch (event.activity.content.type) {
-                        case BpmnElementType.ERROR_EVENT_DEFINITION:
+                        case BpmnElementType.ERROR_EVENT_DEFINITION: {
                             const variables = {};
                             variables['caughtErrorMessage'] = desktopTask.output.description;
                             const setVariables = { ...event.activity.environment.variables, ...variables };
@@ -65,6 +65,7 @@ export class RuntimeSubscriptionsService {
                             processInstanceEvent.log = `ErrorEventDefinition: ${event.activity.content.type} ${event.eventType}`;
                             processInstanceEvent.step = ProcessInstanceStep.ERROR_BOUNDARY;
                             break;
+                        }
                         case BpmnElementType.BOUNDARY_EVENT:
                             // Boundary event doesn't carry any useful information. It's just a wrapper.
                             // Errors are handled in case: BpmnElementType.ERROR_EVENT_DEFINITION

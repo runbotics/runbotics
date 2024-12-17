@@ -37,7 +37,7 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
             state.all.loading = true;
         })
         .addCase(getAllByProcessId.fulfilled, (state, action) => {
-            state.all.byProcessId[action.meta.arg.processId] = action.payload;
+            state.all.byProcessId[action.meta.arg.pageParams.filter.equals.processId] = action.payload;
             state.all.loading = false;
         })
         .addCase(getAllByProcessId.rejected, (state) => {
@@ -84,33 +84,36 @@ const buildProcessInstanceExtraReducers = (builder: ActionReducerMapBuilder<Proc
 
         })
 
-        // GET sub processes
+        // GET subprocesses
         .addCase(getSubprocesses.pending, (state, action) => {
             updateProcessInstanceProps(
-                state, 
-                { 
-                    id: action.meta.arg.processInstanceId, 
+                state,
+                {
+                    id: action.meta.arg.resourceId.toString(),
                     isLoadingSubprocesses: true,
-                }
+                },
             );
         })
         .addCase(getSubprocesses.fulfilled, (state, action) => {
             updateProcessInstanceProps(
-                state, 
-                { 
-                    id: action.meta.arg.processInstanceId, 
-                    isLoadingSubprocesses: false, 
-                    subprocesses: action.payload 
-                }
+                state,
+                {
+                    id: action.meta.arg.resourceId.toString(),
+                    isLoadingSubprocesses: false,
+                    subprocesses: action.payload.content,
+                    subprocessesCount: action.payload.totalElements,
+                },
+                action.meta.arg?.pageParams.page
             );
         })
         .addCase(getSubprocesses.rejected, (state, action) => {
             updateProcessInstanceProps(
-                state, 
-                { 
-                    id: action.meta.arg.processInstanceId, 
-                    isLoadingSubprocesses: false, 
-                    hasSubprocesses: false 
+                state,
+                {
+                    id: action.meta.arg.resourceId.toString(),
+                    isLoadingSubprocesses: false,
+                    hasSubprocesses: false,
+                    subprocessesCount: 0,
                 }
             );
         })

@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
-import { IBot, IProcess, IProcessInstance, IUser, Role } from 'runbotics-common';
+import { IProcess, IProcessInstance, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
-import { BotService } from '#/database/bot/bot.service';
-import { ProcessService } from '#/database/process/process.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { mergeArraysWithoutDuplicates } from '#/utils/mergeArrays';
 import { ServerConfigService } from '#/config/server-config';
+import { CredentialChangeMailPayload, CredentialOperationType } from '#/scheduler-database/credential/credential.utils';
+import { User } from '#/scheduler-database/user/user.entity';
+import { NotificationProcessService } from '#/scheduler-database/notification-process/notification-process.service';
+import { BotEntity } from '#/scheduler-database/bot/bot.entity';
+import { NotificationBotService } from '#/scheduler-database/notification-bot/notification-bot.service';
 
 export type SendMailInput = {
     to?: string;
@@ -15,7 +20,9 @@ export type SendMailInput = {
     subject: string;
     content: string;
     attachment?: string;
+    isHtml: boolean;
 };
+
 
 const NOTIFICATION_MAIL_SUBJECT = 'RunBotics Healthcheck Notification 🔧';
 
@@ -27,6 +34,8 @@ export class MailService {
         private readonly mailerService: MailerService,
         private readonly botService: BotService,
         private readonly processService: ProcessService,
+        private readonly notificationProcessService: NotificationProcessService,
+        private readonly notificationBotService: NotificationBotService,
         private readonly serverConfigService: ServerConfigService
     ) {}
 
@@ -34,7 +43,7 @@ export class MailService {
         const sendMailOptions: ISendMailOptions = {
             from: process.env.MAIL_USERNAME,
             subject: input.subject,
-            text: input.content,
+            [input.isHtml ? 'html': 'text']: input.content,
         };
 
         const to = input.to;
@@ -67,14 +76,19 @@ export class MailService {
         });
     }
 
-    public async sendBotDisconnectionNotificationMail(bot: IBot, installationId: string) {
+    public async sendBotDisconnectionNotificationMail(bot: BotEntity, installationId: string) {
         const disconnectedBot = await this.botService.findById(bot.id);
         const botAssignedUserEmail = disconnectedBot.user.email;
-        const subscribers = disconnectedBot.subscribers ?? [];
+        const subscribers = await this.notificationBotService
+            .getAllByBotId(disconnectedBot.id)
+            .then((notifications) =>
+                notifications.map((notification) => notification.user)
+            );
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
             content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\nYou can visit us here ${this.serverConfigService.entrypointUrl}\n\nBest regards,\nRunBotics`,
+            isHtml: false,
         };
 
         if (disconnectedBot.collection.name !== 'Public') {
@@ -96,17 +110,22 @@ export class MailService {
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
         const failedProcess = await this.processService.findById(process.id);
         const processCreatorEmail = failedProcess.createdBy.email;
-        const subscribers = failedProcess.subscribers ?? [];
+        const subscribers = await this.notificationProcessService
+            .getAllByProcessId(failedProcess.id)
+            .then((notifications) =>
+                notifications.map((notification) => notification.user)
+            );
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
             content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\nYou can visit us here ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\nBest regards,\nRunBotics`,
+            isHtml: false,
         };
 
         if (!failedProcess.isPublic) {
             const filteredSubscribers = subscribers.reduce((acc, subscriber) => {
                 const adminSubscriber = subscriber.authorities
-                    .find(authority => authority.name === Role.ROLE_ADMIN);
+                    .find(authority => [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN].includes(authority.name));
 
                 adminSubscriber && acc.push(subscriber.email);
 
@@ -119,13 +138,40 @@ export class MailService {
         }
     }
 
+    public sendCredentialChangeNotificationMail(params: CredentialChangeMailPayload) {
+        const {
+            editorEmail,
+            collectionCreatorEmail,
+            collectionName,
+            credentialName,
+            credentialOldName,
+            operationType,
+        } = params;
+
+        const attributeInfo = operationType === CredentialOperationType.CHANGE_ATTRIBUTE
+            ? ` with name <i>${params.attributeName}</i> for` : '';
+        const oldNameInfo = CredentialOperationType.EDIT && credentialOldName
+            ? ` (name before change <b>${credentialOldName}</b>)` : '';
+
+        const message = `User with email <b>${editorEmail}</b> ${operationType}${attributeInfo} credential <b>${credentialName}</b>${oldNameInfo} in collection <b>${collectionName}</b>`;
+
+        const sendMailInput: SendMailInput = {
+            to: collectionCreatorEmail,
+            subject: 'Credential change inside owned collection',
+            content: message,
+            isHtml: true,
+        };
+
+        this.sendMail(sendMailInput);
+    }
+
     private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {
         const emailAddresses = mergeArraysWithoutDuplicates(addresses).join(',');
 
         await this.sendMail({ ...emailInput, bcc: emailAddresses });
     }
 
-    private async handlePublicProcessesAndBotsNotificationEmail(subscribers: IUser[], emailInput: SendMailInput, assignedUserEmail: string) {
+    private async handlePublicProcessesAndBotsNotificationEmail(subscribers: User[], emailInput: SendMailInput, assignedUserEmail: string) {
         const subscribersAddresses =
             subscribers && subscribers.length
                 ? subscribers.map(({ email }) => email)

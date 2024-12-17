@@ -1,5 +1,6 @@
 package com.runbotics.repository;
 
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import java.time.Instant;
 import java.util.List;
@@ -28,27 +29,33 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 
-    Optional<User> findOneByLogin(String id);
+    Optional<User> findOneByEmail(String email);
 
     Optional<User> findOneById(Long id);
 
     @EntityGraph(attributePaths = "authorities")
-    Optional<User> findOneWithAuthoritiesByLogin(String login);
+    Optional<User> findOneWithAuthoritiesByEmail(String email);
 
     @EntityGraph(attributePaths = "authorities")
     Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
-
-    Page<User> findAllByLoginNot(Pageable pageable, String login);
 
     Page<User> findAllByIdNotNullAndActivatedIsTrue(Pageable pageable);
 
     Page<User> findAllByActivatedIsTrue(Pageable pageable);
 
+    Page<User> findAllByActivatedIsTrueAndTenant(Pageable pageable, Tenant tenant);
+
     Page<User> findAllByActivatedIsFalse(Pageable pageable);
+
+    Page<User> findAllByActivatedIsFalseAndTenant(Pageable pageable, Tenant tenant);
 
     Page<User> findAllByActivatedIsTrueAndEmailIsContaining(Pageable pageable, String email);
 
+    Page<User> findAllByActivatedIsTrueAndEmailIsContainingAndTenant(Pageable pageable, String email, Tenant tenant);
+
     Page<User> findAllByActivatedIsFalseAndEmailIsContaining(Pageable pageable, String email);
+
+    Page<User> findAllByActivatedIsFalseAndEmailIsContainingAndTenant(Pageable pageable, String email, Tenant tenant);
 
     @Query(
         value = "SELECT * " +
@@ -63,6 +70,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     )
     List<User> findAllActivatedNonAdmins();
 
-    @Query("SELECT u FROM User u WHERE u.id != ?1 AND (u.email = ?2 OR u.login = ?3)")
-    Optional<User> findOtherUserByLoginOrEmail(Long id, String email, String login);
+    @Query("SELECT u FROM User u WHERE u.id != ?1 AND u.email = ?2")
+    Optional<User> findOtherUserByEmail(Long id, String email);
 }

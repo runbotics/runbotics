@@ -23,6 +23,8 @@ const cloudFileActionsTranslations: typeof englishCloudFileActionsTranslations =
     'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.Label': 'Stwórz link udostępniający',
     'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.ShareType': 'Typ udostępnienia',
     'Process.Details.Modeler.Actions.CloudFile.CreateShareLink.ShareScope': 'Zakres udostępnienia',
+
+    'Process.Details.Modeler.Actions.CloudFile.GetSharePointListItems.Label': 'Pobierz elementy listy Sharepoint',
 };
 
 export default cloudFileActionsTranslations;

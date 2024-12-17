@@ -2,6 +2,10 @@ module.exports = {
     rewrites: () => process.env.NODE_ENV === 'development'
         ? [
             {
+                source: '/api/scheduler/:path*',
+                destination: 'http://127.0.0.1:4000/api/scheduler/:path*',
+            },
+            {
                 source: '/api/:path*',
                 destination: 'http://127.0.0.1:8080/api/:path*', // The :path parameter is used here so will not be automatically passed in the query
             },

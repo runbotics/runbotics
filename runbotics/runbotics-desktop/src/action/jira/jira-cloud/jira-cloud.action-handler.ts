@@ -47,8 +47,11 @@ import {
     SimpleWorklog,
     Worklog,
     WorklogOutput,
+    AtlassianCredentials,
 } from '../jira.types';
 import { formatZodError } from '#utils/zodError';
+import { ServerConfigService } from '#config';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 /**
  * @see https://developer.atlassian.com/cloud/jira/platform/rest/v2
@@ -57,7 +60,7 @@ import { formatZodError } from '#utils/zodError';
 export default class JiraCloudActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(JiraCloudActionHandler.name);
 
-    constructor() {
+    constructor(private readonly serverConfigService: ServerConfigService) {
         super();
     }
 
@@ -288,15 +291,22 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
     }
 
     run(request: JiraActionRequest) {
+        const credential = credentialAttributesMapper<AtlassianCredentials>(request.credentials);
+
+        const inputWithAuth = {
+            ...request.input,
+            ...credential,
+        };
+
         switch (request.script) {
             case JiraCloudAction.GET_USER_WORKLOGS:
-                return this.getUserWorklog(request.input);
+                return this.getUserWorklog(inputWithAuth);
             case JiraCloudAction.GET_PROJECT_WORKLOGS:
-                return this.getProjectWorklog(request.input);
+                return this.getProjectWorklog(inputWithAuth);
             case JiraCloudAction.GET_BOARD_SPRINTS:
-                return this.getBoardSprints(request.input);
+                return this.getBoardSprints(inputWithAuth);
             case JiraCloudAction.GET_SPRINT_TASKS:
-                return this.getSprintTasks(request.input);
+                return this.getSprintTasks(inputWithAuth);
             default:
                 throw new Error('Action not found');
         }

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { CollectionId, IUser, ProcessCollection, ROOT_PROCESS_COLLECTION_ID } from 'runbotics-common';
+import { CollectionId, ProcessCollection, ROOT_PROCESS_COLLECTION_ID, BasicUserDto } from 'runbotics-common';
 
 import processCollectionTranslations from '#src-app/translations/en/collections';
 
@@ -13,7 +13,7 @@ const INITIAL_VALUES: ProcessCollection = {
 };
 
 export const prepareIncompleteCollectionEntity = (
-    createdBy: IUser,
+    createdBy: BasicUserDto,
     currentCollectionId: CollectionId,
     collection?: ProcessCollection,
 ): ProcessCollection => ({

@@ -101,7 +101,7 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('visualBasic', visualBasicActionHandler)
             .set('image', imageActionHandler)
             .set('folder', folderActionHandler)
-            .set('zip', zipActionHandler)
+            .set('zip', zipActionHandler);
     }
 
     async onModuleInit() {

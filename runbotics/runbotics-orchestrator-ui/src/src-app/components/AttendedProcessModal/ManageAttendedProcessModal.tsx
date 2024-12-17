@@ -26,7 +26,7 @@ import {
 } from '@rjsf/core';
 import { Theme5 as Mui5Theme } from '@rjsf/material-ui';
 import { JSONSchema7 } from 'json-schema';
-import { IProcess, FeatureKey } from 'runbotics-common';
+import { ProcessDto, FeatureKey } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
@@ -44,7 +44,7 @@ import If from '../utils/If';
 const WIDGET_NAME_MAX_LENGTH = 320;
 
 interface AdminModalProps {
-    process: IProcess;
+    process: ProcessDto;
     open: boolean;
     setOpen: (open: boolean) => void;
     onSubmit: (executionInfoSchema: string) => void;
@@ -126,7 +126,7 @@ const ManageAttendedProcessModal: React.FC<AdminModalProps> = ({
         if (isJsonValid(e.formData.form)) onSubmit(e.formData.form);
     };
 
-    const handleChange = (e: IChangeEvent<IProcess>) => {
+    const handleChange = (e: IChangeEvent<ProcessDto>) => {
         setDraft(e.formData);
     };
 

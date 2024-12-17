@@ -1,10 +1,9 @@
-import { JiraServerAction, ActionRegex } from 'runbotics-common';
+import { JiraServerAction, ActionRegex, ActionCredentialType } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
-
-
 
 const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
     const dateMode = {
@@ -25,6 +24,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
     return ({
         [JiraServerAction.GET_USER_WORKLOGS]: {
             id: JiraServerAction.GET_USER_WORKLOGS,
+            credentialType: ActionCredentialType.ATLASSIAN,
             label: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Label'),
             script: JiraServerAction.GET_USER_WORKLOGS,
             runner: Runner.DESKTOP_SCRIPT,
@@ -42,18 +42,6 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                             title: translate('Process.Details.Modeler.Actions.Common.Input'),
                             type: 'object',
                             properties: {
-                                originEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Origin'),
-                                    type: 'string',
-                                },
-                                usernameEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Username'),
-                                    type: 'string',
-                                },
-                                passwordEnv: {
-                                    title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.Password'),
-                                    type: 'string',
-                                },
                                 email: {
                                     title: translate('Process.Details.Modeler.Actions.Common.Email'),
                                     type: 'string',
@@ -81,6 +69,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.Common.Date'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['date'],
                                     }, {
@@ -96,6 +85,7 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.JiraServer.GetUserWorklogs.EndDate'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['startDate', 'endDate'],
                                     }, {
@@ -107,12 +97,13 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                                                 title: translate('Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.DatesList'),
                                                 type: 'string',
                                             },
+                                            customCredentialId: propertyCustomCredential,
                                         },
                                         required: ['dates']
                                     }],
                                 },
                             },
-                            required: ['originEnv', 'usernameEnv', 'passwordEnv', 'email']
+                            required: ['email']
                         },
                         output: {
                             title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -129,6 +120,9 @@ const getJiraServerActions: () => Record<string, IBpmnAction> = () => {
                 },
                 uiSchema: {
                     'ui:order': ['input', 'output'],
+                    input: {
+                        customCredentialId: schemaCustomCredential,
+                    },
                     output: {
                         variableName: {
                             'ui:options': {

@@ -9,7 +9,7 @@ import {
 } from 'nestjs-io-client';
 import { BotWsMessage, IProcess } from 'runbotics-common';
 
-import { orchestratorAxios } from '#config';
+import { schedulerAxios, StorageService } from '#config';
 import { RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import { delay, SECOND } from '#utils';
@@ -30,7 +30,8 @@ export class ProcessListener {
         private readonly runtimeService: RuntimeService,
         private readonly authService: AuthService,
         private readonly queueService: MessageQueueService,
-        private readonly websocketService: WebsocketService
+        private readonly websocketService: WebsocketService,
+        private readonly storageService: StorageService,
     ) {}
 
     private beginKeepAliveInterval() {
@@ -89,8 +90,11 @@ export class ProcessListener {
             }
 
             const { processId, input, ...rest } = data;
-            const process = await orchestratorAxios
-                .get<IProcess>(`/api/processes/${processId}`, { maxRedirects: 0 })
+            const tenantId = this.storageService.getValue('tenantId');
+            const process = await schedulerAxios
+                .get<IProcess>(
+                    `/api/scheduler/tenants/${tenantId}/processes/${processId}`
+                )
                 .then((response) => {
                     this.logger.log('Starting process: ' + response.data.name);
                     return response.data;

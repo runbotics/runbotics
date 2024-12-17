@@ -1,7 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 
 import { CoreModule } from '#core';
-import { MailerModule } from '#mailer';
 
 import ApiRequestHandler from './api-request';
 import ApplicationActionHandler from './application';
@@ -27,11 +26,10 @@ import VisualBasicActionHandler from './visual-basic';
 import { CloudExcelActionHandler } from './microsoft/automation/excel';
 import { OneDriveService } from './microsoft/one-drive';
 import { SharePointService } from './microsoft/share-point';
-import { MicrosoftGraphService } from './microsoft/microsoft-graph';
-import { MicrosoftAuthService } from './microsoft/microsoft-auth.service';
 import { CloudFileActionHandler } from './microsoft/automation/file';
 import { ImageActionHandler } from './image';
 import FolderActionHandler from './folder/folder.action-handler';
+import { MailService } from '#mailer/mailer.service';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -55,18 +53,16 @@ const ALL_ACTION_HANDLERS = [
     ExcelService,
     OneDriveService,
     SharePointService,
-    MicrosoftGraphService,
-    MicrosoftAuthService,
     DesktopActionHandler,
     VisualBasicActionHandler,
     ImageActionHandler,
     FolderActionHandler,
     ZipActionHandler,
+    MailService,
 ];
 
 @Module({
     imports: [
-        MailerModule,
         MicrosoftModule,
         forwardRef(() => CoreModule),
     ],

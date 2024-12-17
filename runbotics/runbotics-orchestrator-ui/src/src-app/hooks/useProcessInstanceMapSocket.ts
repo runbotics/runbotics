@@ -22,7 +22,7 @@ const useProcessInstanceMapSocket = () => {
         socket.on(WsMessage.PROCESS, (processInstance: IProcessInstance) => {
             const processId = processInstance?.process?.id;
             const isAdminOrOwner =
-                user.roles.includes(Role.ROLE_ADMIN) ||
+                user.roles.some(role => role === Role.ROLE_ADMIN || role === Role.ROLE_TENANT_ADMIN) ||
                 processInstance.user.id === user.id;
             const canUpdateProcessInstance =
                 !allActiveMap[processId] ||
@@ -33,10 +33,9 @@ const useProcessInstanceMapSocket = () => {
                 allActiveMap[processId]?.processInstance?.status !== ProcessInstanceStatus.IN_PROGRESS &&
                 processInstance.status === ProcessInstanceStatus.IN_PROGRESS
             ) {
-                const lastRun = (new Date()).toISOString();
                 dispatch(processActions.updateProcessPage({
                     id: processInstance.process.id,
-                    lastRun
+                    lastRun: processInstance?.process?.lastRun,
                 }));
             }
 

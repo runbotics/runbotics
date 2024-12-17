@@ -54,6 +54,7 @@ interface AuthenticationBase extends TrackLabel {
 type Primitives = string | number | boolean;
 
 export enum USER_TYPE {
+    TENANT_ADMIN = 'tenant_admin',
     ADMIN = 'admin',
     USER = 'user',
     GUEST = 'guest',

@@ -4,16 +4,16 @@ import { Connection } from 'typeorm';
 import Axios from 'axios';
 
 import { Logger } from '#/utils/logger';
-import { ProcessInstanceEntity } from '#/database/process-instance/process-instance.entity';
-import { ProcessInstanceService } from '#/database/process-instance/process-instance.service';
-import { BotService } from '#/database/bot/bot.service';
-import { ProcessService } from '#/database/process/process.service';
+import { BotService } from '#/scheduler-database/bot/bot.service';
+import { ProcessService } from '#/scheduler-database/process/process.service';
 import { MailTriggerService } from '#/mail-trigger/mail-trigger.service';
 import { ProcessFileService } from '#/queue/process/process-file.service';
 import { NotificationService } from '#/microsoft/notification';
 
 import { UiGateway } from '../../ui/ui.gateway';
 import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process-instance.service.utils';
+import { ProcessInstance } from '#/scheduler-database/process-instance/process-instance.entity';
+import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
 
 @Injectable()
 export class BotProcessService {
@@ -39,18 +39,19 @@ export class BotProcessService {
         await queryRunner.startTransaction();
         try {
             const updatedLastInstanceRunTime = await this.updateProcessParams(processInstance, newProcessInstance, bot);
-            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstanceEntity, { where: { id: updatedLastInstanceRunTime.id } });
+            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstance, { where: { id: updatedLastInstanceRunTime.id } });
 
             await queryRunner.manager.createQueryBuilder()
                 .insert()
-                .into(ProcessInstanceEntity)
+                .into(ProcessInstance)
                 .values({ ...updatedLastInstanceRunTime })
                 .orUpdate(getProcessInstanceUpdateFieldsByStatus(updatedLastInstanceRunTime.status, dbProcessInstance?.status), ['id'])
                 .execute();
 
             await queryRunner.commitTransaction();
 
-            const updatedProcessInstance = await this.processInstanceService.findById(processInstance.id);
+            const updatedProcessInstance =
+                await this.processInstanceService.findOneById(processInstance.id);
 
             if (!processInstance.rootProcessInstanceId) {
                 this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
@@ -118,7 +119,7 @@ export class BotProcessService {
     }
 
     private setPropertiesFromProcessInstance(processInstance: IProcessInstance) {
-        const instanceToSave = new ProcessInstanceEntity();
+        const instanceToSave = new ProcessInstance();
         if (processInstance.created) {
             instanceToSave.created = processInstance.created;
         }
@@ -129,13 +130,14 @@ export class BotProcessService {
         instanceToSave.id = processInstance.id;
         instanceToSave.status = processInstance.status;
         instanceToSave.error = processInstance.error;
-        instanceToSave.process = processInstance.process;
+        instanceToSave.processId = processInstance.process.id;
         instanceToSave.orchestratorProcessInstanceId = processInstance.orchestratorProcessInstanceId;
-        instanceToSave.user = processInstance.user;
+        instanceToSave.userId = processInstance.user.id;
         instanceToSave.trigger = processInstance.trigger;
         instanceToSave.triggerData = processInstance.triggerData;
         instanceToSave.parentProcessInstanceId = processInstance.parentProcessInstanceId;
-        return instanceToSave;
+
+        return { ...instanceToSave, user: processInstance.user };
     }
 
     private async setBotInProcessInstance(
@@ -155,7 +157,8 @@ export class BotProcessService {
 
     private async setPropertiesFromDatabase(instanceToSave: IProcessInstance) {
         const newProcessInstance = { ...instanceToSave };
-        const dbProcessInstance = await this.processInstanceService.findById(instanceToSave.id);
+        const dbProcessInstance =
+            await this.processInstanceService.findOneById(instanceToSave.id);
         if (dbProcessInstance) {
             newProcessInstance.user = dbProcessInstance.user;
         }

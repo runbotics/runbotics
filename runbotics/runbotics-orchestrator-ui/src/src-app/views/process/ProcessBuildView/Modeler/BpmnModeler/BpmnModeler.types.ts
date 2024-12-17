@@ -1,5 +1,5 @@
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
-import { IProcess } from 'runbotics-common';
+import { ProcessDto } from 'runbotics-common';
 
 export interface ModelerImperativeHandle {
     export: () => Promise<string>;
@@ -9,7 +9,7 @@ export interface ModelerProps {
     definition: string;
     readOnly?: boolean;
     offsetTop: number | null;
-    process: IProcess;
+    process: ProcessDto;
     onSave: (modeler: BpmnIoModeler) => void;
     onImport: (definition: string, additionalInfo: AdditionalInfo) => void;
     onExport: () => void;
@@ -39,10 +39,10 @@ export interface ModelerHTMLCanvasElement extends HTMLCanvasElement {
     viewbox: (opts?: ModelerViewboxOpts) => ModelerViewboxResult;
 }
 export interface AdditionalInfo {
-    executionInfo?: IProcess['executionInfo'];
-    isAttended?: IProcess['isAttended'];
-    isTriggerable?: IProcess['isTriggerable'];
-    system?: IProcess['system'];
+    executionInfo?: ProcessDto['executionInfo'];
+    isAttended?: ProcessDto['isAttended'];
+    isTriggerable?: ProcessDto['isTriggerable'];
+    system?: ProcessDto['system'];
 }
 
 export enum ModelerEvent {
