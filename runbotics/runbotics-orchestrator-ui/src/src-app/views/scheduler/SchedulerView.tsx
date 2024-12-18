@@ -98,19 +98,19 @@ const SchedulerView = () => {
             <Stack spacing={3}>
                 <SchedulerTableContainer<IProcessInstance>
                     columns={activeProcessColumns}
-                    title={translate('Scheduler.Common.Title')}
+                    title={translate('Scheduler.Common.Jobs.ActiveJobs')}
                     processes={activeJobs}
                     onRedirect={handleProcessInstanceRedirect}
                 />
                 <SchedulerTableContainer<QueueJob>
                     columns={waitingProcessColumns}
-                    title={translate('Scheduler.Common.Title')}
+                    title={translate('Scheduler.Common.Jobs.WaitingJobs')}
                     processes={waitingJobs}
                     onRedirect={handleSchedulerJobRedirect}
                 />
                 <SchedulerTableContainer<ScheduledJob>
                     columns={scheduledProcessColumns}
-                    title={translate('Scheduler.Common.Title')}
+                    title={translate('Scheduler.Common.Jobs.ScheduledJobs')}
                     processes={scheduledJobs}
                     onRedirect={handleScheduledJobRedirect}
                     renderSubRow={renderScheduledJobSubRow}
