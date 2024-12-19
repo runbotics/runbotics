@@ -70,6 +70,20 @@ export class ScheduleProcessService {
         newScheduleProcess.process = process;
 
         const scheduleProcess = await this.scheduleProcessRepository.save(newScheduleProcess);
+        await this.scheduleProcessRepository
+            .findOne({
+                where: {
+                    id: scheduleProcess.id,
+                },
+                relations,
+            })
+            .then((schedule => {
+                scheduleProcess.process = {
+                    ...scheduleProcess.process,
+                    botCollection: schedule.process.botCollection,
+                    system: schedule.process.system,
+                };
+            }));
 
         const orchestratorProcessInstanceId = randomUUID();
         await this.queueService.createScheduledJob({
