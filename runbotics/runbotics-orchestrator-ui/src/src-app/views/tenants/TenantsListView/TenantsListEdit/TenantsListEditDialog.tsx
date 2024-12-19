@@ -40,6 +40,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
     const [tenant, setTenant] = useState<Tenant>(tenantData);
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
+    const [wasEdited, setWasEdited] = useState(false);
 
     const handleOpenDeleteDialog = () => {
         setIsDeleteDialogVisible(true);
@@ -55,6 +56,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
         onClose();
         setFormValidationState(initialValidationState);
         setTenant(getTenantDataWithoutNulls(tenantData));
+        setWasEdited(false);
     };
 
     const handleSave = () => {
@@ -108,6 +110,8 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                                 setTenant={setTenant}
                                 formValidationState={formValidationState}
                                 setFormValidationState={setFormValidationState}
+                                setWasEdited={setWasEdited}
+                                currentTenantName={tenantData?.name}
                             />
                         </Form>
                     </Content>
@@ -130,7 +134,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                                 variant='contained'
                                 onClick={handleSave}
                                 loading={loading}
-                                disabled={!checkFormFieldsValidation()}
+                                disabled={!checkFormFieldsValidation() || !wasEdited}
                             >
                                 {translate('Common.Save')}
                             </LoadingButton>

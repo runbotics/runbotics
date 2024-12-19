@@ -8,12 +8,15 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
 import { TenantsListEditFormProps } from './TenantsListEdit.types';
+import { MINIMUM_NAME_CHARACTERS } from './TenantsListEdit.utils';
 
 const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
     tenant,
     setTenant,
     formValidationState,
-    setFormValidationState
+    setFormValidationState,
+    setWasEdited,
+    currentTenantName
 }) => {
     const { translate } = useTranslations();
 
@@ -23,8 +26,10 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
         setTenant((prevState) => ({ ...prevState, name }));
         setFormValidationState((prevState) => ({
             ...prevState,
-            name: (name.trim() !== '' )
+            name: (name.trim().length >= MINIMUM_NAME_CHARACTERS)
         }));
+
+        name !== currentTenantName ? setWasEdited(true) : setWasEdited(false);
     };
 
     return (
@@ -34,7 +39,7 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
                 value={tenant.name}
                 onChange={handleNameFieldInput}
                 error={!formValidationState.name}
-                {...(!formValidationState.name && { helperText: translate('Tenants.List.Edit.Form.Error.FieldRequired') })}
+                {...(tenant.name.trim().length < MINIMUM_NAME_CHARACTERS && { helperText: translate('Tenants.List.Edit.Form.Error.FieldTooShort') })}
             />
             <Accordion title={translate('Tenants.List.Edit.Form.Accordion.Title')}>
                 <Box display='flex' alignItems='center' paddingBottom='15px'>

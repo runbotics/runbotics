@@ -15,4 +15,6 @@ export interface TenantsListEditFormProps {
     setTenant: (tenant) => void;
     formValidationState: FormValidationState;
     setFormValidationState: (state) => void;
+    setWasEdited: (state) => void;
+    currentTenantName: string;
 };
