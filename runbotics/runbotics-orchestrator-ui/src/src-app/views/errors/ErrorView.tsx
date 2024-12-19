@@ -68,7 +68,7 @@ const ErrorView: FC = () => {
             dispatch(clearError());
         };
 
-    }, [router.query]);
+    }, []);
 
     useEffect(() => {
         if (user?.roles.includes(Role.ROLE_GUEST)) {
