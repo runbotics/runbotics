@@ -33,7 +33,8 @@ export class ProcessInstanceSchedulerService {
         };
         const createdProcessInstance =
             await this.processInstanceService.create(processInstance);
-        this.uiGateway.server.emit(WsMessage.PROCESS, createdProcessInstance);
+        const tenantRoom = job.data.process.tenantId;
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.PROCESS, createdProcessInstance);
     }
 
     async terminateProcessInstance(processInstanceId: string, user: User) {

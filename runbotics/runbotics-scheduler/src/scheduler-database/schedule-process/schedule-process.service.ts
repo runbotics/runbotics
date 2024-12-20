@@ -112,6 +112,6 @@ export class ScheduleProcessService {
         });
 
         await this.scheduleProcessRepository.delete(id);
-        await this.queueService.deleteScheduledJob(id);
+        await this.queueService.deleteScheduledJob(id, tenantId);
     }
 }

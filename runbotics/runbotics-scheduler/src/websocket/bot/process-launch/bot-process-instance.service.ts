@@ -54,7 +54,8 @@ export class BotProcessService {
                 await this.processInstanceService.findOneById(processInstance.id);
 
             if (!processInstance.rootProcessInstanceId) {
-                this.uiGateway.server.emit(WsMessage.PROCESS, updatedProcessInstance);
+                const tenantRoom = updatedProcessInstance.process.tenantId;
+                this.uiGateway.emitTenant(tenantRoom, WsMessage.PROCESS, updatedProcessInstance);
             }
 
             if (!processInstance.rootProcessInstanceId && isProcessInstanceFinished(processInstance.status)) {
@@ -77,7 +78,8 @@ export class BotProcessService {
 
     async handleAdditionalProcessInstanceInfos(processInstance: IProcessInstance) {
         if (!processInstance.rootProcessInstanceId) {
-            this.uiGateway.server.emit(WsMessage.PROCESS, processInstance);
+            const tenantRoom = processInstance.process.tenantId;
+            this.uiGateway.emitTenant(tenantRoom, WsMessage.PROCESS, processInstance);
         }
         if (isProcessInstanceFinished(processInstance.status)) {
             await this.processFileService.deleteTempFiles(processInstance.orchestratorProcessInstanceId);
@@ -185,8 +187,9 @@ export class BotProcessService {
             }
         }
         if (!newProcessInstance.rootProcessInstanceId) {
-            await this.botService.save(newBot);
-            this.uiGateway.server.emit(WsMessage.BOT_STATUS, newBot);
+            const createdBot = await this.botService.save(newBot);
+            const tenantRoom = createdBot.tenantId;
+            this.uiGateway.emitTenant(tenantRoom, WsMessage.BOT_STATUS, newBot);
         }
         return newProcessInstance;
     }
