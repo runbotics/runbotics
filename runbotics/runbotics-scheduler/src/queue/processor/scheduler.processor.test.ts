@@ -29,6 +29,7 @@ import { ServerConfigService } from '#/config/server-config';
 import { WsBotJwtGuard } from '#/auth/guards';
 import { CanActivate } from '@nestjs/common';
 import { SchedulerService } from '#/queue/scheduler/scheduler.service';
+import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 const PROCESS_ID = 2137;
 const JOB_ID = 7312;
@@ -38,6 +39,7 @@ const mockForceActivateGuard: CanActivate = { canActivate: vi.fn(() => true) };
 
 const PROCESS: IProcess = {
     id: PROCESS_ID,
+    tenantId: DEFAULT_TENANT_ID,
 };
 
 const PROCESS_INPUT: ProcessInput = {
@@ -168,6 +170,7 @@ describe('SchedulerProcessor', () => {
                 },
                 emitAll: vi.fn(),
                 emitClient: vi.fn(),
+                emitTenant: vi.fn(),
             })
             .overrideGuard(WsBotJwtGuard).useValue(mockForceActivateGuard)
             .compile();
@@ -229,20 +232,20 @@ describe('SchedulerProcessor', () => {
 
     describe('onActive', () => {
         it('should emit WsMessage.ADD_WAITING_SCHEDULE with correct job data', async () => {
-            vi.spyOn(processService, 'findById').mockResolvedValue({ id: PROCESS_ID } as any);
+            vi.spyOn(processService, 'findById').mockResolvedValue(PROCESS as any);
             vi.spyOn(queueService, 'getActiveJobs').mockResolvedValue([JOB] as any);
             vi.spyOn(queueService, 'getWaitingJobs').mockResolvedValue([] as any);
             await schedulerProcessor.onActive(JOB as Job);
 
             expect(processService.findById).toHaveBeenCalledWith(PROCESS_ID);
-            expect(uiGateway.server.emit).toHaveBeenCalledWith(WsMessage.ADD_WAITING_SCHEDULE, JOB);
+            expect(uiGateway.emitTenant).toHaveBeenCalledWith(DEFAULT_TENANT_ID, WsMessage.ADD_WAITING_SCHEDULE, JOB);
         });
     });
 
     describe('onComplete', () => {
         it('should emit WsMessage.REMOVE_WAITING_SCHEDULE when a job is completed', async () => {
             schedulerProcessor.onComplete(JOB);
-            expect(uiGateway.server.emit).toHaveBeenCalledWith(WsMessage.REMOVE_WAITING_SCHEDULE, JOB);
+            expect(uiGateway.emitTenant).toHaveBeenCalledWith(DEFAULT_TENANT_ID, WsMessage.REMOVE_WAITING_SCHEDULE, JOB);
         });
     });
 
@@ -250,7 +253,7 @@ describe('SchedulerProcessor', () => {
         it('should emit WsMessage.REMOVE_WAITING_SCHEDULE and log when a job fails', async () => {
             const error = new Error('Test error');
             schedulerProcessor.onFailed(JOB, error);
-            expect(uiGateway.server.emit).toHaveBeenCalledWith(WsMessage.REMOVE_WAITING_SCHEDULE, JOB);
+            expect(uiGateway.emitTenant).toHaveBeenCalledWith(DEFAULT_TENANT_ID, WsMessage.REMOVE_WAITING_SCHEDULE, JOB);
         });
     });
 
