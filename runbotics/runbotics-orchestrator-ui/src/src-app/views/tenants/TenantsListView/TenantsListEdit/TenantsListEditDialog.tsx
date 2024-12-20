@@ -40,7 +40,6 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
     const [tenant, setTenant] = useState<Tenant>(tenantData);
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialValidationState);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
-    const [wasEdited, setWasEdited] = useState(false);
 
     const handleOpenDeleteDialog = () => {
         setIsDeleteDialogVisible(true);
@@ -50,13 +49,12 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
         setIsDeleteDialogVisible(false);
     };
 
-    const checkFormFieldsValidation = () => formValidationState.name;
+    const checkFormFieldsValidation = () => Object.values(formValidationState).every(Boolean);
 
     const handleClose = () => {
         onClose();
         setFormValidationState(initialValidationState);
         setTenant(getTenantDataWithoutNulls(tenantData));
-        setWasEdited(false);
     };
 
     const handleSave = () => {
@@ -110,7 +108,6 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                                 setTenant={setTenant}
                                 formValidationState={formValidationState}
                                 setFormValidationState={setFormValidationState}
-                                setWasEdited={setWasEdited}
                                 currentTenantName={tenantData?.name}
                             />
                         </Form>
@@ -134,7 +131,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                                 variant='contained'
                                 onClick={handleSave}
                                 loading={loading}
-                                disabled={!checkFormFieldsValidation() || !wasEdited}
+                                disabled={!checkFormFieldsValidation()}
                             >
                                 {translate('Common.Save')}
                             </LoadingButton>

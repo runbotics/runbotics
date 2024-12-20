@@ -15,7 +15,6 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
     setTenant,
     formValidationState,
     setFormValidationState,
-    setWasEdited,
     currentTenantName
 }) => {
     const { translate } = useTranslations();
@@ -26,10 +25,9 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
         setTenant((prevState) => ({ ...prevState, name }));
         setFormValidationState((prevState) => ({
             ...prevState,
-            name: (name.trim().length >= MINIMUM_NAME_CHARACTERS)
+            name: (name.trim().length >= MINIMUM_NAME_CHARACTERS),
+            wasChanged: name !== currentTenantName
         }));
-
-        name !== currentTenantName ? setWasEdited(true) : setWasEdited(false);
     };
 
     return (
@@ -39,7 +37,8 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
                 value={tenant.name}
                 onChange={handleNameFieldInput}
                 error={!formValidationState.name}
-                {...(tenant.name.trim().length < MINIMUM_NAME_CHARACTERS && { helperText: translate('Tenants.List.Edit.Form.Error.FieldTooShort') })}
+                {...(tenant.name.trim().length < MINIMUM_NAME_CHARACTERS
+                    && { helperText: translate('Tenants.List.Edit.Form.Error.FieldTooShort') })}
             />
             <Accordion title={translate('Tenants.List.Edit.Form.Accordion.Title')}>
                 <Box display='flex' alignItems='center' paddingBottom='15px'>
