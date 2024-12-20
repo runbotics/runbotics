@@ -94,7 +94,9 @@ export class BotProcessEventService {
                     .rootProcessInstanceId === null &&
                 hasProcessInstanceEventChanged
             ) {
-                this.uiGateway.server.emit(
+                const tenantRoom = updatedProcessInstanceEvent.processInstance.process.tenantId;
+                this.uiGateway.emitTenant(
+                    tenantRoom,
                     WsMessage.PROCESS_INSTANCE_EVENT,
                     updatedProcessInstanceEvent
                 );
@@ -218,7 +220,9 @@ export class BotProcessEventService {
                 updatedProcessInstanceEvent.processInstance
                     .rootProcessInstanceId === null
             ) {
-                this.uiGateway.server.emit(
+                const tenantRoom = updatedProcessInstanceEvent.processInstance.process.tenantId;
+                this.uiGateway.emitTenant(
+                    tenantRoom,
                     WsMessage.PROCESS_INSTANCE_LOOP_EVENT,
                     updatedProcessInstanceEvent,
                 );

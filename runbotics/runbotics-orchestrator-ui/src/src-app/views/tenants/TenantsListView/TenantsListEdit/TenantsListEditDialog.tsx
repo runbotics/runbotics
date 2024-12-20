@@ -49,7 +49,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
         setIsDeleteDialogVisible(false);
     };
 
-    const checkFormFieldsValidation = () => formValidationState.name;
+    const checkFormFieldsValidation = () => Object.values(formValidationState).every(Boolean);
 
     const handleClose = () => {
         onClose();
@@ -108,6 +108,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                                 setTenant={setTenant}
                                 formValidationState={formValidationState}
                                 setFormValidationState={setFormValidationState}
+                                currentTenantName={tenantData?.name}
                             />
                         </Form>
                     </Content>

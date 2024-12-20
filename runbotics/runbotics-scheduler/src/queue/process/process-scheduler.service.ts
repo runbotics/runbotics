@@ -101,7 +101,7 @@ export class ProcessSchedulerService {
             ]);
         }
 
-        return processDecryptedCredentials;
+        return this.filterDuplicatedCredentials(processDecryptedCredentials);
     }
 
     private async handleProcessCredentials(
@@ -156,7 +156,7 @@ export class ProcessSchedulerService {
 
                 if (!subprocess) {
                     throw new NotFoundException(
-                        `Cannot find process with ID ${subprocessIds}`
+                        `Cannot find subprocess with ID ${subprocessId}`
                     );
                 }
 

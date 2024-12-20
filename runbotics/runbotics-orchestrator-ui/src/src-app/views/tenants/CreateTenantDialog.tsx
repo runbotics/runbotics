@@ -30,7 +30,7 @@ const CreateTenantDialog: VFC<CreateTenantDialogProps> = ({
 
     const [name, setName] = useState(undefined);
     const isFieldEmpty = name?.trim() === '';
-    const isNameTooShort = name?.length > 0 && name?.length < 2;
+    const isNameTooShort = name?.trim().length > 0 && name?.trim().length < 2;
 
     const handleNameInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);

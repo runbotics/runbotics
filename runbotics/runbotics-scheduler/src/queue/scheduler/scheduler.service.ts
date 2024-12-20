@@ -64,7 +64,8 @@ export class SchedulerService {
             throw new ForbiddenException();
         }
 
-        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+        const tenantRoom = job.data.process.tenantId;
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_WAITING_SCHEDULE, job);
         await job?.remove();
         this.logger.log(`QueueJob with id: ${id} successfully deleted`);
     }

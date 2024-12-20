@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const updateTenantSchema = z.object({
-    name: z.string().min(5)
+    name: z.string().min(2)
 }).required();
 
 export type UpdateTenantDto = z.infer<typeof updateTenantSchema>;

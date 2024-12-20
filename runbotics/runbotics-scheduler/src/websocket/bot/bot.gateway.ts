@@ -18,7 +18,7 @@ import {
     BotStatus, BotWsMessage, IBot,
     IProcessInstance, IProcessInstanceEvent,
     IProcessInstanceLoopEvent, ProcessInstanceEventStatus,
-    ProcessInstanceStatus, WsMessage
+    ProcessInstanceStatus, User, WsMessage
 } from 'runbotics-common';
 import { BotProcessEventService } from '#/websocket/bot/process-launch/bot-process-instance-event.service';
 import { BotAuthSocket } from '#/types/auth-socket';
@@ -62,8 +62,9 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         clearTimeout(connectionTimeout);
 
         if (validationResponse !== null && validationResponse !== undefined) {
-            const { bot } = validationResponse;
-            this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
+            const { bot } = validationResponse as { bot: IBot, user: User };
+            const tenantRoom = bot.tenantId;
+            this.uiGateway.emitTenant(tenantRoom, WsMessage.BOT_STATUS, bot);
 
             this.logger.log(`Bot connected: ${bot.installationId} | ${client.id}`);
 
@@ -79,7 +80,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         const bot = await this.authService.unregisterBot(installationId as string);
 
-        this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
+        const tenantRoom = bot.tenantId;
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.BOT_STATUS, bot);
 
         // await this.botLifecycleService.handleProcessInstanceInterruption(bot);
 
@@ -185,10 +187,11 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
     async setBotStatusBusy(bot: IBot) {
         const busyBotStatus = BotStatus.BUSY;
+        const tenantRoom = bot.tenantId;
         if (bot.status !== busyBotStatus) {
             this.logger.log(`Updating bot ${bot.installationId} status to (${busyBotStatus})`);
             await this.botService.setBusy(bot);
-            this.uiGateway.server.emit(WsMessage.BOT_STATUS, bot);
+            this.uiGateway.emitTenant(tenantRoom, WsMessage.BOT_STATUS, bot);
             this.logger.log('Success: bot status updated');
         }
     }

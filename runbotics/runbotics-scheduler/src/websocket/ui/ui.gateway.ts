@@ -8,7 +8,8 @@ import { Server } from 'socket.io';
 import { AuthService } from '#/auth/auth.service';
 import { AuthSocket } from '#/types';
 import { Logger } from '#/utils/logger';
-import { WsQueueMessage } from 'runbotics-common';
+import { WsMessage, WsQueueMessage } from 'runbotics-common';
+import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 
 @WebSocketGateway({ path: '/ws-ui', cors: { origin: '*' } })
 export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
@@ -23,13 +24,15 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
         try {
             this.logger.log(`Client ${client.id} is trying to establish connection`);
             const user = await this.authService.validateWebsocketConnection(client);
+            const tenantRoom = user.tenantId;
+            client.join(tenantRoom);
             this.logger.log(`Client connected: ${user.email} | ${client.id}`);
         } catch (error) {
             this.logger.error(`Client ${client.id} failed to connect`, error);
         }
     }
 
-    handleDisconnect(client: AuthSocket) {
+    async handleDisconnect(client: AuthSocket) {
         this.logger.log(`Client disconnected: ${client.id}`);
     }
 
@@ -47,5 +50,9 @@ export class UiGateway implements OnGatewayDisconnect, OnGatewayConnection {
         }
 
         clientSocket.emit(event, data);
+    }
+
+    emitTenant(tenantRoom: Tenant['id'], event: WsMessage, data: unknown) {
+        this.server.to(tenantRoom).emit(event, data);
     }
 }

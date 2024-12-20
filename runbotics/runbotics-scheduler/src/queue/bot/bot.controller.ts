@@ -105,7 +105,7 @@ export class BotController {
             }
         });
 
-        return await this.botSchedulerService.deleteById(id).catch((err) => {
+        return await this.botSchedulerService.deleteById(bot).catch((err) => {
             this.logger.log(`<= Bot ${id} deletion failed`);
             throw new HttpException(err.title, err.status);
         });

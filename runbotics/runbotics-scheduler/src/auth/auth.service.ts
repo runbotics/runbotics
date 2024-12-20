@@ -206,7 +206,7 @@ export class AuthService {
         bot.lastConnected = dayjs().toISOString();
         bot.user = user;
         bot.collection = collection;
-        bot.tenantId = collection.tenantId;
+        bot.tenantId = user.tenantId;
         bot.version = version;
         this.logger.log(`=> A new bot ${bot.installationId} has been registered`);
         return this.botService.save(bot).catch(() => {
@@ -222,7 +222,7 @@ export class AuthService {
         botToUpdate.system = system;
         botToUpdate.collection = collection;
         botToUpdate.version = version;
-        botToUpdate.tenantId = collection.tenantId;
+        botToUpdate.tenantId = user.tenantId;
         this.logger.log(`Bot ${bot.installationId} has been registered`);
         return this.botService.save(botToUpdate).catch(() => {
             throw new WsException(`Bot ${bot.installationId} cannot be register`);

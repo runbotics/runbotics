@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from '#/utils/logger';
 import { BotService } from '#/scheduler-database/bot/bot.service';
-import { BotStatus, WsMessage } from 'runbotics-common';
+import { BotStatus, IBot, WsMessage } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';
 import { UiGateway } from '#/websocket/ui/ui.gateway';
 
@@ -42,10 +42,11 @@ export class BotSchedulerService {
         return updatedBots;
     }
 
-    async deleteById(id) {
-        return this.botService.delete(id).then(() => {
-            this.uiGateway.server.emit(WsMessage.BOT_DELETE, id);
-            this.logger.log(`<== Bot ${id} deleted successfully`);
+    async deleteById(bot: IBot) {
+        return this.botService.delete(bot.id).then(() => {
+            const tenantRoom = bot.tenantId;
+            this.uiGateway.emitTenant(tenantRoom, WsMessage.BOT_DELETE, bot.id);
+            this.logger.log(`<== Bot ${bot.id} deleted successfully`);
         });
     }
 }

@@ -1,6 +1,12 @@
 import React, { FC, useEffect } from 'react';
 
-import { Box, Button, Container, Typography, useMediaQuery } from '@mui/material';
+import {
+    Box,
+    Button,
+    Container,
+    Typography,
+    useMediaQuery,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import RouterLink from 'next/link';
@@ -18,7 +24,11 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
 
-import { setErrorCode, clearError, httpErrorSelector } from '#src-app/store/slices/Views/httpErrorSlice';
+import {
+    setErrorCode,
+    clearError,
+    httpErrorSelector,
+} from '#src-app/store/slices/Views/httpErrorSlice';
 
 import BackgroundLogo from './BackgroundLogo';
 
@@ -53,22 +63,29 @@ const ErrorView: FC = () => {
     const { translate } = useTranslations();
     const router = useRouter();
 
-    const { code: errorCode, title: errorTitle, message: errorMessage } = useSelector(httpErrorSelector);
+    const {
+        code: errorCode,
+        title: errorTitle,
+        message: errorMessage,
+    } = useSelector(httpErrorSelector);
 
     useEffect(() => {
         const { code } = router.query;
 
-        if (!isNaN(Number(code)) && Object.values(HttpErrorCodes).includes(Number(code))) {
+        if (
+            !isNaN(Number(code)) &&
+            Object.values(HttpErrorCodes).includes(Number(code))
+        ) {
             dispatch(setErrorCode(Number(code)));
         } else if (!(errorTitle && errorMessage)) {
-            router.replace('/404', undefined, {shallow: true})
+            router.replace('/404', undefined, { shallow: true });
         }
 
         return () => {
             dispatch(clearError());
         };
-
-    }, [router.query]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (user?.roles.includes(Role.ROLE_GUEST)) {
@@ -81,29 +98,36 @@ const ErrorView: FC = () => {
         return <></>;
     }
 
-    const getTranslationKey = (code: HttpErrorCodes, type: 'Meta.Title' | 'View.Title' | 'View.Message') => {
-        return `Error${code}.${type}` as const;
-    };
+    const getTranslationKey = (
+        code: HttpErrorCodes,
+        type: 'Meta.Title' | 'View.Title' | 'View.Message'
+    ) => `Error${code}.${type}` as const;
 
-    const metaTitle = errorCode ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'Meta.Title')) : translate('CustomError.Meta.Title');
-    const viewTitle = errorCode ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'View.Title')) : errorTitle;
-    const viewMessage = errorCode ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'View.Message')) : errorMessage;
+    const metaTitle = errorCode
+        ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'Meta.Title'))
+        : translate('CustomError.Meta.Title');
+    const viewTitle = errorCode
+        ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'View.Title'))
+        : errorTitle;
+    const viewMessage = errorCode
+        ? translate(getTranslationKey(errorCode as HttpErrorCodes, 'View.Message'))
+        : errorMessage;
 
-    const logoHeight = (errorCode && !isNaN(errorCode) && 100) || (mobileDevice && 100) || 200;
-
+    const logoHeight =
+        (errorCode && !isNaN(errorCode) && 100) || (mobileDevice && 100) || 200;
 
     return (
         <StyledPage className={classes.root} title={metaTitle}>
-            <BackgroundLogo position='top' />
-            <Container maxWidth='lg'>
-                <Box mt={0} display='flex' justifyContent='center'>
+            <BackgroundLogo position="top" />
+            <Container maxWidth="lg">
+                <Box mt={0} display="flex" justifyContent="center">
                     <Logo height={logoHeight} white />
                 </Box>
                 {errorCode && !isNaN(errorCode) && (
                     <Typography
-                        align='center'
-                        variant='h1'
-                        color='textPrimary'
+                        align="center"
+                        variant="h1"
+                        color="textPrimary"
                         sx={{
                             height: 150,
                             fontWeight: 800,
@@ -115,34 +139,38 @@ const ErrorView: FC = () => {
                     </Typography>
                 )}
                 <Typography
-                    align='center'
-                    color='textPrimary'
-                    sx={{ 
-                        fontWeight: 600, 
+                    align="center"
+                    color="textPrimary"
+                    sx={{
+                        fontWeight: 600,
                         fontSize: mobileDevice ? '24px' : '40px',
                         lineHeight: '47px',
-                        paddingBottom: '15px'
+                        paddingBottom: '15px',
                     }}
                 >
                     {viewTitle}
                 </Typography>
                 <Typography
-                    align='center'
-                    variant='subtitle2'
-                    color='textSecondary'
+                    align="center"
+                    variant="subtitle2"
+                    color="textSecondary"
                     sx={{ maxWidth: '670px', margin: '0 auto' }}
                 >
                     {viewMessage}
                 </Typography>
-                <Box mt={6} display='flex' justifyContent='center'>
-                    <RouterLink href='/' passHref legacyBehavior>
-                        <Button color='secondary' variant='contained' size='medium'>
-                            {translate('Error.View.BackToHome' as any)}
+                <Box mt={6} display="flex" justifyContent="center">
+                    <RouterLink href="/" passHref legacyBehavior>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            size="medium"
+                        >
+                            {translate('Error.View.BackToHome')}
                         </Button>
                     </RouterLink>
                 </Box>
             </Container>
-            <BackgroundLogo position='bottom' />
+            <BackgroundLogo position="bottom" />
         </StyledPage>
     );
 };
