@@ -36,6 +36,7 @@ import {
 } from './desktop-runner.types';
 import { FINISHED_PROCESS_STATUSES } from './desktop-runner.utils';
 import { ImageActionHandler } from '#action/image';
+import AIActionHandler from '#action/ai';
 
 
 @Injectable()
@@ -54,6 +55,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly serverConfigService: ServerConfigService,
 
         private readonly apiRequestHandler: ApiRequestHandler,
+        private readonly aiActionHandler: AIActionHandler,
         private readonly applicationActionHandler: ApplicationActionHandler,
         private readonly asanaActionHandler: AsanaActionHandler,
         private readonly beeOfficeActionHandler: BeeOfficeActionHandler,
@@ -79,6 +81,7 @@ export class DesktopRunnerService implements OnModuleInit {
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
+            .set('ai', aiActionHandler)
             .set('application', applicationActionHandler)
             .set('asana', asanaActionHandler)
             .set('beeOffice', beeOfficeActionHandler)
