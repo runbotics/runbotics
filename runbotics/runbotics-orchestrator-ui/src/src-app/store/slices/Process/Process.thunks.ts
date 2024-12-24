@@ -124,6 +124,8 @@ export const setDraft = createAsyncThunk('api/setDraft', (payload: { process: Pr
 
 export const getProcesses = ApiTenantResource.get<ProcessDto[]>('process/getAll', PROCESSES_PATH);
 
+export const getSimplifiedProcesses = ApiTenantResource.get<ProcessDto[]>('processes/simplified', `${PROCESSES_PATH}/simplified`);
+
 export const getProcessesPage = ApiTenantResource.get<Page<ProcessDto>>('process/getPage', `${PROCESSES_PATH}/GetPage`);
 
 export const getProcessesAllPage = ApiTenantResource.get<Page<ProcessDto>>('process/getPage', `${PROCESSES_PATH}/GetAllPage`);

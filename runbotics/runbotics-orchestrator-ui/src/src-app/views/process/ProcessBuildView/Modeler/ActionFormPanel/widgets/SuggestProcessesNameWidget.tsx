@@ -25,7 +25,7 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
     const { translate } = useTranslations();
 
     useEffect(() => {
-        dispatch(processActions.getProcesses());
+        dispatch(processActions.getSimplifiedProcesses());
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
