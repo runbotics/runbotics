@@ -36,7 +36,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.loading = false;
         })
 
-        // GET ALL TRIGGERABLE
+        // GET ALL SIMPLIFIED
         .addCase(getSimplifiedProcesses.pending, (state) => {
             state.all.loading = true;
         })
