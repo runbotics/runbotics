@@ -6,6 +6,9 @@ import {
     ModelerRegistryElement,
 } from './BpmnModeler.types';
 import { BPMNElement } from '../helpers/elementParameters';
+import { ActionCredentialType } from 'runbotics-common';
+import { AnyAction, Dispatch, PayloadAction } from '@reduxjs/toolkit';
+import { ModelerError, ModelerErrorType, processActions } from '#src-app/store/slices/Process';
 
 
 /**
@@ -206,4 +209,31 @@ export const retrieveGlobalVariableIds = (modeler: BpmnIoModeler): string[] => {
         .map((item) => item.value);
 
     return Array.from(new Set(allGlobalVariableIds));
+};
+
+export const setNoCredentialsSpecifiedError = (dispatch: Dispatch<AnyAction>, definition: string, coveredCredentialTypes: ActionCredentialType[]): void => {
+    const actionCredentialPairs = [];
+    const regex = /camunda:actionId="([^"]+)".+camunda:credentialType="([^"]+)"/g;
+
+    const matches = definition.matchAll(regex);
+    Array.from(matches).forEach(match => {
+        const credentialType = match[2] as ActionCredentialType;
+        if (coveredCredentialTypes.includes(credentialType)) return;
+        actionCredentialPairs.push({
+            actionId: match[1],
+        });
+    });
+
+    for (const pair of actionCredentialPairs) {
+        const { actionId } = pair;
+        const action: PayloadAction<ModelerError> = {
+            payload: {
+                elementName: actionId,
+                elementId: actionId,
+                type: ModelerErrorType.FORM_ERROR,
+            },
+            type: 'fulfilled',
+        };
+        dispatch(processActions.setError(action.payload));
+    }
 };

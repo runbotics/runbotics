@@ -2,18 +2,20 @@ import React, { useEffect, useImperativeHandle, useState } from 'react';
 
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
+import { PayloadAction } from '@reduxjs/toolkit';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
 import i18n from 'i18next';
+import { If, Show } from 'multi-condition';
 import { useRouter } from 'next/router';
 import Hotkeys from 'react-hot-keys';
-import { isProcessInstanceActive } from 'runbotics-common';
+import { ActionCredentialType, isProcessInstanceActive } from 'runbotics-common';
 
 import 'react-resizable/css/styles.css';
 import InfoPanel from '#src-app/components/InfoPanel';
 import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
-import If from '#src-app/components/utils/If';
+import useCustomValidation from '#src-app/hooks/useCustomValidation';
 import useModelerListener, {
     isModelerSync,
 } from '#src-app/hooks/useModelerListener';
@@ -22,9 +24,14 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
 import ModelerProvider from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
+import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
 import {
     CommandStackInfo,
+    ModelerError,
+    ModelerErrorType,
     processActions,
+    processSelector,
+    ProcessState,
 } from '#src-app/store/slices/Process';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { ProcessBuildTab } from '#src-app/types/sidebar';
@@ -39,6 +46,7 @@ import {
     ModelerProps,
     initializeBpmnDiagram,
     Wrapper,
+    setNoCredentialsSpecifiedError,
 } from '.';
 import { getBpmnModelerConfig } from './BpmnModeler.config';
 import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
@@ -54,7 +62,6 @@ const initialCommandStackInfo: CommandStackInfo = {
     commandStackSize: 0,
 };
 
-
 const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
     // eslint-disable-next-line max-lines-per-function
     ({ definition, offsetTop, onSave, onImport, onExport, process }, ref) => {
@@ -66,11 +73,14 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             null
         );
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
+        const { draft: { credentials: processCredentials } } = useSelector(processSelector);
+        const coveredCredentialTypes: ActionCredentialType[] = processCredentials.map(pc => pc?.credential?.template?.name);
         const { modelerListener, validateUnknownElement } = useModelerListener({
             setCurrentTab,
         });
         const { pathname } = useRouter();
 
+        const processState = useSelector((state) => state.process.modeler);
         const {
             isSaveDisabled,
             selectedElement,
@@ -79,8 +89,8 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             errors,
             imported,
             customValidationErrors,
-            activeDrag
-        } = useSelector((state) => state.process.modeler);
+            activeDrag,
+        } = processState;
 
         useNavigationLock(
             !isSaveDisabled,
@@ -126,6 +136,16 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             };
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [offsetTop, i18n.language]);
+
+        useEffect(() => {
+            dispatch(processActions.getProcessCredentials({ resourceId: process?.id }));
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+
+        useEffect(() => {
+            dispatch(processActions.clearErrors());
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [processCredentials]);
 
         useEffect(() => {
             dispatch(
@@ -196,6 +216,11 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         useEffect(() => {
             modelerRef.current = modeler;
         }, [modeler, offsetTop]);
+
+        useEffect(() => {
+            setNoCredentialsSpecifiedError(dispatch, definition, coveredCredentialTypes);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [definition, coveredCredentialTypes]);
 
         const handleSave = () => {
             recordItemClick({ itemName: CLICKABLE_ITEM.SAVE_BUTTON, sourcePage: identifyPageByUrl(pathname) });
@@ -280,21 +305,17 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                             />
                         </ModelerArea>
                         <ResizableDrawer open={currentTab !== null}>
-                            <If
-                                condition={currentTab === ProcessBuildTab.CONFIGURE_ACTION}
-                            >
-                                <ActionFormPanel />
-                            </If>
-                            <If
-                                condition={currentTab === ProcessBuildTab.RUN_INFO}
-                            >
-                                <InfoPanel />
-                            </If>
-                            <If
-                                condition={currentTab === ProcessBuildTab.PROCESS_VARIABLES}
-                            >
-                                <VariablesPanel />
-                            </If>
+                            <Show>
+                                <If condition={currentTab === ProcessBuildTab.CONFIGURE_ACTION}>
+                                    <ActionFormPanel />
+                                </If>
+                                <If condition={currentTab === ProcessBuildTab.RUN_INFO}>
+                                    <InfoPanel />
+                                </If>
+                                <If condition={currentTab === ProcessBuildTab.PROCESS_VARIABLES}>
+                                    <VariablesPanel />
+                                </If>
+                            </Show>
                         </ResizableDrawer>
                     </Wrapper>
                 </ModelerProvider>

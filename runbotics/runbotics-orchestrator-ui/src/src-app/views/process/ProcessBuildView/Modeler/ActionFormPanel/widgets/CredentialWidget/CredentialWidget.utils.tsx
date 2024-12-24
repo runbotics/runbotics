@@ -1,3 +1,5 @@
+import { Alert } from '@mui/material';
+
 import { translate } from '#src-app/hooks/useTranslations';
 
 export const getCredentialBreadcrumb = (selectedCredential, primaryCredential) => {
@@ -9,8 +11,7 @@ export const getCredentialBreadcrumb = (selectedCredential, primaryCredential) =
         const primaryCredentialName = primaryCredential?.credential?.name;
 
         if (!primaryCollectionName || !primaryCredentialName) {
-            return translate('Credential.ActionFormSelect.Dialog.NoPrimaryCredential');
-
+            return <Alert severity="error">{translate('Credential.ActionFormSelect.Dialog.NoCredentialsSpecified')}</Alert>;
         }
 
         return buildBreadcrumb(primaryCollectionName, primaryCredentialName);
