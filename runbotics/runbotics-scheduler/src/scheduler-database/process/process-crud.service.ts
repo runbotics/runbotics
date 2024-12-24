@@ -242,6 +242,32 @@ export class ProcessCrudService {
         return this.processRepository.find(options);
     }
 
+    async getAllSimplified(user: User, specs: Specs<ProcessEntity>) {
+        const options: FindManyOptions<ProcessEntity> = {
+            ...specs,
+        };
+        options.relations = RELATIONS;
+
+        options.where = mapToWhereOptionsArray<ProcessEntity>({
+            orConditionProps: {
+                ...(!isTenantAdmin(user) && {
+                    isPublic: true,
+                    createdBy: {
+                        id: user.id,
+                    },
+                })
+            },
+            andConditionProps: {
+                ...options.where,
+                tenantId: user.tenantId,
+            }
+        });
+
+        const processes = await this.processRepository.find(options);
+
+        return this.extractIdNameSystem(processes);
+    }
+
     async getPage(user: User, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessDto>> {
         const accessibleProcessIds = await this.processRepository
             .find({
@@ -332,5 +358,15 @@ export class ProcessCrudService {
                 email: process.createdBy.email,
             },
         };
+    }
+
+    private extractIdNameSystem(processes: ProcessEntity[]) {
+        if (!processes.length) return [];
+
+        return processes.map(process => ({
+            id: process.id,
+            name: process.name,
+            system: process.system,
+        }));
     }
 }
