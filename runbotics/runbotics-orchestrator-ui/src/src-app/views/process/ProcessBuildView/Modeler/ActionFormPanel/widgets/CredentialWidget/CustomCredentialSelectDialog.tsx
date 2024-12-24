@@ -51,7 +51,7 @@ export const CustomCredentialSelectDialog: FunctionComponent<CustomCredentialSel
             dispatch(credentialsActions.fetchAllCredentialsAssignedToProcess({ resourceId: String(processId) }))
                 .then(() => {
                     if (allProcessAssignedByType.length === 0) {
-                        enqueueSnackbar(translate('Credential.ActionFormSelect.Dialog.NoCredentialsSpecified.Info'), { variant: 'info' });
+                        enqueueSnackbar(translate('Credential.ActionFormSelect.Dialog.NoCredentialsSpecified'), { variant: 'info' });
                         handleClose();
                     }
                 });

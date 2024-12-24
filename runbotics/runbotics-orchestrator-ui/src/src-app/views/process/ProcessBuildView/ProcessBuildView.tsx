@@ -1,47 +1,36 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect, FC } from 'react';
 
 import { Box, DialogContent } from '@mui/material';
 
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
-
 import { saveAs } from 'file-saver';
-
 import moment from 'moment';
-
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-
-import { FeatureKey } from 'runbotics-common';
+import { Credential, FeatureKey } from 'runbotics-common';
 
 import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSchemaKeys';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
-import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { activityActions } from '#src-app/store/slices/Action';
 import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
-
 import { processActions } from '#src-app/store/slices/Process';
-
-import { recordProcessSaveFail, recordProcessSaveSuccess } from '#src-app/utils/Mixpanel/utils';
 
 import BpmnModeler, {
     AdditionalInfo,
     ModelerImperativeHandle,
-    retrieveGlobalVariableIds,
 } from './Modeler/BpmnModeler';
-
 import { StyledCard } from './ProcessBuildView.styled';
-
-const BORDER_SIZE = 2;
-const SNACKBAR_DURATION = 1500;
+import { BORDER_SIZE, saveProcess } from './ProcessBuildView.utils';
+import ProcessImportDialog from './ProcessImportDialog';
+import { resolveCredentials } from './ProcessImportDialog.utils';
 
 const ProcessBuildView: FC = () => {
     const dispatch = useDispatch();
     const { createRbexFile } = useProcessExport();
     const { enqueueSnackbar } = useSnackbar();
-    const { translate } = useTranslations();
     const { id } = useRouter().query;
     const BpmnModelerRef = useRef<ModelerImperativeHandle>(null);
     const [offSet, setOffSet] = useState<number>(null);
@@ -49,6 +38,10 @@ const ProcessBuildView: FC = () => {
     const { process } = useSelector((state) => state.process.draft);
     const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
     const hasActionsAccess = useFeatureKey([FeatureKey.EXTERNAL_ACTION_READ]);
+    const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+    const [processDefinition, setProcessDefinition] = useState('');
+    const [importedCustomCredentials, setImportedCustomCredentials] = useState<Credential[]>(null);
+    const [additionalProps, setAdditionalProps] = useState<AdditionalInfo>(null);
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
@@ -82,52 +75,17 @@ const ProcessBuildView: FC = () => {
     }, []);
 
     const onSave = async (modeler: BpmnIoModeler) => {
-        try {
-            const definition = await BpmnModelerRef.current.export();
-            const globalVariableIds = retrieveGlobalVariableIds(modeler);
-
-            await dispatch(
-                processActions.updateDiagram(
-                    {
-                        payload: {
-                            definition,
-                            globalVariableIds,
-                            executionInfo: process.executionInfo,
-                        },
-                        resourceId: process.id,
-                    },
-                ),
-            )
-                .unwrap()
-                .then(() => {
-                    dispatch(processActions.clearErrors());
-                    enqueueSnackbar(translate('Process.MainView.Toast.Save.Success'), {
-                        variant: 'success',
-                        autoHideDuration: SNACKBAR_DURATION,
-                    });
-                    recordProcessSaveSuccess({ processName: process.name, processId: String(process.id) });
-                })
-                .catch((error) => {
-                    dispatch(processActions.fetchProcessById(process.id));
-                    throw new Error(error);
-                });
-        } catch (error) {
-            enqueueSnackbar(translate('Process.MainView.Toast.Save.Failed'), {
-                variant: 'error',
-                autoHideDuration: SNACKBAR_DURATION,
-            });
-            recordProcessSaveFail({
-                processName: process.name,
-                processId: String(process.id),
-                reason: translate('Process.MainView.Toast.Save.Failed'),
-            });
-        }
+        await saveProcess({
+            modeler,
+            BpmnModelerRef,
+            process,
+            enqueueSnackbar,
+            dispatch,
+        });
     };
 
-    const handleImport = (
-        definition: string,
-        additionalInfo: AdditionalInfo,
-    ) => {
+    const importDraft = (definition: string, additionalInfo: AdditionalInfo) => {
+        setImportedCustomCredentials(null);
         dispatch(processActions.clearErrors());
         dispatch(
             processActions.setDraft({
@@ -138,6 +96,18 @@ const ProcessBuildView: FC = () => {
                 },
             }),
         );
+    };
+
+    const handleImport = async (
+        definition: string,
+        additionalInfo: AdditionalInfo,
+    ) => {
+        const resolvedCredentials = await resolveCredentials(definition, dispatch);
+        if (resolvedCredentials?.length > 0) { setImportedCustomCredentials(resolvedCredentials); }
+        if (!resolvedCredentials?.length) { importDraft(definition, additionalInfo); return; }
+        setIsImportDialogOpen(true);
+        setProcessDefinition(definition);
+        setAdditionalProps(additionalInfo);
     };
 
     const handleExport = async () => {
@@ -161,6 +131,14 @@ const ProcessBuildView: FC = () => {
         <StyledCard offsetTop={offSet}>
             <DialogContent ref={onRefChange} sx={{ padding: 0 }}>
                 <Box position="relative">
+                    <ProcessImportDialog
+                        isOpen={isImportDialogOpen}
+                        setIsOpen={setIsImportDialogOpen}
+                        credentials={importedCustomCredentials}
+                        importDraft={importDraft}
+                        processDefinition={processDefinition}
+                        additionalProps={additionalProps}
+                    />
                     <BpmnModeler
                         ref={BpmnModelerRef}
                         definition={process.definition}
