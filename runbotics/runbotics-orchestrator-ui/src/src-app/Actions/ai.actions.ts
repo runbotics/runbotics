@@ -10,7 +10,9 @@ const getAIActions: () => Record<string, IBpmnAction> = () => ({
     [AIAction.CHAT]: {
         id: AIAction.CHAT,
         credentialType: ActionCredentialType.AI,
-        label: 'Chat',
+        label: translate(
+            'Process.Details.Modeler.Actions.Ai.Chat.Label'
+        ),
         script: AIAction.CHAT,
         runner: Runner.DESKTOP_SCRIPT,
         output: {
@@ -24,15 +26,21 @@ const getAIActions: () => Record<string, IBpmnAction> = () => ({
                 type: 'object',
                 properties: {
                     input: {
-                        title: 'Input',
+                        title: translate(
+                            'Process.Details.Modeler.Actions.Common.Input'
+                        ),
                         type: 'object',
                         properties: {
                             userMessage: {
-                                title: 'Message',
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Ai.Chat.Input.Message'
+                                ),
                                 type: 'string',
                             },
                             imagePath: {
-                                title: 'Image path',
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.Ai.Chat.Input.ImagePath'
+                                ),
                                 type: 'string',
                             },
                             customCredentialId: propertyCustomCredential,
@@ -64,15 +72,28 @@ const getAIActions: () => Record<string, IBpmnAction> = () => ({
                     userMessage: {
                         'ui:options': {
                             multiline: true,
-                            info: 'User message'
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Ai.Chat.Input.Message.Info'
+                            )
                         }
                     },
                     imagePath: {
                         'ui:options': {
-                            info: 'Path to img'
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Ai.Chat.Input.ImagePath.Info'
+                            )
                         }
                     }
                 },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate(
+                                'Process.Details.Modeler.Actions.Ai.Chat.Output.Info'
+                            ),
+                        },
+                    },
+                }
             },
             formData: {
                 input: {
