@@ -10,3 +10,7 @@ export const chatInputSchema = z.object({
 export type AIChatActionInput = z.infer<typeof chatInputSchema>;
 
 export type AIActionRequest = DesktopRunRequest<AIAction.CHAT, AIChatActionInput>;
+
+export interface AiCredentials {
+    apiKey: string;
+}

@@ -3,10 +3,11 @@ import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 
 import fs from 'fs/promises';
 import { AIAction } from 'runbotics-common';
-import { AIActionRequest, AIChatActionInput } from './ai.types';
+import { AIActionRequest, AIChatActionInput, AiCredentials } from './ai.types';
 import { ChatPromptTemplate, PromptTemplate } from '@langchain/core/prompts';
 import { ChatOpenAI } from '@langchain/openai';
 import { RunboticsLogger } from '#logger';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 
 @Injectable()
@@ -17,11 +18,11 @@ export default class AIActionHandler extends StatelessActionHandler {
         super();
     }
 
-    private async chat(input: AIChatActionInput) {
+    private async chat(input: AIChatActionInput, credential: AiCredentials) {
         const model = new ChatOpenAI({
             temperature: 0,
             model: 'gpt-4o',
-            apiKey: '',
+            apiKey: credential.apiKey,
         });
 
         const message = input.imagePath
@@ -36,20 +37,24 @@ export default class AIActionHandler extends StatelessActionHandler {
 
         const llmChain = message.pipe(model);
 
-        const imageData = await fs.readFile(input.imagePath, { encoding: 'base64' });
+        const llmInput = {
+            userMessage: input.userMessage
+        };
 
-        return (await llmChain.invoke({
-            userMessage: input.userMessage,
-            ...(input.imagePath && { imageData })
-        })).content;
+        if (input.imagePath) {
+            const imageData = await fs.readFile(input.imagePath, { encoding: 'base64' });
+            llmInput['imageData'] = imageData;
+        }
+
+        return (await llmChain.invoke(llmInput)).content;
     }
 
     run(request: AIActionRequest) {
-        // credential here
+        const credential = credentialAttributesMapper<AiCredentials>(request.credentials);
 
         switch(request.script) {
             case AIAction.CHAT:
-                return this.chat(request.input);
+                return this.chat(request.input, credential);
             default:
                 throw new Error('Action not found');
         }
