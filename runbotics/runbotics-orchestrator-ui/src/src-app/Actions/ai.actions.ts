@@ -2,6 +2,7 @@ import { ActionCredentialType, ActionRegex, AIAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
 
@@ -34,6 +35,7 @@ const getAIActions: () => Record<string, IBpmnAction> = () => ({
                                 title: 'Image path',
                                 type: 'string',
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['userMessage']
                     },
@@ -57,13 +59,20 @@ const getAIActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
-                output: {
-                    variableName: {
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                    userMessage: {
                         'ui:options': {
-                            info: 'info somewhere'
+                            multiline: true,
+                            info: 'User message'
+                        }
+                    },
+                    imagePath: {
+                        'ui:options': {
+                            info: 'Path to img'
                         }
                     }
-                }
+                },
             },
             formData: {
                 input: {
