@@ -51,7 +51,8 @@ export enum ACTION_GROUP {
     EXCEL = 'excel',
     POWER_POINT = 'powerPoint',
     WINDOWS = 'windows',
-    VISUAL_BASIC = 'visualBasic'
+    VISUAL_BASIC = 'visualBasic',
+    EXTERNAL = 'external',
 }
 
 export enum VariableAction {
