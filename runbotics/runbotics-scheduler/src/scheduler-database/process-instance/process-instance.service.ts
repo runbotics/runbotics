@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProcessInstance } from './process-instance.entity';
 import {
@@ -15,6 +15,8 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage, Page } from '#/utils/page/page';
+import { isTenantAdmin } from '#/utils/authority.utils';
+import { ProcessService } from '../process/process.service';
 
 type MappedProcessInstance = ProcessInstance & { hasSubprocesses: boolean };
 
@@ -31,7 +33,8 @@ export class ProcessInstanceService {
 
     constructor(
         @InjectRepository(ProcessInstance)
-        private readonly processInstanceRepository: Repository<ProcessInstance>
+        private readonly processInstanceRepository: Repository<ProcessInstance>,
+        private readonly processService: ProcessService,
     ) {}
 
     async create(processInstanceDto: CreateProcessInstanceDto) {
@@ -71,12 +74,23 @@ export class ProcessInstanceService {
     async getPage(
         user: User,
         specs: Specs<ProcessInstance>,
-        paging: Paging
+        paging: Paging,
+        processId: string,
     ): Promise<Page<ProcessInstance>> {
         const options: FindManyOptions<ProcessInstance> = {
             ...paging,
             ...specs,
         };
+
+        if (
+            !isTenantAdmin(user) &&
+            (
+                specs.where.processId === undefined ||
+                !(await this.processService.hasAccess(user, +processId))
+            )
+        ) {
+            throw new ForbiddenException('No access to whole page');
+        }
 
         options.relations = RELATIONS;
         options.where = {

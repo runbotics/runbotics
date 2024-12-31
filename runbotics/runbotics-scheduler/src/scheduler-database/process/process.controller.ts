@@ -59,21 +59,15 @@ export class ProcessController {
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(createProcessSchema)) processDto: CreateProcessDto,
     ) {
-        const canCreate = this.processCrudService.checkCreateProcessViability(user);
-
-        if (!canCreate) {
-            throw new ForbiddenException('Guest can create only one process');
-        }
-
         return this.processCrudService.create(user, processDto);
     }
 
     @Post('guest')
-    @FeatureKeys(FeatureKey.PROCESS_ADD)
-    createGuestProcess(
+    @FeatureKeys(FeatureKey.PROCESS_ADD_GUEST)
+    async createGuestProcess(
         @UserDecorator() user: User,
     ) {
-        const canCreate = this.processCrudService.checkCreateProcessViability(user);
+        const canCreate = await this.processCrudService.checkCreateProcessViability(user);
 
         if (!canCreate) {
             throw new ForbiddenException('Guest can create only one process');

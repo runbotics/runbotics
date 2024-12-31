@@ -6,9 +6,10 @@ import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
 
 import { TagService } from './tag.service';
-import { Tenant } from 'runbotics-common';
+import { FeatureKey, Tenant } from 'runbotics-common';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { CreateTagDto, createTagSchema } from './dto/create-tag.dto';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
 
 @UseInterceptors(TenantInterceptor)
 @Controller('/api/scheduler/tenants/:tenantId/tags')
@@ -18,6 +19,7 @@ export class TagController {
     constructor(private readonly tagService: TagService) {}
 
     @Get()
+    @FeatureKeys(FeatureKey.TAG_READ)
     getAllTags(
         @Param('tenantId', ParseUUIDPipe) tenantId: Tenant['id'],
         @Query('name.contains') searchPhrase: string | undefined,
@@ -27,6 +29,7 @@ export class TagController {
     }
 
     @Get(':id')
+    @FeatureKeys(FeatureKey.TAG_READ)
     async getTag(
         @Param('id', ParseIntPipe) id: number,
         @UserDecorator() user: User,
@@ -41,6 +44,7 @@ export class TagController {
     }
 
     @Post()
+    @FeatureKeys(FeatureKey.TAG_CREATE)
     createTag(
         @Body(new ZodValidationPipe(createTagSchema)) tagDto: CreateTagDto,
         @UserDecorator() user: User,
@@ -50,6 +54,7 @@ export class TagController {
     }
 
     @Delete(':id')
+    @FeatureKeys(FeatureKey.TAG_DELETE)
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteTagById(
         @Param('id', ParseIntPipe) id: number,
