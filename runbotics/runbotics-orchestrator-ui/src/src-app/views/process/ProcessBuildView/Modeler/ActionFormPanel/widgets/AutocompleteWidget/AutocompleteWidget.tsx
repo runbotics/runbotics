@@ -171,7 +171,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
                     helperText={customErrors ? customErrors[0] : null}
-                    {...isMultiline && { multiline: true }}
+                    multiline={isMultiline}
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (

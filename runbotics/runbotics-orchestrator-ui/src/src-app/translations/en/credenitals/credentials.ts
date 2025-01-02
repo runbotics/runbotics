@@ -57,7 +57,7 @@ const credentials = {
     'Credential.Template.Mail.Name': 'E-mail',
     'Credential.Template.Google.Name': 'Google',
     'Credential.Template.Asana.Name': 'Asana',
-    'Credential.Template.Ai.Name': 'AI',
+    'Credential.Template.Ai.Name': 'SI',
 };
 
 export default credentials;
