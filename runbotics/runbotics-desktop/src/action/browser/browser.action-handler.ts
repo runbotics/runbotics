@@ -1,4 +1,4 @@
-import { writeFile, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
 import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
@@ -12,6 +12,8 @@ import { RunboticsLogger } from '#logger';
 import { RunIndex } from './IndexAction';
 import * as BrowserTypes from './types';
 import { ServerConfigService } from '#config';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
+import { BrowserLoginCredential } from './types';
 
 @Injectable()
 export default class BrowserActionHandler extends StatefulActionHandler {
@@ -24,7 +26,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     ) {
         super();
     }
-    
+
     private async getFirefoxSession(isHeadless: boolean | undefined, isWin?: boolean) {
         const driversPath = process.cwd();
         const geckoDriver = driversPath + '/' + this.serverConfigService.cfgGeckoDriver;
@@ -47,11 +49,11 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             .setFirefoxService(
                 new firefox.ServiceBuilder()
                     //.enableVerboseLogging()
-                    .setStdio('inherit'), 
+                    .setStdio('inherit'),
             )
             .build();
     }
-    
+
     private async getChromeSession(isHeadless: boolean | undefined) {
         const chromeOptions = new chrome.Options();
         chromeOptions.addArguments(
@@ -62,7 +64,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         );
 
         if (isHeadless) {
-            chromeOptions.headless(); 
+            chromeOptions.headless();
         }
 
         return new Builder()
@@ -106,7 +108,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     async openSite(input: BrowserTypes.BrowserOpenActionInput): Promise<BrowserTypes.BrowserOpenActionOutput> {
         // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
         //
-        // let driver = await new Builder().forBrowser('chrome').build();        
+        // let driver = await new Builder().forBrowser('chrome').build();
         await this.session.get(input.target);
 
         return {};
@@ -178,6 +180,22 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             await element.clear();
         }
         await element.sendKeys(input.value);
+
+        return {};
+    }
+    private async insertCredentials(input: BrowserTypes.BrowserInsertCredentials, credential: BrowserLoginCredential): Promise<BrowserTypes.BrowserClickActionOutput> {
+        console.log(input);
+        const login = await this.findElement(input.loginTarget);
+        const password = await this.findElement(input.passwordTarget);
+
+        login.clear();
+        password.clear();
+
+        await login.sendKeys(credential.login);
+        await password.sendKeys(credential.password);
+
+        const element = await this.findElement(input.submitButtonTarget);
+        element.click();
 
         return {};
     }
@@ -263,6 +281,13 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.selenium.type':
                 this.isBrowserOpen();
                 return this.doType(request.input);
+            case 'browser.selenium.insertCredentials': {
+                this.isBrowserOpen();
+
+                const loginCredential = credentialAttributesMapper<BrowserLoginCredential>(request.credentials);
+
+                return this.insertCredentials(request.input, loginCredential);
+            }
             case 'browser.selenium.click':
                 this.isBrowserOpen();
                 return this.doClick(request.input);
