@@ -194,6 +194,16 @@ export class ProcessController {
         return (await this.processCrudService.getAll(user, specs));
     }
 
+
+    @Get('simplified')
+    @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
+    async getAllSimplified(
+        @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
+        @UserDecorator() user: User,
+    ) {
+        return (await this.processCrudService.getAllSimplified(user, specs));
+    }
+
     @Get('GetPage')
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
     getPage(
