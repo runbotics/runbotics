@@ -3,7 +3,6 @@ import React, { FC, useEffect } from 'react';
 import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { WidgetProps } from '@rjsf/core';
 
-
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { FieldsWrapper } from './BrowserTarget.styles';
@@ -11,10 +10,15 @@ import { BrowserTargetState } from './BrowserTarget.types';
 import { initialFormState, PREFIX_WIDTH } from './BrowserTarget.utils';
 import CustomTextWidget from '../CustomTextWidget';
 
-
 const BrowserTargetWidget: FC<WidgetProps> = (props) => {
     const { translate } = useTranslations();
     const [formState, setFormState] = React.useState<BrowserTargetState>(initialFormState);
+    const defaultTarget = props.options.defaultTarget as string ? props.options.defaultTarget as string : '';
+    const selectorName = props.options.selectorName as string ? props.options.selectorName as string : translate('Process.Details.Modeler.Actions.Browser.Target.Selector.Label');
+
+    useEffect(() => {
+        defaultTarget && setFormState((prevState) => ({...prevState, prefix: defaultTarget}));
+    }, []);
 
     const PREFIX_OPTIONS = {
         'id=': {
@@ -48,10 +52,16 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
     };
 
     useEffect(() => {
-        if(props.value) {
+        if (props.value) {
             const prefix = Object.keys(PREFIX_OPTIONS).find((option) => props.value.startsWith(option)) || 'None';
-            const value = prefix === 'None' ? props.value : props.value.replace(prefix, ''); 
+            const value = prefix === 'None' ? props.value : props.value.replace(prefix, '');
             setFormState({ prefix: prefix, value: value});
+        }
+    }, []);
+
+    useEffect(() => {
+        if (formState.value === '') {
+            props.onChange(undefined);
         }
     }, []);
 
@@ -62,9 +72,9 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
             props.onChange(value);
         } else {
             props.onChange(prefix + value);
-        }
+        };
     };
-    
+
     const handlePrefixChange = (event: SelectChangeEvent<string>) => {
         setFormState(prev => ({ prefix: event.target.value, value: prev.value }));
         onChangeWrapper(event.target.value, formState.value);
@@ -80,13 +90,14 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
 
     return (
         <FieldsWrapper>
-            <InputLabel>{translate('Process.Details.Modeler.Actions.Browser.Target.Selector.Label')}</InputLabel>
-            <Select 
-                sx={{ minWidth: `${PREFIX_WIDTH}px`}} 
-                required={props.required} 
-                label="Selector" 
-                onChange={handlePrefixChange} 
-                value={formState.prefix}>
+            <InputLabel>{selectorName}</InputLabel>
+            <Select
+                sx={{ minWidth: `${PREFIX_WIDTH}px`}}
+                required={props.required}
+                label={selectorName}
+                onChange={handlePrefixChange}
+                value={formState.prefix}
+            >
                 {prefixOptions}
             </Select>
             <CustomTextWidget
@@ -100,6 +111,7 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
                 defaultValue={''}
                 value={formState.value ?? ''}
                 required={props.required}
+                customErrors={formState.value === ''}
             />
         </FieldsWrapper>
     );
