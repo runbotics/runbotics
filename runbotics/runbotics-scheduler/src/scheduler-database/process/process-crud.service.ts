@@ -265,7 +265,7 @@ export class ProcessCrudService {
 
         const processes = await this.processRepository.find(options);
 
-        return this.extractIdNameSystem(processes);
+        return this.simplifiedProcessMapper(processes);
     }
 
     async getPage(user: User, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessDto>> {
@@ -360,7 +360,7 @@ export class ProcessCrudService {
         };
     }
 
-    private extractIdNameSystem(processes: ProcessEntity[]) {
+    private simplifiedProcessMapper (processes: ProcessEntity[]) {
         if (!processes.length) return [];
 
         return processes.map(process => ({

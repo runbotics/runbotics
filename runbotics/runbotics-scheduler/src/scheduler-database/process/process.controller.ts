@@ -197,7 +197,7 @@ export class ProcessController {
 
     @Get('simplified')
     @FeatureKeys(FeatureKey.PROCESS_LIST_READ)
-    async getAllTrigerrable(
+    async getAllSimplified(
         @Specifiable(ProcessCriteria) specs: Specs<ProcessEntity>,
         @UserDecorator() user: User,
     ) {
