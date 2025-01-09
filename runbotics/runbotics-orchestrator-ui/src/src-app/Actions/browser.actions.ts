@@ -25,7 +25,7 @@ const exampleJsonConfiguration = {
 };
 // eslint-disable-next-line max-lines-per-function
 const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
-    'browser.launch': {
+    [BrowserAction.LAUNCH]: {
         id: BrowserAction.LAUNCH,
         label: translate('Process.Details.Modeler.Actions.Browser.Launch.Label'),
         script: BrowserAction.LAUNCH,
@@ -62,7 +62,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.selenium.open': {
+    [BrowserAction.SELENIUM_OPEN]: {
         id: BrowserAction.SELENIUM_OPEN,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Open.Label'),
         script: BrowserAction.SELENIUM_OPEN,
@@ -94,7 +94,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.close': {
+    [BrowserAction.CLOSE]: {
         id: BrowserAction.CLOSE,
         label: translate('Process.Details.Modeler.Actions.Browser.Close.Label'),
         script: BrowserAction.CLOSE,
@@ -120,7 +120,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.selenium.click': {
+    [BrowserAction.SELENIUM_CLICK]: {
         id: BrowserAction.SELENIUM_CLICK,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Click.Label'),
         script: BrowserAction.SELENIUM_CLICK,
@@ -146,18 +146,19 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'xpath='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 }
             },
             formData: {
                 input: {
-                    target: 'id=',
+                    target: undefined,
                 },
             },
         },
     },
-    'browser.selenium.elements.count': {
+    [BrowserAction.SELENIUM_ELEMENTS_COUNT]: {
         id: BrowserAction.SELENIUM_ELEMENTS_COUNT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Elements.Count.Label'),
         script: BrowserAction.SELENIUM_ELEMENTS_COUNT,
@@ -202,6 +203,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input', 'output'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'xpath='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 },
@@ -215,7 +217,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: 'xpath=',
+                    target: undefined,
                 },
                 output: {
                     variableName: undefined,
@@ -223,7 +225,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.selenium.element.attribute.change': {
+    [BrowserAction.SELENIUM_ELEMENT_ATTRIBUTE_CHANGE]: {
         id: BrowserAction.SELENIUM_ELEMENT_ATTRIBUTE_CHANGE,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Element.Attribute.Change.Label'),
         script: BrowserAction.SELENIUM_ELEMENT_ATTRIBUTE_CHANGE,
@@ -263,20 +265,21 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'id='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 }
             },
             formData: {
                 input: {
-                    target: 'id=',
+                    target: undefined,
                     attribute: undefined,
                     newValue: '',
                 },
             },
         },
     },
-    'browser.selenium.type': {
+    [BrowserAction.SELENIUM_TYPE]: {
         id: BrowserAction.SELENIUM_TYPE,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Type.Label'),
         script: BrowserAction.SELENIUM_TYPE,
@@ -330,6 +333,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
         script: BrowserAction.SELENIUM_INSERT_CREDENTIALS,
         runner: Runner.DESKTOP_SCRIPT,
         form: {
+            customErrors: ['pippo'],
             schema: {
                 type: 'object',
                 description: 'This action ends with submitting the form. If any other fields are required please add apropriate action before this one.',
@@ -361,7 +365,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     customCredentialId: schemaCustomCredential,
                     loginTarget: {
-                        'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.LoginSelector') },
+                        'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.LoginSelector'), customError: 'daj oba' },
                         'ui:widget': 'BrowserTargetWidget',
                     },
                     passwordTarget: {
@@ -372,6 +376,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.SubmitButtonSelector')  },
                         'ui:widget': 'BrowserTargetWidget',
                     },
+                    rawErrors: ['daj tooo']
                 },
             },
             formData: {
@@ -471,7 +476,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
     //         },
     //     },
     // },
-    'browser.selenium.wait': {
+    [BrowserAction.SELENIUM_WAIT]: {
         id: BrowserAction.SELENIUM_WAIT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Wait.Label'),
         script: BrowserAction.SELENIUM_WAIT,
@@ -497,19 +502,20 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'id='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 }
             },
             formData: {
                 input: {
-                    target: 'id=',
+                    target: undefined,
                     value: '',
                 },
             },
         },
     },
-    'browser.selenium.editContent': {
+    [BrowserAction.SELENIUM_EDIT_CONTENT]: {
         id: BrowserAction.SELENIUM_EDIT_CONTENT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.EditContent.Label'),
         script: BrowserAction.SELENIUM_EDIT_CONTENT,
@@ -535,18 +541,19 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'id='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 }
             },
             formData: {
                 input: {
-                    target: 'id=',
+                    target: undefined,
                 },
             },
         },
     },
-    'browser.selenium.select': {
+    [BrowserAction.SELENIUM_SELECT]: {
         id: BrowserAction.SELENIUM_SELECT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Select.Label'),
         script: BrowserAction.SELENIUM_SELECT,
@@ -576,19 +583,20 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'id='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 }
             },
             formData: {
                 input: {
-                    target: 'id=',
+                    target: undefined,
                     value: 'value=',
                 },
             },
         },
     },
-    'browser.read.attribute': {
+    [BrowserAction.READ_ATTRIBUTE]: {
         id: BrowserAction.READ_ATTRIBUTE,
         label: translate('Process.Details.Modeler.Actions.Browser.Read.Attribute.Label'),
         script: BrowserAction.READ_ATTRIBUTE,
@@ -636,6 +644,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input', 'output'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'id='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 },
@@ -649,7 +658,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: 'id=',
+                    target: undefined,
                     attribute: undefined,
                 },
                 output: {
@@ -658,7 +667,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.read.text': {
+    [BrowserAction.READ_TEXT]: {
         id: BrowserAction.READ_TEXT,
         label: translate('Process.Details.Modeler.Actions.Browser.Read.Text.Label'),
         script: BrowserAction.READ_TEXT,
@@ -702,6 +711,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input', 'output'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'id='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 },
@@ -715,7 +725,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: 'id=',
+                    target: undefined,
                 },
                 output: {
                     variableName: '',
@@ -723,7 +733,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.read.input': {
+    [BrowserAction.READ_INPUT]: {
         id: BrowserAction.READ_INPUT,
         label: translate('Process.Details.Modeler.Actions.Browser.Read.Input.Label'),
         script: BrowserAction.READ_INPUT,
@@ -767,6 +777,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 'ui:order': ['input', 'output'],
                 input: {
                     target: {
+                        'ui:options': { defaultTarget: 'id='},
                         'ui:widget': 'BrowserTargetWidget',
                     }
                 },
@@ -780,7 +791,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    target: 'id=',
+                    target: undefined,
                 },
                 output: {
                     variableName: '',
@@ -788,7 +799,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.index': {
+    [BrowserAction.INDEX]: {
         id: BrowserAction.INDEX,
         label: translate('Process.Details.Modeler.Actions.Browser.Index.Label'),
         script: BrowserAction.INDEX,
@@ -853,7 +864,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'browser.selenium.takeScreenshot': {
+    [BrowserAction.SELENIUM_TAKE_SCREENSHOT]: {
         id: BrowserAction.SELENIUM_TAKE_SCREENSHOT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.TakeScreenshot.Label'),
         script: BrowserAction.SELENIUM_TAKE_SCREENSHOT,

@@ -59,12 +59,6 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
         }
     }, []);
 
-    useEffect(() => {
-        if (formState.value === '') {
-            props.onChange(undefined);
-        }
-    }, []);
-
     const onChangeWrapper = (prefix: string, value: string) => {
         if (!prefix || !value) {
             props.onChange(undefined);
@@ -111,7 +105,6 @@ const BrowserTargetWidget: FC<WidgetProps> = (props) => {
                 defaultValue={''}
                 value={formState.value ?? ''}
                 required={props.required}
-                customErrors={formState.value === ''}
             />
         </FieldsWrapper>
     );
