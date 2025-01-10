@@ -259,6 +259,7 @@ export enum DesktopAction {
     TAKE_SCREENSHOT = 'desktop.takeScreenshot',
     READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
+    TYPE_CREDENTIALS = 'desktop.typeCredentials',
 }
 
 export enum WindowsAction {

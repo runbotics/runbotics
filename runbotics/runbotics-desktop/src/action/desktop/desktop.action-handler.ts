@@ -39,9 +39,12 @@ import {
     PointData,
     RegionData,
     KEY_REFERENCE,
-    DesktopPerformKeyboardShortcutActionInput
+    DesktopPerformKeyboardShortcutActionInput,
+    DesktopTypeCredentialsActionInput,
+    DesktopCredential
 } from './types';
 import clipboard from '../../utils/clipboard';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 
 
 
@@ -94,6 +97,14 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         } else {
             await keyboard.type(input.text);
         }
+    }
+
+    async typeCredentials(
+        input: DesktopTypeCredentialsActionInput,
+        credential: DesktopCredential,
+    ) {
+        const credentialAttributeValue = credential[input.credentialAttribute];
+        await keyboard.type(credentialAttributeValue);
     }
 
     async runKeyboardShortcut(input: DesktopPerformKeyboardShortcutActionInput): Promise<void> {
@@ -296,11 +307,15 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     run(request: DesktopActionRequest) {
+        const credential = credentialAttributesMapper<DesktopCredential>(request.credentials);
+
         switch (request.script) {
             case DesktopAction.CLICK:
                 return this.click(request.input);
             case DesktopAction.TYPE:
                 return this.type(request.input);
+            case DesktopAction.TYPE_CREDENTIALS:
+                return this.typeCredentials(request.input, credential);
             case DesktopAction.PERFORM_KEYBOARD_SHORTCUT:
                 return this.runKeyboardShortcut(request.input);
             case DesktopAction.COPY:
