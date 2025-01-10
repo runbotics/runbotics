@@ -56,6 +56,7 @@ const credentials: typeof englishCredentials = {
     'Credential.Template.Mail.Name': 'E-mail',
     'Credential.Template.Google.Name': 'Google',
     'Credential.Template.Asana.Name': 'Asana',
+    'Credential.Template.Ai.Name': 'AI',
     'Credential.Template.BrowserLogin.Name': 'Logowanie w przeglądarce',
 };
 

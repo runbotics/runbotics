@@ -6,5 +6,6 @@ export enum ActionCredentialType {
     BEE_OFFICE = 'beeOffice',
     SAP = 'sap',
     EMAIL = 'mail',
-    BROWSER_LOGIN = 'browserLogin'
+    AI = 'ai',
+    BROWSER_LOGIN = 'browserLogin',
 }

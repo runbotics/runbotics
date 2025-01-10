@@ -30,9 +30,11 @@ import { CloudFileActionHandler } from './microsoft/automation/file';
 import { ImageActionHandler } from './image';
 import FolderActionHandler from './folder/folder.action-handler';
 import { MailService } from '#mailer/mailer.service';
+import AIActionHandler from './ai';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
+    AIActionHandler,
     ApplicationActionHandler,
     AsanaActionHandler,
     BeeOfficeActionHandler,

@@ -94,6 +94,10 @@ export enum ApiAction {
     DOWNLOAD_FILE = 'api.downloadFile',
 }
 
+export enum AIAction {
+    CHAT = 'ai.chat',
+}
+
 export declare enum JavascriptAction {
     JAVASCRIPT_RUN = 'javascript.run',
     TYPESCRIPT_RUN = 'typescript.run',
