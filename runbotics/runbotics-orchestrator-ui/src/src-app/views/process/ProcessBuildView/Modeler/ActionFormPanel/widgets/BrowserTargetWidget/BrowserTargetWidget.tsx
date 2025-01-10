@@ -10,11 +10,18 @@ import { BrowserTargetState } from './BrowserTarget.types';
 import { initialFormState, PREFIX_WIDTH } from './BrowserTarget.utils';
 import CustomTextWidget from '../CustomTextWidget';
 
-const BrowserTargetWidget: FC<WidgetProps> = (props) => {
+interface BrowserTargetWidgetProps extends WidgetProps {
+    options: {
+        defaultTarget?: string;
+        selectorName: string;
+    }
+}
+
+const BrowserTargetWidget: FC<BrowserTargetWidgetProps> = (props) => {
     const { translate } = useTranslations();
     const [formState, setFormState] = React.useState<BrowserTargetState>(initialFormState);
-    const defaultTarget = props.options.defaultTarget as string ? props.options.defaultTarget as string : '';
-    const selectorName = props.options.selectorName as string ? props.options.selectorName as string : translate('Process.Details.Modeler.Actions.Browser.Target.Selector.Label');
+    const defaultTarget =  props.options.defaultTarget ? props.options.defaultTarget: '';
+    const selectorName = props.options.selectorName ? props.options.selectorName : translate('Process.Details.Modeler.Actions.Browser.Target.Selector.Label');
 
     useEffect(() => {
         defaultTarget && setFormState((prevState) => ({...prevState, prefix: defaultTarget}));

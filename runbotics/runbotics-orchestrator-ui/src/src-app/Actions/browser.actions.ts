@@ -365,18 +365,17 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     customCredentialId: schemaCustomCredential,
                     loginTarget: {
-                        'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.LoginSelector'), customError: 'daj oba' },
+                        'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.LoginSelector') },
                         'ui:widget': 'BrowserTargetWidget',
                     },
                     passwordTarget: {
-                        'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.PasswordSelector')  },
+                        'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.PasswordSelector') },
                         'ui:widget': 'BrowserTargetWidget',
                     },
                     submitButtonTarget: {
-                        'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.SubmitButtonSelector')  },
+                        'ui:options': { defaultTarget: 'id=', selectorName: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.SubmitButtonSelector') },
                         'ui:widget': 'BrowserTargetWidget',
-                    },
-                    rawErrors: ['daj tooo']
+                    }
                 },
             },
             formData: {
@@ -388,94 +387,6 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    //     id: BrowserAction.SELENIUM_INSERT_CREDENTIALS,
-    //     credentialType: ActionCredentialType.BROWSER_LOGIN,
-    //     label: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.Label'),
-    //     script: BrowserAction.SELENIUM_INSERT_CREDENTIALS,
-    //     runner: Runner.DESKTOP_SCRIPT,
-    //     form: {
-    //         schema: {
-    //             type: 'object',
-    //             description: 'This action ends with submitting the form. If any other fields are required please add apropriate action before this one.',
-    //             properties: {
-    //                 input: {
-    //                     title: translate('Process.Details.Modeler.Actions.Common.Input'),
-    //                     type: 'object',
-    //                     properties: {
-    //                         login: {
-    //                             properties: {
-    //                                 loginTarget: {
-    //                                     title: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.LoginTarget'),
-    //                                     type: 'string',
-    //                                 },
-    //                             },
-    //                             required: ['loginTarget'],
-    //                         },
-    //                         password: {
-    //                             properties: {
-    //                                 passwordTarget: {
-    //                                     title: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.PasswordTarget'),
-    //                                     type: 'string',
-    //                                 }
-    //                             },
-    //                             required: ['passwordTarget']
-    //                         },
-    //                         submit: {
-    //                             properties: {
-    //                                 submitButtonTarget: {
-    //                                     title: translate('Process.Details.Modeler.Actions.Browser.Selenium.InsertCredentials.SubmitButtonTarget'),
-    //                                     type: 'string',
-    //                                 },
-    //                             },
-    //                             required: ['submitButtonTarget'],
-    //                         },
-    //                         customCredentialId: propertyCustomCredential,
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //         uiSchema: {
-    //             'ui:order': ['input'],
-    //             input: {
-    //                 customCredentialId: schemaCustomCredential,
-    //                 login: {
-    //                     loginTarget: {
-    //                         'ui:options': { defaultTarget: 'id=' },
-    //                         'ui:widget': 'BrowserTargetWidget',
-    //                     }
-    //                 },
-    //                 password: {
-    //                     passwordTarget: {
-    //                         'ui:options': { defaultTarget: 'id=' },
-    //                         'ui:widget': 'BrowserTargetWidget',
-    //                     }
-    //                 },
-    //                 submit: {
-    //                     submitButtonTarget: {
-    //                         'ui:options': { defaultTarget: 'id=' },
-    //                         'ui:widget': 'BrowserTargetWidget',
-    //                     }
-    //                 }
-    //             },
-    //         },
-    //         formData: {
-    //             input: {
-    //                 login: {
-    //                     loginTarget: undefined,
-    //                     value: ''
-    //                 },
-    //                 password: {
-    //                     passwordTarget: undefined,
-    //                     value: ''
-    //                 },
-    //                 submit: {
-    //                     submitButtonTarget: undefined,
-    //                     value: ''
-    //                 }
-    //             }
-    //         },
-    //     },
-    // },
     [BrowserAction.SELENIUM_WAIT]: {
         id: BrowserAction.SELENIUM_WAIT,
         label: translate('Process.Details.Modeler.Actions.Browser.Selenium.Wait.Label'),

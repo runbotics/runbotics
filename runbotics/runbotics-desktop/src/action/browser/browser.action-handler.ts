@@ -184,9 +184,9 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         return {};
     }
     private async insertCredentials(input: BrowserTypes.BrowserInsertCredentials, credential: BrowserLoginCredential): Promise<BrowserTypes.BrowserClickActionOutput> {
-        console.log(input);
         const login = await this.findElement(input.loginTarget);
         const password = await this.findElement(input.passwordTarget);
+        const element = await this.findElement(input.submitButtonTarget);
 
         login.clear();
         password.clear();
@@ -194,7 +194,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         await login.sendKeys(credential.login);
         await password.sendKeys(credential.password);
 
-        const element = await this.findElement(input.submitButtonTarget);
         element.click();
 
         return {};

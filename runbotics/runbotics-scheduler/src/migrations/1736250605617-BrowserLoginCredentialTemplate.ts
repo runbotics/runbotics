@@ -11,7 +11,7 @@ export class BrowserLoginCredentialTemplate1736250605617
             attributes: [
                 {
                     name: 'login',
-                    description: 'Username/login'
+                    description: 'Username'
                 },
                 {
                     name: 'password',
