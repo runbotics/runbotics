@@ -74,6 +74,7 @@ export enum BrowserAction {
     SELENIUM_ELEMENTS_COUNT = 'browser.selenium.elements.count',
     SELENIUM_ELEMENT_ATTRIBUTE_CHANGE = 'browser.selenium.element.attribute.change',
     SELENIUM_TYPE = 'browser.selenium.type',
+    SELENIUM_INSERT_CREDENTIALS = 'browser.selenium.insertCredentials',
     SELENIUM_WAIT = 'browser.selenium.wait',
     SELENIUM_EDIT_CONTENT = 'browser.selenium.editContent',
     SELENIUM_SELECT = 'browser.selenium.select',
