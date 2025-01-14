@@ -307,15 +307,15 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     run(request: DesktopActionRequest) {
-        const credential = credentialAttributesMapper<DesktopCredential>(request.credentials);
-
         switch (request.script) {
             case DesktopAction.CLICK:
                 return this.click(request.input);
             case DesktopAction.TYPE:
                 return this.type(request.input);
-            case DesktopAction.TYPE_CREDENTIALS:
+            case DesktopAction.TYPE_CREDENTIALS: {
+                const credential = credentialAttributesMapper<DesktopCredential>(request.credentials);
                 return this.typeCredentials(request.input, credential);
+            }
             case DesktopAction.PERFORM_KEYBOARD_SHORTCUT:
                 return this.runKeyboardShortcut(request.input);
             case DesktopAction.COPY:
