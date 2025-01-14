@@ -1,6 +1,6 @@
 import { IScheduleProcess } from './schedule-process.model';
 import { BasicUserDto, User } from './user.model';
-import { IBotSystem } from './bot-system.model';
+import { BotSystemType, IBotSystem } from './bot-system.model';
 import { IBotCollection } from './bot-collection.model';
 import { Tag } from './tag.model';
 import { ProcessOutput } from './process-output.model';
@@ -20,6 +20,7 @@ export interface IProcess {
     lastRun?: string | null;
     executionInfo?: string | null;
     system?: IBotSystem | null;
+    systemName?: BotSystemType | null;
     createdBy?: User | null;
     schedules?: Omit<IScheduleProcess, 'process'>[] | null;
     botCollection?: IBotCollection | null;
