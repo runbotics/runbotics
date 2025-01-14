@@ -8,4 +8,5 @@ export enum ActionCredentialType {
     EMAIL = 'mail',
     AI = 'ai',
     BROWSER_LOGIN = 'browserLogin',
+    DESKTOP = 'desktop',
 }

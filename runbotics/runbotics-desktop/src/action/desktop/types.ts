@@ -6,6 +6,7 @@ export const KEY_REFERENCE = 'Key.';
 export type DesktopActionRequest =
     | DesktopRunRequest<DesktopAction.CLICK, DesktopClickActionInput>
     | DesktopRunRequest<DesktopAction.TYPE, DesktopTypeActionInput>
+    | DesktopRunRequest<DesktopAction.TYPE_CREDENTIALS, DesktopTypeCredentialsActionInput>
     | DesktopRunRequest<DesktopAction.COPY, DesktopCopyActionInput>
     | DesktopRunRequest<DesktopAction.PASTE>
     | DesktopRunRequest<DesktopAction.CURSOR_SELECT, DesktopCursorSelectActionInput>
@@ -62,6 +63,10 @@ export type DesktopTypeActionInput = {
     text: string;
 }
 
+export type DesktopTypeCredentialsActionInput = {
+    credentialAttribute: 'username' | 'password';
+}
+
 export type DesktopPerformKeyboardShortcutActionInput = {
     shortcut: string;
 }
@@ -92,3 +97,8 @@ export type DesktopReadTextFromImageActionInput = {
 }
 
 export type DesktopReadTextFromImageActionOutput = string;
+
+export interface DesktopCredential {
+    username: string;
+    password: string;
+}
