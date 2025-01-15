@@ -220,8 +220,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
 
                     return { ...group, items: sortedItems };
                 })
-                .filter(Boolean)
-                .sort((groupA, groupB) => groupA.label.localeCompare(groupB.label)),
+                .filter(Boolean),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [actionGroups, filters]
     );
