@@ -212,6 +212,9 @@ export enum FeatureKey {
     // Allows to edit users assigned to the tenant
     TENANT_EDIT_USER = 'TENANT_EDIT_USER',
 
+    // Allows to delete users assigned to the tenant
+    TENANT_DELETE_USER = 'TENANT_DELETE_USER',
+
     // Allows to get invite code for admin of specific tenant
     TENANT_GET_INVITE_CODE = 'TENANT_GET_INVITE_CODE',
 

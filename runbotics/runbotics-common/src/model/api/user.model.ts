@@ -11,6 +11,7 @@ export interface User {
     imageUrl: string | null;
     langKey: string;
     activated: boolean;
+    wasEverActivated: boolean;
     activationKey?: string | null;
     resetKey?: string | null;
     createdBy: string;
