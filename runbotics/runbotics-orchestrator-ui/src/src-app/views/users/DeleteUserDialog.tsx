@@ -7,10 +7,11 @@ import {
 } from '@mui/material';
 
 import { useSnackbar } from 'notistack';
-import { UserDto } from 'runbotics-common';
+import { Role, UserDto } from 'runbotics-common';
 import styled from 'styled-components';
 
 import CustomDialog from '#src-app/components/CustomDialog';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -45,24 +46,39 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
     const { userDelete } = useSelector(usersSelector);
+    const hasTenantAdminAccess = useRole([Role.ROLE_TENANT_ADMIN]);
 
     const { page, pageSize } = useContext(TablePagingContext);
     const { refreshSearch: refreshSearchNotActivated } = useUserSearch({ searchType: UserSearchType.ALL_NOT_ACTIVATED, page, pageSize });
     const { refreshSearch: refreshSearchActivated } = useUserSearch({ searchType: UserSearchType.ALL_ACTIVATED, page, pageSize });
+    const { refreshSearch: refreshSearchTenantNotActivated } = useUserSearch({ searchType: UserSearchType.TENANT_NOT_ACTIVATED, page, pageSize });
+    const { refreshSearch: refreshSearchTenantActivated } = useUserSearch({ searchType: UserSearchType.TENANT_ACTIVATED, page, pageSize });
 
     const [usersData, setUsersData] = useState<UserDto[]>([]);
 
     const handleSubmit = () => {
         Promise.allSettled(
-            usersData.map((user) =>
-                dispatch(usersActions.deleteUser({ id: user.id }))
-            )
+            usersData.map((user) => hasTenantAdminAccess
+                ? dispatch(usersActions.deleteUserInTenant({
+                    resourceId: user.id,
+                    payload: {
+                        data: {
+                            declineReason: `No consent by (tenant-admin@localhost) for user (${user.email}) activation`,
+                        },
+                    },
+                }))
+                : dispatch(usersActions.deleteUser({
+                    resourceId: user.id,
+                    data: {
+                        declineReason: `No consent by (admin@localhost) for user (${user.email}) activation`,
+                    },
+                })))
         )
             .then((result) => {
                 result.forEach((response) => {
                     if (response.status === 'fulfilled') {
                         const userEmail = usersData.find(
-                            (user) => user.id === response.value.meta.arg.id
+                            (user) => user.id === response.value.meta.arg.resourceId
                         ).email;
 
                         if ('error' in response.value) {
@@ -89,9 +105,16 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
                 onClose();
                 onDelete?.();
 
-                usersData[0].activated
-                    ? refreshSearchActivated()
-                    : refreshSearchNotActivated();
+                const userActivated = usersData[0].activated;
+                if (hasTenantAdminAccess) {
+                    userActivated
+                        ? refreshSearchTenantActivated()
+                        : refreshSearchTenantNotActivated();
+                } else {
+                    userActivated
+                        ? refreshSearchActivated()
+                        : refreshSearchNotActivated();
+                }
             });
     };
 
@@ -99,6 +122,7 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     useEffect(() => { open && setUsersData(getSelectedUsers); }, [open]);
 
     return (
+        // todo: next week this part will be redesigned according to UI/UX design
         <CustomDialog
             isOpen={open}
             onClose={onClose}

@@ -16,7 +16,7 @@ import { ProcessCredentialModule } from '../process-credential/process-credentia
     imports: [
         TypeOrmModule.forFeature([ProcessEntity, ProcessCollectionEntity, GlobalVariable, BotCollection]),
         ProcessCollectionModule,
-        UserModule,
+        forwardRef(() => UserModule),
         TagModule,
         forwardRef(() => ProcessCredentialModule),
     ],

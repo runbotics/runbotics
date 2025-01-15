@@ -9,6 +9,7 @@ import URLBuilder from '#src-app/utils/URLBuilder';
 
 const USERS_PATH = 'users';
 
+type DeleteUserBody = { data?: { declineReason?: string } };
 
 const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
@@ -51,15 +52,15 @@ export const updateInTenant = ApiTenantResource.patch<UserDto, PartialUserDto>(
 
 export const deleteUser = createAsyncThunk<
     void,
-    { id: number },
+    { resourceId: number; } & DeleteUserBody,
     { rejectValue: { statusCode: number; message: string; } }
->('users/delete', ({ id }, { rejectWithValue }) =>
+>('users/delete', ({ resourceId, data }, { rejectWithValue }) =>
     axios
-        .delete(`/api/scheduler/users/${id}`)
+        .delete(`/api/scheduler/users/${resourceId}`, { data })
         .then((response) => response.data)
         .catch((error) => rejectWithValue(error.response.data))
 );
 
-export const deleteUserInTenant = ApiTenantResource.delete<void>(
+export const deleteUserInTenant = ApiTenantResource.delete<void, DeleteUserBody>(
     'users/deleteInTenant', USERS_PATH
 );

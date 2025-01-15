@@ -37,6 +37,13 @@ export class User {
     @Column({ type: 'boolean' })
     activated: boolean;
 
+    @Column({
+        name: 'was_ever_activated',
+        type: 'boolean',
+        default: false,
+    })
+    wasEverActivated: boolean;
+
     @Column({ name: 'activation_key', type: 'varchar', select: false, length: 20, nullable: true })
     activationKey: string;
 
