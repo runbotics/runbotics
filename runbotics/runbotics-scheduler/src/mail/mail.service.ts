@@ -12,6 +12,7 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { NotificationProcessService } from '#/scheduler-database/notification-process/notification-process.service';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { NotificationBotService } from '#/scheduler-database/notification-bot/notification-bot.service';
+import { DeleteUserDto } from '#/scheduler-database/user/dto/delete-user.dto';
 
 export type SendMailInput = {
     to?: string;
@@ -163,6 +164,17 @@ export class MailService {
         };
 
         this.sendMail(sendMailInput);
+    }
+
+    public sendUserDeclineReasonMail(userToDelete: User, userDto: DeleteUserDto) {
+        if (userDto && 'declineReason' in userDto) {
+            this.sendMail({
+                to: userToDelete.email,
+                subject: 'RunBotics user activation decline reason',
+                content: userDto.declineReason,
+                isHtml: false,
+            });
+        }
     }
 
     private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {
