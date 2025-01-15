@@ -39,7 +39,8 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         }),
         [autocompleteOptions]
     );
-    const isMultiline = !!uiSchema['ui:options']?.multiline;
+
+    const isMultiline = !!uiSchema?.['ui:options']?.multiline;
 
     const checkInputMatches = (input: string) => {
         const variablesRegex = /[#]\{([^{}]*)\}?/g;
