@@ -47,6 +47,12 @@ export enum ACTION_GROUP {
     BEEOFFICE = 'beeOffice',
     SAP = 'sap',
     APPLICATION = 'application',
+    DESKTOP = 'desktop',
+    EXCEL = 'excel',
+    POWER_POINT = 'powerPoint',
+    WINDOWS = 'windows',
+    VISUAL_BASIC = 'visualBasic',
+    EXTERNAL = 'external',
 }
 
 export enum VariableAction {

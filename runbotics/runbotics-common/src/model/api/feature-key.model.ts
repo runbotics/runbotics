@@ -20,6 +20,9 @@ export enum FeatureKey {
     // Show "ADD NEW PROCESS" button [ Processes page ]
     PROCESS_ADD = 'PROCESS_ADD',
 
+    // Allow to create new process for guest
+    PROCESS_ADD_GUEST = 'PROCESS_ADD_GUEST',
+
     // Action "Edit" on process tile -> 3 vertical dots (like: edit name, description, etc.) [ Processes page ]
     PROCESS_EDIT_INFO = 'PROCESS_EDIT_INFO',
 
@@ -69,6 +72,10 @@ export enum FeatureKey {
     PROCESS_BOT_SYSTEM_READ = 'PROCESS_BOT_SYSTEM_READ',
 
     // Allow to GET all process instances & GET single process instance by id (displayed e.g. in: "History" table, "Run Info" sidebar) [ Processes page -> process -> RUN tab ]
+    // Allow to GET pages
+    PROCESS_INSTANCE_READ_ALL = 'PROCESS_INSTANCE_READ_ALL',
+
+    // Allow to GET one instance with specific id
     PROCESS_INSTANCE_READ = 'PROCESS_INSTANCE_READ',
 
     // Show "X" button to terminate active process instance [ Scheduler page -> Active processes ]
@@ -219,6 +226,15 @@ export enum FeatureKey {
 
     // Allows to read credentials page
     CREDENTIALS_PAGE_READ = 'CREDENTIALS_PAGE_READ',
+
+    // Allows to read tags
+    TAG_READ = 'TAG_READ',
+
+    // Allows to create tags for process
+    TAG_CREATE = 'TAG_CREATE',
+
+    // Allows to delete tags
+    TAG_DELETE = 'TAG_DELETE',
 }
 
 export interface IFeatureKey {
