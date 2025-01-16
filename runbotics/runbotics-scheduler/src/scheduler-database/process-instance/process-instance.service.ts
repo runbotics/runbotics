@@ -82,13 +82,11 @@ export class ProcessInstanceService {
             ...specs,
         };
 
-        const isAccessForProcess = await this.processService.hasAccess(user, +processId);
-
         if (
             !isTenantAdmin(user) &&
             (
                 specs.where.processId === undefined ||
-                !isAccessForProcess
+                !await this.processService.hasAccess(user, +processId)
             )
         ) {
             throw new ForbiddenException('No access to whole page');
