@@ -6,14 +6,14 @@ export class UserWasEverActivated1736847689046 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            `ALTER TABLE "jhi_user" ADD "was_ever_activated" boolean NOT NULL DEFAULT false`
+            `ALTER TABLE "jhi_user" ADD "has_been_activated" boolean NOT NULL DEFAULT false`
         );
 
         const userRepository = queryRunner.manager.getRepository(User);
         const users = await userRepository.find();
         const updatedUsers = users.map((user) => ({
             ...user,
-            wasEverActivated: true,
+            hasBeenActivated: true,
         }));
 
         await userRepository.save(updatedUsers);
@@ -21,7 +21,7 @@ export class UserWasEverActivated1736847689046 implements MigrationInterface {
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            `ALTER TABLE "jhi_user" DROP COLUMN "was_ever_activated"`
+            `ALTER TABLE "jhi_user" DROP COLUMN "has_been_activated"`
         );
     }
 }

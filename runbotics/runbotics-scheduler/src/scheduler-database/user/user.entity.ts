@@ -38,11 +38,11 @@ export class User {
     activated: boolean;
 
     @Column({
-        name: 'was_ever_activated',
+        name: 'has_been_activated',
         type: 'boolean',
         default: false,
     })
-    wasEverActivated: boolean;
+    hasBeenActivated: boolean;
 
     @Column({ name: 'activation_key', type: 'varchar', select: false, length: 20, nullable: true })
     activationKey: string;

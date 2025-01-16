@@ -103,14 +103,14 @@ export class UserService {
                 throw new BadRequestException('User not found', 'NotFound');
             });
 
-        const isFirstActivation = partialUser.activated && !user.wasEverActivated;
+        const isFirstActivation = partialUser.activated && !user.hasBeenActivated;
 
         const updatedUser: PartialUserDto = {
             ...user,
             ...partialUser,
             ...authority,
             ...(tenantRelation && { ...tenantRelation }),
-            ...(isFirstActivation && { wasEverActivated: true }),
+            ...(isFirstActivation && { hasBeenActivated: true }),
             lastModifiedBy: executor.email,
         };
 
@@ -135,14 +135,14 @@ export class UserService {
 
     async deleteInTenant(id: number, user: User, userDto: DeleteUserDto) {
         if (!isTenantAdmin(user)) {
-            throw new ForbiddenException();
+            throw new ForbiddenException('You have no permission to decline users');
         }
         const userToDelete = await this.userRepository
             .findOneByOrFail({ id, tenantId: user.tenantId })
             .catch(() => {
                 throw new NotFoundException();
             });
-        if (userToDelete.wasEverActivated) {
+        if (userToDelete.hasBeenActivated) {
             throw new BadRequestException('User has been activated at least once');
         }
 
@@ -175,7 +175,7 @@ export class UserService {
             langKey: user.langKey,
             imageUrl: user.imageUrl,
             activated: user.activated,
-            wasEverActivated: user.wasEverActivated,
+            hasBeenActivated: user.hasBeenActivated,
             createdBy: user.createdBy,
             createdDate: user.createdDate,
             lastModifiedBy: user.lastModifiedBy,
