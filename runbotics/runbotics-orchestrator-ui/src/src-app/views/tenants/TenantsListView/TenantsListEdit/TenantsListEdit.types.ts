@@ -8,6 +8,7 @@ export interface TenantsListEditDialogProps {
 
 export interface FormValidationState {
     name: boolean;
+    wasChanged: boolean;
 };
 
 export interface TenantsListEditFormProps {
@@ -15,4 +16,5 @@ export interface TenantsListEditFormProps {
     setTenant: (tenant) => void;
     formValidationState: FormValidationState;
     setFormValidationState: (state) => void;
+    currentTenantName: string;
 };

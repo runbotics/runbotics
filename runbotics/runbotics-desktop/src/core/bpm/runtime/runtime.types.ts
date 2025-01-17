@@ -31,6 +31,8 @@ export interface DesktopTask extends BpmnExecutionEventMessageContent {
     sourceId?: string;
     input?: Record<string, string> & {
         script: string;
+        credentialId?: string;
+        credentialType?: ActionCredentialType;
     };
     output?: Record<string, string> & {
         script: string;

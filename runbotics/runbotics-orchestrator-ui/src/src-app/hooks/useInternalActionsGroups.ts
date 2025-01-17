@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import getAIActions from '#src-app/Actions/ai.actions';
 import getApiActions from '#src-app/Actions/api.actions';
 import getApplicationActions from '#src-app/Actions/application.actions';
@@ -159,7 +160,7 @@ const useInternalActionsGroups = (): Record<
             ),
             items: Object.values(getCloudFileActions())
         },
-        beeoffice: {
+        beeOffice: {
             label: translate(
                 'Process.Details.Modeler.ActionsGroup.BeeOffice'
             ),

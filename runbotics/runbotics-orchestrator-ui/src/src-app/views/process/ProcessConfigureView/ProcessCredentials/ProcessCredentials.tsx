@@ -9,6 +9,7 @@ import { useRequiredCredentialTypes } from '#src-app/credentials/useRequiredCred
 import useTranslations from '#src-app/hooks/useTranslations';
 import useWindowSize from '#src-app/hooks/useWindowSize';
 import { useDispatch, useSelector } from '#src-app/store';
+import { credentialsSelector } from '#src-app/store/slices/Credentials';
 import { credentialTemplatesActions, credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
 
@@ -26,8 +27,6 @@ import {
 import { ProcessCredentialsAddDialog } from './ProcessCredentialsAddDialog';
 import { ProcessCredentialsColumn } from './ProcessCredentialsColumn';
 import { ProcessCredentialsDeleteDialog } from './ProcessCredentialsDeleteDialog';
-
-
 
 
 const ProcessCredentials = () => {
