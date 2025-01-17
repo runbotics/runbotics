@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
 import { ProcessInstanceService } from './process-instance.service';
 import { TenantInterceptor } from '#/utils/interceptors/tenant.interceptor';
 import { Logger } from '#/utils/logger';
@@ -15,7 +15,6 @@ import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 
 @UseInterceptors(TenantInterceptor)
-@FeatureKeys(FeatureKey.PROCESS_INSTANCE_READ)
 @Controller('api/scheduler/tenants/:tenantId/process-instances')
 export class ProcessInstanceController {
     private readonly logger = new Logger(ProcessInstanceController.name);
@@ -25,6 +24,7 @@ export class ProcessInstanceController {
     ) {}
 
     @Get()
+    @FeatureKeys(FeatureKey.PROCESS_INSTANCE_READ_ALL)
     getAll(
         @Specifiable(ProcessInstanceCriteria) specs: Specs<ProcessInstance>,
         @UserDecorator() user: User,
@@ -33,15 +33,18 @@ export class ProcessInstanceController {
     }
 
     @Get('GetPage')
+    @FeatureKeys(FeatureKey.PROCESS_INSTANCE_READ)
     getPage(
         @Specifiable(ProcessInstanceCriteria) specs: Specs<ProcessInstance>,
         @Pageable() paging: Paging,
         @UserDecorator() user: User,
+        @Query('processId.equals') processId: string,
     ) {
-        return this.processInstanceService.getPage(user, specs, paging);
+        return this.processInstanceService.getPage(user, specs, paging, processId);
     }
 
     @Get(':id')
+    @FeatureKeys(FeatureKey.PROCESS_INSTANCE_READ)
     getOne(
         @Param('id') id: ProcessInstance['id'],
         @UserDecorator() user: User,
@@ -50,6 +53,7 @@ export class ProcessInstanceController {
     }
 
     @Get(':id/subprocesses/GetPage')
+    @FeatureKeys(FeatureKey.PROCESS_INSTANCE_READ)
     getSubprocesses(
         @Param('id') id: ProcessInstance['id'],
         @Pageable() paging: Paging,

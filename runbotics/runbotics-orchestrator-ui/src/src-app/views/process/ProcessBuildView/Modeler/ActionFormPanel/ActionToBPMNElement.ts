@@ -304,6 +304,7 @@ export class ActionToBPMNElement {
             ...action.form.formData.input
         };
         if (action.script) inputFields.script = action.script;
+        if (action.credentialType) inputFields.credentialType = action.credentialType;
 
         this.commandStack.execute(
             'properties-panel.update-businessobject-list',

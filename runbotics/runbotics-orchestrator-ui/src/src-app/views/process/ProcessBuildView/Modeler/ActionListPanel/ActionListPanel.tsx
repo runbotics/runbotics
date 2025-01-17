@@ -188,7 +188,8 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                     (filters.currentTab === ListPanelTab.TEMPLATES)
             ),
         [actionGroups, filters]
-    );
+    )
+        .sort((groupA, groupB) => groupA.label.localeCompare(groupB.label));
 
     const filteredGroups: GroupProperties[] = useMemo(
         () =>
@@ -216,10 +217,9 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                     if (!filteredItems.length) return;
 
                     const sortedItems = filteredItems.sort((a, b) => a.label.localeCompare(b.label));
-                    
+
                     return { ...group, items: sortedItems };
                 })
-                .sort((groupA, groupB) => groupA.label.localeCompare(groupB.label))
                 .filter(Boolean),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [actionGroups, filters]

@@ -1,7 +1,10 @@
 import { Tenant } from 'runbotics-common';
 
+export const MINIMUM_NAME_CHARACTERS = 2;
+
 export const initialValidationState = {
-    name: true
+    name: true,
+    wasChanged: false,
 };
 
 export const getTenantDataWithoutNulls = (tenantData: Tenant) => ({

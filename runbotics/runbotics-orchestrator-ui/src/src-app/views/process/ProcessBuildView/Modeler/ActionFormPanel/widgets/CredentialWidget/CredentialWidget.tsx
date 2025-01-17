@@ -22,9 +22,9 @@ const CredentialWidget: FC<WidgetProps> = (props) => {
     const credentialType = getCredentialType(selectedElement);
 
     const alreadySelectedCredential = useMemo(() =>
-        allProcessAssigned.find((cred) => 
+        allProcessAssigned.find((cred) =>
             cred?.credential?.id === props?.value
-        )?.credential, [allProcessAssigned]   
+        )?.credential, [allProcessAssigned]
     );
 
     useEffect(() => {
@@ -90,6 +90,7 @@ const CredentialWidget: FC<WidgetProps> = (props) => {
                 justifyContent="space-between"
                 alignItems="center"
                 pt={2}
+                gap={2}
             >
                 <Typography variant="h6">{breadcrumb}</Typography>
                 <Typography variant="h6">
