@@ -1,7 +1,8 @@
-import { DesktopAction } from 'runbotics-common';
+import { ActionCredentialType, DesktopAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
+import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
 
@@ -456,6 +457,58 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                 },
                 output: {
                     variableName: undefined,
+                },
+            },
+        },
+    },
+    'desktop.typeCredentials': {
+        id: DesktopAction.TYPE_CREDENTIALS,
+        label: translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.Label'),
+        helperTextLabel: translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.HelperTextLabel'),
+        script: DesktopAction.TYPE_CREDENTIALS,
+        credentialType: ActionCredentialType.DESKTOP,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            credentialAttribute: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.CredentialAttribute'),
+                                type: 'string',
+                                enum: [
+                                    'username',
+                                    'password',
+                                ],
+                                enumNames: [
+                                    translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.Username'),
+                                    translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.Password'),
+                                ],
+                                default: 'username',
+                            },
+                            customCredentialId: propertyCustomCredential,
+                        },
+                        required: ['credentialAttribute'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+                input: {
+                    customCredentialId: schemaCustomCredential,
+                    credentialAttribute: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.CredentialAttribute.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    credentialAttribute: 'username',
                 },
             },
         },

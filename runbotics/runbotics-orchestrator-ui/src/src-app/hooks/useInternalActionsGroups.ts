@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import getAIActions from '#src-app/Actions/ai.actions';
 import getApiActions from '#src-app/Actions/api.actions';
 import getApplicationActions from '#src-app/Actions/application.actions';
 import getAsanaActions from '#src-app/Actions/asana.actions';
@@ -189,6 +190,10 @@ const useInternalActionsGroups = (): Record<
             ),
             items: []
         },
+        ai: {
+            label: 'AI',
+            items: Object.values(getAIActions())
+        }
     };
 };
 

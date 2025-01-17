@@ -1,3 +1,4 @@
+import aiActionsTranslations from './ai';
 import cloudFileActionsTranslations from './cloudFile';
 import commonActionsTranslations from './common';
 import excelActionsTranslations from './excel';
@@ -12,6 +13,7 @@ import zipActionsTranslations from './zip';
 
 const processActionsTranslations = {
     ...commonActionsTranslations,
+    ...aiActionsTranslations,
     ...excelActionsTranslations,
     ...actionGroupsTranslations,
     ...cloudFileActionsTranslations,

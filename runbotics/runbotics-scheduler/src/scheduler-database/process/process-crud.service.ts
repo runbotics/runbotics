@@ -79,7 +79,9 @@ export class ProcessCrudService {
 
         process.tags = processDto.tags as Tag[];
 
-        return this.processRepository.save(process);
+        const createdProcess = await this.processRepository.save(process);
+
+        return this.processRepository.findOne({ where: { id: createdProcess.id }, relations: RELATIONS });
     }
 
     async createGuestProcess(user: User) {
@@ -97,7 +99,9 @@ export class ProcessCrudService {
 
         process.botCollectionId = guestCollection.id;
 
-        return this.processRepository.save(process);
+        const createdProcess = await this.processRepository.save(process);
+
+        return this.processRepository.findOne({ where: { id: createdProcess.id }, relations: RELATIONS });
     }
 
     async update(user: User, id: number, processDto: UpdateProcessDto) {

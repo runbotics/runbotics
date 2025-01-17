@@ -80,6 +80,7 @@ export enum BrowserAction {
     SELENIUM_ELEMENTS_COUNT = 'browser.selenium.elements.count',
     SELENIUM_ELEMENT_ATTRIBUTE_CHANGE = 'browser.selenium.element.attribute.change',
     SELENIUM_TYPE = 'browser.selenium.type',
+    SELENIUM_INSERT_CREDENTIALS = 'browser.selenium.insertCredentials',
     SELENIUM_WAIT = 'browser.selenium.wait',
     SELENIUM_EDIT_CONTENT = 'browser.selenium.editContent',
     SELENIUM_SELECT = 'browser.selenium.select',
@@ -97,6 +98,10 @@ export enum LoopAction {
 export enum ApiAction {
     REQUEST = 'api.request',
     DOWNLOAD_FILE = 'api.downloadFile',
+}
+
+export enum AIAction {
+    CHAT = 'ai.chat',
 }
 
 export declare enum JavascriptAction {
@@ -260,6 +265,7 @@ export enum DesktopAction {
     TAKE_SCREENSHOT = 'desktop.takeScreenshot',
     READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
+    TYPE_CREDENTIALS = 'desktop.typeCredentials',
 }
 
 export enum WindowsAction {
