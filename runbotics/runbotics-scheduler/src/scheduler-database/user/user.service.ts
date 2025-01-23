@@ -124,14 +124,6 @@ export class UserService {
         });
     }
 
-    hasFeatureKey(user: User, featureKey: FeatureKey) {
-        const userKeys = user.authorities
-            .flatMap((auth) => auth.featureKeys)
-            .map((featureKey) => featureKey.name);
-
-        return userKeys.includes(featureKey);
-    }
-
     mapToBasicUserDto(user: User): BasicUserDto {
         return {
             id: user.id,

@@ -12,8 +12,4 @@ public interface GuestService {
     User generateGuestAccount(String guestIp, String langKey);
 
     void deleteAllGuestAccounts();
-
-    ProcessDTO getGuestDemoProcess();
-
-    Optional<Guest> findGuestById(Long id);
 }

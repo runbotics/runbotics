@@ -8,7 +8,6 @@ import { getAllWithAncestors, createOne, getAllAccessible, updateOne, deleteOne 
 
 const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<ProcessCollectionState>) => {
     builder
-        // GET ALL WITH ANCESTORS
         .addCase(getAllWithAncestors.pending, (state) => {
             state.active.isLoading = true;
         })
@@ -23,7 +22,6 @@ const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<Pr
             state.active.isLoading = false;
         })
 
-        // POST ONE
         .addCase(createOne.pending, (state) => {
             state.active.isLoading = true;
         })
@@ -37,7 +35,6 @@ const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<Pr
             state.active.isLoading = false;
         })
 
-        // PUT ONE
         .addCase(updateOne.pending, (state) => {
             state.active.isLoading = true;
         })
@@ -56,7 +53,6 @@ const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<Pr
             state.active.isLoading = false;
         })
 
-        // GET user accessible
         .addCase(getAllAccessible.pending, (state) => {
             state.allUserAccessible.isLoading = true;
         })
@@ -69,7 +65,6 @@ const buildProcessCollectionExtraReducers = (builder: ActionReducerMapBuilder<Pr
             state.allUserAccessible.list = [];
         })
 
-        // DELETE collection
         .addCase(deleteOne.pending, (state) => {
             state.active.isLoading = true;
         })
