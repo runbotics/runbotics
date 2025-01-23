@@ -5,7 +5,6 @@ import { ConfigModule } from '#/config/config.module';
 import { BotModule } from '#/scheduler-database/bot/bot.module';
 import { BotCollectionModule } from '#/scheduler-database/bot-collection/bot-collection.module';
 import { BotSystemModule } from '#/scheduler-database/bot-system/bot-system.module';
-import { ProcessCollectionModule } from '#/database/process-collection/process-collection.module';
 import { ProcessModule } from '#/scheduler-database/process/process.module';
 
 @Module({
@@ -33,7 +32,6 @@ import { ProcessModule } from '#/scheduler-database/process/process.module';
         BotCollectionModule,
         BotSystemModule,
         ProcessModule,
-        ProcessCollectionModule,
         TypeOrmModule,
     ],
     exports: [
@@ -41,7 +39,6 @@ import { ProcessModule } from '#/scheduler-database/process/process.module';
         BotCollectionModule,
         BotSystemModule,
         ProcessModule,
-        ProcessCollectionModule,
         TypeOrmModule,
     ],
 })
