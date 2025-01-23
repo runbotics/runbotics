@@ -62,8 +62,6 @@ public class ProcessDTO implements Serializable {
     @JsonView(ProcessDTOViews.DefaultView.class)
     private BotCollection botCollection;
 
-    private ProcessCollection processCollection;
-
     @JsonView(ProcessDTOViews.DefaultView.class)
     private UserDTO editor;
 
@@ -180,14 +178,6 @@ public class ProcessDTO implements Serializable {
         this.botCollection = botCollection;
     }
 
-    public ProcessCollection getProcessCollection() {
-        return processCollection;
-    }
-
-    public void setProcessCollection(ProcessCollection processCollection) {
-        this.processCollection = processCollection;
-    }
-
     public ZonedDateTime getLastRun() {
         return lastRun;
     }
@@ -258,7 +248,6 @@ public class ProcessDTO implements Serializable {
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
             ", definition='" + definition + '\'' +
-            ", collection='" + processCollection + '\'' +
             ", isPublic=" + isPublic +
             ", created=" + created +
             ", updated=" + updated +

@@ -36,10 +36,10 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
 
     const shareableUsers = useMemo(() => ({
         loading: tenantActivated.loading,
-        all: tenantActivated.all.filter(user => user.email !== currentUser.email)
-    }), [tenantActivated, currentUser.email]);
+        all: tenantActivated.all.filter(user => user.id !== currentUser.id)
+    }), [tenantActivated, currentUser.id]);
 
-    const isOwner = !collection || currentUser.email === collection?.createdBy.email || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
+    const isOwner = !collection || currentUser.id === collection?.createdBy?.id || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
     const isUpdated = Boolean(collection);
 
     useEffect(() => {
@@ -66,6 +66,7 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
     const handleSubmit = async () => {
         const body = completeCollectionEntity(collectionData);
         const { type: responseType, payload } = await updateCollection(body);
+        // @ts-ignore
         const { detail, status, errorKey } = payload?.response?.data || {};
 
         if (responseType === CREATE_COLLECTION_REJECTED_TYPE || responseType === UPDATE_COLLECTION_REJECTED_TYPE) {
@@ -88,7 +89,6 @@ const ProcessCollectionModifyDialog: FC<ProcessCollectionModifyDialogProps> = ({
                 variant: 'success',
                 autoHideDuration: 5000,
             });
-            // await dispatch(processCollectionActions.getByPage(pageParams));
             onClose();
             clearForm();
         }

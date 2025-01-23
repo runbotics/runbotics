@@ -97,10 +97,6 @@ public class Process implements Serializable {
     private ProcessOutput outputType;
 
     @ManyToOne
-    @JoinColumn(name = "process_collection")
-    private ProcessCollection processCollection;
-
-    @ManyToOne
     @JoinColumn(name = "tenant_id", nullable = false)
     private Tenant tenant;
 
@@ -326,14 +322,6 @@ public class Process implements Serializable {
         this.outputType = outputType;
     }
 
-    public ProcessCollection getProcessCollection() {
-        return processCollection;
-    }
-
-    public void setProcessCollection(ProcessCollection processCollection) {
-        this.processCollection = processCollection;
-    }
-
     public Tenant getTenant() {
         return tenant;
     }
@@ -383,7 +371,6 @@ public class Process implements Serializable {
             ", editor=" + editor +
             ", tags=" + tags +
             ", outputType=" + outputType +
-            ", collectionId=" + (processCollection != null ? processCollection.getId() : "") +
             ", tenantId=" + (tenant != null ? tenant.getId() : "") +
             '}';
     }

@@ -25,7 +25,7 @@ const ProcessCollectionTile: FC<ProcessCollection> = (collection) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement>(null);
 
     const { user: currentUser } = useAuth();
-    const isOwner = currentUser.email === collection?.createdBy.email || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
+    const isOwner = currentUser.id === collection?.createdBy?.id || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
