@@ -1,16 +1,11 @@
-import { ActionRegex, CombinedActionRegexPatterns } from 'runbotics-common';
 import z from 'zod';
 import { ClickTarget, ImageResourceFormat, Language, MouseButton } from './types';
 
 const coordinateSchema = z.union([z.string(), z.number()]);
 
 export const pointDataSchema = z.object({
-    x: coordinateSchema.refine(val => typeof val === 'number' || typeof val === 'string', {
-        message: 'x must be a string or a number',
-    }),
-    y: coordinateSchema.refine(val => typeof val === 'number' || typeof val === 'string', {
-        message: 'y must be a string or a number',
-    }),
+    x: coordinateSchema,
+    y: coordinateSchema,
 });
 
 export const regionDataSchema = z.object({
