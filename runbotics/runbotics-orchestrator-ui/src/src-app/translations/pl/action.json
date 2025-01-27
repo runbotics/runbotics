@@ -13,6 +13,7 @@
     "Action.Details.Form": "Formularz",
     "Action.Details.Form.Script.Error": "Wymagane. Musi zaczynać się od external.",
     "Action.Details.Form.Label.Error": "Wymagane",
+    "Action.Details.Form.CredentialType.Error": "Dane wejściowe muszą być prawidłowym typem poświadczenia, np: {{ types }}",
     "Action.Details.Form.Validation.Error": "Wprowadzono niepoprawne dane",
     "Action.Details.ExternalScript.Error": "Zewnętrzny skrypt musi zaczynać się od external.",
     "Action.Details.Dialog.SaveAction": "Zapisz akcję: {{ script }}",
