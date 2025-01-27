@@ -8,7 +8,6 @@ export type ExternalHandlersMap = Map<string, any>;
 
 export type InternalHandlerKey =
     | 'api'
-    | 'ai'
     | 'application'
     | 'asana'
     | 'beeOffice'
