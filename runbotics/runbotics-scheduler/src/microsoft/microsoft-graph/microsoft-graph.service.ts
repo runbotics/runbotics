@@ -6,7 +6,7 @@ import 'cross-fetch/polyfill';
 import { MicrosoftAuthService } from '../microsoft-auth.service';
 import { RequestOptions } from './microsoft-graph.types';
 
-const errorMessage = 'No Microsoft credentials provided';
+const errorMessage = 'Incorrect or missing Microsoft credentials';
 
 @Injectable()
 export class MicrosoftGraphService {
