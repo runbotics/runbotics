@@ -1,11 +1,5 @@
 import z from 'zod';
-import {
-    ClickTarget,
-    CredentialAttribute,
-    ImageResourceFormat,
-    Language,
-    MouseButton
-} from './types';
+import { ClickTarget, CredentialAttribute, ImageResourceFormat, Language, MouseButton } from './types';
 
 const coordinateSchema = z.union([z.string(), z.number()]);
 
@@ -23,8 +17,14 @@ export const regionDataSchema = z.object({
 
 export const clickInputSchema = z.object({
     clickTarget: z.nativeEnum(ClickTarget),
-    point: z.any().optional(),
-    region: z.any().optional(),
+    point: z.union([
+        pointDataSchema,
+        z.string()
+    ]).optional(),
+    region: z.union([
+        regionDataSchema,
+        z.string()
+    ]).optional(),
     mouseButton: z.nativeEnum(MouseButton),
     doubleClick: z.boolean()
 });
@@ -46,15 +46,24 @@ export const copyInputSchema = z.object({
 });
 
 export const cursorSelectInputSchema = z.object({
-    startPoint: z.any(),
-    endPoint: z.any()
+    startPoint: z.union([
+        pointDataSchema,
+        z.string()
+    ]),
+    endPoint: z.union([
+        pointDataSchema,
+        z.string()
+    ])
 });
 
 export const takeScreenshotInputSchema = z.object({
     imageName: z.string().optional(),
     imagePath: z.string().optional(),
     imageFormat: z.nativeEnum(ImageResourceFormat),
-    region: z.any()
+    region: z.union([
+        regionDataSchema,
+        z.string()
+    ])
 });
 
 export const readTextFromImageInputSchema = z.object({

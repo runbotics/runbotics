@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { DesktopAction, TEMP_DIRECTORY_NAME } from 'runbotics-common';
+import { DesktopAction } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import { createWorker } from 'tesseract.js';
 
@@ -183,7 +183,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             filePath = path.normalize(imagePath);
             this.checkFileExist(filePath);
         } else {
-            filePath = path.join(process.cwd(), TEMP_DIRECTORY_NAME);
+            filePath = this.tempFolderPath;
         }
 
         if (region) {
