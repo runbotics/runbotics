@@ -38,6 +38,7 @@ export class ActionService {
         newAction.label = createActionDto.label;
         newAction.form = createActionDto.form;
         newAction.script = createActionDto.script;
+        newAction.credentialType = createActionDto.credentialType;
 
         return this.actionRepository.save(newAction);
     }
