@@ -1,11 +1,17 @@
 import z from 'zod';
-import { ClickTarget, ImageResourceFormat, Language, MouseButton } from './types';
+import {
+    ClickTarget,
+    CredentialAttribute,
+    ImageResourceFormat,
+    Language,
+    MouseButton
+} from './types';
 
 const coordinateSchema = z.union([z.string(), z.number()]);
 
 export const pointDataSchema = z.object({
     x: coordinateSchema,
-    y: coordinateSchema,
+    y: coordinateSchema
 });
 
 export const regionDataSchema = z.object({
@@ -28,7 +34,7 @@ export const typeInputSchema = z.object({
 });
 
 export const typeCredentialsInputSchema = z.object({
-    credentialAttribute: z.enum(['username', 'password'])
+    credentialAttribute: z.nativeEnum(CredentialAttribute)
 });
 
 export const performKeyboardShortcutInputSchema = z.object({

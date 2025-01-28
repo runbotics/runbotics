@@ -49,10 +49,16 @@ export type DesktopClickActionInput = z.infer<typeof clickInputSchema>
 
 export type DesktopTypeActionInput = z.infer<typeof typeInputSchema>
 
+export enum CredentialAttribute {
+    USERNAME = 'username',
+    PASSWORD = 'password'
+}
+
 export interface DesktopCredential {
     username: string;
     password: string;
 }
+
 export type DesktopTypeCredentialsActionInput = z.infer<typeof typeCredentialsInputSchema>
 
 export type DesktopPerformKeyboardShortcutActionInput = z.infer<typeof performKeyboardShortcutInputSchema>
