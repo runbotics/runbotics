@@ -279,11 +279,12 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
     private isTargetObjectValid(targetObject: object, testingObject: Point | Region) {
-        const pointKeys = Object.keys(testingObject);
-        for (const key of pointKeys) {
-            if (!(key in targetObject) || isNaN(targetObject[key])) {
-                throw new Error('Object properties must be numeric.');
-            }
+        const isInvalid = Object.keys(testingObject).some(
+            (key) => !(key in targetObject) || typeof targetObject[key] !== 'number' || isNaN(targetObject[key])
+        );
+
+        if (isInvalid) {
+            throw new Error('Object properties must be numeric.');
         }
     }
 
