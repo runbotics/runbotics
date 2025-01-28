@@ -6,8 +6,6 @@ import LoadingType from '#src-app/types/loading';
 import { defaultValue } from '#src-app/types/model/action.model';
 import objFromArray from '#src-app/utils/objFromArray';
 
-import { isCredentialTypeValidString } from '#src-app/views/action/action.utils';
-
 import { ActionState } from './Action.state';
 import { getAllActions, setShowEditModal } from './Action.thunks';
 
@@ -26,14 +24,13 @@ const buildActionExtraReducers = (
             const externalBpmnActions: Record<string, IBpmnAction> =
                 Object.entries(state.actions.byId).reduce(
                     (prev, [key, actionValue]) => {
-                        const credentialType = actionValue.credentialType;
                         const bpmnAction: IBpmnAction = {
                             id: actionValue.id,
                             label: actionValue.label,
                             script: actionValue.script,
+                            credentialType: actionValue.credentialType,
                             runner: Runner.DESKTOP_SCRIPT,
                             form: JSON.parse(actionValue.form),
-                            ...(isCredentialTypeValidString(credentialType) && { credentialType }),
                         };
                         if (bpmnAction.form.formData.output) {
                             bpmnAction.output = {

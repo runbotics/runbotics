@@ -109,12 +109,12 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
             />
             <TextField
                 fullWidth
-                label={'Credential Type'}
+                label={translate('Action.Details.CredentialType')}
                 name="credentialType"
                 sx={{
                     margin: theme => `${theme.spacing(1)} 0 ${theme.spacing(5)} 0`
                 }}
-                value={draft.credentialType ?? ''}
+                value={draft.credentialType}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleCredentialTypeChange(e)}
                 autoComplete="off"
                 {...credentialTypeInputErrorProperties}

@@ -24,12 +24,6 @@ export const isScriptNameValid = (scriptName: string) => {
     return true;
 };
 
-export const isCredentialTypeValidString = (credentialType: unknown) =>
-    credentialType !== null &&
-    credentialType !== undefined &&
-    typeof credentialType === 'string' &&
-    credentialType.trim().length > 0;
-
 export const isCredentialTypeValid = (credentialType: string) =>
     Object.values(ActionCredentialType)
         .includes(credentialType.trim() as ActionCredentialType);

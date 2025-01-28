@@ -15,7 +15,7 @@ import { IAction } from '#src-app/types/model/action.model';
 import { CustomEditor } from './CustomEditor';
 import { ExternalActionForm } from './ExternalActionForm';
 import { LiveView } from './LiveView';
-import { initialFormValidationState, isCredentialTypeValidString } from '../action.utils';
+import { initialFormValidationState } from '../action.utils';
 
 export const Index = () => {
     const dispatch = useDispatch();
@@ -48,21 +48,15 @@ export const Index = () => {
             return;
         }
 
-        const { credentialType, ...rest } = draft;
-        const actionToSave = {
-            ...rest,
-            ...(isCredentialTypeValidString(credentialType) && { credentialType }),
-        };
-
         if (draft.id) {
-            dispatch(activityActions.updateAction({ payload: actionToSave, resourceId: draft.id }))
+            dispatch(activityActions.updateAction({ payload: draft, resourceId: draft.id }))
                 .unwrap()
                 .then(() => {
                     dispatch(activityActions.getAllActions());
                 });
             dispatch(setShowEditModal({ show: false }));
         } else {
-            dispatch(activityActions.createAction({ payload: { ...actionToSave, id: draft.script } }))
+            dispatch(activityActions.createAction({ payload: { ...draft, id: draft.script } }))
                 .unwrap()
                 .then(() => {
                     dispatch(activityActions.getAllActions());

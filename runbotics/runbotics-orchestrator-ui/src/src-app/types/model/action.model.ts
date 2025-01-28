@@ -1,8 +1,10 @@
+import { ActionCredentialType } from 'runbotics-common';
+
 export interface IAction {
     id?: string;
     label?: string | null;
     script?: string | null;
-    credentialType?: string | null;
+    credentialType?: ActionCredentialType | string;
     form?: string | null;
 }
 

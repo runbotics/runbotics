@@ -10,6 +10,7 @@
     "Action.List.Item.Disabled.Tooltip": "Działa wyłącznie na botach z systemem {{ system }}",
     "Action.Details.Script": "Skrypt",
     "Action.Details.Label": "Etykieta",
+    "Action.Details.CredentialType": "Typ poświadczenia",
     "Action.Details.Form": "Formularz",
     "Action.Details.Form.Script.Error": "Wymagane. Musi zaczynać się od external.",
     "Action.Details.Form.Label.Error": "Wymagane",
