@@ -22,7 +22,7 @@ export enum ActionRegex {
     DIRECTORY_NAME = "^[^\\\\/?|<>*:]*$",
     DATE_FORMAT = '^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\/[0-9]{2}\/[0-9]{4}))$',
     WINDOWS_ABSOLUTE_PATH = "^[a-zA-Z]:[\\\/|\\\\]",
-    LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/"
+    LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/",
 }
 
 export enum ACTION_GROUP {

@@ -8,7 +8,7 @@ import { IBpmnAction, Runner } from './types';
 
 // eslint-disable-next-line max-lines-per-function
 const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
-    'desktop.click': {
+    [DesktopAction.CLICK]: {
         id: DesktopAction.CLICK,
         label: translate('Process.Details.Modeler.Actions.Desktop.Click.Label'),
         script: DesktopAction.CLICK,
@@ -104,7 +104,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.type': {
+    [DesktopAction.TYPE]: {
         id: DesktopAction.TYPE,
         label: translate('Process.Details.Modeler.Actions.Desktop.Type.Label'),
         script: DesktopAction.TYPE,
@@ -175,7 +175,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.copy': {
+    [DesktopAction.COPY]: {
         id: DesktopAction.COPY,
         label: translate('Process.Details.Modeler.Actions.Desktop.Copy.Label'),
         script: DesktopAction.COPY,
@@ -209,7 +209,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
-    'desktop.paste': {
+    [DesktopAction.PASTE]: {
         id: DesktopAction.PASTE,
         label: translate('Process.Details.Modeler.Actions.Desktop.Paste.Label'),
         script: DesktopAction.PASTE,
@@ -220,7 +220,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
-    'desktop.cursorSelect': {
+    [DesktopAction.CURSOR_SELECT]: {
         id: DesktopAction.CURSOR_SELECT,
         label: translate('Process.Details.Modeler.Actions.Desktop.CursorSelect.Label'),
         script: DesktopAction.CURSOR_SELECT,
@@ -269,7 +269,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.readClipboardContent': {
+    [DesktopAction.READ_CLIPBOARD_CONTENT]: {
         id: DesktopAction.READ_CLIPBOARD_CONTENT,
         label: translate('Process.Details.Modeler.Actions.Desktop.ReadClipboardContent.Label'),
         script: DesktopAction.READ_CLIPBOARD_CONTENT,
@@ -307,7 +307,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.maximizeActiveWindow': {
+    [DesktopAction.MAXIMIZE_ACTIVE_WINDOW]: {
         id: DesktopAction.MAXIMIZE_ACTIVE_WINDOW,
         label: translate('Process.Details.Modeler.Actions.Desktop.MaximizeActiveWindow.Label'),
         script: DesktopAction.MAXIMIZE_ACTIVE_WINDOW,
@@ -318,7 +318,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             formData: {},
         },
     },
-    'desktop.takeScreenshot': {
+    [DesktopAction.TAKE_SCREENSHOT]: {
         id: DesktopAction.TAKE_SCREENSHOT,
         label: translate('Process.Details.Modeler.Actions.Desktop.TakeScreenshot.Label'),
         script: DesktopAction.TAKE_SCREENSHOT,
@@ -392,7 +392,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.readTextFromImage': {
+    [DesktopAction.READ_TEXT_FROM_IMAGE]: {
         id: DesktopAction.READ_TEXT_FROM_IMAGE,
         label: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromImage.Label'),
         script: DesktopAction.READ_TEXT_FROM_IMAGE,
@@ -461,7 +461,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
-    'desktop.typeCredentials': {
+    [DesktopAction.TYPE_CREDENTIALS]: {
         id: DesktopAction.TYPE_CREDENTIALS,
         label: translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.Label'),
         helperTextLabel: translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.HelperTextLabel'),
@@ -512,7 +512,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                 },
             },
         },
-    }
+    },
 });
 
 export default getDesktopActions;

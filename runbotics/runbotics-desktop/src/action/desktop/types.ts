@@ -1,5 +1,7 @@
 import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { DesktopAction } from 'runbotics-common';
+import z from 'zod';
+import { clickInputSchema, copyInputSchema, cursorSelectInputSchema, performKeyboardShortcutInputSchema, pointDataSchema, readTextFromImageInputSchema, regionDataSchema, takeScreenshotInputSchema, typeCredentialsInputSchema, typeInputSchema } from './desktop.utils';
 
 export const KEY_REFERENCE = 'Key.';
 
@@ -14,7 +16,7 @@ export type DesktopActionRequest =
     | DesktopRunRequest<DesktopAction.MAXIMIZE_ACTIVE_WINDOW>
     | DesktopRunRequest<DesktopAction.TAKE_SCREENSHOT, DesktopTakeScreenshotActionInput>
     | DesktopRunRequest<DesktopAction.READ_TEXT_FROM_IMAGE, DesktopReadTextFromImageActionInput>
-    | DesktopRunRequest<DesktopAction.PERFORM_KEYBOARD_SHORTCUT, DesktopPerformKeyboardShortcutActionInput>;
+    | DesktopRunRequest<DesktopAction.PERFORM_KEYBOARD_SHORTCUT, DesktopPerformKeyboardShortcutActionInput>
 
 export enum MouseButton {
     LEFT = 'LEFT',
@@ -39,66 +41,46 @@ export enum Language {
 
 export type Coordinate = string | number;
 
-export interface PointData {
-    x: Coordinate;
-    y: Coordinate;
+export type PointData = z.infer<typeof pointDataSchema>
+
+export type RegionData = z.infer<typeof regionDataSchema>
+
+export type DesktopClickActionInput = z.infer<typeof clickInputSchema>
+
+export type DesktopTypeActionInput = z.infer<typeof typeInputSchema>
+
+export enum CredentialAttribute {
+    USERNAME = 'username',
+    PASSWORD = 'password'
 }
-
-export interface RegionData {
-    left: Coordinate;
-    top: Coordinate;
-    width: Coordinate;
-    height: Coordinate;
-}
-
-export type DesktopClickActionInput = {
-    clickTarget: ClickTarget;
-    point?: any;
-    region?: any;
-    mouseButton: MouseButton;
-    doubleClick: boolean;
-};
-
-export type DesktopTypeActionInput = {
-    text: string;
-}
-
-export type DesktopTypeCredentialsActionInput = {
-    credentialAttribute: 'username' | 'password';
-}
-
-export type DesktopPerformKeyboardShortcutActionInput = {
-    shortcut: string;
-}
-
-export type DesktopCopyActionInput = {
-    text?: string;
-}
-
-export type DesktopCursorSelectActionInput = {
-    startPoint: any;
-    endPoint: any;
-}
-
-export type DesktopReadClipboardContentActionOutput = string;
-
-export type DesktopTakeScreenshotActionInput = {
-    imageName?: string;
-    imagePath?: string;
-    imageFormat: ImageResourceFormat;
-    region?: any;
-}
-
-export type DesktopTakeScreenshotActionOutput = string;
-
-export type DesktopReadTextFromImageActionInput = {
-    imageFullPath: string;
-    language: Language;
-}
-
-export type DesktopReadTextFromImageActionOutput = string;
 
 export interface DesktopCredential {
     username: string;
     password: string;
 }
+
+export type DesktopTypeCredentialsActionInput = z.infer<typeof typeCredentialsInputSchema>
+
+export type DesktopPerformKeyboardShortcutActionInput = z.infer<typeof performKeyboardShortcutInputSchema>
+
+export type DesktopCopyActionInput = z.infer<typeof copyInputSchema>
+
+export type DesktopCursorSelectActionInput = z.infer<typeof cursorSelectInputSchema>
+
+export type DesktopReadClipboardContentActionOutput = string;
+
+export type DesktopTakeScreenshotActionInput = z.infer<typeof takeScreenshotInputSchema>
+
+export type DesktopTakeScreenshotActionOutput = string;
+
+export type DesktopReadTextFromImageActionInput = z.infer<typeof readTextFromImageInputSchema>
+
+export type DesktopReadTextFromImageActionOutput = string;
+
+export const isPointDataType = (object: PointData | RegionData): object is PointData => {
+    return (<PointData>object).x !== undefined;
+};
+
+export const isRegionDataType = (object: PointData | RegionData): object is RegionData => {
+    return (<RegionData>object).left !== undefined;
+};
