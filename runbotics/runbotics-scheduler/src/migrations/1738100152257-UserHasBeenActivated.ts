@@ -1,8 +1,8 @@
-import { User } from '#/scheduler-database/user/user.entity';
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import { User } from "#/scheduler-database/user/user.entity";
+import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class UserWasEverActivated1736847689046 implements MigrationInterface {
-    name = 'UserWasEverActivated1736847689046';
+export class UserHasBeenActivated1738100152257 implements MigrationInterface {
+    name = 'UserHasBeenActivated1738100152257'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(

@@ -51,7 +51,7 @@ export class UserController {
 
     @DeleteWithTenant('users/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    @FeatureKeys(FeatureKey.TENANT_DELETE_USER)
+    @FeatureKeys(FeatureKey.TENANT_DECLINE_USER)
     async deleteUserInTenant(
         @UserDecorator() user: User,
         @Param('id', ParseIntPipe) userId: User['id'],

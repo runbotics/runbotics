@@ -27,7 +27,8 @@ import {
     StyledSearchFilterBox,
     StyledTextField,
     StyledSelect,
-    StyledInputLabel
+    StyledInputLabel,
+    DeclineButton
 } from './UsersRegistrationView.styles';
 import DeleteUserDialog from '../DeleteUserDialog';
 
@@ -131,7 +132,7 @@ const UsersRegistrationView: FC = () => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Error.AcceptFailed'), { variant: 'error' });
             });
 
-    const handleDelete = () => setIsDeleteDialogVisible(true);
+    const handleDialogOpen = () => setIsDeleteDialogVisible(true);
 
     const getSelectedUsers = (): UserDto[] => hasAdminAccess
         ? notActivated.allByPage.content.filter((user) => selections.includes(user.id))
@@ -224,11 +225,23 @@ const UsersRegistrationView: FC = () => {
                     >
                         {translate('Users.Registration.View.Button.Accept')}
                     </StyledButton>
-                    <If condition={hasAdminAccess || hasTenantAdminAccess}>
+                    <If
+                        condition={hasAdminAccess}
+                        else={
+                            <DeclineButton
+                                type='submit'
+                                variant='contained'
+                                onClick={handleDialogOpen}
+                                disabled={!selections.length}
+                            >
+                                {translate('Users.Registration.View.Button.Decline')}
+                            </DeclineButton>
+                        }
+                    >
                         <DeleteButton
                             type='submit'
                             variant='contained'
-                            onClick={handleDelete}
+                            onClick={handleDialogOpen}
                             disabled={!selections.length}
                         >
                             {translate('Users.Registration.View.Button.Delete')}

@@ -17,6 +17,8 @@ import useUserSearch, { UserSearchType } from '#src-app/hooks/useUserSearch';
 import { useDispatch, useSelector } from '#src-app/store';
 import { usersActions, usersSelector } from '#src-app/store/slices/Users';
 
+import { DeclineUserReasonSelector } from './DeclineUserReasonSelector/DeclineUserReasonSelector';
+import { hasErrorMessage } from './DeleteUserDialog.utils';
 import { TablePagingContext } from '../utils/TablePaging.provider';
 
 
@@ -26,6 +28,7 @@ const StyledList = styled(List)`
     && {
         list-style-type: disc;
         list-style-position: inside;
+        margin-bottom: 1rem;
     }
 `;
 
@@ -55,6 +58,18 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     const { refreshSearch: refreshSearchTenantActivated } = useUserSearch({ searchType: UserSearchType.TENANT_ACTIVATED, page, pageSize });
 
     const [usersData, setUsersData] = useState<UserDto[]>([]);
+    const [declineReason, setDeclineReason] = useState<string>('');
+
+    const dialogLabel = hasTenantAdminAccess
+        ? translate('Users.Actions.Modals.DeleteModal.Button.Decline')
+        : translate('Users.Actions.Modals.DeleteModal.Button.Delete');
+    const dialogTitle = hasTenantAdminAccess
+        ? translate('Users.Actions.Modals.DeleteModal.Decline.TitleMessage')
+        : translate('Users.Actions.Modals.DeleteModal.Delete.TitleMessage');
+
+    const handleMessageChange = (message: string) => {
+        setDeclineReason(message);
+    };
 
     const handleSubmit = () => {
         Promise.allSettled(
@@ -63,14 +78,14 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
                     resourceId: user.id,
                     payload: {
                         data: {
-                            declineReason: `No consent by (tenant-admin@localhost) for user (${user.email}) activation`,
+                            ...(declineReason.length && { declineReason }),
                         },
                     },
                 }))
                 : dispatch(usersActions.deleteUser({
                     resourceId: user.id,
                     data: {
-                        declineReason: `No consent by (admin@localhost) for user (${user.email}) activation`,
+                        ...(declineReason.length && { declineReason }),
                     },
                 })))
         )
@@ -82,6 +97,17 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
                         ).email;
 
                         if ('error' in response.value) {
+                            if (hasErrorMessage(response.value)) {
+                                const message = response.value.payload.message;
+                                enqueueSnackbar(
+                                    translate(
+                                        'Users.Actions.Modals.DeleteModal.ErrorWithMessage',
+                                        { userEmail, message }
+                                    ),
+                                    { variant: 'error' }
+                                );
+                                return;
+                            }
                             enqueueSnackbar(
                                 translate(
                                     'Users.Actions.Modals.DeleteModal.Error',
@@ -122,13 +148,12 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
     useEffect(() => { open && setUsersData(getSelectedUsers); }, [open]);
 
     return (
-        // todo: next week this part will be redesigned according to UI/UX design
         <CustomDialog
             isOpen={open}
             onClose={onClose}
-            title={translate('Users.Actions.Modals.DeleteModal.TitleMessage')}
+            title={dialogTitle}
             confirmButtonOptions={{
-                label: translate('Users.Actions.Modals.DeleteModal.Button.Delete'),
+                label: dialogLabel,
                 onClick: handleSubmit,
                 isLoading: userDelete.loading,
             }}
@@ -147,6 +172,11 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
                     </Typography>
                 ))}
             </StyledList>
+            {hasTenantAdminAccess && (
+                <DeclineUserReasonSelector
+                    onMessageChange={handleMessageChange}
+                />
+            )}
         </CustomDialog>
     );
 };

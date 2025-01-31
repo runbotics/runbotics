@@ -8,6 +8,7 @@ const viewRegistrationTranslations: typeof englishViewRegistrationTranslations =
     'Users.Registration.View.SearchBarPlaceholder': 'Szukaj',
     'Users.Registration.View.Button.Accept': 'Akceptuj',
     'Users.Registration.View.Button.Delete': 'Usuń',
+    'Users.Registration.View.Button.Decline': 'Odmów',
     'Users.Registration.View.Select.Label': 'Organizacja',
     'Users.Registration.View.Select.NoneTenant': 'Brak',
 };
