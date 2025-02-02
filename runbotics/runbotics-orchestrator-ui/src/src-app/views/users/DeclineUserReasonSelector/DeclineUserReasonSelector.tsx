@@ -100,6 +100,7 @@ export const DeclineUserReasonSelector = ({
                     rows={4}
                     value={customMessage}
                     onChange={handleTextFiledChange}
+                    disabled={reason !== DeclineReason.THIRD_REASON}
                 />
             </StyledRadioGroup>
         </StyledFormControl>

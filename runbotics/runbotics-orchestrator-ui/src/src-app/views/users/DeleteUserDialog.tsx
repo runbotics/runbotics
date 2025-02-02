@@ -84,9 +84,6 @@ const DeleteUserDialog: FC<DeleteUserDialogProps> = ({
                 }))
                 : dispatch(usersActions.deleteUser({
                     resourceId: user.id,
-                    data: {
-                        ...(declineReason.length && { declineReason }),
-                    },
                 })))
         )
             .then((result) => {

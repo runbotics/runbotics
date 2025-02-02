@@ -117,8 +117,8 @@ export class UserService {
         return this.userRepository.save(updatedUser).then(this.mapToUserDto);
     }
 
-    async delete(id: number, userDto: DeleteUserDto) {
-        const userToDelete = await this.userRepository.findOneByOrFail({ id }).catch(() => {
+    async delete(id: number) {
+        await this.userRepository.findOneByOrFail({ id }).catch(() => {
             throw new BadRequestException('Cannot find user with provided id');
         });
 
@@ -129,8 +129,6 @@ export class UserService {
 
             throw new BadRequestException();
         });
-
-        this.mailService.sendUserDeclineReasonMail(userToDelete, userDto);
     }
 
     async deleteInTenant(id: number, user: User, userDto: DeleteUserDto) {

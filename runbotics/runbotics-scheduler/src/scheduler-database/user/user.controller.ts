@@ -86,8 +86,7 @@ export class UserController {
     @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS, FeatureKey.MANAGE_ALL_TENANTS)
     async deleteUser(
         @Param('id', ParseIntPipe) userId: User['id'],
-        @Body(new ZodValidationPipe(deleteUserSchema)) userDto: DeleteUserDto,
     ) {
-        await this.userService.delete(userId, userDto);
+        await this.userService.delete(userId);
     }
 }
