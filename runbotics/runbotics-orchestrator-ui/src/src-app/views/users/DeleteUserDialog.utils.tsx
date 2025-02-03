@@ -5,8 +5,7 @@ interface RejectionPayload {
 }
 
 export const hasErrorMessage = (value: unknown): value is RejectionPayload =>
-    value !== undefined &&
-    value !== null &&
+    !value &&
     typeof value === 'object' &&
     'payload' in value &&
     typeof value.payload === 'object' &&

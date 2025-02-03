@@ -50,7 +50,6 @@ export const DeclineUserReasonSelector = ({
     ) => {
         const inputValue = (event.target as HTMLInputElement).value;
 
-        setReason(inputValue);
         if (
             reason !== DeclineReason.THIRD_REASON &&
             inputValue === DeclineReason.THIRD_REASON
@@ -59,6 +58,7 @@ export const DeclineUserReasonSelector = ({
         } else {
             onMessageChange(declineReason[inputValue].message);
         }
+        setReason(inputValue);
     };
 
     const handleTextFiledChange = (
