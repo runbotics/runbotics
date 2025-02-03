@@ -6,25 +6,32 @@ import BpmnModelerType from 'bpmn-js/lib/Modeler';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-
 import { BpmnConnectionFactory, IBpmnConnection, IBpmnGateway } from '../../../helpers/elementParameters';
 
-
 interface DefaultGatewaySelectProps {
-    gateway:IBpmnGateway;
+    gateway: IBpmnGateway;
     defaultFlow: string;
     setDefaultFlow: React.Dispatch<React.SetStateAction<string>>;
     handleOnFocus: (event: FocusEvent<HTMLInputElement>) => void;
     handleOnBlur: (event: FocusEvent<HTMLInputElement>) => void;
     filteredGatewayConnections: IBpmnConnection[];
     modeler: BpmnModelerType;
-    expressions: {[key: string]: any};
+    expressions: { [key: string]: any };
     validateFlows: () => void;
-};
+}
 
-const DefaultGatewaySelect: FC<DefaultGatewaySelectProps> = ({ gateway, defaultFlow, setDefaultFlow, handleOnFocus, handleOnBlur, filteredGatewayConnections, modeler, expressions, validateFlows }) => {
+const DefaultGatewaySelect: FC<DefaultGatewaySelectProps> = ({
+    gateway,
+    defaultFlow,
+    setDefaultFlow,
+    handleOnFocus,
+    handleOnBlur,
+    filteredGatewayConnections,
+    modeler,
+    expressions,
+    validateFlows
+}) => {
     const { translate } = useTranslations();
-
 
     const setDefaultConnection = (outgoing: IBpmnConnection | null) => {
         if (!outgoing) {
@@ -42,13 +49,10 @@ const DefaultGatewaySelect: FC<DefaultGatewaySelectProps> = ({ gateway, defaultF
             setDefaultConnection(null);
             return;
         }
-        gateway.outgoing.forEach((outgoing) => {
+        gateway.outgoing.forEach(outgoing => {
             if (event.target.value === outgoing.id && expressions) {
                 setDefaultConnection(outgoing);
-                BpmnConnectionFactory.from(modeler).setConditionExpression(
-                    outgoing,
-                    expressions[outgoing.id]
-                );
+                BpmnConnectionFactory.from(modeler).setConditionExpression(outgoing, expressions[outgoing.id]);
             }
         });
     };
@@ -67,15 +71,14 @@ const DefaultGatewaySelect: FC<DefaultGatewaySelectProps> = ({ gateway, defaultF
                 onFocus={handleOnFocus}
                 onBlur={handleOnBlur}
             >
-                <MenuItem key='flow-menu-item-none' value="None">None</MenuItem>
-                {
-                    filteredGatewayConnections
-                        .map((outgoing) => (
-                            <MenuItem key={'flow-menu-item-' + outgoing.id} value={outgoing.id}>
-                                {outgoing.businessObject.name ? outgoing.businessObject.name : outgoing.id}
-                            </MenuItem>
-                        ))
-                }
+                <MenuItem key="flow-menu-item-none" value="None">
+                    None
+                </MenuItem>
+                {filteredGatewayConnections.map(outgoing => (
+                    <MenuItem key={'flow-menu-item-' + outgoing.id} value={outgoing.id}>
+                        {outgoing.businessObject.name ? outgoing.businessObject.name : outgoing.id}
+                    </MenuItem>
+                ))}
             </Select>
         </FormControl>
     );

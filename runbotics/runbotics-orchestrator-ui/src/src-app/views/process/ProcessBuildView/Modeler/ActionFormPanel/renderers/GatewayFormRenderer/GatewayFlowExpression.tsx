@@ -17,11 +17,19 @@ interface GatewayFlowExpressionProps {
     handleOnFocus: (event: FocusEvent<HTMLInputElement>) => void;
     handleOnBlur: (event: FocusEvent<HTMLInputElement>) => void;
     handleCancel: (flow: IBpmnConnection) => void;
-    handleExpressionChange: (newValueWithName: NewValueWithName) => void
-    handleConnectionNameChange: (inputValue: string, flow: IBpmnConnection) => void
-};
+    handleExpressionChange: (newValueWithName: NewValueWithName) => void;
+    handleConnectionNameChange: (inputValue: string, flow: IBpmnConnection) => void;
+}
 
-const GatewayFlowExpression: FC<GatewayFlowExpressionProps> = ({ gateway, outgoing, handleOnFocus, handleOnBlur, handleCancel, handleExpressionChange, handleConnectionNameChange }) => {
+const GatewayFlowExpression: FC<GatewayFlowExpressionProps> = ({
+    gateway,
+    outgoing,
+    handleOnFocus,
+    handleOnBlur,
+    handleCancel,
+    handleExpressionChange,
+    handleConnectionNameChange
+}) => {
     const { options } = useOptions();
     const { translate } = useTranslations();
 
@@ -31,7 +39,7 @@ const GatewayFlowExpression: FC<GatewayFlowExpressionProps> = ({ gateway, outgoi
         <FlowExpression key={'flow-expression-' + outgoing.id}>
             <FlowLabelForm
                 formLabel={translate('Process.Details.Modeler.ActionPanel.Form.FlowName.Title')}
-                onSubmit={(name) => handleConnectionNameChange(name, outgoing)}
+                onSubmit={name => handleConnectionNameChange(name, outgoing)}
                 selectedElement={outgoing}
                 onCancel={() => handleCancel(outgoing)}
                 onFocus={handleOnFocus}
@@ -43,9 +51,7 @@ const GatewayFlowExpression: FC<GatewayFlowExpressionProps> = ({ gateway, outgoi
                 autocompleteOptions={options}
                 handleOnBlur={handleOnBlur}
                 handleOnFocus={handleOnFocus}
-                label={`${translate(
-                    'Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression'
-                )}`}
+                label={`${translate('Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression')}`}
                 value={outgoing.businessObject.conditionExpression?.body ?? ''}
                 name={outgoing.id}
                 customErrors={isSequenceWithExpression(gateway, outgoing) ? undefined : [emptyExpressionError]}
@@ -56,6 +62,5 @@ const GatewayFlowExpression: FC<GatewayFlowExpressionProps> = ({ gateway, outgoi
         </FlowExpression>
     );
 };
-
 
 export default GatewayFlowExpression;

@@ -11,10 +11,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { ModelerErrorType, processActions } from '#src-app/store/slices/Process';
 
-
-import {
-    NewValueWithName
-} from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/AutocompleteWidget/AutocompleteWidget.types';
+import { NewValueWithName } from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/AutocompleteWidget/AutocompleteWidget.types';
 
 import DefaultGatewaySelect from './DefaultGatewaySelect';
 import GatewayFlowExpression from './GatewayFlowExpression';
@@ -41,18 +38,19 @@ const GatewayFormRenderer = () => {
     const noDefaultGateway = Boolean(gateway.businessObject.default);
 
     useEffect(() => {
-        const tempFilteredGateway = gateway.outgoing
-            .filter(connection => !EXCLUDED_CONNECTION_TYPES.includes(connection.type));
+        const tempFilteredGateway = gateway.outgoing.filter(connection => !EXCLUDED_CONNECTION_TYPES.includes(connection.type));
 
-        const createInitExpressions = () => tempFilteredGateway
-            .reduce((initExpressions, flow) => {
+        const createInitExpressions = () =>
+            tempFilteredGateway.reduce((initExpressions, flow) => {
                 if (flow.businessObject.conditionExpression === undefined) {
                     BpmnConnectionFactory.from(modeler).setConditionExpression(flow, null);
-                    dispatch(processActions.setCustomValidationError({
-                        elementId: flow.id,
-                        elementName: `${flow.businessObject.name ?? flow.id}`,
-                        type: ModelerErrorType.FORM_ERROR,
-                    }));
+                    dispatch(
+                        processActions.setCustomValidationError({
+                            elementId: flow.id,
+                            elementName: `${flow.businessObject.name ?? flow.id}`,
+                            type: ModelerErrorType.FORM_ERROR
+                        })
+                    );
                 }
                 const expression = flow.businessObject.conditionExpression?.body;
                 if (expression !== undefined) {
@@ -73,29 +71,27 @@ const GatewayFormRenderer = () => {
         flowsToCheck.forEach(checkExpression);
     };
 
-    const checkExpression = (flow) => {
+    const checkExpression = flow => {
         if (isSequenceWithExpression(gateway, flow)) {
             dispatch(processActions.removeCustomValidationError(flow.id));
         } else {
-            dispatch(processActions.setCustomValidationError({
-                elementId: flow.id,
-                elementName: `${flow.businessObject.name ?? flow.id}`,
-                type: ModelerErrorType.FORM_ERROR,
-            }));
+            dispatch(
+                processActions.setCustomValidationError({
+                    elementId: flow.id,
+                    elementName: `${flow.businessObject.name ?? flow.id}`,
+                    type: ModelerErrorType.FORM_ERROR
+                })
+            );
         }
     };
 
     const handleFlowChanged = (value: string, id: string) => {
-        filteredGatewayConnections
-            .forEach((outgoing) => {
-                if (expressions && id === outgoing.id && expressions[outgoing.id] !== value) {
-                    BpmnConnectionFactory.from(modeler).setConditionExpression(
-                        outgoing,
-                        value
-                    );
-                    setExpressions({ ...expressions, [id]: value });
-                }
-            });
+        filteredGatewayConnections.forEach(outgoing => {
+            if (expressions && id === outgoing.id && expressions[outgoing.id] !== value) {
+                BpmnConnectionFactory.from(modeler).setConditionExpression(outgoing, value);
+                setExpressions({ ...expressions, [id]: value });
+            }
+        });
         validateFlows();
     };
 
@@ -117,7 +113,6 @@ const GatewayFormRenderer = () => {
     const handleExpressionChange = (newValueWithName: NewValueWithName) => {
         handleFlowChanged(newValueWithName.value, newValueWithName.name);
     };
-
 
     const handleConnectionNameChange = (inputValue: string, flow: IBpmnConnection) => {
         BpmnConnectionFactory.from(modeler).setConnectionName(flow, inputValue);
@@ -157,21 +152,18 @@ const GatewayFormRenderer = () => {
                     expressions={expressions}
                     validateFlows={validateFlows}
                 />
-                {
-                    filteredGatewayConnections
-                        .map((outgoing) => (
-                            <GatewayFlowExpression
-                                key={outgoing.id}
-                                gateway={gateway}
-                                outgoing={outgoing}
-                                handleOnFocus={handleOnFocus}
-                                handleOnBlur={handleOnBlur}
-                                handleCancel={handleCancel}
-                                handleExpressionChange={handleExpressionChange}
-                                handleConnectionNameChange={handleConnectionNameChange}
-                            />
-                        ))
-                }
+                {filteredGatewayConnections.map(outgoing => (
+                    <GatewayFlowExpression
+                        key={outgoing.id}
+                        gateway={gateway}
+                        outgoing={outgoing}
+                        handleOnFocus={handleOnFocus}
+                        handleOnBlur={handleOnBlur}
+                        handleCancel={handleCancel}
+                        handleExpressionChange={handleExpressionChange}
+                        handleConnectionNameChange={handleConnectionNameChange}
+                    />
+                ))}
             </GatewayFormMenu>
         </>
     );
