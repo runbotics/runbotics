@@ -81,8 +81,10 @@ export type BusinessObject = {
     customValidationError?: boolean;
 };
 
-export type IBpmnGatewayBusinessObject = BusinessObject & {
+export type IBpmnGatewayBusinessObject = Pick<BusinessObject, '$type' | 'disabled' | 'runFromHere' | 'processOutput'> & {
     default?: IBpmnConnection;
+    incoming?: Pick<ModdleElement, '$type' | 'id'>;
+    outgoing?: ISequenceFlowBusinessObject;
 };
 
 export type ModdleElement = {
