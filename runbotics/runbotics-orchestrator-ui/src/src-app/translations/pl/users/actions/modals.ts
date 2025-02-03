@@ -8,7 +8,7 @@ const modalsActionsTranslations: typeof englishModalsActionsTranslations  = {
     'Users.Actions.Modals.DeleteModal.ErrorWithMessage': 'Wystąpił błąd podczas usuwania użytkownika: {{ userEmail }}. Powód: {{ message }}',
     'Users.Actions.Modals.DeleteModal.Button.Cancel': 'Anuluj',
     'Users.Actions.Modals.DeleteModal.Button.Delete': 'Usuń',
-    'Users.Actions.Modals.DeleteModal.Button.Decline': 'Odmów',
+    'Users.Actions.Modals.DeleteModal.Button.Decline': 'Odrzuć',
     'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Title': 'Wybierz powód:',
     'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.FirstReason': 'W tej chwili nie możemy aktywować konta. Spróbuj później lub skontaktuj się z administratorem.',
     'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.SecondReason': 'Aktywacja konta nie została zatwierdzona, ponieważ nie spełnia naszych kryteriów.',

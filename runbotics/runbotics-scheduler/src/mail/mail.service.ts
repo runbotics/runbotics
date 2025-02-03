@@ -170,7 +170,7 @@ export class MailService {
         if (userDto && 'declineReason' in userDto) {
             this.sendMail({
                 to: userToDelete.email,
-                subject: 'RunBotics user activation decline reason',
+                subject: 'RunBotics - User Activation',
                 content: userDto.declineReason,
                 isHtml: false,
             });
