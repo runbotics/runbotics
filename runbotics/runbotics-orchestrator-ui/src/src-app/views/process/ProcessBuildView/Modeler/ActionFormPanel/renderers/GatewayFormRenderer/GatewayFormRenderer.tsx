@@ -31,8 +31,9 @@ const GatewayFormRenderer = () => {
     const gateway = selectedElement as IBpmnGateway;
     const { translate } = useTranslations();
     const dispatch = useDispatch();
+    const noDefaultFlowTransaltion = translate('Process.Details.Modeler.ActionPanel.Form.Gateway.DefaultFlow');
 
-    const [defaultFlow, setDefaultFlow] = useState(gateway.businessObject.default ? gateway.businessObject.default.id : 'None');
+    const [defaultFlow, setDefaultFlow] = useState(gateway.businessObject.default ? gateway.businessObject.default.id : noDefaultFlowTransaltion);
     const [expressions, setExpressions] = useState({});
     const [filteredGatewayConnections, setFilteredGatewayConnections] = useState<IBpmnConnection[]>([]);
     const noDefaultGateway = Boolean(gateway.businessObject.default);

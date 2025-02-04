@@ -32,11 +32,12 @@ const DefaultGatewaySelect: FC<DefaultGatewaySelectProps> = ({
     validateFlows
 }) => {
     const { translate } = useTranslations();
+    const noDefaultFlowTransaltion = translate('Process.Details.Modeler.ActionPanel.Form.Gateway.DefaultFlow');
 
     const setDefaultConnection = (outgoing: IBpmnConnection | null) => {
         if (!outgoing) {
             gateway.businessObject.default = null;
-            setDefaultFlow('None');
+            setDefaultFlow(noDefaultFlowTransaltion);
         } else {
             setDefaultFlow(outgoing.id);
         }
@@ -45,7 +46,7 @@ const DefaultGatewaySelect: FC<DefaultGatewaySelectProps> = ({
     };
 
     const handleDefaultFlowChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value === 'None') {
+        if (event.target.value === noDefaultFlowTransaltion) {
             setDefaultConnection(null);
             return;
         }
@@ -71,8 +72,8 @@ const DefaultGatewaySelect: FC<DefaultGatewaySelectProps> = ({
                 onFocus={handleOnFocus}
                 onBlur={handleOnBlur}
             >
-                <MenuItem key="flow-menu-item-none" value="None">
-                    None
+                <MenuItem key="flow-menu-item-none" value={noDefaultFlowTransaltion}>
+                    {translate('Process.Details.Modeler.ActionPanel.Form.Gateway.NoDefaultFlow')}
                 </MenuItem>
                 {filteredGatewayConnections.map(outgoing => (
                     <MenuItem key={'flow-menu-item-' + outgoing.id} value={outgoing.id}>
