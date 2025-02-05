@@ -49,9 +49,10 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
         setIsDeleteDialogVisible(false);
     };
 
-    const checkFormFieldsValidation = () =>
-        formValidationState.name &&
-        formValidationState.wasChanged;
+    const checkFormFieldsValidation = () => {
+        const { name, wasTenantNameChanged, wasWhitelistChanged } = formValidationState;
+        return name && (wasTenantNameChanged || wasWhitelistChanged);
+    };
 
     const handleClose = () => {
         onClose();

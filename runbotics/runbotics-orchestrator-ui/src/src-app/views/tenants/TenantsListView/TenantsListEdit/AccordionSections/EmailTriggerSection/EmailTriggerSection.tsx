@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
@@ -41,10 +41,18 @@ export const EmailTriggerSection = ({
     };
 
     return (
-        <Accordion title="Triggering">
+        <Accordion
+            title={translate('Tenants.List.Edit.Form.Section.Triggering')}
+        >
             <Box display="flex" alignItems="center" paddingBottom="15px">
-                <Typography>Email trigger whitelist</Typography>
-                <InfoButtonTooltip message="Email trigger whitelist. Accepts allowed email addresses and domains allowed to trigger processes by email across this tenant." />
+                <Typography>
+                    {translate('Tenants.List.Edit.Form.Label.Whitelist')}
+                </Typography>
+                <InfoButtonTooltip
+                    message={translate(
+                        'Tenants.List.Edit.Form.Label.Whitelist.Tooltip'
+                    )}
+                />
             </Box>
             <EmailTriggerWhitelistInput
                 emailTriggerWhitelist={emailTriggerWhitelist}

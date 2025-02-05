@@ -6,7 +6,6 @@ export const MINIMUM_NAME_CHARACTERS = 2;
 
 export const initialValidationState = {
     name: true,
-    wasChanged: false,
     wasTenantNameChanged: false,
     wasWhitelistChanged: false,
 };

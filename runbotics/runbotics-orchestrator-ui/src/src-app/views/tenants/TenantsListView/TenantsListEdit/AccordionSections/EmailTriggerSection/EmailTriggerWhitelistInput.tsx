@@ -1,7 +1,7 @@
 import React, { KeyboardEvent, useEffect, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
-import { IconButton, TextField, Tooltip } from '@mui/material';
+import { IconButton, TextField } from '@mui/material';
 
 import { EMAIL_TRIGGER_WHITELIST_PATTERN } from 'runbotics-common';
 
@@ -45,27 +45,26 @@ export const EmailTriggerWhitelistInput = ({
     };
 
     useEffect(() => {
-        if (input !== '' && !isInputValid(input)) {
-            setError(true);
-        } else {
-            setError(false);
-        }
+        setError(input !== '' && !isInputValid(input));
     }, [input]);
 
     return (
         <TextField
-            label="Email whitelist"
+            label={translate('Tenants.List.Edit.Form.Input.Label.Whitelist')}
             variant="outlined"
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleEnter}
-            placeholder="Type input"
+            placeholder={translate(
+                'Tenants.List.Edit.Form.Input.Placeholder.Whitelist'
+            )}
             autoComplete="off"
             fullWidth
             error={error}
             {...(error && {
-                helperText:
-                    'Invalid input value. Acceptable whitelist items are valid email addresses or domains.',
+                helperText: translate(
+                    'Tenants.List.Edit.Form.Input.HelperText.Whitelist'
+                ),
             })}
             InputProps={{
                 endAdornment: (

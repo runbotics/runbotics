@@ -8,7 +8,6 @@ export interface TenantsListEditDialogProps {
 
 export interface FormValidationState {
     name: boolean;
-    wasChanged: boolean;
     wasTenantNameChanged: boolean;
     wasWhitelistChanged: boolean;
 };

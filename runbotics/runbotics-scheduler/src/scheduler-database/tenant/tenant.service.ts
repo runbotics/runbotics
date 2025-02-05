@@ -32,11 +32,11 @@ export class TenantService {
     ) {}
 
     getById(id: string) {
-        return this.tenantRepository.findOneBy({ id });
+        return this.tenantRepository.findOne({ where: { id }, relations });
     }
 
     getAll() {
-        return this.tenantRepository.find();
+        return this.tenantRepository.find({ relations });
     }
 
     async getAllByPageWithSpecs(specs: Specs<Tenant>, paging: Paging) {
@@ -78,40 +78,38 @@ export class TenantService {
         id: string,
         requester: User
     ): Promise<Tenant> {
-        const tenantByName = await this.tenantRepository.findOneBy({ name: tenantDto.name });
-        if (tenantByName) throw new BadRequestException('Name already exist', 'NameExist');
-
-        const updatedTenant = await this.tenantRepository
-            .findOneByOrFail({ id })
-            .then(tenant => ({
-                ...tenant,
-                name: tenantDto.name,
-                lastModifiedBy: requester.email
-            }))
-            .then(async (tenant) => {
-                if (!tenant.emailTriggerWhitelist) return tenant;
-
-                await this.emailTriggerWhitelistItem.delete({ tenantId: id });
-
-                const emailTriggerWhitelist = tenantDto.emailTriggerWhitelist
-                    .map((whitelistItem) => {
-                        const item = new EmailTriggerWhitelistItem();
-                        item.tenantId = id;
-                        item.whitelistItem = whitelistItem;
-                        return item;
-                    });
-
-                return {
-                    ...tenant,
-                    emailTriggerWhitelist,
-                };
-            })
+        const tenant = await this.tenantRepository.findOneByOrFail({ id })
             .catch(() => {
                 this.logger.error('Cannot find tenant with id: ', id);
                 throw new BadRequestException('Tenant not found', 'NotFound');
             });
 
-        return this.tenantRepository.save(updatedTenant);
+        if (tenantDto.name) {
+            const tenantByName = await this.tenantRepository.findOneBy({ name: tenantDto.name });
+            if (tenantByName) throw new BadRequestException('Name already exist', 'NameExist');
+
+            tenant.name = tenantDto.name;
+            tenant.lastModifiedBy = requester.email;
+        }
+
+        if (tenantDto.emailTriggerWhitelist) {
+            await this.emailTriggerWhitelistItem.delete({ tenantId: id });
+
+            const emailTriggerWhitelist = tenantDto.emailTriggerWhitelist
+                .map((whitelistItem) => {
+                    const item = new EmailTriggerWhitelistItem();
+                    item.tenantId = id;
+                    item.whitelistItem = whitelistItem;
+                    return item;
+                });
+
+            tenant.emailTriggerWhitelist = emailTriggerWhitelist;
+            tenant.lastModifiedBy = requester.email;
+        }
+
+        await this.tenantRepository.save(tenant);
+
+        return this.tenantRepository.findOne({ where: { id }, relations });
     }
 
     async validateInviteCode(inviteCodeDto: TenantInviteCodeDto) {

@@ -42,7 +42,6 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
         setFormValidationState((prevState) => ({
             ...prevState,
             name: tenant.name.trim().length >= MINIMUM_NAME_CHARACTERS,
-            wasChanged: wasTenantNameChanged || wasWhitelistChanged,
             wasTenantNameChanged,
             wasWhitelistChanged,
         }));
