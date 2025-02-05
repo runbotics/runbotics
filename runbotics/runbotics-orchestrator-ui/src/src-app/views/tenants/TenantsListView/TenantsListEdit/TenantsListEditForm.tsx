@@ -1,12 +1,11 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, useEffect } from 'react';
 
-import { Box, TextField, Typography } from '@mui/material';
+import { TextField } from '@mui/material';
 
-import Accordion from '#src-app/components/Accordion';
-import InviteCodeButton from '#src-app/components/InviteCodeButton';
 import useTranslations from '#src-app/hooks/useTranslations';
-import InfoButtonTooltip from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/widgets/InfoTooltip/InfoButtonTooltip';
 
+import { EmailTriggerSection } from './AccordionSections/EmailTriggerSection/EmailTriggerSection';
+import { SharingSection } from './AccordionSections/SharingSection';
 import { TenantsListEditFormProps } from './TenantsListEdit.types';
 import { MINIMUM_NAME_CHARACTERS } from './TenantsListEdit.utils';
 
@@ -15,7 +14,8 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
     setTenant,
     formValidationState,
     setFormValidationState,
-    currentTenantName
+    currentTenantName,
+    currentWhitelist,
 }) => {
     const { translate } = useTranslations();
 
@@ -23,12 +23,30 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
         const name = event.target.value;
 
         setTenant((prevState) => ({ ...prevState, name }));
+    };
+
+    const wasFormChanged = () => {
+        const wasTenantNameChanged = tenant.name !== currentTenantName;
+        const wasWhitelistChanged =
+            currentWhitelist.length !== tenant.emailTriggerWhitelist?.length ||
+            !currentWhitelist.every(item => tenant.emailTriggerWhitelist.includes(item));
+
+        return {
+            wasTenantNameChanged,
+            wasWhitelistChanged,
+        };
+    };
+
+    useEffect(() => {
+        const { wasTenantNameChanged, wasWhitelistChanged } = wasFormChanged();
         setFormValidationState((prevState) => ({
             ...prevState,
-            name: (name.trim().length >= MINIMUM_NAME_CHARACTERS),
-            wasChanged: name !== currentTenantName
+            name: tenant.name.trim().length >= MINIMUM_NAME_CHARACTERS,
+            wasChanged: wasTenantNameChanged || wasWhitelistChanged,
+            wasTenantNameChanged,
+            wasWhitelistChanged,
         }));
-    };
+    }, [tenant]);
 
     return (
         <>
@@ -37,18 +55,17 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
                 value={tenant.name}
                 onChange={handleNameFieldInput}
                 error={!formValidationState.name}
-                {...(tenant.name.trim().length < MINIMUM_NAME_CHARACTERS
-                    && { helperText: translate('Tenants.List.Edit.Form.Error.FieldTooShort') })}
+                {...(tenant.name.trim().length < MINIMUM_NAME_CHARACTERS && {
+                    helperText: translate(
+                        'Tenants.List.Edit.Form.Error.FieldTooShort'
+                    ),
+                })}
             />
-            <Accordion title={translate('Tenants.List.Edit.Form.Accordion.Title')}>
-                <Box display='flex' alignItems='center' paddingBottom='15px'>
-                    <Typography>
-                        {translate('Tenants.List.Edit.Form.Accordion.Link.Title')}
-                    </Typography>
-                    <InfoButtonTooltip message={translate('Tenants.List.Edit.Form.Accordion.Link.Info')}/>
-                </Box>
-                <InviteCodeButton tenantId={tenant.id} fullWidth/>
-            </Accordion>
+            <SharingSection tenantId={tenant.id} />
+            <EmailTriggerSection
+                tenant={tenant}
+                setTenant={setTenant}
+            />
         </>
     );
 };

@@ -14,8 +14,9 @@ import { TenantInviteCodeDto } from './dto/invite-code.dto';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
+import { EmailTriggerWhitelistItem } from '../emial-trigger-whitelist-item/emial-trigger-whitelist-item.entity';
 
-const relations = ['createdByUser'];
+const relations = ['createdByUser', 'emailTriggerWhitelist'];
 
 @Injectable()
 export class TenantService {
@@ -25,7 +26,9 @@ export class TenantService {
         @InjectRepository(Tenant)
         private readonly tenantRepository: Repository<Tenant>,
         @InjectRepository(TenantInviteCode)
-        private readonly inviteCodeRepository: Repository<TenantInviteCode>
+        private readonly inviteCodeRepository: Repository<TenantInviteCode>,
+        @InjectRepository(EmailTriggerWhitelistItem)
+        private readonly emailTriggerWhitelistItem: Repository<EmailTriggerWhitelistItem>
     ) {}
 
     getById(id: string) {
@@ -82,9 +85,28 @@ export class TenantService {
             .findOneByOrFail({ id })
             .then(tenant => ({
                 ...tenant,
-                ...tenantDto,
+                name: tenantDto.name,
                 lastModifiedBy: requester.email
-            })).catch(() => {
+            }))
+            .then(async (tenant) => {
+                if (!tenant.emailTriggerWhitelist) return tenant;
+
+                await this.emailTriggerWhitelistItem.delete({ tenantId: id });
+
+                const emailTriggerWhitelist = tenantDto.emailTriggerWhitelist
+                    .map((whitelistItem) => {
+                        const item = new EmailTriggerWhitelistItem();
+                        item.tenantId = id;
+                        item.whitelistItem = whitelistItem;
+                        return item;
+                    });
+
+                return {
+                    ...tenant,
+                    emailTriggerWhitelist,
+                };
+            })
+            .catch(() => {
                 this.logger.error('Cannot find tenant with id: ', id);
                 throw new BadRequestException('Tenant not found', 'NotFound');
             });

@@ -3,6 +3,7 @@ import { BasicUserDto } from "./user.model";
 export interface Tenant {
     id?: string;
     name?: string;
+    emailTriggerWhitelist?: string[];
     createdBy?: string;
     createdByUser?: BasicUserDto;
     created?: string | null;
