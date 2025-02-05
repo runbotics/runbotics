@@ -3,7 +3,7 @@ import React, { VFC, ChangeEvent } from 'react';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import { MenuItem, Select } from '@mui/material';
 
-import { BotCollectionDto, FeatureKey, IBotCollection } from 'runbotics-common';
+import { BotCollectionDto, FeatureKey } from 'runbotics-common';
 
 
 import If from '#src-app/components/utils/If';
@@ -19,10 +19,13 @@ import { StyledLabel, Wrapper } from './BotComponent.styles';
 interface BotCollectionProps {
     selectedBotCollection: BotCollectionDto;
     onSelectBotCollection?: (collection: BotCollectionDto) => void;
+    canConfigure: boolean;
 }
 
 const BotCollectionComponent: VFC<BotCollectionProps> = ({
-    selectedBotCollection, onSelectBotCollection,
+    selectedBotCollection,
+    onSelectBotCollection,
+    canConfigure
 }) => {
     const { botCollections } = useSelector(botCollectionSelector);
     const { translate } = useTranslations();
@@ -58,7 +61,7 @@ const BotCollectionComponent: VFC<BotCollectionProps> = ({
                     value={selectedBotCollection?.id ?? ''}
                     variant="standard"
                     onChange={handleBotCollectionChange}
-                    disabled={!hasEditBotCollectionAccess}
+                    disabled={!hasEditBotCollectionAccess || !canConfigure}
                 >
                     {getBotCollectionsOptions()}
                 </Select>

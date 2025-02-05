@@ -17,10 +17,13 @@ import { StyledLabel, Wrapper } from './BotComponent.styles';
 interface BotSystemProps {
     selectedBotSystem: IBotSystem;
     onSelectBotSystem?: (botSystem: IBotSystem) => void;
+    canConfigure: boolean;
 }
 
 const BotSystemComponent: VFC<BotSystemProps> = ({
-    selectedBotSystem, onSelectBotSystem,
+    selectedBotSystem,
+    onSelectBotSystem,
+    canConfigure,
 }) => {
     const { botSystems } = useSelector(botSystemsSelector);
     const { translate } = useTranslations();
@@ -57,7 +60,7 @@ const BotSystemComponent: VFC<BotSystemProps> = ({
                     value={selectedBotSystem?.name ?? ''}
                     variant="standard"
                     onChange={handleBotSystemChange}
-                    disabled={!hasEditBotSystemAccess}
+                    disabled={!hasEditBotSystemAccess || !canConfigure}
                 >
                     {getBotSystemOptions()}
                 </Select>
