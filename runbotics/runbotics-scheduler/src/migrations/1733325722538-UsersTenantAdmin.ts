@@ -1,4 +1,3 @@
-import { User } from '#/scheduler-database/user/user.entity';
 import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
@@ -6,25 +5,18 @@ export class UsersTenantAdmin1733325722538 implements MigrationInterface {
     name = 'UsersTenantAdmin1733325722538';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        const userRepository = queryRunner.manager.getRepository(User);
-        const tenantAdmin = await userRepository.findOne({ where: { id: 4 } });
-        if (tenantAdmin) {
+        const usersCount = await queryRunner.query(`
+            SELECT COUNT(*) as count FROM "jhi_user"
+            WHERE "id" = 4
+        `);
+        if (usersCount[0].count != 0) {
             throw new Error('User with id (4) already exists');
         }
 
-        const user = new User();
-        user.id = 4;
-        user.email = 'tenant-admin@localhost';
-        user.passwordHash = '$2a$10$HFfD1e.PVrgnqoK7StH25On4w8e49dMLlT5FZ0zTHxGxbMZU6Q/5O';
-        user.firstName = 'TenantAdministrator';
-        user.lastName = 'TenantAdministrator';
-        user.activated = true;
-        user.langKey = 'en';
-        user.createdBy = 'system';
-        user.lastModifiedBy = 'system';
-        user.tenantId = DEFAULT_TENANT_ID;
-
-        await userRepository.insert(user);
+        await queryRunner.query(`
+            INSERT INTO "jhi_user" ("id", "email", "password_hash", "first_name", "last_name", "activated", "lang_key", "created_by", "last_modified_by", "tenant_id")
+            VALUES (4, 'tenant-admin@localhost', '$2a$10$HFfD1e.PVrgnqoK7StH25On4w8e49dMLlT5FZ0zTHxGxbMZU6Q/5O', 'TenantAdministrator', 'TenantAdministrator', true, 'en', 'system', 'system', '${DEFAULT_TENANT_ID}')
+        `);
 
         const result = await queryRunner.query(`
             SELECT COUNT(*) as count FROM "jhi_user_authority"
@@ -41,9 +33,11 @@ export class UsersTenantAdmin1733325722538 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        const userRepository = queryRunner.manager.getRepository(User);
-        const tenantAdmin = await userRepository.findOne({ where: { id: 4 } });
-        if (!tenantAdmin) {
+        const usersCount = await queryRunner.query(`
+            SELECT COUNT(*) as count FROM "jhi_user"
+            WHERE "id" = 4
+        `);
+        if (usersCount[0].count == 0) {
             throw new Error('User with id (4) doesn\'t exist');
         }
 
@@ -60,6 +54,9 @@ export class UsersTenantAdmin1733325722538 implements MigrationInterface {
             WHERE "user_id" = 4
         `);
 
-        await userRepository.delete({ id: 4 });
+        await queryRunner.query(`
+            DELETE FROM "jhi_user"
+            WHERE "id" = 4
+        `);
     }
 }
