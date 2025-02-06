@@ -13,6 +13,7 @@ import { getPage } from '#/utils/page/page';
 import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
 import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
 import { UserService } from '../user/user.service';
+import { hasFeatureKey } from '#/utils/authority.utils';
 
 const relations = ['user', 'system', 'collection', 'collection.users'];
 
@@ -48,7 +49,7 @@ export class BotCrudService {
     }
 
     async findAllPage(user: User, specs: Specs<BotEntity>, paging: Paging) {
-        const collectionIds = this.userService.hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS) ?
+        const collectionIds = hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS) ?
             await this.botCollectionService.findIdsForAdmin(
                 user,
                 {

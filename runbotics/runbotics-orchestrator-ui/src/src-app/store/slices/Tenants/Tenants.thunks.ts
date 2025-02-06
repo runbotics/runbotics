@@ -6,35 +6,42 @@ import axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
 
-const INVITE_CODE_PATH = 'invite-code';
+export type TenantRawBody = Omit<Tenant, 'emailTriggerWhitelist'> & {
+    emailTriggerWhitelist: {
+        id: string;
+        tenantId: string;
+        whitelistItem: string;
+    }[];
+}
 
+const INVITE_CODE_PATH = 'invite-code';
 
 const buildPageURL = (params: PageRequestParams, url: string) => URLBuilder
     .url(url)
     .params(params)
     .build();
 
-export const getAll = createAsyncThunk<Tenant[]>(
+export const getAll = createAsyncThunk<TenantRawBody[]>(
     'tenants/getAll',
-    () => axios.get<Tenant[]>('/api/scheduler/tenants')
+    () => axios.get<TenantRawBody[]>('/api/scheduler/tenants')
         .then(response => response.data)
 );
 
-export const getAllByPage = createAsyncThunk<Page<Tenant>, PageRequestParams>(
+export const getAllByPage = createAsyncThunk<Page<TenantRawBody>, PageRequestParams>(
     'tenants/getAllByPage',
-    (params) => axios.get<Page<Tenant>>(buildPageURL(params, '/api/scheduler/tenants/Page'))
+    (params) => axios.get<Page<TenantRawBody>>(buildPageURL(params, '/api/scheduler/tenants/Page'))
         .then(response => response.data)
 );
 
-export const createOne = createAsyncThunk<Tenant, Tenant>(
+export const createOne = createAsyncThunk<TenantRawBody, Tenant>(
     'tenants/create',
-    (tenant) => axios.post<Tenant>('/api/scheduler/tenants', tenant)
+    (tenant) => axios.post<TenantRawBody>('/api/scheduler/tenants', tenant)
         .then(response => response.data)
 );
 
-export const partialUpdate = createAsyncThunk<Tenant, Tenant>(
+export const partialUpdate = createAsyncThunk<TenantRawBody, Tenant>(
     'tenants/partialUpdate',
-    (tenant, { rejectWithValue }) => axios.patch<Tenant>(`/api/scheduler/tenants/${tenant.id}`, tenant)
+    (tenant, { rejectWithValue }) => axios.patch<TenantRawBody>(`/api/scheduler/tenants/${tenant.id}`, tenant)
         .then(response => response.data)
         .catch(error => rejectWithValue(error.response.data))
 );

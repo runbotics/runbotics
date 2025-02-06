@@ -24,6 +24,8 @@ import { ProcessInstanceLoopEventModule } from './process-instance-loop-event/pr
 import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { UserModule } from './user/user.module';
 import { GuestModule } from '#/scheduler-database/guest/guest.module';
+import { ProcessCollectionModule } from './process-collection/process-collection.module';
+import { EmailTriggerWhitelistItemModule } from './email-trigger-whitelist-item/email-trigger-whitelist-item.module';
 
 @Module({
     imports: [
@@ -52,6 +54,8 @@ import { GuestModule } from '#/scheduler-database/guest/guest.module';
         UserModule,
         TriggerEventModule,
         GuestModule,
+        ProcessCollectionModule,
+        EmailTriggerWhitelistItemModule,
     ],
     exports: [
         DatabaseModule,
@@ -60,6 +64,7 @@ import { GuestModule } from '#/scheduler-database/guest/guest.module';
         ProcessInstanceLoopEventModule,
         UserModule,
         GuestModule,
+        ProcessCollectionModule,
     ],
 })
 export class SchedulerDatabaseModule {}

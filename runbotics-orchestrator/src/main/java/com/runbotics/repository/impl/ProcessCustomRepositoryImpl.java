@@ -3,7 +3,6 @@ package com.runbotics.repository.impl;
 import com.runbotics.domain.Guest;
 import com.runbotics.domain.Guest_;
 import com.runbotics.domain.Process;
-import com.runbotics.domain.ProcessCollection_;
 import com.runbotics.domain.Process_;
 import com.runbotics.domain.Tag_;
 import com.runbotics.domain.User;
@@ -124,12 +123,6 @@ public class ProcessCustomRepositoryImpl implements ProcessCustomRepository {
         }
 
         ParameterExpression<UUID> pCollectionId = criteriaBuilder.parameter(UUID.class, PROCESS_COLLECTION);
-
-        if (collectionId != null) {
-            predicates.add(criteriaBuilder.equal(root.get(Process_.PROCESS_COLLECTION).get(ProcessCollection_.ID), pCollectionId));
-        } else {
-            predicates.add(criteriaBuilder.isNull(root.get(Process_.PROCESS_COLLECTION)));
-        }
 
         criteriaQuery.where(predicates.toArray(new Predicate[] {}));
         criteriaCountingQuery.where(predicates.toArray(new Predicate[] {}));
