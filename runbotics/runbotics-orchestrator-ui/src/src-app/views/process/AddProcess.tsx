@@ -24,6 +24,7 @@ export const AddProcess: FC = () => {
     const { translate } = useTranslations();
 
     const handleAdd = (process: IProcess) => {
+        setShowDialog(false);
         router.push(`/app/processes/${process.id}/${ProcessTab.BUILD}`);
     };
 
