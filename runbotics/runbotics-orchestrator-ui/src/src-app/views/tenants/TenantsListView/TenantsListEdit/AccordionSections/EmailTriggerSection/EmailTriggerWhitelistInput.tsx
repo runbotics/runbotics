@@ -41,7 +41,7 @@ export const EmailTriggerWhitelistInput = ({
     const handleEnter = (e: KeyboardEvent<HTMLInputElement>) => {
         const shouldAddWhitelistItem = e.key === 'Enter' && !error;
 
-        if (shouldAddWhitelistItem) handleAdd();
+        if (input !== '' && shouldAddWhitelistItem) handleAdd();
     };
 
     useEffect(() => {
@@ -71,7 +71,7 @@ export const EmailTriggerWhitelistInput = ({
                     <IconButton
                         type="button"
                         onClick={handleAdd}
-                        disabled={error}
+                        disabled={input === '' || error}
                     >
                         <AddIcon />
                     </IconButton>
