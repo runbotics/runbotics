@@ -27,7 +27,8 @@ import {
     StyledSearchFilterBox,
     StyledTextField,
     StyledSelect,
-    StyledInputLabel
+    StyledInputLabel,
+    DeclineButton
 } from './UsersRegistrationView.styles';
 import DeleteUserDialog from '../DeleteUserDialog';
 
@@ -49,6 +50,7 @@ const UsersRegistrationView: FC = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
+    const hasTenantAdminAccess = useRole([Role.ROLE_TENANT_ADMIN]);
 
     const currentPage = parseInt(searchParams.get('page'));
     const pageSizeFromUrl = parseInt(searchParams.get('pageSize'));
@@ -130,9 +132,11 @@ const UsersRegistrationView: FC = () => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Error.AcceptFailed'), { variant: 'error' });
             });
 
-    const handleDelete = () => setIsDeleteDialogVisible(true);
+    const handleDialogOpen = () => setIsDeleteDialogVisible(true);
 
-    const getSelectedUsers = (): UserDto[] => notActivated.allByPage.content.filter((user) => selections.includes(user.id));
+    const getSelectedUsers = (): UserDto[] => hasAdminAccess
+        ? notActivated.allByPage.content.filter((user) => selections.includes(user.id))
+        : tenantNotActivated.allByPage.content.filter((user) => selections.includes(user.id));
 
     useEffect(() => {
         const allUsers = hasAdminAccess ? notActivated.allByPage : tenantNotActivated.allByPage;
@@ -160,7 +164,7 @@ const UsersRegistrationView: FC = () => {
 
     return (
         <>
-            {hasAdminAccess && <DeleteUserDialog
+            {(hasAdminAccess || hasTenantAdminAccess) && <DeleteUserDialog
                 open={isDeleteDialogVisible}
                 onClose={() => setIsDeleteDialogVisible(false)}
                 getSelectedUsers={getSelectedUsers}
@@ -221,11 +225,23 @@ const UsersRegistrationView: FC = () => {
                     >
                         {translate('Users.Registration.View.Button.Accept')}
                     </StyledButton>
-                    <If condition={hasAdminAccess}>
+                    <If
+                        condition={hasAdminAccess}
+                        else={
+                            <DeclineButton
+                                type='submit'
+                                variant='contained'
+                                onClick={handleDialogOpen}
+                                disabled={!selections.length}
+                            >
+                                {translate('Users.Registration.View.Button.Decline')}
+                            </DeclineButton>
+                        }
+                    >
                         <DeleteButton
                             type='submit'
                             variant='contained'
-                            onClick={handleDelete}
+                            onClick={handleDialogOpen}
                             disabled={!selections.length}
                         >
                             {translate('Users.Registration.View.Button.Delete')}

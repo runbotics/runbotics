@@ -10,9 +10,9 @@ import {
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
 import {
     IBotCollection,
-    IBotSystem,
     IScheduleProcess,
     NotificationProcess, ProcessCollection as IProcessCollection,
+    BotSystemType,
 } from 'runbotics-common';
 import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
@@ -86,10 +86,10 @@ export class ProcessEntity {
 
     @ManyToOne(() => BotSystem, system => system.processes)
     @JoinColumn({ name: 'system' })
-    system: IBotSystem;
+    system: BotSystem;
 
-    @Column({ name: 'system', type: 'varchar', length: 50 })
-    systemName: string;
+    @Column({ name: 'system', default: BotSystemType.ANY, length: 50 })
+    systemName: BotSystemType;
 
     @OneToMany(() => ScheduleProcess, scheduleProcess => scheduleProcess.process)
     schedules: IScheduleProcess[];

@@ -49,12 +49,7 @@ export class CredentialCollectionService {
                 credentialCollectionUser: []
             })
             .catch(async error => {
-                const isNameTaken = Boolean(await this.findOneByCriteria(userDto.tenantId, { name, createdById: userDto.id }));
-
-                if (isNameTaken) {
-                    throw new BadRequestException(`Credential collection with name "${name}" already exists`);
-                }
-
+                this.throwErrorIfNameTaken(userDto.tenantId, name, userDto.id);
                 throw new BadRequestException(error.message);
             });
 
@@ -69,14 +64,14 @@ export class CredentialCollectionService {
         }
 
         if (sharedWith && sharedWith.length > 0) {
-            const credentialCollectionUserArrayToSave = await this.getCollectionUserArrayWithPrivileges(
+            const credentialCollectionUsersToSave = await this.getCollectionUserArrayWithPrivileges(
                 sharedWith,
                 credentialCollection,
                 userDto,
                 tenantId
             );
 
-            credentialCollection.credentialCollectionUser = credentialCollectionUserArrayToSave;
+            credentialCollection.credentialCollectionUser = credentialCollectionUsersToSave;
         }
 
         return this.credentialCollectionRepository.save(credentialCollection);
@@ -110,22 +105,22 @@ export class CredentialCollectionService {
         const options: FindManyOptions<CredentialCollection> = {
             ...paging,
             ...specs,
-            relationLoadStrategy: 'query',
+            relationLoadStrategy: 'join',
         };
 
         options.where = {
             ...options.where,
             tenantId: user.tenantId,
-            credentialCollectionUser: { userId: user.id }
         };
 
         options.relations = RELATIONS;
-
         const page = await getPage(this.credentialCollectionRepository, options);
+
+        const userAccessedCollections = page.content.filter(collection => collection.credentialCollectionUser.some(ccu => ccu.userId === user.id));
 
         return {
             ...page,
-            content: page.content
+            content: userAccessedCollections,
         };
     }
 
@@ -224,18 +219,7 @@ export class CredentialCollectionService {
         await Promise.all(credentialCollectionUserArrayToSave.map(ccu => this.credentialCollectionUserRepository.save(ccu)));
 
         await this.credentialCollectionRepository.update(id, dto).catch(async error => {
-            const isNameTaken = await this.credentialCollectionRepository
-                .findOne({
-                    where: {
-                        name: dto.name,
-                        createdById: user.id
-                    }
-                })
-                .then(collection => collection && collection.id !== id);
-
-            if (isNameTaken) {
-                throw new BadRequestException(`Collection with name "${dto.name}" already exists`);
-            }
+            this.throwErrorIfNameTaken(user.tenantId, dto.name, user.id, { id });
 
             throw new BadRequestException(error.message);
         });
@@ -311,5 +295,17 @@ export class CredentialCollectionService {
         });
 
         return [...credentialCollectionUserArray, credentialCollectionCreator];
+    }
+
+    private async throwErrorIfNameTaken(tenantId: string, name: string, createdById: number, { id }: { id?: string } = {}) {
+        const collection = await this.findOneByCriteria(tenantId, { name, createdById });
+
+        const isNameTaken = id
+            ? collection.id !== id
+            : Boolean(await this.findOneByCriteria(tenantId, { name, createdById }));
+
+        if (isNameTaken) {
+            throw new BadRequestException(`Credential collection with name "${name}" already exists`);
+        }
     }
 }
