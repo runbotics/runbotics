@@ -25,7 +25,7 @@ import { TriggerEventModule } from './trigger-event/trigger-event.module';
 import { UserModule } from './user/user.module';
 import { GuestModule } from '#/scheduler-database/guest/guest.module';
 import { ProcessCollectionModule } from './process-collection/process-collection.module';
-import { EmailTriggerWhitelistItemModule } from './emial-trigger-whitelist-item/emial-trigger-whitelist-item.module';
+import { EmailTriggerWhitelistItemModule } from './email-trigger-whitelist-item/email-trigger-whitelist-item.module';
 
 @Module({
     imports: [

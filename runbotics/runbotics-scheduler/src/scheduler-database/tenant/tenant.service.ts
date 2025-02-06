@@ -14,7 +14,7 @@ import { TenantInviteCodeDto } from './dto/invite-code.dto';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
-import { EmailTriggerWhitelistItem } from '../emial-trigger-whitelist-item/emial-trigger-whitelist-item.entity';
+import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 
 const relations = ['createdByUser', 'emailTriggerWhitelist'];
 

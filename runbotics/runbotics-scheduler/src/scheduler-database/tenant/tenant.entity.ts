@@ -7,7 +7,7 @@ import { CredentialAttribute } from '../credential-attribute/credential-attribut
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { Credential } from '../credential/credential.entity';
 import { User } from '../user/user.entity';
-import { EmailTriggerWhitelistItem } from '../emial-trigger-whitelist-item/emial-trigger-whitelist-item.entity';
+import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 
 @Entity()
 export class Tenant {
