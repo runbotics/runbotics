@@ -49,7 +49,10 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
         setIsDeleteDialogVisible(false);
     };
 
-    const checkFormFieldsValidation = () => Object.values(formValidationState).every(Boolean);
+    const checkFormFieldsValidation = () => {
+        const { name, wasTenantNameChanged, wasWhitelistChanged } = formValidationState;
+        return name && (wasTenantNameChanged || wasWhitelistChanged);
+    };
 
     const handleClose = () => {
         onClose();
@@ -60,7 +63,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
     const handleSave = () => {
         if (!checkFormFieldsValidation()) return;
 
-        const dataPayload = getTenantDataWithoutEmptyStrings(tenant);
+        const dataPayload = getTenantDataWithoutEmptyStrings(tenant, formValidationState);
 
         dispatch(tenantsActions.partialUpdate(
             dataPayload
@@ -109,6 +112,7 @@ const TenantsListEditDialog: VFC<TenantsListEditDialogProps> = ({
                                 formValidationState={formValidationState}
                                 setFormValidationState={setFormValidationState}
                                 currentTenantName={tenantData?.name}
+                                currentWhitelist={tenantData?.emailTriggerWhitelist}
                             />
                         </Form>
                     </Content>
