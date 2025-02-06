@@ -7,6 +7,7 @@ import { CredentialAttribute } from '../credential-attribute/credential-attribut
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { Credential } from '../credential/credential.entity';
 import { User } from '../user/user.entity';
+import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 
 @Entity()
 export class Tenant {
@@ -49,4 +50,7 @@ export class Tenant {
 
     @OneToMany(() => CredentialCollection, credentialCollection => credentialCollection.tenant)
     credentialCollections: CredentialCollection[];
+
+    @OneToMany(() => EmailTriggerWhitelistItem, emailTriggerWhitelistItem => emailTriggerWhitelistItem.tenant, { cascade: true })
+    emailTriggerWhitelist: EmailTriggerWhitelistItem[];
 }
