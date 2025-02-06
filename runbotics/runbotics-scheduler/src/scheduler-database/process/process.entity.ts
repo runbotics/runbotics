@@ -24,10 +24,10 @@ import {
 } from '#/scheduler-database/notification-process/notification-process.entity';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { ProcessCredential } from '#/scheduler-database/process-credential/process-credential.entity';
-import { ProcessCollectionEntity } from '#/database/process-collection/process-collection.entity';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { ProcessOutput } from '#/scheduler-database/process-output/process-output.entity';
 import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
+import { ProcessCollection } from '../process-collection/process-collection.entity';
 
 @Entity({ name: 'process' })
 export class ProcessEntity {
@@ -106,7 +106,7 @@ export class ProcessEntity {
     botCollectionId: string;
 
     @ManyToOne(
-        () => ProcessCollectionEntity,
+        () => ProcessCollection,
         { onDelete: 'CASCADE' },
     )
     @JoinColumn({ name: 'process_collection' })

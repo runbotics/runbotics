@@ -1,4 +1,4 @@
-import { Injectable, PayloadTooLargeException } from '@nestjs/common';
+import { Injectable, NotFoundException, PayloadTooLargeException } from '@nestjs/common';
 import { EmailTriggerData, IProcessInstance, isEmailTriggerData, MemoryUnit, TriggerEvent } from 'runbotics-common';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -11,8 +11,7 @@ import { Logger } from '#/utils/logger';
 import { Attachment, OutlookService, Recipient, ReplyEmailRequest } from '../outlook';
 import { SubscriptionService } from '../subscription';
 import { ExpiredLifecycleNotificationEvent, LifecycleEventDivision, LifecycleNotification, Notification } from './notification.types';
-import { User } from '#/scheduler-database/user/user.entity';
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
+import { TenantService } from '#/scheduler-database/tenant/tenant.service';
 
 @Injectable()
 export class NotificationService {
@@ -24,6 +23,7 @@ export class NotificationService {
         private readonly queueService: QueueService,
         private readonly serverConfigService: ServerConfigService,
         private readonly subscriptionService: SubscriptionService,
+        private readonly tenantService: TenantService,
     ) {}
 
     async handleEmailNotifications(notifications: (Notification | LifecycleNotification)[]) {
@@ -35,14 +35,34 @@ export class NotificationService {
             const email = await this.outlookService.getEmail(emailId);
 
             const processId = Number(email.subject);
-            if (!this.isSenderDomainAllowed(email.sender.emailAddress.address)
-                || Number.isNaN(processId)) {
-                this.logger.warn(`Notification is not a valid email trigger email - skipping (emailId=${emailId})`);
-                continue;
+            if (Number.isNaN(processId)) {
+                throw new Error('Incorrect email subject. Must be valid process ID.');
             }
 
             try {
-                const process = await this.validateTitle(processId);
+                const process = await this.processService.findById(processId);
+                if (!process) {
+                    const message = `Cannot find process with ID "${email.subject}".`;
+                    this.logger.error(message);
+                    throw new NotFoundException(message);
+                }
+
+                const tenant = await this.tenantService.getById(process.tenantId);
+                const whitelist = tenant.emailTriggerWhitelist.map(item => item.whitelistItem);
+                if (!this.isSenderAllowed(email.sender.emailAddress.address, whitelist)) {
+                    this.logger.warn(`Notification is not a valid email trigger email - skipping (emailId=${emailId})`);
+                    continue;
+                }
+
+                await this.queueService.validateProcessAccess({
+                    process,
+                    triggered: true,
+                    user: {
+                        tenantId: process.tenantId,
+                        authorities: [],
+                    },
+                });
+
                 const variables = this.parseMailBody(email.bodyPreview);
 
                 if (email.hasAttachments) {
@@ -70,7 +90,7 @@ export class NotificationService {
                 await this.queueService.createInstantJob({
                     process,
                     input,
-                    user: process?.createdBy || null,
+                    user: process.createdBy,
                     trigger: { name: TriggerEvent.EMAIL },
                     triggerData: {
                         emailId,
@@ -154,10 +174,14 @@ export class NotificationService {
                 .updateSubscription(notification.subscriptionId, newSubscriptionExpirationDate)));
     }
 
-    private isSenderDomainAllowed(address: string) {
-        const senderDomain = address.split('@')[1];
-        return this.serverConfigService.emailTriggerConfig.domainWhitelist.length === 0
-            || this.serverConfigService.emailTriggerConfig.domainWhitelist.includes(senderDomain);
+    private isSenderAllowed(address: string, emailTriggerWhitelist: string[]) {
+        if (emailTriggerWhitelist.length === 0) return false;
+
+        const senderDomain = address.toLocaleLowerCase().split('@')[1];
+        const isEmailOnWhitelist = emailTriggerWhitelist.includes(address.toLocaleLowerCase());
+        const isDomainOnWhitelist = emailTriggerWhitelist.includes(senderDomain);
+
+        return isEmailOnWhitelist || isDomainOnWhitelist;
     }
 
     private mapAttachment(attachment: Attachment) {
@@ -185,27 +209,6 @@ export class NotificationService {
                 acc.missed.push(notification);
             return acc;
         }, { missed: [], expired: [] });
-    }
-
-    private async validateTitle(processId: number) {
-        const message = `Process "${processId}" does not exist`;
-
-        const process = await this.processService.findById(processId);
-
-        if (!process) {
-            this.logger.error(message);
-            throw new Error(message);
-        }
-
-        await this.queueService.validateProcessAccess({
-            process,
-            triggered: true,
-            user: {
-                tenantId: DEFAULT_TENANT_ID,
-            },
-        });
-
-        return process;
     }
 
     private parseMailBody(text: string): unknown {

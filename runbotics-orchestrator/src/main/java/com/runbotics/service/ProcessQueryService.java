@@ -44,8 +44,6 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private final UserService userService;
 
-    private final ProcessCollectionService processCollectionService;
-
     private final String PROCESS_NAME = "name";
 
     private final String PROCESS_TAG_NAME = "tagName";
@@ -57,13 +55,11 @@ public class ProcessQueryService extends QueryService<Process> {
     public ProcessQueryService(
         ProcessRepository processRepository,
         ProcessMapper processMapper,
-        UserService userService,
-        ProcessCollectionService processCollectionService
+        UserService userService
     ) {
         this.processRepository = processRepository;
         this.processMapper = processMapper;
         this.userService = userService;
-        this.processCollectionService = processCollectionService;
     }
 
     /**

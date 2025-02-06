@@ -12,9 +12,11 @@
 
     "Action.Details.Script": "Script",
     "Action.Details.Label": "Label",
+    "Action.Details.CredentialType": "Credential Type",
     "Action.Details.Form": "Form",
     "Action.Details.Form.Script.Error": "Required. Must start with external.",
     "Action.Details.Form.Label.Error": "Required",
+    "Action.Details.Form.CredentialType.Error": "Input must be valid acceptable credential type, e.g.: {{ types }}",
     "Action.Details.Form.Validation.Error": "Invalid form values",
     "Action.Details.ExternalScript.Error": "External script needs to start with external.",
     "Action.Details.Dialog.SaveAction": "Save action: {{ script }}",
