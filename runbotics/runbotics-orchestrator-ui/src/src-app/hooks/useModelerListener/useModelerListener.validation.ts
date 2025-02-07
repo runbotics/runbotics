@@ -51,9 +51,9 @@ export const isModelerSync = ({
         _.sortBy(modelerActivities),
         _.sortBy(appliedActivities)
     );
-    if (imported && errors.length === 0 && customValidationErrors.length === 0) {
-        return true;
-    }
+    // if (imported && errors.length === 0 && customValidationErrors.length === 0) {
+    //     return true;
+    // }
 
     return (
         !activeDrag &&

@@ -2,7 +2,6 @@ import React, { useEffect, useImperativeHandle, useState } from 'react';
 
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
-import { PayloadAction } from '@reduxjs/toolkit';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
 import i18n from 'i18next';
@@ -15,7 +14,7 @@ import 'react-resizable/css/styles.css';
 import InfoPanel from '#src-app/components/InfoPanel';
 import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
-import useCustomValidation from '#src-app/hooks/useCustomValidation';
+import useLastRoute from '#src-app/hooks/useLastRoute';
 import useModelerListener, {
     isModelerSync,
 } from '#src-app/hooks/useModelerListener';
@@ -24,19 +23,17 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
 import ModelerProvider from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
-import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
 import {
     CommandStackInfo,
-    ModelerError,
-    ModelerErrorType,
     processActions,
     processSelector,
-    ProcessState,
 } from '#src-app/store/slices/Process';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { ProcessBuildTab } from '#src-app/types/sidebar';
 import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
 import { identifyPageByUrl, recordItemClick } from '#src-app/utils/Mixpanel/utils';
+
+import { ProcessTab } from '#src-app/utils/process-tab';
 
 import {
     centerCanvas,
@@ -78,6 +75,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const { modelerListener, validateUnknownElement } = useModelerListener({
             setCurrentTab,
         });
+        const lastRoute = useLastRoute();
         const { pathname } = useRouter();
 
         const processState = useSelector((state) => state.process.modeler);
@@ -91,6 +89,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             customValidationErrors,
             activeDrag,
         } = processState;
+        console.log('imported', imported);
 
         useNavigationLock(
             !isSaveDisabled,
@@ -148,18 +147,20 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [processCredentials]);
 
         useEffect(() => {
+            const isLastRouteConfigure = lastRoute === ProcessTab.CONFIGURE;
+            const hasModelerChanged =
+                !isModelerSync({
+                    appliedActivities,
+                    modeler,
+                    commandStack,
+                    errors,
+                    customValidationErrors,
+                    imported,
+                    activeDrag
+                });
+
             dispatch(
-                processActions.setSaveDisabled(
-                    !isModelerSync({
-                        appliedActivities,
-                        modeler,
-                        commandStack,
-                        errors,
-                        customValidationErrors,
-                        imported,
-                        activeDrag
-                    })
-                )
+                processActions.setSaveDisabled(hasModelerChanged || isLastRouteConfigure)
             );
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [
@@ -171,6 +172,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             selectedElement,
             customValidationErrors,
             errors,
+            lastRoute,
         ]);
 
         useImperativeHandle(
