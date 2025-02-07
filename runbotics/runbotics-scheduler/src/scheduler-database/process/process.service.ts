@@ -99,4 +99,10 @@ export class ProcessService {
 
         return this.processCollectionService.hasAccess(user, process.processCollectionId);
     }
+
+    async canConfigureProcess(user: User, processId: number): Promise<boolean> {
+        const process = await this.findById(processId);
+
+        return user.id === process.createdBy.id || isTenantAdmin(user);
+    }
 }

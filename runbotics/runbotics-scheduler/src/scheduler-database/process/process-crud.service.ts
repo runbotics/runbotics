@@ -1,4 +1,4 @@
-import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
@@ -143,7 +143,7 @@ export class ProcessCrudService {
     }
 
     async partialUpdate(user: User, id: number, processDto: PartialUpdateProcessDto) {
-        await this.processRepository
+        const currentProcess = await this.processRepository
             .findOneOrFail({
                 where: {
                     id,
@@ -157,20 +157,24 @@ export class ProcessCrudService {
 
         const partial: Partial<ProcessEntity> = {};
 
-        if ('executionInfo' in processDto) {
-            partial.executionInfo = processDto.executionInfo;
-        } else if ('isAttended' in processDto) {
-            partial.isAttended = processDto.isAttended;
-        } else if ('isTriggerable' in processDto) {
-            partial.isTriggerable = processDto.isTriggerable;
-        } else if ('botCollection' in processDto) {
-            partial.botCollectionId = processDto.botCollection?.id;
-        } else if ('system' in processDto) {
-            partial.systemName = processDto.system?.name;
-        } else if ('output' in processDto) {
-            partial.outputType = processDto.output?.type;
+        if (user.id === Number(currentProcess.createdBy.id) || isTenantAdmin(user)) {
+            if ('executionInfo' in processDto) {
+                partial.executionInfo = processDto.executionInfo;
+            } else if ('isAttended' in processDto) {
+                partial.isAttended = processDto.isAttended;
+            } else if ('isTriggerable' in processDto && isTenantAdmin(user)) {
+                partial.isTriggerable = processDto.isTriggerable;
+            } else if ('botCollection' in processDto) {
+                partial.botCollectionId = processDto.botCollection?.id;
+            } else if ('system' in processDto) {
+                partial.systemName = processDto.system?.name;
+            } else if ('output' in processDto) {
+                partial.outputType = processDto.output?.type;
+            } else {
+                throw new BadRequestException();
+            }
         } else {
-            throw new BadRequestException();
+            throw new ForbiddenException();
         }
 
         partial.updated = dayjs().toISOString();
