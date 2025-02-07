@@ -10,7 +10,7 @@ import { processActions } from '#src-app/store/slices/Process';
 
 import ActionFormRenderer from './renderers/ActionFormRenderer';
 import ConnectionFormRenderer from './renderers/ConnectionFormRenderer';
-import GatewayFormRenderer from './renderers/GatewayFormRenderer';
+import GatewayFormRenderer from './renderers/GatewayFormRenderer/GatewayFormRenderer';
 import LoopActionRenderer from './renderers/LoopActionRenderer';
 import internalBpmnActions from '../../../../../Actions';
 

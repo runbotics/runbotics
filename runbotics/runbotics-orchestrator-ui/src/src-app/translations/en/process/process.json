@@ -537,6 +537,7 @@
     "Process.Details.Modeler.ActionPanel.Form.Connection.Expression": "Expression",
     "Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression": "Expression",
     "Process.Details.Modeler.ActionPanel.Form.Gateway.DefaultFlow": "Default flow",
+    "Process.Details.Modeler.ActionPanel.Form.Gateway.NoDefaultFlow": "None",
     "Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList": "Action properties errors: {{ errors }}",
     "Process.Details.Modeler.ActionPanel.Form.JSONSchema.Actions.Reset": "Reset",
     "Process.Details.Modeler.ActionPanel.Form.JSONSchema.Actions.Apply": "Apply",
