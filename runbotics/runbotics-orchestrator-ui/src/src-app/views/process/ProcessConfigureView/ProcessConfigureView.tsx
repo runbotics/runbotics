@@ -213,7 +213,7 @@ const ProcessConfigureView: VFC = () => {
                 </SettingsContainer>
                 <CredentialsContainer>
                     <StyledPaper>
-                        <ProcessCredentials/>
+                        <ProcessCredentials canConfigure={canConfigure}/>
                     </StyledPaper>
                 </CredentialsContainer>
             </PageContainer>
