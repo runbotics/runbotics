@@ -18,9 +18,14 @@ import ManageProcessForm from '../ProcessRunView/ManageProcessForm';
 interface ProcessAttendedProps {
     isProcessAttended: boolean;
     onAttendedChange: (isAttended: boolean) => void;
+    canConfigure: boolean;
 }
 
-const ProcessAttendedComponent: VFC<ProcessAttendedProps> = ({ isProcessAttended, onAttendedChange }) => {
+const ProcessAttendedComponent: VFC<ProcessAttendedProps> = ({
+    isProcessAttended,
+    onAttendedChange,
+    canConfigure
+}) => {
     const hasReadProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_READ]);
     const hasEditProcessAttendAccess = useFeatureKey([FeatureKey.PROCESS_IS_ATTENDED_EDIT]);
     const { translate } = useTranslations();
@@ -46,6 +51,7 @@ const ProcessAttendedComponent: VFC<ProcessAttendedProps> = ({ isProcessAttended
                     label={translate('Process.Edit.Form.Fields.IsAttended.Label')}
                     labelPlacement="start"
                     sx={{ height: '1.75rem' }}
+                    disabled={!hasEditProcessAttendAccess || !canConfigure}
                 />
             </Wrapper>
             <If condition={hasReadProcessAttendAccess}>

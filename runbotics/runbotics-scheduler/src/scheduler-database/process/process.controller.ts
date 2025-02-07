@@ -41,6 +41,7 @@ import {
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { UpdateExecutionInfoDto, updateExecutionInfoSchema } from './dto/update-execution-info.dto';
+import { isTenantAdmin } from '#/utils/authority.utils';
 
 @UseInterceptors(TenantInterceptor)
 @Controller('/api/scheduler/tenants/:tenantId/processes')
@@ -107,7 +108,7 @@ export class ProcessController {
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateExecutionInfoSchema)) updateExecutionInfoDto: UpdateExecutionInfoDto,
     ) {
-        await this.checkAccess(user, id);
+        await this.hasConfigureAccess(user, id);
 
         return this.processCrudService.partialUpdate(user, id, { executionInfo: updateExecutionInfoDto.executionInfo });
     }
@@ -119,7 +120,7 @@ export class ProcessController {
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateAttendedSchema)) attendedDto: UpdateAttendedDto,
     ) {
-        await this.checkAccess(user, id);
+        await this.hasConfigureAccess(user, id);
 
         return this.processCrudService.partialUpdate(user, id, { isAttended: attendedDto.isAttended });
     }
@@ -131,7 +132,7 @@ export class ProcessController {
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateTriggerableSchema)) triggerableDto: UpdateTriggerableDto,
     ) {
-        await this.checkAccess(user, id);
+        await this.hasTenantAdminAccess(user, id);
 
         return this.processCrudService.partialUpdate(user, id, { isTriggerable: triggerableDto.isTriggerable });
     }
@@ -143,7 +144,7 @@ export class ProcessController {
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessBotCollectionSchema)) updateBotCollectionDto: UpdateProcessBotCollectionDto,
     ) {
-        await this.checkAccess(user, id);
+        await this.hasConfigureAccess(user, id);
 
         return this.processCrudService.partialUpdate(user, id, { botCollection: updateBotCollectionDto.botCollection });
     }
@@ -155,7 +156,7 @@ export class ProcessController {
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessBotSystemSchema)) updateProcessBotSystemDto: UpdateProcessBotSystemDto,
     ) {
-        await this.checkAccess(user, id);
+        await this.hasConfigureAccess(user, id);
 
         return this.processCrudService.partialUpdate(user, id, updateProcessBotSystemDto);
     }
@@ -167,7 +168,8 @@ export class ProcessController {
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessOutputTypeSchema)) updateOutputTypeDto: UpdateProcessOutputTypeDto,
     ) {
-        await this.checkAccess(user, id);
+        console.log('sprawdzam');
+        await this.hasConfigureAccess(user, id);
 
         return this.processCrudService.partialUpdate(user, id, { output: updateOutputTypeDto.output });
     }
@@ -259,5 +261,19 @@ export class ProcessController {
         if (!hasAccess) {
             throw new ForbiddenException();
         }
+    }
+
+    async hasConfigureAccess(user: User, processId: number) {
+        const canConfigure = await this.processService.canConfigureProcess(user, processId);
+
+        if (!canConfigure) {
+            throw new ForbiddenException();
+        }
+    }
+
+    async hasTenantAdminAccess(user, processId: number) {
+        this.hasConfigureAccess(user, processId);
+
+        return isTenantAdmin(user);
     }
 }

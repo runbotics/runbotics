@@ -17,11 +17,13 @@ import { StyledLabel, Wrapper } from './BotComponent.styles';
 interface ProcessOutputComponent {
     selectedProcessOutput: ProcessOutput;
     onSelectProcessOutput: (processOutput: ProcessOutput) => void;
+    canConfigure: boolean;
 }
 
 const ProcessOutputComponent: FC<ProcessOutputComponent> = ({
     selectedProcessOutput,
     onSelectProcessOutput,
+    canConfigure,
 }) => {
     const { processOutputs } = useSelector(processOutputSelector);
     const hasReadProcessOutputAccess = useFeatureKey([FeatureKey.PROCESS_OUTPUT_TYPE_READ]);
@@ -57,7 +59,7 @@ const ProcessOutputComponent: FC<ProcessOutputComponent> = ({
                     value={selectedProcessOutput?.type ?? ''}
                     variant="standard"
                     onChange={handleProcessOutputChange}
-                    disabled={!hasEditProcessOutputAccess}
+                    disabled={!hasEditProcessOutputAccess || !canConfigure}
                 >
                     {getProcessOutputOptions()}
                 </Select>
