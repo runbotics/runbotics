@@ -63,7 +63,7 @@ export const takeScreenshotInputSchema = z.object({
     region: z.union([
         regionDataSchema,
         z.string()
-    ])
+    ]).optional()
 });
 
 export const readTextFromImageInputSchema = z.object({

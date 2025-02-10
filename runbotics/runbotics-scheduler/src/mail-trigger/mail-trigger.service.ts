@@ -8,7 +8,7 @@ import { ServerConfigService } from '#/config/server-config/server-config.servic
 import { QueueService } from '#/queue/queue.service';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { EmailTriggerData, IProcessInstance, ProcessInstanceStatus, TriggerEvent } from 'runbotics-common';
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
+import { TenantService } from '#/scheduler-database/tenant/tenant.service';
 
 const FETCH_MAILS_CONFIG: FetchQueryObject = {
     source: true,
@@ -35,6 +35,7 @@ export class MailTriggerService implements OnModuleInit {
         private readonly serverConfigService: ServerConfigService,
         private readonly queueService: QueueService,
         private readonly schedulerRegistry: SchedulerRegistry,
+        private readonly tenantService: TenantService,
     ) {}
 
     public onModuleInit() {
@@ -118,16 +119,35 @@ export class MailTriggerService implements OnModuleInit {
 
             for await (const msg of messages) {
                 try {
-                    if (!this.isDomainAllowed(msg.envelope.from[0].address)) {
+                    const sender = msg.envelope.from.map(x => x.address)[0];
+                    const subject = msg.envelope.subject;
+
+                    this.logger.log(`Processing email ${msg.uid}: "${subject}" from ${sender} | ${msg.envelope.date.toLocaleString()}`);
+                    processedMails.push(msg.uid);
+
+                    const processId = Number(subject);
+                    const process = !isNaN(processId) ? await this.processService.findById(processId) : undefined;
+                    if (!process) {
+                        const message = `Cannot find process with ID "${subject}".`;
+                        this.logger.error(message);
+                        throw new NotFoundException(message);
+                    }
+
+                    const tenant = await this.tenantService.getById(process.tenantId);
+                    const whitelist = tenant.emailTriggerWhitelist.map(item => item.whitelistItem);
+                    if (!this.isSenderAllowed(sender, whitelist)) {
                         continue;
                     }
 
-                    const sender = msg.envelope.from.map(x => x.address)[0];
+                    await this.queueService.validateProcessAccess({
+                        process,
+                        triggered: true,
+                        user: {
+                            tenantId: process.tenantId,
+                            authorities: [],
+                        },
+                    });
 
-                    this.logger.log(`Processing email ${msg.uid}: "${msg.envelope.subject}" from ${sender} | ${msg.envelope.date.toLocaleString()}`);
-                    processedMails.push(msg.uid);
-
-                    const process = await this.validateTitle(msg.envelope);
                     const variables = await this.extractMailBody(msg.source);
 
                     const input = {
@@ -140,7 +160,7 @@ export class MailTriggerService implements OnModuleInit {
                     await this.queueService.createInstantJob({
                         process,
                         input,
-                        user: null,
+                        user: process.createdBy,
                         trigger: { name: TriggerEvent.EMAIL },
                         triggerData: {
                             sender: sender.toLowerCase(),
@@ -190,26 +210,6 @@ export class MailTriggerService implements OnModuleInit {
         return `Process ${processInstance.process.id} execution has been completed successfully`;
     }
 
-    private async validateTitle(envelope: MessageEnvelopeObject) {
-        const processId = Number(envelope.subject);
-        const process = !isNaN(processId) ? await this.processService.findById(processId) : undefined;
-
-        if (!process) {
-            this.logger.error(`Process "${envelope.subject}" does not exist`);
-            throw new NotFoundException(`Process "${envelope.subject}" does not exist`);
-        }
-
-        await this.queueService.validateProcessAccess({
-            process,
-            triggered: true,
-            user: {
-                tenantId: DEFAULT_TENANT_ID,
-            },
-        });
-
-        return process;
-    }
-
     private sendReplyErrorMail(envelope: MessageEnvelopeObject, text: string) {
         return this.server.sendMail({
             from: envelope.to[0].address,
@@ -257,10 +257,13 @@ export class MailTriggerService implements OnModuleInit {
             }, {});
     }
 
-    private isDomainAllowed(emailAddress: string) {
-        const senderDomain = emailAddress.split('@')[1];
-        return this.serverConfigService.emailTriggerConfig.domainWhitelist.length === 0
-            || this.serverConfigService.emailTriggerConfig.domainWhitelist.includes(senderDomain);
-    }
+    private isSenderAllowed(address: string, emailTriggerWhitelist: string[]) {
+        if (emailTriggerWhitelist.length === 0) return false;
 
+        const senderDomain = address.toLocaleLowerCase().split('@')[1];
+        const isEmailOnWhitelist = emailTriggerWhitelist.includes(address.toLocaleLowerCase());
+        const isDomainOnWhitelist = emailTriggerWhitelist.includes(senderDomain);
+
+        return isEmailOnWhitelist || isDomainOnWhitelist;
+    }
 }

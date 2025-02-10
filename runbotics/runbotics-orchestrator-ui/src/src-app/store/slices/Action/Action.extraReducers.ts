@@ -28,8 +28,9 @@ const buildActionExtraReducers = (
                             id: actionValue.id,
                             label: actionValue.label,
                             script: actionValue.script,
+                            credentialType: actionValue.credentialType,
                             runner: Runner.DESKTOP_SCRIPT,
-                            form: JSON.parse(actionValue.form)
+                            form: JSON.parse(actionValue.form),
                         };
                         if (bpmnAction.form.formData.output) {
                             bpmnAction.output = {

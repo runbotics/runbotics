@@ -12,6 +12,7 @@ import {
     getInviteCodeByTenantId,
     partialUpdate,
     fetchTenantNameByInviteCode,
+    TenantRawBody,
 } from './Tenants.thunks';
 
 const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState>) => {
@@ -21,7 +22,8 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
             state.loading = true;
         })
         .addCase(getAll.fulfilled, (state, action) => {
-            state.all = action.payload;
+            const tenants = action.payload;
+            state.all = tenants.map(emailTriggerWhitelistMapper);
             state.loading = false;
         })
         .addCase(getAll.rejected, (state) => {
@@ -33,7 +35,11 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
             state.loading = true;
         })
         .addCase(getAllByPage.fulfilled, (state, action) => {
-            state.allByPage = action.payload;
+            const tenantPage = action.payload;
+            state.allByPage = {
+                ...tenantPage,
+                content: tenantPage.content.map(emailTriggerWhitelistMapper),
+            };
             state.loading = false;
         })
         .addCase(getAllByPage.rejected, (state) => {
@@ -103,5 +109,10 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
             state.invitingTenant = null;
         });
 };
+
+const emailTriggerWhitelistMapper = ({ emailTriggerWhitelist, ...rest }: TenantRawBody) => ({
+    ...rest,
+    emailTriggerWhitelist: emailTriggerWhitelist.map(item => item.whitelistItem),
+});
 
 export default buildTenantsExtraReducers;

@@ -4,9 +4,9 @@ import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/hel
 
 import { getCredentialTypeFromActionGroup } from './Credential.utils';
 
-const getCredentialType = (element: BPMNElement): ActionCredentialType => element.businessObject?.credentialType
+const getCredentialType = (element: BPMNElement): ActionCredentialType => element?.businessObject?.credentialType
     ?? getCredentialTypeFromActionGroup(
-        element.businessObject?.actionId.split('.')[0]
+        element?.businessObject?.actionId.split('.')[0]
     );
 
 export default getCredentialType;

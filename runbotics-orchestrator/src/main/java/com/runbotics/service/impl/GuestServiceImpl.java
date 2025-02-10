@@ -2,15 +2,11 @@ package com.runbotics.service.impl;
 
 import com.runbotics.domain.Authority;
 import com.runbotics.domain.Guest;
-import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
 import com.runbotics.repository.GuestRepository;
 import com.runbotics.security.AuthoritiesConstants;
 import com.runbotics.service.GuestService;
-import com.runbotics.service.ProcessService;
 import com.runbotics.service.UserService;
-import com.runbotics.service.dto.ProcessDTO;
-import com.runbotics.service.exception.GuestProcessInternalServerError;
 import com.runbotics.utils.Utils;
 import java.util.*;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,18 +20,15 @@ public class GuestServiceImpl implements GuestService {
 
     private final UserService userService;
     private final GuestRepository guestRepository;
-    private final ProcessService processService;
     private final PasswordEncoder passwordEncoder;
 
     public GuestServiceImpl(
         UserService userService,
         GuestRepository guestRepository,
-        ProcessService processService,
         PasswordEncoder passwordEncoder
     ) {
         this.userService = userService;
         this.guestRepository = guestRepository;
-        this.processService = processService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -53,19 +46,6 @@ public class GuestServiceImpl implements GuestService {
         User guestUser = userService.saveUser(createGuestUser(langKey));
         guestRepository.save(createGuest(guestIp, guestUser));
         return guestUser;
-    }
-
-    @Override
-    public ProcessDTO getGuestDemoProcess() {
-        User guest = this.userService.getUserWithAuthorities().get();
-
-        List<ProcessDTO> processes = this.processService.findUserProcesses(guest);
-
-        if (processes.size() > 1) {
-            throw new GuestProcessInternalServerError();
-        }
-
-        return processes.get(0);
     }
 
     @Transactional

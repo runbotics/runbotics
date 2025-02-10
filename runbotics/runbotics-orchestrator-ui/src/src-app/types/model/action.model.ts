@@ -1,7 +1,10 @@
+import { ActionCredentialType } from 'runbotics-common';
+
 export interface IAction {
     id?: string;
     label?: string | null;
     script?: string | null;
+    credentialType?: ActionCredentialType | string;
     form?: string | null;
 }
 
@@ -48,6 +51,7 @@ const defaultForm = {
 export const defaultValue: Readonly<IAction> = {
     id: '',
     label: '',
+    credentialType: '',
     script: 'external.',
     form: JSON.stringify(defaultForm, null, '\t'),
 };

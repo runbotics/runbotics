@@ -1,6 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ProcessCollection } from 'runbotics-common';
 
+import { RootState } from '#src-app/store';
+import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
 import { PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
@@ -12,51 +14,54 @@ const buildCollectionURL = (params: PageRequestParams, url: string) => URLBuilde
     .params(params)
     .build();
 
-export const getWithAccess = createAsyncThunk<void, PageRequestParams, { rejectValue: any }>(
+const PROCESS_COLLECTION_PATH = 'process-collection';
+const SCHEDULER_API_PATH = '/api/scheduler/tenants';
+
+export const getWithAccess = ApiTenantResource.get<ProcessCollection>(
     'processCollection/getWithAccess',
-    (params, { rejectWithValue }) =>
-        axios.get(buildCollectionURL(params, '/api/process-collection/access'))
-            .then((response) => response.data)
-            .catch((error) => rejectWithValue(error))
+    `${PROCESS_COLLECTION_PATH}/access`
 );
 
-export const getAllWithAncestors = createAsyncThunk<ProcessCollectionPack, PageRequestParams, { rejectValue: any }>(
-    'processCollection/getAllWithAncestors',
-    (params, { rejectWithValue }) =>
-        axios.get(buildCollectionURL(params, '/api/process-collection'))
-            .then((response) => response.data)
-            .catch((error) => rejectWithValue(error))
-);
+export const getAllWithAncestors = createAsyncThunk<ProcessCollectionPack, PageRequestParams, { state: RootState; }
+>('processCollection/getAllWithAncestors', (params, { getState }) => {
+    const { auth: { user } } = getState();
+    return axios.get(buildCollectionURL(params, `${SCHEDULER_API_PATH}/${user.tenant.id}/${PROCESS_COLLECTION_PATH}`))
+        .then((response) => response.data);
+});
 
-export const createOne = createAsyncThunk<ProcessCollection, CollectionCreateParams, { rejectValue: any }>(
+export const createOne = createAsyncThunk<ProcessCollection, CollectionCreateParams, { state: RootState }>(
     'processCollection/createCollection',
-    ({ body, parentId }, { rejectWithValue }) =>
-        axios.post<ProcessCollection>('/api/process-collection', body)
-            .then((response) => response.data)
-            .catch(error => rejectWithValue(error))
+    ({ body }, { getState }) => {
+        const { description, ...bodyWithoutDescription } = body;
+        const correctBody = { ...bodyWithoutDescription, ...(description && { description }) };
+        const { auth: { user } } = getState();
+        return axios.post<ProcessCollection>(`${SCHEDULER_API_PATH}/${user.tenant.id}/${PROCESS_COLLECTION_PATH}`, correctBody)
+            .then((response) => response.data);
+    });
+
+export const getAllAccessible = ApiTenantResource.get<ProcessCollection[]>(
+    'processCollection/getAccessible',
+    `${PROCESS_COLLECTION_PATH}/user-accessible`
 );
 
-export const getAllAccessible = createAsyncThunk<ProcessCollection[]>(
-    'processCollection/getAccessible/',
-    (_, { rejectWithValue }) => axios.get<ProcessCollection[]>('/api/process-collection/user-accessible/')
-        .then((response) => response.data)
-        .catch(error => rejectWithValue(error))
-);
-
-export const updateOne = createAsyncThunk<ProcessCollection, CollectionUpdateParams, { rejectValue: any }>(
+export const updateOne = createAsyncThunk<ProcessCollection, CollectionUpdateParams, { state: RootState }>(
     'processCollection/createCollection/{id}',
-    ({ id, body, parentId }, { rejectWithValue }) =>
-        axios.put<ProcessCollection>(`/api/process-collection/${id}`, body)
-            .then((response) => response.data)
-            .catch(error => rejectWithValue(error))
+    ({ id, body }, { getState }) => {
+        const { description, ...bodyWithoutDescription } = body;
+        const correctBody = { ...bodyWithoutDescription, ...(description && { description }) };
+        const { auth: { user } } = getState();
+        return axios.put<ProcessCollection>(`${SCHEDULER_API_PATH}/${user.tenant.id}/${PROCESS_COLLECTION_PATH}/${id}`, correctBody)
+            .then((response) => response.data);
+    }
 );
 
-export const deleteOne = createAsyncThunk<ProcessCollection, CollectionDeleteParams, { rejectValue: any }>(
+export const deleteOne = createAsyncThunk<ProcessCollection, CollectionDeleteParams, { state: RootState }>(
     'processCollection/deleteCollection/{id}',
-    ({ id }, { rejectWithValue }) =>
-        axios.delete<ProcessCollection>(`/api/process-collection/${id}`)
-            .then((response) => response.data)
-            .catch(error => rejectWithValue(error))
+    ({ id }, {  getState }) => {
+        const { auth: { user } } = getState();
+        return axios.delete<ProcessCollection>(`${SCHEDULER_API_PATH}/${user.tenant.id}/${PROCESS_COLLECTION_PATH}/${id}`)
+            .then((response) => response.data);
+    }
 );
 
 const processCollectionThunks = {

@@ -3,6 +3,6 @@ import { IProcess } from 'runbotics-common';
 
 export interface ValidateProcessAccessProps {
     process: IProcess,
-    user?: Partial<User>,
+    user: Partial<User>,
     triggered?: boolean
 }
