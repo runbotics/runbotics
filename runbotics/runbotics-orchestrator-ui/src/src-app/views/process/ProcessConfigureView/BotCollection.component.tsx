@@ -8,6 +8,7 @@ import { BotCollectionDto, FeatureKey } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useProcessConfigurator from '#src-app/hooks/useProcessConfigurator';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { botCollectionSelector } from '#src-app/store/slices/BotCollections';
@@ -19,18 +20,17 @@ import { StyledLabel, Wrapper } from './BotComponent.styles';
 interface BotCollectionProps {
     selectedBotCollection: BotCollectionDto;
     onSelectBotCollection?: (collection: BotCollectionDto) => void;
-    canConfigure: boolean;
 }
 
 const BotCollectionComponent: VFC<BotCollectionProps> = ({
     selectedBotCollection,
     onSelectBotCollection,
-    canConfigure
 }) => {
     const { botCollections } = useSelector(botCollectionSelector);
     const { translate } = useTranslations();
     const hasReadBotCollectionAccess = useFeatureKey([FeatureKey.PROCESS_BOT_COLLECTION_READ]);
     const hasEditBotCollectionAccess = useFeatureKey([FeatureKey.PROCESS_BOT_COLLECTION_EDIT]);
+    const canConfigure = useProcessConfigurator();
 
     const getBotCollectionsOptions = () => botCollections.map((collection) => (
         <MenuItem value={collection.id} key={collection.id}>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, FC } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 
 import LockIcon from '#public/images/icons/lock.svg';
 import { useRequiredCredentialTypes } from '#src-app/credentials/useRequiredCredentialTypes';
+import useProcessConfigurator from '#src-app/hooks/useProcessConfigurator';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useWindowSize from '#src-app/hooks/useWindowSize';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -27,16 +28,13 @@ import { ProcessCredentialsAddDialog } from './ProcessCredentialsAddDialog';
 import { ProcessCredentialsColumn } from './ProcessCredentialsColumn';
 import { ProcessCredentialsDeleteDialog } from './ProcessCredentialsDeleteDialog';
 
-interface ProcessCredentialsProps {
-    canConfigure: boolean;
-}
-
-const ProcessCredentials: FC<ProcessCredentialsProps> = ({ canConfigure }) => {
+const ProcessCredentials = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { id: processId } = useRouter().query;
     const { draft: { credentials: processCredentials } } = useSelector(processSelector);
+    const canConfigure = useProcessConfigurator();
     const credentialTypes = useRequiredCredentialTypes();
     const actionCredentials = useMemo(
         () => credentialTypes ? sortByActionCredentialType(processCredentials, credentialTypes) : null,

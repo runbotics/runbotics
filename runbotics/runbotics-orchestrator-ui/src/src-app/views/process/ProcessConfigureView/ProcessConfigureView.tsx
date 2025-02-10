@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Dialog } from '@mui/material';
 import { useRouter } from 'next/router';
-import { IBotSystem, IBotCollection, NotificationProcess, NotificationProcessType, Role } from 'runbotics-common';
+import { IBotSystem, IBotCollection, NotificationProcess, NotificationProcessType } from 'runbotics-common';
 
 import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.model';
 
@@ -11,8 +11,6 @@ import NotificationTableComponent from '#src-app/components/tables/NotificationT
 import { ProcessNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
 import useProcessNotificationColumns from '#src-app/components/tables/NotificationTable/useProcessNotificationColumns';
 import useAuth from '#src-app/hooks/useAuth';
-import { useOwner } from '#src-app/hooks/useOwner';
-import useRole from '#src-app/hooks/useRole';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
@@ -56,9 +54,6 @@ const ProcessConfigureView: VFC = () => {
     const [triggerable, setTriggerable] = useState(process?.isTriggerable);
 
     const { user } = useAuth();
-    const isProcessOwner = useOwner();
-    const isAdminOrTenantAdmin = useRole([Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN]);
-    const canConfigure = isProcessOwner(process.createdBy?.id) || isAdminOrTenantAdmin;
     const [open, setOpen] = useState(false);
 
     const notificationTableColumns = useProcessNotificationColumns({ onDelete: handleDeleteSubscription });
@@ -160,7 +155,6 @@ const ProcessConfigureView: VFC = () => {
                             <BotSystemComponent
                                 selectedBotSystem={selectedBotSystem}
                                 onSelectBotSystem={handleSelectBotSystem}
-                                canConfigure={canConfigure}
                             />
                         </StyledPaper>
                     </Box>
@@ -169,7 +163,6 @@ const ProcessConfigureView: VFC = () => {
                             <BotCollectionComponent
                                 selectedBotCollection={selectedBotCollection}
                                 onSelectBotCollection={handleSelectBotCollection}
-                                canConfigure={canConfigure}
                             />
                         </StyledPaper>
                     </Box>
@@ -178,7 +171,6 @@ const ProcessConfigureView: VFC = () => {
                             <ProcessOutputComponent
                                 selectedProcessOutput={processOutputType}
                                 onSelectProcessOutput={handleSelectProcessOutputType}
-                                canConfigure={canConfigure}
                             />
                         </StyledPaper>
                     </Box>
@@ -187,7 +179,6 @@ const ProcessConfigureView: VFC = () => {
                             <ProcessAttendedComponent
                                 isProcessAttended={attended}
                                 onAttendedChange={handleAttendanceChange}
-                                canConfigure={canConfigure}
                             />
                         </AttendancePaper>
                     </Box>
@@ -213,7 +204,7 @@ const ProcessConfigureView: VFC = () => {
                 </SettingsContainer>
                 <CredentialsContainer>
                     <StyledPaper>
-                        <ProcessCredentials canConfigure={canConfigure}/>
+                        <ProcessCredentials/>
                     </StyledPaper>
                 </CredentialsContainer>
             </PageContainer>

@@ -168,7 +168,6 @@ export class ProcessController {
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessOutputTypeSchema)) updateOutputTypeDto: UpdateProcessOutputTypeDto,
     ) {
-        console.log('sprawdzam');
         await this.hasConfigureAccess(user, id);
 
         return this.processCrudService.partialUpdate(user, id, { output: updateOutputTypeDto.output });

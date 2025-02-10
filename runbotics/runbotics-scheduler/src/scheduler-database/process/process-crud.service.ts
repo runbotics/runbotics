@@ -157,24 +157,24 @@ export class ProcessCrudService {
 
         const partial: Partial<ProcessEntity> = {};
 
-        if (user.id === Number(currentProcess.createdBy.id) || isTenantAdmin(user)) {
-            if ('executionInfo' in processDto) {
-                partial.executionInfo = processDto.executionInfo;
-            } else if ('isAttended' in processDto) {
-                partial.isAttended = processDto.isAttended;
-            } else if ('isTriggerable' in processDto && isTenantAdmin(user)) {
-                partial.isTriggerable = processDto.isTriggerable;
-            } else if ('botCollection' in processDto) {
-                partial.botCollectionId = processDto.botCollection?.id;
-            } else if ('system' in processDto) {
-                partial.systemName = processDto.system?.name;
-            } else if ('output' in processDto) {
-                partial.outputType = processDto.output?.type;
-            } else {
-                throw new BadRequestException();
-            }
-        } else {
+        if (user.id !== Number(currentProcess.createdBy.id) && !isTenantAdmin(user)) {
             throw new ForbiddenException();
+        }
+
+        if ('executionInfo' in processDto) {
+            partial.executionInfo = processDto.executionInfo;
+        } else if ('isAttended' in processDto) {
+            partial.isAttended = processDto.isAttended;
+        } else if ('isTriggerable' in processDto && isTenantAdmin(user)) {
+            partial.isTriggerable = processDto.isTriggerable;
+        } else if ('botCollection' in processDto) {
+            partial.botCollectionId = processDto.botCollection?.id;
+        } else if ('system' in processDto) {
+            partial.systemName = processDto.system?.name;
+        } else if ('output' in processDto) {
+            partial.outputType = processDto.output?.type;
+        } else {
+            throw new BadRequestException();
         }
 
         partial.updated = dayjs().toISOString();
