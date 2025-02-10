@@ -53,7 +53,9 @@ const GatewayFormRenderer = () => {
                         })
                     );
                 }
+
                 const expression = flow.businessObject.conditionExpression?.body;
+
                 if (expression !== undefined) {
                     initExpressions[flow.id] = expression;
                 }
@@ -88,7 +90,8 @@ const GatewayFormRenderer = () => {
 
     const handleFlowChanged = (value: string, id: string) => {
         filteredGatewayConnections.forEach(outgoing => {
-            if (expressions && id === outgoing.id && expressions[outgoing.id] !== value) {
+            const hasExpressionChanged = expressions && id === outgoing.id && expressions[outgoing.id] !== value;
+            if (hasExpressionChanged) {
                 BpmnConnectionFactory.from(modeler).setConditionExpression(outgoing, value);
                 setExpressions({ ...expressions, [id]: value });
             }
