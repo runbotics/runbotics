@@ -5,7 +5,7 @@ import { ProcessEntity } from './process.entity';
 import { IProcess } from 'runbotics-common';
 import { isTenantAdmin } from '#/utils/authority.utils';
 import { User } from '#/scheduler-database/user/user.entity';
-import { ProcessCollectionService } from '#/database/process-collection/dto/process-collection.service';
+import { ProcessCollectionService } from '../process-collection/process-collection.service';
 
 const relations = [
     'createdBy',

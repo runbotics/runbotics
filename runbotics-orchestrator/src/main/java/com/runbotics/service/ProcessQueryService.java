@@ -44,8 +44,6 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private final UserService userService;
 
-    private final ProcessCollectionService processCollectionService;
-
     private final String PROCESS_NAME = "name";
 
     private final String PROCESS_TAG_NAME = "tagName";
@@ -54,16 +52,10 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private final String PROCESS_COLLECTION = "processCollection";
 
-    public ProcessQueryService(
-        ProcessRepository processRepository,
-        ProcessMapper processMapper,
-        UserService userService,
-        ProcessCollectionService processCollectionService
-    ) {
+    public ProcessQueryService(ProcessRepository processRepository, ProcessMapper processMapper, UserService userService) {
         this.processRepository = processRepository;
         this.processMapper = processMapper;
         this.userService = userService;
-        this.processCollectionService = processCollectionService;
     }
 
     /**
@@ -118,9 +110,7 @@ public class ProcessQueryService extends QueryService<Process> {
         var userEmail = userService.getUserWithAuthorities().get().getEmail();
         final Specification<Process> specification = createSpecification(criteria);
         if (criteria.getCreatedByName() != null) {
-            return processRepository
-                .findByCreatedByUser(userEmail, page)
-                .map(processMapper::toDto);
+            return processRepository.findByCreatedByUser(userEmail, page).map(processMapper::toDto);
         }
         if (criteria.getBotCollectionName() != null) {
             return processRepository

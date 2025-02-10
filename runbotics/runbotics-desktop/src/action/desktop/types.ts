@@ -1,7 +1,18 @@
 import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { DesktopAction } from 'runbotics-common';
 import z from 'zod';
-import { clickInputSchema, copyInputSchema, cursorSelectInputSchema, performKeyboardShortcutInputSchema, pointDataSchema, readTextFromImageInputSchema, regionDataSchema, takeScreenshotInputSchema, typeCredentialsInputSchema, typeInputSchema } from './desktop.utils';
+import {
+    clickInputSchema,
+    copyInputSchema,
+    cursorSelectInputSchema,
+    performKeyboardShortcutInputSchema,
+    pointDataSchema,
+    readTextFromImageInputSchema,
+    regionDataSchema,
+    takeScreenshotInputSchema,
+    typeCredentialsInputSchema,
+    typeInputSchema
+} from './desktop.utils';
 
 export const KEY_REFERENCE = 'Key.';
 

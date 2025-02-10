@@ -542,6 +542,7 @@
     "Process.Details.Modeler.ActionPanel.Form.Connection.Expression": "Wyrażenie",
     "Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression": "Wyrażenie",
     "Process.Details.Modeler.ActionPanel.Form.Gateway.DefaultFlow": "Domyślny przepływ",
+    "Process.Details.Modeler.ActionPanel.Form.Gateway.NoDefaultFlow": "Brak",
     "Process.Details.Modeler.ActionPanel.Form.JSONSchema.Errors.ErrorsList": "Błędy w właściwościach akcji: {{ errors }}",
     "Process.Details.Modeler.ActionPanel.Form.JSONSchema.Actions.Reset": "Zresetować",
     "Process.Details.Modeler.ActionPanel.Form.JSONSchema.Actions.Apply": "Zastosować",

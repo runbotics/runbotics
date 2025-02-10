@@ -3,9 +3,9 @@ import { createGlobalVariableSchema } from '#/scheduler-database/global-variable
 import { processOutputReferenceSchema } from '#/scheduler-database/process-output/dto/process-output-reference';
 import { tagReferenceSchema } from '#/scheduler-database/tags/dto/tag-reference';
 import { botSystemReferenceSchema } from '#/scheduler-database/bot-system/dto/bot-system-reference';
-import { processCollectionReferenceSchema } from '#/database/process-collection/dto/process-collection-reference';
 import { botCollectionReferenceSchema } from '#/scheduler-database/bot-collection/dto/bot-collection-reference';
 import { BotSystemType, ProcessOutputType } from 'runbotics-common';
+import { processCollectionReferenceSchema } from '#/scheduler-database/process-collection/dto/process-collection-reference';
 
 export const createProcessSchema = z.object({
     name: z.string().trim().min(1).max(255),

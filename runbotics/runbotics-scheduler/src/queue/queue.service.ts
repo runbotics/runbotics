@@ -179,7 +179,7 @@ export class QueueService implements OnModuleInit {
         const isTriggerable = process?.isTriggerable;
 
         if (!hasProcessAccess && !isPublic && !isAdmin) {
-            this.logger.error(`User${user ? ' ' + user?.email : ''} does not have access to the process "${process?.id}"`);
+            this.logger.error(`User does not have access to the process "${process?.id}"`);
             throw new ForbiddenException(`You do not have access to the process "${process?.id}"`);
         }
 
