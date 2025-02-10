@@ -1,4 +1,4 @@
-import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
@@ -143,7 +143,7 @@ export class ProcessCrudService {
     }
 
     async partialUpdate(user: User, id: number, processDto: PartialUpdateProcessDto) {
-        await this.processRepository
+        const currentProcess = await this.processRepository
             .findOneOrFail({
                 where: {
                     id,
@@ -157,11 +157,15 @@ export class ProcessCrudService {
 
         const partial: Partial<ProcessEntity> = {};
 
+        if (user.id !== Number(currentProcess.createdBy.id) && !isTenantAdmin(user)) {
+            throw new ForbiddenException();
+        }
+
         if ('executionInfo' in processDto) {
             partial.executionInfo = processDto.executionInfo;
         } else if ('isAttended' in processDto) {
             partial.isAttended = processDto.isAttended;
-        } else if ('isTriggerable' in processDto) {
+        } else if ('isTriggerable' in processDto && isTenantAdmin(user)) {
             partial.isTriggerable = processDto.isTriggerable;
         } else if ('botCollection' in processDto) {
             partial.botCollectionId = processDto.botCollection?.id;

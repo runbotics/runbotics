@@ -22,11 +22,7 @@ public class GuestServiceImpl implements GuestService {
     private final GuestRepository guestRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public GuestServiceImpl(
-        UserService userService,
-        GuestRepository guestRepository,
-        PasswordEncoder passwordEncoder
-    ) {
+    public GuestServiceImpl(UserService userService, GuestRepository guestRepository, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.guestRepository = guestRepository;
         this.passwordEncoder = passwordEncoder;

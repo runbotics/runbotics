@@ -52,11 +52,7 @@ public class ProcessQueryService extends QueryService<Process> {
 
     private final String PROCESS_COLLECTION = "processCollection";
 
-    public ProcessQueryService(
-        ProcessRepository processRepository,
-        ProcessMapper processMapper,
-        UserService userService
-    ) {
+    public ProcessQueryService(ProcessRepository processRepository, ProcessMapper processMapper, UserService userService) {
         this.processRepository = processRepository;
         this.processMapper = processMapper;
         this.userService = userService;
@@ -114,9 +110,7 @@ public class ProcessQueryService extends QueryService<Process> {
         var userEmail = userService.getUserWithAuthorities().get().getEmail();
         final Specification<Process> specification = createSpecification(criteria);
         if (criteria.getCreatedByName() != null) {
-            return processRepository
-                .findByCreatedByUser(userEmail, page)
-                .map(processMapper::toDto);
+            return processRepository.findByCreatedByUser(userEmail, page).map(processMapper::toDto);
         }
         if (criteria.getBotCollectionName() != null) {
             return processRepository

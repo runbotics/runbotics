@@ -3,11 +3,12 @@ import React, { VFC, ChangeEvent } from 'react';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import { MenuItem, Select } from '@mui/material';
 
-import { BotCollectionDto, FeatureKey, IBotCollection } from 'runbotics-common';
+import { BotCollectionDto, FeatureKey } from 'runbotics-common';
 
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useProcessConfigurator from '#src-app/hooks/useProcessConfigurator';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { botCollectionSelector } from '#src-app/store/slices/BotCollections';
@@ -22,12 +23,14 @@ interface BotCollectionProps {
 }
 
 const BotCollectionComponent: VFC<BotCollectionProps> = ({
-    selectedBotCollection, onSelectBotCollection,
+    selectedBotCollection,
+    onSelectBotCollection,
 }) => {
     const { botCollections } = useSelector(botCollectionSelector);
     const { translate } = useTranslations();
     const hasReadBotCollectionAccess = useFeatureKey([FeatureKey.PROCESS_BOT_COLLECTION_READ]);
     const hasEditBotCollectionAccess = useFeatureKey([FeatureKey.PROCESS_BOT_COLLECTION_EDIT]);
+    const canConfigure = useProcessConfigurator();
 
     const getBotCollectionsOptions = () => botCollections.map((collection) => (
         <MenuItem value={collection.id} key={collection.id}>
@@ -58,7 +61,7 @@ const BotCollectionComponent: VFC<BotCollectionProps> = ({
                     value={selectedBotCollection?.id ?? ''}
                     variant="standard"
                     onChange={handleBotCollectionChange}
-                    disabled={!hasEditBotCollectionAccess}
+                    disabled={!hasEditBotCollectionAccess || !canConfigure}
                 >
                     {getBotCollectionsOptions()}
                 </Select>
