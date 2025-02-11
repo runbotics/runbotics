@@ -28,7 +28,7 @@
         "@microsoft/microsoft-graph-client": "^3.0.5",
         "@nestjs-modules/mailer": "1.8.1",
         "@nestjs/common": "^9.2.1",
-        "@nestjs/config": "^2.2.0",
+        "@nestjs/config": "^4.0.0",
         "@nestjs/core": "^9.2.1",
         "arch": "^2.1.1",
         "asana": "^0.18.6",
