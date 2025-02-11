@@ -2,6 +2,12 @@
 const editListTranslations = {
     'Tenants.List.Edit.Form.Title': 'Edit tenant',
     'Tenants.List.Edit.Form.Label.Name': 'Name',
+    'Tenants.List.Edit.Form.Section.Triggering': 'Triggering',
+    'Tenants.List.Edit.Form.Label.Whitelist': 'Email trigger whitelist',
+    'Tenants.List.Edit.Form.Label.Whitelist.Tooltip': 'Email trigger whitelist. Accepts valid email addresses and domains allowed to trigger processes by email across this tenant.',
+    'Tenants.List.Edit.Form.Input.Label.Whitelist': 'Email whitelist',
+    'Tenants.List.Edit.Form.Input.Placeholder.Whitelist': 'Type input',
+    'Tenants.List.Edit.Form.Input.HelperText.Whitelist': 'Invalid input value. Acceptable and unique whitelist items are valid email addresses or domains.',
     'Tenants.List.Edit.Form.Event.Success': 'Successfully saved changes',
     'Tenants.List.Edit.Form.Event.Error': 'Error',
     'Tenants.List.Edit.Form.Event.Error.InvalidId': 'Invalid ID',

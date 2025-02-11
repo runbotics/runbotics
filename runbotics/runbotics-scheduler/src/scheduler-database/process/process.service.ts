@@ -5,7 +5,7 @@ import { ProcessEntity } from './process.entity';
 import { IProcess } from 'runbotics-common';
 import { isTenantAdmin } from '#/utils/authority.utils';
 import { User } from '#/scheduler-database/user/user.entity';
-import { ProcessCollectionService } from '#/database/process-collection/dto/process-collection.service';
+import { ProcessCollectionService } from '../process-collection/process-collection.service';
 
 const relations = [
     'createdBy',
@@ -98,5 +98,11 @@ export class ProcessService {
         const process = await this.processRepository.findOneByOrFail({id: processId});
 
         return this.processCollectionService.hasAccess(user, process.processCollectionId);
+    }
+
+    async canConfigureProcess(user: User, processId: number): Promise<boolean> {
+        const process = await this.findById(processId);
+
+        return user.id === process.createdBy.id || isTenantAdmin(user);
     }
 }

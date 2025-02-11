@@ -258,7 +258,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             const parsedObject = JSON.parse(validJson);
             return parsedObject;
         } catch (error) {
-            throw new Error(`Provided input ${input} is not a valid coordinates object. Object properties (x, y) must be separated by coma and must be numeric.`);
+            throw new Error(`Provided input ${input} is not a valid object. Object properties must be separated by coma and must be numeric.`);
         }
     }
 

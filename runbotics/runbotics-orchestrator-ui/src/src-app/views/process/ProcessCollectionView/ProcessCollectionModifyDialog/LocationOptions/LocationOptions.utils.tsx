@@ -23,7 +23,7 @@ export const getIcon = ({ isPublic, users }: GetIconParams) => {
     if (isPublic) {
         return accessTooltipIcon.public;
     }
-    if (users.length > 0) {
+    if (users?.length  > 0) {
         return accessTooltipIcon.specificUsers;
     }
     return accessTooltipIcon.private;

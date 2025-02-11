@@ -1,6 +1,8 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, useEffect } from 'react';
 
 import { TextField } from '@mui/material';
+
+import { ActionCredentialType } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -8,7 +10,7 @@ import { IAction } from '#src-app/types/model/action.model';
 
 import { isStringValueEmpty } from '#src-app/utils/isStringValueEmpty';
 
-import { ExternalActionFormValidationState, isScriptNameValid } from '../action.utils';
+import { ExternalActionFormValidationState, isCredentialTypeValid, isScriptNameValid } from '../action.utils';
 
 
 interface ExternalActionFormProps {
@@ -26,11 +28,6 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
             ...prev,
             script: e.target.value
         }));
-
-        setFormValidationState(prevState => ({
-            ...prevState,
-            script: isScriptNameValid(e.target.value)
-        }));
     };
 
     const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,10 +35,12 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
             ...prev,
             label: e.target.value
         }));
+    };
 
-        setFormValidationState(prevState => ({
-            ...prevState,
-            label: !isStringValueEmpty(e.target.value)
+    const handleCredentialTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setDraft(prev => ({
+            ...prev,
+            credentialType: e.target.value
         }));
     };
 
@@ -59,6 +58,27 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
         }),
     };
 
+    const credentialTypeInputErrorProperties = {
+        ...(!formValidationState.credentialType && {
+            error: true,
+            helperText: translate(
+                'Action.Details.Form.CredentialType.Error',
+                {
+                    types: Object.values(ActionCredentialType).join(', '),
+                },
+            ),
+        }),
+    };
+
+    useEffect(() => {
+        const { script, label, credentialType } = draft;
+        setFormValidationState(prevState => ({
+            ...prevState,
+            script: isScriptNameValid(script),
+            label: !isStringValueEmpty(label),
+            credentialType: isStringValueEmpty(credentialType) || isCredentialTypeValid(credentialType),
+        }));
+    }, [draft.label, draft.script, draft.credentialType]);
 
     return (
         <>
@@ -80,12 +100,24 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
                 name="label"
                 required
                 sx={{
-                    margin: theme => `${theme.spacing(1)} 0 ${theme.spacing(5)} 0`
+                    margin: theme => `${theme.spacing(1)} 0`
                 }}
                 value={draft.label}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleLabelChange(e)}
                 autoComplete="off"
                 {...labelInputErrorProperties}
+            />
+            <TextField
+                fullWidth
+                label={translate('Action.Details.CredentialType')}
+                name="credentialType"
+                sx={{
+                    margin: theme => `${theme.spacing(1)} 0 ${theme.spacing(5)} 0`
+                }}
+                value={draft.credentialType}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => handleCredentialTypeChange(e)}
+                autoComplete="off"
+                {...credentialTypeInputErrorProperties}
             />
         </>
     );
