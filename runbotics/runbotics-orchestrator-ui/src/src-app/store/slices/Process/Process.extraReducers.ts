@@ -121,18 +121,6 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.draft.loading = LoadingType.IDLE;
         })
 
-    // // UPDATE PROCESS
-    // .addCase(updateProcess.pending, (state) => {
-    //     state.all.loading = true;
-    // })
-    // .addCase(updateProcess.fulfilled, (state) => {
-    //     // state.draft.process = action.payload;
-    //     state.all.loading = false;
-    // })
-    // .addCase(updateProcess.rejected, (state) => {
-    //     state.all.loading = false;
-    // })
-
         // DELETE
         .addCase(deleteProcess.pending, (state) => {
             state.all.loading = true;
