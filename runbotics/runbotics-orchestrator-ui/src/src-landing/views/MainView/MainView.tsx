@@ -14,6 +14,7 @@ import IntegrationSection from '#src-landing/views/sections/IntegrationSection';
 import OpenSourceSection from '#src-landing/views/sections/OpenSourceSection';
 import PartnerSection from '#src-landing/views/sections/PartnerSection';
 import ProsSection from '#src-landing/views/sections/ProsSection';
+import ReferencesSection from '#src-landing/views/sections/ReferencesSection/ReferencesSection';
 import RPASection from '#src-landing/views/sections/RPASection';
 
 interface Props {
@@ -34,6 +35,7 @@ const MainView: VFC<Props> = ({ blogPosts }) => {
             <OpenSourceSection />
             {/* <TemplatesSection /> */}
             <IntegrationSection />
+            <ReferencesSection />
             <PartnerSection />
             <AboutTeamSection />
             <BlogSection posts={blogPosts} />
