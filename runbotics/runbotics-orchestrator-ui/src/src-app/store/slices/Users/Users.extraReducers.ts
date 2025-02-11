@@ -12,6 +12,7 @@ import {
     getAllByPageInTenant,
     update,
     updateInTenant,
+    deleteUserInTenant,
 } from './Users.thunks';
 
 const getActionAdminFilterContext = (
@@ -145,6 +146,17 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
             state.userDelete.loading = false;
         })
         .addCase(deleteUser.rejected, (state) => {
+            state.userDelete.loading = false;
+        })
+
+        // DELETE USER FOR TENANT ADMIN
+        .addCase(deleteUserInTenant.pending, (state) => {
+            state.userDelete.loading = true;
+        })
+        .addCase(deleteUserInTenant.fulfilled, (state) => {
+            state.userDelete.loading = false;
+        })
+        .addCase(deleteUserInTenant.rejected, (state) => {
             state.userDelete.loading = false;
         })
 

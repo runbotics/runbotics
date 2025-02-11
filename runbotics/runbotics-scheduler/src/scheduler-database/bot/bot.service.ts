@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { BotEntity } from './bot.entity';
 import {
     BotStatus,
@@ -46,38 +46,26 @@ export class BotService {
         collection: IBotCollection,
         system: IBotSystem,
     ): Promise<IBot[]> {
+        const availableBots = await this.botRepository.find({
+            where: [
+                {
+                    ...(system.name !== BotSystemType.ANY && { system }),
+                    status: In([BotStatus.CONNECTED, BotStatus.BUSY]),
+                    tenantId: collection.tenantId,
+                    collectionId: collection.id,
+                },
+                {
+                    ...(system.name !== BotSystemType.ANY && { system }),
+                    status: In([BotStatus.CONNECTED, BotStatus.BUSY]),
+                    collection: {
+                        name: In([DefaultCollections.PUBLIC, DefaultCollections.GUEST]),
+                    }
+                }
+            ],
+            relations,
+        });
 
-        const systemCondition = `${
-            system.name === BotSystemType.ANY ? '' : 'bot.SYSTEM = :system'
-        }`;
-
-        const statusCondition =
-            '(bot.status = :connected OR bot.status = :busy)';
-
-        const collectionCondition = `
-        (bot.tenant_id = :tenantId AND bot.collection_id = :collectionId
-        ${
-            collection.publicBotsIncluded
-                ? 'OR bot_collection.name = :public OR bot_collection.name = :guest'
-                : ''
-        } )`;
-
-        return await this.botRepository
-            .createQueryBuilder('bot')
-            .leftJoinAndSelect('bot.collection', 'bot_collection')
-            .where(systemCondition)
-            .andWhere(statusCondition)
-            .andWhere(collectionCondition)
-            .setParameters({
-                collectionId: collection.id,
-                system: system.name,
-                connected: BotStatus.CONNECTED,
-                busy: BotStatus.BUSY,
-                public: DefaultCollections.PUBLIC,
-                guest: DefaultCollections.GUEST,
-                tenantId: collection.tenantId,
-            })
-            .getMany();
+        return availableBots;
     }
 
     async updateConnectedBotStatus(botId: IBot['id']) {

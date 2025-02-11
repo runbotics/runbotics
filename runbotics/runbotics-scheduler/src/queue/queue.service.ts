@@ -33,6 +33,7 @@ import { ServerConfigService } from '#/config/server-config/server-config.servic
 import { ScheduleProcessService } from '#/scheduler-database/schedule-process/schedule-process.service';
 import { QueueMessageService } from './queue-message.service';
 import { randomUUID } from 'crypto';
+import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 
 @Injectable()
 export class QueueService implements OnModuleInit {
@@ -68,7 +69,8 @@ export class QueueService implements OnModuleInit {
             removeOnFail: true,
         })
             .then(() => {
-                this.uiGateway.server.emit(WsMessage.ADD_SCHEDULE_PROCESS, scheduledProcess);
+                const tenantRoom = scheduledProcess.process.tenantId;
+                this.uiGateway.emitTenant(tenantRoom, WsMessage.ADD_SCHEDULE_PROCESS, scheduledProcess);
                 this.logger.log(`Process: "${scheduledProcess.process.name}":${scheduledProcess.process.id} successfully scheduled | scheduleID: ${scheduledProcess.id}`);
             })
             .catch(err => this.logger.error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
@@ -136,8 +138,9 @@ export class QueueService implements OnModuleInit {
     async deleteJobFromQueue(id: JobId) {
         this.logger.log(`Deleting waiting job with id: ${id}`);
         const job = await this.processQueue.getJob(id);
+        const tenantRoom = job.data.process.tenantId;
 
-        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_WAITING_SCHEDULE, job);
         await job?.remove();
         this.logger.log(`Job with id: ${id} successfully deleted`);
     }
@@ -176,7 +179,7 @@ export class QueueService implements OnModuleInit {
         const isTriggerable = process?.isTriggerable;
 
         if (!hasProcessAccess && !isPublic && !isAdmin) {
-            this.logger.error(`User${user ? ' ' + user?.email : ''} does not have access to the process "${process?.id}"`);
+            this.logger.error(`User does not have access to the process "${process?.id}"`);
             throw new ForbiddenException(`You do not have access to the process "${process?.id}"`);
         }
 
@@ -253,7 +256,7 @@ export class QueueService implements OnModuleInit {
         }
     }
 
-    async deleteScheduledJob(id: number) {
+    async deleteScheduledJob(id: number, tenantRoom: Tenant['id']) {
         this.logger.log(`Deleting scheduled job with id: ${id}`);
 
         const scheduledJob = await this.processQueue.getRepeatableJobs()
@@ -266,7 +269,7 @@ export class QueueService implements OnModuleInit {
         await this.deleteQueueJobsBySchedule(id);
 
         await this.processQueue.removeRepeatableByKey(scheduledJob.key);
-        this.uiGateway.server.emit(WsMessage.REMOVE_SCHEDULE_PROCESS, scheduledJob);
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_SCHEDULE_PROCESS, scheduledJob);
         this.logger.log(`Scheduled job with id: ${id} successfully deleted`);
     }
 

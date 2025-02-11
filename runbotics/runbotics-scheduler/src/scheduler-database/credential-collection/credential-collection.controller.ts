@@ -46,8 +46,6 @@ export class CredentialCollectionController {
             createCredentialCollectionDto: CreateCredentialCollectionDto,
         @UserDecorator() user: User,
     ) {
-        this.logger.log('REST request to create credential collection');
-
         const collection = await this.credentialCollectionService.create(
             createCredentialCollectionDto,
             user,
@@ -62,7 +60,6 @@ export class CredentialCollectionController {
         @Pageable() paging: Paging,
         @UserDecorator() user: User,
       ) {
-        this.logger.log('REST request to get credential collections by page');
         return this.credentialCollectionService.getAllAccessiblePages(user, specs, paging);
       }
 
@@ -70,8 +67,6 @@ export class CredentialCollectionController {
     findAll(
         @UserDecorator() user: User,
     ) {
-        this.logger.log('REST request to get credential collections');
-
         return this.credentialCollectionService.findAllAccessible(user);
     }
 
@@ -80,8 +75,6 @@ export class CredentialCollectionController {
         @Param('id') id: string,
         @UserDecorator() user: User,
     ) {
-        this.logger.log(`REST request to get collection with id (${id})`);
-
         return this.credentialCollectionService.findOneAccessibleById(id, user);
     }
 
@@ -92,7 +85,6 @@ export class CredentialCollectionController {
             updateCredentialCollectionDto: UpdateCredentialCollectionDto,
         @UserDecorator() user: User,
     ) {
-        this.logger.log(`REST request to update credential collection with id (${id})`);
 
         return this.credentialCollectionService.update(
             id,
@@ -107,7 +99,6 @@ export class CredentialCollectionController {
         @Param('id') id: string,
         @UserDecorator() user: User,
     ) {
-        this.logger.log(`REST request to delete credential collection with id (${id})`);
         await this.credentialCollectionService.delete(id, user);
     }
 }

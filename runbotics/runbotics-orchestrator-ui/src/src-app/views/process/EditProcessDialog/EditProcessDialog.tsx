@@ -76,7 +76,12 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                 const processInfo: ProcessDto = { ...processFormState };
                 dispatch(
                     processActions.createProcess({ payload: processInfo })
-                ).then((res) => onAdd(res.payload));
+                )
+                    .unwrap()
+                    .then((res) => {
+                        dispatch(processActions.fetchProcessById(res.id));
+                        onAdd(res);
+                    });
                 return;
             }
             if (processFormState.processCollection?.id === null) {

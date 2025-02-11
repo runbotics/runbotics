@@ -7,4 +7,6 @@ export enum ActionCredentialType {
     SAP = 'sap',
     EMAIL = 'mail',
     AI = 'ai',
+    BROWSER_LOGIN = 'browserLogin',
+    DESKTOP = 'desktop',
 }

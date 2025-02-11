@@ -6,6 +6,7 @@ import { FeatureKey, ProcessOutput, ProcessOutputType } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useProcessConfigurator from '#src-app/hooks/useProcessConfigurator';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { processOutputSelector } from '#src-app/store/slices/ProcessOutput';
@@ -26,7 +27,7 @@ const ProcessOutputComponent: FC<ProcessOutputComponent> = ({
     const { processOutputs } = useSelector(processOutputSelector);
     const hasReadProcessOutputAccess = useFeatureKey([FeatureKey.PROCESS_OUTPUT_TYPE_READ]);
     const hasEditProcessOutputAccess = useFeatureKey([FeatureKey.PROCESS_OUTPUT_TYPE_EDIT]);
-
+    const canConfigure = useProcessConfigurator();
 
     const getProcessOutputOptions = () => Object.values(processOutputs)
         .map((processOutput) => (
@@ -57,7 +58,7 @@ const ProcessOutputComponent: FC<ProcessOutputComponent> = ({
                     value={selectedProcessOutput?.type ?? ''}
                     variant="standard"
                     onChange={handleProcessOutputChange}
-                    disabled={!hasEditProcessOutputAccess}
+                    disabled={!hasEditProcessOutputAccess || !canConfigure}
                 >
                     {getProcessOutputOptions()}
                 </Select>

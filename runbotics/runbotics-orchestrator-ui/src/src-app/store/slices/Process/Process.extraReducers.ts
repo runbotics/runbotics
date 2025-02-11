@@ -17,6 +17,7 @@ import {
     unsubscribeProcessNotifications,
     getProcessSubscriptionInfo,
     getProcessCredentials,
+    getSimplifiedProcesses,
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
@@ -32,6 +33,19 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
             state.all.ids = Object.keys(state.all.byId);
         })
         .addCase(getProcesses.rejected, (state) => {
+            state.all.loading = false;
+        })
+
+        // GET ALL SIMPLIFIED
+        .addCase(getSimplifiedProcesses.pending, (state) => {
+            state.all.loading = true;
+        })
+        .addCase(getSimplifiedProcesses.fulfilled, (state, action) => {
+            state.all.loading = false;
+            state.all.byId = objFromArray(action.payload);
+            state.all.ids = Object.keys(state.all.byId);
+        })
+        .addCase(getSimplifiedProcesses.rejected, (state) => {
             state.all.loading = false;
         })
 

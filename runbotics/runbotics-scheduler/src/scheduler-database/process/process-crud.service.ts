@@ -1,4 +1,4 @@
-import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
@@ -79,7 +79,9 @@ export class ProcessCrudService {
 
         process.tags = processDto.tags as Tag[];
 
-        return this.processRepository.save(process);
+        const createdProcess = await this.processRepository.save(process);
+
+        return this.processRepository.findOne({ where: { id: createdProcess.id }, relations: RELATIONS });
     }
 
     async createGuestProcess(user: User) {
@@ -97,7 +99,9 @@ export class ProcessCrudService {
 
         process.botCollectionId = guestCollection.id;
 
-        return this.processRepository.save(process);
+        const createdProcess = await this.processRepository.save(process);
+
+        return this.processRepository.findOne({ where: { id: createdProcess.id }, relations: RELATIONS });
     }
 
     async update(user: User, id: number, processDto: UpdateProcessDto) {
@@ -139,7 +143,7 @@ export class ProcessCrudService {
     }
 
     async partialUpdate(user: User, id: number, processDto: PartialUpdateProcessDto) {
-        await this.processRepository
+        const currentProcess = await this.processRepository
             .findOneOrFail({
                 where: {
                     id,
@@ -153,11 +157,15 @@ export class ProcessCrudService {
 
         const partial: Partial<ProcessEntity> = {};
 
+        if (user.id !== Number(currentProcess.createdBy.id) && !isTenantAdmin(user)) {
+            throw new ForbiddenException();
+        }
+
         if ('executionInfo' in processDto) {
             partial.executionInfo = processDto.executionInfo;
         } else if ('isAttended' in processDto) {
             partial.isAttended = processDto.isAttended;
-        } else if ('isTriggerable' in processDto) {
+        } else if ('isTriggerable' in processDto && isTenantAdmin(user)) {
             partial.isTriggerable = processDto.isTriggerable;
         } else if ('botCollection' in processDto) {
             partial.botCollectionId = processDto.botCollection?.id;
@@ -240,6 +248,32 @@ export class ProcessCrudService {
         });
 
         return this.processRepository.find(options);
+    }
+
+    async getAllSimplified(user: User, specs: Specs<ProcessEntity>) {
+        const options: FindManyOptions<ProcessEntity> = {
+            ...specs,
+        };
+        options.relations = RELATIONS;
+
+        options.where = mapToWhereOptionsArray<ProcessEntity>({
+            orConditionProps: {
+                ...(!isTenantAdmin(user) && {
+                    isPublic: true,
+                    createdBy: {
+                        id: user.id,
+                    },
+                })
+            },
+            andConditionProps: {
+                ...options.where,
+                tenantId: user.tenantId,
+            }
+        });
+
+        const processes = await this.processRepository.find(options);
+
+        return this.simplifiedProcessMapper(processes);
     }
 
     async getPage(user: User, specs: Specs<ProcessEntity>, paging: Paging): Promise<Page<ProcessDto>> {
@@ -332,5 +366,15 @@ export class ProcessCrudService {
                 email: process.createdBy.email,
             },
         };
+    }
+
+    private simplifiedProcessMapper (processes: ProcessEntity[]) {
+        if (!processes.length) return [];
+
+        return processes.map(process => ({
+            id: process.id,
+            name: process.name,
+            system: process.system,
+        }));
     }
 }

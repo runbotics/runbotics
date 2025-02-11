@@ -72,7 +72,7 @@ interface TopBarProps {
 
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
     const { user } = useAuth();
-    const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
+    const hasAdminAccess = useRole([Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN]);
     const isGuest = user?.roles.includes(Role.ROLE_GUEST);
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();

@@ -66,9 +66,11 @@ export class SchedulerProcessor {
         const process = await this.processService.findById(
             Number(job.data.process.id)
         );
+        const tenantRoom = process.tenantId;
         const jobWithProcessAndActive = job;
         jobWithProcessAndActive.data = { ...job.data, isActive: true, process };
-        this.uiGateway.server.emit(
+        this.uiGateway.emitTenant(
+            tenantRoom,
             WsMessage.ADD_WAITING_SCHEDULE,
             jobWithProcessAndActive
         );
@@ -79,10 +81,10 @@ export class SchedulerProcessor {
 
         await Promise.all(jobs.map((job, jobIndex) => {
             const queuePosition = jobIndex + 1;
-            const processId = job?.data?.process?.id;
-            const jobId = job?.id;
-            const orchestratorProcessInstanceId = job?.data?.orchestratorProcessInstanceId;
-            const clientId = job?.data?.input?.clientId;
+            const processId = job.data.process.id;
+            const jobId = job.id;
+            const orchestratorProcessInstanceId = job.data.orchestratorProcessInstanceId;
+            const clientId = job.data.input.clientId;
 
             if (queuePosition === 1) {
                 this.uiGateway.emitClient(
@@ -117,13 +119,13 @@ export class SchedulerProcessor {
         const job = jobs[jobIndex];
         if (!job) return;
 
-        this.uiGateway.server.emit(WsMessage.ADD_WAITING_SCHEDULE, job);
-
         const queuePosition = jobIndex + 1;
-        const processId = job?.data?.process?.id;
+        const processId = job.data.process.id;
+        const tenantRoom = job.data.process.tenantId;
         const orchestratorProcessInstanceId = job?.data?.orchestratorProcessInstanceId;
-        const clientId = job?.data?.input?.clientId;
+        const clientId = job.data.input.clientId;
 
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.ADD_WAITING_SCHEDULE, job);
         this.uiGateway.emitClient(
             clientId,
             WsMessage.JOB_WAITING,
@@ -143,10 +145,10 @@ export class SchedulerProcessor {
 
         this.queueService.clearQueueTimer(job.id);
 
-        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
-
-        const processId = job?.data?.process?.id;
-        const clientId = job?.data?.input?.clientId;
+        const processId = job.data.process.id;
+        const tenantRoom = job.data.process.tenantId;
+        const clientId = job.data.input.clientId;
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_WAITING_SCHEDULE, job);
         this.uiGateway.emitClient(clientId, WsMessage.PROCESS_STARTED, { processId });
     }
 
@@ -159,11 +161,11 @@ export class SchedulerProcessor {
 
         this.queueService.clearQueueTimer(job.id);
 
-        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
-
-        const processId = job?.data?.process?.id;
-        const clientId = job?.data?.input?.clientId;
+        const processId = job.data.process.id;
+        const tenantRoom = job.data.process.tenantId;
+        const clientId = job.data.input.clientId;
         const errorMessage = error.message;
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_WAITING_SCHEDULE, job);
         this.uiGateway.emitClient(clientId, WsMessage.JOB_FAILED, { processId, errorMessage });
         await this.queueMessageService.sendQueueMessage(QueueEventType.FAILED, job);
     }
@@ -174,7 +176,8 @@ export class SchedulerProcessor {
 
         this.queueService.clearQueueTimer(job.id);
 
-        this.uiGateway.server.emit(WsMessage.REMOVE_WAITING_SCHEDULE, job);
+        const tenantRoom = job.data.process.tenantId;
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_WAITING_SCHEDULE, job);
 
         await this.queueMessageService.sendQueueMessage(QueueEventType.REMOVE, job);
 
@@ -184,9 +187,9 @@ export class SchedulerProcessor {
 
         await Promise.all(jobs.map((job, jobIndex) => {
             const queuePosition = jobIndex + 1;
-            const processId = job?.data?.process?.id;
-            const clientId = job?.data?.input?.clientId;
-            const jobId = job?.id;
+            const processId = job.data.process.id;
+            const clientId = job.data.input.clientId;
+            const jobId = job.id;
             if (queuePosition === 1) return;
 
             this.uiGateway.emitClient(clientId, WsMessage.JOB_WAITING, { processId, queuePosition, jobId });

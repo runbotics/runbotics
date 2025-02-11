@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Unique } from 'typeorm';
 import { Tenant } from '../tenant/tenant.entity';
 import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
+import { ActionCredentialType } from 'runbotics-common';
 
 
 @Entity({ name: 'action' })
@@ -17,6 +18,9 @@ export class Action {
 
     @Column({ type: 'varchar', length: 255 })
     script: string;
+
+    @Column({ type: 'varchar', length: 255, default: '' })
+    credentialType: ActionCredentialType;
 
     @Column({ name: 'tenant_id', type: 'uuid', default: DEFAULT_TENANT_ID })
     tenantId: string;

@@ -27,14 +27,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Connect.ConnectionName'),
                                 type: 'string',
                             },
-                            user: {
-                                title: translate('Process.Details.Modeler.Actions.Sap.Connect.User'),
-                                type: 'string',
-                            },
-                            password: {
-                                title: translate('Process.Details.Modeler.Actions.Sap.Connect.Password'),
-                                type: 'string',
-                            },
                             client: {
                                 title: translate('Process.Details.Modeler.Actions.Sap.Connect.Client'),
                                 type: 'string',
@@ -47,7 +39,7 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                             },
                             customCredentialId: propertyCustomCredential,
                         },
-                        required: ['user', 'password', 'connectionName'],
+                        required: ['connectionName'],
                     },
                 },
             },
@@ -60,15 +52,12 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             formData: {
                 input: {
                     connectionName: undefined,
-                    user: 'SAP_USERNAME',
-                    password: 'SAP_PASSWORD'
                 },
             },
         },
     },
     'sap.disconnect': {
         id: SapAction.DISCONNECT,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Disconnect.Label'),
         script: SapAction.DISCONNECT,
         runner: Runner.DESKTOP_SCRIPT,
@@ -76,22 +65,10 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         form: {
             schema: {
                 type: 'object',
-                properties: {
-                    input: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
-                        type: 'object',
-                        properties: {
-                            customCredentialId: propertyCustomCredential,
-                        },
-                        required: [],
-                    },
-                },
+                properties: {},
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {},
@@ -101,7 +78,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
 
     'sap.startTransaction': {
         id: SapAction.START_TRANSACTION,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.StartTransaction.Label'),
         script: SapAction.START_TRANSACTION,
         runner: Runner.DESKTOP_SCRIPT,
@@ -118,7 +94,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.StartTransaction.Transaction'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['transaction'],
                     },
@@ -126,9 +101,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -139,7 +111,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.endTransaction': {
         id: SapAction.END_TRANSACTION,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.EndTransaction.Label'),
         script: SapAction.END_TRANSACTION,
         runner: Runner.DESKTOP_SCRIPT,
@@ -147,16 +118,11 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
         form: {
             schema: {
                 type: 'object',
-                properties: {
-                    customCredentialId: propertyCustomCredential,
-                },
+                properties: {},
                 required: [],
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {},
@@ -165,7 +131,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.type': {
         id: SapAction.TYPE,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Type.Label'),
         script: SapAction.TYPE,
         runner: Runner.DESKTOP_SCRIPT,
@@ -186,7 +151,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Type.Value'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'value'],
                     },
@@ -194,9 +158,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -208,7 +169,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.sendVKey': {
         id: SapAction.SEND_VKEY,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.SendVKey.Label'),
         script: SapAction.SEND_VKEY,
         runner: Runner.DESKTOP_SCRIPT,
@@ -293,7 +253,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                     'Ctrl+P',
                                 ],
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['virtualKey'],
                     },
@@ -301,9 +260,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -314,7 +270,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.index': {
         id: SapAction.INDEX,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Index.Label'),
         script: SapAction.INDEX,
         runner: Runner.DESKTOP_SCRIPT,
@@ -337,7 +292,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Index.Target'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -358,9 +312,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -381,7 +332,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.readText': {
         id: SapAction.READ_TEXT,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.ReadText.Label'),
         script: SapAction.READ_TEXT,
         runner: Runner.DESKTOP_SCRIPT,
@@ -404,7 +354,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.ReadText.Target'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -425,9 +374,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
                 output: {
                     variableName: {
                         'ui:options': {
@@ -448,7 +394,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.click': {
         id: SapAction.CLICK,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Click.Label'),
         script: SapAction.CLICK,
         runner: Runner.DESKTOP_SCRIPT,
@@ -465,7 +410,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Click.Target'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -473,9 +417,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -486,7 +427,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.focus': {
         id: SapAction.FOCUS,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Focus.Label'),
         script: SapAction.FOCUS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -503,7 +443,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Focus.Target'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -511,9 +450,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -524,7 +460,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.doubleClick': {
         id: SapAction.DOUBLE_CLICK,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.DoubleClick.Label'),
         script: SapAction.DOUBLE_CLICK,
         runner: Runner.DESKTOP_SCRIPT,
@@ -541,7 +476,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.DoubleClick.Target'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -549,9 +483,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -562,7 +493,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.select': {
         id: 'sap.select',
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.Select.Label'),
         script: 'sap.select',
         runner: Runner.DESKTOP_SCRIPT,
@@ -579,7 +509,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.Select.Target'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target'],
                     },
@@ -587,9 +516,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                }
             },
             formData: {
                 input: {
@@ -600,7 +526,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.openContextMenu': {
         id: SapAction.OPEN_CONTEXT_MENU,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.OpenContextMenu.Label'),
         script: SapAction.OPEN_CONTEXT_MENU,
         runner: Runner.DESKTOP_SCRIPT,
@@ -621,7 +546,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.OpenContextMenu.MenuId'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'menuId'],
                     },
@@ -629,9 +553,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -643,7 +564,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.selectFromContextMenu': {
         id: SapAction.SELECT_FROM_CONTEXT_MENU,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.Label'),
         script: SapAction.SELECT_FROM_CONTEXT_MENU,
         runner: Runner.DESKTOP_SCRIPT,
@@ -664,7 +584,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.SelectFromContextMenu.OptionId'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'optionId'],
                     },
@@ -672,9 +591,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                }
             },
             formData: {
                 input: {
@@ -686,7 +602,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.clickToolbarButton': {
         id: SapAction.CLICK_TOOLBAR_BUTTON,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.ClickToolbarButton.Label'),
         script: SapAction.CLICK_TOOLBAR_BUTTON,
         runner: Runner.DESKTOP_SCRIPT,
@@ -707,7 +622,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.ClickToolbarButton.ToolId'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'toolId'],
                     },
@@ -715,9 +629,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -729,7 +640,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.selectTableRow': {
         id: SapAction.SELECT_TABLE_ROW,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.SelectTableRow.Label'),
         script: SapAction.SELECT_TABLE_ROW,
         runner: Runner.DESKTOP_SCRIPT,
@@ -749,7 +659,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.SelectTableRow.RowIndex'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target', 'rowIndex'],
                     },
@@ -757,9 +666,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {
@@ -771,7 +677,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
     },
     'sap.toggleCheckbox': {
         id: SapAction.TOGGLE_CHECKBOX,
-        credentialType: ActionCredentialType.SAP,
         label: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Label'),
         script: SapAction.TOGGLE_CHECKBOX,
         runner: Runner.DESKTOP_SCRIPT,
@@ -791,7 +696,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Sap.ToggleCheckbox.Checked'),
                                 type: 'boolean'
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['target']
                     },
@@ -799,9 +703,6 @@ const getSapActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 'ui:order': ['input'],
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
             },
             formData: {
                 input: {

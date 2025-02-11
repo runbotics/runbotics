@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
 import LockIcon from '#public/images/icons/lock.svg';
 import { useRequiredCredentialTypes } from '#src-app/credentials/useRequiredCredentialTypes';
+import useProcessConfigurator from '#src-app/hooks/useProcessConfigurator';
 import useTranslations from '#src-app/hooks/useTranslations';
 import useWindowSize from '#src-app/hooks/useWindowSize';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -27,15 +28,13 @@ import { ProcessCredentialsAddDialog } from './ProcessCredentialsAddDialog';
 import { ProcessCredentialsColumn } from './ProcessCredentialsColumn';
 import { ProcessCredentialsDeleteDialog } from './ProcessCredentialsDeleteDialog';
 
-
-
-
 const ProcessCredentials = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { id: processId } = useRouter().query;
     const { draft: { credentials: processCredentials } } = useSelector(processSelector);
+    const canConfigure = useProcessConfigurator();
     const credentialTypes = useRequiredCredentialTypes();
     const actionCredentials = useMemo(
         () => credentialTypes ? sortByActionCredentialType(processCredentials, credentialTypes) : null,
@@ -105,45 +104,47 @@ const ProcessCredentials = () => {
     }, []);
 
     return (
-        <Container>
-            <ProcessCredentialsDeleteDialog
-                isOpen={isDeleteDialogOpen}
-                handleClose={handleDeleteDialogClose}
-                handleDelete={handleDelete}
-            />
-            <ProcessCredentialsAddDialog
-                isOpen={isAddDialogOpen}
-                handleClose={handleAddDialogClose}
-                templateName={currentActionName}
-            />
-            <Header>
-                <StyledImage
-                    src={LockIcon}
-                    alt={translate('Process.Configure.Credentials.Section.Icon.Alt')}
-                    style={{ filter: 'brightness(0) saturate(100%)' }}
+        <Box sx={!canConfigure && { pointerEvents: 'none', opacity: 0.7 }}>
+            <Container>
+                <ProcessCredentialsDeleteDialog
+                    isOpen={isDeleteDialogOpen}
+                    handleClose={handleDeleteDialogClose}
+                    handleDelete={handleDelete}
                 />
-                <Typography>{translate('Process.Configure.Credentials.Section.Title')}</Typography>
-            </Header>
-            <ActionsContainer $rowCount={rowCount}>
-                {columns.map((column, idx) => (
-                    <ActionsColumns key={column.count + String(idx)} >
-                        {column.actionCredentials.map(actionType => {
-                            const templateId = credentialTemplates?.find(template => template.name === actionType.name).id;
+                <ProcessCredentialsAddDialog
+                    isOpen={isAddDialogOpen}
+                    handleClose={handleAddDialogClose}
+                    templateName={currentActionName}
+                />
+                <Header>
+                    <StyledImage
+                        src={LockIcon}
+                        alt={translate('Process.Configure.Credentials.Section.Icon.Alt')}
+                        style={{ filter: 'brightness(0) saturate(100%)' }}
+                    />
+                    <Typography>{translate('Process.Configure.Credentials.Section.Title')}</Typography>
+                </Header>
+                <ActionsContainer $rowCount={rowCount}>
+                    {columns.map((column, idx) => (
+                        <ActionsColumns key={column.count + String(idx)}>
+                            {column.actionCredentials.map(actionType => {
+                                const templateId = credentialTemplates?.find(template => template.name === actionType.name).id;
 
-                            return (
-                                <ProcessCredentialsColumn
-                                    key={actionType.name}
-                                    actionType={actionType}
-                                    processId={String(processId)}
-                                    templateId={templateId}
-                                    handleAddDialogOpen={handleAddDialogOpen}
-                                    handleDeleteDialogOpen={handleDeleteDialogOpen}
-                                />);
-                        })}
-                    </ActionsColumns>
-                ))}
-            </ActionsContainer>
-        </Container>
+                                return (
+                                    <ProcessCredentialsColumn
+                                        key={actionType.name}
+                                        actionType={actionType}
+                                        processId={String(processId)}
+                                        templateId={templateId}
+                                        handleAddDialogOpen={handleAddDialogOpen}
+                                        handleDeleteDialogOpen={handleDeleteDialogOpen}
+                                    />);
+                            })}
+                        </ActionsColumns>
+                    ))}
+                </ActionsContainer>
+            </Container>
+        </Box>
     );
 };
 

@@ -1,4 +1,3 @@
-import getAIActions from './ai.actions';
 import getApiActions from './api.actions';
 import getApplicationActions from './application.actions';
 import getAsanaActions from './asana.actions';
@@ -29,7 +28,6 @@ import getZipActions from './zip.actions';
 
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getLoopActions(),
-    ...getAIActions(),
     ...getBeeOfficeActions(),
     ...getSapActions(),
     ...getApplicationActions(),

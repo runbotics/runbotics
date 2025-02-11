@@ -56,7 +56,7 @@ export type IBpmnAction = {
     input?: IActionInput;
     output?: IActionOutput;
     form?: IForm;
-    credentialType?: ActionCredentialType;
+    credentialType?: ActionCredentialType | string;
 };
 
 export type FormState = {

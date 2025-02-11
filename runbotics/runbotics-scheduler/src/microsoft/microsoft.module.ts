@@ -7,6 +7,7 @@ import { NotificationController, NotificationService } from './notification';
 import { DatabaseModule } from '#/database/database.module';
 import { QueueModule } from '#/queue/queue.module';
 import { MicrosoftGraphService } from './microsoft-graph/microsoft-graph.service';
+import { TenantModule } from '#/scheduler-database/tenant/tenant.module';
 
 const services = [
     MicrosoftAuthService, OutlookService, OneDriveService, MicrosoftGraphService,
@@ -14,7 +15,7 @@ const services = [
 ];
 
 @Module({
-    imports: [DatabaseModule, forwardRef(() => QueueModule)],
+    imports: [DatabaseModule, forwardRef(() => QueueModule), TenantModule],
     controllers: [NotificationController],
     providers: services,
     exports: services,

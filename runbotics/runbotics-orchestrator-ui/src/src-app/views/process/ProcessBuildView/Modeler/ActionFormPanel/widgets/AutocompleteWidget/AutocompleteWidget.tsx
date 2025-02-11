@@ -28,7 +28,6 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     handleOnFocus,
     name,
     autofocus,
-    uiSchema,
 }) => {
     const [open, setOpen] = useState(false);
     const [inputAutocompleteState, setInputAutocompleteState] = useState(INPUT_AUTOCOMPLETE_DEFAULT);
@@ -39,7 +38,6 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
         }),
         [autocompleteOptions]
     );
-    const isMultiline = !!uiSchema['ui:options']?.multiline;
 
     const checkInputMatches = (input: string) => {
         const variablesRegex = /[#]\{([^{}]*)\}?/g;
@@ -171,7 +169,6 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
                     helperText={customErrors ? customErrors[0] : null}
-                    multiline={isMultiline}
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (

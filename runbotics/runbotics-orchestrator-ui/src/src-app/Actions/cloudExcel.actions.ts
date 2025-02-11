@@ -119,7 +119,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.CREATE_WORKSHEET]: {
         id: CloudExcelAction.CREATE_WORKSHEET,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.Label'),
         script: CloudExcelAction.CREATE_WORKSHEET,
         runner: Runner.DESKTOP_SCRIPT,
@@ -143,7 +142,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['worksheetName'],
                     },
@@ -165,7 +163,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    customCredentialId: schemaCustomCredential,
                     worksheetName: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.CloudExcel.CreateWorksheet.WorksheetName.Info'),
@@ -192,7 +189,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.GET_CELL]: {
         id: CloudExcelAction.GET_CELL,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.GetCell.Label'),
         script: CloudExcelAction.GET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
@@ -218,7 +214,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.IsStringExpected'),
                                 type: 'boolean',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['cell', 'isStringExpected'],
                     },
@@ -238,7 +233,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    customCredentialId: schemaCustomCredential,
                     cell: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCell.Cell.Info'),
@@ -267,7 +261,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.GET_CELLS]: {
         id: CloudExcelAction.GET_CELLS,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.GetCells.Label'),
         script: CloudExcelAction.GET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -297,7 +290,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.IsStringExpected'),
                                 type: 'boolean',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['startCell', 'endCell', 'isStringExpected'],
                     },
@@ -318,7 +310,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    customCredentialId: schemaCustomCredential,
                     startCell: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.GetCells.StartCell.Info'),
@@ -351,7 +342,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.GET_WORKSHEET_CONTENT]: {
         id: CloudExcelAction.GET_WORKSHEET_CONTENT,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.GetWorksheetContent.Label'),
         script: CloudExcelAction.GET_WORKSHEET_CONTENT,
         runner: Runner.DESKTOP_SCRIPT,
@@ -375,7 +365,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                     },
                     output: {
@@ -394,7 +383,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    customCredentialId: schemaCustomCredential,
                     worksheetName: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.CloudExcel.GetWorksheetContent.WorksheetName.Info'),
@@ -420,7 +408,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.SET_CELL]: {
         id: CloudExcelAction.SET_CELL,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.SetCell.Label'),
         script: CloudExcelAction.SET_CELL,
         runner: Runner.DESKTOP_SCRIPT,
@@ -432,23 +419,31 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            value: {
-                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value'),
-                                type: 'string',
-                            },
                             cell: {
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Cell'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
+                            value: {
+                                title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value'),
+                                type: 'string',
+                            },
                         },
-                        required: ['value', 'cell'],
+                        required: ['cell', 'value'],
                     }
                 },
             },
             uiSchema: {
                 input: {
-                    customCredentialId: schemaCustomCredential,
+                    value: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Value.Info'),
+                        },
+                    },
+                    cell: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCell.Cell.Info'),
+                        },
+                    },
                 },
             },
             formData: {
@@ -461,7 +456,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.SET_CELLS]: {
         id: CloudExcelAction.SET_CELLS,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.SetCells.Label'),
         script: CloudExcelAction.SET_CELLS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -487,7 +481,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCells.Values'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['startCell', 'values'],
                     },
@@ -510,7 +503,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    customCredentialId: schemaCustomCredential,
                     startCell: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.SharePointExcel.SetCells.StartCell.Info'),
@@ -543,7 +535,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.DELETE_WORKSHEET]: {
         id: CloudExcelAction.DELETE_WORKSHEET,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.Label'),
         script: CloudExcelAction.DELETE_WORKSHEET,
         runner: Runner.DESKTOP_SCRIPT,
@@ -561,7 +552,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['worksheetName'],
                     },
@@ -569,7 +559,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 input: {
-                    customCredentialId: schemaCustomCredential,
                     worksheetName: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteWorksheet.WorksheetName.Info'),
@@ -586,7 +575,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.DELETE_COLUMNS]: {
         id: CloudExcelAction.DELETE_COLUMNS,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.Label'),
         script: CloudExcelAction.DELETE_COLUMNS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -606,7 +594,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.EndColumn'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['startColumn'],
                     },
@@ -614,7 +601,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 input: {
-                    customCredentialId: schemaCustomCredential,
                     startColumn: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteColumns.StartColumn.Info'),
@@ -636,7 +622,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.DELETE_ROWS]: {
         id: CloudExcelAction.DELETE_ROWS,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Label'),
         script: CloudExcelAction.DELETE_ROWS,
         runner: Runner.DESKTOP_SCRIPT,
@@ -656,7 +641,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.Worksheet'),
                                 type: 'string',
                             },
-                            customCredentialId: propertyCustomCredential,
                         },
                         required: ['rowRange'],
                     },
@@ -664,7 +648,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
             },
             uiSchema: {
                 input: {
-                    customCredentialId: schemaCustomCredential,
                     rowRange: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.CloudExcel.DeleteRows.RowRange.Info'),
@@ -686,7 +669,6 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
     },
     [CloudExcelAction.CLOSE_SESSION]: {
         id: CloudExcelAction.CLOSE_SESSION,
-        credentialType: ActionCredentialType.MICROSOFT_GRAPH,
         label: translate('Process.Details.Modeler.Actions.CloudExcel.CloseSession.Label'),
         script: CloudExcelAction.CLOSE_SESSION,
         runner: Runner.DESKTOP_SCRIPT,
@@ -696,17 +678,11 @@ const getCloudExcelActions: () => Record<string, IBpmnAction> = () => ({
                     input: {
                         title: '',
                         type: 'object',
-                        properties: {
-                            customCredentialId: propertyCustomCredential,
-                        },
+                        properties: {},
                     },
                 },
             },
-            uiSchema: {
-                input: {
-                    customCredentialId: schemaCustomCredential,
-                },
-            },
+            uiSchema: {},
             formData: {},
         },
     },
