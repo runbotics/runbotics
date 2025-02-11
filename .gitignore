@@ -31,3 +31,4 @@ out/
 /runbotics-deployment
 CHANGELOG.*
 .fleet
+.cursorrules
