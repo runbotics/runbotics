@@ -27,7 +27,7 @@ export const AddProcess: FC = () => {
 
     const handleAdd = (process: IProcess) => {
         router.push(`/app/processes/${process.id}/${ProcessTab.BUILD}`);
-        enqueueSnackbar(`Redirecting to ${process.name}`, { variant: 'success' });
+        enqueueSnackbar(translate('Process.Add.Creating.Info', { processName: process.name }), { variant: 'success' });
     };
 
     const currentUser = useSelector((state) => state.auth.user);
