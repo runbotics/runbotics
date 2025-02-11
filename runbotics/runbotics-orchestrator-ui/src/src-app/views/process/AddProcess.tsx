@@ -6,6 +6,7 @@ import {
     Button
 } from '@mui/material';
 import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { FilePlus } from 'react-feather';
 import { IProcess } from 'runbotics-common';
 
@@ -22,10 +23,11 @@ export const AddProcess: FC = () => {
     const [showDialog, setShowDialog] = useState(false);
     const router = useRouter();
     const { translate } = useTranslations();
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleAdd = (process: IProcess) => {
-        setShowDialog(false);
         router.push(`/app/processes/${process.id}/${ProcessTab.BUILD}`);
+        enqueueSnackbar(`Redirecting to ${process.name}`, { variant: 'success' });
     };
 
     const currentUser = useSelector((state) => state.auth.user);

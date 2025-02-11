@@ -18,6 +18,7 @@ import {
     getProcessSubscriptionInfo,
     getProcessCredentials,
     getSimplifiedProcesses,
+    createProcess,
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
@@ -108,6 +109,29 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         .addCase(createGuestProcess.rejected, (state) => {
             state.draft.loading = LoadingType.IDLE;
         })
+
+        // CREATE PROCESS
+        .addCase(createProcess.pending, (state) => {
+            state.draft.loading = LoadingType.PENDING;
+        })
+        .addCase(createProcess.fulfilled, (state) => {
+            state.draft.loading = LoadingType.IDLE;
+        })
+        .addCase(createProcess.rejected, (state) => {
+            state.draft.loading = LoadingType.IDLE;
+        })
+
+    // // UPDATE PROCESS
+    // .addCase(updateProcess.pending, (state) => {
+    //     state.all.loading = true;
+    // })
+    // .addCase(updateProcess.fulfilled, (state) => {
+    //     // state.draft.process = action.payload;
+    //     state.all.loading = false;
+    // })
+    // .addCase(updateProcess.rejected, (state) => {
+    //     state.all.loading = false;
+    // })
 
         // DELETE
         .addCase(deleteProcess.pending, (state) => {
