@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import { FeatureKey, ProcessDto } from 'runbotics-common';
 
 import CustomDialog from '#src-app/components/CustomDialog';
+import Loader from '#src-app/components/Loader';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -141,6 +142,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                         />
                     </Form>
                 </Content>
+                {isLoading && <Loader/>}
             </Box>
         </CustomDialog>
     );
