@@ -89,12 +89,12 @@ export const updateDiagram = ApiTenantResource.patch<IProcess, UpdateDiagramRequ
 );
 
 export const createProcess = ApiTenantResource.post<ProcessDto, ProcessDto>(
-    'processes/create',
+    'processes/createProcess',
     PROCESSES_PATH,
 );
 
 export const createGuestProcess = ApiTenantResource.post<IProcess>(
-    'processes/create',
+    'processes/createGuestProcess',
     `${PROCESSES_PATH}/guest`,
 );
 

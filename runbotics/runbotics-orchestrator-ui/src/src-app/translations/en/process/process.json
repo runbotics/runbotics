@@ -61,6 +61,7 @@
     "Process.Add.Form.Error.GuestCanCreateOnlyOneProcess": "Guest can create only one process",
     "Process.Add.Form.Error.NameNotAvailable": "This name is already taken",
     "Process.Add.Form.Error.Required": "Process name is required",
+    "Process.Add.Creating.Info": "Creating process named {{ processName }}...",
     "Process.Schedule.Tooltip.PickBotAndCollection": "Pick bot system and collection",
     "Process.Schedule.Tooltip.Attended": "Cannot schedule the process without attended form",
     "Process.Schedule.Cron.HumanReadable": "Run: {{cron}}",

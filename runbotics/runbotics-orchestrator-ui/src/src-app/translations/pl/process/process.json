@@ -57,6 +57,7 @@
     "Process.Add.Form.Error.GuestCanCreateOnlyOneProcess": "Gość może utworzyć tylko jeden proces",
     "Process.Add.Form.Error.NameNotAvailable": "Ta nazwa jest już zajęta",
     "Process.Add.Form.Error.Required": "Nazwa procesu jest wymagana",
+    "Process.Add.Creating.Info": "Tworzenie procesu o nazwie {{ processName }}...",
     "Process.Schedule.Tooltip.PickBotAndCollection": "Wybierz system botów i zbiór",
     "Process.Schedule.Tooltip.Attended": "Nie można ustawić harmonogramu bez formularza danych wejściowych",
     "Process.Schedule.Cron.HumanReadable": "Uruchom: {{cron}}",
