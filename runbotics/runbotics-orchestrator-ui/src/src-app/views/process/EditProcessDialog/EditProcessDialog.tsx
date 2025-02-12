@@ -6,6 +6,7 @@ import { FeatureKey, ProcessDto } from 'runbotics-common';
 
 import CustomDialog from '#src-app/components/CustomDialog';
 import Loader from '#src-app/components/Loader';
+import If from '#src-app/components/utils/If';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -20,7 +21,6 @@ import { EditProcessDialogProps, FormValidationState } from './EditProcessDialog
 import { initialFormValidationState, inputErrorMessages, InputErrorType } from './EditProcessDialog.utils';
 import { GeneralOptions } from './GeneralOptions/GeneralOptions';
 import { Content, Form } from '../../utils/FormDialog.styles';
-
 
 const EditProcessDialog: FC<EditProcessDialogProps> = ({
     process, onAdd, onClose, open,
@@ -120,8 +120,13 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                 isDisabled: isLoading,
             }}
         >
-            <Box sx={isLoading && { pointerEvents: 'none', opacity: 0.7 }}>
-                <Content sx={{ overflowX: 'hidden' }}>
+            <Content sx={{ overflowX: 'hidden' }}>
+                <If condition={!isLoading} else={
+                    <Box sx={{ width: '500px'}}>
+                        <Loader/>
+                    </Box>
+                }
+                >
                     <Form $gap={0}>
                         <GeneralOptions
                             processData={processFormState}
@@ -141,9 +146,8 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                             isOwner={isOwner}
                         />
                     </Form>
-                </Content>
-                {isLoading && <Loader/>}
-            </Box>
+                </If>
+            </Content>
         </CustomDialog>
     );
 };
