@@ -45,7 +45,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     useEffect(() => {
         setProcessFormState(process);
         setFormValidationState(initialFormValidationState);
-    }, []);
+    }, [process]);
 
     useEffect(() => {
         if (processFormState.name) {
