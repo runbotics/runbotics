@@ -12,7 +12,8 @@ import { REFERENCES_SECTION_ID } from '#src-landing/utils/utils';
 import ReferencesContent from './ReferencesContent/ReferencesContent';
 import styles from './ReferencesSection.module.scss';
 
-import { REFERENCES_DATA } from './ReferencesSection.utils';
+import { REFERENCES_DATA, calculateTotalPages } from './ReferencesSection.utils';
+
 
 const LOGO_WIDTH = 280;
 
@@ -39,10 +40,10 @@ const ReferencesSection: VFC = () => {
         return () => window.removeEventListener('resize', calculateLogosPerView);
     }, [calculateLogosPerView]);
 
-    const totalDots = Math.max(1, Math.ceil((REFERENCES_DATA.length / logosPerView)));
+    const totalDots = Math.max(1, calculateTotalPages(REFERENCES_DATA.length, logosPerView));
 
     const handleDotClick = useCallback((index: number) => {
-        const maxVisibleIndex = Math.ceil(REFERENCES_DATA.length / logosPerView)-1;
+        const maxVisibleIndex = calculateTotalPages(REFERENCES_DATA.length, logosPerView) - 1;
         setActiveIndex(index);
         setVisibleLogosIndex(index === maxVisibleIndex ? REFERENCES_DATA.length - logosPerView : index * Math.floor(logosPerView));
     }, [logosPerView]);    

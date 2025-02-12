@@ -1,12 +1,22 @@
 @import '#src-landing/scss/main.scss';
 
+$ROOT-PADDING-1: 120px;
+$CONTENT-BORDER-RADIUS: 20px;
+$CONTENT-BORDER-TOP-LEFT-RADIUS: 120px;
+$CONTENT-BORDER-BOTTOM-RIGHT-RADIUS: 150px;
+$ROOT-MAX-WIDTH: 1600px;
+$RECTANGLE-MAX-WIDTH: 1364px;
+$RECTANGLE-MAX-HEIGHT: 608px;
+$GAP-1: 20px;
+$GAP-2: 10px;
+
 .root {
     position: relative;
     overflow: hidden;
     width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 120px $padding-3;
+    max-width: $ROOT-MAX-WIDTH;
+    margin: $margin-0 auto;
+    padding: $ROOT-PADDING-1 $padding-3;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -23,11 +33,11 @@
 
 .rectangle {
     width: 85%;
-    max-width: 1364px;
+    max-width: $RECTANGLE-MAX-WIDTH;
     max-height: 608px;
     background: $palette-white;
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 120px 20px 20px 20px;
+    box-shadow: $box-shadow-container;
+    border-radius: $CONTENT-BORDER-TOP-LEFT-RADIUS $CONTENT-BORDER-RADIUS $CONTENT-BORDER-RADIUS $CONTENT-BORDER-RADIUS;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -38,8 +48,8 @@
     position: absolute;
     width: 120px;
     height: 128px;
-    background: #FCE8B1;
-    border-radius: 20px 20px 150px 20px;
+    background: $palette-background-accent-light;
+    border-radius: $CONTENT-BORDER-RADIUS $CONTENT-BORDER-RADIUS $CONTENT-BORDER-BOTTOM-RIGHT-RADIUS $CONTENT-BORDER-RADIUS;
     right: -20px;
     bottom: 0;
 }
@@ -55,13 +65,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: $GAP-1;
     width: 100%;
 }
 
 .logosContainer {
     width: 85%;
-    max-width: 1364px;
+    max-width: $RECTANGLE-MAX-WIDTH;
     padding: $padding-2;
     overflow: hidden;
     position: relative;
@@ -71,7 +81,7 @@
     display: flex;
     justify-content: space-around;
     margin-top: $margin-4;
-    gap: 20px;
+    gap: $GAP-1;
     transition: transform 0.3s ease-in-out;
 }
 
@@ -80,20 +90,20 @@
     flex-direction: column;
     align-items: center;
     padding: $padding-5 $padding-0;
-    gap: 10px;
+    gap: $GAP-2;
     min-width: 260px;
     min-height: 160px;
-    border-radius: 20px;
+    border-radius: $CONTENT-BORDER-RADIUS;
     box-sizing: border-box;
     cursor: pointer;
 
     &.selected {
-        box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
-        border: 1px solid #C7C7C7;
+        box-shadow: $box-shadow-container;
+        border: 1px solid $palette-light-gray;
     }
 
     img {
-        border-radius: 20px;
+        border-radius: $CONTENT-BORDER-RADIUS;
         height: 70px;
         object-fit: contain;
     }
@@ -104,13 +114,13 @@
     justify-content: center;
     align-items: center;
     gap: $margin-1;
-    margin-top: $margin-2;
+    padding: $padding-2;
 }
     
 .dot {
     width: 12px;
     height: 12px;
-    background: #D9D9D9;
+    background: $palette-light-gray;
     border-radius: 50%;
     cursor: pointer;
     transition: background 0.3s;

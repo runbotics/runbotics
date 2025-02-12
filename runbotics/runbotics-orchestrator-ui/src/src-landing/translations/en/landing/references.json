@@ -1,11 +1,11 @@
 {
-    "Landing.References.Title": "Trusted us:",
+    "Landing.References.Title": "Trusted us",
     "Landing.References.Button": "Case study",
-    "Landing.AboutTeam.AVK.Quote.1": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.",
-    "Landing.References.AVK.Author.Name": "Kamila Malanowicz",
-    "Landing.References.AVK.Author.Title": "R&D Menadżer, Lider zespołu Automation Development w All For One Poland",
+    "Landing.References.Photo": "Photo",
+    "Landing.References.Logo": "Client logo",
+    "Landing.References.Quote.Mark": "Quotation mark icon",
+    "Landing.AboutTeam.AVK.Quote.1": "Bot reads the data from the file, verifies the VAT number on the taxpayer whitelist, verifies the EU VAT number on the VIES website, and enters the results into the data file. Numbers are verified automatically, on average twice a month. ",
+    "Landing.AboutTeam.AVK.Quote.2": "Benefits: Saves time, eliminates human error, relieves the burden on employees and freeing up their potential for more creative tasks, scalability.",
     "Landing.AboutTeam.Raiffeisen.Quote.1": "The solution automates the synchronization of HR and payroll data between BeeOffice and R2Płatnik systems in the migration of work time requests - overtime, schedules for shift work and vacation limits. Each month, the bot relieves the burden on employees by performing about 350 requests and 50+ leave limits on a company-wide basis",
-    "Landing.AboutTeam.Raiffeisen.Quote.2": "Benefits: Elimination of errors, saving time, relieving the burden on employees, ability to migrate data at any time and continuous monitoring of the migration process.",
-    "Landing.References.Raiffeisen.Author.Name": "Jan Kowalski",
-    "Landing.References.Raiffeisen.Author.Title": "Starszy menedżer w Raiffeisen Bank"
+    "Landing.AboutTeam.Raiffeisen.Quote.2": "Benefits: Elimination of errors, saving time, relieving the burden on employees, ability to migrate data at any time and continuous monitoring of the migration process."
 }

@@ -1,12 +1,24 @@
 @import '#src-landing/scss/main';
 
+$ROOT-PADDING-1: 275px;
+$ROOT-PADDING-2: 220px;
+$ROOT-PADDING-3: 120px;
+$ROOT-PADDING-4: 100px;
+$ROOT-PADDING-5: 90px;
+$MIN-PADDING: 4px;
+$LINE-HEIGHT-20: 20px;
+$MIN-HEIGHT-LARGE: 500px;
+$MIN-HEIGHT-SMALL: 110px;
+$LEFT-1: -215px;
+$LEFT-2: -50px;
+
 .root {
     position: relative;
     width: 100%;
     height: auto;
-    min-height: 500px;
+    min-height: $MIN-HEIGHT-LARGE;
     margin: 0 auto;
-    padding: 120px $padding-15 $padding-10 275px;
+    padding: $ROOT-PADDING-3 $padding-15 $padding-10 $ROOT-PADDING-1;
     display: flex;
     justify-content: space-between;
 }
@@ -19,23 +31,23 @@
     width: 60%;
     position: relative;
     z-index: 1;
+    isolation: isolate;
 }
 
 .quoteMark {
     position: absolute;
     width: 45%;
     height: auto;
-    top: -15px;
-    left: -215px;
-    z-index: -1;
+    top: -$margin-2;
+    left: $LEFT-1;
+    z-index: $nested-blur-effect-z-index;
 }
 
 .caseStudyText {
     position: relative;
-    font-family: 'Montserrat', sans-serif;
     font-size: 16px;
-    font-weight: 500;
-    line-height: 20px;
+    font-weight: $font-weight-medium;
+    line-height: $LINE-HEIGHT-20;
     color: #000;
     max-width: 532px;
     margin-bottom: $margin-1;
@@ -50,7 +62,7 @@
 
 .authorImage {
     margin-right: $margin-3;
-    padding: 4px;
+    padding: $MIN-PADDING;
     border: 1px solid $palette-black;
     border-radius: 305px;
     width: 110px;
@@ -61,7 +73,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 110px;
+    min-height: $MIN-HEIGHT-SMALL;
 }
 
 .noImage {
@@ -88,7 +100,7 @@
     justify-content: flex-end;
 }
 
-.clientLogo{
+.clientLogo {
     height: 94px;
     width: auto;
 }
@@ -96,12 +108,12 @@
 
 @media screen and (max-width: $breakpoint-lg) {
     .root {
-        padding: 100px $padding-10 $padding-10 220px;
+        padding: $ROOT-PADDING-4 $padding-10 $padding-10 $ROOT-PADDING-2;
     }
 
     .quoteMark {
         width: 40%;
-        left: -160px;
+        left: -$margin-18;
     }
 
     .caseStudyText {
@@ -112,7 +124,7 @@
 
 @media screen and (max-width: $breakpoint-md) {
     .root {
-        padding: 120px $padding-10 $padding-10 $padding-10;
+        padding: $ROOT-PADDING-3 $padding-10 $padding-10 $padding-10;
     }
 
     .leftColumn {
@@ -121,7 +133,7 @@
     }
 
     .quoteMark {
-        left: -50px;
+        left: $LEFT-2;
     }
 
     .author {
@@ -130,19 +142,19 @@
 
     .noImage {
         .authorInfo {
-            min-height: 110px;
+            min-height: $MIN-HEIGHT-SMALL;
         }
     }
 
     .rightColumn {
-        padding: 0px 0px 0px $padding-12;
+        padding: $padding-0 $padding-0 $padding-0 $padding-12;
     }
 
     .rightColumn a {
         margin-bottom: $margin-3;
     }
     
-    .clientLogo{
+    .clientLogo {
         height: 80px;
         width: auto;
     }
@@ -152,7 +164,7 @@
 @media screen and (max-width: $breakpoint-sm) {
     .root {
         flex-direction: column;
-        padding: 120px $padding-7 $padding-7 $padding-7;
+        padding: $ROOT-PADDING-3 $padding-7 $padding-7 $padding-7;
     }
 
 
@@ -164,12 +176,8 @@
     .quoteMark {
         min-width: 70px;
         width: auto;
-        left: -20px;
-        top: -15px;
-    }
-
-    .caseStudyText {
-        max-width: none;
+        left: -$margin-3;
+        top: -$margin-2;
     }
 
     .author {
@@ -187,7 +195,7 @@
         margin-bottom: $margin-0;
     }
 
-    .clientLogo{
+    .clientLogo {
         margin-bottom: $margin-4;
         margin-top: $margin-4;
     }
@@ -196,20 +204,19 @@
 
 @media screen and (max-width: $breakpoint-xs) {
     .root {
-        padding: 90px $padding-4 $padding-6 $padding-4;
+        padding: $ROOT-PADDING-5 $padding-4 $padding-6 $padding-4;
     }
 
     .quoteMark {
         min-width: 70px;
         width: auto;
-        left: 0px;
+        left: $margin-0;
     }
 
     .caseStudyText {
-        font-family: 'Roboto', sans-serif;
+        @include font-face-roboto;
         font-size: 14px;
-        font-weight: 400;
-        line-height: 20px;
+        font-weight: $font-weight-regular;
     }
     
 
@@ -221,6 +228,7 @@
     .authorInfo h6 {
         font-size: 16px;
     }
+
     .authorInfo {
         font-size: 14px;
     }

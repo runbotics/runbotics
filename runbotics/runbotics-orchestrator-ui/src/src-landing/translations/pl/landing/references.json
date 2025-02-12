@@ -1,11 +1,11 @@
 {
-    "Landing.References.Title": "Trusted us:",
-    "Landing.References.Button": "Case study",
-    "Landing.AboutTeam.AVK.Quote.1": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.",
-    "Landing.References.AVK.Author.Name": "Kamila Malanowicz",
-    "Landing.References.AVK.Author.Title": "R&D Menadżer, Lider zespołu Automation Development w All For One Poland",
+    "Landing.References.Title": "Zaufali nam",
+    "Landing.References.Button": "Studium przypadku",
+    "Landing.References.Photo": "Zdjęcie",
+    "Landing.References.Logo": "Logo klienta",
+    "Landing.References.Quote.Mark": "Ikona cudzysłowu",
+    "Landing.AboutTeam.AVK.Quote.1": "Bot odczytuje dane z pliku, weryfikuje nr VAT na białej liście podatników, weryfikuje nr VAT w UE na stronie VIES oraz wprowadza rezultaty do pliku z danym. Numery weryfikowane są automatycznie, średnio dwa razy w miesiącu.",
+    "Landing.AboutTeam.AVK.Quote.2": "Korzyści: Oszczędność czasu, wyeliminowanie błędów ludzkich, odciążenie pracowników i uwolnienie ich potencjału na bardziej kreatywne zadania, skalowalność.",
     "Landing.AboutTeam.Raiffeisen.Quote.1": "Rozwiązanie automatyzuje synchronizację danych kadrowo-płacowych pomiędzy systemami BeeOffice oraz R2Płatnik w obrzerze migracji wniosków czasu pracy – nadgodzin, harmonogramów dla zmianowego systemu pracy oraz limitów urlopowych. W każdym miesiącu bot odciąża pracowników, wykonując ok 350 wniosków oraz 50+ limitów urlopowych w skali firmy.",
-    "Landing.AboutTeam.Raiffeisen.Quote.2": "Korzyści: Eliminacja błędów, oszczędność czasu, odciążenie pracowników, możliwość migracji danych w dowolnym czasie oraz ciągłego monitorowania procesu migracji.",
-    "Landing.References.Raiffeisen.Author.Name": "Jan Kowalski",
-    "Landing.References.Raiffeisen.Author.Title": "Starszy menedżer w Raiffeisen Bank"
+    "Landing.AboutTeam.Raiffeisen.Quote.2": "Korzyści: Eliminacja błędów, oszczędność czasu, odciążenie pracowników, możliwość migracji danych w dowolnym czasie oraz ciągłego monitorowania procesu migracji."
 }

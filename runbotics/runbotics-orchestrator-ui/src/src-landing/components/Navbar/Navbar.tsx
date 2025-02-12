@@ -106,22 +106,22 @@ const Navbar: FC<NavbarProps> = ({
                 </li>
                 <li className={styles.listItem}>
                     <Link
-                        href={`/#${PARTNER_SECTION_ID}`}
-                        className={styles.link}
-                        onClick={hideNav}
-                        scroll={false}
-                    >
-                        {translate('Landing.Header.Nav.Option.Partners')}
-                    </Link>
-                </li>
-                <li className={styles.listItem}>
-                    <Link
                         href={`/#${REFERENCES_SECTION_ID}`}
                         className={styles.link}
                         onClick={hideNav}
                         scroll={false}
                     >
                         {translate('Landing.Header.Nav.Option.References')}
+                    </Link>
+                </li>
+                <li className={styles.listItem}>
+                    <Link
+                        href={`/#${PARTNER_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate('Landing.Header.Nav.Option.Partners')}
                     </Link>
                 </li>
                 <li className={styles.listItem}>
