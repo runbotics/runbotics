@@ -1,12 +1,12 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import { Box } from '@mui/material';
+import { Show, If, Else } from 'multi-condition';
 import { useSnackbar } from 'notistack';
 import { FeatureKey, ProcessDto } from 'runbotics-common';
 
 import CustomDialog from '#src-app/components/CustomDialog';
 import Loader from '#src-app/components/Loader';
-import If from '#src-app/components/utils/If';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
@@ -121,32 +121,34 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
             }}
         >
             <Content sx={{ overflowX: 'hidden' }}>
-                <If condition={!isLoading} else={
-                    <Box sx={{ width: '500px'}}>
-                        <Loader/>
-                    </Box>
-                }
-                >
-                    <Form $gap={0}>
-                        <GeneralOptions
-                            processData={processFormState}
-                            setProcessData={setProcessFormState}
-                            formValidationState={formValidationState}
-                            setFormValidationState={setFormValidationState}
-                            inputErrorType={inputErrorType}
-                            isEditDialogOpen={open}
-                            formState={processFormState}
-                            setFormState={setProcessFormState}
-                            isOwner={isOwner}
-                        />
-                        <AccessOptions
-                            processData={processFormState}
-                            setProcessData={setProcessFormState}
-                            isEditDialogOpen={open}
-                            isOwner={isOwner}
-                        />
-                    </Form>
-                </If>
+                <Show>
+                    <If condition={!isLoading}>
+                        <Form $gap={0}>
+                            <GeneralOptions
+                                processData={processFormState}
+                                setProcessData={setProcessFormState}
+                                formValidationState={formValidationState}
+                                setFormValidationState={setFormValidationState}
+                                inputErrorType={inputErrorType}
+                                isEditDialogOpen={open}
+                                formState={processFormState}
+                                setFormState={setProcessFormState}
+                                isOwner={isOwner}
+                            />
+                            <AccessOptions
+                                processData={processFormState}
+                                setProcessData={setProcessFormState}
+                                isEditDialogOpen={open}
+                                isOwner={isOwner}
+                            />
+                        </Form>
+                    </If>
+                    <Else>
+                        <Box sx={{ width: '500px'}}>
+                            <Loader/>
+                        </Box>
+                    </Else>
+                </Show>
             </Content>
         </CustomDialog>
     );
