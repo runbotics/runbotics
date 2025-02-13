@@ -15,6 +15,7 @@ import OpenSourceSection from '#src-landing/views/sections/OpenSourceSection';
 import PartnerSection from '#src-landing/views/sections/PartnerSection';
 import ProsSection from '#src-landing/views/sections/ProsSection';
 import RPASection from '#src-landing/views/sections/RPASection';
+import MarketplaceSection from '#src-landing/views/sections/MarketplaceSection';
 
 interface Props {
     blogPosts: BlogPost[];
@@ -37,6 +38,7 @@ const MainView: VFC<Props> = ({ blogPosts }) => {
             <PartnerSection />
             <AboutTeamSection />
             <BlogSection posts={blogPosts} />
+            <MarketplaceSection offers={[]} />
             <ContactSection />
         </Layout> );
 };
