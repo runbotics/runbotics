@@ -24,7 +24,7 @@ export type ContentfulCollection<T> = {
 }
 
 export interface BlogPost {
-    status: PostStatus;
+    status: ContentfulContentPublishStatus;
     title: string;
     slug: string;
     date: string;
@@ -57,7 +57,27 @@ export interface Tag {
     slug: string;
 }
 
-export interface PostStatus {
+export interface Industry {
+    title: string;
+    slug: string;
+}
+
+export interface ContentfulContentPublishStatus {
     publishedAt: string | null;
     publishedVersion: number | null;
 };
+
+export interface MarketplaceOffer {
+    status: ContentfulContentPublishStatus;
+    title: string;
+    slug: string;
+    description: string;
+    image: {
+        url: string;
+    };
+    imageAltText?: string;
+    tags: ContentfulCollection<Tag>;
+    body: ContentfulRichText;
+    author: Author;
+    industries: ContentfulCollection<Industry>;
+}
