@@ -15,19 +15,16 @@ export type GetAllOffersResponse = FetchContentfulResponse<
     & AllTagsCollection
 >
 
-// Filtered Offers
-export type GetFilteredOffersOptions = {
+export interface GetFilteredOffersOptions {
     filterFragment?: string;
 };
 
-// All Offers Paths
 export type GetAllOffersPathsResponse = FetchContentfulResponse<{
     marketplaceOfferCollection: {
         items: Pick<MarketplaceOffer, 'slug'>[];
     };
 }>;
 
-// Industries
 export type GetAllIndustriesResponse = FetchContentfulResponse<AllIndustriesCollection>;
 
 interface AllIndustriesCollection {
