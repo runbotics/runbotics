@@ -29,7 +29,7 @@ const MarketplaceSection: VFC<Props> = ({ offers }) => {
             id={MARKETPLACE_SECTION_ID}
             aria-labelledby={MARKETPLACE_SECTION_TITLE_ID}
         >
-            <div className={styles.marketplaceTitle}>
+            <div className={styles.blogTitle}>
                 <Typography className={styles.mainTitle} variant="h2" id={MARKETPLACE_SECTION_TITLE_ID}>
                     {translate('Landing.Marketplace.Title.Part.1')}
                 </Typography>
