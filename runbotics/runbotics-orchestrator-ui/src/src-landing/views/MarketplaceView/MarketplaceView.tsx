@@ -43,7 +43,7 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
                 <button onClick={() => setFilterDisplayed(true)} className={styles.filter}>
                     <Image alt="filterIcon" src={'/images/icons/filter.svg'} fill={true}/>
                 </button>
-                <div>
+                <div style={{border: 'solid black 1px'}}>
                     place for filters section
                 </div>
                 <If condition={Boolean(offers.length)} else={offersNotFoundInfo}>
