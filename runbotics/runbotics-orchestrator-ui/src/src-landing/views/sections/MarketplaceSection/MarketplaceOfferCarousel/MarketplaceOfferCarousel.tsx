@@ -11,7 +11,7 @@ interface Props {
 
 const MarketplaceOfferCarousel: VFC<Props> = ({ offers }) => {
     
-    const slides = offers.map((_post) => (<div></div>));
+    const slides = offers.map((_post) => (<div key={'key-temp'}></div>));
     // code left for future feature
     // <BlogCard
     //     key={post.slug}

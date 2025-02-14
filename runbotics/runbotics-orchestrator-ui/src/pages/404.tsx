@@ -10,7 +10,7 @@ const NotFoundPage = () => {
 
     useEffect(() => {
         dispatch(setErrorCode(404));
-    }, []);
+    }, [dispatch]);
 
     return <ErrorView />;
 };
