@@ -1,7 +1,6 @@
 import { VFC } from 'react';
 
-import { BlogPost, MarketplaceOffer } from '#contentful/common';
-import BlogCard from '#src-landing/components/BlogCard';
+import { MarketplaceOffer } from '#contentful/common';
 import MediaScroller from '#src-landing/components/MediaScroller';
 
 import styles from './MarketplaceOfferCarousel.module.scss';
@@ -11,17 +10,14 @@ interface Props {
 }
 
 const MarketplaceOfferCarousel: VFC<Props> = ({ offers }) => {
-    const slides = offers.map((post) => (
-        // <BlogCard
-        //     key={post.slug}
-        //     className={styles.blogCard}
-        //     post={post}
-        // />
-        <div>
-            
-        </div>
-    ));
-
+    
+    const slides = offers.map((_post) => (<div></div>));
+    // code left for future feature
+    // <BlogCard
+    //     key={post.slug}
+    //     className={styles.blogCard}
+    //     post={post}
+    // />
     return (
         <MediaScroller className={styles.mediaScroller}>
             {slides}
