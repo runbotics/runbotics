@@ -73,6 +73,7 @@ export enum ENTERED_PAGE {
     LANDING = 'landing',
     LOGIN = 'login',
     REGISTER = 'register',
+    MARKETPLACE = 'marketplace',
     NOT_SPECIFIED = 'not specified',
 }
 

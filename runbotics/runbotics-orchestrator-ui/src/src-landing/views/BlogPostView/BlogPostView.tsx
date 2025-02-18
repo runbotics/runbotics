@@ -35,7 +35,7 @@ const BlogPostView: VFC<Props> = ({ post }) => {
             <div className={styles.blogWrapper}>
                 <PostHeader {...postHeaderProps} />
                 <div className={styles.breadCrumbsWrapper}>
-                    <BreadcrumbsSection postTitle={post.title} />
+                    <BreadcrumbsSection subPageTitle={post.title} />
                 </div>
                 <article className={styles.contentArticle}>
                     <RichTextRenderer content={body} />

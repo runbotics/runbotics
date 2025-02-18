@@ -11,5 +11,6 @@
     "Landing.Header.Nav.Option.Team": "Team",
     "Landing.Header.Nav.Option.ContactUs": "Contact us",
     "Landing.Header.Nav.Option.Blog": "Blog",
-    "Landing.Header.Button.LogIn": "Try it"
+    "Landing.Header.Button.LogIn": "Try it",
+    "Landing.Header.Nav.Option.Marketplace": "Marketplace"
 }
