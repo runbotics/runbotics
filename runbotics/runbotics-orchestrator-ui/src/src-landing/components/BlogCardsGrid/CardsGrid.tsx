@@ -8,6 +8,12 @@ import MarketplaceCard from '#src-landing/components/MarketplaceCard';
 import styles from './CardsGrid.module.scss';
 import BlogCard from '../BlogCard/BlogCard';
 import FeaturedBlogCard from '../FeaturedBlogCard';
+import MarketplaceCard from '#src-landing/components/MarketplaceCard';
+
+interface CardsGridPropsBase {
+    pageType: string;
+    cards: unknown[];
+}
 
 export enum PageType {
     BLOG = 'blog',
