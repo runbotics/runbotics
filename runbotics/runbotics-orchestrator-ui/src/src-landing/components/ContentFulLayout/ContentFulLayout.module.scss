@@ -14,6 +14,11 @@ $PADDING-BOTTOM: 30px;
     padding: 0 $x-content-padding $PADDING-BOTTOM $x-content-padding;
 }
 
+.rootWithSearchBarOnTop {
+    display: flex;
+    flex-direction: column;
+    
+}
 
 
 @media (max-width: $breakpoint-sm) {

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FC, useState } from 'react';
 
 import { Industry, MarketplaceOffer, Page, Tag } from '#contentful/common';
@@ -32,7 +31,7 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
             </Typography>
         </div>
     );
-
+    const tempOffers = [...offers, ...offers, ...offers];
     return (
         <Layout disableScroll={isFilterDisplayed}>
             <ContentFulLayout
@@ -45,9 +44,12 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
                 <If condition={Boolean(offers.length)} else={offersNotFoundInfo}>
                     <CardsSection
                         pageType={'marketplace'}
-                        cards={offers}
+                        cards={[...tempOffers, ...tempOffers, ...tempOffers, ...tempOffers]}
                         featuredCard={null}
                         page={page}
+                        searchBar={
+                            <div style={{ width: '100%', border: '1px solid black', padding: '8px', margin: '8px' }}>Here will be searchBar</div>
+                        }
                     />
                 </If>
             </ContentFulLayout>

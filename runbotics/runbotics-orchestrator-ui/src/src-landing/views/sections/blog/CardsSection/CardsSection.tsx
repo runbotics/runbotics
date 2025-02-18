@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import { BlogPost, MarketplaceOffer, Page } from '#contentful/common';
 import If from '#src-app/components/utils/If';
@@ -11,6 +11,7 @@ interface CardsSectionPropsBase {
     pageType: string;
     cards: unknown[];
     page: Page;
+    searchBar?: ReactElement;
 }
 
 interface CardsBlogSectionProps extends CardsSectionPropsBase {
@@ -34,8 +35,10 @@ const CardsSection: FC<CardsSectionPropsType> = ({
     cards,
     featuredCard,
     page,
+    searchBar
 }) => (
     <div className={styles.root}>
+        {searchBar}
         {/*@ts-expect-error union of types are not well served in typescript so the pageType is incompatible even if values are the same*/}
         <CardsGrid
             pageType={pageType}
