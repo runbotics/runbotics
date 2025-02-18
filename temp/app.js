@@ -1,6 +1,6 @@
 var _a;
-var PL = "pl";
-var EN = "en";
+const PL = "pl";
+const EN = "en";
 var SourceColumnNumber;
 (function (SourceColumnNumber) {
     SourceColumnNumber[SourceColumnNumber["INFRASTRUCTURE"] = 1] = "INFRASTRUCTURE";
@@ -13,17 +13,16 @@ var DataDividers;
     DataDividers["FORWARD_SLASH"] = "/";
     DataDividers["COMMA"] = ",";
 })(DataDividers || (DataDividers = {}));
-var CELL_DATA_DIVIDERS = (_a = {},
-    _a[SourceColumnNumber.INFRASTRUCTURE] = [DataDividers.COMMA],
-    _a[SourceColumnNumber.INDUSTRY] = [DataDividers.FORWARD_SLASH],
-    _a);
-;
-var userInput = {
-    infrastructure: "Rockawork", // czy mogą podać kilka?
-    industry: "automotive", // czy mogą podać kilka?
-    language: "pl", // czy mogą podać kilka?
+const CELL_DATA_DIVIDERS = {
+    [SourceColumnNumber.INFRASTRUCTURE]: [DataDividers.COMMA],
+    [SourceColumnNumber.INDUSTRY]: [DataDividers.FORWARD_SLASH],
 };
-var sourceDataWithMeta = {
+const userInput = {
+    industries: ["automotive"],
+    infrastructures: [],
+    languages: [PL],
+};
+const sourceDataWithMeta = {
     startCell: "A1",
     endCell: "Q342",
     columnCount: 17,
@@ -70,29 +69,64 @@ var sourceDataWithMeta = {
         ],
     ],
 };
-var rawSourceData = sourceDataWithMeta.text;
+const { text: rawSourceData } = sourceDataWithMeta;
 // const rawSourceDataWithoutHeader = rawSourceData.slice(1); // for production replace next line with this
-var rawSourceDataWithoutHeader = rawSourceData;
-var getDividedData = function (text, column) {
-    var simplifiedText = text.replace(/\s+/g, "").toLowerCase();
-    var dividers = CELL_DATA_DIVIDERS[column];
-    var dividedData = dividers.reduce(function (acc, divider) {
-        return acc.flatMap(function (item) { return item.split(divider); });
+const rawSourceDataWithoutHeader = rawSourceData;
+const getDividedData = (text, column) => {
+    const simplifiedText = text.replace(/\s+/g, "").toLowerCase();
+    const dividers = CELL_DATA_DIVIDERS[column];
+    const dividedData = dividers.reduce((acc, divider) => {
+        return acc.flatMap((item) => item.split(divider));
     }, [simplifiedText]);
     return dividedData;
 };
-var sourceData = rawSourceDataWithoutHeader.map(function (row) {
-    var _a = row, _b = SourceColumnNumber.INDUSTRY, industryCell = _a[_b], _c = SourceColumnNumber.INFRASTRUCTURE, infrastructureCell = _a[_c], _d = SourceColumnNumber.PL_URL, plUrl = _a[_d], _e = SourceColumnNumber.EN_URL, enUrl = _a[_e];
-    var industries = getDividedData(industryCell, SourceColumnNumber.INDUSTRY);
-    var infrastructures = getDividedData(infrastructureCell, SourceColumnNumber.INFRASTRUCTURE);
-    return {
-        infrastructures: infrastructures,
-        industries: industries,
-        plUrl: plUrl,
-        enUrl: enUrl,
-    };
-});
-var filterDuplicatedLinks = function (sourceData) {
-    throw new Error("Not implemented");
+const sourceData = rawSourceDataWithoutHeader.map((row) => {
+    const { [SourceColumnNumber.INDUSTRY]: industryCell, [SourceColumnNumber.INFRASTRUCTURE]: infrastructureCell, [SourceColumnNumber.PL_URL]: plUrl, [SourceColumnNumber.EN_URL]: enUrl, } = row;
+    const industries = getDividedData(industryCell, SourceColumnNumber.INDUSTRY);
+    const infrastructures = getDividedData(infrastructureCell, SourceColumnNumber.INFRASTRUCTURE);
+    // Return the object only if either plUrl or enUrl is not empty
+    return (plUrl || enUrl) ? {
+        infrastructures,
+        industries,
+        plUrl,
+        enUrl,
+    } : null;
+}).filter(Boolean); // Filter out null values
+const simplifyValue = (value) => value.replace(/\s+/g, "").toLowerCase();
+// poniżej dzieje się temporary matching
+const aiImprovedUserInput = {
+    industries: userInput.industries.map(simplifyValue),
+    infrastructures: (_a = userInput.infrastructures) === null || _a === void 0 ? void 0 : _a.map(simplifyValue),
+    languages: userInput.languages,
 };
-console.log(sourceData);
+// ----- tu się dzieje AI - dopasowuje user input do nazw infrastruktury i branży z sourceData i zwraca matchedData
+// const aiImprovedUserInput: UserInput = {
+//     industries: ["automotive"],
+//     infrastructures: ["rockawork(dawniejecm)", "beeoffice"],
+//     languages: [PL, EN],
+// };
+const matchedData = sourceData.filter((sourceData) => {
+    var _a, _b;
+    const isIndustryMatched = aiImprovedUserInput.industries.some((industry) => sourceData.industries.includes(industry));
+    const isInfrastructureMatched = (_b = (_a = aiImprovedUserInput.infrastructures) === null || _a === void 0 ? void 0 : _a.some((infrastructure) => sourceData.infrastructures.includes(infrastructure))) !== null && _b !== void 0 ? _b : true;
+    return isIndustryMatched || isInfrastructureMatched;
+}, []);
+const matchedDataByInfrastructures = matchedData.reduce((acc, curr) => curr.infrastructures.reduce((acc, infrastructure) => {
+    var _a;
+    return Object.assign(Object.assign({}, acc), { [infrastructure]: [
+            ...((_a = acc[infrastructure]) !== null && _a !== void 0 ? _a : []),
+            Object.assign(Object.assign({}, curr), { infrastructures: undefined }),
+        ] });
+}, acc), {});
+const mapToLinksOnly = (language) => {
+    const langUrlProp = `${language}Url`;
+    return Object.keys(matchedDataByInfrastructures).reduce((acc, infrastructure) => {
+        acc[infrastructure] = matchedDataByInfrastructures[infrastructure].map(data => data[langUrlProp]);
+        return acc;
+    }, {});
+};
+const links = aiImprovedUserInput.languages.map(lang => mapToLinksOnly(lang));
+const linksFlat = links.map(link => Object.values(link).flat());
+// console.log(JSON.stringify(linksFlat, null, 2));
+const check = sourceData.filter(data => linksFlat.flat().some(link => link === data.plUrl));
+console.log(check);

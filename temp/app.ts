@@ -5,7 +5,7 @@ const PL = "pl";
 const EN = "en";
 type Language = typeof PL | typeof EN;
 
-interface SourceDataWithMeta {
+interface RawSourceData extends Record<string, any> {
     text: string[][];
 }
 
@@ -27,18 +27,25 @@ const CELL_DATA_DIVIDERS = {
 };
 
 interface UserInput {
-    industry: Industry[];
-    infrastructure?: Infrastructure[];
-    language?: language;
+    industries: Industry[];
+    infrastructures?: Infrastructure[];
+    languages: Language[];
+}
+
+interface SourceData {
+    industries: Industry[];
+    infrastructures: Infrastructure[];
+    plUrl: string;
+    enUrl: string;
+}
+
+const userInput: UserInput = {
+    industries: ["automotive"],
+    infrastructures: [],
+    languages: [PL],
 };
 
-const userInput: UserInput = { // co jeśli po angielsku? co z nieunikalnymi/minimalnie różniącymi się wartościami? -> może pobrać te wszystkie unikalne wartości i podać chatowi i niech dopasuje user input do nich?
-    infrastructure: "Rockawork", // czy mogą podać kilka?
-    industry: "automotive", // czy mogą podać kilka?
-    language: "pl",// czy mogą podać kilka?
-};
-
-const sourceDataWithMeta: SourceDataWithMeta = {
+const sourceDataWithMeta: RawSourceData = {
     startCell: "A1",
     endCell: "Q342",
     columnCount: 17,
@@ -88,7 +95,7 @@ const sourceDataWithMeta: SourceDataWithMeta = {
 
 const { text: rawSourceData } = sourceDataWithMeta;
 // const rawSourceDataWithoutHeader = rawSourceData.slice(1); // for production replace next line with this
-const rawSourceDataWithoutHeader = rawSourceData
+const rawSourceDataWithoutHeader = rawSourceData;
 
 const getDividedData = (
     text: Cell,
@@ -105,12 +112,12 @@ const getDividedData = (
     return dividedData;
 };
 
-const sourceData = rawSourceDataWithoutHeader.map((row) => {
+const sourceData: SourceData[] = rawSourceDataWithoutHeader.map((row) => {
     const {
         [SourceColumnNumber.INDUSTRY]: industryCell,
         [SourceColumnNumber.INFRASTRUCTURE]: infrastructureCell,
         [SourceColumnNumber.PL_URL]: plUrl,
-        [SourceColumnNumber.EN_URL]: enUrl
+        [SourceColumnNumber.EN_URL]: enUrl,
     } = row;
 
     const industries = getDividedData(
@@ -123,16 +130,75 @@ const sourceData = rawSourceDataWithoutHeader.map((row) => {
         SourceColumnNumber.INFRASTRUCTURE
     );
 
-    return {
+    // Return the object only if either plUrl or enUrl is not empty
+    return (plUrl || enUrl) ? {
         infrastructures,
         industries,
         plUrl,
         enUrl,
-    };
-});
+    } : null;
+}).filter(Boolean) as SourceData[]; // Filter out null values
 
-const filterDuplicatedLinks = (sourceData: any) => {
-    throw new Error("Not implemented");
+const simplifyValue = (value: string) => value.replace(/\s+/g, "").toLowerCase();
+
+// poniżej dzieje się temporary matching
+const aiImprovedUserInput: UserInput = {
+    industries: userInput.industries.map(simplifyValue),
+    infrastructures: userInput.infrastructures?.map(simplifyValue),
+    languages: userInput.languages,
+};
+// ----- tu się dzieje AI - dopasowuje user input do nazw infrastruktury i branży z sourceData i zwraca matchedData
+
+// const aiImprovedUserInput: UserInput = {
+//     industries: ["automotive"],
+//     infrastructures: ["rockawork(dawniejecm)", "beeoffice"],
+//     languages: [PL, EN],
+// };
+
+const matchedData = sourceData.filter((sourceData) => {
+    const isIndustryMatched = aiImprovedUserInput.industries.some((industry) =>
+        sourceData.industries.includes(industry)
+    );
+
+    const isInfrastructureMatched =
+        aiImprovedUserInput.infrastructures?.some((infrastructure) =>
+            sourceData.infrastructures.includes(infrastructure)
+        ) ?? true;
+
+    return isIndustryMatched || isInfrastructureMatched;
+}, []);
+
+interface MatchedDataByInfrastructures {
+    [infrastructure: string]: SourceData[];
 }
 
-console.log(sourceData);
+const matchedDataByInfrastructures = matchedData.reduce(
+    (acc, curr) =>
+        curr.infrastructures.reduce((acc, infrastructure) => {
+            return {
+                ...acc,
+                [infrastructure]: [
+                    ...(acc[infrastructure] ?? []),
+                    { ...curr, infrastructures: undefined },
+                ],
+            };
+        }, acc),
+    {}
+);
+
+const mapToLinksOnly = (language: Language) => {
+    const langUrlProp = `${language}Url`;
+    return Object.keys(matchedDataByInfrastructures).reduce((acc, infrastructure) => {
+        acc[infrastructure] = matchedDataByInfrastructures[infrastructure].map(data => data[langUrlProp]);
+        return acc;
+    }, {});
+};
+
+const links: Array<Record<Infrastructure, string[]>> = aiImprovedUserInput.languages.map(lang => mapToLinksOnly(lang));
+const linksFlat = links.map(link => Object.values(link).flat());
+
+// console.log(JSON.stringify(linksFlat, null, 2));
+
+const check = sourceData.filter(data => linksFlat.flat().some(link => link === data.plUrl))
+
+console.log(check)
