@@ -3,10 +3,11 @@ import React, { FC } from 'react';
 import { BlogPost, MarketplaceOffer } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 
+import MarketplaceCard from '#src-landing/components/MarketplaceCard';
+
 import styles from './CardsGrid.module.scss';
 import BlogCard from '../BlogCard/BlogCard';
 import FeaturedBlogCard from '../FeaturedBlogCard';
-import MarketplaceCard from '#src-landing/components/MarketplaceCard';
 
 interface CardsGridPropsBase {
     pageType: string;
