@@ -1,17 +1,17 @@
+// @ts-nocheck
 import { FC, useState } from 'react';
-
-import Image from 'next/image';
 
 import { Industry, MarketplaceOffer, Page, Tag } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { HeadImage } from '#src-landing/components/ContentFulHeadImage/ContentFulHeadImage';
 import Layout from '#src-landing/components/Layout';
 import Typography from '#src-landing/components/Typography';
 import ContentFulLayout from 'src/src-landing/components/ContentFulLayout';
 
 import styles from './MarketplaceView.module.scss';
-import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import CardsSection from '../sections/blog/CardsSection';
+
 
 interface MarketplaceViewProps {
     offers: MarketplaceOffer[];
@@ -36,20 +36,17 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
     return (
         <Layout disableScroll={isFilterDisplayed}>
             <ContentFulLayout
-                baseImage={'marketplace-banner'}
-                baseImageContent={'Marketplace'}
+                baseImage={'hero-background'}
+                headImageClass={HeadImage.marketplace}
             >
-                <BreadcrumbsSection/>
-                <button onClick={() => setFilterDisplayed(true)} className={styles.filter}>
-                    <Image alt="filterIcon" src={'/images/icons/filter.svg'} fill={true}/>
-                </button>
-                <div style={{border: 'solid black 1px'}}>
+                <div style={{ border: 'solid black 1px' }}>
                     place for filters section
                 </div>
                 <If condition={Boolean(offers.length)} else={offersNotFoundInfo}>
                     <CardsSection
-                        posts={[]}
-                        featuredPost={null}
+                        pageType={'marketplace'}
+                        cards={offers}
+                        featuredCard={null}
                         page={page}
                     />
                 </If>

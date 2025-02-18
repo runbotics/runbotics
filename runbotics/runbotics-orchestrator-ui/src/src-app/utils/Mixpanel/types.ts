@@ -95,6 +95,7 @@ export enum CLICKABLE_ITEM {
     RUN_BUTTON = 'run button',
     SAVE_BUTTON = 'save button',
     LOGOUT_BUTTON = 'logout button',
+    MARKETPLACE_OFFER = 'marketplace offer',
 }
 
 export enum ERROR_REASON {

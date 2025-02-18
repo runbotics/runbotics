@@ -1,30 +1,57 @@
 import React, { FC } from 'react';
 
-import { BlogPost } from '#contentful/common';
+import { BlogPost, MarketplaceOffer } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 
 import styles from './CardsGrid.module.scss';
 import BlogCard from '../BlogCard/BlogCard';
 import FeaturedBlogCard from '../FeaturedBlogCard';
+import MarketplaceCard from '#src-landing/components/MarketplaceCard';
 
-
-interface CardsGridProps {
-    posts: BlogPost[];
-    featuredPost?: BlogPost;
+interface CardsGridPropsBase {
+    pageType: string;
+    cards: unknown[];
 }
 
-const CardsGrid: FC<CardsGridProps> = ({
-    posts,
-    featuredPost,
-}) => (
-    <div className={styles.root}>
-        <If condition={Boolean(featuredPost)}>
-            <FeaturedBlogCard post={featuredPost} />
-        </If>
-        {posts.map((post) => (
-            <BlogCard key={post.slug} post={post} />
-        ))}
-    </div>
-);
+interface CardsBlogGridProps extends CardsGridPropsBase {
+    pageType: 'blog';
+    cards: BlogPost[];
+    featuredCard?: BlogPost;
+}
+
+interface CardsMarketplaceGridProps extends CardsGridPropsBase {
+    pageType: 'marketplace';
+    cards: MarketplaceOffer[];
+    featuredCard?: MarketplaceOffer;
+}
+
+export type CardsGridPropsType = CardsBlogGridProps | CardsMarketplaceGridProps;
+
+const CardsGrid: FC<CardsGridPropsType> = ({
+    pageType,
+    cards,
+    featuredCard,
+}) => {
+    if( pageType === 'marketplace' ) {
+        return (
+            <div className={styles.root}>
+                {cards.map(card => (
+                    <MarketplaceCard offer={card} key={card.slug} />
+                ))}
+            </div>
+        );
+    } 
+    return (
+        <div className={styles.root}>
+            <If condition={Boolean(featuredCard)}>
+                <FeaturedBlogCard post={featuredCard}/>
+            </If>
+            {cards.map((card) => (
+                <BlogCard key={card.slug} post={card}/>
+            ))}
+        </div>
+    );
+    
+};
 
 export default CardsGrid;

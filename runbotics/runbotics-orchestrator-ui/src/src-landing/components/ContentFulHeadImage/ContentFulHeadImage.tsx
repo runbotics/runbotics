@@ -4,16 +4,29 @@ import Image from 'next/image';
 
 import styles from './ContentFulHeadImage.module.scss';
 
-export interface Props {
-    baseImage?: string;
-    baseImageContent?: string;
+export enum HeadImage {
+    blog = 'blogImage',
+    marketplace = 'marketplaceImage',
 }
 
-const ContentFulHeadImage: FC<Props> = ({ baseImage = 'blog-header', baseImageContent = 'RunNews' }) => {
+export interface Props {
+    baseImage?: string;
+    headImageClass?: HeadImage;
+}
 
+const ContentFulHeadImage: FC<Props> = ({ baseImage = 'blog-header', headImageClass = HeadImage.blog }) => {
     const image = require(`#public/images/banners/${baseImage}.png`);
-    // @ts-expect-error passing variable to styles is not well typed in typescript
-    return <div className={styles.image} style={{ '--content': `"${baseImageContent}"` }}>
+    const imageTypeClassName = () => {
+        switch (headImageClass) {
+            case HeadImage.marketplace:
+                return styles.marketplaceImage;
+            case HeadImage.blog:
+                return styles.blogImage;
+            default:
+                return '';
+        }
+    };
+    return <div className={`${styles.image} ${imageTypeClassName()}`}>
         <Image className={styles.background} src={image} alt="banner" fill/>
     </div>;
 };

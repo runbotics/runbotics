@@ -3,7 +3,7 @@
 $CARD-PADDING-TOP: 20px;
 $CARD-PADDING: 20px;
 $IMG-MAX-HEIGHT: 140px;
-$IMG-BORDER-RADIUS: 20px;
+$IMG-BORDER-RADIUS: 8px;
 $INFO-PADDING: 0 20px;
 $TITLE-MARGIN-BOTTOM: 10px;
 $CONTENT-PADDING: 12px 20px 20px 20px;
@@ -22,9 +22,13 @@ $CONTENT-MIN-HEIGHT: 245px;
 $CARD-HOVER-TRANSLATE-Y: -3px;
 $CARD-HOVER-TRANSITION: 200ms;
 $FONT-COLOR: #000;
+$BORDER-ADD-TO-CART-COLOR: #c7c7c7;
+
+$BOX-SHADOW-HOVER: rgba(0, 0, 0, 0.4) 0 5px 10px 0;
 
 .root {
     display: grid;
+    max-height: 373px;
 }
 
 .link {
@@ -32,20 +36,18 @@ $FONT-COLOR: #000;
 
     color: $FONT-COLOR;
     border-radius: $IMG-BORDER-RADIUS;
-    transition: transform $CARD-HOVER-TRANSITION ease;
+    
     box-shadow: $box-shadow-primary;
+    transition: box-shadow 0.3s ease-in-out;
     text-decoration: none;
     border: none;
-
     &:hover {
-        transform: translateY($CARD-HOVER-TRANSLATE-Y);
-        box-shadow: $box-shadow-primary-hover;
-
-        .title,
-        .addToCart {
+        box-shadow: $BOX-SHADOW-HOVER;
+        .title {
             text-decoration: underline;
         }
     }
+
 }
 
 .wrapper {
@@ -53,16 +55,10 @@ $FONT-COLOR: #000;
 
     width: 100%;
     height: 100%;
+    min-height: 50px;
     border-radius: $IMG-BORDER-RADIUS;
 
     background-color: $palette-white;
-}
-
-.img {
-    position: relative !important;
-    max-height: $IMG-MAX-HEIGHT;
-    object-fit: cover;
-    border-radius: $IMG-BORDER-RADIUS;
 }
 
 .info {
@@ -86,7 +82,21 @@ $FONT-COLOR: #000;
     flex-direction: column;
     padding: $CONTENT-PADDING;
     gap: 10px;
-    min-height: calc(100% - $IMG-MAX-HEIGHT);
+    min-height: fit-content;
+}
+
+.addToCartButton {
+    padding: 5px 16px;
+    
+    background-color: $palette-white;
+    border: 1px solid #FFB800;
+    border-radius: 20px;
+    
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+    &:disabled {
+     cursor: not-allowed;   
+    }
 }
 
 .addToCart {
@@ -95,19 +105,11 @@ $FONT-COLOR: #000;
 
     margin-top: auto;
     width: 100%;
+    padding-top: 12px;
+
+    border-top: 1px solid $BORDER-ADD-TO-CART-COLOR;
     color: $READ-MORE-COLOR;
 
-    &::after {
-        content: '';
-        filter: $black-to-accent-filter;
-        top: $READ-MORE-A-TOP;
-        right: $READ-MORE-A-RIGHT;
-
-        height: $READ-MORE-ICON-HEIGHT;
-        width: $READ-MORE-ICON-WIDTH;
-
-        background-image: url('/images/icons/right.svg');
-    }
 }
 
 .badges {

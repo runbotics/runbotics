@@ -8,5 +8,8 @@
     "Marketplace.Filters.Less": "Mniej",
     "Marketplace.Filters.More": "Więcej",
     "Marketplace.Filters.ApplyFilters":"Zastosuj filtry",
-    "Marketplace.EmptyPage.Title": "Nie mogliśmy znaleźć ofert, których szukasz"
+    "Marketplace.EmptyPage.Title": "Nie mogliśmy znaleźć ofert, których szukasz",
+    "Marketplace.Card.AddToCart": "Dodaj do koszyka",
+    "Marketplace.Card.Compare": "porównaj",
+    "Marketplace.Card.price": "Cena"
 }

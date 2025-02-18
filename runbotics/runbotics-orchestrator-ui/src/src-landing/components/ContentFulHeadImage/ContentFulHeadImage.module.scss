@@ -12,6 +12,8 @@ $BANNER_BORDER_RADIUS: 10px;
     margin-inline: auto;
     margin-top: $HEADER_HEIGHT;
 
+    overflow: hidden;
+
     isolation: isolate;
     font-size: 250px;
 
@@ -20,7 +22,7 @@ $BANNER_BORDER_RADIUS: 10px;
 
         border-radius: $BANNER_BORDER_RADIUS;
     }
-
+    
     &::before {
         position: absolute;
 
@@ -32,22 +34,6 @@ $BANNER_BORDER_RADIUS: 10px;
         mix-blend-mode: color;
         border-radius: $BANNER_BORDER_RADIUS;
         content: '';
-    }
-
-    &::after {
-        @include font-face-base;
-        position: absolute;
-
-        bottom: -40px;
-        right: 40px;
-
-        z-index: 1;
-        isolation: isolate;
-        content: var(--content, "RunNews");
-        color: white;
-        font-weight: $font-weight-semi-bold;
-        letter-spacing: -0.05em;
-        mix-blend-mode: soft-light;
     }
 
     @media (max-width: $breakpoint-md) {
@@ -73,6 +59,45 @@ $BANNER_BORDER_RADIUS: 10px;
         height: $BACKGROUND-HEIGHT-XS;
 
         font-size: 50px;
+    }
+}
+
+.blogImage {
+
+    &::after {
+        @include font-face-base;
+        position: absolute;
+
+        bottom: -40px;
+        right: 40px;
+
+        z-index: 1;
+        isolation: isolate;
+        content: "RunNews";
+        color: white;
+        font-weight: $font-weight-semi-bold;
+        letter-spacing: -0.05em;
+        mix-blend-mode: soft-light;
+    }
+    
+}
+
+.marketplaceImage {
+    
+    &::after {
+        @include font-face-base;
+        position: absolute;
+
+        bottom: -40px;
+        right: 40px;
+
+        z-index: 1;
+        isolation: isolate;
+        content: "Marketplace";
+        color: white;
+        font-weight: $font-weight-semi-bold;
+        letter-spacing: -0.05em;
+        opacity: 0.7;
     }
 
 }
