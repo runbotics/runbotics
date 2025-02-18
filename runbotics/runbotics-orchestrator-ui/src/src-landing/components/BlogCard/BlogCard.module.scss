@@ -42,7 +42,7 @@ $FONT-COLOR: #000;
         box-shadow: $box-shadow-primary-hover;
 
         .title,
-        .addToCart {
+        .readMore {
             text-decoration: underline;
         }
     }
@@ -89,7 +89,7 @@ $FONT-COLOR: #000;
     min-height: calc(100% - $IMG-MAX-HEIGHT);
 }
 
-.addToCart {
+.readMore {
     display: flex;
     justify-content: flex-end;
 

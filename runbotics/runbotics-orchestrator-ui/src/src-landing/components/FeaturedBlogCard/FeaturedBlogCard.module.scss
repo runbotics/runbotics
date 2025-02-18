@@ -40,7 +40,7 @@ $FONT-COLOR: #000;
 
     &:hover {
         .title,
-        .addToCart {
+        .readMore {
             text-decoration: underline;
         }
     }
@@ -122,7 +122,7 @@ $FONT-COLOR: #000;
     max-width: $DESCRIPTION-MAX-WIDTH;
 }
 
-.addToCart {
+.readMore {
     display: flex;
     justify-content: flex-end;
     width: 100%;
