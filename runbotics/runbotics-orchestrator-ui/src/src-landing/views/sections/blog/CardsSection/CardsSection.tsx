@@ -3,26 +3,27 @@ import React, { FC, ReactElement } from 'react';
 import { BlogPost, MarketplaceOffer, Page } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import CardsGrid from '#src-landing/components/BlogCardsGrid';
+import { PageType } from '#src-landing/components/BlogCardsGrid/CardsGrid';
 import CardsPagination from '#src-landing/components/PostPagination';
 
 import styles from './CardsSection.module.scss';
 
 interface CardsSectionPropsBase {
-    pageType: string;
+    pageType: PageType;
     cards: unknown[];
     page: Page;
     searchBar?: ReactElement;
 }
 
 interface CardsBlogSectionProps extends CardsSectionPropsBase {
-    pageType: 'blog';
+    pageType: PageType.BLOG;
     cards: BlogPost[];
     featuredCard?: BlogPost;
     page: Page;
 }
 
 interface CardsMarketplaceSectionProps extends CardsSectionPropsBase {
-    pageType: 'marketplace';
+    pageType: PageType.MARKETPLACE;
     cards: MarketplaceOffer[];
     featuredCard?: MarketplaceOffer;
     page: Page;

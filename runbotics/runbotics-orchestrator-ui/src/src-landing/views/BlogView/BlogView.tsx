@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { BlogPost, Category, Page, Tag } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { PageType } from '#src-landing/components/BlogCardsGrid/CardsGrid';
 import Layout from '#src-landing/components/Layout';
 import Typography from '#src-landing/components/Typography';
 import ContentFulLayout from 'src/src-landing/components/ContentFulLayout';
@@ -51,7 +52,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
                 />
                 <If condition={Boolean(posts.length) || Boolean(featuredPost)} else={postsNotFoundInfo}>
                     <CardsSection
-                        pageType={'blog'}
+                        pageType={PageType.BLOG}
                         cards={posts}
                         featuredCard={featuredPost}
                         page={page}

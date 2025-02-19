@@ -5,8 +5,8 @@ import Image from 'next/image';
 import styles from './ContentFulHeadImage.module.scss';
 
 export enum HeadImage {
-    blog = 'blogImage',
-    marketplace = 'marketplaceImage',
+    BLOG = 'blogImage',
+    MARKETPLACE = 'marketplaceImage',
 }
 
 export interface Props {
@@ -14,13 +14,13 @@ export interface Props {
     headImageClass?: HeadImage;
 }
 
-const ContentFulHeadImage: FC<Props> = ({ baseImage = 'blog-header', headImageClass = HeadImage.blog }) => {
+const ContentFulHeadImage: FC<Props> = ({ baseImage = 'blog-header', headImageClass = HeadImage.BLOG }) => {
     const image = require(`#public/images/banners/${baseImage}.png`);
     const imageTypeClassName = () => {
         switch (headImageClass) {
-            case HeadImage.marketplace:
+            case HeadImage.MARKETPLACE:
                 return styles.marketplaceImage;
-            case HeadImage.blog:
+            case HeadImage.BLOG:
                 return styles.blogImage;
             default:
                 return '';

@@ -3,6 +3,7 @@ import { FC, useState } from 'react';
 import { Industry, MarketplaceOffer, Page, Tag } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { PageType } from '#src-landing/components/BlogCardsGrid/CardsGrid';
 import { HeadImage } from '#src-landing/components/ContentFulHeadImage/ContentFulHeadImage';
 import Layout from '#src-landing/components/Layout';
 import Typography from '#src-landing/components/Typography';
@@ -36,14 +37,14 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
         <Layout disableScroll={isFilterDisplayed}>
             <ContentFulLayout
                 baseImage={'hero-background'}
-                headImageClass={HeadImage.marketplace}
+                headImageClass={HeadImage.MARKETPLACE}
             >
                 <div style={{ border: 'solid black 1px' }}>
                     place for filters section
                 </div>
                 <If condition={Boolean(offers.length)} else={offersNotFoundInfo}>
                     <CardsSection
-                        pageType={'marketplace'}
+                        pageType={PageType.MARKETPLACE}
                         cards={[...tempOffers, ...tempOffers, ...tempOffers, ...tempOffers]}
                         featuredCard={null}
                         page={page}

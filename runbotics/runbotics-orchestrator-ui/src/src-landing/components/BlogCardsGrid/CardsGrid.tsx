@@ -9,19 +9,24 @@ import styles from './CardsGrid.module.scss';
 import BlogCard from '../BlogCard/BlogCard';
 import FeaturedBlogCard from '../FeaturedBlogCard';
 
+export enum PageType {
+    BLOG = 'blog',
+    MARKETPLACE = 'marketplace',
+}
+
 interface CardsGridPropsBase {
-    pageType: string;
+    pageType: PageType;
     cards: unknown[];
 }
 
 interface CardsBlogGridProps extends CardsGridPropsBase {
-    pageType: 'blog';
+    pageType: PageType.BLOG;
     cards: BlogPost[];
     featuredCard?: BlogPost;
 }
 
 interface CardsMarketplaceGridProps extends CardsGridPropsBase {
-    pageType: 'marketplace';
+    pageType: PageType.MARKETPLACE;
     cards: MarketplaceOffer[];
     featuredCard?: MarketplaceOffer;
 }
@@ -33,7 +38,7 @@ const CardsGrid: FC<CardsGridPropsType> = ({
     cards,
     featuredCard,
 }) => {
-    if( pageType === 'marketplace' ) {
+    if( pageType === PageType.MARKETPLACE ) {
         return (
             <div className={styles.root}>
                 {cards.map(card => (
