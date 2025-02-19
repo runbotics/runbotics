@@ -9,8 +9,13 @@ import styles from './CardsGrid.module.scss';
 import BlogCard from '../BlogCard/BlogCard';
 import FeaturedBlogCard from '../FeaturedBlogCard';
 
+export enum PageType {
+    BLOG = 'blog',
+    MARKETPLACE = 'marketplace',
+}
+
 interface CardsGridPropsBase {
-    pageType: string;
+    pageType: PageType;
     cards: unknown[];
 }
 
