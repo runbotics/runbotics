@@ -14,6 +14,7 @@ import {
     OPEN_SOURCE_SECTION_ID,
     TEAM_SECTION_ID,
     BLOG_SECTION_ID,
+    MARKETPLACE_SECTION_ID,
 } from '#src-landing/utils/utils';
 
 import styles from './Navbar.module.scss';
@@ -39,7 +40,7 @@ const Navbar: FC<NavbarProps> = ({
                 }`}
             >
                 <li className={styles.listItem}>
-                    <LoginLink />
+                    <LoginLink/>
                 </li>
                 <li className={styles.listItem}>
                     <Link
@@ -142,6 +143,16 @@ const Navbar: FC<NavbarProps> = ({
                         scroll={false}
                     >
                         {translate('Landing.Header.Nav.Option.Blog')}
+                    </Link>
+                </li>
+                <li className={styles.listItem}>
+                    <Link
+                        href={`/#${MARKETPLACE_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate('Landing.Header.Nav.Option.Marketplace')}
                     </Link>
                 </li>
                 <li className={styles.listItem}>

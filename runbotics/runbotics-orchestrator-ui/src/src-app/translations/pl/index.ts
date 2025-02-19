@@ -1,6 +1,7 @@
 import blogTranslations from '#src-landing/translations/pl/blog';
 import feedbackTranslations from '#src-landing/translations/pl/feedback';
 import landingPageTranslations from '#src-landing/translations/pl/landing';
+import marketplaceTranslations from '#src-landing/translations/pl/marketplace';
 
 import accountTranslations from './account.json';
 import actionTranslations from './action.json';
@@ -47,6 +48,7 @@ const translationResources = {
     ...tenantsTranslations,
     ...credenitalsTranslations,
     ...feedbackTranslations,
+    ...marketplaceTranslations,
 };
 
 export default translationResources;

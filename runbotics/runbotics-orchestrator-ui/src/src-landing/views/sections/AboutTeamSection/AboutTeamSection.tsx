@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import manager from '#public/images/photos/manager.png';
 import team from '#public/images/photos/team.jpg';
-import quotation_mark from '#public/images/shapes/quotation_ mark.png';
+import quotationMark from '#public/images/shapes/quotation_ mark.png';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import Typography from '#src-landing/components/Typography';

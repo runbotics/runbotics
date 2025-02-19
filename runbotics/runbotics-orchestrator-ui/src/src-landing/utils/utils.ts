@@ -12,5 +12,6 @@ export const PARTNER_SECTION_ID = 'partners';
 export const TEAM_SECTION_ID = 'team';
 export const TEMPLATE_SECTION_ID = 'resources';
 export const CONTACT_US_SECTION_ID = 'contact-us';
+export const MARKETPLACE_SECTION_ID = 'marketplace';
 
 export const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);

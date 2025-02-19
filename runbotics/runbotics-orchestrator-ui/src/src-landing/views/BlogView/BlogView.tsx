@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { BlogPost, Category, Page, Tag } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
-import BlogLayout from '#src-landing/components/BlogLayout';
 import Layout from '#src-landing/components/Layout';
 import Typography from '#src-landing/components/Typography';
+import ContentFulLayout from 'src/src-landing/components/ContentFulLayout';
 
 import styles from './BlogView.module.scss';
 import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
@@ -38,7 +38,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
 
     return (
         <Layout disableScroll={isFilterDisplayed}>
-            <BlogLayout>
+            <ContentFulLayout>
                 <BreadcrumbsSection/>
                 <button onClick={() => setFilterDisplayed(true)} className={styles.filter}>
                     <Image alt='filterIcon' src={'/images/icons/filter.svg'} fill={true}/>
@@ -56,7 +56,7 @@ const BlogView: FC<BlogViewProps> = ({ posts, categories, tags, page, featuredPo
                         page={page}
                     />
                 </If>
-            </BlogLayout>
+            </ContentFulLayout>
         </Layout>
     );
 };

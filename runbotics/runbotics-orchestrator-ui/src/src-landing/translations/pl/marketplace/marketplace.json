@@ -1,0 +1,12 @@
+{
+    "Marketplace.Filters.Search": "Szukaj",
+    "Marketplace.Filters.Title": "Filtry",
+    "Marketplace.Filters.ClearAll": "Wyczyść",
+    "Marketplace.Filters.Industry": "Branża",
+    "Marketplace.Filters.Tag": "Tag",
+    "Marketplace.Filters.Date": "Data",
+    "Marketplace.Filters.Less": "Mniej",
+    "Marketplace.Filters.More": "Więcej",
+    "Marketplace.Filters.ApplyFilters":"Zastosuj filtry",
+    "Marketplace.EmptyPage.Title": "Nie mogliśmy znaleźć ofert, których szukasz"
+}
