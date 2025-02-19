@@ -4,12 +4,15 @@ import referencesTranslation from '#src-landing/translations/en/landing/referenc
 
 type ArticleTranslationKey = keyof typeof referencesTranslation;
 
-export interface Reference {
-    id: string,
-    quotes: ArticleTranslationKey[];
+export interface AuthorData {
     authorName?: ArticleTranslationKey;
     authorTitle?: ArticleTranslationKey;
     authorImage?: StaticImageData;
+}
+
+export interface Reference extends AuthorData {
+    id: string;
+    quotes: ArticleTranslationKey[];
     logo: StaticImageData;
     caseStudyLink: string;
 }

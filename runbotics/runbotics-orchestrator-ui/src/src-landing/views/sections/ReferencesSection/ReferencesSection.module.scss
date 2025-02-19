@@ -1,14 +1,11 @@
 @import '#src-landing/scss/main.scss';
 
-$ROOT-PADDING-1: 120px;
 $CONTENT-BORDER-RADIUS: 20px;
 $CONTENT-BORDER-TOP-LEFT-RADIUS: 120px;
 $CONTENT-BORDER-BOTTOM-RIGHT-RADIUS: 150px;
 $ROOT-MAX-WIDTH: 1600px;
-$RECTANGLE-MAX-WIDTH: 1364px;
-$RECTANGLE-MAX-HEIGHT: 608px;
-$GAP-1: 20px;
-$GAP-2: 10px;
+$RECTANGLE-MAX-WIDTH: 1370px;
+$RECTANGLE-MAX-HEIGHT: 610px;
 
 .root {
     position: relative;
@@ -16,7 +13,7 @@ $GAP-2: 10px;
     width: 100%;
     max-width: $ROOT-MAX-WIDTH;
     margin: $margin-0 auto;
-    padding: $ROOT-PADDING-1 $padding-3;
+    padding: $padding-10 $padding-3;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -65,7 +62,7 @@ $GAP-2: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: $GAP-1;
+    gap: $padding-3;
     width: 100%;
 }
 
@@ -81,7 +78,7 @@ $GAP-2: 10px;
     display: flex;
     justify-content: space-around;
     margin-top: $margin-4;
-    gap: $GAP-1;
+    gap: $padding-2;
     transition: transform 0.3s ease-in-out;
 }
 
@@ -90,7 +87,6 @@ $GAP-2: 10px;
     flex-direction: column;
     align-items: center;
     padding: $padding-5 $padding-0;
-    gap: $GAP-2;
     min-width: 260px;
     min-height: 160px;
     border-radius: $CONTENT-BORDER-RADIUS;

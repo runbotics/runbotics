@@ -2,15 +2,10 @@
 
 $ROOT-PADDING-1: 275px;
 $ROOT-PADDING-2: 220px;
-$ROOT-PADDING-3: 120px;
-$ROOT-PADDING-4: 100px;
-$ROOT-PADDING-5: 90px;
 $MIN-PADDING: 4px;
 $LINE-HEIGHT-20: 20px;
 $MIN-HEIGHT-LARGE: 500px;
-$MIN-HEIGHT-SMALL: 110px;
 $LEFT-1: -215px;
-$LEFT-2: -50px;
 
 .root {
     position: relative;
@@ -18,7 +13,7 @@ $LEFT-2: -50px;
     height: auto;
     min-height: $MIN-HEIGHT-LARGE;
     margin: 0 auto;
-    padding: $ROOT-PADDING-3 $padding-15 $padding-10 $ROOT-PADDING-1;
+    padding: $margin-16 $padding-15 $padding-10 $ROOT-PADDING-1;
     display: flex;
     justify-content: space-between;
 }
@@ -48,8 +43,7 @@ $LEFT-2: -50px;
     font-size: 16px;
     font-weight: $font-weight-medium;
     line-height: $LINE-HEIGHT-20;
-    color: #000;
-    max-width: 532px;
+    color: $palette-black;
     margin-bottom: $margin-1;
 }
 
@@ -73,7 +67,7 @@ $LEFT-2: -50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: $MIN-HEIGHT-SMALL;
+    min-height: $padding-14;
 }
 
 .noImage {
@@ -108,7 +102,7 @@ $LEFT-2: -50px;
 
 @media screen and (max-width: $breakpoint-lg) {
     .root {
-        padding: $ROOT-PADDING-4 $padding-10 $padding-10 $ROOT-PADDING-2;
+        padding: $margin-14 $padding-10 $padding-10 $ROOT-PADDING-2;
     }
 
     .quoteMark {
@@ -124,7 +118,7 @@ $LEFT-2: -50px;
 
 @media screen and (max-width: $breakpoint-md) {
     .root {
-        padding: $ROOT-PADDING-3 $padding-10 $padding-10 $padding-10;
+        padding: $margin-16 $padding-10 $padding-10 $padding-10;
     }
 
     .leftColumn {
@@ -133,7 +127,7 @@ $LEFT-2: -50px;
     }
 
     .quoteMark {
-        left: $LEFT-2;
+        left: -$padding-6;
     }
 
     .author {
@@ -142,7 +136,7 @@ $LEFT-2: -50px;
 
     .noImage {
         .authorInfo {
-            min-height: $MIN-HEIGHT-SMALL;
+            min-height: $padding-14;
         }
     }
 
@@ -164,7 +158,7 @@ $LEFT-2: -50px;
 @media screen and (max-width: $breakpoint-sm) {
     .root {
         flex-direction: column;
-        padding: $ROOT-PADDING-3 $padding-7 $padding-7 $padding-7;
+        padding: $margin-16 $padding-7 $padding-7 $padding-7;
     }
 
 
@@ -204,12 +198,10 @@ $LEFT-2: -50px;
 
 @media screen and (max-width: $breakpoint-xs) {
     .root {
-        padding: $ROOT-PADDING-5 $padding-4 $padding-6 $padding-4;
+        padding: $padding-12 $padding-4 $padding-6 $padding-4;
     }
 
     .quoteMark {
-        min-width: 70px;
-        width: auto;
         left: $margin-0;
     }
 

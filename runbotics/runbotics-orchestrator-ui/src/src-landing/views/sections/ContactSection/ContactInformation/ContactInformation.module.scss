@@ -17,9 +17,10 @@ $INFO-MAX-WIDTH: 800px;
 
 .infoGrid {
     display: grid;
-    grid-template-columns: minmax(18px, 100px) 1fr;
+    grid-template-columns: 30px 1fr;
     grid-template-rows: repeat(3, 1fr);
     grid-gap: $margin-9;
+    grid-column-gap: $margin-5;
 }
 
 .gridItemText {

@@ -12,7 +12,7 @@ import { REFERENCES_SECTION_ID } from '#src-landing/utils/utils';
 import ReferencesContent from './ReferencesContent/ReferencesContent';
 import styles from './ReferencesSection.module.scss';
 
-import { REFERENCES_DATA, calculateTotalPages } from './ReferencesSection.utils';
+import { REFERENCES_DATA, calculateTotalPages, calculateTotalDots } from './ReferencesSection.utils';
 
 
 const LOGO_WIDTH = 280;
@@ -40,7 +40,7 @@ const ReferencesSection: VFC = () => {
         return () => window.removeEventListener('resize', calculateLogosPerView);
     }, [calculateLogosPerView]);
 
-    const totalDots = Math.max(1, calculateTotalPages(REFERENCES_DATA.length, logosPerView));
+    const totalDots = calculateTotalDots(REFERENCES_DATA.length, logosPerView);
 
     const handleDotClick = useCallback((index: number) => {
         const maxVisibleIndex = calculateTotalPages(REFERENCES_DATA.length, logosPerView) - 1;
@@ -91,16 +91,14 @@ const ReferencesSection: VFC = () => {
                         </div>
 
                         <div className={styles.dotsContainer}>
-                            {Array.from({ length: totalDots }).map((_, index) => {
-                                const dotKey = `dot-${index}`
-                                return(
+                            {Array.from({ length: totalDots }).map((_, index) => (
                                     <div
-                                        key={dotKey}
+                                        key={`dot-${index}`}
                                         className={`${styles.dot} ${activeIndex === index  ? styles.activeDot : ''}`}
                                         onClick={() => handleDotClick(index)}
                                     ></div>
                                 )
-                            })}
+                            )}
                         </div>
                     </>
                 ) : (

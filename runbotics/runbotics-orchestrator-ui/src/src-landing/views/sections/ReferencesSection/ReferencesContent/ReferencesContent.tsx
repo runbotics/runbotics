@@ -23,14 +23,11 @@ const ReferencesContent: FC<Reference> = ({ quotes, authorName, authorTitle, aut
                     alt={translate('Landing.References.Quote.Mark')}
                     className={styles.quoteMark}
                 />
-                {quotes.map((quote, index) => {
-                    const quoteKey = `quote-${index}`
-                    return(
-                        <Typography key={quoteKey} variant="body1" font='Montserrat' className={styles.caseStudyText}>
+                {quotes.map((quote, index) => (
+                        <Typography key={`quote-${index}`} variant="body1" className={styles.caseStudyText}>
                             {translate(quote)}
                         </Typography>
-                    )
-                })}
+                ))}
                 <If condition={!!authorName}>
                     <div className={`${styles.author} ${!authorImage ? styles.noImage : ''}`}>
                         <If condition={!!authorImage}>
