@@ -34,6 +34,7 @@ export const loadPlugins = createAsyncThunk<LoadedPlugin[]>(
                 throw error;
             }
 
+            console.warn(error.response.data.error);
             return rejectWithValue(error.response.data.error);
         }
     }
