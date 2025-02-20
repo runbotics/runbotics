@@ -1,3 +1,4 @@
+import path from 'path';
 import { ProcessInstanceStatus } from 'runbotics-common';
 
 export const FINISHED_PROCESS_STATUSES = [
@@ -7,3 +8,5 @@ export const FINISHED_PROCESS_STATUSES = [
 ];
 
 export const PLUGIN_PREFIX = 'plugin.';
+
+export const BOT_PLUGIN_DIR = path.join('bot', 'dist', 'index.cjs');
