@@ -28,10 +28,12 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
     handleOnFocus,
     name,
     autofocus,
+    uiSchema,
 }) => {
     const [open, setOpen] = useState(false);
     const [inputAutocompleteState, setInputAutocompleteState] = useState(INPUT_AUTOCOMPLETE_DEFAULT);
     const [isExternalOpen, setIsExternalOpen] = useState(false);
+    const isMultiline = !!(uiSchema && uiSchema['ui:options']?.multiline);
     const optionValues = React.useMemo(
         () => ({
             'ui:options': Object.values(autocompleteOptions).map((option) => option.value),
@@ -169,6 +171,7 @@ const AutocompleteWidget: FC<AutocompleteWidgetProps> = ({
                     InputLabelProps={{ shrink: true }}
                     error={Boolean(customErrors) || Boolean(rawErrors)}
                     helperText={customErrors ? customErrors[0] : null}
+                    multiline={isMultiline}
                     InputProps={{
                         ...params.InputProps,
                         endAdornment: (

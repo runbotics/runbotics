@@ -1,5 +1,9 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 
+import i18next from 'i18next';
+
+import { languages } from '#src-app/translations/translations';
+
 import { PluginState, Translate } from './Plugin.state';
 
 export const setPluginBpmnActions = (
@@ -17,10 +21,18 @@ export const setPluginBpmnActions = (
     const pluginBpmnActionsMap = loadedPlugins.reduce(
         (acc: PluginState['pluginBpmnActionsMap'], loadedPlugin) => {
             const entries = Object.entries(loadedPlugin);
-            for (const [pluginKey, { actions, actionsGroupLabel }] of entries) {
+            for (const [pluginKey, { actions, actionsGroupLabel, translations }] of entries) {
+                const en = languages[0];
+                const pl = languages[1];
+                const ns = 'translation';
+
+                i18next.addResourceBundle(en, ns, translations[en][ns], true);
+                i18next.addResourceBundle(pl, ns, translations[pl][ns], true);
+
                 if (actionsGroupLabel) {
                     pluginActionsGroupLabelMap.set(pluginKey, actionsGroupLabel);
                 }
+
                 pluginBpmnActions = {
                     ...pluginBpmnActions,
                     ...actions(translate),
