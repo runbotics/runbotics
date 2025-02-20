@@ -26,6 +26,7 @@ const ActionFormPanel: FC = () => {
     const externalBpmnActions = useSelector(
         state => state.action.bpmnActions.byId
     );
+    const { pluginBpmnActions } = useSelector(state => state.plugin);
 
     const actionId = selectedElement
         ? selectedElement.businessObject.actionId
@@ -39,9 +40,8 @@ const ActionFormPanel: FC = () => {
             dispatch(
                 processActions.setSelectedAction(
                     externalAction ||
-                        internalBpmnActions[
-                            selectedElement?.businessObject.actionId
-                        ]
+                    internalBpmnActions[selectedElement?.businessObject.actionId] ||
+                    pluginBpmnActions[selectedElement?.businessObject.actionId]
                 )
             );
         } else {

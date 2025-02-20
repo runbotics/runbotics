@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { sanitize } from 'dompurify';
 import i18next from 'i18next';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 
-import { TranslationsDescriptors, Language } from '../translations/translations';
+import { useSelector } from '#src-app/store';
+
+import { TranslationsDescriptors, Language, languages } from '../translations/translations';
 
 const useTranslations = () => {
     const { t, i18n } = useTranslation();
+    const { loadedPlugins } = useSelector((state) => state.plugin);
 
     const translate = (
         key: keyof TranslationsDescriptors,
@@ -31,18 +34,33 @@ const useTranslations = () => {
 
     const currentLanguage = i18n.language;
 
+    useEffect(() => {
+        if (!loadedPlugins) return;
+
+        loadedPlugins.forEach(plugin => {
+            for (const [_, { translations }] of Object.entries(plugin)) {
+                const en = languages[0];
+                const pl = languages[1];
+                const ns = 'translation';
+
+                i18n.addResourceBundle(en, ns, translations[en][ns], true);
+                i18n.addResourceBundle(pl, ns, translations[pl][ns], true);
+            }
+        });
+    }, [loadedPlugins]);
+
     return {
         translate,
         translateHTML,
         switchLanguage,
-        currentLanguage
+        currentLanguage,
     };
 };
 
 export const isNamespaceLoaded = () => new Promise((resolve) => {
-    if (i18next.hasLoadedNamespace(i18next.language)) 
-    { resolve(true); }
-    
+    if (i18next.hasLoadedNamespace(i18next.language)) {
+        resolve(true);
+    }
 });
 
 export const translate = (
