@@ -317,8 +317,13 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.read.input':
                 this.isBrowserOpen();
                 return this.readElementInput(request.input);
-            default:
-                throw new Error('Action not found');
+            default: {
+                if (!this.pluginService) {
+                    throw new Error('Action not found');
+                }
+                this.isBrowserOpen();
+                return this.pluginService.run(this, request);
+            }
         }
     }
 

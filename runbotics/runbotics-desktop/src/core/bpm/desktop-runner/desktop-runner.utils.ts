@@ -5,3 +5,5 @@ export const FINISHED_PROCESS_STATUSES = [
     ProcessInstanceStatus.STOPPED,
     ProcessInstanceStatus.ERRORED,
 ];
+
+export const PLUGIN_PREFIX = 'plugin.';
