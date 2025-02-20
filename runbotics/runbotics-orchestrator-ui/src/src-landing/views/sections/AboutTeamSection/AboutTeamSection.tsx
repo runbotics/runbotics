@@ -23,7 +23,7 @@ const AboutTeamSection = () => {
             >
                 <div className={styles.team}>
                     <Image
-                        src={quotation_mark}
+                        src={quotationMark}
                         alt=""
                         className={styles.iconBackground}
                     />

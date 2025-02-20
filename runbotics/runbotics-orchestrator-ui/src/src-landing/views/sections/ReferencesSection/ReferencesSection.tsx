@@ -17,6 +17,7 @@ import { REFERENCES_DATA, calculateTotalPages, calculateTotalDots } from './Refe
 
 const LOGO_WIDTH = 280;
 
+/* eslint-disable react/no-array-index-key */
 const ReferencesSection: VFC = () => {
     const { translate } = useTranslations();
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -92,13 +93,12 @@ const ReferencesSection: VFC = () => {
 
                         <div className={styles.dotsContainer}>
                             {Array.from({ length: totalDots }).map((_, index) => (
-                                    <div
-                                        key={`dot-${index}`}
-                                        className={`${styles.dot} ${activeIndex === index  ? styles.activeDot : ''}`}
-                                        onClick={() => handleDotClick(index)}
-                                    ></div>
-                                )
-                            )}
+                                <div
+                                    key={`dot-${index}`}
+                                    className={`${styles.dot} ${activeIndex === index  ? styles.activeDot : ''}`}
+                                    onClick={() => handleDotClick(index)}
+                                ></div>
+                            ))}
                         </div>
                     </>
                 ) : (
