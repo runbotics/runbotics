@@ -11,6 +11,7 @@ import openSourceTranslations from './open-source.json';
 import partnerTranslations from './partner.json';
 import policyTranslations from './policy.json';
 import prosTranslations from './pros.json';
+import referencesTranslations from './references.json';
 import rpaTranslations from './rpa.json';
 import templatesTranslations from './templates.json';
 
@@ -30,6 +31,7 @@ const landingPageTranslations = {
     ...aboutTeamTranslations,
     ...policyTranslations,
     ...marketplaceTranslations,
+    ...referencesTranslations,
 };
 
 export default landingPageTranslations;

@@ -6,6 +6,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import {
     BENEFITS_SECTION_ID,
     INTEGRATION_SECTION_ID,
+    REFERENCES_SECTION_ID,
     RPA_SECTION_ID,
     PARTNER_SECTION_ID,
     CONTACT_US_SECTION_ID,
@@ -102,6 +103,16 @@ const Navbar: FC<NavbarProps> = ({
                         scroll={false}
                     >
                         {translate('Landing.Header.Nav.Option.Integration')}
+                    </Link>
+                </li>
+                <li className={styles.listItem}>
+                    <Link
+                        href={`/#${REFERENCES_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate('Landing.Header.Nav.Option.References')}
                     </Link>
                 </li>
                 <li className={styles.listItem}>
