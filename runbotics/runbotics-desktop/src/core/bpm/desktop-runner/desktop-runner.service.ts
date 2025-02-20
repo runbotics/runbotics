@@ -49,7 +49,11 @@ import {
     InternalHandlersInstancesMap,
     PluginHandlersMap,
 } from './desktop-runner.types';
-import { FINISHED_PROCESS_STATUSES, PLUGIN_PREFIX } from './desktop-runner.utils';
+import {
+    BOT_PLUGIN_DIR,
+    FINISHED_PROCESS_STATUSES,
+    PLUGIN_PREFIX,
+} from './desktop-runner.utils';
 import { ImageActionHandler } from '#action/image';
 
 
@@ -132,12 +136,14 @@ export class DesktopRunnerService implements OnModuleInit {
             this.serverConfigService.pluginsDirPath,
             this.filterPlugins,
             this.loadPlugins,
+            'plugin actions'
         );
 
         await this.loadExternalModules(
             this.serverConfigService.extensionsDirPath,
             this.filterExtensions,
             this.loadExtensions,
+            'external actions'
         );
 
         this.runtimeService.processChange().subscribe(async data => {
@@ -153,21 +159,19 @@ export class DesktopRunnerService implements OnModuleInit {
         dirPath: string,
         moduleFilter: (...args: any[]) => boolean,
         moduleLoader: (...args: any[]) => Promise<void>,
+        moduleType: string,
     ) {
         if (!dirPath) {
-            this.logger.warn('External module dir not provided - skipping');
+            this.logger.warn(`External module dir not provided - skipping loading (${moduleType})`);
             return;
         }
 
         this.logger.log('Loading external modules from dir: ' + dirPath);
 
-        moduleFilter.bind(this);
-        moduleLoader.bind(this);
-
         let currentExternalModuleName: string;
         try {
             const externalModules = readdirSync(dirPath, { withFileTypes: true })
-                .filter(directoryEntry => moduleFilter(dirPath, directoryEntry))
+                .filter(directoryEntry => moduleFilter.call(this, dirPath, directoryEntry))
                 .map(directoryEntry => directoryEntry.name);
             this.logger.log('Number of external modules found: ' + externalModules.length);
 
@@ -175,11 +179,11 @@ export class DesktopRunnerService implements OnModuleInit {
                 currentExternalModuleName = externalModule;
                 const externalModulePath = path.resolve(dirPath, externalModule);
                 this.logger.log(`Loading ${externalModule} external module`);
-                await moduleLoader(externalModulePath);
+                await moduleLoader.call(this, externalModulePath);
                 this.logger.log(`Success: External module ${externalModule} loaded`);
             }
         } catch (e) {
-            this.logger.error(`Error loading ${currentExternalModuleName ?? dirPath} - ${e.message}`);
+            this.logger.error(`Error loading (${moduleType}) with module ${currentExternalModuleName ?? dirPath} - ${e.message}`);
         }
     }
 
@@ -220,7 +224,7 @@ export class DesktopRunnerService implements OnModuleInit {
 
     async loadPlugins(externalModule: string) {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const module = require(externalModule);
+        const module = require(path.join(externalModule, BOT_PLUGIN_DIR));
         if (!module) {
             throw new Error(`Missing default export in external module: ${externalModule}`);
         }
@@ -254,6 +258,7 @@ export class DesktopRunnerService implements OnModuleInit {
                 this.pluginHandlersMap.set(key, handler);
 
                 this.logger.log(`Success: Imported plugin ${key} ${handler.name}`);
+                continue;
             }
 
             const internalHandlerKey = key.split('.')[1] as InternalHandlerKey;
@@ -380,7 +385,7 @@ export class DesktopRunnerService implements OnModuleInit {
     }
 
     private checkPluginExists(directoryPath: string, directoryName: string) {
-        const pluginPath = path.join(directoryPath, directoryName, 'bot', 'dist', 'index.cjs');
+        const pluginPath = path.join(directoryPath, directoryName, BOT_PLUGIN_DIR);
 
         return existsSync(pluginPath);
     }
