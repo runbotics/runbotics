@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "outDir": "dist",
-        "module": "ESNext",
+        "module": "NodeNext",
         "target": "ESNext",
         "lib": [
             "dom",
