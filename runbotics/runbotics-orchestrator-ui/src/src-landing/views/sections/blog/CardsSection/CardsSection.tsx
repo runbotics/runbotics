@@ -1,31 +1,53 @@
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 
-import { BlogPost, Page } from '#contentful/common';
+import { BlogPost, MarketplaceOffer, Page } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import CardsGrid from '#src-landing/components/BlogCardsGrid';
+import { PageType } from '#src-landing/components/BlogCardsGrid/CardsGrid';
 import CardsPagination from '#src-landing/components/PostPagination';
 
 import styles from './CardsSection.module.scss';
 
-interface CardsSectionProps {
-    posts: BlogPost[];
-    featuredPost?: BlogPost;
+interface CardsSectionPropsBase {
+    pageType: PageType;
+    cards: unknown[];
+    page: Page;
+    searchBar?: ReactElement;
+}
+
+interface CardsBlogSectionProps extends CardsSectionPropsBase {
+    pageType: PageType.BLOG;
+    cards: BlogPost[];
+    featuredCard?: BlogPost;
     page: Page;
 }
 
+interface CardsMarketplaceSectionProps extends CardsSectionPropsBase {
+    pageType: PageType.MARKETPLACE;
+    cards: MarketplaceOffer[];
+    featuredCard?: MarketplaceOffer;
+    page: Page;
+}
 
-const CardsSection: FC<CardsSectionProps> = ({
-    posts,
-    featuredPost,
+export type CardsSectionPropsType = CardsBlogSectionProps | CardsMarketplaceSectionProps;
+
+const CardsSection: FC<CardsSectionPropsType> = ({
+    pageType,
+    cards,
+    featuredCard,
     page,
+    searchBar
 }) => (
     <div className={styles.root}>
+        {searchBar}
+        {/*@ts-expect-error union of types are not well served in typescript so the pageType is incompatible even if values are the same*/}
         <CardsGrid
-            posts={posts}
-            featuredPost={featuredPost}
+            pageType={pageType}
+            cards={cards}
+            featuredCard={featuredCard}
         />
         <If condition={page.total > 1}>
-            <CardsPagination page={page} />
+            <CardsPagination page={page}/>
         </If>
     </div>
 );

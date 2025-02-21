@@ -1,17 +1,17 @@
 import { FC, useState } from 'react';
 
-import Image from 'next/image';
-
 import { Industry, MarketplaceOffer, Page, Tag } from '#contentful/common';
 import If from '#src-app/components/utils/If';
 import useTranslations from '#src-app/hooks/useTranslations';
+import { PageType } from '#src-landing/components/BlogCardsGrid/CardsGrid';
+import { HeadImage } from '#src-landing/components/ContentFulHeadImage/ContentFulHeadImage';
 import Layout from '#src-landing/components/Layout';
 import Typography from '#src-landing/components/Typography';
 import ContentFulLayout from 'src/src-landing/components/ContentFulLayout';
 
 import styles from './MarketplaceView.module.scss';
-import BreadcrumbsSection from '../sections/blog/BreadcrumbsSection';
 import CardsSection from '../sections/blog/CardsSection';
+
 
 interface MarketplaceViewProps {
     offers: MarketplaceOffer[];
@@ -32,25 +32,25 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
             </Typography>
         </div>
     );
-
+    const tempOffers = [...offers, ...offers, ...offers];
     return (
         <Layout disableScroll={isFilterDisplayed}>
             <ContentFulLayout
-                baseImage={'marketplace-banner'}
-                baseImageContent={'Marketplace'}
+                baseImage={'hero-background'}
+                headImageClass={HeadImage.MARKETPLACE}
             >
-                <BreadcrumbsSection/>
-                <button onClick={() => setFilterDisplayed(true)} className={styles.filter}>
-                    <Image alt="filterIcon" src={'/images/icons/filter.svg'} fill={true}/>
-                </button>
-                <div style={{border: 'solid black 1px'}}>
+                <div style={{ border: 'solid black 1px' }}>
                     place for filters section
                 </div>
                 <If condition={Boolean(offers.length)} else={offersNotFoundInfo}>
                     <CardsSection
-                        posts={[]}
-                        featuredPost={null}
+                        pageType={PageType.MARKETPLACE}
+                        cards={[...tempOffers, ...tempOffers, ...tempOffers, ...tempOffers]}
+                        featuredCard={null}
                         page={page}
+                        searchBar={
+                            <div style={{ width: '100%', border: '1px solid black', padding: '8px', margin: '8px' }}>Here will be searchBar</div>
+                        }
                     />
                 </If>
             </ContentFulLayout>

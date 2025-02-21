@@ -27,6 +27,7 @@ const MarketplacePage: VFC<Props> = ({ offers, industries, tags, page }) => (
 
 export default MarketplacePage;
 
+// @ts-expect-error returned mocked object doesn't exactly contain all the fields, which are not needed in mocked data
 export const getServerSideProps: GetServerSideProps<Props> = async ({ query, locale, res }) => {
     // const language = locale as Language;
 
@@ -78,7 +79,31 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
     return {
         props: {
             metadata,
-            offers: [],
+            offers: [{
+                title: 'Test Offer',
+                description: 'Very long description aaaad sdflksdfsdkflfjsd',
+                slug: 'test-offer',
+                tags: {
+                    items: [{
+                        slug: 'test-tag',
+                        name: 'Test Tag',
+                    }]
+                },
+                industries: [],
+                author: {
+                    slug: 'new-author',
+                    name: 'New Author',
+                    bio: {
+                        json: {} as JSON,
+                        links: [],
+                    }
+                },
+                body: {
+                    json: {},
+                    links: []
+                },
+
+            }],
             industries: [],
             tags: [],
             page: {
