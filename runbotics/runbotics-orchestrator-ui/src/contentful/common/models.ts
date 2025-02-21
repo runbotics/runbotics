@@ -72,12 +72,11 @@ export interface MarketplaceOffer {
     title: string;
     slug: string;
     description: string;
-    image: {
+    image?: {
         url: string;
     };
     imageAltText?: string;
     tags: ContentfulCollection<Tag>;
     body: ContentfulRichText;
-    author: Author;
     industries: ContentfulCollection<Industry>;
 }

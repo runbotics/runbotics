@@ -5,10 +5,14 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
 import { isCached, recreateCache } from '#contentful/blog-main';
+import { isMarketplaceCached, recreateMarketplaceCache} from '#contentful/marketplace-main';
 
 (async function initializeBlogCache() {
     if (!isCached('en') || !isCached('pl')) {
         await recreateCache();
+    }
+    if(!isMarketplaceCached('pl') || !isMarketplaceCached('en')) {
+        await recreateMarketplaceCache();
     }
 })();
 

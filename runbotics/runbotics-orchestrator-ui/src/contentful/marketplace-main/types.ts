@@ -1,5 +1,6 @@
-import { getMainPage } from '#contentful/blog-main';
 import { FetchContentfulResponse, Industry, MarketplaceOffer, Tag } from '#contentful/common';
+
+import { getMainPage } from './api';
 
 interface AllOffersCollection {
     marketplaceOfferCollection: {
@@ -13,6 +14,7 @@ interface AllOffersCollection {
 export type GetAllOffersResponse = FetchContentfulResponse<
     & AllOffersCollection
     & AllTagsCollection
+    & AllIndustriesCollection
 >
 
 export interface GetFilteredOffersOptions {
@@ -45,5 +47,4 @@ export type GetAllModelsResponse = FetchContentfulResponse<
     & AllTagsCollection
 >
 
-//TODO: change getMainPage to type of getMainMarketplacePage when cache is done
 export type MarketplaceMainCache = Awaited<ReturnType<typeof getMainPage>> | null;

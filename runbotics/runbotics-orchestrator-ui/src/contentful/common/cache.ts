@@ -20,6 +20,10 @@ function createCacheInstance() {
     return new LRUMap<CacheKeys, unknown>(53);
 }
 
+function createMarketplaceCacheInstance() {
+    return new LRUMap<CacheKeys, unknown>(5);
+}
+
 if (!global[contentfulCacheSymbol]) {
     global[contentfulCacheSymbol] = {
         en: createCacheInstance(),
@@ -29,4 +33,4 @@ if (!global[contentfulCacheSymbol]) {
 
 const contentfulCache = global[contentfulCacheSymbol] as ContentfulCache;
 
-export { contentfulCache, createCacheInstance };
+export { contentfulCache, createMarketplaceCacheInstance, createCacheInstance };
