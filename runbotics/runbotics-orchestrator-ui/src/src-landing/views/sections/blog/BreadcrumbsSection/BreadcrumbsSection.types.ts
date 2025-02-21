@@ -1,3 +1,4 @@
 export interface BreadcrumbsSectionProps {
-    postTitle?: string;
+    subPageTitle?: string;
+    baseUrl?: string;
 }

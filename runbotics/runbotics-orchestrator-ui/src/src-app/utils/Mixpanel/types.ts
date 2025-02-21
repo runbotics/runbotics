@@ -73,6 +73,7 @@ export enum ENTERED_PAGE {
     LANDING = 'landing',
     LOGIN = 'login',
     REGISTER = 'register',
+    MARKETPLACE = 'marketplace',
     NOT_SPECIFIED = 'not specified',
 }
 
@@ -94,6 +95,7 @@ export enum CLICKABLE_ITEM {
     RUN_BUTTON = 'run button',
     SAVE_BUTTON = 'save button',
     LOGOUT_BUTTON = 'logout button',
+    MARKETPLACE_OFFER = 'marketplace offer',
 }
 
 export enum ERROR_REASON {
