@@ -32,14 +32,17 @@ import {
     sortAscending,
     getBoardSprintsInputSchema,
     getSprintTasksInputSchema,
+    getTaskDetailsInputSchema,
     getJiraAllBoardSprints,
-    getJiraAllSprintTasks
+    getJiraAllSprintTasks,
+    getJiraAllTaskDetails
 } from '../jira.utils';
 import {
     GetJiraDatesInput,
     GetBoardSprintsInput,
     GetProjectWorklogInput,
     GetSprintTasksInput,
+    GetTaskDetailsInput,
     GetUserWorklogInput,
     GetWorklogInput,
     IssueWorklogsParam,
@@ -145,6 +148,17 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         const sprintTasks = await getJiraAllSprintTasks(input);
 
         return sprintTasks;
+    }
+
+    async getTaskDetails(rawInput: GetTaskDetailsInput) {
+        const input = await getTaskDetailsInputSchema.parseAsync(rawInput)
+            .catch((error: ZodError) => {
+                throw formatZodError(error);
+            });
+
+        const tasksDetails = await getJiraAllTaskDetails(input);
+
+        return tasksDetails;
     }
 
     private getJiraDates(input: GetJiraDatesInput) {
@@ -307,6 +321,8 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                 return this.getBoardSprints(inputWithAuth);
             case JiraCloudAction.GET_SPRINT_TASKS:
                 return this.getSprintTasks(inputWithAuth);
+            case JiraCloudAction.GET_TASK_DETAILS:
+                return this.getTaskDetails(inputWithAuth);
             default:
                 throw new Error('Action not found');
         }

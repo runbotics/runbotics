@@ -22,6 +22,7 @@ import {
     Sprint,
     Page,
     GetSprintTasksInput,
+    GetTaskDetailsInput,
     AtlassianCredentials
 } from './jira.types';
 import { CloudJiraUser } from './jira-cloud/jira-cloud.types';
@@ -141,6 +142,11 @@ export const getSprintTasksInputSchema = getSprintTasksInputBaseSchema.and(z.uni
     jiraDatesCollectionSchema,
 ]));
 
+export const getTaskDetailsInputSchema = getJiraInputBaseSchema.and(z.object({
+    task: z.string({ required_error: 'Task ID is missing' }),
+    fields: z.string().optional(),
+}));
+
 export const getBasicAuthHeader = ({ username, password }: Omit<AtlassianCredentials, 'originUrl'>) => {
     return {
         Authorization: 'Basic ' + Buffer.from(
@@ -239,6 +245,59 @@ export const getJiraAllSprintTasks = async <T extends CloudJiraUser>(
         total: response.total,
         issues,
     };
+};
+
+export const getJiraAllTaskDetails = async <T extends CloudJiraUser>(
+    input: GetTaskDetailsInput,
+) => {
+    const jql = `key="${input.task}"`.trim();
+
+    let startAt = 0;
+    let issues: SearchIssue<T> | null = null;
+
+    const response = await searchTaskDetails<T>(input, jql, startAt);
+    if (response.total > 0) {
+        issues = response.issues[0];
+    }
+
+    return {
+        issues,
+    };
+};
+
+const searchTaskDetails = async <T extends CloudJiraUser>(
+    input: GetSprintTasksInput,
+    jql: string,
+    startAt: Page['startAt'],
+)  => {
+    const { username, password, originUrl } = input;
+    const baseFields = 'summary, issuetype, created, resolutiondate, updated, status, assignee, issuelinks, priority, reporter, components, labels, sprint, epic link, timespent, duedate, customfield_10020, customfield_10014';
+    const additionalFields = input?.fields
+        ? input?.fields
+            .split(',')
+            .map(field => field.trim())
+            .filter(field => !baseFields.split(',').includes(field))
+            .join(',')
+        : '';
+
+    const fields = additionalFields
+        ? `${baseFields},${additionalFields}`
+        : baseFields;
+    const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
+        `${originUrl}/rest/api/2/search`,
+        {
+            params: {
+                jql,
+                maxResults: 100, // 100 is max value
+                startAt,
+                fields,
+            },
+            headers: getBasicAuthHeader({ username, password }),
+            maxRedirects: 0,
+        },
+    );
+
+    return data;
 };
 
 const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
