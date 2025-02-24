@@ -21,6 +21,7 @@ import {
     getIssueWorklogsByParam,
     getJiraProject,
     getJiraUser,
+    getEpicWorklogInputSchema,
     getProjectWorklogInputSchema,
     getUserWorklogInputSchema,
     groupByDay,
@@ -40,6 +41,7 @@ import {
 import {
     GetJiraDatesInput,
     GetBoardSprintsInput,
+    GetEpicWorklogInput,
     GetProjectWorklogInput,
     GetSprintTasksInput,
     GetTaskDetailsInput,
@@ -90,6 +92,35 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
                 endDate,
                 dates,
                 jiraUser
+            })
+        );
+
+        return input.groupByDay
+            ? groupByDay(worklogs)
+            : sortAscending(worklogs);
+    }
+
+    async getEpicWorklog(rawInput: GetEpicWorklogInput) {
+        const input = await getEpicWorklogInputSchema.parseAsync(rawInput)
+            .catch((error: ZodError) => {
+                throw formatZodError(error);
+            });
+
+        const { startDate, endDate, dates } = this.getJiraDates(input);
+
+        const issues = await getIssueWorklogsByParam<CloudJiraUser>(
+            { param: IssueWorklogsParam.EPIC, epic: input.epic },
+            input,
+        );
+        this.logger.log(`Found ${issues.length} issues containing desired worklogs`);
+
+        const worklogs = await this.getAllWorklogsForIssue(
+            input,
+            issues,
+            this.filterProjectWorklogs({
+                startDate,
+                endDate,
+                dates,
             })
         );
 
@@ -315,6 +346,8 @@ export default class JiraCloudActionHandler extends StatelessActionHandler {
         switch (request.script) {
             case JiraCloudAction.GET_USER_WORKLOGS:
                 return this.getUserWorklog(inputWithAuth);
+            case JiraCloudAction.GET_EPIC_WORKLOGS:
+                    return this.getEpicWorklog(inputWithAuth);
             case JiraCloudAction.GET_PROJECT_WORKLOGS:
                 return this.getProjectWorklog(inputWithAuth);
             case JiraCloudAction.GET_BOARD_SPRINTS:

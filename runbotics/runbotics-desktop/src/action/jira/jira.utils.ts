@@ -91,6 +91,11 @@ export const getUserWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object
     groupByDay: z.boolean().optional(),
 }));
 
+export const getEpicWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object({
+    epic: z.string({ required_error: 'Epic ID is missing' }),
+    groupByDay: z.boolean().optional(),
+}));
+
 export const getProjectWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object({
     project: z.string({ required_error: 'Project key is missing' }),
     groupByDay: z.boolean().optional(),
@@ -113,6 +118,12 @@ export const jiraDatesCollectionSchema = z.object({
 });
 
 export const getUserWorklogInputSchema = getUserWorklogInputBaseSchema.and(z.union([
+    jiraSingleDaySchema.required({ date: true }),
+    jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
+    jiraDatesCollectionSchema.required({ dates: true }),
+]));
+
+export const getEpicWorklogInputSchema = getEpicWorklogInputBaseSchema.and(z.union([
     jiraSingleDaySchema.required({ date: true }),
     jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
     jiraDatesCollectionSchema.required({ dates: true }),
@@ -395,6 +406,8 @@ export const getIssueWorklogsByParam = async <T extends CloudJiraUser | ServerJi
     }
     const jqlSearchParam = searchParam.param === 'worklogAuthor'
         ? `worklogAuthor=${searchParam.author}`
+        : searchParam.param === 'epic'
+        ? `cf[10014]=${searchParam.epic}`
         : `project=${searchParam.project}`;
     const jql = `${dateCondition} AND ${jqlSearchParam}`;
     let startAt = 0;
