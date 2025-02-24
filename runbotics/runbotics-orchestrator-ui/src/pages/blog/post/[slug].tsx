@@ -2,9 +2,8 @@ import type { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import { isCached, recreateCache } from '#contentful/blog-main';
 import { getSinglePostCache } from '#contentful/blog-post';
-import { BlogPost } from '#contentful/common';
+import { BlogPost, isCached, recreateCache } from '#contentful/common';
 import backupRunBoticsImage from '#public/images/banners/hero-background.png';
 import { Language } from '#src-app/translations/translations';
 import { MetadataTags } from '#src-landing/components/Matadata/Metadata';
@@ -26,7 +25,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
     const language = locale as Language;
 
     if (!isCached(language)) {
-        await recreateCache();
+        await recreateCache(language);
     } else {
         res.setHeader('X-Cache', 'HIT');
     }

@@ -4,15 +4,11 @@ import React from 'react';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
-import { isCached, recreateCache } from '#contentful/blog-main';
-import { isMarketplaceCached, recreateMarketplaceCache} from '#contentful/marketplace-main';
+import { isCached, recreateCache } from '#contentful/common';
 
 (async function initializeBlogCache() {
     if (!isCached('en') || !isCached('pl')) {
         await recreateCache();
-    }
-    if(!isMarketplaceCached('pl') || !isMarketplaceCached('en')) {
-        await recreateMarketplaceCache();
     }
 })();
 
@@ -45,14 +41,14 @@ class MyDocument extends Document {
         return (
             <Html lang="en" dir="ltr">
                 <Head>
-                    <meta charSet="utf-8" />
-                    <meta name="theme-color" content="#000000" />
-                    <link rel="icon" href="/images/favicon.ico" />
+                    <meta charSet="utf-8"/>
+                    <meta name="theme-color" content="#000000"/>
+                    <link rel="icon" href="/images/favicon.ico"/>
                 </Head>
 
                 <body>
-                    <Main />
-                    <NextScript />
+                <Main/>
+                <NextScript/>
                 </body>
             </Html>
         );

@@ -2,7 +2,7 @@
 
 
 export const MARKETPLACE_INDUSTRY_FRAGMENT = `
-    industriesCollection(limit: 20) {
+    industriesCollection(limit: 5) {
         items {
             title
             slug
@@ -11,7 +11,7 @@ export const MARKETPLACE_INDUSTRY_FRAGMENT = `
 `;
 
 export const MARKETPLACE_TAGS_FRAGMENT = `
-    tagsCollection {
+    tagsCollection(limit: 5) {
         items {
             name
             slug
@@ -27,6 +27,7 @@ export const MARKETPLACE_OFFER_LIST_FRAGMENT = `
     title
     slug
     tags: ${MARKETPLACE_TAGS_FRAGMENT}
+    industries: ${MARKETPLACE_INDUSTRY_FRAGMENT}
     description
 `;
 

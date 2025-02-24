@@ -9,27 +9,31 @@ import PaginationNavigation from './PaginationNavigation';
 import SwitchPageButton from './SwitchPageButton';
 
 export interface CardsPaginationProps {
+    basePageUrl: string;
     page: Page;
 }
 
 
-const CardsPagination: FC<CardsPaginationProps> = ({ page }) => {
+const CardsPagination: FC<CardsPaginationProps> = ({ basePageUrl, page }) => {
     const { current: currentPage, total: totalPages } = page;
 
     return (
         <div className={styles.root}>
             <If condition={currentPage > 1}>
                 <SwitchPageButton
+                    basePageUrl={basePageUrl}
                     direction='Previous'
                     currentPage={currentPage}
                 />
             </If>
             <PaginationNavigation
+                basePageUrl={basePageUrl}
                 currentPage={currentPage}
                 totalPages={totalPages}
             />
             <If condition={currentPage < totalPages}>
                 <SwitchPageButton
+                    basePageUrl={basePageUrl}
                     direction='Next'
                     currentPage={currentPage}
                 />

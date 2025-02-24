@@ -32,7 +32,6 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
             </Typography>
         </div>
     );
-    const tempOffers = [...offers, ...offers, ...offers];
     return (
         <Layout disableScroll={isFilterDisplayed}>
             <ContentFulLayout
@@ -45,7 +44,7 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
                 <If condition={Boolean(offers.length)} else={offersNotFoundInfo}>
                     <CardsSection
                         pageType={PageType.MARKETPLACE}
-                        cards={[...tempOffers, ...tempOffers, ...tempOffers, ...tempOffers]}
+                        cards={offers}
                         featuredCard={null}
                         page={page}
                         searchBar={

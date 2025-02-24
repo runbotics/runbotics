@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { recreateMarketplaceCache } from '#contentful/marketplace-main';
+import { recreateCache } from '#contentful/common';
 import { languages } from '#src-app/translations/translations';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(401).send('Invalid secret');
     }
 
-    await Promise.allSettled(languages.map((language) => recreateMarketplaceCache(language)));
+    await Promise.allSettled(languages.map((language) => recreateCache(language)));
 
     return res.send('RunBotics marketplace cache recreated');
 };

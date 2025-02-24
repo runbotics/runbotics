@@ -1,8 +1,10 @@
 import LRUMap from 'mnemonist/lru-map';
 
-import { Language } from '#src-app/translations/translations';
+import { DEFAULT_LANG, Language } from '#src-app/translations/translations';
 
 import { CacheKey } from './types';
+import { recreateBlogCache } from '#contentful/blog-main';
+import { recreateMarketplaceCache } from '#contentful/marketplace-main';
 
 type CacheKeys = CacheKey | string;
 type ContentfulCache = Record<Language, LRUMap<CacheKeys, unknown>>;
@@ -10,18 +12,17 @@ type ContentfulCache = Record<Language, LRUMap<CacheKeys, unknown>>;
 const CONTENTFUL_CACHE_KEY = 'contentfulCache';
 const contentfulCacheSymbol = Symbol.for(CONTENTFUL_CACHE_KEY);
 
+const BLOG_CACHE_SIZE = 53;
+const MARKETPLACE_CACHE_SIZE = 12;
+
 /**
  * Cache instance singleton
  * It is hard cache, which means that there is no expiration, cache will be refreshed once server is restarted
- * Adjust size of cache accordingly to number of posts
+ * Adjust size of cache accordingly to number of posts and offers
  */
 
 function createCacheInstance() {
-    return new LRUMap<CacheKeys, unknown>(53);
-}
-
-function createMarketplaceCacheInstance() {
-    return new LRUMap<CacheKeys, unknown>(5);
+    return new LRUMap<CacheKeys, unknown>(BLOG_CACHE_SIZE + MARKETPLACE_CACHE_SIZE);
 }
 
 if (!global[contentfulCacheSymbol]) {
@@ -33,4 +34,15 @@ if (!global[contentfulCacheSymbol]) {
 
 const contentfulCache = global[contentfulCacheSymbol] as ContentfulCache;
 
-export { contentfulCache, createMarketplaceCacheInstance, createCacheInstance };
+
+const isCached = (lang: Language) => {
+    return contentfulCache[lang] && contentfulCache[lang].size > 0;
+}
+
+const recreateCache = async (language: Language = DEFAULT_LANG) => {
+    createCacheInstance();
+    await recreateBlogCache(language);
+    await recreateMarketplaceCache(language);
+}
+
+export { contentfulCache, recreateCache, isCached, createCacheInstance };

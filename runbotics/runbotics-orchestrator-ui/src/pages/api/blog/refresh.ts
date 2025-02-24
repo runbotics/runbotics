@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { recreateCache } from '#contentful/blog-main';
+import { recreateBlogCache } from '#contentful/blog-main';
 
 import { languages } from '#src-app/translations/translations';
+import { recreateCache } from '#contentful/common';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method !== 'POST') {

@@ -47,7 +47,7 @@ const CardsSection: FC<CardsSectionPropsType> = ({
             featuredCard={featuredCard}
         />
         <If condition={page.total > 1}>
-            <CardsPagination page={page}/>
+            <CardsPagination page={page} basePageUrl={pageType}/>
         </If>
     </div>
 );

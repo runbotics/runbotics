@@ -1,11 +1,4 @@
-import {
-    CacheKey,
-    contentfulCache,
-    createMarketplaceCacheInstance,
-    Industry,
-    MarketplaceOffer,
-    Tag,
-} from '#contentful/common';
+import { CacheKey, contentfulCache, Industry, isCached, MarketplaceOffer, Tag } from '#contentful/common';
 import { MarketplaceMainCache } from '#contentful/marketplace-main/types';
 import { getOffer, setSingleOfferCache } from '#contentful/marketplace-post';
 import { DEFAULT_LANG, Language, languages } from '#src-app/translations/translations';
@@ -39,8 +32,7 @@ export function setMarketplaceTagsCache(language: Language, cacheValue: Tag[]) {
 export function getMarketplaceMainCache(
     language: Language = DEFAULT_LANG,
 ): MarketplaceMainCache {
-    console.log(contentfulCache[language].get('offers'));
-    if (!isMarketplaceCached(language)) {
+    if (!isCached(language)) {
         return null;
     }
 
@@ -58,14 +50,8 @@ export function getMarketplaceMainCache(
     };
 }
 
-export function isMarketplaceCached(language: Language) {
-    return contentfulCache[language] && contentfulCache[language].get('offers');
-
-}
-
 export async function recreateMarketplaceCache(language: Language = DEFAULT_LANG) {
     await Promise.allSettled(languages.map(async (lang) => {
-        contentfulCache[lang] = createMarketplaceCacheInstance();
         const modelMap = await getMainPage(lang);
         if (modelMap.offers) {
             const offers = modelMap.offers;
