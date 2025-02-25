@@ -1,10 +1,11 @@
 import LRUMap from 'mnemonist/lru-map';
 
+import { recreateBlogCache } from '#contentful/blog-main';
+import { recreateMarketplaceCache } from '#contentful/marketplace-main';
 import { DEFAULT_LANG, Language } from '#src-app/translations/translations';
 
 import { CacheKey } from './types';
-import { recreateBlogCache } from '#contentful/blog-main';
-import { recreateMarketplaceCache } from '#contentful/marketplace-main';
+
 
 type CacheKeys = CacheKey | string;
 type ContentfulCache = Record<Language, LRUMap<CacheKeys, unknown>>;
@@ -35,14 +36,12 @@ if (!global[contentfulCacheSymbol]) {
 const contentfulCache = global[contentfulCacheSymbol] as ContentfulCache;
 
 
-const isCached = (lang: Language) => {
-    return contentfulCache[lang] && contentfulCache[lang].size > 0;
-}
+const isCached = (lang: Language) => contentfulCache[lang] && contentfulCache[lang].size > 0;
 
 const recreateCache = async (language: Language = DEFAULT_LANG) => {
     createCacheInstance();
     await recreateBlogCache(language);
     await recreateMarketplaceCache(language);
-}
+};
 
 export { contentfulCache, recreateCache, isCached, createCacheInstance };
