@@ -252,17 +252,9 @@ export const getJiraAllTaskDetails = async <T extends CloudJiraUser>(
 ) => {
     const jql = `key="${input.task}"`.trim();
 
-    let startAt = 0;
-    let issues: SearchIssue<T> | null = null;
-
-    const response = await searchTaskDetails<T>(input, jql, startAt);
-    if (response.total > 0) {
-        issues = response.issues[0];
-    }
-
-    return {
-        issues,
-    };
+    const START_AT = 0;
+    return await searchTaskDetails<T>(input, jql, START_AT)
+        .then(res => res.total > 0 ? res.issues[0] : null)
 };
 
 const searchTaskDetails = async <T extends CloudJiraUser>(
@@ -271,24 +263,26 @@ const searchTaskDetails = async <T extends CloudJiraUser>(
     startAt: Page['startAt'],
 )  => {
     const { username, password, originUrl } = input;
-    const baseFields = 'summary, issuetype, created, resolutiondate, updated, status, assignee, issuelinks, priority, reporter, components, labels, sprint, epic link, timespent, duedate, customfield_10020, customfield_10014';
+    const BASE_FIELDS = ['summary', 'issue_type', 'created', 'resolutiondate', 'updated', 'status', 'assignee', 'issuelinks', 'priority', 'reporter', 'components', 'labels', 'sprint', 'epic link', 'timespent', 'duedate', 'customfield_10020', 'customfield_10014'].join(',');
     const additionalFields = input?.fields
         ? input?.fields
             .split(',')
             .map(field => field.trim())
-            .filter(field => !baseFields.split(',').includes(field))
+            .filter(field => !BASE_FIELDS.split(',').includes(field))
             .join(',')
         : '';
 
     const fields = additionalFields
-        ? `${baseFields},${additionalFields}`
-        : baseFields;
+        ? `${BASE_FIELDS},${additionalFields}`
+        : BASE_FIELDS;
+
+    const MAX_SEARCH_RESULTS = 100;
     const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
         `${originUrl}/rest/api/2/search`,
         {
             params: {
                 jql,
-                maxResults: 100, // 100 is max value
+                maxResults: MAX_SEARCH_RESULTS,
                 startAt,
                 fields,
             },
