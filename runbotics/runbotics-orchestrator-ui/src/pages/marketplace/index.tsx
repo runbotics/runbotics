@@ -94,7 +94,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
                 metadata,
                 offers: currentPageOffers,
                 page: {
-                    current: 1,
+                    current: currentPage,
                     total: totalPages,
                 },
             },

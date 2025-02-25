@@ -29,7 +29,7 @@ const PaginationNavigation: FC<PaginationNavigationProps> = ({ basePageUrl, curr
     );
     const VISIBLE_PAGE_LINKS_NUMBER = Number(styles.visiblePageLinks);
     const wrapperTranslateValue = (currentPage * PAGE_LINK_SIZE * -1) + (Math.ceil(VISIBLE_PAGE_LINKS_NUMBER / 2) * PAGE_LINK_SIZE);
-
+    console.log(currentPage)
     const pageLinks = pageNumbers.map(
         (number) => (
             <li key={number}>
