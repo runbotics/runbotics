@@ -135,6 +135,118 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                 formData: {},
             },
         },
+        [JiraCloudAction.GET_EPIC_WORKLOGS]: {
+            id: JiraCloudAction.GET_EPIC_WORKLOGS,
+            credentialType: ActionCredentialType.ATLASSIAN,
+            label: translate('Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Label'),
+            script: JiraCloudAction.GET_EPIC_WORKLOGS,
+            runner: Runner.DESKTOP_SCRIPT,
+            output: {
+                assignVariables: true,
+                outputMethods: {
+                    variableName: '${content.output[0]}',
+                },
+            },
+            form: {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        input: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                            type: 'object',
+                            properties: {
+                                epic: {
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Epic'),
+                                    type: 'string',
+                                },
+                                groupByDay: {
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.GroupByDay'),
+                                    type: 'boolean',
+                                },
+                                mode: {
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.DateMode'),
+                                    type: 'string',
+                                    enum: [dateMode.date.value, dateMode.period.value, dateMode.collection.value],
+                                    enumNames: [dateMode.date.title, dateMode.period.title, dateMode.collection.title],
+                                    default: dateMode.date.value,
+                                },
+                            },
+                            dependencies: {
+                                mode: {
+                                    oneOf: [{
+                                        properties: {
+                                            mode: {
+                                                enum: [dateMode.date.value],
+                                            },
+                                            date: {
+                                                title: translate('Process.Details.Modeler.Actions.Common.Date'),
+                                                type: 'string',
+                                            },
+                                            customCredentialId: propertyCustomCredential,
+                                        },
+                                        required: ['date'],
+                                    }, {
+                                        properties: {
+                                            mode: {
+                                                enum: [dateMode.period.value],
+                                            },
+                                            startDate: {
+                                                title: translate('Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.StartDate'),
+                                                type: 'string',
+                                            },
+                                            endDate: {
+                                                title: translate('Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.EndDate'),
+                                                type: 'string',
+                                            },
+                                            customCredentialId: propertyCustomCredential,
+                                        },
+                                        required: ['startDate', 'endDate'],
+                                    }, {
+                                        properties: {
+                                            mode: {
+                                                enum: [dateMode.collection.value],
+                                            },
+                                            dates: {
+                                                title: translate('Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.DatesList'),
+                                                type: 'string',
+                                            },
+                                            customCredentialId: propertyCustomCredential,
+                                        },
+                                        required: ['dates']
+                                    }],
+                                },
+                            },
+                            required: ['epic']
+                        },
+                        output: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                            type: 'object',
+                            properties: {
+                                variableName: {
+                                    title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                    type: 'string',
+                                    pattern: ActionRegex.VARIABLE_NAME,
+                                },
+                            },
+                        },
+                    },
+                },
+                uiSchema: {
+                    'ui:order': ['input', 'output'],
+                    input: {
+                        customCredentialId: schemaCustomCredential,
+                    },
+                    output: {
+                        variableName: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Output.Info'),
+                            }
+                        },
+                    }
+                },
+                formData: {},
+            },
+        },
         [JiraCloudAction.GET_PROJECT_WORKLOGS]: {
             id: JiraCloudAction.GET_PROJECT_WORKLOGS,
             credentialType: ActionCredentialType.ATLASSIAN,

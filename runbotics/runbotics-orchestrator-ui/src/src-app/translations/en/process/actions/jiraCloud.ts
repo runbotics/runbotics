@@ -7,6 +7,15 @@ const jiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.GroupByDay': 'Group by day',
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Output.Info': 'Array of user\'s worklogs or map of user\'s worklogs grouped by day',
 
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Label': 'Get Epic Worklogs',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.DateMode': 'Date Mode',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.StartDate': 'Start Date',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.EndDate': 'End Date',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.DatesList': 'Dates List',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.GroupByDay': 'Group by day',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Epic': 'Epic ID',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Output.Info': 'Array of epic\'s worklogs or map of epic\'s worklogs grouped by day',
+
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Label': 'Get Project Worklogs',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.DateMode': 'Date Mode',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.StartDate': 'Start Date',

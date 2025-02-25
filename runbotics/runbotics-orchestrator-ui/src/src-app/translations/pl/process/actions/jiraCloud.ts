@@ -9,6 +9,15 @@ const jiraCloudTranslations: typeof englishJiraCloudActionsTranslations = {
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.GroupByDay': 'Pogrupuj po dniach',
     'Process.Details.Modeler.Actions.JiraCloud.GetUserWorklogs.Output.Info': 'Tablica z dziennikami pracy lub mapa pogrupowanych dzienników pracy po dniach',
 
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Label': 'Pobierz dziennik pracy epika',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.DateMode': 'Tryb daty',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.StartDate': 'Data początkowa',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.EndDate': 'Data końcowa',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.DatesList': 'Lista dat',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.GroupByDay': 'Pogrupuj po dniach',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Epic': 'ID epika',
+    'Process.Details.Modeler.Actions.JiraCloud.GetEpicWorklogs.Output.Info': 'Tablica z dziennikami pracy lub mapa pogrupowanych dzienników pracy po dniach',
+
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.Label': 'Pobierz dziennik pracy projektu',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.DateMode': 'Tryb daty',
     'Process.Details.Modeler.Actions.JiraCloud.GetProjectWorklogs.StartDate': 'Data początkowa',

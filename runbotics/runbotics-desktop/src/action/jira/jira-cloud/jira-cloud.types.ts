@@ -1,9 +1,10 @@
 import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import { JiraCloudAction } from 'runbotics-common';
-import { GetBoardSprintsInput, GetProjectWorklogInput, GetSprintTasksInput, GetTaskDetailsInput, GetUserWorklogInput, WorklogAllowedDateParams, WorklogIsCreatorParams } from '../jira.types';
+import { GetBoardSprintsInput, GetEpicWorklogInput, GetProjectWorklogInput, GetSprintTasksInput, GetTaskDetailsInput, GetUserWorklogInput, WorklogAllowedDateParams, WorklogIsCreatorParams } from '../jira.types';
 
 export type JiraActionRequest =
     | DesktopRunRequest<JiraCloudAction.GET_USER_WORKLOGS, GetUserWorklogInput>
+    | DesktopRunRequest<JiraCloudAction.GET_EPIC_WORKLOGS, GetEpicWorklogInput>
     | DesktopRunRequest<JiraCloudAction.GET_PROJECT_WORKLOGS, GetProjectWorklogInput>
     | DesktopRunRequest<JiraCloudAction.GET_BOARD_SPRINTS, GetBoardSprintsInput>
     | DesktopRunRequest<JiraCloudAction.GET_SPRINT_TASKS, GetSprintTasksInput>
