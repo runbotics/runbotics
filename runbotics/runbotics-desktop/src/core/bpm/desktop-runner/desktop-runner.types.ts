@@ -6,6 +6,8 @@ export type ActionHandler = { new(): StatelessActionHandler | StatefulActionHand
 
 export type ExternalHandlersMap = Map<string, any>;
 
+export type PluginHandlersMap = Map<string, any>;
+
 export type InternalHandlerKey =
     | 'api'
     | 'application'

@@ -65,6 +65,11 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         useState<HTMLButtonElement | null>(null);
 
     const { byId, external } = useSelector(state => state.action.bpmnActions);
+    const {
+        pluginBpmnActions,
+        pluginBpmnActionsMap,
+        pluginActionsGroupLabelMap,
+    } = useSelector(state => state.plugin);
     const internalActionsGroups = useInternalActionsGroups();
     const templatesGroups = useTemplatesGroups();
     const { translate } = useTranslations();
@@ -78,13 +83,35 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
         const externalActionsGroup = external.map(
             externalId => byId[externalId]
         );
-        const completeActionsGroups = {
+        const builtinActionsGroups: Record<
+            string,
+            { items: IBpmnAction[]; label: string }
+        > = {
             ...internalActionsGroups,
             external: {
                 ...internalActionsGroups.external,
-                items: [...externalActionsGroup]
-            }
+                items: [...externalActionsGroup],
+            },
         };
+
+        let completeActionsGroups = { ...builtinActionsGroups };
+        for (const [pluginKey, actions] of pluginBpmnActionsMap.entries()) {
+            const actionGroupName = pluginKey.split('.')[1];
+            const actionGroupContent = completeActionsGroups[actionGroupName];
+
+            completeActionsGroups = {
+                ...completeActionsGroups,
+                [actionGroupName]: {
+                    label: actionGroupContent?.label ?? pluginActionsGroupLabelMap.get(pluginKey)(translate),
+                    items: actionGroupContent
+                        ? [
+                            ...actionGroupContent.items,
+                            ...Object.values(actions),
+                        ]
+                        : Object.values(actions),
+                },
+            };
+        }
 
         const getGroupList = (
             group: object,
@@ -103,7 +130,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
             ...getGroupList(templatesGroups, true)
         ];
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [external, i18n.language, templatesGroups]);
+    }, [external, i18n.language, templatesGroups, pluginBpmnActionsMap]);
 
     const [openGroupsState, dispatchGroups] = useGroupReducer(
         Object.fromEntries(actionGroups.map(({ key }) => [key, false]))
@@ -142,6 +169,8 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
             CustomLoopHandler[item.id](event, modeler);
         } else if (internalTemplates[item.id]) {
             CustomTemplateHandler(event, modeler, internalTemplates[item.id]);
+        } else if (pluginBpmnActions[item.id]) {
+            handleAction(event, pluginBpmnActions[item.id]);
         } else if (byId[item.id]) {
             // Handler for external actions
             handleAction(event, byId[item.id]);

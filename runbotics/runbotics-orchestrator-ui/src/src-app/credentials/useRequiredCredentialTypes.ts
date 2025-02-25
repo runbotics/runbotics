@@ -12,13 +12,14 @@ export const useRequiredCredentialTypes = (): ActionCredentialType[] | null => {
     const externalBpmnActions = useSelector(
         state => state.action.bpmnActions.byId
     );
+    const { pluginBpmnActions } = useSelector(state => state.plugin);
 
-    const actions = { ...internalBpmnActions, ...externalBpmnActions };
+    const actions = { ...internalBpmnActions, ...externalBpmnActions, ...pluginBpmnActions };
 
     const requiredCredentialTypes = useMemo(() => process.definition
         ? getRequiredCredentialsTypesInProcess(process.definition, actions)
         : null,
-    [process, externalBpmnActions]);
+    [process, externalBpmnActions, pluginBpmnActions]);
 
     return requiredCredentialTypes;
 };
