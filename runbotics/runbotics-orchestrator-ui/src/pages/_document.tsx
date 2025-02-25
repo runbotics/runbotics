@@ -46,8 +46,8 @@ class MyDocument extends Document {
                     <link rel="icon" href="/images/favicon.ico"/>
                 </Head>
                 <body>
-                <Main/>
-                <NextScript/>
+                    <Main/>
+                    <NextScript/>
                 </body>
             </Html>
         );
