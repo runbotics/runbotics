@@ -331,7 +331,10 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             case DesktopAction.READ_TEXT_FROM_IMAGE:
                 return this.readTextFromImage(request.input);
             default:
-                throw new Error('Action not found');
+                if (!this.pluginService) {
+                    throw new Error('Action not found');
+                }
+                return this.pluginService.run(this, request);
         }
     }
 }

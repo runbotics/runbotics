@@ -169,11 +169,15 @@ export class DesktopRunnerService implements OnModuleInit {
 
         this.logger.log('Loading external modules from dir: ' + dirPath);
 
-        const externalModules = readdirSync(dirPath, { withFileTypes: true })
-            .filter(directoryEntry => moduleFilter.call(this, dirPath, directoryEntry))
-            .map(directoryEntry => directoryEntry.name);
-
-        this.logger.log('Number of external modules found: ' + externalModules.length);
+        const externalModules: string[] = [];
+        try {
+            externalModules.push(...readdirSync(dirPath, { withFileTypes: true })
+                .filter(directoryEntry => moduleFilter.call(this, dirPath, directoryEntry))
+                .map(directoryEntry => directoryEntry.name));
+            this.logger.log('Number of external modules found: ' + externalModules.length);
+        } catch (e) {
+            this.logger.error(e.message);
+        }
 
         let currentExternalModuleName: string;
         for (const externalModule of externalModules) {
@@ -184,7 +188,7 @@ export class DesktopRunnerService implements OnModuleInit {
                 await moduleLoader.call(this, externalModulePath);
                 this.logger.log(`Success: External module ${externalModule} loaded`);
             } catch (e) {
-                this.logger.error(`Error loading (${moduleType}) with module ${currentExternalModuleName ?? dirPath} - ${e.message}`);
+                this.logger.error(`Error loading (${moduleType}) with module ${currentExternalModuleName ?? dirPath} - ${e.message}\n`);
             }
         }
     }
