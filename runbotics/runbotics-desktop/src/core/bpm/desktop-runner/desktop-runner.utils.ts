@@ -10,3 +10,8 @@ export const FINISHED_PROCESS_STATUSES = [
 export const PLUGIN_PREFIX = 'plugin.';
 
 export const BOT_PLUGIN_DIR = path.join('bot', 'dist', 'index.cjs');
+
+export enum MODULE_TYPE {
+    PLUGIN = 'runbotics-plugins',
+    ACTIONS = 'runbotics-actions',
+}
