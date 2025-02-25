@@ -121,6 +121,7 @@ export enum JiraCloudAction {
     GET_PROJECT_WORKLOGS = 'jiraCloud.getProjectWorklogs',
     GET_BOARD_SPRINTS = 'jiraCloud.getBoardSprints',
     GET_SPRINT_TASKS = 'jiraCloud.getSprintTasks',
+    GET_TASK_DETAILS = "jiraCloud.getTaskDetails",
 }
 
 export enum JiraSprintState {

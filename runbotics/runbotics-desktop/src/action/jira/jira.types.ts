@@ -9,7 +9,8 @@ import {
     jiraSingleDaySchema,
     jiraDatesPeriodSchema,
     getBoardSprintsInputSchema,
-    getSprintTasksInputSchema
+    getSprintTasksInputSchema,
+    getTaskDetailsInputSchema
 } from './jira.utils';
 import { CloudJiraUser, SimpleCloudJiraUser } from './jira-cloud/jira-cloud.types';
 import { ServerJiraUser, SimpleServerJiraUser } from './jira-server/jira-server.types';
@@ -28,6 +29,7 @@ export type GetUserWorklogInput = z.infer<typeof getUserWorklogInputSchema>;
 export type GetProjectWorklogInput = z.infer<typeof getProjectWorklogInputSchema>;
 export type GetBoardSprintsInput = z.infer<typeof getBoardSprintsInputSchema>;
 export type GetSprintTasksInput = z.infer<typeof getSprintTasksInputSchema>;
+export type GetTaskDetailsInput = z.infer<typeof getTaskDetailsInputSchema>;
 
 export interface Page {
     maxResults: number;

@@ -437,6 +437,72 @@ const getJiraCloudActions: () => Record<string, IBpmnAction> = () => {
                 formData: {},
             },
         },
+        [JiraCloudAction.GET_TASK_DETAILS]: {
+            id: JiraCloudAction.GET_TASK_DETAILS,
+            credentialType: ActionCredentialType.ATLASSIAN,
+            label: translate('Process.Details.Modeler.Actions.JiraCloud.GetTaskDetails.Label'),
+            script: JiraCloudAction.GET_TASK_DETAILS,
+            runner: Runner.DESKTOP_SCRIPT,
+            output: {
+                assignVariables: true,
+                outputMethods: {
+                    variableName: '${content.output[0]}',
+                },
+            },
+            form: {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        input: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                            type: 'object',
+                            properties: {
+                                task: {
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetTaskDetails.Task'),
+                                    type: 'string',
+                                },
+                                fields: {
+                                    title: translate('Process.Details.Modeler.Actions.JiraCloud.GetTaskDetails.Fields'),
+                                    type: 'string',
+                                },
+                                customCredentialId: propertyCustomCredential,
+                            },
+                            required: ['task']
+                        },
+                        output: {
+                            title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                            type: 'object',
+                            properties: {
+                                variableName: {
+                                    title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                    type: 'string',
+                                    pattern: ActionRegex.VARIABLE_NAME,
+                                },
+                            },
+                        },
+                    },
+                },
+                uiSchema: {
+                    'ui:order': ['input', 'output'],
+                    input: {
+                        fields: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.JiraCloud.GetTaskDetails.Fields.Info'),
+                            },
+                        },
+                        customCredentialId: schemaCustomCredential,
+                    },
+                    output: {
+                        variableName: {
+                            'ui:options': {
+                                info: translate('Process.Details.Modeler.Actions.JiraCloud.GetTaskDetails.Output.Info'),
+                            },
+                        },
+                    }
+                },
+                formData: {},
+            },
+        },
     });
 };
 
