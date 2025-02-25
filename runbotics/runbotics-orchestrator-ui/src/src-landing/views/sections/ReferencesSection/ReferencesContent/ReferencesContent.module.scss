@@ -5,7 +5,6 @@ $ROOT-PADDING-2: 220px;
 $MIN-PADDING: 4px;
 $LINE-HEIGHT-20: 20px;
 $MIN-HEIGHT-LARGE: 500px;
-$LEFT-1: -215px;
 
 .root {
     position: relative;
@@ -31,10 +30,10 @@ $LEFT-1: -215px;
 
 .quoteMark {
     position: absolute;
-    width: 45%;
+    width: 35%;
     height: auto;
     top: -$margin-2;
-    left: $LEFT-1;
+    left: -30%;
     z-index: $nested-blur-effect-z-index;
 }
 
@@ -105,11 +104,6 @@ $LEFT-1: -215px;
         padding: $margin-14 $padding-10 $padding-10 $ROOT-PADDING-2;
     }
 
-    .quoteMark {
-        width: 40%;
-        left: -$margin-18;
-    }
-
     .caseStudyText {
         max-width: none;
     }
@@ -168,8 +162,6 @@ $LEFT-1: -215px;
     }
 
     .quoteMark {
-        min-width: 70px;
-        width: auto;
         left: -$margin-3;
         top: -$margin-2;
     }
