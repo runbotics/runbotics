@@ -404,11 +404,18 @@ export const getIssueWorklogsByParam = async <T extends CloudJiraUser | ServerJi
             .join(',');
         dateCondition = `worklogDate in (${mappedDates})`;
     }
-    const jqlSearchParam = searchParam.param === 'worklogAuthor'
-        ? `worklogAuthor=${searchParam.author}`
-        : searchParam.param === 'epic'
-        ? `cf[10014]=${searchParam.epic}`
-        : `project=${searchParam.project}`;
+
+    const EPICFIELDS = 'cf[10014]'
+    let jqlSearchParam = '';
+
+    if (searchParam.param === 'worklogAuthor') {
+        jqlSearchParam = `worklogAuthor=${searchParam.author}`;
+    } else if (searchParam.param === 'epic') {
+        jqlSearchParam = `${EPICFIELDS}=${searchParam.epic}`;
+    } else if (searchParam.param === 'project') {
+        jqlSearchParam = `project=${searchParam.project}`
+    }
+
     const jql = `${dateCondition} AND ${jqlSearchParam}`;
     let startAt = 0;
     const issues: SearchIssue<T>[] = [];
