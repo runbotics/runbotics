@@ -19,16 +19,6 @@ interface CardsGridPropsBase {
     cards: unknown[];
 }
 
-export enum PageType {
-    BLOG = 'blog',
-    MARKETPLACE = 'marketplace',
-}
-
-interface CardsGridPropsBase {
-    pageType: PageType;
-    cards: unknown[];
-}
-
 interface CardsBlogGridProps extends CardsGridPropsBase {
     pageType: PageType.BLOG;
     cards: BlogPost[];
