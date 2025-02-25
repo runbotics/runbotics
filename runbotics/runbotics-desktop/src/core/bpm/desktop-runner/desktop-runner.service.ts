@@ -52,6 +52,7 @@ import {
 import {
     BOT_PLUGIN_DIR,
     FINISHED_PROCESS_STATUSES,
+    MODULE_TYPE,
     PLUGIN_PREFIX,
 } from './desktop-runner.utils';
 import { ImageActionHandler } from '#action/image';
@@ -136,14 +137,14 @@ export class DesktopRunnerService implements OnModuleInit {
             this.serverConfigService.pluginsDirPath,
             this.filterPlugins,
             this.loadPlugins,
-            'plugin actions'
+            MODULE_TYPE.PLUGIN,
         );
 
         await this.loadExternalModules(
             this.serverConfigService.extensionsDirPath,
             this.filterExtensions,
             this.loadExtensions,
-            'external actions'
+            MODULE_TYPE.ACTIONS,
         );
 
         this.runtimeService.processChange().subscribe(async data => {
@@ -159,7 +160,7 @@ export class DesktopRunnerService implements OnModuleInit {
         dirPath: string,
         moduleFilter: (...args: any[]) => boolean,
         moduleLoader: (...args: any[]) => Promise<void>,
-        moduleType: string,
+        moduleType: MODULE_TYPE,
     ) {
         if (!dirPath) {
             this.logger.warn(`External module dir not provided - skipping loading (${moduleType})`);
@@ -168,22 +169,23 @@ export class DesktopRunnerService implements OnModuleInit {
 
         this.logger.log('Loading external modules from dir: ' + dirPath);
 
-        let currentExternalModuleName: string;
-        try {
-            const externalModules = readdirSync(dirPath, { withFileTypes: true })
-                .filter(directoryEntry => moduleFilter.call(this, dirPath, directoryEntry))
-                .map(directoryEntry => directoryEntry.name);
-            this.logger.log('Number of external modules found: ' + externalModules.length);
+        const externalModules = readdirSync(dirPath, { withFileTypes: true })
+            .filter(directoryEntry => moduleFilter.call(this, dirPath, directoryEntry))
+            .map(directoryEntry => directoryEntry.name);
 
-            for (const externalModule of externalModules) {
+        this.logger.log('Number of external modules found: ' + externalModules.length);
+
+        let currentExternalModuleName: string;
+        for (const externalModule of externalModules) {
+            try {
                 currentExternalModuleName = externalModule;
                 const externalModulePath = path.resolve(dirPath, externalModule);
                 this.logger.log(`Loading ${externalModule} external module`);
                 await moduleLoader.call(this, externalModulePath);
                 this.logger.log(`Success: External module ${externalModule} loaded`);
+            } catch (e) {
+                this.logger.error(`Error loading (${moduleType}) with module ${currentExternalModuleName ?? dirPath} - ${e.message}`);
             }
-        } catch (e) {
-            this.logger.error(`Error loading (${moduleType}) with module ${currentExternalModuleName ?? dirPath} - ${e.message}`);
         }
     }
 

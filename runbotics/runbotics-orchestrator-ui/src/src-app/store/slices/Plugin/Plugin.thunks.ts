@@ -8,9 +8,10 @@ export const loadPlugins = createAsyncThunk<LoadedPlugin[]>(
     'plugin/loadPlugins',
     async (_, { rejectWithValue }) => {
         try {
-            const availablePlugins = (await axios.get('/api/plugins/check'))
-                .data;
-            const loadedPlugins = (await Promise.all(
+            const availablePlugins = (
+                await axios.get<{ plugins: string[] }>('/api/plugins/check')
+            ).data;
+            const loadedPlugins = await Promise.all<LoadedPlugin>(
                 availablePlugins.plugins.map(async (pluginName) => {
                     const loadedPlugin = await axios.get(
                         `/api/plugins/${pluginName}/load`
@@ -26,11 +27,11 @@ export const loadPlugins = createAsyncThunk<LoadedPlugin[]>(
 
                     return pluginModule.default;
                 })
-            )) as LoadedPlugin[];
+            );
 
             return loadedPlugins;
         } catch (error) {
-            if (!error.response) {
+            if (!axios.isAxiosError(error)) {
                 throw error;
             }
 
