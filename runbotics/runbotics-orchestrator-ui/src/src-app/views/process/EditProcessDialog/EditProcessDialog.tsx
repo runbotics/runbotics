@@ -1,15 +1,19 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 
+import { Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { FeatureKey, ProcessDto } from 'runbotics-common';
 
 import CustomDialog from '#src-app/components/CustomDialog';
+import Loader from '#src-app/components/Loader';
+import If from '#src-app/components/utils/If';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 
+import LoadingType from '#src-app/types/loading';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import AccessOptions from './AccessOptions';
@@ -18,26 +22,16 @@ import { initialFormValidationState, inputErrorMessages, InputErrorType } from '
 import { GeneralOptions } from './GeneralOptions/GeneralOptions';
 import { Content, Form } from '../../utils/FormDialog.styles';
 
-
-const EditProcessDialog: FC<EditProcessDialogProps> = ({
+const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
     process, onAdd, onClose, open,
 }) => {
     const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialFormValidationState);
     const [inputErrorType, setInputErrorType] = useState<InputErrorType>(null);
     const [processFormState, setProcessFormState] = useState<ProcessDto>({ ...process });
     const [isNameDirty, setIsNameDirty] = useState<boolean>(false);
-
-    const resetState = () => {
-        setProcessFormState(process);
-        setFormValidationState(initialFormValidationState);
-        setInputErrorType(null);
-        setIsNameDirty(false);
-    };
-
-    const handleClose = () => {
-        onClose();
-        resetState();
-    };
+    const { loading: isStoreLoading } = useSelector((state) => state.process.all);
+    const { loading: processLoadingState } = useSelector((state) => state.process.draft);
+    const [isLoading, setIsLoading] = useState(isStoreLoading || processLoadingState === LoadingType.PENDING);
 
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -49,6 +43,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     const dispatch = useDispatch();
 
     useEffect(() => {
+        setProcessFormState(process);
         setFormValidationState(initialFormValidationState);
     }, [process]);
 
@@ -67,6 +62,7 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
     }, [processFormState.name]);
 
     const handleSubmit = () => {
+        setIsLoading(true);
         try {
             if (!checkIsFormValid()) {
                 enqueueSnackbar(inputErrorMessages[inputErrorType], { variant: 'error' });
@@ -79,8 +75,8 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                 )
                     .unwrap()
                     .then((res) => {
-                        dispatch(processActions.fetchProcessById(res.id));
                         onAdd(res);
+                        dispatch(processActions.fetchProcessById(res.id));
                     });
                 return;
             }
@@ -89,6 +85,8 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
                 onAdd(rest);
             }
             onAdd(processFormState);
+            setIsLoading(false);
+            onClose();
         } catch (error) {
             const message = error?.message ?? translate('Process.Add.Form.Error.General');
             const translationKey = `Process.Add.Form.Error.${capitalizeFirstLetter({ text: error.message, delimiter: ' ' })}`;
@@ -106,45 +104,48 @@ const EditProcessDialog: FC<EditProcessDialogProps> = ({
         }
     };
 
-    useEffect(() => {
-        setProcessFormState(process);
-    }, [process]);
-
     return (
         <CustomDialog
             isOpen={open}
-            onClose={handleClose}
+            onClose={onClose}
             title={process.id ? translate('Process.Edit.Title') : translate('Process.Add.Title')}
             confirmButtonOptions={{
                 label: translate('Common.Save'),
                 onClick: handleSubmit,
-                isDisabled: !checkIsFormValid(),
+                isDisabled: !checkIsFormValid() || isLoading,
             }}
             cancelButtonOptions={{
                 label: translate('Common.Cancel'),
-                onClick: handleClose,
+                onClick: onClose,
+                isDisabled: isLoading,
             }}
         >
             <Content sx={{ overflowX: 'hidden' }}>
-                <Form $gap={0}>
-                    <GeneralOptions
-                        processData={processFormState}
-                        setProcessData={setProcessFormState}
-                        formValidationState={formValidationState}
-                        setFormValidationState={setFormValidationState}
-                        inputErrorType={inputErrorType}
-                        isEditDialogOpen={open}
-                        formState={processFormState}
-                        setFormState={setProcessFormState}
-                        isOwner={isOwner}
-                    />
-                    <AccessOptions
-                        processData={processFormState}
-                        setProcessData={setProcessFormState}
-                        isEditDialogOpen={open}
-                        isOwner={isOwner}
-                    />
-                </Form>
+                <If condition={!isLoading} else={
+                    <Box sx={{ width: '500px'}}>
+                        <Loader/>
+                    </Box>
+                }>
+                    <Form $gap={0}>
+                        <GeneralOptions
+                            processData={processFormState}
+                            setProcessData={setProcessFormState}
+                            formValidationState={formValidationState}
+                            setFormValidationState={setFormValidationState}
+                            inputErrorType={inputErrorType}
+                            isEditDialogOpen={open}
+                            formState={processFormState}
+                            setFormState={setProcessFormState}
+                            isOwner={isOwner}
+                        />
+                        <AccessOptions
+                            processData={processFormState}
+                            setProcessData={setProcessFormState}
+                            isEditDialogOpen={open}
+                            isOwner={isOwner}
+                        />
+                    </Form>
+                </If>
             </Content>
         </CustomDialog>
     );

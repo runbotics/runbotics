@@ -2,6 +2,7 @@
 import BpmnModeler from 'bpmn-js/lib/Modeler';
 
 import internalBpmnActions from '#src-app/Actions';
+import store from '#src-app/store';
 import { ActionToBPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/ActionFormPanel/ActionToBPMNElement';
 import { TaskType } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/elementFactory/ElementFactory';
 import { ParameterDestination } from '#src-app/views/process/ProcessBuildView/Modeler/extensions/palette/CustomPalette';
@@ -39,13 +40,16 @@ function mapSchemaToElements(template: TemplatesSchema, modeler: BpmnModeler) {
         const { type, input, output, label } = templateSchema;
         const { x, y } = position;
 
+        const { pluginBpmnActions } = store.getState().plugin;
+
+        const action =
+            internalBpmnActions[(templateSchema as ServiceTaskElement).bpmnAction] ||
+            pluginBpmnActions[(templateSchema as ServiceTaskElement).bpmnAction];
         switch (type) {
             case ElementType.SERVICE_TASK:
                 const serviceTaskElement = actionToBPMNElement.createElement(
                     TaskType.ServiceTask,
-                    internalBpmnActions[
-                        (templateSchema as ServiceTaskElement).bpmnAction
-                    ],
+                    action,
                     {},
                     { x, y }
                 );

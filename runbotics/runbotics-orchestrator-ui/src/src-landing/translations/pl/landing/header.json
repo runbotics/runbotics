@@ -8,8 +8,10 @@
     "Landing.Header.Nav.Option.Integration": "Integracja",
     "Landing.Header.Nav.Option.OpenSource": "Open source",
     "Landing.Header.Nav.Option.Partners": "Partnerzy",
+    "Landing.Header.Nav.Option.References": "Referencje",
     "Landing.Header.Nav.Option.Team": "Zespół",
     "Landing.Header.Nav.Option.ContactUs": "Kontakt",
     "Landing.Header.Nav.Option.Blog": "Blog",
-    "Landing.Header.Button.LogIn": "Wypróbuj"
+    "Landing.Header.Button.LogIn": "Wypróbuj",
+    "Landing.Header.Nav.Option.Marketplace": "Marketplace"
 }

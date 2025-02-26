@@ -45,6 +45,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
     const externalBpmnActions = useSelector(
         (state) => state.action.bpmnActions.byId
     );
+    const { pluginBpmnActions } = useSelector((state) => state.plugin);
 
     const handleInvalidStartEvent = ({ errorType, nameKey, elementId }) => {
         dispatch(
@@ -206,8 +207,9 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
                     externalBpmnActions[element?.businessObject.actionId]
                 );
                 const action =
-                    externalAction ??
-                    internalBpmnActions[element?.businessObject.actionId];
+                    externalAction ||
+                    internalBpmnActions[element?.businessObject.actionId] ||
+                    pluginBpmnActions[element?.businessObject.actionId];
                 applyModelerElement({
                     modeler,
                     element,

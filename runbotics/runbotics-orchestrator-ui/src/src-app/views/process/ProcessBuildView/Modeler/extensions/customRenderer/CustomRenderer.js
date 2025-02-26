@@ -312,9 +312,8 @@ export default class CustomRenderer extends BaseRenderer {
         // }
         const externalAction =
             store.getState().action.bpmnActions.byId[ businessObject.actionId ];
-        const action = externalAction
-            ? externalAction
-            : internalBpmnActions[ businessObject.actionId ];
+        const { pluginBpmnActions } = store.getState().plugin;
+        const action = externalAction || internalBpmnActions[businessObject.actionId] || pluginBpmnActions[businessObject.actionId];
 
         const globalVariables = store.getState().globalVariable.globalVariables;
         if (action) {

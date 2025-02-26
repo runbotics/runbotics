@@ -22,7 +22,7 @@ export enum ActionRegex {
     DIRECTORY_NAME = "^[^\\\\/?|<>*:]*$",
     DATE_FORMAT = '^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\/[0-9]{2}\/[0-9]{4}))$',
     WINDOWS_ABSOLUTE_PATH = "^[a-zA-Z]:[\\\/|\\\\]",
-    LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/"
+    LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/",
 }
 
 export enum ACTION_GROUP {
@@ -80,6 +80,7 @@ export enum BrowserAction {
     SELENIUM_ELEMENTS_COUNT = 'browser.selenium.elements.count',
     SELENIUM_ELEMENT_ATTRIBUTE_CHANGE = 'browser.selenium.element.attribute.change',
     SELENIUM_TYPE = 'browser.selenium.type',
+    SELENIUM_INSERT_CREDENTIALS = 'browser.selenium.insertCredentials',
     SELENIUM_WAIT = 'browser.selenium.wait',
     SELENIUM_EDIT_CONTENT = 'browser.selenium.editContent',
     SELENIUM_SELECT = 'browser.selenium.select',
@@ -262,6 +263,7 @@ export enum DesktopAction {
     TAKE_SCREENSHOT = 'desktop.takeScreenshot',
     READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
+    TYPE_CREDENTIALS = 'desktop.typeCredentials',
 }
 
 export enum WindowsAction {
