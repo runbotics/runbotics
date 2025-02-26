@@ -22,6 +22,7 @@ import {
     Sprint,
     Page,
     GetSprintTasksInput,
+    GetTaskDetailsInput,
     AtlassianCredentials
 } from './jira.types';
 import { CloudJiraUser } from './jira-cloud/jira-cloud.types';
@@ -90,6 +91,11 @@ export const getUserWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object
     groupByDay: z.boolean().optional(),
 }));
 
+export const getEpicWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object({
+    epic: z.string({ required_error: 'Epic ID is missing' }),
+    groupByDay: z.boolean().optional(),
+}));
+
 export const getProjectWorklogInputBaseSchema = getJiraInputBaseSchema.and(z.object({
     project: z.string({ required_error: 'Project key is missing' }),
     groupByDay: z.boolean().optional(),
@@ -112,6 +118,12 @@ export const jiraDatesCollectionSchema = z.object({
 });
 
 export const getUserWorklogInputSchema = getUserWorklogInputBaseSchema.and(z.union([
+    jiraSingleDaySchema.required({ date: true }),
+    jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
+    jiraDatesCollectionSchema.required({ dates: true }),
+]));
+
+export const getEpicWorklogInputSchema = getEpicWorklogInputBaseSchema.and(z.union([
     jiraSingleDaySchema.required({ date: true }),
     jiraDatesPeriodSchema.required({ startDate: true, endDate: true }),
     jiraDatesCollectionSchema.required({ dates: true }),
@@ -140,6 +152,11 @@ export const getSprintTasksInputSchema = getSprintTasksInputBaseSchema.and(z.uni
     jiraDatesPeriodSchema,
     jiraDatesCollectionSchema,
 ]));
+
+export const getTaskDetailsInputSchema = getJiraInputBaseSchema.and(z.object({
+    task: z.string({ required_error: 'Task ID is missing' }),
+    fields: z.string().optional(),
+}));
 
 export const getBasicAuthHeader = ({ username, password }: Omit<AtlassianCredentials, 'originUrl'>) => {
     return {
@@ -241,6 +258,53 @@ export const getJiraAllSprintTasks = async <T extends CloudJiraUser>(
     };
 };
 
+export const getJiraAllTaskDetails = async <T extends CloudJiraUser>(
+    input: GetTaskDetailsInput,
+) => {
+    const jql = `key="${input.task}"`.trim();
+
+    const START_AT = 0;
+    return await searchTaskDetails<T>(input, jql, START_AT)
+        .then(res => res.total > 0 ? res.issues[0] : null)
+};
+
+const searchTaskDetails = async <T extends CloudJiraUser>(
+    input: GetSprintTasksInput,
+    jql: string,
+    startAt: Page['startAt'],
+)  => {
+    const { username, password, originUrl } = input;
+    const BASE_FIELDS = ['summary', 'issue_type', 'created', 'resolutiondate', 'updated', 'status', 'assignee', 'issuelinks', 'priority', 'reporter', 'components', 'labels', 'sprint', 'epic link', 'timespent', 'duedate', 'customfield_10020', 'customfield_10014'].join(',');
+    const additionalFields = input?.fields
+        ? input?.fields
+            .split(',')
+            .map(field => field.trim())
+            .filter(field => !BASE_FIELDS.split(',').includes(field))
+            .join(',')
+        : '';
+
+    const fields = additionalFields
+        ? `${BASE_FIELDS},${additionalFields}`
+        : BASE_FIELDS;
+
+    const MAX_SEARCH_RESULTS = 100;
+    const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
+        `${originUrl}/rest/api/2/search`,
+        {
+            params: {
+                jql,
+                maxResults: MAX_SEARCH_RESULTS,
+                startAt,
+                fields,
+            },
+            headers: getBasicAuthHeader({ username, password }),
+            maxRedirects: 0,
+        },
+    );
+
+    return data;
+};
+
 const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
     input: GetSprintTasksInput,
     jql: string,
@@ -340,9 +404,18 @@ export const getIssueWorklogsByParam = async <T extends CloudJiraUser | ServerJi
             .join(',');
         dateCondition = `worklogDate in (${mappedDates})`;
     }
-    const jqlSearchParam = searchParam.param === 'worklogAuthor'
-        ? `worklogAuthor=${searchParam.author}`
-        : `project=${searchParam.project}`;
+
+    const EPICFIELDS = 'cf[10014]'
+    let jqlSearchParam = '';
+
+    if (searchParam.param === 'worklogAuthor') {
+        jqlSearchParam = `worklogAuthor=${searchParam.author}`;
+    } else if (searchParam.param === 'epic') {
+        jqlSearchParam = `${EPICFIELDS}=${searchParam.epic}`;
+    } else if (searchParam.param === 'project') {
+        jqlSearchParam = `project=${searchParam.project}`
+    }
+
     const jql = `${dateCondition} AND ${jqlSearchParam}`;
     let startAt = 0;
     const issues: SearchIssue<T>[] = [];

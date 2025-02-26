@@ -1,5 +1,7 @@
 import z from 'zod';
 import {
+    getEpicWorklogInputBaseSchema,
+    getEpicWorklogInputSchema,
     getProjectWorklogInputBaseSchema,
     getProjectWorklogInputSchema,
     getUserWorklogInputBaseSchema,
@@ -9,7 +11,8 @@ import {
     jiraSingleDaySchema,
     jiraDatesPeriodSchema,
     getBoardSprintsInputSchema,
-    getSprintTasksInputSchema
+    getSprintTasksInputSchema,
+    getTaskDetailsInputSchema
 } from './jira.utils';
 import { CloudJiraUser, SimpleCloudJiraUser } from './jira-cloud/jira-cloud.types';
 import { ServerJiraUser, SimpleServerJiraUser } from './jira-server/jira-server.types';
@@ -18,16 +21,19 @@ import { JiraSprintState } from 'runbotics-common';
 
 export type GetJiraInputBase = z.infer<typeof getJiraInputBaseSchema>
 export type GetUserWorklogBase = z.infer<typeof getUserWorklogInputBaseSchema>
+export type GetEpicWorklogBase = z.infer<typeof getEpicWorklogInputBaseSchema>
 export type GetProjectWorklogBase = z.infer<typeof getProjectWorklogInputBaseSchema>
 export type JiraSingleDay = GetJiraInputBase & z.infer<typeof jiraSingleDaySchema>
 export type JiraDatesPeriod = GetJiraInputBase & z.infer<typeof jiraDatesPeriodSchema>
 export type JiraDatesCollection = GetJiraInputBase & z.infer<typeof jiraDatesCollectionSchema>
-export type GetWorklogInput = GetUserWorklogInput & GetProjectWorklogInput;
+export type GetWorklogInput = GetUserWorklogInput & GetProjectWorklogInput & GetEpicWorklogInput;
 export type GetJiraDatesInput = JiraSingleDay | JiraDatesPeriod | JiraDatesCollection;
 export type GetUserWorklogInput = z.infer<typeof getUserWorklogInputSchema>;
+export type GetEpicWorklogInput = z.infer<typeof getEpicWorklogInputSchema>;
 export type GetProjectWorklogInput = z.infer<typeof getProjectWorklogInputSchema>;
 export type GetBoardSprintsInput = z.infer<typeof getBoardSprintsInputSchema>;
 export type GetSprintTasksInput = z.infer<typeof getSprintTasksInputSchema>;
+export type GetTaskDetailsInput = z.infer<typeof getTaskDetailsInputSchema>;
 
 export interface Page {
     maxResults: number;
@@ -195,6 +201,7 @@ export interface WorklogIsCreatorParams<T extends CloudJiraUser | ServerJiraUser
 }
 
 export enum IssueWorklogsParam {
+    EPIC = 'epic',
     PROJECT = 'project',
     WORKLOG_AUTHOR = 'worklogAuthor',
 }
@@ -206,9 +213,14 @@ interface GetIssueWorklogsByAuthorParam extends GetIssueWorklogsByParamCommon {
     param: IssueWorklogsParam.WORKLOG_AUTHOR;
     author: string;
 }
+
+interface GetIssueWorklogsByEpicParam extends GetIssueWorklogsByParamCommon {
+    param: IssueWorklogsParam.EPIC;
+    epic: string;
+}
 interface GetIssueWorklogsByProjectParam extends GetIssueWorklogsByParamCommon {
     param: IssueWorklogsParam.PROJECT;
     project: string;
 }
-export type GetIssueWorklogsByParam = GetIssueWorklogsByAuthorParam | GetIssueWorklogsByProjectParam;
+export type GetIssueWorklogsByParam = GetIssueWorklogsByAuthorParam | GetIssueWorklogsByProjectParam | GetIssueWorklogsByEpicParam;
 export type AtlassianCredentials = Required<Pick<GetWorklogInput, 'username' | 'password' | 'originUrl'>>;
