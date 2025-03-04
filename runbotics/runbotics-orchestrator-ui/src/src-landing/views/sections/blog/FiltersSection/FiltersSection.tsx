@@ -8,7 +8,7 @@ import {
     FilterQueryParamsEnum,
     Category,
     Tag,
-    getBlogUrl,
+    getPageUrl,
 } from '#contentful/common';
 import MinusIcon from '#public/images/icons/minus.svg';
 import PlusIcon from '#public/images/icons/plus.svg';
@@ -120,7 +120,7 @@ const FiltersSection: VFC<Props> = ({
             searchParams.append(FilterQueryParamsEnum.Search, search);
         }
 
-        const newUrl = getBlogUrl(searchParams);
+        const newUrl = getPageUrl('blog', searchParams);
 
         push(newUrl);
     };
