@@ -41,13 +41,13 @@ class MyDocument extends Document {
         return (
             <Html lang="en" dir="ltr">
                 <Head>
-                    <meta charSet="utf-8"/>
-                    <meta name="theme-color" content="#000000"/>
-                    <link rel="icon" href="/images/favicon.ico"/>
+                    <meta charSet="utf-8" />
+                    <meta name="theme-color" content="#000000" />
+                    <link rel="icon" href="/images/favicon.ico" />
                 </Head>
                 <body>
-                    <Main/>
-                    <NextScript/>
+                    <Main />
+                    <NextScript />
                 </body>
             </Html>
         );
