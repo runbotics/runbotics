@@ -4,8 +4,8 @@ import { PluginHandler } from './utils';
 
 export abstract class StatefulInjectablePluginHandler {
     abstract run(
-        ctx: unknown,
-        request: DesktopRunRequest
+        request: DesktopRunRequest,
+        ctx: unknown
     ): Promise<DesktopRunResponse | void>;
 
     getType(): string {
