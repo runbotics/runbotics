@@ -1,0 +1,76 @@
+@import '#src-landing/scss/main';
+
+.wrapper {
+    height: clamp(450px, 50vw, 600px);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: $palette-black;
+    border-radius: 10px;
+    isolation: isolate;
+}
+
+.wrapper h1 {
+    font-size: clamp(1rem, 3vw + 1rem, 3rem);
+    line-height: clamp($line-height-body2, 3vw + 1rem, $line-height-h1);
+}
+
+
+.info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.info > div {
+    padding-left: clamp(10px, 8vw, 140px);
+    padding-right: clamp(10px, 8vw, 140px);
+}
+
+.tagContainer {
+    display: flex;
+    gap: 16px;
+    
+}
+
+.separator {
+    width: 1px;
+    height: 28px;
+    border: 1px solid #D9D9D990;
+}
+
+
+.offerTitle {
+    padding: 1rem 0;
+    background-color: rgba($palette-white, 40%);
+}
+
+.details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    gap: clamp(0.5rem, 1rem, 1.5rem);
+    min-height: 80px;
+    width: 100%;
+    padding: 16px;
+
+    background-color: rgba($palette-white, 70%);
+}
+
+
+.details > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    width: fit-content;
+}
+
+.detailTitle {
+    font-size: clamp(0.875rem, 1vw + 0.25rem, 1.125rem);
+    line-height: $line-height-base;
+}

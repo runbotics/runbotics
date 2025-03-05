@@ -6,10 +6,12 @@ import footerTranslations from './footer.json';
 import headerTranslations from './header.json';
 import heroTranslations from './hero.json';
 import integrationTranslations from './integration.json';
+import marketplaceTranslations from './marketplace.json';
 import openSourceTranslations from './open-source.json';
 import partnerTranslations from './partner.json';
 import policyTranslations from './policy.json';
 import prosTranslations from './pros.json';
+import referencesTranslations from './references.json';
 import rpaTranslations from './rpa.json';
 import templatesTranslations from './templates.json';
 
@@ -28,6 +30,8 @@ const landingPageTranslations = {
     ...blogTranslations,
     ...aboutTeamTranslations,
     ...policyTranslations,
+    ...marketplaceTranslations,
+    ...referencesTranslations,
 };
 
 export default landingPageTranslations;

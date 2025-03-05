@@ -171,7 +171,7 @@ export const clearErrors = (state: ProcessState) => {
 };
 
 export const clearModelerState = (state: ProcessState) => {
-    state.modeler = initialModelerState;
+    state.modeler = { ...initialModelerState, imported: state.modeler.imported };
 };
 
 export const setOptions = (state: ProcessState, action: PayloadAction<Options>) => {

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { DesktopAction, TEMP_DIRECTORY_NAME } from 'runbotics-common';
+import { DesktopAction } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import { createWorker } from 'tesseract.js';
 
@@ -36,15 +36,22 @@ import {
     DesktopReadTextFromImageActionOutput,
     ClickTarget,
     MouseButton,
+    KEY_REFERENCE,
+    DesktopPerformKeyboardShortcutActionInput,
+    DesktopTypeCredentialsActionInput,
+    DesktopCredential,
+    isPointDataType,
     PointData,
     RegionData,
-    KEY_REFERENCE,
-    DesktopPerformKeyboardShortcutActionInput
 } from './types';
 import clipboard from '../../utils/clipboard';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
+import { validateInput } from '#utils/zodError';
+import { ServerConfigService } from '#config';
+import { Injectable } from '@nestjs/common';
+import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema } from './desktop.utils';
 
-
-
+@Injectable()
 export default class DesktopActionHandler extends StatelessActionHandler {
     private readonly logger: RunboticsLogger = new RunboticsLogger(DesktopActionHandler.name);
     private readonly system: string = process.platform;
@@ -55,49 +62,65 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     private readonly keyboardConfig: KeyboardConfig = {
         autoDelayMs: 50,
     };
+    private readonly tempFolderPath: string;
 
-    constructor() {
+    constructor(
+        private readonly serverConfigService: ServerConfigService
+    ) {
         super();
         mouse.config = this.mouseConfig;
         keyboard.config = this.keyboardConfig;
+        this.tempFolderPath = this.serverConfigService.tempFolderPath;
     }
 
-    async click(input: DesktopClickActionInput): Promise<void> {
-        const button: Button = input.mouseButton === MouseButton.LEFT ? Button.LEFT : Button.RIGHT;
+    async click(rawInput: DesktopClickActionInput): Promise<void> {
+        const { clickTarget, point, region, mouseButton, doubleClick } = await validateInput(rawInput, clickInputSchema);
 
-        if (input.clickTarget === ClickTarget.POINT) {
-            const point = input.point;
-            this.checkPoint(point);
-            this.moveMouseToPoint(point);
-        } else {
-            const region = input.region;
-            this.checkRegion(region);
-            await this.moveMouseToRegion(region);
-        }
+        const button: Button = mouseButton === MouseButton.LEFT ? Button.LEFT : Button.RIGHT;
 
-        if (input.doubleClick) {
+        const target: PointData | RegionData = (clickTarget === ClickTarget.POINT) ? this.parseTarget(point) : this.parseTarget(region);
+
+        this.checkTarget(target, clickTarget);
+
+
+        await this.moveMouse(target);
+
+        if (doubleClick) {
             await mouse.doubleClick(button);
         } else {
             await mouse.click(button);
         }
     }
 
-    async type(input: DesktopTypeActionInput): Promise<void> {
-        if (typeof input.text === 'number') {
-            await keyboard.type(`${input.text}`);
+    async type(rawInput: DesktopTypeActionInput): Promise<void> {
+        const { text } = await validateInput(rawInput, typeInputSchema);
+
+        if (typeof text === 'number') {
+            await keyboard.type(`${text}`);
             return;
         }
 
-        const optionalKey = input.text.substring(KEY_REFERENCE.length);
-        if (input.text.startsWith(KEY_REFERENCE) && Object.keys(Key).includes(optionalKey)) {
+        const optionalKey = text.substring(KEY_REFERENCE.length);
+        if (text.startsWith(KEY_REFERENCE) && Object.keys(Key).includes(optionalKey)) {
             await keyboard.type(Key[optionalKey]);
         } else {
-            await keyboard.type(input.text);
+            await keyboard.type(text);
         }
     }
 
-    async runKeyboardShortcut(input: DesktopPerformKeyboardShortcutActionInput): Promise<void> {
-        const shortcutsArr = input.shortcut.split('+');
+    async typeCredentials(
+        rawInput: DesktopTypeCredentialsActionInput,
+        credential: DesktopCredential,
+    ) {
+        const { credentialAttribute } = await validateInput(rawInput, typeCredentialsInputSchema);
+        const credentialAttributeValue = credential[credentialAttribute];
+        await keyboard.type(credentialAttributeValue);
+    }
+
+    async runKeyboardShortcut(rawInput: DesktopPerformKeyboardShortcutActionInput): Promise<void> {
+        const { shortcut } = await validateInput(rawInput, performKeyboardShortcutInputSchema);
+
+        const shortcutsArr = shortcut.split('+');
         const keysToPress = shortcutsArr.map(key => {
             const trimmedKey = key.trim();
             if (Object.keys(Key).includes(trimmedKey)) {
@@ -106,12 +129,15 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 throw new Error('Unsupported key. Got: ' + trimmedKey + '. Check tooltip for supported keys.');
             }
         });
+
         await this.performKeyboardShortcut(keysToPress);
     }
 
-    async copy(input: DesktopCopyActionInput): Promise<void> {
-        if (input.text) {
-            await clipboard.write(input.text);
+    async copy(rawInput: DesktopCopyActionInput): Promise<void> {
+        const { text } = await validateInput(rawInput, copyInputSchema);
+
+        if (text) {
+            await clipboard.write(text);
         } else {
             const superKey: Key = this.getSuperKey();
             await this.performKeyboardShortcut([superKey, Key.C]);
@@ -123,12 +149,15 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         await this.performKeyboardShortcut([superKey, Key.V]);
     }
 
-    async cursorSelect(input: DesktopCursorSelectActionInput): Promise<void> {
-        this.checkPoint(input.startPoint);
-        this.checkPoint(input.endPoint);
-        await this.moveMouseToPoint(input.startPoint);
+    async cursorSelect(rawInput: DesktopCursorSelectActionInput): Promise<void> {
+        const { startPoint, endPoint } = await validateInput(rawInput, cursorSelectInputSchema);
+
+        const parsedStartPoint = this.parseTarget(startPoint);
+        const parsedEndPoint = this.parseTarget(endPoint);
+
+        await this.moveMouse(parsedStartPoint);
         await mouse.pressButton(Button.LEFT);
-        await this.moveMouseToPoint(input.endPoint);
+        await this.moveMouse(parsedEndPoint);
         await mouse.releaseButton(Button.LEFT);
     }
 
@@ -141,11 +170,12 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    async takeScreenshot(input: DesktopTakeScreenshotActionInput): Promise<DesktopTakeScreenshotActionOutput> {
+    async takeScreenshot(rawInput: DesktopTakeScreenshotActionInput): Promise<DesktopTakeScreenshotActionOutput> {
         // prevents from taking screenshot too fast
         await sleep(500);
 
-        const { imagePath, region, imageName, imageFormat } = input;
+        const { imagePath, region, imageName, imageFormat } = await validateInput(rawInput, takeScreenshotInputSchema);
+
         const fileName = imageName ?? uuidv4();
         let filePath: string;
 
@@ -153,46 +183,24 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             filePath = path.normalize(imagePath);
             this.checkFileExist(filePath);
         } else {
-            filePath = path.join(process.cwd(), TEMP_DIRECTORY_NAME);
+            filePath = this.tempFolderPath;
         }
 
         if (region) {
-            this.checkRegion(region);
-            const newRegion = new Region(Number(region.left), Number(region.top), Number(region.width), Number(region.height));
+            const parsedRegion = this.parseTarget(region);
+            this.checkTarget(parsedRegion, ClickTarget.REGION);
+            const newRegion = new Region(Number(parsedRegion.left), Number(parsedRegion.top), Number(parsedRegion.width), Number(parsedRegion.height));
             return screen.captureRegion(fileName, newRegion, FileType[imageFormat], filePath);
         } else {
-            return screen.capture(fileName, FileType[input.imageFormat], filePath);
+            return screen.capture(fileName, FileType[imageFormat], filePath);
         }
     }
 
-    // async findScreenRegion(input: DesktopFindScreenRegionActionInput): Promise<RegionData> {
-    //     const image = path.normalize(input.imageFullPath);
-    //     this.checkFileExist(image);
+    async readTextFromImage(rawInput: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
+        const { imageFullPath, language } = await validateInput(rawInput, readTextFromImageInputSchema);
 
-    //     const { filePath, fileName } = this.getFilePathElements(image);
-    //     screen.config.resourceDirectory = filePath;
-
-    //     const resource = await imageResource(fileName);
-    //     const region = await screen.find(resource);
-    //     return this.toRegionObj(region);
-    // }
-
-    // async waitForScreenRegion(input: DesktopWaitForScreenRegionActionInput): Promise<RegionData> {
-    //     const image = path.normalize(input.imageFullPath);
-    //     this.checkFileExist(image);
-
-    //     const { filePath, fileName } = this.getFilePathElements(image);
-    //     screen.config.resourceDirectory = filePath;
-
-    //     const resource = await imageResource(fileName);
-    //     const region = await screen.waitFor(resource, 5000);
-    //     return this.toRegionObj(region);
-    // }
-
-    async readTextFromImage(input: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
         let worker: any;
         try {
-            const { imageFullPath, language } = input;
             this.checkFileExist(imageFullPath);
             const imageBuffer = fs.readFileSync(imageFullPath);
 
@@ -224,14 +232,14 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    private async moveMouseToPoint(point: PointData) {
-        const destination = new Point(Number(point.x), Number(point.y));
-        await mouse.move(straightTo(destination));
-    }
-
-    private async moveMouseToRegion(region: RegionData) {
-        const destination = new Region(Number(region.left), Number(region.top), Number(region.width), Number(region.height));
-        await mouse.move(straightTo(centerOf(destination)));
+    private async moveMouse(target: PointData | RegionData) {
+        if (isPointDataType(target)) {
+            const destination = new Point(Number(target.x), Number(target.y));
+            await mouse.move(straightTo(destination));
+        } else {
+            const destination = new Region(Number(target.left), Number(target.top), Number(target.width), Number(target.height));
+            await mouse.move(straightTo(centerOf(destination)));
+        }
     }
 
     private async performKeyboardShortcut(keys: Key[]) {
@@ -243,31 +251,40 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         return this.system === 'darwin' ? Key.LeftCmd : Key.LeftControl;
     }
 
-    private checkPoint(point: unknown) {
-        if (typeof point !== 'object') {
-            throw new Error('Point must be of object type and its coordinates (x, y) must be numeric.');
-        }
+    private parseStringCoordinateToObject (input: string) {
+        const validJson = input.replace(/(\w+)\s*:/g, '"$1":');
 
-        const testPoint = new Point(0, 0);
-        const pointKeys = Object.keys(testPoint);
-        for (const key of pointKeys) {
-            if (!(key in point) || isNaN(point[key])) {
-                throw new Error('Point coordinates (x, y) must be numeric.');
-            }
+        try {
+            const parsedObject = JSON.parse(validJson);
+            return parsedObject;
+        } catch (error) {
+            throw new Error(`Provided input ${input} is not a valid object. Object properties must be separated by coma and must be numeric.`);
         }
     }
 
-    private checkRegion(region: unknown) {
-        if (typeof region !== 'object') {
-            throw new Error('Region must be of object type and its properties (left, top, width, height) must be numeric.');
+    private parseTarget(target: unknown) {
+        if (typeof target !== 'string' && typeof target !== 'object') {
+            throw new Error('Invalid input, it should be an object with two attributes - x, y, e.g. { x: 25, y: 298 }');
         }
 
-        const testRegion = new Region(0, 0, 0, 0);
-        const regionKeys = Object.keys(testRegion);
-        for (const key of regionKeys) {
-            if (!(key in region) || isNaN(region[key])) {
-                throw new Error('Region properties (left, top, width, height) must be numeric.');
-            }
+        const object = typeof target === 'object' ? target : this.parseStringCoordinateToObject(target);
+
+        return object;
+    }
+
+    private checkTarget(object: object, targetType: ClickTarget) {
+        const testingObject = targetType === ClickTarget.POINT ? new Point(0, 0) : new Region(0, 0, 0, 0);
+
+        this.isTargetObjectValid(object, testingObject);
+    }
+
+    private isTargetObjectValid(targetObject: object, testingObject: Point | Region) {
+        const isInvalid = Object.keys(testingObject).some(
+            (key) => !(key in targetObject) || typeof targetObject[key] !== 'number' || isNaN(targetObject[key])
+        );
+
+        if (isInvalid) {
+            throw new Error('Object properties must be numeric.');
         }
     }
 
@@ -277,22 +294,14 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
-    private getFilePathElements(filePath: string): { filePath: string; fileName: string, fileExtension: string } {
-        const parsedPath = path.parse(filePath);
-        return {
-            filePath: parsedPath.dir,
-            fileName: parsedPath.name + parsedPath.ext,
-            fileExtension: parsedPath.ext
-        };
-    }
+    private getCurrentDateForFilePath(): string {
+        const now = new Date();
 
-    private toRegionObj(region: Region): RegionData {
-        return {
-            left: region.left,
-            top: region.top,
-            width: region.width,
-            height: region.height
-        };
+        return now
+            .toISOString()
+            .replace(/T/g, '_')
+            .replace(/:/g, '-')
+            .split('.')[0];
     }
 
     run(request: DesktopActionRequest) {
@@ -301,6 +310,10 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 return this.click(request.input);
             case DesktopAction.TYPE:
                 return this.type(request.input);
+            case DesktopAction.TYPE_CREDENTIALS: {
+                const credential = credentialAttributesMapper<DesktopCredential>(request.credentials);
+                return this.typeCredentials(request.input, credential);
+            }
             case DesktopAction.PERFORM_KEYBOARD_SHORTCUT:
                 return this.runKeyboardShortcut(request.input);
             case DesktopAction.COPY:
@@ -318,7 +331,10 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             case DesktopAction.READ_TEXT_FROM_IMAGE:
                 return this.readTextFromImage(request.input);
             default:
-                throw new Error('Action not found');
+                if (!this.pluginService) {
+                    throw new Error('Action not found');
+                }
+                return this.pluginService.run(this, request);
         }
     }
 }

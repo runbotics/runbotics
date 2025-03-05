@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 
-import { BlogPost, PostStatus } from './models';
+import { BlogPost, ContentfulContentPublishStatus } from './models';
 import { FilterQueryParams, FilterQueryParamsEnum } from './types';
 
 export const DEFAULT_PAGE_SIZE = 9;
@@ -49,7 +49,10 @@ export const extractFilterQueryParams = (
 
 export const filterPosts = (posts: BlogPost[], queryParams: FilterQueryParams) => posts
     .filter(post => {
+        if (!checkBlogPostMandatoryFields(post)) return false;
+
         const { categories, tags, startDate, endDate, search } = queryParams;
+
         const hasCategory = (
             !categories || categories
                 ?.includes(post.category.slug)
@@ -65,19 +68,19 @@ export const filterPosts = (posts: BlogPost[], queryParams: FilterQueryParams) =
                 )
         );
         const isInTimePeriod = (
-            !queryParams.startDate || 
+            !startDate ||
             new Date(post.date) >= new Date(startDate)
         ) && (
-            !endDate || 
+            !endDate ||
             new Date(post.date) <= new Date(endDate)
         );
         const containsSearchPhrase = (
-            !search || 
+            !search ||
             post.title
                 .toLowerCase()
                 .includes(
                     search.toLowerCase()
-                ) || 
+                ) ||
             post.summary
                 .toLowerCase()
                 .includes((
@@ -116,19 +119,25 @@ export const hasQueryParams = (
     paramsToInclude: string[]
 ) => paramsToInclude.some((param) => query[param]);
 
-export const getBlogUrl = (params: URLSearchParams): string => `/blog${
+export const getPageUrl = (baseUrl: string, params: URLSearchParams): string => `/${baseUrl}${
     params.toString() ?
-        '?' + params.toString() : 
+        '?' + params.toString() :
         ''
 }`;
 
-export const getPaginatedUrl = (page: number, initialParams?: string): string => {
+export const getPaginatedUrl = (page: number, baseUrl: string, initialParams?: string): string => {
     const searchParams = new URLSearchParams(initialParams);
     searchParams.set(FilterQueryParamsEnum.Page, String(page));
-    const newUrl = getBlogUrl(searchParams);
+    const newUrl = getPageUrl(baseUrl, searchParams);
 
     return newUrl;
 };
 
-export const checkIsDraft = (status: PostStatus): boolean => !status.publishedAt;
+export const checkIsDraft = (status: ContentfulContentPublishStatus): boolean => !status.publishedAt;
 
+const checkBlogPostMandatoryFields = (post: BlogPost) =>
+    post.category &&
+    post.tags &&
+    post.date &&
+    post.title &&
+    post.summary;

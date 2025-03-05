@@ -10,7 +10,7 @@ import { processActions } from '#src-app/store/slices/Process';
 
 import ActionFormRenderer from './renderers/ActionFormRenderer';
 import ConnectionFormRenderer from './renderers/ConnectionFormRenderer';
-import GatewayFormRenderer from './renderers/GatewayFormRenderer';
+import GatewayFormRenderer from './renderers/GatewayFormRenderer/GatewayFormRenderer';
 import LoopActionRenderer from './renderers/LoopActionRenderer';
 import internalBpmnActions from '../../../../../Actions';
 
@@ -26,6 +26,7 @@ const ActionFormPanel: FC = () => {
     const externalBpmnActions = useSelector(
         state => state.action.bpmnActions.byId
     );
+    const { pluginBpmnActions } = useSelector(state => state.plugin);
 
     const actionId = selectedElement
         ? selectedElement.businessObject.actionId
@@ -39,9 +40,8 @@ const ActionFormPanel: FC = () => {
             dispatch(
                 processActions.setSelectedAction(
                     externalAction ||
-                        internalBpmnActions[
-                            selectedElement?.businessObject.actionId
-                        ]
+                    internalBpmnActions[selectedElement?.businessObject.actionId] ||
+                    pluginBpmnActions[selectedElement?.businessObject.actionId]
                 )
             );
         } else {

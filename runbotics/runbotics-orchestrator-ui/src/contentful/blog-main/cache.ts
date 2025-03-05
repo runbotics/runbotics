@@ -1,12 +1,5 @@
 import { getPost, setSinglePostCache } from '#contentful/blog-post';
-import {
-    BlogPost,
-    CacheKey,
-    Category,
-    Tag,
-    contentfulCache,
-    createCacheInstance,
-} from '#contentful/common';
+import { BlogPost, CacheKey, Category, contentfulCache, isCached, Tag } from '#contentful/common';
 import { DEFAULT_LANG, Language, languages } from '#src-app/translations/translations';
 
 import { getMainPage } from './api';
@@ -37,7 +30,7 @@ export function setBlogTagsCache(language: Language, cacheValue: Tag[]) {
 }
 
 export function getBlogMainCache(
-    language: Language = DEFAULT_LANG
+    language: Language = DEFAULT_LANG,
 ): BlogMainCache {
     if (!isCached(language)) {
         return null;
@@ -56,14 +49,8 @@ export function getBlogMainCache(
     };
 }
 
-export function isCached(language: Language) {
-    if (contentfulCache[language] && contentfulCache[language].size > 0) return true;
-    return false;
-}
-
-export async function recreateCache(language: Language = DEFAULT_LANG) {
+export async function recreateBlogCache(language: Language = DEFAULT_LANG) {
     await Promise.allSettled(languages.map(async (lang) => {
-        contentfulCache[lang] = createCacheInstance();
         const modelMap = await getMainPage(lang);
 
         if (modelMap.posts) {

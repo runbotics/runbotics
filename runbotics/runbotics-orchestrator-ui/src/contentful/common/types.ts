@@ -36,4 +36,7 @@ export enum CacheKey {
     Categories = 'categories',
     Tags = 'tags',
     Posts = 'posts',
+    Offers = 'offers',
+    Industries = 'industries',
+    MarketplaceTags = 'marketplaceTags',
 }

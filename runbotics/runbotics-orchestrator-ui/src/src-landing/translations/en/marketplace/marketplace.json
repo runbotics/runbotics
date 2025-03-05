@@ -1,0 +1,15 @@
+{
+    "Marketplace.Filters.Search": "Search",
+    "Marketplace.Filters.Title": "Filters",
+    "Marketplace.Filters.ClearAll": "Clear All",
+    "Marketplace.Filters.Industry": "Industry",
+    "Marketplace.Filters.Tag": "Tag",
+    "Marketplace.Filters.Date": "Date",
+    "Marketplace.Filters.Less": "Less",
+    "Marketplace.Filters.More": "More",
+    "Marketplace.Filters.ApplyFilters":"Apply Filters",
+    "Marketplace.EmptyPage.Title": "We could not find the offers you are looking for",
+    "Marketplace.Card.AddToCart": "Add to cart",
+    "Marketplace.Card.Compare": "compare",
+    "Marketplace.Card.price": "Price"
+}

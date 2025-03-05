@@ -1,6 +1,11 @@
 module.exports = {
     rewrites: () => process.env.NODE_ENV === 'development'
         ? [
+            // order of rules matters
+            {
+                source: '/api/plugins/:path*',
+                destination: '/api/plugins/:path*',
+            },
             {
                 source: '/api/scheduler/:path*',
                 destination: 'http://127.0.0.1:4000/api/scheduler/:path*',
@@ -40,6 +45,7 @@ module.exports = {
         mailPort: process.env.MAIL_PORT,
         mailUsername: process.env.MAIL_USERNAME,
         mailPassword: process.env.MAIL_PASSWORD,
+        runboticsPluginsDir: process.env.RUNBOTICS_PLUGINS_DIR,
     },
 
     images: {
