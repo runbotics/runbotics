@@ -334,7 +334,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 if (!this.pluginService) {
                     throw new Error('Action not found');
                 }
-                return this.pluginService.run(this, request);
+                return this.pluginService.run(request, this);
         }
     }
 }
