@@ -36,7 +36,7 @@
         "@nestjs/platform-socket.io": "^9.1.6",
         "@nestjs/schematics": "^9.0.3",
         "@nestjs/typeorm": "^9.0.1",
-        "@nestjs/websockets": "^9.1.6",
+        "@nestjs/websockets": "^11.0.10",
         "@willsoto/nestjs-prometheus": "^6.0.0",
         "axios": "^1.1.3",
         "bull": "^4.10.2",
