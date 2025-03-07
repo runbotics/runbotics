@@ -322,7 +322,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
                     throw new Error('Action not found');
                 }
                 this.isBrowserOpen();
-                return this.pluginService.run(this, request);
+                return this.pluginService.run(request, this);
             }
         }
     }

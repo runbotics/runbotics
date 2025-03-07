@@ -96,3 +96,8 @@ export interface IBpmnEngineEvent<T> {
 export interface ISubscription {
     unsubscribe(): void;
 }
+
+export interface LicenseInfo {
+    license: string;
+    licenseKey: string;
+}
