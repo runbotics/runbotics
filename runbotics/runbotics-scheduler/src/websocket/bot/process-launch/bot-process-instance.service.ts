@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { BotStatus, IBot, IProcessInstance, isEmailTriggerData, ProcessInstanceNotification, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
 import { Connection } from 'typeorm';
 import Axios from 'axios';
@@ -35,9 +35,11 @@ export class BotProcessService {
         const { newProcessInstance, bot } = await this.setBotInProcessInstance(instanceToSave, installationId);
 
         const queryRunner = this.connection.createQueryRunner();
-        await queryRunner.connect();
-        await queryRunner.startTransaction();
+
         try {
+            await queryRunner.connect();
+            await queryRunner.startTransaction();
+
             const updatedLastInstanceRunTime = await this.updateProcessParams(processInstance, newProcessInstance, bot);
             const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstance, { where: { id: updatedLastInstanceRunTime.id } });
 
@@ -49,6 +51,18 @@ export class BotProcessService {
                 .execute();
 
             await queryRunner.commitTransaction();
+            await queryRunner.release();
+        } catch (err: unknown) {
+            this.logger.error('Process instance update error:', err);
+            await queryRunner.rollbackTransaction();
+            await queryRunner.release();
+            throw new InternalServerErrorException();
+        }
+    }
+
+    async updateProcessInstanceAndNotify(installationId: string, processInstance: IProcessInstance) {
+        try {
+            await this.updateProcessInstance(installationId, processInstance);
 
             const updatedProcessInstance =
                 await this.processInstanceService.findOneById(processInstance.id);
@@ -68,11 +82,8 @@ export class BotProcessService {
             if (isProcessInstanceFinished(processInstance.status)) {
                 await this.processFileService.deleteTempFiles(processInstance.orchestratorProcessInstanceId);
             }
-        } catch (err: unknown) {
-            this.logger.error('Process instance update error: rollback', err);
-            await queryRunner.rollbackTransaction();
-        } finally {
-            await queryRunner.release();
+        } catch (err) {
+            this.logger.error(err);
         }
     }
 
