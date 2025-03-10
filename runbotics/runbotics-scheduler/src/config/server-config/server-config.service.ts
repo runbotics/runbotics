@@ -98,6 +98,7 @@ export class ServerConfigService {
             clientSecret: this.configService.get('MS_CLIENT_SECRET'),
             username: this.configService.get('MS_USERNAME'),
             password: this.configService.get('MS_PASSWORD'),
+            discoveryKeysUri: this.configService.get('MS_DISCOVERY_KEYS_URI'),
         };
     }
 
