@@ -1,12 +1,12 @@
 import { FilterQueryParams } from '#contentful/common';
 
 export const buildFilterFragment = (options: FilterQueryParams) => {
-    const { industries, search, startDate, endDate } = options;
+    const { categories, search, startDate, endDate } = options;
     const query = [];
 
-    if (industries?.length) {
+    if (categories?.length) {
         query.push(
-            `category: { slug_in: ${JSON.stringify(industries)} }`
+            `category: { slug_in: ${JSON.stringify(categories)} }`
         );
     }
     if (search) {

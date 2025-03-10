@@ -46,9 +46,9 @@ const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
                 <div className={styles.wrapper}>
                     <div className={styles.info}>
                         {offer.tags?.items.length > 0 &&
-                                offer.industries.items.filter(industry => Boolean( industry)).slice(0, 3).map((industry) => (
-                                    <InformationalTag text={industry.title} key={industry.slug} />
-                                ))}
+                            offer.industries.items.filter(industry => Boolean(industry)).slice(0, 3).map((industry) => (
+                                <InformationalTag text={industry.title} key={industry.slug} />
+                            ))}
                     </div>
                     <div className={styles.content}>
                         <Typography variant="h4" className={styles.title}>

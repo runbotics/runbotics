@@ -55,10 +55,10 @@ export const filterPosts = (posts: BlogPost[], queryParams: FilterQueryParams) =
     .filter(post => {
         if (!checkBlogPostMandatoryFields(post)) return false;
 
-        const { industries, tags, startDate, endDate, search } = queryParams;
+        const { categories, tags, startDate, endDate, search } = queryParams;
 
         const hasCategory = (
-            !industries || industries
+            !categories || categories
                 ?.includes(post.category.slug)
         );
         const hasTag = (

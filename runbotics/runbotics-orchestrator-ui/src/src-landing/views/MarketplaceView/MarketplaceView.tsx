@@ -44,7 +44,6 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
                     handleFilterDisplayed={setFilterDisplayed} 
                     isFilterDisplayed={isFilterDisplayed}
                     industries={industries}
-                    tags={tags}
                 />
                 <CardsSection
                     pageType={PageType.MARKETPLACE}
