@@ -7,7 +7,7 @@ import ContentFulHeadImage from '../ContentFulHeadImage';
 
 export interface Props {
     baseImage?: string;
-    headImageClass?: HeadImage;
+    headImageClass?: HeadImage;    
 }
 
 const ContentFulLayout: FC<Props> = ({ children, ...props }) => (

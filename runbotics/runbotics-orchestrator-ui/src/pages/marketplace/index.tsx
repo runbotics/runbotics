@@ -87,9 +87,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
             },
         };
     }
-    
+
+
     const totalPages = Math.ceil((offers?.length ?? 0) / DEFAULT_PAGE_SIZE);
-    
     return {
         props: {
             ...cache,

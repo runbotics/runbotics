@@ -17,18 +17,23 @@ interface Props {
     isFilterDisplayed: Boolean;
     handleFilterDisplayed: Function;
     industries: Industry[];
+    tags: Tag[];
 }
 
+// eslint-disable-next-line max-lines-per-function
 const FiltersSection: VFC<Props> = ({
     isFilterDisplayed,
     handleFilterDisplayed,
     industries,
+    tags,
 }) => {
     const { translate } = useTranslations();
     const { query, push } = useRouter();
     const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [isIndustriesSectionExpanded, setIsIndustriesSectionExpanded] =
         useState(false);
+    const [isTagsSectionExpanded, setTagsSectionExpand] = useState(false);
 
     const searchParam = Array.isArray(query?.search)
         ? query.search[0]
@@ -44,9 +49,15 @@ const FiltersSection: VFC<Props> = ({
         } else {
             setSelectedIndustries([]);
         }
+
+        if (query.tag) {
+            setSelectedTags(Array.isArray(query.tag) ? query.tag : [query.tag]);
+        } else {
+            setSelectedTags([]);
+        }
     }, [query]);
 
-    const handleIndustryCheckboxChange = (slug: string) => {
+    const handleCategoryCheckboxChange = (slug: string) => {
         if (selectedIndustries.includes(slug)) {
             setSelectedIndustries((prevState) =>
                 prevState.filter((industry) => industry !== slug),
@@ -56,13 +67,25 @@ const FiltersSection: VFC<Props> = ({
         }
     };
 
+    const handleTagCheckboxChange = (slug: string) => {
+        if (selectedTags.includes(slug)) {
+            setSelectedTags((prevState) =>
+                prevState.filter((tag) => tag !== slug),
+            );
+        } else {
+            setSelectedTags((prevState) => [...prevState, slug]);
+        }
+    };
+
     const pushFilters = () => {
         const searchParams = new URLSearchParams();
 
         selectedIndustries.forEach((industry) =>
             searchParams.append(FilterQueryParamsEnum.Industry, industry),
         );
-        
+        selectedTags.forEach((tag) =>
+            searchParams.append(FilterQueryParamsEnum.Tag, tag),
+        );
         if (searchParam) {
             searchParams.append(FilterQueryParamsEnum.Search, searchParam);
         }
@@ -78,6 +101,7 @@ const FiltersSection: VFC<Props> = ({
     }, [
         searchParam,
         selectedIndustries.length,
+        selectedTags.length,
     ]);
 
     const industriesCheckboxes = industries
@@ -89,7 +113,7 @@ const FiltersSection: VFC<Props> = ({
                     index < 5 || isIndustriesSectionExpanded ? '' : styles.hidden
                 }
                 checked={selectedIndustries.includes(industry.slug)}
-                onChange={() => handleIndustryCheckboxChange(industry.slug)}
+                onChange={() => handleCategoryCheckboxChange(industry.slug)}
                 label={industry.title}
                 title={industry.title}
                 size="regular"
