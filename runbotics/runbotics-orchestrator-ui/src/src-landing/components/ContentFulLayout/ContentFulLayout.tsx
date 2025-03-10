@@ -7,12 +7,12 @@ import ContentFulHeadImage from '../ContentFulHeadImage';
 
 export interface Props {
     baseImage?: string;
-    headImageClass?: HeadImage;    
+    headImageClass?: HeadImage;
 }
 
-const ContentFulLayout: FC<Props> = ({ children, ...props}) => (
+const ContentFulLayout: FC<Props> = ({ children, ...props }) => (
     <>
-        <ContentFulHeadImage {...props}/>
+        <ContentFulHeadImage {...props} />
         <div className={styles.root}>{children}</div>
     </>
 );
