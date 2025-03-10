@@ -44,28 +44,26 @@ const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
                 })}
                 href={`/marketplace/offer/${offer.slug}`}>
                 <div className={styles.wrapper}>
-                    <div className={styles.content}>
-                        <div className={styles.info}>
-                            {offer.tags?.items.length > 0 &&
-                                offer.tags.items.filter(tag => tag).slice(0, 3).map((tag) => (
-                                    <InformationalTag text={tag.name} key={tag.slug} />
+                    <div className={styles.info}>
+                        {offer.tags?.items.length > 0 &&
+                                offer.industries.items.filter(industry => Boolean( industry)).slice(0, 3).map((industry) => (
+                                    <InformationalTag text={industry.title} key={industry.slug} />
                                 ))}
-                        </div>
-                        <div>
-                            <Typography variant="h4" className={styles.title}>
-                                {offer.title}
-                            </Typography>
+                    </div>
+                    <div className={styles.content}>
+                        <Typography variant="h4" className={styles.title}>
+                            {offer.title}
+                        </Typography>
+                        <Typography variant="body3" className={styles.contentDescription}>
+                            {cutText(offer.description, 180)}
+                        </Typography>
+                    </div>
+                    <div className={styles.addToCart}>
+                        <button className={styles.addToCartButton} disabled>
                             <Typography variant="body3">
-                                {offer.description}
+                                {translate('Marketplace.Card.AddToCart')}
                             </Typography>
-                        </div>
-                        <div className={styles.addToCart}>
-                            <button className={styles.addToCartButton} disabled>
-                                <Typography variant="body3">
-                                    {translate('Marketplace.Card.AddToCart')}
-                                </Typography>
-                            </button>
-                        </div>
+                        </button>
                     </div>
                 </div>
             </Link>

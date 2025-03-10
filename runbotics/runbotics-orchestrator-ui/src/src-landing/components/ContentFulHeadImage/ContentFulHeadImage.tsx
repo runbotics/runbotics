@@ -3,6 +3,7 @@ import { FC } from 'react';
 import Image from 'next/image';
 
 import styles from './ContentFulHeadImage.module.scss';
+import Link from 'next/link';
 
 export enum HeadImage {
     BLOG = 'blogImage',
@@ -14,7 +15,7 @@ export interface Props {
     headImageClass?: HeadImage;
 }
 
-const ContentFulHeadImage: FC<Props> = ({ baseImage = 'blog-header', headImageClass = HeadImage.BLOG }) => {
+const ContentFulHeadImage: FC<Props> = ({ baseImage = 'blog-header', headImageClass = HeadImage.BLOG}) => {
     const image = require(`#public/images/banners/${baseImage}.png`);
     const imageTypeClassName = () => {
         switch (headImageClass) {
