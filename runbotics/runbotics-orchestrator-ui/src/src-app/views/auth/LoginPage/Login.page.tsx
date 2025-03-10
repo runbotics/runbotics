@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { FC, useEffect, useState } from 'react';
 
+import { useMsal } from '@azure/msal-react';
 import {
     Box,
     Card,
@@ -16,7 +17,7 @@ import { useSnackbar } from 'notistack';
 import Logo from '#src-app/components/utils/Logo/Logo';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
-import { login } from '#src-app/store/slices/Auth/Auth.thunks';
+import { login, microsoftLoginPopup, microsoftLogin } from '#src-app/store/slices/Auth/Auth.thunks';
 import { SOURCE_PAGE, TRACK_LABEL, ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
 import { identifyUserType, recordFailedLogin, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
 import GuestLoginSection from '#src-app/views/auth/LoginPage/GuestLoginSection';
@@ -46,10 +47,65 @@ const LoginPage: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [isGuestSubmitting, setGuestSubmitting] = useState(false);
     const isScreenSM = useMediaQuery('(max-width: 768px)');
+    const { instance } = useMsal();
+    const [signingIn, setSigningIn] = useState(false);
 
     useEffect(() => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.LOGIN });
     }, []);
+
+    const handleLoginWithMicrosoft = async () => {
+        setSigningIn(true);
+        const idToken = await dispatch(
+            microsoftLoginPopup(instance)
+        )
+            .then(unwrapResult)
+            .catch(() => {
+                setSigningIn(false);
+                const errorMessage = translate('Login.Error.MicrosoftPopupError');
+
+                enqueueSnackbar(errorMessage, {
+                    variant: 'error',
+                    autoHideDuration: 10000,
+                });
+            });
+
+        idToken && await dispatch(
+            microsoftLogin({
+                idToken,
+                langKey: router.locale,
+            })
+        )
+            .then(unwrapResult)
+            .then((user) => {
+                setSigningIn(false);
+                recordSuccessfulAuthentication({
+                    identifyBy: user.email,
+                    userType: identifyUserType(user.roles),
+                    sourcePage: SOURCE_PAGE.LOGIN,
+                    email: user.email,
+                    trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
+                });
+                router.push({ pathname: '/app/processes/collections' }, null, {
+                    locale: user.langKey,
+                });
+                return user;
+            })
+            .catch(() => {
+                setSigningIn(false);
+                const errorMessage = translate('Login.Error.UnexpectedError');
+
+                recordFailedLogin({
+                    trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                    sourcePage: SOURCE_PAGE.LOGIN,
+                    reason: errorMessage,
+                });
+                enqueueSnackbar(errorMessage, {
+                    variant: 'error',
+                    autoHideDuration: 10000,
+                });
+            });
+    };
 
     const handleGuestLogin = () => {
         setGuestSubmitting(true);
@@ -151,6 +207,8 @@ const LoginPage: FC = () => {
                             initialValues={initialValues}
                             loginValidationSchema={loginValidationSchema}
                             handleFormSubmit={handleFormSubmit}
+                            signingIn={signingIn}
+                            handleLoginWithMicrosoft={handleLoginWithMicrosoft}
                         />
                         <Box mx={isScreenSM ? 4 : 0}>
                             <Divider
