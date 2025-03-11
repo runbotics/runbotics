@@ -48,20 +48,20 @@ const LoginPage: FC = () => {
     const [isGuestSubmitting, setGuestSubmitting] = useState(false);
     const isScreenSM = useMediaQuery('(max-width: 768px)');
     const { instance } = useMsal();
-    const [signingIn, setSigningIn] = useState(false);
+    const [isSigningIn, setIsSigningIn] = useState(false);
 
     useEffect(() => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.LOGIN });
     }, []);
 
     const handleLoginWithMicrosoft = async () => {
-        setSigningIn(true);
+        setIsSigningIn(true);
         const idToken = await dispatch(
             microsoftLoginPopup(instance)
         )
             .then(unwrapResult)
             .catch(() => {
-                setSigningIn(false);
+                setIsSigningIn(false);
                 const errorMessage = translate('Login.Error.MicrosoftPopupError');
 
                 enqueueSnackbar(errorMessage, {
@@ -78,7 +78,7 @@ const LoginPage: FC = () => {
         )
             .then(unwrapResult)
             .then((user) => {
-                setSigningIn(false);
+                setIsSigningIn(false);
                 recordSuccessfulAuthentication({
                     identifyBy: user.email,
                     userType: identifyUserType(user.roles),
@@ -92,7 +92,7 @@ const LoginPage: FC = () => {
                 return user;
             })
             .catch(() => {
-                setSigningIn(false);
+                setIsSigningIn(false);
                 const errorMessage = translate('Login.Error.UnexpectedError');
 
                 recordFailedLogin({
@@ -207,7 +207,7 @@ const LoginPage: FC = () => {
                             initialValues={initialValues}
                             loginValidationSchema={loginValidationSchema}
                             handleFormSubmit={handleFormSubmit}
-                            signingIn={signingIn}
+                            isSigningIn={isSigningIn}
                             handleLoginWithMicrosoft={handleLoginWithMicrosoft}
                         />
                         <Box mx={isScreenSM ? 4 : 0}>

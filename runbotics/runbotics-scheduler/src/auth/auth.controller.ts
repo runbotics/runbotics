@@ -1,4 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    InternalServerErrorException,
+    Post,
+} from '@nestjs/common';
 import { Public } from './guards';
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
@@ -22,12 +27,20 @@ export class AuthController {
                 microsoftAthDto.idToken
             );
 
-        const email = tokenPayload['preferred_username'];
-        const accessToken = await this.authService.handleMicrosoftSSOUserAuth({
-            ...microsoftAthDto,
-            email,
-        });
+        if (
+            typeof tokenPayload === 'object' &&
+            'preferred_username' in tokenPayload
+        ) {
+            const email = tokenPayload['preferred_username'];
+            const accessToken =
+                await this.authService.handleMicrosoftSSOUserAuth({
+                    ...microsoftAthDto,
+                    email,
+                });
 
-        return { accessToken };
+            return { accessToken };
+        }
+
+        throw new InternalServerErrorException();
     }
 }

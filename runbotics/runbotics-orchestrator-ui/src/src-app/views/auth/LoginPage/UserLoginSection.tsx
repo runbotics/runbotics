@@ -16,7 +16,7 @@ interface Props {
     initialValues: LoginFormState;
     loginValidationSchema: UseLoginValidationSchema;
     handleFormSubmit: (values: LoginFormState, { setErrors, setStatus, setSubmitting }) => Promise<void>;
-    signingIn: boolean;
+    isSigningIn: boolean;
     handleLoginWithMicrosoft: () => Promise<void>;
 }
 
@@ -24,7 +24,7 @@ const UserLoginSection: FC<Props> = ({
     initialValues,
     loginValidationSchema,
     handleFormSubmit,
-    signingIn,
+    isSigningIn,
     handleLoginWithMicrosoft,
 }) => {
     const { translate } = useTranslations();
@@ -113,7 +113,7 @@ const UserLoginSection: FC<Props> = ({
                         size="large"
                         variant="contained"
                         sx={{ marginTop: 3 }}
-                        disabled={signingIn}
+                        disabled={isSigningIn}
                         onClick={handleLoginWithMicrosoft}
                     >
                         <MicrosoftIcon sx={{ marginRight: 1 }} />
