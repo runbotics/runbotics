@@ -14,7 +14,21 @@
         "runbotics-desktop",
         "runbotics-orchestrator",
         "runbotics-common",
-        "runbotics-cli",
+        "runbotics-cli"
     ],
     "svg.preview.background": "transparent",
+    "dbcode.connections": [
+        {
+            "connectionId": "5zqHkdpQc_xYJYFMhe3AZ",
+            "name": "rb-localhost",
+            "driver": "postgres",
+            "connectionType": "host",
+            "host": "127.0.0.1",
+            "port": 5432,
+            "ssl": false,
+            "username": "runbotics",
+            "savePassword": "secretStorage",
+            "connectionTimeout": 30
+        }
+    ]
 }
