@@ -2,10 +2,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import AxiosInstance from 'axios';
 
-import { LoadedPlugin } from './Plugin.state';
-
 import { AppDispatch, RootState } from '#src-app/store';
 import axios from '#src-app/utils/axios';
+
+import { LoadedPlugin } from './Plugin.state';
 
 export const loadPlugins = createAsyncThunk<
     LoadedPlugin[],
