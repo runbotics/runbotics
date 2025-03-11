@@ -49,6 +49,7 @@ module.exports = {
         mailUsername: process.env.MAIL_USERNAME,
         mailPassword: process.env.MAIL_PASSWORD,
         runboticsPluginsDir: process.env.RUNBOTICS_PLUGINS_DIR,
+        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://127.0.0.1:3000',
     },
 
     images: {
