@@ -136,8 +136,8 @@ importers:
         specifier: ^7.5.5
         version: 7.8.1
       selenium-webdriver:
-        specifier: 4.0.0-beta.4
-        version: 4.0.0-beta.4
+        specifier: 4.28.1
+        version: 4.28.1
       source-map-support:
         specifier: ^0.5.20
         version: 0.5.21
@@ -194,8 +194,8 @@ importers:
         specifier: ^6.4.1
         version: 6.4.9
       '@types/selenium-webdriver':
-        specifier: ^4.0.12
-        version: 4.1.16
+        specifier: ^4.1.28
+        version: 4.1.28
       '@types/uuid':
         specifier: ^8.3.0
         version: 8.3.4
@@ -2308,6 +2308,10 @@ packages:
       '@babel/helper-string-parser': 7.24.8
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
+
+  /@bazel/runfiles@6.3.1:
+    resolution: {integrity: sha512-1uLNT5NZsUVIGS4syuHwTzZ8HycMPyr6POA3FCE4GbMtc4rhoJk8aZKtNIRthJYfL+iioppi+rTfH3olMPr9nA==}
+    dev: false
 
   /@bpmn-io/element-templates-validator@0.1.0:
     resolution: {integrity: sha512-GK2IxWa//Zkck6wTwC6kmjNpL2W5zXLQdtPKdpe8UbAFtGxiltzUgIRiLPnvB0PKnKtyh1nq3on3GHxU9QlC0g==}
@@ -5758,9 +5762,10 @@ packages:
   /@types/scheduler@0.16.3:
     resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
 
-  /@types/selenium-webdriver@4.1.16:
-    resolution: {integrity: sha512-ETje9rr7nTrD0r/mNnIuCAF7fAZ2xKE/1WyxXZZH9N9Cy2NKJTrpEd7SCdzuIlm/1iu1gjHCVbaDwT+MuDrVZg==}
+  /@types/selenium-webdriver@4.1.28:
+    resolution: {integrity: sha512-Au7CXegiS7oapbB16zxPToY4Cjzi9UQQMf3W2ZZM8PigMLTGR3iUAHjPUTddyE5g1SBjT/qpmvlsAQLBfNAdKg==}
     dependencies:
+      '@types/node': 22.5.5
       '@types/ws': 8.5.5
     dev: true
 
@@ -15698,14 +15703,14 @@ packages:
     resolution: {integrity: sha512-4jzoJNh7VT2s2tvm/kUSskSw7pD0BVcrrGccbfOMK+3AXLBPz6nIy1yo+pbXgvNoTNII96Pq92+sAY+rF0LUAA==}
     dev: false
 
-  /selenium-webdriver@4.0.0-beta.4:
-    resolution: {integrity: sha512-+s/CIYkWzmnC9WASBxxVj7Lm0dcyl6OaFxwIJaFCT5WCuACiimEEr4lUnOOFP/QlKfkDQ56m+aRczaq2EvJEJg==}
-    engines: {node: '>= 10.15.0'}
+  /selenium-webdriver@4.28.1:
+    resolution: {integrity: sha512-TwbTpu/NUQkorBODGAkGowJ8sar63bvqi66/tjqhS05rBl34HkVp8DoRg1cOv2iSnNonVSbkxazS3wjbc+NRtg==}
+    engines: {node: '>= 18.20.5'}
     dependencies:
+      '@bazel/runfiles': 6.3.1
       jszip: 3.10.1
-      rimraf: 3.0.2
-      tmp: 0.2.1
-      ws: 7.5.9
+      tmp: 0.2.3
+      ws: 8.18.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -16634,6 +16639,12 @@ packages:
     engines: {node: '>=8.17.0'}
     dependencies:
       rimraf: 3.0.2
+    dev: true
+
+  /tmp@0.2.3:
+    resolution: {integrity: sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==}
+    engines: {node: '>=14.14'}
+    dev: false
 
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
@@ -17808,19 +17819,6 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  /ws@7.5.9:
-    resolution: {integrity: sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==}
-    engines: {node: '>=8.3.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: false
-
   /ws@8.11.0:
     resolution: {integrity: sha512-HPG3wQd9sNQoT9xHyNCXoDUa+Xw/VevmY9FoHyQ+g+rrMn4j6FB4np7Z0OhdTgjx6MgQLK7jwSy1YecU1+4Asg==}
     engines: {node: '>=10.0.0'}
@@ -17832,6 +17830,19 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  /ws@8.18.1:
+    resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
 
   /xhr@2.6.0:
     resolution: {integrity: sha512-/eCGLb5rxjx5e3mF1A7s+pLlR6CGyqWN91fv1JgER5mVWg1MZmlhBvy9kjcsOdRk8RrIujotWyJamfyrp+WIcA==}
