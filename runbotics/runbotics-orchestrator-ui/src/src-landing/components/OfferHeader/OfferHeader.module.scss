@@ -15,6 +15,20 @@
     line-height: clamp($line-height-body2, 3vw + 1rem, $line-height-h1);
 }
 
+.backLink {
+    font-family: 'Roboto', sans-serif;
+    position: relative;
+    top: 20px;
+    left: 20px;
+    
+    color: $palette-black;
+    z-index: 1;
+    text-decoration: none;
+    :hover {
+        text-decoration: underline;
+    }
+}
+
 
 .info {
     position: absolute;

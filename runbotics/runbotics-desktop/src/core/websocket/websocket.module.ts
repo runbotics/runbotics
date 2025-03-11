@@ -31,6 +31,7 @@ import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.servic
                     options: {
                         auth: credentials,
                         path: '/ws-bot/',
+                        reconnectionDelayMax: 10000,
                         // transports: [
                         //     'websocket'
                         // ]

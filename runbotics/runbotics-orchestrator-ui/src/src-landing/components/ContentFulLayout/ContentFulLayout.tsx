@@ -10,9 +10,9 @@ export interface Props {
     headImageClass?: HeadImage;
 }
 
-const ContentFulLayout: FC<Props> = ({ children, ...props}) => (
+const ContentFulLayout: FC<Props> = ({ children, ...props }) => (
     <>
-        <ContentFulHeadImage {...props}/>
+        <ContentFulHeadImage {...props} />
         <div className={styles.root}>{children}</div>
     </>
 );

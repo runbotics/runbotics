@@ -11,5 +11,6 @@
     "Marketplace.EmptyPage.Title": "We could not find the offers you are looking for",
     "Marketplace.Card.AddToCart": "Add to cart",
     "Marketplace.Card.Compare": "compare",
-    "Marketplace.Card.price": "Price"
+    "Marketplace.Card.price": "Price",
+    "Marketplace.Card.BackToMarketplace": "Back to Marketplace"
 }

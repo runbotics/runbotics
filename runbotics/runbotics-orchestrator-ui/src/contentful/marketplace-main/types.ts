@@ -36,7 +36,7 @@ interface AllIndustriesCollection {
 }
 
 interface AllTagsCollection {
-    tagCollection: {
+    marketplaceTagCollection: {
         items: Tag[];
     };
 }
