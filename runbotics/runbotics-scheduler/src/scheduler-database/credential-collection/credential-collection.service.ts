@@ -11,6 +11,7 @@ import { getPage, Page } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { User } from '../user/user.entity';
+import { isTenantAdmin } from '#/utils/authority.utils';
 
 const RELATIONS = [
     'credentialCollectionUser',
@@ -116,7 +117,13 @@ export class CredentialCollectionService {
         options.relations = RELATIONS;
         const page = await getPage(this.credentialCollectionRepository, options);
 
-        const userAccessedCollections = page.content.filter(collection => collection.credentialCollectionUser.some(ccu => ccu.userId === user.id));
+        const userAccessedCollections = isTenantAdmin(user)
+            ? page.content
+            : page.content.filter((collection) =>
+                  collection.credentialCollectionUser.some(
+                      (ccu) => ccu.userId === user.id
+                  )
+              );
 
         return {
             ...page,
