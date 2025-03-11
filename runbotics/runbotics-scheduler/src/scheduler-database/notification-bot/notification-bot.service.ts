@@ -23,7 +23,7 @@ export class NotificationBotService {
     ) {}
 
     async getAllByBotId(botId: number) {
-        return this.notificationBotRepository.findBy({ bot: { id: botId } });
+        return this.notificationBotRepository.find({ where: { bot: { id: botId } }, relations: ['user'] });
     }
 
     async getAllByBotIdAndUser(botId: number, user: User) {
