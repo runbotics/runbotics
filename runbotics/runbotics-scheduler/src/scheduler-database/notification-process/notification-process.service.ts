@@ -19,7 +19,7 @@ export class NotificationProcessService {
     ) {}
 
     async getAllByProcessId(processId: number) {
-        return this.notificationProcessRepository.findBy({ process: { id: processId } });
+        return this.notificationProcessRepository.find({ where: { process: { id: processId } }, relations: ['user'] });
     }
 
     async getAllByProcessIdAndUser(processId: number, user: User) {
