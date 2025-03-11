@@ -28,7 +28,10 @@ module.exports = {
     publicRuntimeConfig: {
         runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://127.0.0.1:4000',
         mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN,
-        copilotChatUrl: process.env.COPILOT_CHAT_URL
+        copilotChatUrl: process.env.COPILOT_CHAT_URL,
+        microsoftAppId: process.env.MICROSOFT_APP_ID,
+        microsoftAppAuthority: process.env.MICROSOFT_APP_AUTHORITY,
+        microsoftAppRedirectUri: process.env.MICROSOFT_APP_REDIRECT_URI,
     },
 
     modularizeImports: {

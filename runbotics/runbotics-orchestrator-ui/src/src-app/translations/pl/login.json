@@ -1,5 +1,6 @@
 {
     "Login.SignIn": "Zaloguj się",
+    "Login.SignIn.WithMicrosoft": "Zaloguj się z Microsoft",
     "Login.SignIn.Success": "Zalogowano pomyślnie",
     "Login.Guest.Try": "Wypróbuj nasze demo za darmo!",
     "Login.Guest.ThanksToIt": "Dzięki temu masz możliwość:",
@@ -27,5 +28,6 @@
     "Login.Error.4xx": "Błędne poświadczenia lub użytkownik nie istnieje",
     "Login.Error.5xx": "Wystąpił nieoczekiwany problem z serwerem. Gdyby problem się powtarzał skontaktuj się z nami poprzez formularz na stronie głownej",
     "Login.Error.UserNotActivated": "Użytkownik nie został jeszcze aktywowany. Poproś administratora o aktywację",
-    "Login.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej"
+    "Login.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Login.Error.MicrosoftPopupError": "Wystąpił błąd logowania z użyciem konta Microsoft - skontaktuj się z nami poprzez formularz na stronie głownej"
 }

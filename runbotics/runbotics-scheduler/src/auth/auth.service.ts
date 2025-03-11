@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Connection } from 'typeorm';
-import * as jwt from 'jsonwebtoken';
+import jwt, { JwtHeader, JwtPayload, Secret, SigningKeyCallback } from 'jsonwebtoken';
+import jwksClient, { JwksClient } from 'jwks-rsa';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { ServerConfigService } from '#/config/server-config';
@@ -11,9 +12,10 @@ import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-co
 import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
-import { BotStatus, BotSystemType, IBot } from 'runbotics-common';
-import { MutableBotParams, RegisterNewBotParams } from './auth.service.types';
+import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
+import { MicrosoftSSOUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
+import { User } from '#/scheduler-database/user/user.entity';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -23,6 +25,7 @@ interface ValidatorBotWsProps {
 @Injectable()
 export class AuthService {
     private readonly logger = new Logger(AuthService.name);
+    private jwksClient: JwksClient;
 
     constructor(
         private readonly userService: UserService,
@@ -31,7 +34,11 @@ export class AuthService {
         private readonly botCollectionService: BotCollectionService,
         private readonly serverConfigService: ServerConfigService,
         private readonly connection: Connection,
-    ) {}
+    ) {
+        this.jwksClient = jwksClient({
+            jwksUri: this.serverConfigService.microsoftAuth.discoveryKeysUri,
+        });
+    }
 
     validatePayload(payload: JWTPayload) {
         return this.userService.findByEmail(payload.sub);
@@ -69,6 +76,71 @@ export class AuthService {
         }
 
         return user;
+    }
+
+    validateMicrosoftAccessToken(idToken: string) {
+        return new Promise<JwtPayload | string>((resolve, reject) => {
+            jwt.verify(
+                idToken,
+                this.getSigningKey.bind(this),
+                {
+                    algorithms: ['RS256'],
+                    complete: false,
+                },
+                (err, decoded) => {
+                    if (err) {
+                        console.error(err);
+                        reject(new UnauthorizedException('Invalid token'));
+                    } else {
+                        resolve(decoded);
+                    }
+                }
+            );
+        });
+    }
+
+    async handleMicrosoftSSOUserAuth(msUserAuthDto: MicrosoftSSOUserDto) {
+        const user = await this.userService.findByEmail(msUserAuthDto.email);
+        if (!user) {
+            return this.registerMicrosoftSSOUser(msUserAuthDto);
+        }
+        return this.signInMicrosoftSSOUser(user);
+    }
+
+    private signInMicrosoftSSOUser({ email, authorities }: User) {
+        const roles = authorities.map((authority) => authority.name);
+
+        return this.signNewIdToken(email, roles);
+    }
+
+    private async registerMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
+        const { email, authorities } =
+            await this.userService.createMicrosoftSSOUser(msUserAuthDto);
+        const roles = authorities.map((authority) => authority.name);
+
+        return this.signNewIdToken(email, roles);
+    }
+
+    private signNewIdToken(email: string, roles = [Role.ROLE_USER]) {
+        const secret = this.serverConfigService.secret;
+        const payload = {
+            sub: email,
+            auth: roles.join(','),
+        };
+        return jwt.sign(payload, secret, {
+            algorithm: 'HS512',
+            expiresIn: '1d',
+        });
+    }
+
+    private getSigningKey(header: JwtHeader, callback: SigningKeyCallback) {
+        this.jwksClient.getSigningKey(header.kid, (err, key) => {
+            if (err) {
+                return callback(err, null);
+            }
+            const signingKey = key.getPublicKey();
+            callback(null, signingKey);
+        });
     }
 
     private extractSemanticVersion(version: string): Promise<[number, number, number]> {

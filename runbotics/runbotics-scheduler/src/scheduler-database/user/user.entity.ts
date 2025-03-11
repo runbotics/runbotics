@@ -6,7 +6,11 @@ import { Tenant } from '../tenant/tenant.entity';
 
 @Entity({ name: 'jhi_user' })
 export class User {
-    @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
+    @PrimaryColumn({
+        type: 'bigint',
+        transformer: numberTransformer,
+        default: () => 'nextval(\'sequence_generator\')',
+    })
     id: number;
 
     @Column({ type: 'varchar', length: 191, unique: true })
