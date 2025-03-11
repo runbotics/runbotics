@@ -28,9 +28,6 @@ export class LicenseService {
             pluginName,
         });
 
-        if (!license) {
-            throw new NotFoundException();
-        }
         if (!license || !this.isExpDateValid(license)) {
             throw new NotFoundException();
         }

@@ -20,7 +20,7 @@ export class License {
     @Column({ name: 'tenant_id', type: 'uuid' })
     tenantId: string;
 
-    @ManyToOne(() => Tenant, (tenant) => tenant.id, { nullable: false })
+    @ManyToOne(() => Tenant, (tenant) => tenant.id)
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 

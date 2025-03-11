@@ -4,6 +4,7 @@ import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import getConfig from 'next/config';
 import path from 'path';
+import { HttpErrorCodes } from 'runbotics-common';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -12,7 +13,9 @@ export default async function handler(
     res: NextApiResponse
 ) {
     if (req.method !== 'POST') {
-        return res.status(404).json({ error: 'Not found' });
+        return res
+            .status(HttpErrorCodes.NOT_FOUND)
+            .json({ error: 'Not found' });
     }
 
     try {
@@ -20,23 +23,22 @@ export default async function handler(
         const tenantId = req.body.tenantId;
         const accessToken = req.headers.authorization;
 
-        axios.defaults.headers.common.Authorization = accessToken;
-
         const tenantAvailablePlugins = (
             await axios.get<string[]>(
-                `${entrypointUrl}/api/scheduler/tenants/${tenantId}/licenses/plugins/available`
+                `${entrypointUrl}/api/scheduler/tenants/${tenantId}/licenses/plugins/available`,
+                { headers: { authorization: accessToken } }
             )
         ).data;
 
         const pluginsPath = serverRuntimeConfig.runboticsPluginsDir;
         if (!pluginsPath) {
-            return res.status(400).json({
+            return res.status(HttpErrorCodes.BAD_REQUEST).json({
                 error: 'Plugins directory was not provided',
             });
         }
 
         if (!fs.existsSync(pluginsPath)) {
-            return res.status(400).json({
+            return res.status(HttpErrorCodes.BAD_REQUEST).json({
                 error: 'Plugins directory does not exist',
             });
         }
@@ -48,7 +50,7 @@ export default async function handler(
 
         if (pluginDirs.length === 0) {
             return res
-                .status(400)
+                .status(HttpErrorCodes.BAD_REQUEST)
                 .json({ error: 'No plugin directories to be loaded' });
         }
 
@@ -79,7 +81,7 @@ export default async function handler(
 
         if (filteredPlugins.length === 0) {
             return res
-                .status(400)
+                .status(HttpErrorCodes.BAD_REQUEST)
                 .json({ error: 'No valid plugin directories found' });
         }
 
@@ -91,9 +93,15 @@ export default async function handler(
 
         return res.status(200).json({ plugins: filteredPlugins });
     } catch (error) {
-        console.log(error);
+        if (axios.isAxiosError(error)) {
+            console.log('Error:', error.response?.data);
+        } else if (error instanceof Error) {
+            console.log('Error:', error.message);
+        } else {
+            console.log('Error:', error);
+        }
 
-        return res.status(500).json({
+        return res.status(HttpErrorCodes.INTERNAL_SERVER_ERROR).json({
             error: 'Failed to check available plugins',
         });
     }
