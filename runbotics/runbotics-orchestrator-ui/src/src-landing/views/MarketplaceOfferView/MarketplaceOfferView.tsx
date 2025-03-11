@@ -15,20 +15,10 @@ interface Props {
 const MarketplaceOfferView: VFC<Props> = ({ offer }) => {
     const {
         body,
-        description,
-        slug: offertSlug,
         tags,
         title,
         industries,
-        ...postHeaderProps
     } = offer;
-    const { translate } = useTranslations();
-
-    // const tags = offerTags.items.map(({ name, slug }) => (
-    //     <Link key={name} href={`/marketplace?tag=${slug}`} className={styles.tagLink}>
-    //         {`${name}`}
-    //     </Link>
-    // ));
 
     return (
         <Layout>

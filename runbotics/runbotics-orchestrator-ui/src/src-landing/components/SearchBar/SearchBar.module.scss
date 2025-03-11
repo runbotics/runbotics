@@ -1,0 +1,22 @@
+@import "#src-landing/scss/main";
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+.input {
+    width: 100%;
+    outline: none;
+    border: none;
+    
+    font-size: $font-size-body3;
+    padding: $padding-1 $padding-2;
+}
+
+.icon {
+    background-color: $palette-white;
+}
