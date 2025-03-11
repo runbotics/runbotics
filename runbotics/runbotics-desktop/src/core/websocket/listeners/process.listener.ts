@@ -100,7 +100,7 @@ export class ProcessListener {
                 });
 
             if (!process) {
-                throw new Error(`Process not found in tenant bot is authenticated to. Process id: ${processId}, bot tenant id: ${tenantId}`);
+                throw new Error(`The process was not found in the tenant to which the bot is authenticated. Process id: ${processId}, bot tenant id: ${tenantId}`);
             }
 
             this.logger.log('Starting process: ' + process.name);
