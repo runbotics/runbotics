@@ -89,9 +89,12 @@ export class AuthService {
                 },
                 (err, decoded) => {
                     if (err) {
+                        console.log('TEST err =====> validateMicrosoftAccessToken');
                         console.error(err);
                         reject(new UnauthorizedException('Invalid token'));
                     } else {
+                        console.log('TEST decoded =====> validateMicrosoftAccessToken');
+                        console.log(JSON.stringify(decoded, null, 4));
                         resolve(decoded);
                     }
                 }
@@ -134,11 +137,23 @@ export class AuthService {
     }
 
     private getSigningKey(header: JwtHeader, callback: SigningKeyCallback) {
+        console.log('TEST jwksUri, jwksClient =====> validateMicrosoftAccessToken');
+        console.log(JSON.stringify({
+            jwksUri: this.serverConfigService.microsoftAuth.discoveryKeysUri,
+            jwksClient: this.jwksClient,
+        }, null, 4));
+
         this.jwksClient.getSigningKey(header.kid, (err, key) => {
             if (err) {
+                console.log('TEST err =====> getSigningKey');
+                console.error(err);
                 return callback(err, null);
             }
+            console.log('TEST key =====> getSigningKey');
+            console.log(JSON.stringify({ key }, null, 4));
             const signingKey = key.getPublicKey();
+            console.log('TEST signingKey =====> getSigningKey');
+            console.log(JSON.stringify({ signingKey }, null, 4));
             callback(null, signingKey);
         });
     }
