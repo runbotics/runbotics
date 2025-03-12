@@ -31,11 +31,7 @@ jobs:
   push-scheduler:
     needs: changes-detection
     if: |
-      (github.ref == 'refs/heads/develop'
-      || github.ref == 'refs/heads/master'
-      || startsWith(github.ref, 'refs/heads/release/')
-      || startsWith(github.ref, 'refs/heads/hotfix/'))
-      && needs.changes-detection.outputs.scheduler == 'true'
+      needs.changes-detection.outputs.scheduler == 'true'
 
     runs-on: ubuntu-latest
 
