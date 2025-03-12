@@ -2,7 +2,7 @@ name: CD
 
 on:
   push:
-    branches: ['develop', 'master']
+    branches: ['test-md-502']
   workflow_dispatch:
 
 env:
@@ -14,10 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      ui: ${{ steps.filter.outputs.ui }}
       scheduler: ${{ steps.filter.outputs.scheduler }}
-      bot: ${{ steps.filter.outputs.bot }}
-      api: ${{ steps.filter.outputs.api }}
 
     steps:
       - name: Checkout
@@ -28,64 +25,8 @@ jobs:
         id: filter
         with:
           filters: |
-            ui:
-              - 'runbotics/runbotics-orchestrator-ui/package.json'
             scheduler:
               - 'runbotics/runbotics-scheduler/package.json'
-            bot:
-              - 'runbotics/runbotics-desktop/package.json'
-            api:
-              - 'runbotics-orchestrator/build.gradle'
-
-  push-ui:
-    needs: changes-detection
-    if: |
-      (github.ref == 'refs/heads/develop'
-      || github.ref == 'refs/heads/master'
-      || startsWith(github.ref, 'refs/heads/release/')
-      || startsWith(github.ref, 'refs/heads/hotfix/'))
-      && needs.changes-detection.outputs.ui == 'true'
-
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./runbotics/runbotics-orchestrator-ui
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Update .npmrc
-        shell: bash
-        run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Assign package version
-        uses: nyaa8/package-version@v1
-        with:
-          path: './runbotics/runbotics-orchestrator-ui/package.json'
-
-      - name: Build and push image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./runbotics
-          file: ./runbotics/Dockerfile
-          push: true
-          tags: |
-            runbotics/runbotics-orchestrator-ui:latest
-            runbotics/runbotics-orchestrator-ui:${{ env.PACKAGE_VERSION }}
 
   push-scheduler:
     needs: changes-detection
@@ -149,145 +90,3 @@ jobs:
           tags: |
             runbotics/runbotics-scheduler:latest
             runbotics/runbotics-scheduler:${{ env.PACKAGE_VERSION }}
-
-  push-bot:
-    needs: changes-detection
-    if: |
-      (github.ref == 'refs/heads/develop'
-      || github.ref == 'refs/heads/master'
-      || startsWith(github.ref, 'refs/heads/release/')
-      || startsWith(github.ref, 'refs/heads/hotfix/'))
-      && needs.changes-detection.outputs.bot == 'true'
-
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./runbotics/runbotics-desktop
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Update .npmrc
-        shell: bash
-        run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Install dependencies
-        run: $RUSH install -t .
-
-      - name: Build
-        run: $RUSH rebuild -t .
-
-      - name: Rush deploy
-        run: |
-          mkdir -p ../common/deploy/runbotics-desktop
-          $RUSH deploy \
-            --scenario runbotics-desktop \
-            --target-folder ../common/deploy/runbotics-desktop \
-            --overwrite
-
-      - name: Assign package version
-        uses: nyaa8/package-version@v1
-        with:
-          path: './runbotics/runbotics-desktop/package.json'
-
-      - name: Build and push image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./runbotics/common/deploy/runbotics-desktop
-          file: ./runbotics/common/deploy/runbotics-desktop/Dockerfile
-          push: true
-          tags: |
-            runbotics/runbotics-desktop:latest
-            runbotics/runbotics-desktop:${{ env.PACKAGE_VERSION }}
-
-  push-api:
-    needs: changes-detection
-    if: |
-      (github.ref == 'refs/heads/develop'
-      || github.ref == 'refs/heads/master'
-      || startsWith(github.ref, 'refs/heads/release/')
-      || startsWith(github.ref, 'refs/heads/hotfix/'))
-      && needs.changes-detection.outputs.api == 'true'
-
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: ./runbotics-orchestrator
-
-    env:
-      JAVA_VERSION: 11
-      JAVA_DISTRIBUTION: 'adopt'
-      GRADLE_VERSION: '6.8.3'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Install Java JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-
-      - name: Install gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: ${{ env.GRADLE_VERSION }}
-
-      - name: Build
-        run: gradle bootJar -Pprod jibDockerBuild
-
-      - name: Assign package version
-        run: |
-          version=$(grep -m 1 -o 'version = "[^"]*"' build.gradle | awk -F'"' '{print $2}' | tr -d '\n')
-          echo "API_VERSION=$version" >> $GITHUB_ENV
-
-      - name: Push image
-        run: |
-          docker tag runbotics/runbotics-orchestrator:latest runbotics/runbotics-orchestrator:$API_VERSION
-          docker push --all-tags runbotics/runbotics-orchestrator
-
-  dispatch-core:
-    needs: [push-ui, push-scheduler, push-api]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dispatch deploy core
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.ACTION_DISPATCH }}
-          repository: runbotics/runbotics-deployment
-          event-type: core
-          client-payload: '{}'
-
-  dispatch-bot:
-      needs: [push-bot]
-      runs-on: ubuntu-latest
-      steps:
-        - name: Dispatch deploy bot
-          uses: peter-evans/repository-dispatch@v2
-          with:
-            token: ${{ secrets.ACTION_DISPATCH }}
-            repository: runbotics/runbotics-deployment
-            event-type: bot
-            client-payload: '{}'
