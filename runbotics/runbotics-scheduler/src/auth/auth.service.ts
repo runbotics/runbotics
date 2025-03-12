@@ -104,6 +104,8 @@ export class AuthService {
 
     async handleMicrosoftSSOUserAuth(msUserAuthDto: MicrosoftSSOUserDto) {
         const user = await this.userService.findByEmail(msUserAuthDto.email);
+        console.log('TEST user =====> handleMicrosoftSSOUserAuth');
+        console.log(JSON.stringify(user, null, 4));
         if (!user) {
             return this.registerMicrosoftSSOUser(msUserAuthDto);
         }

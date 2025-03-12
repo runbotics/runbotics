@@ -34,13 +34,26 @@ export class UserService {
     ) {}
 
     async createMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
+        console.log('TEST msUserAuthDto =====> createMicrosoftSSOUser');
+        console.log(JSON.stringify(msUserAuthDto, null, 4));
+
         const user = new User();
         const randomPassword = generate({
             length: 24,
             numbers: true,
             symbols: true,
         });
+
+        console.log('TEST randomPassword =====> createMicrosoftSSOUser');
+        console.log(JSON.stringify(randomPassword, null, 4));
+
         user.passwordHash = hashSync(randomPassword, 10);
+
+        console.log('TEST passwordHash =====> createMicrosoftSSOUser');
+        console.log(JSON.stringify({
+            passwordHash: user.passwordHash
+        }, null, 4));
+
         user.email = msUserAuthDto.email;
         user.langKey = msUserAuthDto.langKey;
         user.activated = true;

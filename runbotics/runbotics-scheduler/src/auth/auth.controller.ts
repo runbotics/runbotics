@@ -32,6 +32,8 @@ export class AuthController {
             'preferred_username' in tokenPayload
         ) {
             const email = tokenPayload['preferred_username'];
+            console.log('TEST email =====> authenticateWithMicrosoft');
+            console.log(JSON.stringify(email, null, 4));
             const accessToken =
                 await this.authService.handleMicrosoftSSOUserAuth({
                     ...microsoftAthDto,
@@ -40,6 +42,8 @@ export class AuthController {
 
             return { accessToken };
         }
+
+        console.log('TEST InternalServerErrorException =====> authenticateWithMicrosoft');
 
         throw new InternalServerErrorException();
     }
