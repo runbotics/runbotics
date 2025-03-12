@@ -47,7 +47,8 @@ export class UserService {
         console.log('TEST randomPassword =====> createMicrosoftSSOUser');
         console.log(JSON.stringify(randomPassword, null, 4));
 
-        user.passwordHash = await bcrypt.hash(randomPassword, 10);
+        const salt = await bcrypt.genSalt(10);
+        user.passwordHash = await bcrypt.hash(randomPassword, salt);
 
         console.log('TEST passwordHash =====> createMicrosoftSSOUser');
         console.log(JSON.stringify({
