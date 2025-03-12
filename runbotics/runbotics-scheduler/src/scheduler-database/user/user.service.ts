@@ -16,7 +16,7 @@ import postgresError from '#/utils/postgresError';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { MailService } from '#/mail/mail.service';
 import { MicrosoftSSOUserDto } from '#/auth/auth.service.types';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
 
 @Injectable()
@@ -47,11 +47,7 @@ export class UserService {
         console.log('TEST randomPassword =====> createMicrosoftSSOUser');
         console.log(JSON.stringify(randomPassword, null, 4));
 
-        const salt = bcrypt.genSaltSync(10);
-        console.log('TEST salt =====> createMicrosoftSSOUser');
-        console.log(JSON.stringify({ salt }, null, 4));
-
-        const passwordHash = bcrypt.hashSync('test', salt);
+        const passwordHash = bcrypt.hashSync(randomPassword, 10);
         console.log('TEST passwordHash =====> createMicrosoftSSOUser');
         console.log(JSON.stringify({ passwordHash }, null, 4));
 

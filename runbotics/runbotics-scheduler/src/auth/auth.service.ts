@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Connection } from 'typeorm';
-import jwt, { JwtHeader, JwtPayload, Secret, SigningKeyCallback } from 'jsonwebtoken';
+import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from 'jsonwebtoken';
 import jwksClient, { JwksClient } from 'jwks-rsa';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
