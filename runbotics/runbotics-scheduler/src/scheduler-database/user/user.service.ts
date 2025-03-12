@@ -47,14 +47,15 @@ export class UserService {
         console.log('TEST randomPassword =====> createMicrosoftSSOUser');
         console.log(JSON.stringify(randomPassword, null, 4));
 
-        const salt = await bcrypt.genSalt(10);
-        user.passwordHash = await bcrypt.hash(randomPassword, salt);
+        const salt = bcrypt.genSaltSync(10);
+        console.log('TEST salt =====> createMicrosoftSSOUser');
+        console.log(JSON.stringify({ salt }, null, 4));
 
+        const passwordHash = bcrypt.hashSync('test', salt);
         console.log('TEST passwordHash =====> createMicrosoftSSOUser');
-        console.log(JSON.stringify({
-            passwordHash: user.passwordHash
-        }, null, 4));
+        console.log(JSON.stringify({ passwordHash }, null, 4));
 
+        user.passwordHash = passwordHash;
         user.email = msUserAuthDto.email;
         user.langKey = msUserAuthDto.langKey;
         user.activated = true;
