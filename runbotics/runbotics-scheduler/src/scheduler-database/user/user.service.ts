@@ -16,7 +16,7 @@ import postgresError from '#/utils/postgresError';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { MailService } from '#/mail/mail.service';
 import { MicrosoftSSOUserDto } from '#/auth/auth.service.types';
-import { hashSync } from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class UserService {
             numbers: true,
             symbols: true,
         });
-        user.passwordHash = hashSync(randomPassword, 10);
+        user.passwordHash = bcrypt.hashSync(randomPassword, 10);
         user.email = msUserAuthDto.email;
         user.langKey = msUserAuthDto.langKey;
         user.activated = true;

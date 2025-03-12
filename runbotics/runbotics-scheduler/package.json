@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "3.1.0-SNAPSHOT.34",
+    "version": "3.1.0-SNAPSHOT.35",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -69,8 +69,8 @@
         "zod": "~3.23.8",
         "bpmn-moddle": "^9.0.1",
         "jwks-rsa": "~3.1.0",
-        "bcrypt": "~5.1.1",
-        "generate-password": "~1.7.1"
+        "generate-password": "~1.7.1",
+        "bcryptjs": "~3.0.2"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",
@@ -101,8 +101,7 @@
         "@types/mime-types": "~2.1.4",
         "@types/bpmn-moddle": "^5.1.11",
         "unplugin-swc": "~1.5.1",
-        "@swc/core": "~1.7.26",
-        "@types/bcrypt": "~5.0.2"
+        "@swc/core": "~1.7.26"
     },
     "files": [
         "dist"
