@@ -27,7 +27,7 @@ const ContentFulHeadImage: FC<Props> = ({ baseImage = 'blog-header', headImageCl
         }
     };
     return <div className={`${styles.image} ${imageTypeClassName()}`}>
-        <Image className={styles.background} src={image} alt="banner" fill/>
+        <Image className={styles.background} src={image} alt="banner" fill />
     </div>;
 };
 

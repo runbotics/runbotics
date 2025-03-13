@@ -13,6 +13,8 @@ interface CardsSectionPropsBase {
     cards: unknown[];
     page: Page;
     searchBar?: ReactElement;
+    notFoundInfo?: ReactElement;
+    isNotFoundVisible?: boolean;
 }
 
 interface CardsBlogSectionProps extends CardsSectionPropsBase {
@@ -36,10 +38,11 @@ const CardsSection: FC<CardsSectionPropsType> = ({
     cards,
     featuredCard,
     page,
-    searchBar
-}) => (
-    <div className={styles.root}>
-        {searchBar}
+    searchBar,
+    notFoundInfo,
+    isNotFoundVisible,
+}) => {
+    const cardsGrid = <>
         {/*@ts-expect-error union of types are not well served in typescript so the pageType is incompatible even if values are the same*/}
         <CardsGrid
             pageType={pageType}
@@ -47,9 +50,21 @@ const CardsSection: FC<CardsSectionPropsType> = ({
             featuredCard={featuredCard}
         />
         <If condition={page.total > 1}>
-            <CardsPagination page={page} basePageUrl={pageType}/>
+            <CardsPagination page={page} basePageUrl={pageType} />
         </If>
-    </div>
-);
+    </>;
+    
+    return (
+        <div className={pageType === 'marketplace' ? styles.root : styles.justifiedRoot}>
+            {searchBar}
+            {notFoundInfo ?
+                <If condition={isNotFoundVisible} else={notFoundInfo}>
+                    {cardsGrid}
+                </If> :
+                cardsGrid
+            }
+        </div>
+    );
+};
 
 export default CardsSection;

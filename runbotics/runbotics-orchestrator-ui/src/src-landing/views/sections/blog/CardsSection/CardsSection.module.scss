@@ -1,8 +1,12 @@
 @import '#src-landing/scss/main.scss';
 
-
-
 .root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.justifiedRoot {
     display: flex;
     flex-direction: column;
     justify-content: space-between;

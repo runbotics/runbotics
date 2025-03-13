@@ -59,6 +59,7 @@ services:
       - MAIL_PASSWORD=
       - ENCRYPTION_KEY=O3OTmXJpIIyUb3ByT4t65xblgsxfDGQu
       - TZ=UTC
+      - MS_DISCOVERY_KEYS_URI=https://login.microsoftonline.com/common/discovery/v2.0/keys
     ports:
       - 4000:4000
     depends_on:

@@ -104,7 +104,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             await this.setBotStatusBusy(socket.bot);
         }
 
-        await this.botProcessService.updateProcessInstance(installationId, processInstance);
+        await this.botProcessService.updateProcessInstanceAndNotify(installationId, processInstance);
 
         if(
             processInstance.status === ProcessInstanceStatus.ERRORED ||

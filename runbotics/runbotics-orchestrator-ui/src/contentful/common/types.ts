@@ -15,6 +15,7 @@ export type FetchContentfulResponse<T> = {
 
 export type FilterQueryParams = {
     categories?: string[];
+    industries?: string[];
     tags?: string[];
     startDate?: string;
     endDate?: string;
@@ -30,6 +31,7 @@ export enum FilterQueryParamsEnum {
     EndDate = 'endDate',
     Search = 'search',
     Page = 'page',
+    Industry = 'industry',
 }
 
 export enum CacheKey {

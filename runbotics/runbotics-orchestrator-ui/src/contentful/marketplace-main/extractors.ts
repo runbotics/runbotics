@@ -37,6 +37,6 @@ export function extractAllModelsEntries(fetchResponse: GetAllModelsResponse) {
         offers,
         featuredOffer: null,
         industries: fetchResponse?.data?.industryCollection?.items,
-        tags: fetchResponse?.data?.tagCollection?.items,
+        tags: fetchResponse?.data?.marketplaceTagCollection?.items,
     };
 }

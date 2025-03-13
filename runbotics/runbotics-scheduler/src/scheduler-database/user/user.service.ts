@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { FindManyOptions, In, Repository } from 'typeorm';
+import { DataSource, FindManyOptions, In, Repository } from 'typeorm';
 import { BasicUserDto, FeatureKey, PartialUserDto, Role, UserDto } from 'runbotics-common';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
@@ -15,6 +15,9 @@ import { isAdmin, isTenantAdmin } from '#/utils/authority.utils';
 import postgresError from '#/utils/postgresError';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { MailService } from '#/mail/mail.service';
+import { MicrosoftSSOUserDto } from '#/auth/auth.service.types';
+import bcrypt from 'bcryptjs';
+import { generate } from 'generate-password';
 
 @Injectable()
 export class UserService {
@@ -27,7 +30,39 @@ export class UserService {
         private readonly authorityRepository: Repository<Authority>,
         private readonly tenantService: TenantService,
         private readonly mailService: MailService,
+        private readonly dataSource: DataSource,
     ) {}
+
+    async createMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
+        const user = new User();
+        const randomPassword = generate({
+            length: 24,
+            numbers: true,
+            symbols: true,
+        });
+        user.passwordHash = bcrypt.hashSync(randomPassword, 10);
+        user.email = msUserAuthDto.email;
+        user.langKey = msUserAuthDto.langKey;
+        user.activated = true;
+        user.hasBeenActivated = true;
+        user.activationKey = generate({ length: 20 });
+        user.createdBy = 'system';
+        user.lastModifiedBy = 'system';
+
+        const { id } = await this.userRepository.save(user);
+
+        await this.dataSource
+            .createQueryBuilder()
+            .insert()
+            .into('jhi_user_authority')
+            .values({ user_id: id, authority_name: Role.ROLE_USER })
+            .execute();
+
+        return this.userRepository.findOneOrFail({
+            where: { id },
+            relations: ['authorities'],
+        });
+    }
 
     findAll() {
         return this.userRepository.find();

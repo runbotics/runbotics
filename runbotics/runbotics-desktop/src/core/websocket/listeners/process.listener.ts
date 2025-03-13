@@ -96,9 +96,14 @@ export class ProcessListener {
                     `/api/scheduler/tenants/${tenantId}/processes/${processId}`
                 )
                 .then((response) => {
-                    this.logger.log('Starting process: ' + response.data.name);
                     return response.data;
                 });
+
+            if (!process) {
+                throw new Error(`The process was not found in the tenant to which the bot is authenticated. Process id: ${processId}, bot tenant id: ${tenantId}`);
+            }
+
+            this.logger.log('Starting process: ' + process.name);
 
             const variables = input?.variables ?? {};
             const callbackUrl = input?.callbackUrl;

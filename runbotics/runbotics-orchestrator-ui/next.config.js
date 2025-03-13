@@ -28,7 +28,10 @@ module.exports = {
     publicRuntimeConfig: {
         runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://127.0.0.1:4000',
         mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN,
-        copilotChatUrl: process.env.COPILOT_CHAT_URL
+        copilotChatUrl: process.env.COPILOT_CHAT_URL,
+        microsoftAppId: process.env.MICROSOFT_APP_ID,
+        microsoftAppAuthority: process.env.MICROSOFT_APP_AUTHORITY,
+        microsoftAppRedirectUri: process.env.MICROSOFT_APP_REDIRECT_URI,
     },
 
     modularizeImports: {
@@ -46,6 +49,7 @@ module.exports = {
         mailUsername: process.env.MAIL_USERNAME,
         mailPassword: process.env.MAIL_PASSWORD,
         runboticsPluginsDir: process.env.RUNBOTICS_PLUGINS_DIR,
+        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://127.0.0.1:3000',
     },
 
     images: {
