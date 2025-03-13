@@ -49,4 +49,5 @@ export const MARKETPLACE_OFFER_FRAGMENT = `
             }
         }
     }
+    additionalParameters
 `;
