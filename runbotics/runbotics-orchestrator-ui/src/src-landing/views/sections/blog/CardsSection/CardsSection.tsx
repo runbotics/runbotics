@@ -55,7 +55,7 @@ const CardsSection: FC<CardsSectionPropsType> = ({
     </>;
     
     return (
-        <div className={styles.root}>
+        <div className={pageType === 'marketplace' ? styles.root : styles.justifiedRoot}>
             {searchBar}
             {notFoundInfo ?
                 <If condition={isNotFoundVisible} else={notFoundInfo}>

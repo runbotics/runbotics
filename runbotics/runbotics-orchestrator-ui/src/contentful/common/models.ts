@@ -67,6 +67,22 @@ export interface ContentfulContentPublishStatus {
     publishedVersion: number | null;
 };
 
+export interface OfferAdditionalParameterOption {
+    name: string;
+    additionalPrice: number;
+    isDefault?: boolean;
+}
+
+export interface OfferAdditionalParameter {
+    name: string;
+    options: OfferAdditionalParameterOption[];
+}
+
+export interface MarketplaceOfferParameters {
+    basePrice: number;
+    additionalParameters: OfferAdditionalParameter[];
+}
+
 export interface MarketplaceOffer {
     status: ContentfulContentPublishStatus;
     title: string;
@@ -79,4 +95,5 @@ export interface MarketplaceOffer {
     tags: ContentfulCollection<Tag>;
     body: ContentfulRichText;
     industries: ContentfulCollection<Industry>;
+    additionalParameters?: MarketplaceOfferParameters;
 }
