@@ -10,6 +10,7 @@ import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
 import 'moment/locale/pl';
+import { CartProvider } from '#src-app/contexts/CartContext';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
 import MainLayout from '#src-app/layouts/MainLayout';
 import SnackbarProvider from '#src-app/providers/Snackbar.provider';
@@ -67,9 +68,11 @@ function App(props: AppProps) {
                                                 uri={props.runboticsEntrypointUrl}
                                                 shouldAttach={router.pathname.includes('/app/')}
                                             >
-                                                <Layout>
-                                                    <Component {...restPageProps} />
-                                                </Layout>
+                                                <CartProvider>
+                                                    <Layout>
+                                                        <Component {...restPageProps} />
+                                                    </Layout>
+                                                </CartProvider>
                                             </SocketProvider>
                                         </InitializeAuth>
                                     </MsalProvider>
