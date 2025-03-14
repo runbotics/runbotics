@@ -100,7 +100,9 @@ export default class CustomRenderer extends BaseRenderer {
             });
             const actionTranslationKey = `Process.Details.Modeler.Actions.${actionPartialTranslationKey}.Label`;
 
-            const actionGroupKey = actionPartialTranslationKey.split('.')[ 0 ];
+            const actionGroupKey = actionPartialTranslationKey.startsWith('Plugin.')
+                ? actionPartialTranslationKey.split('.').slice(0, 2).join('.')
+                : actionPartialTranslationKey.split('.')[ 0 ];
             const actionGroupTranslationKey = `Process.Details.Modeler.ActionsGroup.${actionGroupKey}`;
 
             const translatedLabel = checkIfKeyExists(actionGroupTranslationKey)
