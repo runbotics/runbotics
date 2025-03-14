@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { DataSource, FindManyOptions, In, Repository } from 'typeorm';
+import { DataSource, FindManyOptions, In, Not, Repository } from 'typeorm';
 import { BasicUserDto, FeatureKey, PartialUserDto, Role, UserDto } from 'runbotics-common';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
@@ -90,6 +90,23 @@ export class UserService {
                 tenantId,
                 email: In(emails),
             },
+        });
+    }
+
+    countByEmailsInTenant(emails: string[], tenantId: string) {
+        return this.userRepository.countBy({
+            tenantId,
+            email: In(emails),
+        });
+    }
+
+    findByEmailsNotTenantAdmin(emails: string[], tenantId: string) {
+        return this.userRepository.findBy({
+            tenantId,
+            email: In(emails),
+            authorities: {
+                name: Not(Role.ROLE_TENANT_ADMIN)
+            }
         });
     }
 

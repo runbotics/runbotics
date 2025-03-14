@@ -54,7 +54,7 @@ export class CredentialCollectionService {
                 throw new BadRequestException(error.message);
             });
 
-        if (accessType === AccessType.PRIVATE) {
+        if (accessType === AccessType.PRIVATE && !isTenantAdmin(user)) {
             const credentialCollectionCreator = this.credentialCollectionUserRepository.create({
                 credentialCollectionId: credentialCollection.id,
                 userId: userDto.id
@@ -68,7 +68,7 @@ export class CredentialCollectionService {
             const credentialCollectionUsersToSave = await this.getCollectionUserArrayWithPrivileges(
                 sharedWith,
                 credentialCollection,
-                userDto,
+                user,
                 tenantId
             );
 
@@ -147,29 +147,52 @@ export class CredentialCollectionService {
     }
 
     async findOneAccessibleById(id: string, user: User) {
-        const collection = await this.credentialCollectionRepository
-            .createQueryBuilder('credentialCollectionEntity')
-            .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
-            .leftJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
-            .innerJoinAndSelect(
-                'credentialCollectionEntity.credentialCollectionUser',
-                'credentialCollectionUser',
-                `
+        const collection = isTenantAdmin(user)
+            ? await this.credentialCollectionRepository.findOne({
+                  where: {
+                      tenantId: user.tenantId,
+                      id: id,
+                  },
+                  relations: ['createdBy'],
+              })
+            : await this.credentialCollectionRepository
+                  .createQueryBuilder('credentialCollectionEntity')
+                  .leftJoinAndSelect(
+                      'credentialCollectionEntity.credentials',
+                      'allCredentials'
+                  )
+                  .leftJoinAndSelect(
+                      'credentialCollectionEntity.createdBy',
+                      'createdBy'
+                  )
+                  .innerJoinAndSelect(
+                      'credentialCollectionEntity.credentialCollectionUser',
+                      'credentialCollectionUser',
+                      `
                     credentialCollectionEntity.id = :id AND
                     credentialCollectionEntity.tenantId = :tenantId AND
                     credentialCollectionUser.user.id = :userId AND
                     credentialCollectionUser.privilegeType IN (:...privilegeTypes)
                 `,
-                {
-                    id,
-                    tenantId: user.tenantId,
-                    userId: user.id,
-                    privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE]
-                }
-            )
-            .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
-            .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
-            .getOne();
+                      {
+                          id,
+                          tenantId: user.tenantId,
+                          userId: user.id,
+                          privilegeTypes: [
+                              PrivilegeType.READ,
+                              PrivilegeType.WRITE,
+                          ],
+                      }
+                  )
+                  .innerJoinAndSelect(
+                      'credentialCollectionEntity.credentialCollectionUser',
+                      'allCredentialCollectionUser'
+                  )
+                  .innerJoinAndSelect(
+                      'allCredentialCollectionUser.user',
+                      'user'
+                  )
+                  .getOne();
 
         if (!collection) {
             throw new NotFoundException('Could not find credential collection with id: ' + id);
@@ -200,7 +223,7 @@ export class CredentialCollectionService {
         const { sharedWith, ...dto } = updateCredentialCollectionDto;
         const { tenantId } = user;
 
-        if (credentialCollection.createdById !== user.id) {
+        if (credentialCollection.createdById !== user.id && !isTenantAdmin(user)) {
             throw new ForbiddenException();
         }
 
@@ -221,6 +244,7 @@ export class CredentialCollectionService {
             tenantId
         );
 
+        // make transaction
         await Promise.all(credentialCollectionUserArray.map(ccu => this.credentialCollectionUserRepository.remove(ccu)));
 
         await Promise.all(credentialCollectionUserArrayToSave.map(ccu => this.credentialCollectionUserRepository.save(ccu)));
@@ -268,40 +292,115 @@ export class CredentialCollectionService {
     private async getCollectionUserArrayWithPrivileges(
         sharedWith: UpdateCredentialCollectionDto['sharedWith'],
         credentialCollection: CredentialCollection,
-        user: Omit<User, 'authorities'>,
+        user: User,
         tenantId: Tenant['id'],
     ) {
-        const credentialCollectionCreator = this.credentialCollectionUserRepository.create({
-            credentialCollectionId: credentialCollection.id,
-            userId: user.id,
-            privilegeType: PrivilegeType.WRITE
-        });
-
-        if (!sharedWith) return [credentialCollectionCreator];
-
-        const userEmails = sharedWith.filter(item => item.email !== user.email).map(item => item.email);
-
-        const grantAccessUsers = await this.userService.findAllByEmails(userEmails, tenantId);
-
-        const grantAccessEmails = new Set(grantAccessUsers.map(user => user.email));
-
-        const unknownEmails = userEmails.filter(email => !grantAccessEmails.has(email));
-
-        if (unknownEmails.length > 0) {
-            throw new BadRequestException(`Users with emails ${unknownEmails.join(', ')} do not exist`);
+        if (!sharedWith) {
+            return [
+                this.credentialCollectionUserRepository.create({
+                    credentialCollectionId: credentialCollection.id,
+                    userId: credentialCollection.createdBy.id,
+                    privilegeType: PrivilegeType.WRITE,
+                }),
+            ];
         }
 
-        const credentialCollectionUserArray = grantAccessUsers.map(grantedUser => {
-            const privilegeType = sharedWith.find(item => item.email === grantedUser.email)?.privilegeType ?? PrivilegeType.READ;
+        const userEmails = sharedWith.map(user => user.email);
+        userEmails.push(credentialCollection.createdBy.email);
+
+        const correctEmailCount = await this.userService.countByEmailsInTenant(
+            userEmails, tenantId
+        );
+
+        if (userEmails.length !== correctEmailCount) {
+            throw new BadRequestException('Some emails are not correct');
+        }
+
+        const grantAccessUsers = await this.userService.findByEmailsNotTenantAdmin(userEmails, tenantId);
+
+        return grantAccessUsers.map(user => {
+            if (user.email === credentialCollection.createdBy.email) {
+                return this.credentialCollectionUserRepository.create({
+                    credentialCollectionId: credentialCollection.id,
+                    userId: user.id,
+                    privilegeType: PrivilegeType.WRITE,
+                });
+            }
+
+            const privilegeType = sharedWith.find(item => item.email === user.email)?.privilegeType ?? PrivilegeType.READ;
 
             return this.credentialCollectionUserRepository.create({
                 credentialCollectionId: credentialCollection.id,
-                userId: grantedUser.id,
+                userId: user.id,
                 privilegeType
             });
         });
 
-        return [...credentialCollectionUserArray, credentialCollectionCreator];
+        // get all emails which are not tenant + append owner
+
+        // const credentialCollectionCreator = this.credentialCollectionUserRepository.create({
+        //     credentialCollectionId: credentialCollection.id,
+        //     userId: credentialCollection.createdBy.id, // always owner
+        //     privilegeType: PrivilegeType.WRITE
+        // });
+
+        // if (!sharedWith) return [credentialCollectionCreator];
+
+        // const userEmails = sharedWith.map(user => user.email);
+        // const correctEmailCount = await this.userService.countByEmailsInTenant(
+        //     userEmails, tenantId
+        // );
+
+        // if (userEmails.length !== correctEmailCount) {
+        //     throw new BadRequestException('Some emails are not correct');
+        // }
+
+        // const newEmails = new Set(userEmails);
+        // newEmails.delete(credentialCollection.createdBy.email); // delete owner
+
+        // // find by emails without tenant admins
+        // const grantAccessUsers = (
+        //     await this.userService.findAllByEmails([...newEmails], tenantId)
+        // ).filter((user) => !isTenantAdmin(user));
+
+        // const credentialCollectionUserArray = grantAccessUsers.map(grantedUser => {
+        //     const privilegeType = sharedWith.find(item => item.email === grantedUser.email)?.privilegeType ?? PrivilegeType.READ;
+
+        //     return this.credentialCollectionUserRepository.create({
+        //         credentialCollectionId: credentialCollection.id,
+        //         userId: grantedUser.id,
+        //         privilegeType
+        //     });
+        // });
+
+        // return [...credentialCollectionUserArray, credentialCollectionCreator];
+
+        // OLD
+        // const userEmails = sharedWith.filter(item => item.email !== user.email).map(item => item.email);
+
+        // const grantAccessUsers = await this.userService.findAllByEmails(userEmails, tenantId);
+
+        // const grantAccessEmails = new Set(grantAccessUsers.map(user => user.email));
+        // if tenant admin then remove
+        // const grantAccessEmails = grantAccessUsers;
+
+        // const unknownEmails = userEmails.filter(email => !grantAccessEmails.has(email));
+
+        // if (unknownEmails.length > 0) {
+        //     throw new BadRequestException(`Users with emails ${unknownEmails.join(', ')} do not exist`);
+        // }
+
+        // const credentialCollectionUserArray = grantAccessUsers.map(grantedUser => {
+        //     const privilegeType = sharedWith.find(item => item.email === grantedUser.email)?.privilegeType ?? PrivilegeType.READ;
+
+        //     return this.credentialCollectionUserRepository.create({
+        //         credentialCollectionId: credentialCollection.id,
+        //         userId: grantedUser.id,
+        //         privilegeType
+        //     });
+        // });
+
+        // return [...credentialCollectionUserArray, credentialCollectionCreator];
     }
 
     private async throwErrorIfNameTaken(tenantId: string, name: string, createdById: number, { id }: { id?: string } = {}) {
