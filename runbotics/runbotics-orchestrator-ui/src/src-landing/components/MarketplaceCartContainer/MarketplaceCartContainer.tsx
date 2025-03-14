@@ -1,6 +1,11 @@
 import { Dispatch, FC, SetStateAction, useMemo, useState } from 'react';
 
 import { Trash } from 'react-feather';
+import { FC, useMemo, useState } from 'react';
+
+import Table from '#src-app/components/tables/Table';
+import { useCart, CartItem } from '#src-app/contexts/CartContext';
+import Checkbox from '#src-landing/components/Checkbox';
 import { Column } from 'react-table';
 
 import Table from '#src-app/components/tables/Table';
@@ -17,6 +22,7 @@ interface Props{
 
 const MarketplaceCartContainer: FC<Props> = ({setSelectedItems, selectedItems}) => {
     const { currentLanguage, translate } = useTranslations();
+    const [selectedItems, setSelectedItems] = useState([]);
     const { cart, removeFromCart } = useCart();
 
     const tableColumns: Column<CartItem>[] = useMemo(() => [
