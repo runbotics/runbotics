@@ -46,8 +46,10 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
 
     const processOutput = useMemo(() => {
         if (isProcessOutput) {
-            const output: Record<string, unknown> =
-                JSON.parse(processInstance.output)?.processOutput;
+            
+            const parsedOutput = JSON.parse(processInstance.output);
+            const output: Record<string, unknown> = 
+                parsedOutput?.processOutput ?? parsedOutput?.partialResponse?.processOutput;
 
             if (output === undefined) return null;
 
