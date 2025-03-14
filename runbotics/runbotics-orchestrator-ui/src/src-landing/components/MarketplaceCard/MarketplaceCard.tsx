@@ -30,7 +30,7 @@ export const cutText = (text: string, length: number) => {
 
 const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
     const { translate } = useTranslations();
-    const { pathname } = useRouter();
+    const { pathname, push } = useRouter();
     return (
         <article className={`${styles.root} ${className}`}>
             <Link
@@ -59,7 +59,10 @@ const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
                         </Typography>
                     </div>
                     <div className={styles.addToCart}>
-                        <button className={styles.addToCartButton} disabled>
+                        <button className={styles.addToCartButton} onClick={(e) => {
+                            e.preventDefault();
+                            push('/marketplace/cart');
+                        }}>
                             <Typography variant="body3">
                                 {translate('Marketplace.Card.AddToCart')}
                             </Typography>
