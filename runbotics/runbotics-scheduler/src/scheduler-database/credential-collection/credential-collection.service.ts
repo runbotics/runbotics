@@ -50,7 +50,7 @@ export class CredentialCollectionService {
                 credentialCollectionUser: []
             })
             .catch(async error => {
-                this.throwErrorIfNameTaken(userDto.tenantId, name, userDto.id);
+                await this.throwErrorIfNameTaken(userDto.tenantId, name, userDto.id);
                 throw new BadRequestException(error.message);
             });
 
@@ -68,7 +68,6 @@ export class CredentialCollectionService {
             const credentialCollectionUsersToSave = await this.getCollectionUserArrayWithPrivileges(
                 sharedWith,
                 credentialCollection,
-                user,
                 tenantId
             );
 
@@ -240,20 +239,29 @@ export class CredentialCollectionService {
         const credentialCollectionUserArrayToSave = await this.getCollectionUserArrayWithPrivileges(
             sharedWith,
             credentialCollection,
-            user,
             tenantId
         );
 
-        // make transaction
-        await Promise.all(credentialCollectionUserArray.map(ccu => this.credentialCollectionUserRepository.remove(ccu)));
+        await this.credentialCollectionRepository.manager.transaction(
+            async (manager) => {
+                await Promise.all(
+                    credentialCollectionUserArray.map((ccu) =>
+                        manager.remove(CredentialCollectionUser, ccu)
+                    )
+                );
+                await Promise.all(
+                    credentialCollectionUserArrayToSave.map((ccu) =>
+                        manager.save(CredentialCollectionUser, ccu)
+                    )
+                );
 
-        await Promise.all(credentialCollectionUserArrayToSave.map(ccu => this.credentialCollectionUserRepository.save(ccu)));
+                await manager.update(CredentialCollection, id, dto).catch(async error => {
+                    await this.throwErrorIfNameTaken(user.tenantId, dto.name, user.id, { id });
 
-        await this.credentialCollectionRepository.update(id, dto).catch(async error => {
-            this.throwErrorIfNameTaken(user.tenantId, dto.name, user.id, { id });
-
-            throw new BadRequestException(error.message);
-        });
+                    throw new BadRequestException(error.message);
+                });
+            }
+        );
 
         return this.credentialCollectionRepository.findOne({
             where: { id },
@@ -292,7 +300,6 @@ export class CredentialCollectionService {
     private async getCollectionUserArrayWithPrivileges(
         sharedWith: UpdateCredentialCollectionDto['sharedWith'],
         credentialCollection: CredentialCollection,
-        user: User,
         tenantId: Tenant['id'],
     ) {
         if (!sharedWith) {
@@ -335,72 +342,6 @@ export class CredentialCollectionService {
                 privilegeType
             });
         });
-
-        // get all emails which are not tenant + append owner
-
-        // const credentialCollectionCreator = this.credentialCollectionUserRepository.create({
-        //     credentialCollectionId: credentialCollection.id,
-        //     userId: credentialCollection.createdBy.id, // always owner
-        //     privilegeType: PrivilegeType.WRITE
-        // });
-
-        // if (!sharedWith) return [credentialCollectionCreator];
-
-        // const userEmails = sharedWith.map(user => user.email);
-        // const correctEmailCount = await this.userService.countByEmailsInTenant(
-        //     userEmails, tenantId
-        // );
-
-        // if (userEmails.length !== correctEmailCount) {
-        //     throw new BadRequestException('Some emails are not correct');
-        // }
-
-        // const newEmails = new Set(userEmails);
-        // newEmails.delete(credentialCollection.createdBy.email); // delete owner
-
-        // // find by emails without tenant admins
-        // const grantAccessUsers = (
-        //     await this.userService.findAllByEmails([...newEmails], tenantId)
-        // ).filter((user) => !isTenantAdmin(user));
-
-        // const credentialCollectionUserArray = grantAccessUsers.map(grantedUser => {
-        //     const privilegeType = sharedWith.find(item => item.email === grantedUser.email)?.privilegeType ?? PrivilegeType.READ;
-
-        //     return this.credentialCollectionUserRepository.create({
-        //         credentialCollectionId: credentialCollection.id,
-        //         userId: grantedUser.id,
-        //         privilegeType
-        //     });
-        // });
-
-        // return [...credentialCollectionUserArray, credentialCollectionCreator];
-
-        // OLD
-        // const userEmails = sharedWith.filter(item => item.email !== user.email).map(item => item.email);
-
-        // const grantAccessUsers = await this.userService.findAllByEmails(userEmails, tenantId);
-
-        // const grantAccessEmails = new Set(grantAccessUsers.map(user => user.email));
-        // if tenant admin then remove
-        // const grantAccessEmails = grantAccessUsers;
-
-        // const unknownEmails = userEmails.filter(email => !grantAccessEmails.has(email));
-
-        // if (unknownEmails.length > 0) {
-        //     throw new BadRequestException(`Users with emails ${unknownEmails.join(', ')} do not exist`);
-        // }
-
-        // const credentialCollectionUserArray = grantAccessUsers.map(grantedUser => {
-        //     const privilegeType = sharedWith.find(item => item.email === grantedUser.email)?.privilegeType ?? PrivilegeType.READ;
-
-        //     return this.credentialCollectionUserRepository.create({
-        //         credentialCollectionId: credentialCollection.id,
-        //         userId: grantedUser.id,
-        //         privilegeType
-        //     });
-        // });
-
-        // return [...credentialCollectionUserArray, credentialCollectionCreator];
     }
 
     private async throwErrorIfNameTaken(tenantId: string, name: string, createdById: number, { id }: { id?: string } = {}) {
