@@ -12,5 +12,14 @@
     "Marketplace.Card.AddToCart": "Add to cart",
     "Marketplace.Card.Compare": "compare",
     "Marketplace.Card.price": "Price",
-    "Marketplace.Card.BackToMarketplace": "Back to Marketplace"
+    "Marketplace.Card.BackToMarketplace": "Back to Marketplace",
+    "Marketplace.Cart.Product": "Product",
+    "Marketplace.Cart.Quantity": "Amount",
+    "Marketplace.Cart.QuantityHelp": "(of licences)",
+    "Marketplace.Cart.AdditionalParameter1": "Additional Parameter 1",
+    "Marketplace.Cart.AdditionalParameter2": "Additional Parameter 2",
+    "Marketplace.Cart.ApproximatePrice": "Approximate price from",
+    "Marketplace.Cart.PriceText": "euro/lic.",
+    "Marketplace.Cart.ChosenProducts": "Chosen products",
+    "Marketplace.Cart.YourCart": "Your cart"
 }

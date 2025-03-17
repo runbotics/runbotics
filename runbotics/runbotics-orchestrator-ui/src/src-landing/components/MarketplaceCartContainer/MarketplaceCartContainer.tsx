@@ -1,78 +1,93 @@
-import { FC, useMemo, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useMemo, useState } from 'react';
+
+import { Trash } from 'react-feather';
+import { Column } from 'react-table';
 
 import Table from '#src-app/components/tables/Table';
-import { useCart, CartItem } from '#src-app/contexts/CartContext';
-import Checkbox from '#src-landing/components/Checkbox';
-import { Column } from 'react-table';
+import { CartItem, useCart } from '#src-app/contexts/CartContext';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { TableCell } from '@mui/material';
-import { Trash } from 'react-feather';
+import Checkbox from '#src-landing/components/Checkbox';
 
+import styles from './MarketplaceCartContainer.module.scss';
 
+interface Props{
+    selectedItems: string[];
+    setSelectedItems: Dispatch<SetStateAction<string[]>>;
+}
 
-const MarketplaceCartContainer: FC = () => {
+const MarketplaceCartContainer: FC<Props> = ({setSelectedItems, selectedItems}) => {
     const { currentLanguage, translate } = useTranslations();
-    const [selectedItems, setSelectedItems] = useState([]);
     const { cart, removeFromCart } = useCart();
 
     const tableColumns: Column<CartItem>[] = useMemo(() => [
         {
+            id: 'isSelected',
+            Cell: (cell) => <Checkbox checked={selectedItems.includes(cell.row.original.id)} label={''}
+                onClick={() => {
+                    setSelectedItems(prev => {
+                        if (prev.includes(cell.row.original.id)) {
+                            return prev.filter(item => item !== cell.row.original.id);
+                        }
+                        return [...prev, cell.row.original.id];
+                    });
+                }} />,
+        },
+        {
             id: 'product',
-            Header: 'Product',
+            Header: translate('Marketplace.Cart.Product'),
             accessor: 'name',
-            Cell: (element) => {
-                console.log(element.data, element.row.original);
-                return (<div style={{display: 'flex'}}>
-                    <Checkbox checked={true} label={''} />
-                    <div>{element.row.original.name}</div>
-                </div>)},
         },
         {
             id: 'quantity',
             accessor: 'quantity',
-            Header: 'Amount',
+            Header: () => (
+                <div>
+                    <p>{translate('Marketplace.Cart.Quantity')}</p>
+                    <p>{translate('Marketplace.Cart.QuantityHelp')}</p>
+                </div>
+            ),
         },
         {
             id: 'additionalParameter1',
             Header: 'Additional Parameter 1',
-            Cell: (cell) => {
-                return cell.row.original.additionalParameters?.at(0)?.name ?? 'test'
-            }
+            Cell: (cell) => cell.row.original.additionalParameters?.at(0)?.name ?? 'test',
         },
         {
             id: 'additionalParameter2',
             Header: 'Additional Parameter 2',
-            Cell: (cell) => {
-                return cell.row.original.additionalParameters?.at(1)?.name ?? 'test'
-            }
+            Cell: (cell) => cell.row.original.additionalParameters?.at(1)?.name ?? 'test',
         },
         {
             id: 'apprximatePriceFrom',
             Header: 'Approximate price from',
             Cell: cell => {
-                const {price, additionalParameters} = cell.row.original;
+                const { price, additionalParameters } = cell.row.original;
                 let sum = price;
-                if(additionalParameters && additionalParameters.length > 0) {
+                if (additionalParameters && additionalParameters.length > 0) {
                     additionalParameters.forEach(param => {
                         sum = sum + param.additionalPrice;
                     });
                 }
                 return `${sum} euro/lic.`;
-            }
+            },
         },
         {
             id: 'Actions',
             Cell: cell => (
-                <Trash  size={120} onClick={() => removeFromCart(cell.row.original.id)}/>
-            )
-        }
-        
-        
-    ],[currentLanguage]);
-    return (
-        <div>
-            <Table columns={tableColumns} data={cart} />
+                <Trash
+                    size={20}
+                    color={'red'}
+                    cursor={'pointer'}
+                    onClick={() => removeFromCart(cell.row.original.id)}
+                />
+            ),
+        },
 
+    ], [currentLanguage, selectedItems]);
+
+    return (
+        <div className={styles.root}>
+            <Table columns={tableColumns} data={cart} />
         </div>
     );
 };
