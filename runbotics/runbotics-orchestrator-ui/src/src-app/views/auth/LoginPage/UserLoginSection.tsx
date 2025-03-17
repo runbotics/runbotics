@@ -18,6 +18,7 @@ interface Props {
     handleFormSubmit: (values: LoginFormState, { setErrors, setStatus, setSubmitting }) => Promise<void>;
     isSigningIn: boolean;
     handleLoginWithMicrosoft: () => Promise<void>;
+    isSsoEnabled: boolean;
 }
 
 const UserLoginSection: FC<Props> = ({
@@ -26,6 +27,7 @@ const UserLoginSection: FC<Props> = ({
     handleFormSubmit,
     isSigningIn,
     handleLoginWithMicrosoft,
+    isSsoEnabled,
 }) => {
     const { translate } = useTranslations();
 
@@ -107,7 +109,7 @@ const UserLoginSection: FC<Props> = ({
                     >
                         {renderForm}
                     </Formik>
-                    <Button
+                    {isSsoEnabled && <Button
                         color="secondary"
                         fullWidth
                         size="large"
@@ -118,7 +120,7 @@ const UserLoginSection: FC<Props> = ({
                     >
                         <MicrosoftIcon sx={{ marginRight: 1 }} />
                         {translate('Login.SignIn.WithMicrosoft')}
-                    </Button>
+                    </Button>}
                 </Box>
             </Box>
             <Box display="flex" justifyContent="center" mt={3}>
