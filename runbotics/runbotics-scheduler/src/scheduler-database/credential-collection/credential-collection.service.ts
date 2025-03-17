@@ -275,18 +275,20 @@ export class CredentialCollectionService {
             where: {
                 id,
                 tenantId: user.tenantId,
-                credentialCollectionUser: {
-                    userId: user.id,
-                    privilegeType: PrivilegeType.WRITE
-                }
-            }
+                ...(!isTenantAdmin(user) && {
+                    credentialCollectionUser: {
+                        userId: user.id,
+                        privilegeType: PrivilegeType.WRITE,
+                    },
+                }),
+            },
         });
 
         if (!collection) {
             throw new NotFoundException('Could not find credential collection with id: ' + id);
         }
 
-        if (collection.createdById !== user.id) {
+        if (!isTenantAdmin(user) && collection.createdById !== user.id) {
             throw new ForbiddenException();
         }
 
