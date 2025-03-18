@@ -59,10 +59,14 @@ const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
                         </Typography>
                     </div>
                     <div className={styles.addToCart}>
-                        <button className={styles.addToCartButton} onClick={(e) => {
-                            e.preventDefault();
-                            push('/marketplace/cart');
-                        }}>
+                        <button
+                            className={styles.addToCartButton}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                push('/marketplace/cart');
+                            }}
+                            disabled
+                        >
                             <Typography variant="body3">
                                 {translate('Marketplace.Card.AddToCart')}
                             </Typography>
