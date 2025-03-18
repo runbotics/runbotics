@@ -59,7 +59,7 @@ const MarketplaceCartContainer: FC<Props> = ({setSelectedItems, selectedItems}) 
         },
         {
             id: 'apprximatePriceFrom',
-            Header: 'Approximate price from',
+            Header: translate('Marketplace.Cart.ApproximatePriceFrom'),
             Cell: cell => {
                 const { price, additionalParameters } = cell.row.original;
                 let sum = price;

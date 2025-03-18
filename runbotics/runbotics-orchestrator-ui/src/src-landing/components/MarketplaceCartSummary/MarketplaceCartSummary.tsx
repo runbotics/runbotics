@@ -9,7 +9,6 @@ import styles from './MarketplaceCartSummary.module.scss';
 interface Props {
     approximatePrice: number;
     onSubmit: Function;
-
 }
 
 const MarketplaceCartSummary: FC<Props> = ({ approximatePrice, onSubmit }) => {
@@ -17,17 +16,16 @@ const MarketplaceCartSummary: FC<Props> = ({ approximatePrice, onSubmit }) => {
     return (
         <div className={styles.root}>
             <div className={styles.summary}>
-                <h2>Summary</h2>
+                <h2>{translate('Marketplace.Cart.Summary')}</h2>
                 <div>
-                    <h3>Disclaimer:</h3>
-                    <p>Our team prices products individually to your needs. Send us a request for a quote. Our
-                        consultant will contact you to arrange all the details in 3 working days.</p>
+                    <h3>{translate('Marketplace.Cart.Disclaimer')}:</h3>
+                    <p>{translate('Marketplace.Cart.DisclaimerText')}</p>
                 </div>
                 <div>
-                    <h3>Approximate price:</h3>
+                    <h3>{translate('Marketplace.Cart.ApproximatePrice')}:</h3>
                     <p>{approximatePrice} euro</p>
                 </div>
-                <Button 
+                <Button
                     fullWidth
                     variant={'contained'}
                     sx={{
@@ -36,7 +34,8 @@ const MarketplaceCartSummary: FC<Props> = ({ approximatePrice, onSubmit }) => {
                     size={'large'}
                     disabled
                 >
-                    Send request for quote </Button>
+                    {translate('Marketplace.Cart.SendRequestForQuote')}
+                </Button>
             </div>
         </div>
     );

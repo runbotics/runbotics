@@ -18,8 +18,13 @@
     "Marketplace.Cart.QuantityHelp": "(licencji)",
     "Marketplace.Cart.AdditionalParameter1": "Dodatkowy parametr 1",
     "Marketplace.Cart.AdditionalParameter2": "Dodatkowy parametr 2",
-    "Marketplace.Cart.ApproximatePrice": "Szacowana cena od",
+    "Marketplace.Cart.ApproximatePriceFrom": "Szacowana cena od",
     "Marketplace.Cart.PriceText": "euro/lic.",
     "Marketplace.Cart.ChosenProducts": "Wybrane produkty",
-    "Marketplace.Cart.YourCart": "Twój koszyk"
+    "Marketplace.Cart.YourCart": "Twój koszyk",
+    "Marketplace.Cart.Summary": "Podsumowanie",
+    "Marketplace.Cart.Disclaimer": "Zastrzeżenie",
+    "Marketplace.Cart.DisclaimerText": "Nasz zespół wycenia produkty indywidualnie według Twoich potrzeb. Wyślij nam prośbę o wycenę. Nasz konsultant skontaktuje się z Tobą, aby ustalić wszystkie szczegóły w ciągu 3 dni roboczych.",
+    "Marketplace.Cart.ApproximatePrice": "Przybliżona cena",
+    "Marketplace.Cart.SendRequestForQuote": "Wyślij zapytanie o ofertę"
 }
