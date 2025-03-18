@@ -51,12 +51,12 @@ const MarketplaceCartContainer: FC<Props> = ({ setSelectedItems, selectedItems }
         {
             id: 'additionalParameter1',
             Header: 'Additional Parameter 1',
-            Cell: (cell) => cell.row.original.additionalParameters?.additionalParameters?.at(0)?.name ?? '-',
+            Cell: (cell) => cell.row.original.additionalParameters?.at(0)?.name ?? '-',
         },
         {
             id: 'additionalParameter2',
             Header: 'Additional Parameter 2',
-            Cell: (cell) => cell.row.original.additionalParameters?.additionalParameters?.at(1)?.name ?? '-',
+            Cell: (cell) => cell.row.original.additionalParameters?.at(1)?.name ?? '-',
         },
         {
             id: 'apprximatePriceFrom',
