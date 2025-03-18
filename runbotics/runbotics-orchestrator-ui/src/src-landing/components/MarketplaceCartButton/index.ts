@@ -1,4 +1,2 @@
-import MarketplaceCartButton, { cutText } from './MarketplaceCartButton';
-
-export { cutText };
+import MarketplaceCartButton from './MarketplaceCartButton';
 export default MarketplaceCartButton;
