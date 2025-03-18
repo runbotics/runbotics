@@ -12,6 +12,7 @@ import ContentFulLayout from 'src/src-landing/components/ContentFulLayout';
 
 import styles from './MarketplaceView.module.scss';
 import CardsSection from '../sections/blog/CardsSection';
+import MarketplaceCartButton from '#src-landing/components/MarketplaceCartButton';
 
 
 interface MarketplaceViewProps {
@@ -55,6 +56,7 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
                     isNotFoundVisible={Boolean(offers.length)}
                 />
             </ContentFulLayout>
+            <MarketplaceCartButton />
         </Layout>
     );
 };

@@ -7,6 +7,7 @@ import OfferHeader from '#src-landing/components/OfferHeader';
 import RichTextRenderer from '#src-landing/components/RichTextRenderer';
 
 import styles from './MarketplaceOfferView.module.scss';
+import MarketplaceCartButton from '#src-landing/components/MarketplaceCartButton';
 
 interface Props {
     offer: MarketplaceOffer;
@@ -32,6 +33,7 @@ const MarketplaceOfferView: VFC<Props> = ({ offer }) => {
                     <RichTextRenderer content={body}/>
                 </article>
             </div>
+            <MarketplaceCartButton />
         </Layout>
     );
 };
