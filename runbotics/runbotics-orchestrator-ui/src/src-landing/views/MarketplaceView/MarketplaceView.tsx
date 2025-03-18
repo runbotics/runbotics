@@ -5,6 +5,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import { PageType } from '#src-landing/components/BlogCardsGrid/CardsGrid';
 import { HeadImage } from '#src-landing/components/ContentFulHeadImage/ContentFulHeadImage';
 import Layout from '#src-landing/components/Layout';
+import MarketplaceCartButton from '#src-landing/components/MarketplaceCartButton';
 import Typography from '#src-landing/components/Typography';
 import FiltersSection from '#src-landing/views/sections/marketplace/FilterSection';
 import SearchBarSection from '#src-landing/views/sections/marketplace/SearchBarSection';
@@ -12,7 +13,7 @@ import ContentFulLayout from 'src/src-landing/components/ContentFulLayout';
 
 import styles from './MarketplaceView.module.scss';
 import CardsSection from '../sections/blog/CardsSection';
-import MarketplaceCartButton from '#src-landing/components/MarketplaceCartButton';
+
 
 
 interface MarketplaceViewProps {
