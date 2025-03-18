@@ -1,0 +1,35 @@
+@import '#src-landing/scss/main';
+
+.root {
+    display: flex;
+    flex: 3;
+    
+    padding-top: 10vw;
+    justify-content: center;
+    align-items: flex-start;
+    
+
+    background: transparent;
+}
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    
+    width: 400px;
+    min-height: fit-content;
+    height: 400px;
+    
+    align-items: flex-start;
+    justify-content: space-between;
+    
+    padding: clamp(20px, 60px, 80px);
+    gap: 1rem;
+    
+    border-radius: 20px;
+    box-shadow: 0px 2px 8px 0px #00000033;
+
+    background: $palette-white;
+    
+    @include font-face-roboto;
+}
