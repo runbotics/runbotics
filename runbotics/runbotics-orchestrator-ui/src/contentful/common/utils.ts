@@ -127,6 +127,11 @@ export const filterOffers = (offers: MarketplaceOffer[], queryParams: FilterQuer
                 .some(tag =>
                     tag.name.toLowerCase()
                         .includes(search.toLowerCase())
+                ) ||
+            offer.industries.items
+                .some(industry =>
+                    industry.title.toLowerCase()
+                        .includes(search.toLowerCase())
                 )
         );
         return hasIndustry && containsSearchPhrase;

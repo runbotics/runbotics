@@ -15,13 +15,13 @@ import Typography from '../Typography';
 
 type Props = Omit<
     MarketplaceOffer,
-    'slug' | 'summary' | 'body' | 'description' | 'status'
+    'slug' | 'summary' | 'body' | 'description' | 'status' | 'tags'
 >;
 
-const OfferHeader: VFC<Props> = ({ title, industries, tags }) => {
+const OfferHeader: VFC<Props> = ({ title, industries }) => {
     const { translate } = useTranslations();
-    
-    return  (
+
+    return (
         <div className={styles.wrapper}>
             <Link
                 key={'backToMarketplaceLink'}
@@ -45,12 +45,13 @@ const OfferHeader: VFC<Props> = ({ title, industries, tags }) => {
                 </div>
                 <div className={styles.details}>
                     <div className={styles.tagContainer}>
-                        {tags.items.map(tag => <InformationalTag key={tag.slug} text={tag.name} />)}
-                    </div>
-                    <div className={styles.separator} />
-                    <div className={styles.tagContainer}>
-                        {industries.items.map(industry => <InformationalTag key={industry.slug}
-                            text={industry.title} />)}
+                        {industries.items.map((industry, idx) => (
+                            <>
+                                <InformationalTag key={industry.slug}
+                                    text={industry.title} />
+                                {idx !== industries.items.length - 1 && <div className={styles.separator} />}
+                            </>
+                        ))}
                     </div>
                 </div>
             </div>
