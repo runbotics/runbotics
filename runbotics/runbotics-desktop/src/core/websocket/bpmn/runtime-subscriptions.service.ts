@@ -251,7 +251,7 @@ export class RuntimeSubscriptionsService {
 
                     try {
                         processInstance.output = this.sanitizeStructure({
-                            processOutput: event.processInstance?.processOutput ?? {},
+                            processOutput: event.processInstance?.processOutput ?? event.processInstance?.partialResponse?.processOutput ?? {},
                             variables,
                         });
                     } catch (e) {
