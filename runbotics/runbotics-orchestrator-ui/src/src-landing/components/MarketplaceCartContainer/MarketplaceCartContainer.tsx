@@ -1,6 +1,7 @@
-import { Dispatch, FC, SetStateAction, useMemo, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useMemo } from 'react';
 
 import { Trash } from 'react-feather';
+
 import { Column } from 'react-table';
 
 import Table from '#src-app/components/tables/Table';

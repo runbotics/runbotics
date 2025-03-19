@@ -1,12 +1,13 @@
 import { VFC } from 'react';
 
 import { MarketplaceOffer } from '#contentful/common';
-import useTranslations from '#src-app/hooks/useTranslations';
 import Layout from '#src-landing/components/Layout';
+import MarketplaceCartButton from '#src-landing/components/MarketplaceCartButton';
 import OfferHeader from '#src-landing/components/OfferHeader';
 import RichTextRenderer from '#src-landing/components/RichTextRenderer';
 
 import styles from './MarketplaceOfferView.module.scss';
+
 
 interface Props {
     offer: MarketplaceOffer;
@@ -29,9 +30,10 @@ const MarketplaceOfferView: VFC<Props> = ({ offer }) => {
                     industries={industries}
                 />
                 <article className={styles.contentArticle}>
-                    <RichTextRenderer content={body}/>
+                    <RichTextRenderer content={body} />
                 </article>
             </div>
+            <MarketplaceCartButton />
         </Layout>
     );
 };
