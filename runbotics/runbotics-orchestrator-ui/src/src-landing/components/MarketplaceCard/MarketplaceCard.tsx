@@ -47,7 +47,7 @@ const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
                 href={`/marketplace/offer/${offer.slug}`}>
                 <div className={styles.wrapper}>
                     <div className={styles.info}>
-                        {offer.tags?.items.length > 0 &&
+                        {offer.industries?.items.length > 0 &&
                             offer.industries.items.filter(industry => Boolean(industry)).slice(0, 3).map((industry) => (
                                 <InformationalTag text={industry.title} key={industry.slug} />
                             ))}
