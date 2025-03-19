@@ -10,6 +10,7 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
+import getConfig from 'next/config';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
@@ -39,6 +40,8 @@ const initialValues: LoginFormState = {
 };
 
 const LoginPage: FC = () => {
+    const { publicRuntimeConfig } = getConfig();
+    const isSsoEnabled = publicRuntimeConfig.isSsoEnabled === 'true';
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const router = useRouter();
@@ -209,6 +212,7 @@ const LoginPage: FC = () => {
                             handleFormSubmit={handleFormSubmit}
                             isSigningIn={isSigningIn}
                             handleLoginWithMicrosoft={handleLoginWithMicrosoft}
+                            isSsoEnabled={isSsoEnabled}
                         />
                         <Box mx={isScreenSM ? 4 : 0}>
                             <Divider

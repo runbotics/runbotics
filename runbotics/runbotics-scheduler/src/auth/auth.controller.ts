@@ -3,6 +3,7 @@ import {
     Controller,
     InternalServerErrorException,
     Post,
+    UseInterceptors,
 } from '@nestjs/common';
 import { Public } from './guards';
 import { AuthService } from './auth.service';
@@ -11,6 +12,7 @@ import {
     MicrosoftAuthDto,
     microsoftAuthSchema,
 } from './dto/microsoft-auth.dto';
+import { SsoMicrosoftInterceptor } from '#/utils/interceptors/ssoMicrosoft.interceptor';
 
 @Controller('/api/scheduler/auth')
 export class AuthController {
@@ -18,6 +20,7 @@ export class AuthController {
 
     @Public()
     @Post('microsoft')
+    @UseInterceptors(SsoMicrosoftInterceptor)
     async authenticateWithMicrosoft(
         @Body(new ZodValidationPipe(microsoftAuthSchema))
         microsoftAthDto: MicrosoftAuthDto
