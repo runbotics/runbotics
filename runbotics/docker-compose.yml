@@ -134,7 +134,7 @@ services:
 
   chrome:
     container_name: chrome
-    image: selenium/standalone-chrome:4.0.0-beta-3-20210426
+    image: selenium/standalone-chrome:132.0.6834.159-chromedriver-132.0.6834.159-grid-4.28.1-20250202
     ports:
       - 7900:7900
       - 4444:4444
