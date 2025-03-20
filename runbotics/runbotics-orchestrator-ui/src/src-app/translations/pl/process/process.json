@@ -243,6 +243,7 @@
     "Process.Details.Modeler.Actions.File.AppendFile.Separator": "Separator(;)",
     "Process.Details.Modeler.Actions.File.CreateFile.Label": "Utwórz",
     "Process.Details.Modeler.Actions.File.CreateFile.FilePath": "Ścieżka pliku (np. C://RunBotics/example.txt)",
+    "Process.Details.Modeler.Actions.File.CreateFile.Conflict": "Konflikt nazewnictwa",
     "Process.Details.Modeler.Actions.File.RemoveFile.Label": "Usuń",
     "Process.Details.Modeler.Actions.File.RemoveFile.FilePath": "Ścieżka pliku (np. C://RunBotics/example.txt)",
     "Process.Details.Modeler.Actions.File.ReadFile.Label": "Odczytaj",
