@@ -40,9 +40,7 @@ export default class MailActionHandler extends StatelessActionHandler {
 
         const attachment = input.attachment;
         if (attachment) {
-            const ext = path.extname(attachment);
-            const baseName = path.basename(attachment, ext);
-            const fileName = `${baseName}${ext}`;
+            const fileName = path.basename(attachment);
             await this.mailService.sendMail(
                 {
                     to: input.to,
