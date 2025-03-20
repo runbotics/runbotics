@@ -2,4 +2,8 @@ export * from "./DesktopRunRequest";
 export * from "./DesktopRunResponse";
 export * from "./StatefulActionHandler";
 export * from "./StatelessActionHandler";
+export * from "./StatefulInjectablePluginHandler";
+export * from "./StatefulStandalonePluginHandler";
+export * from "./StatelessInjectablePluginHandler";
+export * from "./StatelessStandalonePluginHandler";
 export * from "./utils";

@@ -12,18 +12,20 @@ import styles from './SwitchPageButton.module.scss';
 const ARROW_SIZE = 30;
 
 interface SwitchPageButtonProps {
+    basePageUrl: string;
     direction: 'Previous' | 'Next';
     currentPage: number;
 }
 
 
-const SwitchPageButton: FC<SwitchPageButtonProps> = ({ direction, currentPage }) => {
+const SwitchPageButton: FC<SwitchPageButtonProps> = ({ basePageUrl, direction, currentPage }) => {
     const { translate } = useTranslations();
     const currentUrl = window.location.href;
     const paginatedUrl = getPaginatedUrl(
         direction === 'Previous' ?
             currentPage - 1 :
             currentPage + 1,
+        basePageUrl,
         currentUrl.split('?')[1]
     );
     

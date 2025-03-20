@@ -3,15 +3,13 @@ package com.runbotics.service.dto;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.runbotics.domain.*;
 import com.runbotics.domain.Process;
-
-import javax.persistence.Lob;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.Lob;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * A DTO for the {@link Process} entity.

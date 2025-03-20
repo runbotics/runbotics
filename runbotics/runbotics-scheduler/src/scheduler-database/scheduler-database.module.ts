@@ -26,6 +26,7 @@ import { UserModule } from './user/user.module';
 import { GuestModule } from '#/scheduler-database/guest/guest.module';
 import { ProcessCollectionModule } from './process-collection/process-collection.module';
 import { EmailTriggerWhitelistItemModule } from './email-trigger-whitelist-item/email-trigger-whitelist-item.module';
+import { LicenseModule } from './license/license.module';
 
 @Module({
     imports: [
@@ -56,6 +57,7 @@ import { EmailTriggerWhitelistItemModule } from './email-trigger-whitelist-item/
         GuestModule,
         ProcessCollectionModule,
         EmailTriggerWhitelistItemModule,
+        LicenseModule,
     ],
     exports: [
         DatabaseModule,

@@ -25,14 +25,9 @@ public class ProcessResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    public ProcessResource(
-        ProcessRepository processRepository,
-        ProcessQueryService processQueryService,
-        UserService userService
-    ) {
+    public ProcessResource(ProcessRepository processRepository, ProcessQueryService processQueryService, UserService userService) {
         this.processRepository = processRepository;
         this.processQueryService = processQueryService;
         this.userService = userService;
     }
-
 }

@@ -1,0 +1,151 @@
+@import '#src-landing/scss/main.scss';
+
+$CARD-PADDING-TOP: 20px;
+$CARD-PADDING: 20px;
+$IMG-MAX-HEIGHT: 140px;
+$IMG-BORDER-RADIUS: 8px;
+$INFO-PADDING: 0 20px;
+$TITLE-MARGIN-BOTTOM: 10px;
+$CONTENT-PADDING: 12px 20px 20px 20px;
+$READ-MORE-PADDING-RIGHT: 30px;
+$READ-MORE-A-TOP: 1px;
+$READ-MORE-A-RIGHT: 5px;
+$READ-MORE-ICON-HEIGHT: 24px;
+$READ-MORE-ICON-WIDTH: 24px;
+$READ-MORE-COLOR: #fbb040;
+$BADGE-TOP: calc($IMG-MAX-HEIGHT - 40px);
+$BADGE-LEFT: 20px;
+$DRAFT-BADGE-TOP: calc($IMG-MAX-HEIGHT - 120px);
+$BADGE-GAP: 15px;
+$BADGES-BORDER-RADIUS: 25px;
+$CONTENT-MIN-HEIGHT: 245px;
+$CARD-HOVER-TRANSLATE-Y: -3px;
+$CARD-HOVER-TRANSITION: 200ms;
+$FONT-COLOR: #000;
+$BORDER-ADD-TO-CART-COLOR: #c7c7c7;
+
+$BOX-SHADOW-HOVER: rgba(0, 0, 0, 0.4) 0 5px 10px 0;
+
+.root {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+    height: 373px;
+}
+
+.link {
+    height: 100%;
+
+    color: $FONT-COLOR;
+    border-radius: $IMG-BORDER-RADIUS;
+
+    box-shadow: $box-shadow-primary;
+    transition: box-shadow 0.3s ease-in-out;
+    text-decoration: none;
+    border: none;
+
+    &:hover {
+        box-shadow: $BOX-SHADOW-HOVER;
+
+        .title {
+            text-decoration: underline;
+        }
+    }
+
+}
+
+.wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 50px;
+    border-radius: $IMG-BORDER-RADIUS;
+    padding: 16px;
+    background-color: $palette-white;
+}
+
+.info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 10px;
+}
+
+.category {
+    font-weight: $font-weight-semi-bold;
+}
+
+.title {
+    font-weight: $font-weight-bold;
+    margin: 0;
+    margin-bottom: $TITLE-MARGIN-BOTTOM;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: fit-content;
+    max-height: 220px;
+    
+    .contentDescription {
+        max-height: 170px;
+    }
+}
+
+.addToCartButton {
+    padding: 5px 16px;
+
+    background-color: $palette-white;
+    border: 1px solid #FFB800;
+    border-radius: 20px;
+
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+.addToCart {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: auto;
+    width: 100%;
+    padding-top: 12px;
+
+    border-top: 1px solid $BORDER-ADD-TO-CART-COLOR;
+    color: $READ-MORE-COLOR;
+
+}
+
+.badges {
+    position: absolute;
+    top: $BADGE-TOP;
+    left: $BADGE-LEFT;
+
+    display: flex;
+    flex-wrap: nowrap;
+    gap: $BADGE-GAP;
+
+    width: calc(100% - 2 * $BADGE-LEFT);
+
+    border-radius: $BADGES-BORDER-RADIUS;
+    overflow: hidden;
+}
+
+.badge {
+    width: max-content;
+}
+
+.draftBadge {
+    position: absolute;
+    top: $DRAFT-BADGE-TOP;
+    right: $BADGE-LEFT;
+}

@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import MicrosoftIcon from '@mui/icons-material/Microsoft';
 import { Box, Button, CardContent, Link, TextField, Typography } from '@mui/material';
 import { Formik } from 'formik';
 import RouterLink from 'next/link';
@@ -15,12 +16,18 @@ interface Props {
     initialValues: LoginFormState;
     loginValidationSchema: UseLoginValidationSchema;
     handleFormSubmit: (values: LoginFormState, { setErrors, setStatus, setSubmitting }) => Promise<void>;
+    isSigningIn: boolean;
+    handleLoginWithMicrosoft: () => Promise<void>;
+    isSsoEnabled: boolean;
 }
 
 const UserLoginSection: FC<Props> = ({
     initialValues,
     loginValidationSchema,
     handleFormSubmit,
+    isSigningIn,
+    handleLoginWithMicrosoft,
+    isSsoEnabled,
 }) => {
     const { translate } = useTranslations();
 
@@ -102,6 +109,18 @@ const UserLoginSection: FC<Props> = ({
                     >
                         {renderForm}
                     </Formik>
+                    {isSsoEnabled && <Button
+                        color="secondary"
+                        fullWidth
+                        size="large"
+                        variant="contained"
+                        sx={{ marginTop: 3 }}
+                        disabled={isSigningIn}
+                        onClick={handleLoginWithMicrosoft}
+                    >
+                        <MicrosoftIcon sx={{ marginRight: 1 }} />
+                        {translate('Login.SignIn.WithMicrosoft')}
+                    </Button>}
                 </Box>
             </Box>
             <Box display="flex" justifyContent="center" mt={3}>

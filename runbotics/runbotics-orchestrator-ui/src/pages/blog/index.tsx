@@ -2,7 +2,7 @@ import { VFC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
-import { getBlogMainCache, isCached, recreateCache } from '#contentful/blog-main';
+import { getBlogMainCache } from '#contentful/blog-main';
 
 import {
     BlogPost,
@@ -14,7 +14,7 @@ import {
     extractFilterQueryParams,
     hasQueryParams,
     Page,
-    FilterQueryParamsEnum
+    FilterQueryParamsEnum, recreateCache, isCached,
 } from '#contentful/common';
 
 import BlogBg from '#public/images/banners/blog-header.png';
@@ -46,7 +46,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
     const language = locale as Language;
 
     if (!isCached(language)) {
-        await recreateCache();
+        await recreateCache(language);
     } else {
         res.setHeader('X-Cache', 'HIT');
     }

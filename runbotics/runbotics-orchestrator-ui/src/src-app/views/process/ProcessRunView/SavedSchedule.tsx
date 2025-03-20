@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
 import { scheduleProcessActions, scheduleProcessSelector } from '#src-app/store/slices/ScheduleProcess';
-import { IProcess } from '#src-app/types/model/process.model';
 import { IScheduleProcess } from '#src-app/types/model/schedule-process.model';
 
 

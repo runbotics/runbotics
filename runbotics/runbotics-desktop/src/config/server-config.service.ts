@@ -41,6 +41,10 @@ export class ServerConfigService {
         return this.getEnvValue('RUNBOTICS_EXTENSION_DIR');
     }
 
+    get pluginsDirPath(): string {
+        return this.getEnvValue('RUNBOTICS_PLUGINS_DIR');
+    }
+
     get entrypointUrl(): string {
         return this.getEnvValue('RUNBOTICS_ENTRYPOINT_URL');
     }

@@ -8,7 +8,7 @@ import {
     FilterQueryParamsEnum,
     Category,
     Tag,
-    getBlogUrl,
+    getPageUrl,
 } from '#contentful/common';
 import MinusIcon from '#public/images/icons/minus.svg';
 import PlusIcon from '#public/images/icons/plus.svg';
@@ -120,7 +120,7 @@ const FiltersSection: VFC<Props> = ({
             searchParams.append(FilterQueryParamsEnum.Search, search);
         }
 
-        const newUrl = getBlogUrl(searchParams);
+        const newUrl = getPageUrl('blog', searchParams);
 
         push(newUrl);
     };
@@ -136,33 +136,37 @@ const FiltersSection: VFC<Props> = ({
         dateRange?.startDate,
     ]);
 
-    const categoriesCheckboxes = categories?.map((category, index) => (
-        <Checkbox
-            key={category.slug}
-            className={
-                index < 5 || isCategoriesSectionExpanded ? '' : styles.hidden
-            }
-            checked={selectedCategories.includes(category.slug)}
-            onChange={() => handleCategoryCheckboxChange(category.slug)}
-            label={category.title}
-            title={category.title}
-            size="regular"
-            singleLine
-        />
-    ));
+    const categoriesCheckboxes = categories
+        ?.filter(category => category.title && category.slug)
+        .map((category, index) => (
+            <Checkbox
+                key={category.slug}
+                className={
+                    index < 5 || isCategoriesSectionExpanded ? '' : styles.hidden
+                }
+                checked={selectedCategories.includes(category.slug)}
+                onChange={() => handleCategoryCheckboxChange(category.slug)}
+                label={category.title}
+                title={category.title}
+                size="regular"
+                singleLine
+            />
+        ));
 
-    const tagsCheckboxes = tags?.map((tag, index) => (
-        <Checkbox
-            key={tag.slug}
-            className={index < 5 || isTagsSectionExpanded ? '' : styles.hidden}
-            checked={selectedTags.includes(tag.slug)}
-            onChange={() => handleTagCheckboxChange(tag.slug)}
-            label={tag.name}
-            title={tag.name}
-            size="regular"
-            singleLine
-        />
-    ));
+    const tagsCheckboxes = tags
+        ?.filter(tag => tag.name && tag.slug)
+        .map((tag, index) => (
+            <Checkbox
+                key={tag.slug}
+                className={index < 5 || isTagsSectionExpanded ? '' : styles.hidden}
+                checked={selectedTags.includes(tag.slug)}
+                onChange={() => handleTagCheckboxChange(tag.slug)}
+                label={tag.name}
+                title={tag.name}
+                size="regular"
+                singleLine
+            />
+        ));
 
     return (
         <aside

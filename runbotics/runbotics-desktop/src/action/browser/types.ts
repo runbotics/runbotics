@@ -15,7 +15,8 @@ export type BrowserActionRequest =
 | DesktopRunRequest<'browser.selenium.element.attribute.change', BrowserElementAttributeChangeInput>
 | DesktopRunRequest<'browser.read.attribute', BrowserReadElementAttribute>
 | DesktopRunRequest<'browser.read.text', BrowserReadElementText>
-| DesktopRunRequest<'browser.read.input', BrowserReadElementInput>;
+| DesktopRunRequest<'browser.read.input', BrowserReadElementInput>
+| DesktopRunRequest<'browser.selenium.insertCredentials', BrowserInsertCredentials>
 
 export type BrowserLaunchActionInput = {
     headless: boolean;
@@ -80,3 +81,14 @@ export type BrowserPrintToPdfActionInput = {
 export type BrowserPrintToPdfActionOutput = string;
 
 export type BrowserTakeScreenshotActionOutput = string;
+
+export type BrowserInsertCredentials = {
+    loginTarget: string
+    passwordTarget: string
+    submitButtonTarget: string
+}
+
+export type BrowserLoginCredential = {
+    login: string;
+    password: string;
+}

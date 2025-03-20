@@ -1,5 +1,6 @@
 {
     "Login.SignIn": "Sign in",
+    "Login.SignIn.WithMicrosoft": "Sign in with Microsoft",
     "Login.SignIn.Success": "Successfully logged in",
     "Login.Guest.Try": "Try our demo for free!",
     "Login.Guest.ThanksToIt": "Thanks to it, you are able to:",
@@ -27,5 +28,6 @@
     "Login.Error.4xx": "Bad credentials or the user does not exist",
     "Login.Error.5xx": "An unexpected server error has occurred. If the problem persists - contact us via the contact form on the homepage",
     "Login.Error.UserNotActivated": "User is inactive. Ask the administrator for activation",
-    "Login.Error.UnexpectedError": "Unhandled error has occurred. Contact us via the contact form on the homepage"
+    "Login.Error.UnexpectedError": "Unhandled error has occurred. Contact us via the contact form on the homepage",
+    "Login.Error.MicrosoftPopupError": "Login with Microsoft account error has occurred. Contact us via the contact form on the homepage"
 }

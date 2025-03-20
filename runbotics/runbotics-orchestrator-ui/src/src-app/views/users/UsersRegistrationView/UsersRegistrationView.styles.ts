@@ -47,6 +47,8 @@ export const DeleteButton = styled(Button)(({theme}) => `
     }
 `);
 
+export const DeclineButton = DeleteButton;
+
 export const StyledSelect = styled(Select)`
     width: 300px;
     height: 40px;

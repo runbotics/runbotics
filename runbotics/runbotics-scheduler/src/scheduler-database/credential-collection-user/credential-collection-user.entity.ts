@@ -3,7 +3,7 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
-    PrimaryGeneratedColumn,
+    PrimaryColumn,
 } from 'typeorm';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
 import { numberTransformer } from '#/database/database.utils';
@@ -15,9 +15,6 @@ import { User } from '../user/user.entity';
     schema: 'scheduler',
 })
 export class CredentialCollectionUser {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-
     @ManyToOne(
         () => CredentialCollection,
         (collection) => collection.credentialCollectionUser,
@@ -26,7 +23,7 @@ export class CredentialCollectionUser {
     @JoinColumn({ name: 'collection_id' })
     credentialCollection: CredentialCollection;
 
-    @Column({ name: 'collection_id', type: 'uuid' })
+    @PrimaryColumn({ name: 'collection_id', type: 'uuid' })
     credentialCollectionId: string;
 
     @ManyToOne(
@@ -36,7 +33,7 @@ export class CredentialCollectionUser {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @Column({ name: 'user_id', type: 'bigint', transformer: numberTransformer })
+    @PrimaryColumn({ name: 'user_id', type: 'bigint', transformer: numberTransformer })
     userId: number;
 
     @Column({ name: 'privilege_type', type: 'enum', enum: PrivilegeType, default: PrivilegeType.WRITE })

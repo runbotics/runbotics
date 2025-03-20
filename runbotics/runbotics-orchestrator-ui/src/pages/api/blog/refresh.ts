@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { recreateCache } from '#contentful/blog-main';
-
+import { recreateCache } from '#contentful/common';
 import { languages } from '#src-app/translations/translations';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

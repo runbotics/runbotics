@@ -6,7 +6,11 @@ import { Tenant } from '../tenant/tenant.entity';
 
 @Entity({ name: 'jhi_user' })
 export class User {
-    @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
+    @PrimaryColumn({
+        type: 'bigint',
+        transformer: numberTransformer,
+        default: () => 'nextval(\'sequence_generator\')',
+    })
     id: number;
 
     @Column({ type: 'varchar', length: 191, unique: true })
@@ -36,6 +40,13 @@ export class User {
 
     @Column({ type: 'boolean' })
     activated: boolean;
+
+    @Column({
+        name: 'has_been_activated',
+        type: 'boolean',
+        default: false,
+    })
+    hasBeenActivated: boolean;
 
     @Column({ name: 'activation_key', type: 'varchar', select: false, length: 20, nullable: true })
     activationKey: string;

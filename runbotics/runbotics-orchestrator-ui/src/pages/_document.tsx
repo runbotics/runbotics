@@ -4,7 +4,7 @@ import React from 'react';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
-import { isCached, recreateCache } from '#contentful/blog-main';
+import { isCached, recreateCache } from '#contentful/common';
 
 (async function initializeBlogCache() {
     if (!isCached('en') || !isCached('pl')) {
@@ -45,7 +45,6 @@ class MyDocument extends Document {
                     <meta name="theme-color" content="#000000" />
                     <link rel="icon" href="/images/favicon.ico" />
                 </Head>
-
                 <body>
                     <Main />
                     <NextScript />

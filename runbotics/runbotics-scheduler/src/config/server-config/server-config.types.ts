@@ -28,6 +28,8 @@ export interface MicrosoftAuth {
     clientSecret: string | undefined;
     username: string | undefined;
     password: string | undefined;
+    discoveryKeysUri: string | undefined;
+    isSsoEnabled: string | undefined;
 }
 
 export interface EmailTriggerConfig {

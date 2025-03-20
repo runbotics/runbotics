@@ -599,6 +599,7 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.BeeOffice.CreateHolidayLeave.AdditionalData'),
                                 type: 'boolean'
                             },
+                            customCredentialId: propertyCustomCredential,
                         },
                         if: {
                             properties: {
@@ -615,7 +616,6 @@ const getBeeOfficeActions: () => Record<string, IBpmnAction> = () => ({
                                 }
                             }
                         },
-                        customCredentialId: propertyCustomCredential,
                         required: ['employeeId', 'leaveConfigName', 'dateFrom', 'dateTo']
                     },
                 },
