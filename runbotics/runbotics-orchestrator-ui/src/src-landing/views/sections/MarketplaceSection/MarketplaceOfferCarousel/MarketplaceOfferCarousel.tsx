@@ -13,7 +13,7 @@ const MarketplaceOfferCarousel: VFC<Props> = ({ offers }) => {
     
     const slides = offers.map((_post) => (<div key={'key-temp'}></div>));
     // code left for future feature
-    // <MarketplaceCard
+    // <MarketplaceCartButton
     //     key={post.slug}
     //     className={styles.blogCard}
     //     post={post}

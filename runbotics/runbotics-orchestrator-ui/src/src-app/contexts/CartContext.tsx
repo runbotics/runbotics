@@ -2,7 +2,7 @@ import { createContext, useContext, ReactNode } from 'react';
 
 import { useTypedLocalStorage } from '../hooks/useTypedLocalStorage';
 
-interface CartItem {
+export interface CartItem {
     id: string;
     name: string;
     price: number;
