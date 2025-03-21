@@ -26,5 +26,8 @@
     "Marketplace.Cart.Disclaimer": "Zastrzeżenie",
     "Marketplace.Cart.DisclaimerText": "Nasz zespół wycenia produkty indywidualnie według Twoich potrzeb. Wyślij nam prośbę o wycenę. Nasz konsultant skontaktuje się z Tobą, aby ustalić wszystkie szczegóły w ciągu 3 dni roboczych.",
     "Marketplace.Cart.ApproximatePrice": "Przybliżona cena",
-    "Marketplace.Cart.SendRequestForQuote": "Wyślij zapytanie o ofertę"
+    "Marketplace.Cart.SendRequestForQuote": "Wyślij zapytanie o ofertę",
+    "Marketplace.Offer.ApproximatePriceStartsFrom": "Przybliżone ceny tego produktu zaczynają się od {{ price }} euro za licencję.",
+    "Marketplace.Offer.AmountOfLicences": "Liczba licencji",
+    "Marketplace.Offer.AddProcessToCart": "Dodaj proces do koszyka"
 }
