@@ -58,7 +58,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
     };
     
     const offers = cache?.offers;
-    console.log(offers);
+    
     if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(query);
         const currentPage = queryParams.page && queryParams.page > 1 ? queryParams.page : 1;
