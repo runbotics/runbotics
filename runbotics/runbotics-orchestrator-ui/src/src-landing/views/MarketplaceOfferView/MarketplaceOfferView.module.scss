@@ -1,7 +1,7 @@
 @import '#src-landing/scss/main';
 @import '#src-landing/components/Typography/Typography.module.scss';
 
-.blogWrapper {
+.offerWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,33 +36,9 @@
     }
 }
 
-.breadCrumbsWrapper {
-    width: 100%;
-    padding: 24px clamp(10px, 8vw, 140px);
-}
-
-.tagsWrapper {
+.detailsWrapper {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;  
-    margin-top: $margin-5;
-}
-
-.tag {
-    margin-right: $margin-1;
-    border-bottom: 3px solid transparent;
-}
-
-.tagLink {
-    @extend .typography__primary, .typography__Roboto, .typography__h4;
-    @include link-styles;
-    border-bottom-width: 3px;
-    margin-right: $margin-1;
-}
-
-@media (max-width: $breakpoint-md) {
-    .breadCrumbsWrapper {
-        padding: 24px 0;
-    }
+    width: 100%;
+    
+    justify-content: space-between;
 }

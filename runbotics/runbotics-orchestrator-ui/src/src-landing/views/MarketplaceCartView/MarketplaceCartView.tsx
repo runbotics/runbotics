@@ -15,6 +15,7 @@ const MarketplaceCartView: FC = () => {
     
     const currentPrice = cart.filter(item => selectedItems.includes(item.slug))
         .reduce((a, b) => a = a + ((b.additionalParameters?.basePrice ?? 0) * b.quantity), 0);
+    
     return (
         <Layout>
             <div className={styles.root}>
