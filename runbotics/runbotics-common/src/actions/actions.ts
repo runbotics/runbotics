@@ -23,6 +23,7 @@ export enum ActionRegex {
     DATE_FORMAT = '^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\/[0-9]{2}\/[0-9]{4}))$',
     WINDOWS_ABSOLUTE_PATH = "^[a-zA-Z]:[\\\/|\\\\]",
     LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/",
+    FILE_SUFFIX="/\(\d+\)/",
 }
 
 export enum ACTION_GROUP {
@@ -334,3 +335,9 @@ export type AllActionIds =
     | ImageAction
     | FolderAction
     | ZipAction;
+
+export enum ConflictFile {
+    OVERWRITE = 'Overwrite',
+    EXTEND_NAME = 'Extend name',
+    THROW_ERROR = 'Throw Error'
+}
