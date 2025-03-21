@@ -12,20 +12,26 @@ import styles from './MarketplaceCartView.module.scss';
 const MarketplaceCartView: FC = () => {
     const { cart } = useCart();
     const [selectedItems, setSelectedItems] = useState(cart.map(item => item.slug) ?? []);
-    
+
     const currentPrice = cart.filter(item => selectedItems.includes(item.slug))
-        .reduce((a, b) => a = a + ((b.additionalParameters?.basePrice ?? 0) * b.quantity), 0);
-    
+        .reduce(
+            (
+                accumulator,
+                currentValue,
+            ) => accumulator = accumulator + ((currentValue.additionalParameters?.basePrice ?? 0) * currentValue.quantity),
+            0,
+        );
+
     return (
         <Layout>
             <div className={styles.root}>
                 <div className={styles.cartWrapper}>
                     <h1 className={styles.cartHeader}>Your cart</h1>
                     <div className={styles.cartProductsWrapper}>
-                        <h2>Chosen products  ({cart.length})</h2>
-                        <MarketplaceCartContainer 
+                        <h2>Chosen products ({cart.length})</h2>
+                        <MarketplaceCartContainer
                             setSelectedItems={setSelectedItems}
-                            selectedItems={selectedItems}/>
+                            selectedItems={selectedItems} />
                     </div>
                     <div className={styles.contactForm}>
                         <h1>Work in progress</h1>
@@ -33,7 +39,8 @@ const MarketplaceCartView: FC = () => {
                 </div>
                 <MarketplaceCartSummary
                     approximatePrice={currentPrice}
-                    onSubmit={() => {}}/>
+                    onSubmit={() => {
+                    }} />
             </div>
         </Layout>
     );
