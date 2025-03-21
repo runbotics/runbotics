@@ -1,4 +1,3 @@
-import MarketplaceAddToCartSection, { cutText } from './MarketplaceAddToCartSection';
+import MarketplaceAddToCartSection from './MarketplaceAddToCartSection';
 
-export { cutText };
 export default MarketplaceAddToCartSection;
