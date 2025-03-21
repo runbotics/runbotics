@@ -260,6 +260,82 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
         },
     },
+    'file.exists': {
+        id: FileAction.EXISTS,
+        label: translate('Process.Details.Modeler.Actions.File.Exists.Label'),
+        script: FileAction.EXISTS,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.File.Exists.Label'),
+                        type: 'object',
+                        properties: {
+                            name: {
+                                title: translate('Process.Details.Modeler.Actions.File.Exists.Name'),
+                                type: 'string',
+                            },
+                            path: {
+                                title: translate('Process.Details.Modeler.Actions.File.Path'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['name'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    name: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.File.Exists.Name.Info'),
+                        },
+                    },
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.File.Exists.Path.Info'),
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.File.Exists.Output.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    path: undefined,
+                    name: undefined,
+                },
+                output: {
+                    variableName: undefined,
+                },
+            }
+        }
+    },
 });
 
 export default getFileActions;

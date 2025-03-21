@@ -6,7 +6,8 @@ export type FileActionRequest =
     | DesktopRunRequest<FileAction.READ_FILE, FileReadFileActionInput>
     | DesktopRunRequest<FileAction.APPEND_FILE, FileAppendFileActionInput>
     | DesktopRunRequest<FileAction.CREATE_FILE, FileCreateFileActionInput>
-    | DesktopRunRequest<FileAction.REMOVE_FILE, FileRemoveFileActionInput>;
+    | DesktopRunRequest<FileAction.REMOVE_FILE, FileRemoveFileActionInput>
+    | DesktopRunRequest<FileAction.EXISTS, FileExistsActionInput>;
 
 export type FileAppendFileActionInput = {
     content: string;
@@ -37,3 +38,7 @@ export type FileWriteFileActionInput = {
 };
 export type FileWriteFileActionOutput = any;
 
+export type FileExistsActionInput = {
+    name: string;
+    path?: string;
+};
