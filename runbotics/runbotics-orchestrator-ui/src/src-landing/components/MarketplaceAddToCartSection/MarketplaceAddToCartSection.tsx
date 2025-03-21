@@ -54,7 +54,7 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
             {
                 additionalParameters?.additionalParameters?.length > 0 &&
                 additionalParameters?.additionalParameters.map(param => (
-                    <div>
+                    <div key={param.name}>
                         <Typography variant={'h6'}>
                             {param.name}
                         </Typography>
@@ -73,7 +73,7 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
                                 });
                             }}>
                             {param.options.map(option => (
-                                <MenuItem value={option.name}>{option.name}</MenuItem>
+                                <MenuItem key={option.name} value={option.name}>{option.name}</MenuItem>
                             ))}
                         </Select>
                     </div>
