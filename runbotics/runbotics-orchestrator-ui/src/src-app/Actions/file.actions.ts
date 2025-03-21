@@ -1,4 +1,4 @@
-import { FileAction, ActionRegex } from 'runbotics-common';
+import { FileAction, ActionRegex, ConflictFile } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -90,6 +90,11 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                             //     'title': '(example.txt)',
                             //     'type': 'string'
                             // },
+                            conflict: {
+                                type: 'string',
+                                title: translate('Process.Details.Modeler.Actions.File.CreateFile.Conflict'),
+                                enum: [ConflictFile.OVERWRITE, ConflictFile.EXTEND_NAME, ConflictFile.THROW_ERROR],
+                            },
                         },
                         required: [
                             'path',
@@ -101,10 +106,14 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                conflict: {
+                    'ui:widget': 'radio',
+                },
             },
             formData: {
                 input: {
                     path: undefined,
+                    conflict: 'Overwrite'
                     // fileName: "",
                 },
                 output: {},

@@ -244,6 +244,7 @@
     "Process.Details.Modeler.Actions.File.AppendFile.Separator": "Separator(;)",
     "Process.Details.Modeler.Actions.File.CreateFile.Label": "Create",
     "Process.Details.Modeler.Actions.File.CreateFile.FilePath": "File path (e.g. C://RunBotics/example.txt)",
+    "Process.Details.Modeler.Actions.File.CreateFile.Conflict": "Conflict",
     "Process.Details.Modeler.Actions.File.RemoveFile.Label": "Remove",
     "Process.Details.Modeler.Actions.File.RemoveFile.FilePath": "File path (e.g. C://RunBotics/example.txt)",
     "Process.Details.Modeler.Actions.File.ReadFile.Label": "Read",
