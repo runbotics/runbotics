@@ -11,32 +11,32 @@ import Checkbox from '#src-landing/components/Checkbox';
 
 import styles from './MarketplaceCartContainer.module.scss';
 
-interface Props{
+interface Props {
     selectedItems: string[];
     setSelectedItems: Dispatch<SetStateAction<string[]>>;
 }
 
-const MarketplaceCartContainer: FC<Props> = ({setSelectedItems, selectedItems}) => {
+const MarketplaceCartContainer: FC<Props> = ({ setSelectedItems, selectedItems }) => {
     const { currentLanguage, translate } = useTranslations();
     const { cart, removeFromCart } = useCart();
 
     const tableColumns: Column<CartItem>[] = useMemo(() => [
         {
             id: 'isSelected',
-            Cell: (cell) => <Checkbox checked={selectedItems.includes(cell.row.original.id)} label={''}
+            Cell: (cell) => <Checkbox checked={selectedItems.includes(cell.row.original.slug)} label={''}
                 onClick={() => {
                     setSelectedItems(prev => {
-                        if (prev.includes(cell.row.original.id)) {
-                            return prev.filter(item => item !== cell.row.original.id);
+                        if (prev.includes(cell.row.original.slug)) {
+                            return prev.filter(item => item !== cell.row.original.slug);
                         }
-                        return [...prev, cell.row.original.id];
+                        return [...prev, cell.row.original.slug];
                     });
                 }} />,
         },
         {
             id: 'product',
             Header: translate('Marketplace.Cart.Product'),
-            accessor: 'name',
+            accessor: 'title',
         },
         {
             id: 'quantity',
@@ -51,19 +51,19 @@ const MarketplaceCartContainer: FC<Props> = ({setSelectedItems, selectedItems}) 
         {
             id: 'additionalParameter1',
             Header: 'Additional Parameter 1',
-            Cell: (cell) => cell.row.original.additionalParameters?.at(0)?.name ?? 'test',
+            Cell: (cell) => cell.row.original.additionalParameters?.additionalParameters?.at(0)?.name ?? '-',
         },
         {
             id: 'additionalParameter2',
             Header: 'Additional Parameter 2',
-            Cell: (cell) => cell.row.original.additionalParameters?.at(1)?.name ?? 'test',
+            Cell: (cell) => cell.row.original.additionalParameters?.additionalParameters?.at(1)?.name ?? '-',
         },
         {
             id: 'apprximatePriceFrom',
             Header: translate('Marketplace.Cart.ApproximatePriceFrom'),
             Cell: cell => {
-                const { price, additionalParameters } = cell.row.original;
-                let sum = price;
+                const { additionalParameters } = cell.row.original;
+                let sum = additionalParameters?.basePrice ?? 0;
                 if (additionalParameters && additionalParameters.length > 0) {
                     additionalParameters.forEach(param => {
                         sum = sum + param.additionalPrice;
@@ -79,7 +79,7 @@ const MarketplaceCartContainer: FC<Props> = ({setSelectedItems, selectedItems}) 
                     size={20}
                     color={'red'}
                     cursor={'pointer'}
-                    onClick={() => removeFromCart(cell.row.original.id)}
+                    onClick={() => removeFromCart(cell.row.original.slug)}
                 />
             ),
         },
