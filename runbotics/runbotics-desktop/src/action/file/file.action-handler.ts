@@ -1,5 +1,6 @@
 import { StatelessActionHandler, DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import fs from 'fs';
+import path from 'path';
 import { Injectable } from '@nestjs/common';
 import { FileAction } from 'runbotics-common';
 
@@ -21,6 +22,7 @@ export type FileAppendFileActionOutput = any;
 // ----
 export type FileCreateFileActionInput = {
     path: string;
+    conflict: 'Overwrite' | 'Extend name' | 'Throw Error';
     // fileName: string;
 };
 export type FileCreateFileActionOutput = any;
@@ -61,11 +63,24 @@ export default class FileActionHandler extends StatelessActionHandler {
     }
 
     async createFile(input: FileCreateFileActionInput): Promise<FileCreateFileActionOutput> {
-        try {
-            fs.closeSync(fs.openSync(`${input.path}`, 'a'));
-        } catch (err) {
-            throw Error(err);
-        }
+        if(fs.existsSync(input.path)) {
+            switch (input.conflict) {
+                case 'Overwrite': 
+                    await createNewFile(input.path);
+                    return 'File overwritten successfully';
+                case 'Extend name': {
+                    const newFilePath = getUniqueFileName(input.path);
+                    await createNewFile(newFilePath);
+                    return 'File with extended name created successfully';
+                }
+                case 'Throw Error':
+                    throw Error('File with the same name already exists');
+                default: 
+                    await createNewFile(input.path);
+                    return 'File created successfully';
+            }
+        } 
+        await createNewFile(input.path);
         return 'File created successfully';
     }
 
@@ -113,4 +128,29 @@ export default class FileActionHandler extends StatelessActionHandler {
                 throw new Error('Action not found');
         }
     }
+}
+
+async function createNewFile(path: string){
+    try {
+        fs.closeSync(fs.openSync(`${path}`, 'a'));
+    } catch (err) {
+        throw Error(err);
+    }
+}
+
+function getUniqueFileName(filePath) {
+    const dir = path.dirname(filePath);
+    const ext = path.extname(filePath);
+    const baseName = path.basename(filePath, ext).replace(/\s\(\d+\)/, '');
+    
+    let counter = 1;
+    let newFilePath = path.join(dir, `${baseName} (${counter})${ext}`);
+    
+    // Keep increasing counter until we find a free name
+    while (fs.existsSync(newFilePath)) {
+        counter++;
+        newFilePath = path.join(dir, `${baseName} (${counter})${ext}`);
+    }
+
+    return newFilePath;
 }
