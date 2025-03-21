@@ -72,11 +72,9 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
                                     return newState;
                                 });
                             }}>
-                            {param.options.map(option => {
-                                return (
-                                    <MenuItem value={option.name}>{option.name}</MenuItem>
-                                );
-                            })}
+                            {param.options.map(option => (
+                                <MenuItem value={option.name}>{option.name}</MenuItem>
+                            ))}
                         </Select>
                     </div>
                 ))
