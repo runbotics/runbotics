@@ -1,5 +1,6 @@
 import { StatelessActionHandler, DesktopRunRequest } from '@runbotics/runbotics-sdk';
 import fs from 'fs';
+import path from 'path';
 import { Injectable } from '@nestjs/common';
 import { FileAction } from 'runbotics-common';
 
@@ -8,7 +9,8 @@ export type FileActionRequest =
     | DesktopRunRequest<FileAction.READ_FILE, FileReadFileActionInput>
     | DesktopRunRequest<FileAction.APPEND_FILE, FileAppendFileActionInput>
     | DesktopRunRequest<FileAction.CREATE_FILE, FileCreateFileActionInput>
-    | DesktopRunRequest<FileAction.REMOVE_FILE, FileRemoveFileActionInput>;
+    | DesktopRunRequest<FileAction.REMOVE_FILE, FileRemoveFileActionInput>
+    | DesktopRunRequest<FileAction.EXISTS, FileExistsActionInput>;
 
 // ----
 export type FileAppendFileActionInput = {
@@ -43,6 +45,11 @@ export type FileWriteFileActionInput = {
     content: string;
 };
 export type FileWriteFileActionOutput = any;
+
+export type FileExistsActionInput = {
+    name: string;
+    path?: string;
+};
 
 
 @Injectable()
@@ -97,6 +104,21 @@ export default class FileActionHandler extends StatelessActionHandler {
         return 'File saved successfully';
     }
 
+    async existsFile(input: FileExistsActionInput) {
+
+        if (!input.name) {
+            throw new Error('Name is not provided.');
+        }
+
+        if (input.path && !fs.existsSync(input.path)) {
+            throw new Error('Provided path does not exist.');
+        }
+
+        const filePath = path.join(input.path, input.name);
+
+        return fs.existsSync(filePath);
+    }
+
     run(request: FileActionRequest) {
         switch (request.script) {
             case 'file.writeFile':
@@ -109,6 +131,8 @@ export default class FileActionHandler extends StatelessActionHandler {
                 return this.createFile(request.input);
             case 'file.removeFile':
                 return this.removeFile(request.input);
+            case 'file.exists':
+                return this.existsFile(request.input);
             default:
                 throw new Error('Action not found');
         }
