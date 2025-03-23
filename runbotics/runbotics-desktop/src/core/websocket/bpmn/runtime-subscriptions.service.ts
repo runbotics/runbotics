@@ -250,10 +250,11 @@ export class RuntimeSubscriptionsService {
                     }
 
                     try {
-                        processInstance.output = this.sanitizeStructure({
-                            processOutput: event.processInstance?.processOutput ?? event.processInstance?.partialResponse?.processOutput ?? {},
-                            variables,
-                        });
+                        const processOutput = event.processInstance?.processOutput 
+                            ?? event.processInstance?.partialResponse?.processOutput 
+                            ?? {};
+
+                        processInstance.output = this.sanitizeStructure({ processOutput });
                     } catch (e) {
                         this.logger.error('Error preparing output');
                         processInstance.output = JSON.stringify({

@@ -13,7 +13,7 @@ export interface BpmnProcessInstance extends IProcessInstance, IProcessParams {
     processOutput?: Record<string, unknown>;
     partialResponse?:{
         processOutput?: Record<string, unknown>;
-    } ;
+    };
 }
 
 export interface IProcessEventData {

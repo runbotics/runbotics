@@ -48,8 +48,9 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
         if (isProcessOutput) {
             
             const parsedOutput = JSON.parse(processInstance.output);
-            const output: Record<string, unknown> = 
-                parsedOutput?.processOutput ?? parsedOutput?.partialResponse?.processOutput;
+            const output: Record<string, unknown> = parsedOutput?.processOutput 
+                ?? parsedOutput?.partialResponse?.processOutput 
+                ?? {};
 
             if (output === undefined) return null;
 
