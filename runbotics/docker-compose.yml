@@ -60,6 +60,7 @@ services:
       - ENCRYPTION_KEY=O3OTmXJpIIyUb3ByT4t65xblgsxfDGQu
       - TZ=UTC
       - MS_DISCOVERY_KEYS_URI=https://login.microsoftonline.com/common/discovery/v2.0/keys
+      - IS_SSO_ENABLED="false"
     ports:
       - 4000:4000
     depends_on:
@@ -133,7 +134,7 @@ services:
 
   chrome:
     container_name: chrome
-    image: selenium/standalone-chrome:4.0.0-beta-3-20210426
+    image: selenium/standalone-chrome:132.0.6834.159-chromedriver-132.0.6834.159-grid-4.28.1-20250202
     ports:
       - 7900:7900
       - 4444:4444

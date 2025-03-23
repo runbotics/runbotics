@@ -40,7 +40,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             .setBinary(this.serverConfigService.cfgFirefoxBin);
 
         if (isHeadless) {
-            optionsFF = optionsFF.headless();
+            optionsFF = optionsFF.addArguments('--headless');
         }
 
         return new Builder()
@@ -64,7 +64,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         );
 
         if (isHeadless) {
-            chromeOptions.headless();
+            chromeOptions.addArguments('--headless');
         }
 
         return new Builder()
@@ -158,7 +158,8 @@ export default class BrowserActionHandler extends StatefulActionHandler {
 
         return this.session
             .wait(until.elementsLocated(locator), 10000)
-            .then((response) => ({ elementsCount: response.length }))
+            .then(() => this.session.findElements(By[key](locator[key])))
+            .then((elements) => ({ elementsCount: elements.length }))
             .catch(() => ({ elementsCount: 0 }));
     }
 

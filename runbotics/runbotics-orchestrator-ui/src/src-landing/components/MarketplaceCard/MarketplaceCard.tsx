@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { MarketplaceOffer } from '#contentful/common';
+import { useCart } from '#src-app/contexts/CartContext';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { CLICKABLE_ITEM } from '#src-app/utils/Mixpanel/types';
 import { identifyPageByUrl, recordItemClick } from '#src-app/utils/Mixpanel/utils';
@@ -29,6 +30,7 @@ export const cutText = (text: string, length: number) => {
 };
 
 const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
+    const { addToCart } = useCart();
     const { translate } = useTranslations();
     const { pathname } = useRouter();
     return (
@@ -45,7 +47,7 @@ const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
                 href={`/marketplace/offer/${offer.slug}`}>
                 <div className={styles.wrapper}>
                     <div className={styles.info}>
-                        {offer.tags?.items.length > 0 &&
+                        {offer.industries?.items.length > 0 &&
                             offer.industries.items.filter(industry => Boolean(industry)).slice(0, 3).map((industry) => (
                                 <InformationalTag text={industry.title} key={industry.slug} />
                             ))}
@@ -59,7 +61,13 @@ const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
                         </Typography>
                     </div>
                     <div className={styles.addToCart}>
-                        <button className={styles.addToCartButton} disabled>
+                        <button
+                            className={styles.addToCartButton}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                addToCart({ ...offer, quantity: 1 });
+                            }}
+                        >
                             <Typography variant="body3">
                                 {translate('Marketplace.Card.AddToCart')}
                             </Typography>

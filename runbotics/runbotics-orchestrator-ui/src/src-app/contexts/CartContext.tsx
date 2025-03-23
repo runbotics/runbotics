@@ -1,17 +1,12 @@
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
+
+import { MarketplaceOffer } from '#contentful/common';
 
 import { useTypedLocalStorage } from '../hooks/useTypedLocalStorage';
 
-interface CartItem {
-    id: string;
-    name: string;
-    price: number;
-    quantity: number;
-    additionalParameters?: {
-        additionalPrice: number;
-        name: string;
-    }[];
-}
+export type CartItem = Omit<MarketplaceOffer, 'tags' | 'body' | 'description' | 'industries' | 'status'> & {
+    quantity: number
+};
 
 interface CartContextType {
     cart: CartItem[];
@@ -27,10 +22,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const addToCart = (item: CartItem) => {
         setCart((prevCart) => {
-            const existingItem = prevCart.find((i) => i.id === item.id);
+            const existingItem = prevCart.find((i) => i.slug === item.slug);
             if (existingItem) {
                 return prevCart.map((i) =>
-                    i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+                    i.slug === item.slug ? { ...i, quantity: i.quantity + item.quantity } : i,
                 );
             }
             return [...prevCart, item];
@@ -38,7 +33,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     const removeFromCart = (id: string) => {
-        setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+        setCart((prevCart) => prevCart.filter((item) => item.slug !== id));
     };
 
     const clearCart = () => {

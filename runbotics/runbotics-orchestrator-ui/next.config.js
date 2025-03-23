@@ -32,6 +32,7 @@ module.exports = {
         microsoftAppId: process.env.MICROSOFT_APP_ID,
         microsoftAppAuthority: process.env.MICROSOFT_APP_AUTHORITY,
         microsoftAppRedirectUri: process.env.MICROSOFT_APP_REDIRECT_URI,
+        isSsoEnabled: process.env.IS_SSO_ENABLED,
     },
 
     modularizeImports: {
