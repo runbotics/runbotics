@@ -706,6 +706,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             this.logger.log(`[${instanceId}] Terminating process instance`);
             this.engines[instanceId].stop();
             this.purgeEngine(instanceId);
+            this.desktopRunnerService.clearHandlers();
         }
         return Promise.resolve();
     };
