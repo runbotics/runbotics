@@ -6,7 +6,7 @@ import Accordion from '#src-app/components/Accordion';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { CredentialsCollectionKeys, EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
+import { CredentialsCollectionKeys, EditCredentialsCollectionWithCreatorDto } from '../../CredentialsCollection.types';
 import CollectionColorSelect from '../CollectionColor/CollectionColorSelect';
 import { CollectionFormValidation, inputErrorMessages, InputErrorType } from '../EditCredentialsCollection.utils';
 
@@ -15,8 +15,8 @@ interface CredentalsCollectionGeneralOptionsProps {
     setFormValidationState: (formValidationState: CollectionFormValidation) => void;
     inputErrorType: InputErrorType;
     setInputErrorType: (errorType: InputErrorType) => void;
-    formState: EditCredentialsCollectionDto;
-    setFormState: (state: ((prevState: EditCredentialsCollectionDto) => EditCredentialsCollectionDto)) => void;
+    formState: EditCredentialsCollectionWithCreatorDto;
+    setFormState: (state: ((prevState: EditCredentialsCollectionWithCreatorDto) => EditCredentialsCollectionWithCreatorDto)) => void;
 }
 
 export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
