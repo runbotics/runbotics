@@ -18,7 +18,6 @@ export function getUniqueFileName(filePath) {
     let counter = 1;
     let newFilePath = path.join(dir, `${baseName}(${counter})${ext}`);
     
-    // Keep increasing counter until we find a free name
     while (fs.existsSync(newFilePath)) {
         counter++;
         newFilePath = path.join(dir, `${baseName}(${counter})${ext}`);

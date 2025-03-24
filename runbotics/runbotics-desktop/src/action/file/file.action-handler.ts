@@ -33,8 +33,7 @@ export default class FileActionHandler extends StatelessActionHandler {
                 case ConflictFile.THROW_ERROR:
                     throw Error('File with the same name already exists');
                 default: 
-                    await createNewFile(input.path);
-                    return 'File created successfully';
+                    throw Error('This case doesn\'t exist in the select option');
             }
         } 
         await createNewFile(input.path);

@@ -86,10 +86,6 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                                 title: translate('Process.Details.Modeler.Actions.File.CreateFile.FilePath'),
                                 type: 'string',
                             },
-                            // 'fileName': {
-                            //     'title': '(example.txt)',
-                            //     'type': 'string'
-                            // },
                             conflict: {
                                 type: 'string',
                                 title: translate('Process.Details.Modeler.Actions.File.CreateFile.Conflict'),
@@ -98,7 +94,6 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                         },
                         required: [
                             'path',
-                            // 'fileName',
                         ],
                     },
                     output: {},
@@ -113,8 +108,7 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             formData: {
                 input: {
                     path: undefined,
-                    conflict: 'Overwrite'
-                    // fileName: "",
+                    conflict: ConflictFile.OVERWRITE,
                 },
                 output: {},
             },
