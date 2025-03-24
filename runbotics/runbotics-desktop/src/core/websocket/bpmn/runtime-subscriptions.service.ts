@@ -254,7 +254,7 @@ export class RuntimeSubscriptionsService {
                             ?? event.processInstance?.partialResponse?.processOutput 
                             ?? {};
 
-                        processInstance.output = this.sanitizeStructure({ processOutput });
+                        processInstance.output = this.sanitizeStructure({ processOutput, variables });
                     } catch (e) {
                         this.logger.error('Error preparing output');
                         processInstance.output = JSON.stringify({
@@ -276,11 +276,12 @@ export class RuntimeSubscriptionsService {
 
     private sanitizeStructure(variable: object): string {
         const variableToCheck: string = JSON.stringify(variable);
-        if (variableToCheck && variableToCheck.length > MAX_STRUCTURE_SIZE)
+        if (variableToCheck && variableToCheck.length > MAX_STRUCTURE_SIZE){
             return JSON.stringify({
                 message: 'Exceeded max length. Result is truncated.',
                 partialResponse: truncateStructure({ originalObject: variable, maxSize: MAX_STRUCTURE_SIZE })
             });
+        }
         return variableToCheck;
     }
 
