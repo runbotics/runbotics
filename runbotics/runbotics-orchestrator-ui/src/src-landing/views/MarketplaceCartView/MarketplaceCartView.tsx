@@ -18,7 +18,7 @@ const MarketplaceCartView: FC = () => {
             (
                 accumulator,
                 currentValue,
-            ) => accumulator = accumulator + ((currentValue.additionalParameters?.basePrice ?? 0) * currentValue.quantity),
+            ) => accumulator += ((currentValue.parameters?.basePrice ?? 0) * currentValue.quantity),
             0,
         );
 

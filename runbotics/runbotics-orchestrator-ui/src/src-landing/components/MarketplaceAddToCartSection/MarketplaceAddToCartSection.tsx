@@ -19,7 +19,7 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
         selectedOption: string;
     }[]>(
         offer
-            .additionalParameters
+            .parameters
             ?.additionalParameters
             .map(parameter => ({
                 name: parameter.name,
@@ -27,7 +27,7 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
             })) ?? []);
     const { addToCart } = useCart();
     const { translate } = useTranslations();
-    const { additionalParameters } = offer;
+    const { parameters } = offer;
 
     const onSubmit = () => {
         addToCart({
@@ -40,7 +40,7 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
             <Typography variant={'h5'}>
                 {translate(
                     'Marketplace.Offer.ApproximatePriceStartsFrom',
-                    { price: additionalParameters?.basePrice ?? 0 },
+                    { price: parameters?.basePrice ?? 0 },
                 )}
             </Typography>
             <div>
@@ -52,8 +52,8 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
                 </div>
             </div>
             {
-                additionalParameters?.additionalParameters?.length > 0 &&
-                additionalParameters?.additionalParameters.map(param => (
+                parameters?.additionalParameters?.length > 0 &&
+                parameters?.additionalParameters.map(param => (
                     <div key={param.name}>
                         <Typography variant={'h6'}>
                             {param.name}
