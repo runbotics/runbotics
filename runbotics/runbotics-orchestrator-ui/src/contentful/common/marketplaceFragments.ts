@@ -29,7 +29,7 @@ export const MARKETPLACE_OFFER_LIST_FRAGMENT = `
     tags: ${MARKETPLACE_TAGS_FRAGMENT}
     industries: ${MARKETPLACE_INDUSTRY_FRAGMENT}
     description
-    additionalParameters
+    parameters
 `;
 
 export const MARKETPLACE_OFFER_FRAGMENT = `

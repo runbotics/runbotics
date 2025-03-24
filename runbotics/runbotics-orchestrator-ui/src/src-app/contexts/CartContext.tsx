@@ -6,7 +6,10 @@ import { useTypedLocalStorage } from '../hooks/useTypedLocalStorage';
 
 export type CartItem = Omit<MarketplaceOffer, 'tags' | 'body' | 'description' | 'industries' | 'status'> & {
     quantity: number;
-    selectedParameters?: string[];
+    selectedParameters?: {
+        name: string;
+        selectedOption: string;
+    }[];
 };
 
 interface CartContextType {

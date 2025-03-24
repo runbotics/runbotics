@@ -63,6 +63,7 @@ const MarketplaceCartContainer: FC<Props> = ({ setSelectedItems, selectedItems }
             Header: translate('Marketplace.Cart.ApproximatePriceFrom'),
             Cell: cell => {
                 const { parameters } = cell.row.original;
+                console.log(parameters, cell.row.original);
                 let sum = parameters?.basePrice ?? 0;
                 if (parameters && parameters.length > 0) {
                     parameters.forEach(param => {
