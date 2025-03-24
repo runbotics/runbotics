@@ -16,7 +16,6 @@ interface Props {
 const MarketplaceOfferView: VFC<Props> = ({ offer }) => {
     const {
         body,
-        tags,
         title,
         industries,
     } = offer;
@@ -25,7 +24,6 @@ const MarketplaceOfferView: VFC<Props> = ({ offer }) => {
         <Layout>
             <div className={styles.blogWrapper}>
                 <OfferHeader
-                    tags={tags}
                     title={title}
                     industries={industries}
                 />
