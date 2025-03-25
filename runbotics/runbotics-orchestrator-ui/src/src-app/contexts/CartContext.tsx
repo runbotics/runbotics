@@ -5,7 +5,11 @@ import { MarketplaceOffer } from '#contentful/common';
 import { useTypedLocalStorage } from '../hooks/useTypedLocalStorage';
 
 export type CartItem = Omit<MarketplaceOffer, 'tags' | 'body' | 'description' | 'industries' | 'status'> & {
-    quantity: number
+    quantity: number;
+    selectedParameters?: {
+        name: string;
+        selectedOption: string;
+    }[];
 };
 
 interface CartContextType {
@@ -30,6 +34,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
             }
             return [...prevCart, item];
         });
+    };
+
+    const updateCartItem = (id: string, updates: Partial<CartItem>) => {
+        setCart((prevCart) =>
+            prevCart.map((item) =>
+                item.slug === id
+                    ? { ...item, ...updates, quantity: updates.quantity ?? item.quantity }
+                    : item
+            ).filter(item => item.quantity > 0)
+        );
     };
 
     const removeFromCart = (id: string) => {

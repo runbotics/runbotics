@@ -51,21 +51,21 @@ const MarketplaceCartContainer: FC<Props> = ({ setSelectedItems, selectedItems }
         {
             id: 'additionalParameter1',
             Header: 'Additional Parameter 1',
-            Cell: (cell) => cell.row.original.additionalParameters?.additionalParameters?.at(0)?.name ?? '-',
+            Cell: (cell) => cell.row.original.parameters?.additionalParameters?.at(0)?.name ?? '-',
         },
         {
             id: 'additionalParameter2',
             Header: 'Additional Parameter 2',
-            Cell: (cell) => cell.row.original.additionalParameters?.additionalParameters?.at(1)?.name ?? '-',
+            Cell: (cell) => cell.row.original.parameters?.additionalParameters?.at(1)?.name ?? '-',
         },
         {
             id: 'apprximatePriceFrom',
             Header: translate('Marketplace.Cart.ApproximatePriceFrom'),
             Cell: cell => {
-                const { additionalParameters } = cell.row.original;
-                let sum = additionalParameters?.basePrice ?? 0;
-                if (additionalParameters && additionalParameters.length > 0) {
-                    additionalParameters.forEach(param => {
+                const { parameters } = cell.row.original;
+                let sum = parameters?.basePrice ?? 0;
+                if (parameters && parameters.length > 0) {
+                    parameters.forEach(param => {
                         sum = sum + param.additionalPrice;
                     });
                 }
