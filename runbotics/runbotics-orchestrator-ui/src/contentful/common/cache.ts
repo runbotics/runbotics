@@ -14,7 +14,7 @@ const CONTENTFUL_CACHE_KEY = 'contentfulCache';
 const contentfulCacheSymbol = Symbol.for(CONTENTFUL_CACHE_KEY);
 
 const BLOG_CACHE_SIZE = 53;
-const MARKETPLACE_CACHE_SIZE = 12;
+const MARKETPLACE_CACHE_SIZE = 42;
 
 /**
  * Cache instance singleton
