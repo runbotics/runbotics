@@ -28,6 +28,12 @@
     "Marketplace.Cart.DisclaimerText": "Our team prices products individually to your needs. Send us a request for a quote. Our consultant will contact you to arrange all the details in 3 working days.",
     "Marketplace.Cart.ApproximatePrice": "Approximate Price",
     "Marketplace.Cart.SendRequestForQuote": "Send request for quote",
+    "Marketplace.Cart.NameAndSurname": "Name and Surname",
+    "Marketplace.Cart.EmailAddress": "Email address",
+    "Marketplace.Cart.PhoneNumber": "Phone number",
+    "Marketplace.Cart.YourContactInfo": "Your contact info",
+    "Marketplace.Cart.AdditionalInfo": "Additional Info",
+    "Marketplace.Cart.AddMessageWithInfo": "Add message with more information"
     "Marketplace.Offer.ApproximatePriceStartsFrom": "Approximate prices for this product start at {{ price }} euro per licence.",
     "Marketplace.Offer.AmountOfLicences": "Amount of licences",
     "Marketplace.Offer.AddProcessToCart": "Add process to cart"

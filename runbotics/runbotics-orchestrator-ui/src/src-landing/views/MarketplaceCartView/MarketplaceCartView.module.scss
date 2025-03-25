@@ -39,19 +39,3 @@
 
 
 }
-
-.contactForm {
-    display: flex;
-    
-    justify-content: center;
-    align-items: center;
-    
-    border-radius: 8px;
-    min-height: 300px;
-    background: #bbbbbb;
-    @include font-face-roboto;
-    
-    h1 {
-        opacity: 0.5;
-    }
-}

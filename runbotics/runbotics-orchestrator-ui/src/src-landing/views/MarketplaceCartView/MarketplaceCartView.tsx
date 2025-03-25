@@ -8,6 +8,7 @@ import MarketplaceCartContainer from '#src-landing/components/MarketplaceCartCon
 import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSummary';
 
 import styles from './MarketplaceCartView.module.scss';
+import ContactForm from '#src-landing/components/ContactForm';
 
 const MarketplaceCartView: FC = () => {
     const { cart } = useCart();
@@ -33,9 +34,7 @@ const MarketplaceCartView: FC = () => {
                             setSelectedItems={setSelectedItems}
                             selectedItems={selectedItems} />
                     </div>
-                    <div className={styles.contactForm}>
-                        <h1>Work in progress</h1>
-                    </div>
+                    <ContactForm />
                 </div>
                 <MarketplaceCartSummary
                     approximatePrice={currentPrice}

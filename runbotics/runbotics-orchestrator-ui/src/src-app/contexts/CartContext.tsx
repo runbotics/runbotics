@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 
 import { MarketplaceOffer } from '#contentful/common';
 
@@ -12,8 +12,17 @@ export type CartItem = Omit<MarketplaceOffer, 'tags' | 'body' | 'description' | 
     }[];
 };
 
+export interface ContactFormValue {
+    name: string;
+    email: string ;
+    phone: string;
+    additionalInfo: string;
+}
+
 interface CartContextType {
     cart: CartItem[];
+    contactFormValue: ContactFormValue;
+    changeFormValue: (key: keyof ContactFormValue, value: string) => void;
     addToCart: (item: CartItem) => void;
     removeFromCart: (id: string) => void;
     clearCart: () => void;
@@ -23,6 +32,19 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
     const [cart, setCart] = useTypedLocalStorage<CartItem[]>('cart', []);
+    const [contactFormValue, setContactFormValue] = useState<ContactFormValue>({
+        name: '',
+        email: '',
+        phone: '',
+        additionalInfo: '',
+    });
+    
+    const changeFormValue = (key: keyof ContactFormValue, value: string) => {
+        setContactFormValue((prevState) => ({
+            ...prevState,
+            [key]: value,
+        }));
+    };
 
     const addToCart = (item: CartItem) => {
         setCart((prevCart) => {
@@ -55,7 +77,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+        <CartContext.Provider value={{ cart, contactFormValue, changeFormValue,  addToCart, removeFromCart, clearCart }}>
             {children}
         </CartContext.Provider>
     );
