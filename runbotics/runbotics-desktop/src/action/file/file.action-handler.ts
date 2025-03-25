@@ -2,7 +2,7 @@ import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import fs from 'fs';
 import path from 'path';
 import { Injectable } from '@nestjs/common';
-import { FileActionRequest, FileAppendFileActionInput, FileAppendFileActionOutput, FileCreateFileActionInput, FileCreateFileActionOutput, FileReadFileActionInput, FileReadFileActionOutput, FileRemoveFileActionInput, FileRemoveFileActionOutput, FileWriteFileActionInput, FileWriteFileActionOutput } from './types';
+import { FileActionRequest, FileAppendFileActionInput, FileAppendFileActionOutput, FileCreateFileActionInput, FileCreateFileActionOutput, FileExistsActionInput, FileReadFileActionInput, FileReadFileActionOutput, FileRemoveFileActionInput, FileRemoveFileActionOutput, FileWriteFileActionInput, FileWriteFileActionOutput } from './types';
 import { createNewFile, getUniqueFileName } from './file.utils';
 import { ConflictFile } from 'runbotics-common';
 @Injectable()
