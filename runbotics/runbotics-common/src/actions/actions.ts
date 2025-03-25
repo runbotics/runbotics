@@ -149,6 +149,7 @@ export enum FileAction {
     REMOVE_FILE = 'file.removeFile',
     READ_FILE = 'file.readFile',
     WRITE_FILE = 'file.writeFile',
+    EXISTS = "file.exists"
 }
 
 export enum CsvAction {

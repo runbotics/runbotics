@@ -1,7 +1,8 @@
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import fs from 'fs';
+import path from 'path';
 import { Injectable } from '@nestjs/common';
-import { FileActionRequest, FileAppendFileActionInput, FileAppendFileActionOutput, FileCreateFileActionInput, FileCreateFileActionOutput, FileReadFileActionInput, FileReadFileActionOutput, FileRemoveFileActionInput, FileRemoveFileActionOutput, FileWriteFileActionInput, FileWriteFileActionOutput } from './types';
+import { FileActionRequest, FileAppendFileActionInput, FileAppendFileActionOutput, FileCreateFileActionInput, FileCreateFileActionOutput, FileExistsActionInput, FileReadFileActionInput, FileReadFileActionOutput, FileRemoveFileActionInput, FileRemoveFileActionOutput, FileWriteFileActionInput, FileWriteFileActionOutput } from './types';
 import { createNewFile, getUniqueFileName } from './file.utils';
 import { ConflictFile } from 'runbotics-common';
 @Injectable()
@@ -68,6 +69,21 @@ export default class FileActionHandler extends StatelessActionHandler {
         return 'File saved successfully';
     }
 
+    async existsFile(input: FileExistsActionInput) {
+
+        if (!input.name) {
+            throw new Error('Name is not provided.');
+        }
+
+        if (input.path && !fs.existsSync(input.path)) {
+            throw new Error('Provided path does not exist.');
+        }
+
+        const filePath = path.join(input.path, input.name);
+
+        return fs.existsSync(filePath);
+    }
+
     run(request: FileActionRequest) {
         switch (request.script) {
             case 'file.writeFile':
@@ -80,6 +96,8 @@ export default class FileActionHandler extends StatelessActionHandler {
                 return this.createFile(request.input);
             case 'file.removeFile':
                 return this.removeFile(request.input);
+            case 'file.exists':
+                return this.existsFile(request.input);
             default:
                 throw new Error('Action not found');
         }
