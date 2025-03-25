@@ -166,6 +166,8 @@ export class UserService {
             lastModifiedBy: executor.email,
         };
 
+        this.mailService.sendUserAcceptMail(user);
+
         return this.userRepository.save(updatedUser).then(this.mapToUserDto);
     }
 
