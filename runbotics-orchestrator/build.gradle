@@ -26,7 +26,7 @@ plugins {
 
 group = "com.runbotics"
 
-version = "3.1.0-SNAPSHOT.49"
+version = "3.1.0-SNAPSHOT.50"
 description = ""
 
 sourceCompatibility=11
