@@ -8,7 +8,6 @@ export type FileActionRequest =
     | DesktopRunRequest<FileAction.CREATE_FILE, FileCreateFileActionInput>
     | DesktopRunRequest<FileAction.REMOVE_FILE, FileRemoveFileActionInput>;
 
-// ----
 export type FileAppendFileActionInput = {
     content: string;
     path: string;
@@ -16,27 +15,22 @@ export type FileAppendFileActionInput = {
 };
 export type FileAppendFileActionOutput = any;
 
-// ----
 export type FileCreateFileActionInput = {
     path: string;
     conflict: ConflictFile;
-    // fileName: string;
 };
 export type FileCreateFileActionOutput = any;
 
-// ----
 export type FileRemoveFileActionInput = {
     path: string;
 };
 export type FileRemoveFileActionOutput = any;
 
-// ----
 export type FileReadFileActionInput = {
     path: string;
 };
 export type FileReadFileActionOutput = any;
 
-// ----
 export type FileWriteFileActionInput = {
     path: string;
     content: string;
