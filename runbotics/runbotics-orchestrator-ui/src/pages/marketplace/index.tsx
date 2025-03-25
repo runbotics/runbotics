@@ -56,9 +56,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
         description: 'RunBotics - Marketplace',
         image: MarketplaceBg.src,
     };
-    
-    const offers = cache?.offers;
 
+    const offers = cache?.offers;
+    
     if (hasQueryParams(query, FILTER_QUERY_PARAMS)) {
         const queryParams = extractFilterQueryParams(query);
         const currentPage = queryParams.page && queryParams.page > 1 ? queryParams.page : 1;
@@ -67,10 +67,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
         const currentPageOffers = filteredOffers?.slice(firstPageElementIndex, currentPage * DEFAULT_PAGE_SIZE) ?? [];
 
         const totalPages = Math.ceil((filteredOffers?.length ?? 0) / DEFAULT_PAGE_SIZE);
-        
+
         let currentPageAfterFilter = 1;
-        
-        if(totalPages <= 1) {
+
+        if (totalPages <= 1) {
             currentPageAfterFilter = 1;
         } else {
             currentPageAfterFilter = currentPage > totalPages ? totalPages : currentPage;
@@ -87,10 +87,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
             },
         };
     }
-    
+
     const totalPages = Math.ceil((offers?.length ?? 0) / DEFAULT_PAGE_SIZE);
     const currentPageOffers = offers?.slice(0, DEFAULT_PAGE_SIZE) ?? [];
-    
+
     return {
         props: {
             ...cache,

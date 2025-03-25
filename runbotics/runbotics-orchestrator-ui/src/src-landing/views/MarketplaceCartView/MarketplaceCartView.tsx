@@ -15,11 +15,13 @@ const MarketplaceCartView: FC = () => {
 
     const currentPrice = cart.filter(item => selectedItems.includes(item.slug))
         .reduce(
-            (accumulator, currentValue) => {
-                accumulator = accumulator + ((currentValue.additionalParameters?.basePrice ?? 0) * currentValue.quantity);
-                return accumulator;
-            }, 0,
+            (
+                accumulator,
+                currentValue,
+            ) => accumulator += ((currentValue.parameters?.basePrice ?? 0) * currentValue.quantity),
+            0,
         );
+
     return (
         <Layout>
             <div className={styles.root}>
