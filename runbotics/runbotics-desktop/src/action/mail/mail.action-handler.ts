@@ -5,6 +5,7 @@ import { ServerConfigService } from '#config';
 import { MailCredential } from './mail.types';
 import fs from 'fs';
 import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
+import path from 'path';
 
 export type MailActionRequest =
     | DesktopRunRequest<'mail.send', MailSendActionInput>;
@@ -39,7 +40,7 @@ export default class MailActionHandler extends StatelessActionHandler {
 
         const attachment = input.attachment;
         if (attachment) {
-            const fileName = attachment.substring(attachment.lastIndexOf('\\') + 1);
+            const fileName = path.basename(attachment);
             await this.mailService.sendMail(
                 {
                     to: input.to,
