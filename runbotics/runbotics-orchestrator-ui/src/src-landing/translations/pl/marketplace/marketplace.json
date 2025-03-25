@@ -33,7 +33,7 @@
     "Marketplace.Cart.PhoneNumber": "Numer telefonu",
     "Marketplace.Cart.YourContactInfo": "Twoje date kontaktowe",
     "Marketplace.Cart.AdditionalInfo": "Dodatkowe informacje",
-    "Marketplace.Cart.AddMessageWithInfo": "Dodaj więcej informacji w wiadomości"
+    "Marketplace.Cart.AddMessageWithInfo": "Dodaj więcej informacji w wiadomości",
     "Marketplace.Offer.ApproximatePriceStartsFrom": "Przybliżone ceny tego produktu zaczynają się od {{ price }} euro za licencję.",
     "Marketplace.Offer.AmountOfLicences": "Liczba licencji",
     "Marketplace.Offer.AddProcessToCart": "Dodaj proces do koszyka"
