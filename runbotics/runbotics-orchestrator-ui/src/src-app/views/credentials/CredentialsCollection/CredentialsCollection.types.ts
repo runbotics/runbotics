@@ -13,7 +13,7 @@ export interface EditCredentialsCollectionDto {
 }
 
 export interface EditCredentialsCollectionWithCreatorDto extends EditCredentialsCollectionDto {
-    createdById: number;
+    createdById: number | null;
 }
 
 export type CredentialsCollectionKeys = { [Key in keyof FrontCredentialCollectionDto]: Key }[keyof FrontCredentialCollectionDto];

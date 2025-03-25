@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, FC, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -22,7 +22,7 @@ export interface SharedWithUser {
 
 interface SharedWithUsersProps {
     credentialsCollectionFormState: EditCredentialsCollectionWithCreatorDto;
-    setCredentialsCollectionFormState: (state: (prevState: EditCredentialsCollectionWithCreatorDto) => EditCredentialsCollectionWithCreatorDto) => void;
+    setCredentialsCollectionFormState: Dispatch<SetStateAction<EditCredentialsCollectionWithCreatorDto>>;
 }
 
 export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectionFormState, setCredentialsCollectionFormState }) => {

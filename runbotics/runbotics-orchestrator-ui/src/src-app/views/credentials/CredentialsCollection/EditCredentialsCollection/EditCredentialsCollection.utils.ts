@@ -61,7 +61,7 @@ export const mapToEditCredentialCollectionDto = (collection: FrontCredentialColl
         accessType: collection.accessType,
         color: collection.color,
         sharedWith: sharedWithUsers,
-        description: collection.description ? collection.description : '',
+        description: collection.description ?? '',
         createdById: collection.createdById,
     };
 };
@@ -83,17 +83,28 @@ interface filterOptions {
 
 const SHARE_NOT_ALLOWED_ROLES = [Role.ROLE_GUEST, Role.ROLE_TENANT_ADMIN];
 
-export const filterSharableUsers = (value: string, allSharableUsers: UserDto[], {
-    sharedWithUsers =[],
-    selectedUsers = [],
-    collectionCreatorId,
-    currentUserId,
-}: filterOptions ): UserDto[] =>
+export const filterSharableUsers = (
+    value: string,
+    allSharableUsers: UserDto[],
+    {
+        sharedWithUsers = [],
+        selectedUsers = [],
+        collectionCreatorId,
+        currentUserId,
+    }: filterOptions
+): UserDto[] =>
     allSharableUsers.filter(
-        sharableUser =>
+        (sharableUser) =>
             sharableUser.email.toLowerCase().includes(value.toLowerCase()) &&
-        sharableUser.id !== collectionCreatorId && sharableUser.id !== currentUserId
-        && !sharableUser.roles.some(role => SHARE_NOT_ALLOWED_ROLES.includes(role)) &&
-        !sharedWithUsers?.some(sharedWithUser => sharedWithUser.email === sharableUser.email) &&
-        !selectedUsers?.some(selectedUser => selectedUser.email === sharableUser.email)
+            sharableUser.id !== collectionCreatorId &&
+            sharableUser.id !== currentUserId &&
+            !sharableUser.roles.some((role) =>
+                SHARE_NOT_ALLOWED_ROLES.includes(role)
+            ) &&
+            !sharedWithUsers?.some(
+                (sharedWithUser) => sharedWithUser.email === sharableUser.email
+            ) &&
+            !selectedUsers?.some(
+                (selectedUser) => selectedUser.email === sharableUser.email
+            )
     );

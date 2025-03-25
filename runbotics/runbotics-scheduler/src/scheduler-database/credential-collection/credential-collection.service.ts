@@ -322,7 +322,7 @@ export class CredentialCollectionService {
         );
 
         if (userEmails.length !== correctEmailCount) {
-            throw new BadRequestException('Some emails are not correct');
+            throw new BadRequestException('SharedWith array does not contain valid emails');
         }
 
         const grantAccessUsers = await this.userService.findByEmailsNotTenantAdmin(userEmails, tenantId);

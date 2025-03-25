@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from 'react';
+import { Dispatch, ChangeEvent, FC, SetStateAction } from 'react';
 
 import { Box, TextField } from '@mui/material';
 
@@ -12,11 +12,11 @@ import { CollectionFormValidation, inputErrorMessages, InputErrorType } from '..
 
 interface CredentalsCollectionGeneralOptionsProps {
     formValidationState: CollectionFormValidation;
-    setFormValidationState: (formValidationState: CollectionFormValidation) => void;
+    setFormValidationState: Dispatch<SetStateAction<CollectionFormValidation>>;
     inputErrorType: InputErrorType;
-    setInputErrorType: (errorType: InputErrorType) => void;
+    setInputErrorType: Dispatch<SetStateAction<InputErrorType>>;
     formState: EditCredentialsCollectionWithCreatorDto;
-    setFormState: (state: ((prevState: EditCredentialsCollectionWithCreatorDto) => EditCredentialsCollectionWithCreatorDto)) => void;
+    setFormState: Dispatch<SetStateAction<EditCredentialsCollectionWithCreatorDto>>;
 }
 
 export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
