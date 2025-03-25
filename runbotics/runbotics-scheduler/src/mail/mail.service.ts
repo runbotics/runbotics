@@ -177,6 +177,17 @@ export class MailService {
         }
     }
 
+    public sendUserAcceptMail(userToUpdate: User) {
+        const message = 'Your account has been activated.';
+
+        this.sendMail({
+            to: userToUpdate.email,
+            subject: 'RunBotics - User Activation',
+            content: message,
+            isHtml: false,
+        });
+    }
+
     private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {
         const emailAddresses = mergeArraysWithoutDuplicates(addresses).join(',');
 
