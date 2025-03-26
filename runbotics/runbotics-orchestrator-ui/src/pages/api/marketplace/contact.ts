@@ -11,6 +11,20 @@ export interface MarketplaceContactBody {
     cartContent: CartItem[];
 }
 
+const getContentCard = (cartContent: CartItem[]) => cartContent.map((item, idx) => {
+    const { title, quantity, selectedParameters, parameters } = item;
+    return `${idx + 1}. ${title} | Amount: ${quantity} | Parameters: ${selectedParameters?.map(parameter => {
+        const selectedParameter = parameters.additionalParameters
+            ?.find(param => param.name === parameter.name);
+        if (!selectedParameter) {
+            return null;
+        }
+        const selectedParameterOption = selectedParameter.options
+            .find(option => option.name === parameter.selectedOption)?.name;
+        return `${selectedParameter.name} - ${selectedParameterOption}`;
+    }).join(' | ')} | Price: ${item.parameters?.basePrice}`;
+}).join(' |\n');
+
 function getMissingFields<T>(obj: any, interfaceType: { [K in keyof T]: any }): (keyof T)[] {
     return Object.keys(interfaceType).filter(key => !(key in obj)) as (keyof T)[];
 }
@@ -23,19 +37,7 @@ const createMessage = (body: MarketplaceContactBody) => {
 Additional Info:
 ${additionalInfo}
 Offers:
-${cartContent.map((item, idx) => {
-        const { title, quantity, selectedParameters, parameters } = item;
-        return `${idx + 1}. ${title} | Amount: ${quantity} | Parameters: ${selectedParameters?.map(parameter => {
-            const selectedParameter = parameters.additionalParameters
-                ?.find(param => param.name === parameter.name);
-            if (!selectedParameter) {
-                return null;
-            }
-            const selectedParameterOption = selectedParameter.options
-                .find(option => option.name === parameter.selectedOption)?.name;
-            return `${selectedParameter.name} - ${selectedParameterOption}`;
-        }).join(' | ')} | Price: ${item.parameters?.basePrice}`;
-    }).join(' |\n')}`;
+${getContentCard(cartContent)}`;
 };
 
 const emailConfig = async (env) => {
@@ -69,7 +71,7 @@ const getEmailContent = (body: MarketplaceContactBody) => {
     return {
         from: `${name} <${email}>`,
         to: env === 'production' ? serverRuntimeConfig.mailUsername : 'test@runbotics.com',
-        subject: `Message from ${name}`,
+        subject: `[Marketplace] Message from ${name}`,
         text: content,
     };
 };
