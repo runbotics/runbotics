@@ -36,6 +36,7 @@
     "Marketplace.Cart.AddMessageWithInfo": "Add message with more information",
     "Marketplace.Offer.ApproximatePriceStartsFrom": "Approximate prices for this product start at {{ price }} euro per licence.",
     "Marketplace.Offer.AmountOfLicences": "Amount of licences",
-    "Marketplace.Offer.AddProcessToCart": "Add process to cart"
-    
+    "Marketplace.Offer.AddProcessToCart": "Add process to cart",
+    "Marketplace.Offer.Notice": "Notice",
+    "Marketplace.Offer.NoticeText": "By completing this form and sending us a request for a quote, you voluntarily agree to provide us with the data contained in the form and for us to process this data in order to prepare a quote and contact you. The administrator of this data will be All For One Poland company. At any time you can correct your data and get access to it by contacting our RunBotics team."
 }

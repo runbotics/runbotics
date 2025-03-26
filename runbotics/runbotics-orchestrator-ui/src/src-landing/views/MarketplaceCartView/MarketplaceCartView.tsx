@@ -1,17 +1,21 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { useCart } from '#src-app/contexts/CartContext';
+import { axiosInstance as axios } from '#src-app/utils/axios';
+import ContactForm from '#src-landing/components/ContactForm';
 import Layout from '#src-landing/components/Layout';
 
 import MarketplaceCartContainer from '#src-landing/components/MarketplaceCartContainer';
 
 import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSummary';
 
+import Typography from '#src-landing/components/Typography';
+
 import styles from './MarketplaceCartView.module.scss';
-import ContactForm from '#src-landing/components/ContactForm';
+import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 
 const MarketplaceCartView: FC = () => {
-    const { cart } = useCart();
+    const { cart, contactFormValue } = useCart();
     const [selectedItems, setSelectedItems] = useState(cart.map(item => item.slug) ?? []);
 
     const currentPrice = cart.filter(item => selectedItems.includes(item.slug))
@@ -23,6 +27,25 @@ const MarketplaceCartView: FC = () => {
             0,
         );
 
+    const getSelectedCartItems = useCallback(() => cart.filter(item => selectedItems.includes(item.slug)), [selectedItems, cart]);
+
+    const onSubmit = async () => {
+        const selectedCartItems = getSelectedCartItems();
+        const body: MarketplaceContactBody = {
+            ...contactFormValue,
+            cartContent: selectedCartItems,
+        };
+        await axios
+            .post('/api/marketplace/contact', body)
+            .then(() => {
+                console.log(
+                    'email sent',
+                );
+            })
+            .catch(() => {
+                console.error('email not sent');
+            });
+    };
     return (
         <Layout>
             <div className={styles.root}>
@@ -38,8 +61,7 @@ const MarketplaceCartView: FC = () => {
                 </div>
                 <MarketplaceCartSummary
                     approximatePrice={currentPrice}
-                    onSubmit={() => {
-                    }} />
+                    onSubmit={onSubmit} />
             </div>
         </Layout>
     );

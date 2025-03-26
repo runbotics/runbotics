@@ -36,5 +36,7 @@
     "Marketplace.Cart.AddMessageWithInfo": "Dodaj więcej informacji w wiadomości",
     "Marketplace.Offer.ApproximatePriceStartsFrom": "Przybliżone ceny tego produktu zaczynają się od {{ price }} euro za licencję.",
     "Marketplace.Offer.AmountOfLicences": "Liczba licencji",
-    "Marketplace.Offer.AddProcessToCart": "Dodaj proces do koszyka"
+    "Marketplace.Offer.AddProcessToCart": "Dodaj proces do koszyka",
+    "Marketplace.Offer.Notice": "Nota",
+    "Marketplace.Offer.NoticeText": "Wypełniając ten formularz i wysyłając do nas prośbę o wycenę, dobrowolnie wyrażasz zgodę na podanie nam danych zawartych w formularzu oraz na przetwarzanie tych danych w celu przygotowania wyceny i skontaktowania się z Tobą. Administratorem tych danych będzie firma All For One Poland. W każdej chwili możesz poprawić swoje dane i uzyskać do nich dostęp, kontaktując się z naszym zespołem RunBotics."
 }
