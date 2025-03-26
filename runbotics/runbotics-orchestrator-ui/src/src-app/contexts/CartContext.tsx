@@ -1,6 +1,10 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
 
+import { useSnackbar } from 'notistack';
+
 import { MarketplaceOffer } from '#contentful/common';
+
+import { translate } from '#src-app/hooks/useTranslations';
 
 import { useTypedLocalStorage } from '../hooks/useTypedLocalStorage';
 
@@ -38,6 +42,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         phone: '',
         additionalInfo: '',
     });
+    const {enqueueSnackbar} = useSnackbar();
     
     const changeFormValue = (key: keyof ContactFormValue, value: string) => {
         setContactFormValue((prevState) => ({
@@ -55,6 +60,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 );
             }
             return [...prevCart, item];
+        });
+        enqueueSnackbar(translate('Marketplace.Cart.SuccessAdded'), {
+            variant: 'success',
+            autoHideDuration: 5000,
         });
     };
 

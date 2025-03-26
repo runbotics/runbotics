@@ -1,6 +1,9 @@
 import { FC, useCallback, useState } from 'react';
 
+import { useSnackbar } from 'notistack';
+
 import { useCart } from '#src-app/contexts/CartContext';
+import useTranslations from '#src-app/hooks/useTranslations';
 import { axiosInstance as axios } from '#src-app/utils/axios';
 import ContactForm from '#src-landing/components/ContactForm';
 import Layout from '#src-landing/components/Layout';
@@ -9,12 +12,13 @@ import MarketplaceCartContainer from '#src-landing/components/MarketplaceCartCon
 
 import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSummary';
 
-import Typography from '#src-landing/components/Typography';
-
 import styles from './MarketplaceCartView.module.scss';
 import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 
+
 const MarketplaceCartView: FC = () => {
+    const { translate } = useTranslations();
+    const { enqueueSnackbar } = useSnackbar();
     const { cart, contactFormValue } = useCart();
     const [selectedItems, setSelectedItems] = useState(cart.map(item => item.slug) ?? []);
 
@@ -27,7 +31,10 @@ const MarketplaceCartView: FC = () => {
             0,
         );
 
-    const getSelectedCartItems = useCallback(() => cart.filter(item => selectedItems.includes(item.slug)), [selectedItems, cart]);
+    const getSelectedCartItems = useCallback(
+        () => cart.filter(item => selectedItems.includes(item.slug)),
+        [selectedItems, cart],
+    );
 
     const onSubmit = async () => {
         const selectedCartItems = getSelectedCartItems();
@@ -38,12 +45,22 @@ const MarketplaceCartView: FC = () => {
         await axios
             .post('/api/marketplace/contact', body)
             .then(() => {
-                console.log(
-                    'email sent',
+                enqueueSnackbar(
+                    translate('Marketplace.Cart.EmailSent'),
+                    {
+                        variant: 'success',
+                        autoHideDuration: 5000,
+                    },
                 );
             })
             .catch(() => {
-                console.error('email not sent');
+                enqueueSnackbar(
+                    translate('Marketplace.Cart.EmailError'),
+                    {
+                        variant: 'error',
+                        autoHideDuration: 5000,
+                    },
+                );
             });
     };
     return (
