@@ -1,9 +1,9 @@
-import { AccessType, DEFAULT_COLLECTION_COLOR, FrontCredentialCollectionDto, UserDto } from 'runbotics-common';
+import { AccessType, DEFAULT_COLLECTION_COLOR, FrontCredentialCollectionDto, Role, UserDto } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { SharedWithUser } from './SharedWithUsers/SharedWithUsers';
-import { EditCredentialsCollectionDto } from '../CredentialsCollection.types';
+import { EditCredentialsCollectionDto, EditCredentialsCollectionWithCreatorDto } from '../CredentialsCollection.types';
 
 export enum InputErrorType {
     NAME_IS_REQUIRED = 'NAME_IS_REQUIRED'
@@ -23,14 +23,15 @@ export const initialFormValidationState: CollectionFormValidation = {
     name: false
 };
 
-export const initialCredentialsCollectionData: EditCredentialsCollectionDto = {
+export const initialCredentialsCollectionData: EditCredentialsCollectionWithCreatorDto = {
     name: '',
     accessType: AccessType.PRIVATE,
     description: '',
-    color: DEFAULT_COLLECTION_COLOR
+    color: DEFAULT_COLLECTION_COLOR,
+    createdById: null,
 };
 
-export const getInitialCredentialsCollectionData = (collection: null | EditCredentialsCollectionDto): EditCredentialsCollectionDto => {
+export const getInitialCredentialsCollectionData = (collection: null | EditCredentialsCollectionWithCreatorDto): EditCredentialsCollectionWithCreatorDto => {
     if (!collection) {
         return initialCredentialsCollectionData;
     }
@@ -40,11 +41,12 @@ export const getInitialCredentialsCollectionData = (collection: null | EditCrede
         accessType: collection.accessType,
         color: collection.color,
         sharedWith: collection.sharedWith,
-        description: collection.description
+        description: collection.description,
+        createdById: collection.createdById,
     };
 };
 
-export const mapToEditCredentialCollectionDto = (collection: FrontCredentialCollectionDto): EditCredentialsCollectionDto => {
+export const mapToEditCredentialCollectionDto = (collection: FrontCredentialCollectionDto): EditCredentialsCollectionWithCreatorDto => {
     const sharedWithUsers = collection.credentialCollectionUser
         ? [...collection.credentialCollectionUser]
             .filter(credentialUser => credentialUser.userId !== collection.createdById)
@@ -59,11 +61,12 @@ export const mapToEditCredentialCollectionDto = (collection: FrontCredentialColl
         accessType: collection.accessType,
         color: collection.color,
         sharedWith: sharedWithUsers,
-        description: collection.description ? collection.description : ''
+        description: collection.description ?? '',
+        createdById: collection.createdById,
     };
 };
 
-export const adjustShareWithProperty = (collection: EditCredentialsCollectionDto): EditCredentialsCollectionDto => ({
+export const adjustShareWithProperty = (collection: EditCredentialsCollectionWithCreatorDto): EditCredentialsCollectionDto => ({
     name: collection.name,
     accessType: collection.accessType,
     color: collection.color,
@@ -75,18 +78,33 @@ interface filterOptions {
     sharedWithUsers: SharedWithUser[];
     selectedUsers: SharedWithUser[];
     collectionCreatorId: number;
+    currentUserId: number;
 }
 
-export const filterSharableUsers = (value: string, allSharableUsers: UserDto[], {
-    sharedWithUsers =[],
-    selectedUsers = [],
-    collectionCreatorId
-}: filterOptions ): UserDto[] =>
+const SHARE_NOT_ALLOWED_ROLES = [Role.ROLE_GUEST, Role.ROLE_TENANT_ADMIN];
+
+export const filterSharableUsers = (
+    value: string,
+    allSharableUsers: UserDto[],
+    {
+        sharedWithUsers = [],
+        selectedUsers = [],
+        collectionCreatorId,
+        currentUserId,
+    }: filterOptions
+): UserDto[] =>
     allSharableUsers.filter(
-        sharableUser =>
+        (sharableUser) =>
             sharableUser.email.toLowerCase().includes(value.toLowerCase()) &&
-        sharableUser.id !== collectionCreatorId
-        &&
-        !sharedWithUsers?.some(sharedWithUser => sharedWithUser.email === sharableUser.email) &&
-        !selectedUsers?.some(selectedUser => selectedUser.email === sharableUser.email)
+            sharableUser.id !== collectionCreatorId &&
+            sharableUser.id !== currentUserId &&
+            !sharableUser.roles.some((role) =>
+                SHARE_NOT_ALLOWED_ROLES.includes(role)
+            ) &&
+            !sharedWithUsers?.some(
+                (sharedWithUser) => sharedWithUser.email === sharableUser.email
+            ) &&
+            !selectedUsers?.some(
+                (selectedUser) => selectedUser.email === sharableUser.email
+            )
     );

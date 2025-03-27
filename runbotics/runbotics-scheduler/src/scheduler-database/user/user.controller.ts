@@ -28,7 +28,7 @@ export class UserController {
     }
 
     @GetWithTenant('users')
-    @FeatureKeys(FeatureKey.TENANT_READ_USER)
+    @FeatureKeys(FeatureKey.TENANT_READ)
     getAllActivatedUsersInTenant(
         @UserDecorator() { tenantId }: User,
     ) {

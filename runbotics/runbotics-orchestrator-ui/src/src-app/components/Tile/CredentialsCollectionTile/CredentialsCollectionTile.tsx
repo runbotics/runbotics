@@ -5,10 +5,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Divider, Grid, Typography, Box } from '@mui/material';
 import { useRouter } from 'next/router';
 
-import { AccessType, FrontCredentialCollectionDto } from 'runbotics-common';
+import { AccessType, FrontCredentialCollectionDto, Role } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import { ColorDot } from '#src-app/views/credentials/CredentialsCollection/EditCredentialsCollection/CollectionColor/CollectionColor.styles';
@@ -34,6 +35,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
     const { translate } = useTranslations();
     const { user: currentUser } = useAuth();
     const isOwner = collection.createdById === currentUser.id;
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
 
     const handleCardClick = () => {
         setCurrentDialogCollection(collection);
@@ -98,7 +100,7 @@ const CredentialsCollectionTile: FC<CredentialsCollectionTileProps> = ({
                     </Grid>
                     <Divider sx={{ marginTop: '2rem' }} />
                     <Box minHeight="66px">
-                        <If condition={isOwner}>
+                        <If condition={isOwner || isTenantAdmin}>
                             <MenuItems
                                 itemId={collection?.id}
                                 handleOpenEditDialog={handleOpenEditDialog}

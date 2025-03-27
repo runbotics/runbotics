@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from 'react';
+import { Dispatch, ChangeEvent, FC, SetStateAction } from 'react';
 
 import { Box, TextField } from '@mui/material';
 
@@ -6,17 +6,17 @@ import Accordion from '#src-app/components/Accordion';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { CredentialsCollectionKeys, EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
+import { CredentialsCollectionKeys, EditCredentialsCollectionWithCreatorDto } from '../../CredentialsCollection.types';
 import CollectionColorSelect from '../CollectionColor/CollectionColorSelect';
 import { CollectionFormValidation, inputErrorMessages, InputErrorType } from '../EditCredentialsCollection.utils';
 
 interface CredentalsCollectionGeneralOptionsProps {
     formValidationState: CollectionFormValidation;
-    setFormValidationState: (formValidationState: CollectionFormValidation) => void;
+    setFormValidationState: Dispatch<SetStateAction<CollectionFormValidation>>;
     inputErrorType: InputErrorType;
-    setInputErrorType: (errorType: InputErrorType) => void;
-    formState: EditCredentialsCollectionDto;
-    setFormState: (state: ((prevState: EditCredentialsCollectionDto) => EditCredentialsCollectionDto)) => void;
+    setInputErrorType: Dispatch<SetStateAction<InputErrorType>>;
+    formState: EditCredentialsCollectionWithCreatorDto;
+    setFormState: Dispatch<SetStateAction<EditCredentialsCollectionWithCreatorDto>>;
 }
 
 export const GeneralOptions: FC<CredentalsCollectionGeneralOptionsProps> = ({
