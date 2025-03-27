@@ -244,22 +244,22 @@ export class CredentialCollectionService {
 
         await this.credentialCollectionRepository.manager.transaction(
             async (manager) => {
-                await Promise.all(
-                    credentialCollectionUserArray.map((ccu) =>
-                        manager.remove(CredentialCollectionUser, ccu)
-                    )
-                );
-                await Promise.all(
-                    credentialCollectionUserArrayToSave.map((ccu) =>
-                        manager.save(CredentialCollectionUser, ccu)
-                    )
-                );
+                await manager.remove(CredentialCollectionUser, credentialCollectionUserArray);
 
-                await manager.update(CredentialCollection, id, dto).catch(async error => {
-                    await this.throwErrorIfNameTaken(user.tenantId, dto.name, user.id, { id });
+                await manager.save(CredentialCollectionUser, credentialCollectionUserArrayToSave);
 
-                    throw new BadRequestException(error.message);
-                });
+                await manager
+                    .update(CredentialCollection, id, dto)
+                    .catch(async (error) => {
+                        await this.throwErrorIfNameTaken(
+                            user.tenantId,
+                            dto.name,
+                            user.id,
+                            { id }
+                        );
+
+                        throw new BadRequestException(error.message);
+                    });
             }
         );
 
