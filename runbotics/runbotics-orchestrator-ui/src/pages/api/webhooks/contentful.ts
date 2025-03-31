@@ -1,14 +1,23 @@
 import _ from 'lodash';
 
 import {
+    getBlogMainCache, recreateBlogCache,
+    transformContentfulResponse as transformBlogContentfulResponse,
+} from '#contentful/blog-main';
+import {
     getMarketplaceMainCache,
     recreateMarketplaceCache,
-    transformContentfulResponse,
+    transformContentfulResponse as transformMarketplaceContentfulResponse,
 } from '#contentful/marketplace-main';
 import { languages } from '#src-app/translations/translations';
 
 enum ContentTypeId {
-    MARKETPLACE_OFFER = 'marketplaceOffer'
+    MARKETPLACE_OFFER = 'marketplaceOffer',
+    MARKETPLACE_INDUSTRY = 'industry',
+    MARKETPLACE_TAG = 'marketplaceTag',
+    BLOG_POST = 'blogPost',
+    BLOG_AUTHOR = 'author',
+    BLOG_TAG = 'tag',
 }
 
 interface RequestBody {
@@ -17,24 +26,35 @@ interface RequestBody {
 
 export default async function handler(req, res) {
     const body = JSON.parse(req.body) as RequestBody;
-    console.log(body);
     switch (body.contentTypeId) {
         case ContentTypeId.MARKETPLACE_OFFER:
-            const marketplaceContentful = await transformContentfulResponse();
+        case ContentTypeId.MARKETPLACE_TAG:
+        case ContentTypeId.MARKETPLACE_INDUSTRY:
+            const marketplaceContentful = await transformMarketplaceContentfulResponse();
             for(const lang of languages) {
                 const cache = getMarketplaceMainCache(lang);
                 if(!_.isEqual(marketplaceContentful[lang], cache)) {
-                    recreateMarketplaceCache();
-                    break;
+                    // eslint-disable-next-line no-await-in-loop
+                    await recreateMarketplaceCache();
+                    return res.status(200).json({ message: 'Marketplace cache refreshed'});
                 }
             }
+            break;
+        case ContentTypeId.BLOG_AUTHOR:
+        case ContentTypeId.BLOG_POST:
+        case ContentTypeId.BLOG_TAG:
+            const blogContentful = await transformBlogContentfulResponse();
+            for (const lang of Object.values(languages)) {
+                const cache = getBlogMainCache(lang);
+                if(!_.isEqual(blogContentful[lang], cache)) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await recreateBlogCache();
+                    return  res.status(200).json({message: 'Blog cache refreshed'})
+                }
+            }
+            break;
+        default: 
+            return res.status(304).json({ message: 'Cache not modified' });
     }
-    // console.log(contentfulCache['en']);
-    // const offersPL = getAllOffers('pl');
-    // const offersEN = getAllOffers('en');
-    // 
-    // poszukać entry type i po tym filtrować - na webhooka
-    // 2 webhooki jeden prodowy - publish i  unpublish
-    // drugi - save 
-    return res.status(200).json({ message: 'Successful refresh' });
+    return res.status(304).json({ message: 'Cache not modified' });
 }

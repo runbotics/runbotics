@@ -50,7 +50,7 @@ export function getMarketplaceMainCache(
     };
 }
 
-export async function transformContentfulResponse(language: Language = DEFAULT_LANG) {
+export async function transformContentfulResponse() {
     const result: { en: Partial<MarketplaceMainCache>; pl: Partial<MarketplaceMainCache> } = {
         en: {},
         pl: {}
