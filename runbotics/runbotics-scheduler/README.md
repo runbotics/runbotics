@@ -14,6 +14,7 @@ The `runbotics-scheduler` package based on [Nest.js](https://nestjs.com) is resp
 - process triggering
 - process scheduling
 - process termination
+- and many more - the goal is to migrate the whole backend to this package and it's at advanced stage.
 
 It is available at `http://localhost:4000`.
 
