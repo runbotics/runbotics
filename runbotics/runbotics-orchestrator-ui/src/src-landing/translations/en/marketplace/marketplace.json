@@ -28,8 +28,19 @@
     "Marketplace.Cart.DisclaimerText": "Our team prices products individually to your needs. Send us a request for a quote. Our consultant will contact you to arrange all the details in 3 working days.",
     "Marketplace.Cart.ApproximatePrice": "Approximate Price",
     "Marketplace.Cart.SendRequestForQuote": "Send request for quote",
+    "Marketplace.Cart.NameAndSurname": "Name and Surname",
+    "Marketplace.Cart.EmailAddress": "Email address",
+    "Marketplace.Cart.PhoneNumber": "Phone number",
+    "Marketplace.Cart.YourContactInfo": "Your contact info",
+    "Marketplace.Cart.AdditionalInfo": "Additional Info",
+    "Marketplace.Cart.AddMessageWithInfo": "Add message with more information",
     "Marketplace.Offer.ApproximatePriceStartsFrom": "Approximate prices for this product start at {{ price }} euro per licence.",
     "Marketplace.Offer.AmountOfLicences": "Amount of licences",
-    "Marketplace.Offer.AddProcessToCart": "Add process to cart"
-    
+    "Marketplace.Offer.AddProcessToCart": "Add process to cart",
+    "Marketplace.Offer.Notice": "Notice",
+    "Marketplace.Offer.NoticeText": "By completing this form and sending us a request for a quote, you voluntarily agree to provide us with the data contained in the form and for us to process this data in order to prepare a quote and contact you. The administrator of this data will be All For One Poland company. At any time you can correct your data and get access to it by contacting our RunBotics team.",
+    "Marketplace.Cart.EmailSent": "Email sent successfully",
+    "Marketplace.Cart.EmailError": "Error occurred while sending email",
+    "Marketplace.Cart.SuccessAdded": "Offer added successfully",
+    "Marketplace.Cart.ErrorAdded": "Error occurred while adding new offer to cart"
 }

@@ -32,7 +32,7 @@ const MarketplaceCartSummary: FC<Props> = ({ approximatePrice, onSubmit }) => {
                         borderRadius: '20px',
                     }}
                     size={'large'}
-                    disabled
+                    onClick={() => onSubmit()}
                 >
                     {translate('Marketplace.Cart.SendRequestForQuote')}
                 </Button>

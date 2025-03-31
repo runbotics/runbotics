@@ -1,6 +1,11 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
+
+import { useSnackbar } from 'notistack';
 
 import { useCart } from '#src-app/contexts/CartContext';
+import useTranslations from '#src-app/hooks/useTranslations';
+import { axiosInstance as axios } from '#src-app/utils/axios';
+import ContactForm from '#src-landing/components/ContactForm';
 import Layout from '#src-landing/components/Layout';
 
 import MarketplaceCartContainer from '#src-landing/components/MarketplaceCartContainer';
@@ -8,9 +13,13 @@ import MarketplaceCartContainer from '#src-landing/components/MarketplaceCartCon
 import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSummary';
 
 import styles from './MarketplaceCartView.module.scss';
+import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
+
 
 const MarketplaceCartView: FC = () => {
-    const { cart } = useCart();
+    const { translate } = useTranslations();
+    const { enqueueSnackbar } = useSnackbar();
+    const { cart, contactFormValue } = useCart();
     const [selectedItems, setSelectedItems] = useState(cart.map(item => item.slug) ?? []);
 
     const currentPrice = cart.filter(item => selectedItems.includes(item.slug))
@@ -22,6 +31,38 @@ const MarketplaceCartView: FC = () => {
             0,
         );
 
+    const getSelectedCartItems = useCallback(
+        () => cart.filter(item => selectedItems.includes(item.slug)),
+        [selectedItems, cart],
+    );
+
+    const onSubmit = async () => {
+        const selectedCartItems = getSelectedCartItems();
+        const body: MarketplaceContactBody = {
+            ...contactFormValue,
+            cartContent: selectedCartItems,
+        };
+        await axios
+            .post('/api/marketplace/contact', body)
+            .then(() => {
+                enqueueSnackbar(
+                    translate('Marketplace.Cart.EmailSent'),
+                    {
+                        variant: 'success',
+                        autoHideDuration: 5000,
+                    },
+                );
+            })
+            .catch(() => {
+                enqueueSnackbar(
+                    translate('Marketplace.Cart.EmailError'),
+                    {
+                        variant: 'error',
+                        autoHideDuration: 5000,
+                    },
+                );
+            });
+    };
     return (
         <Layout>
             <div className={styles.root}>
@@ -33,14 +74,11 @@ const MarketplaceCartView: FC = () => {
                             setSelectedItems={setSelectedItems}
                             selectedItems={selectedItems} />
                     </div>
-                    <div className={styles.contactForm}>
-                        <h1>Work in progress</h1>
-                    </div>
+                    <ContactForm />
                 </div>
                 <MarketplaceCartSummary
                     approximatePrice={currentPrice}
-                    onSubmit={() => {
-                    }} />
+                    onSubmit={onSubmit} />
             </div>
         </Layout>
     );
