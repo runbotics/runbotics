@@ -1,6 +1,5 @@
 import { getPost, setSinglePostCache } from '#contentful/blog-post';
 import { BlogPost, CacheKey, Category, contentfulCache, isCached, Tag } from '#contentful/common';
-import { getOffer } from '#contentful/marketplace-post';
 import { DEFAULT_LANG, Language, languages } from '#src-app/translations/translations';
 
 import { getMainPage } from './api';
@@ -64,7 +63,7 @@ export async function transformContentfulResponse() {
             result[lang].posts = modelMap.posts;
 
             await Promise.allSettled(modelMap.posts.map(async (post) => {
-                const singlePost = await getOffer(lang, { slug: post.slug });
+                const singlePost = await getPost(lang, { slug: post.slug });
 
                 if (!result[lang]) {
                     result[lang] = {};
