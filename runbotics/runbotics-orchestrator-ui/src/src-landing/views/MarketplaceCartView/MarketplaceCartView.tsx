@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useSnackbar } from 'notistack';
 
@@ -19,8 +19,7 @@ import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 const MarketplaceCartView: FC = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
-    const { cart, contactFormValue } = useCart();
-    const [selectedItems, setSelectedItems] = useState(cart.map(item => item.slug) ?? []);
+    const { cart, contactFormValue, selectedCartItems} = useCart();
 
     const fullPrice = cart.filter(item => selectedItems.includes(item.slug))
         .reduce(
@@ -32,15 +31,15 @@ const MarketplaceCartView: FC = () => {
         );
 
     const getSelectedCartItems = useCallback(
-        () => cart.filter(item => selectedItems.includes(item.slug)),
-        [selectedItems, cart],
+        () => cart.filter(item => selectedCartItems.includes(item.slug)),
+        [selectedCartItems, cart],
     );
 
     const onSubmit = async () => {
-        const selectedCartItems = getSelectedCartItems();
+        const selectedFullCartItems = getSelectedCartItems();
         const body: MarketplaceContactBody = {
             ...contactFormValue,
-            cartContent: selectedCartItems,
+            cartContent: selectedFullCartItems,
         };
         await axios
             .post('/api/marketplace/contact', body)
@@ -70,9 +69,7 @@ const MarketplaceCartView: FC = () => {
                     <h1 className={styles.cartHeader}>Your cart</h1>
                     <div className={styles.cartProductsWrapper}>
                         <h2>Chosen products ({cart.length})</h2>
-                        <MarketplaceCartContainer
-                            setSelectedItems={setSelectedItems}
-                            selectedItems={selectedItems} />
+                        <MarketplaceCartContainer />
                     </div>
                     <ContactForm />
                 </div>

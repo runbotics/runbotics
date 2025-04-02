@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from 'react';
 
 import { useSnackbar } from 'notistack';
 
@@ -30,6 +30,8 @@ interface CartContextType {
     addToCart: (item: CartItem) => void;
     removeFromCart: (id: string) => void;
     clearCart: () => void;
+    selectedCartItems: string[];
+    setSelectedCartItems: Dispatch<SetStateAction<string[]>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -42,6 +44,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         phone: '',
         additionalInfo: '',
     });
+    const [selectedCartItems, setSelectedCartItems] = useState<string[]>(cart.map(item => item.slug) ?? []);
     const {enqueueSnackbar} = useSnackbar();
     
     const changeFormValue = (key: keyof ContactFormValue, value: string) => {
@@ -86,7 +89,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <CartContext.Provider value={{ cart, contactFormValue, changeFormValue,  addToCart, removeFromCart, clearCart }}>
+        <CartContext.Provider value={{ 
+            cart, 
+            contactFormValue,
+            changeFormValue,  
+            addToCart, 
+            removeFromCart,
+            clearCart,
+            selectedCartItems,
+            setSelectedCartItems
+        }}>
             {children}
         </CartContext.Provider>
     );

@@ -31,7 +31,9 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
 
     const onSubmit = () => {
         addToCart({
-            ...offer,
+            title: offer.title,
+            slug: offer.slug,
+            parameters: offer.parameters,
             selectedParameters,
             quantity: 1,
         });
