@@ -6,4 +6,38 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    
+    padding: 8px;
+}
+
+.deleteButton {
+    margin: 8px;
+    
+    :hover {
+        background-color: $palette-light-gray;
+        border-radius: 50%;
+    }
+}
+
+.accordionDetails {
+    display: flex;
+    
+    flex-direction: column;
+    
+    gap: 1rem;
+    
+    border: 1px solid $palette-gray;
+    border-radius: 8px;
+    border-top: 0;
+    
+    
+}
+
+.parameterWrapper {
+    display: flex;
+    width: 30%;
+    
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 }

@@ -8,12 +8,14 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { useTypedLocalStorage } from '../hooks/useTypedLocalStorage';
 
+export interface SelectedParameter {
+    name: string;
+    selectedOption: string;
+}
+
 export type CartItem = Omit<MarketplaceOffer, 'tags' | 'body' | 'description' | 'industries' | 'status'> & {
     quantity: number;
-    selectedParameters?: {
-        name: string;
-        selectedOption: string;
-    }[];
+    selectedParameters?: SelectedParameter[];
 };
 
 export interface ContactFormValue {
@@ -32,6 +34,7 @@ interface CartContextType {
     clearCart: () => void;
     selectedCartItems: string[];
     setSelectedCartItems: Dispatch<SetStateAction<string[]>>;
+    updateCartItem: (id: string, update: Partial<CartItem>) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -97,7 +100,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
             removeFromCart,
             clearCart,
             selectedCartItems,
-            setSelectedCartItems
+            setSelectedCartItems,
+            updateCartItem,
         }}>
             {children}
         </CartContext.Provider>
