@@ -43,7 +43,7 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
             <Typography variant={'h5'}>
                 {translate(
                     'Marketplace.Offer.ApproximatePriceStartsFrom',
-                    { price: parameters?.basePrice ?? 0 },
+                    { price: '--' },
                 )}
             </Typography>
             <div>
