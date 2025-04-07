@@ -5,6 +5,7 @@ import { DEFAULT_LANG, Language, languages } from '#src-app/translations/transla
 import { getMainPage } from './api';
 import { BlogMainCache } from './types';
 
+
 export function getBlogPostsCache(language: Language = DEFAULT_LANG) {
     return contentfulCache[language].get(CacheKey.Posts) as BlogPost[] | undefined;
 }
@@ -47,6 +48,41 @@ export function getBlogMainCache(
         categories,
         tags,
     };
+}
+
+export async function transformContentfulResponse() {
+    const result: { en: Partial<BlogMainCache>; pl: Partial<BlogMainCache> } = {
+        en: {},
+        pl: {}
+    };
+
+    await Promise.allSettled(languages.map(async (lang) => {
+        const modelMap = await getMainPage(lang);
+
+        if (modelMap.posts) {
+            result[lang].posts = modelMap.posts;
+
+            await Promise.allSettled(modelMap.posts.map(async (post) => {
+                const singlePost = await getPost(lang, { slug: post.slug });
+
+                if (!result[lang]) {
+                    result[lang] = {};
+                }
+
+                result[lang][post.slug] = singlePost;
+            }));
+        }
+
+        if (modelMap.tags) {
+            result[lang].tags = modelMap.tags;
+        }
+
+        if (modelMap.categories) {
+            result[lang].categories = modelMap.categories;
+        }
+    }));
+
+    return result;
 }
 
 export async function recreateBlogCache(language: Language = DEFAULT_LANG) {

@@ -25,6 +25,7 @@ import {
     GetFilteredOffersOptions,
 } from './types';
 
+
 export async function getAllOffers(language: Language) {
     const entries = await fetchGraphQL<GetAllOffersResponse>(
         buildAllOffersQuery({
