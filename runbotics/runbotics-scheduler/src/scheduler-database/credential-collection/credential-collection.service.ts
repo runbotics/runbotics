@@ -37,7 +37,7 @@ export class CredentialCollectionService {
         const tenantId = user.tenantId;
         const { name, description, accessType, color, sharedWith } = createCredentialCollectionDto;
 
-        const { authorities, ...userDto } = user;
+        const {...userDto } = user;
         const credentialCollection = await this.credentialCollectionRepository
             .save({
                 name,
@@ -50,7 +50,7 @@ export class CredentialCollectionService {
                 credentialCollectionUser: []
             })
             .catch(async error => {
-                await this.throwErrorIfNameTaken(userDto.tenantId, name, userDto.id);
+                await this.throwErrorIfNameTaken(user, userDto.tenantId, name, userDto.id);
                 throw new BadRequestException(error.message);
             });
 
@@ -77,28 +77,37 @@ export class CredentialCollectionService {
         return this.credentialCollectionRepository.save(credentialCollection);
     }
 
-    findAllAccessible(user: User) {
-        return this.credentialCollectionRepository
-            .createQueryBuilder('credentialCollectionEntity')
-            .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
-            .leftJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
-            .innerJoinAndSelect(
-                'credentialCollectionEntity.credentialCollectionUser',
-                'credentialCollectionUser',
-                `
-                    credentialCollectionEntity.tenantId = :tenantId AND
-                    credentialCollectionUser.user.id = :userId AND
-                    credentialCollectionUser.privilegeType IN (:...privilegeTypes)
-                    `,
-                {
+    async findAllAccessible(user: User) {
+        const collections = isTenantAdmin(user)
+            ? await this.credentialCollectionRepository.find({
+                where: {
                     tenantId: user.tenantId,
-                    userId: user.id,
-                    privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE]
-                }
-            )
-            .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
-            .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
-            .getMany();
+                },
+                relations: [...RELATIONS, 'credentials.createdBy', 'credentials.collection']
+            })
+            : await this.credentialCollectionRepository
+                .createQueryBuilder('credentialCollectionEntity')
+                .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
+                .leftJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
+                .innerJoinAndSelect(
+                    'credentialCollectionEntity.credentialCollectionUser',
+                    'credentialCollectionUser',
+                    `
+                        credentialCollectionEntity.tenantId = :tenantId AND
+                        credentialCollectionUser.user.id = :userId AND
+                        credentialCollectionUser.privilegeType IN (:...privilegeTypes)
+                        `,
+                    {
+                        tenantId: user.tenantId,
+                        userId: user.id,
+                        privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE]
+                    }
+                )
+                .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
+                .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
+                .getMany();
+
+        return collections;
     }
 
     async getAllAccessiblePages(user: User, specs: Specs<CredentialCollection>, paging: Paging): Promise<Page<CredentialCollection>> {
@@ -152,7 +161,7 @@ export class CredentialCollectionService {
                       tenantId: user.tenantId,
                       id: id,
                   },
-                  relations: ['createdBy'],
+                  relations: RELATIONS,
               })
             : await this.credentialCollectionRepository
                   .createQueryBuilder('credentialCollectionEntity')
@@ -252,6 +261,7 @@ export class CredentialCollectionService {
                     .update(CredentialCollection, id, dto)
                     .catch(async (error) => {
                         await this.throwErrorIfNameTaken(
+                            user,
                             user.tenantId,
                             dto.name,
                             user.id,
@@ -346,12 +356,14 @@ export class CredentialCollectionService {
         });
     }
 
-    private async throwErrorIfNameTaken(tenantId: string, name: string, createdById: number, { id }: { id?: string } = {}) {
-        const collection = await this.findOneByCriteria(tenantId, { name, createdById });
+    private async throwErrorIfNameTaken(user: User, tenantId: string, name: string, createdById: number, { id }: { id?: string } = {}) {
+        const collection = isTenantAdmin(user)
+            ? await this.findOneByCriteria(tenantId, { name })
+            : await this.findOneByCriteria(tenantId, { name, createdById });
 
         const isNameTaken = id
             ? collection.id !== id
-            : Boolean(await this.findOneByCriteria(tenantId, { name, createdById }));
+            : Boolean(collection);
 
         if (isNameTaken) {
             throw new BadRequestException(`Credential collection with name "${name}" already exists`);
