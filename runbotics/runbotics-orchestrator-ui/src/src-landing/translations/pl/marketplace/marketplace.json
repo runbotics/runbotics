@@ -42,5 +42,8 @@
     "Marketplace.Cart.EmailSent": "Wysłano email",
     "Marketplace.Cart.EmailError": "Błąd podczas wysyłania wiadomości",
     "Marketplace.Cart.SuccessAdded": "Dodano ofertę do koszyka",
-    "Marketplace.Cart.ErrorAdded": "Wystąpił błąd podczas dodawania nowej oferty do koszyka"
+    "Marketplace.Cart.ErrorAdded": "Wystąpił błąd podczas dodawania nowej oferty do koszyka",
+    "Marketplace.Cart.FormError.RequiredField": "To pole jest wymagane",
+    "Marketplace.Cart.FormError.Email": "Niepoprawny format adresu e-mail",
+    "Marketplace.Cart.FormError.Phone": "Numer telefonu musi mieć dokładnie 9 cyfr"
 }

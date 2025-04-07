@@ -25,17 +25,17 @@ const ContactForm: FC = () => {
         const newErrors: FormError = {};
 
         if (!contactFormValue.name.trim()) {
-            newErrors.fullName = 'To pole jest wymagane';
+            newErrors.fullName = translate('Marketplace.Cart.FormError.RequiredField');
         }
 
         if (!contactFormValue.email.trim()) {
-            newErrors.email = 'Email jest wymagany';
+            newErrors.email = translate('Marketplace.Cart.FormError.RequiredField');
         } else if (!/^[^@]+@[^@]+\.[^@]+$/.test(contactFormValue.email)) {
-            newErrors.email = 'Niepoprawny contactFormValueat emaila';
+            newErrors.email = translate('Marketplace.Cart.FormError.Email');
         }
 
         if (contactFormValue.phone && !/^\d{3}\s?\d{3}\s?\d{3}$/.test(contactFormValue.phone)) {
-            newErrors.phone = 'Numer musi mieć dokładnie 9 cyfr';
+            newErrors.phone = translate('Marketplace.Cart.FormError.Phone');
         }
 
         setErrors(newErrors);
@@ -73,7 +73,7 @@ const ContactForm: FC = () => {
                         <TextField
                             className={styles.formInput}
                             variant={'outlined'}
-                            placeholder={'test'}
+                            placeholder={'email'}
                             value={contactFormValue.email}
                             onChange={(e) => changeFormValue('email', e.target.value)}
                             type={'email'}
@@ -90,7 +90,7 @@ const ContactForm: FC = () => {
                         <TextField
                             className={styles.formInput}
                             variant={'outlined'}
-                            placeholder={'test'}
+                            placeholder={'phone'}
                             value={contactFormValue.phone}
                             onChange={(e) => changeFormValue('phone', e.target.value)}
                             type={'tel'}
@@ -112,7 +112,7 @@ const ContactForm: FC = () => {
                         <TextField
                             className={styles.formInput}
                             variant={'outlined'}
-                            placeholder={'test'}
+                            placeholder={'info...'}
                             value={contactFormValue.additionalInfo}
                             multiline
                             rows={6}
