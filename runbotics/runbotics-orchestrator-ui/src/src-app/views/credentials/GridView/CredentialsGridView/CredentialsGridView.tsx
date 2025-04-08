@@ -1,10 +1,11 @@
+/* eslint-disable max-lines-per-function */
 import { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 
-import { FrontCredentialDto, PrivilegeType } from 'runbotics-common';
+import { FrontCredentialDto, PrivilegeType, Role } from 'runbotics-common';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
 import CredentialTile from '#src-app/components/Tile/CredentialTile/CredentialTile';
@@ -13,6 +14,7 @@ import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useAuth from '#src-app/hooks/useAuth';
 import useDebounce from '#src-app/hooks/useDebounce';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
+import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { credentialCollectionsActions, credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
@@ -41,6 +43,7 @@ const CredentialsGridView = () => {
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
     const [isLoading, setIsLoading] = useState(true);
     const { user: currentUser } = useAuth();
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
 
     const pageFromUrl = searchParams.get('page');
     const [page, setPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
@@ -62,8 +65,9 @@ const CredentialsGridView = () => {
         collectionId &&
         credentialCollections &&
         currentCredentialsCollection?.credentialCollectionUser.length - 1;
+
     const collectionName = currentCredentialsCollection?.name;
-    const hasEditAccess = currentCredentialsCollection ? currentCredentialsCollection.credentialCollectionUser.some(
+    const hasEditAccess = currentCredentialsCollection ? isTenantAdmin || currentCredentialsCollection.credentialCollectionUser.some(
         user => user.user.email === currentUser.email &&
         user.privilegeType === PrivilegeType.WRITE
     ) : true;
