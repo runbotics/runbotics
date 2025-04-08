@@ -140,15 +140,22 @@ export class CredentialCollectionService {
     }
 
     async findAllAccessibleWithUser(user: User) {
-        const collections = await this.credentialCollectionRepository.find({
-            where: {
-                tenantId: user.tenantId,
-                credentialCollectionUser: {
-                    userId: user.id,
-                    privilegeType: In([PrivilegeType.WRITE, PrivilegeType.READ])
-                }
-            },
-            relations: [...RELATIONS, 'credentials.createdBy', 'credentials.collection']
+        const collections = isTenantAdmin(user)
+            ? await this.credentialCollectionRepository.find({
+                where: {
+                    tenantId: user.tenantId,
+                },
+                relations: [...RELATIONS, 'credentials.createdBy', 'credentials.collection']
+            })
+            : await this.credentialCollectionRepository.find({
+                where: {
+                    tenantId: user.tenantId,
+                    credentialCollectionUser: {
+                        userId: user.id,
+                        privilegeType: In([PrivilegeType.WRITE, PrivilegeType.READ])
+                    }
+                },
+                relations: [...RELATIONS, 'credentials.createdBy', 'credentials.collection']
         });
 
         return collections;
