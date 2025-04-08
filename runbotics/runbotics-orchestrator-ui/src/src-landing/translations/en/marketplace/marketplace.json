@@ -42,5 +42,8 @@
     "Marketplace.Cart.EmailSent": "Email sent successfully",
     "Marketplace.Cart.EmailError": "Error occurred while sending email",
     "Marketplace.Cart.SuccessAdded": "Offer added successfully",
-    "Marketplace.Cart.ErrorAdded": "Error occurred while adding new offer to cart"
+    "Marketplace.Cart.ErrorAdded": "Error occurred while adding new offer to cart",
+    "Marketplace.Cart.FormError.RequiredField": "This is required field",
+    "Marketplace.Cart.FormError.Email": "Incorrect email format",
+    "Marketplace.Cart.FormError.Phone": "Phone number has to have 9 digits"
 }

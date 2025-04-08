@@ -1,11 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-
 import { HttpErrorCodes } from 'runbotics-common';
 
 import { recreateCache } from '#contentful/common';
 import { languages } from '#src-app/translations/translations';
 
-const refreshMarketplaceCache = async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
         return res.status(HttpErrorCodes.NOT_FOUND).end();
     }
@@ -16,7 +15,5 @@ const refreshMarketplaceCache = async (req: NextApiRequest, res: NextApiResponse
 
     await Promise.allSettled(languages.map((language) => recreateCache(language)));
 
-    return res.send('RunBotics marketplace cache recreated');
-};
-
-export default refreshMarketplaceCache;
+    return res.send('RunBotics cache recreated');
+}

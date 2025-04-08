@@ -50,6 +50,41 @@ export function getMarketplaceMainCache(
     };
 }
 
+export async function transformContentfulResponse() {
+    const result: { en: Partial<MarketplaceMainCache>; pl: Partial<MarketplaceMainCache> } = {
+        en: {},
+        pl: {}
+    };
+
+    await Promise.allSettled(languages.map(async (lang) => {
+        const modelMap = await getMainPage(lang);
+
+        if (modelMap.offers) {
+            result[lang].offers = modelMap.offers;
+
+            await Promise.allSettled(modelMap.offers.map(async (offer) => {
+                const singleOffer = await getOffer(lang, { slug: offer.slug });
+
+                if (!result[lang]) {
+                    result[lang] = {};
+                }
+
+                result[lang][offer.slug] = singleOffer;
+            }));
+        }
+
+        if (modelMap.industries) {
+            result[lang].industries = modelMap.industries;
+        }
+
+        if (modelMap.tags) {
+            result[lang].tags = modelMap.tags;
+        }
+    }));
+
+    return result;
+}
+
 export async function recreateMarketplaceCache(language: Language = DEFAULT_LANG) {
     await Promise.allSettled(languages.map(async (lang) => {
         const modelMap = await getMainPage(lang);
