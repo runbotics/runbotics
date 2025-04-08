@@ -19,6 +19,7 @@ export type BrowserActionRequest =
 | DesktopRunRequest<'browser.selenium.insertCredentials', BrowserInsertCredentials>
 
 export type BrowserLaunchActionInput = {
+    maximize: boolean;
     headless: boolean;
     target?: string;
 };

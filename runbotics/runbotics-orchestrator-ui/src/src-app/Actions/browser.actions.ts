@@ -38,6 +38,10 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
+                            maximize: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Launch.Maximize'),
+                                type: 'boolean',
+                            },
                             headless: {
                                 title: translate('Process.Details.Modeler.Actions.Browser.Launch.Headless'),
                                 type: 'boolean',
@@ -56,6 +60,7 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
+                    maximize: false,
                     headless: true,
                     target: ''
                 },

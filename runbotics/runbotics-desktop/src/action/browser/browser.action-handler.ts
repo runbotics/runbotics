@@ -98,6 +98,10 @@ export default class BrowserActionHandler extends StatefulActionHandler {
                 target: input.target,
             });
         }
+
+        if (input.maximize) {
+            await this.session.manage().window().maximize();
+        }
     }
 
     async closeBrowser() {
