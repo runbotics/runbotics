@@ -41,7 +41,7 @@ export const ADVANCED_ACTION_IDS: AllActionIds[] = [
     GeneralAction.START_PROCESS,
     GeneralAction.DELAY,
     BrowserAction.SELENIUM_TAKE_SCREENSHOT,
-    ApiAction.DOWNLOAD_FILE,
+    BrowserAction.SELENIUM_INSERT_CREDENTIALS,
 ];
 
 export interface ActionListProps {
