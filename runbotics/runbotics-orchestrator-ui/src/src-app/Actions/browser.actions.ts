@@ -1,10 +1,9 @@
-import { BrowserAction, ActionRegex, ActionCredentialType } from 'runbotics-common';
-
-import { translate } from '#src-app/hooks/useTranslations';
+import { BrowserAction, ActionRegex, ActionCredentialType, BrowserScrollPageMode, BrowserScrollPagePosition } from 'runbotics-common';
 
 import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
+import { translate } from '#src-app/hooks/useTranslations';
 
 
 const exampleJsonConfiguration = {
@@ -844,6 +843,93 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [BrowserAction.SCROLL_PAGE]: {
+        id: BrowserAction.SCROLL_PAGE,
+        label: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Label'),
+        script: BrowserAction.SCROLL_PAGE,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            mode: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Mode.Title'),
+                                type: 'string',
+                                oneOf: [
+                                    {
+                                        const: BrowserScrollPageMode.SMOOTH,
+                                        title: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Mode.Smooth'),
+                                    },
+                                    {
+                                        const: BrowserScrollPageMode.INSTANT,
+                                        title: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Mode.Instant'),
+                                    }
+                                ]
+                            },
+                            position: {
+                                title: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Position.Title'),
+                                type: 'string',
+                                oneOf: [
+                                    {
+                                        const: BrowserScrollPagePosition.TOP,
+                                        title: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Position.Top'),
+                                    },
+                                    {
+                                        const: BrowserScrollPagePosition.BOTTOM,
+                                        title: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Position.Bottom'),
+                                    },
+                                    {
+                                        const: BrowserScrollPagePosition.ELEMENT,
+                                        title: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Position.Element'),
+                                    },
+                                    {
+                                        const: BrowserScrollPagePosition.HEIGHT,
+                                        title: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Position.Height'),
+                                    }
+                                ]
+                            },
+                        },
+                        if: {
+                            properties: {
+                                position: {
+                                    const: BrowserScrollPagePosition.ELEMENT,
+                                }
+                            }
+                        },
+                        then: {
+                            properties: {
+                                target: {
+                                    title: translate('Process.Details.Modeler.Actions.Browser.Click.Target'),
+                                    type: 'string',
+                                },
+                            },
+                            required: ['target'],
+                        }
+                    }
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input'],
+                input: {
+                    target: {
+                        'ui:options': { defaultTarget: 'xpath='},
+                        'ui:widget': 'BrowserTargetWidget',
+                    }
+                }
+            },
+            formData: {
+                input: {
+                    position: BrowserScrollPagePosition.TOP,
+                    mode: BrowserScrollPageMode.INSTANT,
+                    target: undefined,
+                }
+            },
+        }
+    }
 });
 
 export default getBrowserActions;
