@@ -22,7 +22,7 @@ const MarketplaceCartView: FC = () => {
     const { cart, contactFormValue } = useCart();
     const [selectedItems, setSelectedItems] = useState(cart.map(item => item.slug) ?? []);
 
-    const currentPrice = cart.filter(item => selectedItems.includes(item.slug))
+    const fullPrice = cart.filter(item => selectedItems.includes(item.slug))
         .reduce(
             (
                 accumulator,
@@ -77,7 +77,7 @@ const MarketplaceCartView: FC = () => {
                     <ContactForm />
                 </div>
                 <MarketplaceCartSummary
-                    approximatePrice={currentPrice}
+                    approximatePrice={fullPrice}
                     onSubmit={onSubmit} />
             </div>
         </Layout>
