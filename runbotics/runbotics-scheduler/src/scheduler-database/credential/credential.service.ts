@@ -42,9 +42,11 @@ export class CredentialService {
       throw new NotFoundException(`Could not find collection with id ${collectionId}`);
     }
 
-    const hasEditCollectionAccess = isTenantAdmin(user) || collection.credentialCollectionUser.find(
-        collectionUser => collectionUser.userId === user.id && collectionUser.privilegeType === PrivilegeType.WRITE
-    );
+    const hasEditCollectionAccess =
+        isTenantAdmin(user) ||
+        collection.credentialCollectionUser.find(
+            collectionUser => collectionUser.userId === user.id && collectionUser.privilegeType === PrivilegeType.WRITE
+        );
 
     if (!hasEditCollectionAccess) {
       throw new ForbiddenException('You do not have access to edit this collection');
@@ -475,11 +477,9 @@ export class CredentialService {
 
     private ensureUserHasEditAccessOrThrow(collection: CredentialCollection, user: User) {
         const hasEditCollectionAccess =
-          isTenantAdmin(user)
-          || collection.credentialCollectionUser
-            .some(collectionUser =>
-              collectionUser.userId === user.id &&
-              collectionUser.privilegeType === PrivilegeType.WRITE
+            isTenantAdmin(user) ||
+            collection.credentialCollectionUser.some(
+                collectionUser => collectionUser.userId === user.id && collectionUser.privilegeType === PrivilegeType.WRITE
             );
 
         if (!hasEditCollectionAccess) {

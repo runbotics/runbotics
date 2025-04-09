@@ -67,10 +67,12 @@ const CredentialsGridView = () => {
         currentCredentialsCollection?.credentialCollectionUser.length - 1;
 
     const collectionName = currentCredentialsCollection?.name;
-    const hasEditAccess = currentCredentialsCollection ? isTenantAdmin || currentCredentialsCollection.credentialCollectionUser.some(
-        user => user.user.email === currentUser.email &&
-        user.privilegeType === PrivilegeType.WRITE
-    ) : true;
+    const hasEditAccess = currentCredentialsCollection
+        ? isTenantAdmin ||
+          currentCredentialsCollection.credentialCollectionUser.some(
+              user => user.user.email === currentUser.email && user.privilegeType === PrivilegeType.WRITE
+          )
+        : true;
 
     useEffect(() => {
         const pageNotAvailable = allByPage && page >= allByPage.totalPages;
