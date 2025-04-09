@@ -42,7 +42,7 @@ export const GeneralInfoSelectFields: FC<GeneralInfoSelectFieldsProps> = ({
                 .find(collectionUser => collectionUser.userId === currentUser.id
                 && collectionUser.privilegeType === PrivilegeType.WRITE
                 )
-            ), [credentialCollections, currentUser.id]);
+            ), [credentialCollections, currentUser.id, isTenantAdmin]);
 
     const handleDropdownChange = (name: string, value: string) => {
         const changeTo = (() => {
