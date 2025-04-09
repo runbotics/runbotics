@@ -203,13 +203,31 @@ export class CredentialService {
       ...specs
     };
 
-    options.where = {
+    const defaultWhereOptions = {
       ...options.where,
-      tenantId: user.tenantId,
-      ...!isTenantAdmin(user) && {
-        collection: { credentialCollectionUser: { userId: user.id } }
-      }
+      tenantId: user.tenantId
     };
+
+    options.where = isTenantAdmin(user)
+      ? defaultWhereOptions
+      : [
+          {
+            ...defaultWhereOptions,
+            collection: {
+              credentialCollectionUser: {
+                userId: user.id
+              }
+            }
+          },
+          {
+            ...defaultWhereOptions,
+            collection: {
+              createdBy: {
+                id: user.id
+              }
+            }
+          }
+        ];
 
     options.relations = RELATIONS;
 

@@ -3,7 +3,7 @@ import { CreateCredentialCollectionDto } from './dto/create-credential-collectio
 import { UpdateCredentialCollectionDto } from './dto/update-credential-collection.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CredentialCollection } from './credential-collection.entity';
-import { FindManyOptions, In, Repository } from 'typeorm';
+import { Brackets, FindManyOptions, In, Repository } from 'typeorm';
 import { CredentialCollectionUser } from '../credential-collection-user/credential-collection-user.entity';
 import { UserService } from '#/scheduler-database/user/user.service';
 import { AccessType, PrivilegeType, Tenant } from 'runbotics-common';
@@ -89,24 +89,24 @@ export class CredentialCollectionService {
                 .createQueryBuilder('credentialCollectionEntity')
                 .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
                 .leftJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
-                .innerJoinAndSelect(
-                    'credentialCollectionEntity.credentialCollectionUser',
-                    'credentialCollectionUser',
-                    `
-                        credentialCollectionEntity.tenantId = :tenantId AND
-                        credentialCollectionUser.user.id = :userId AND
-                        credentialCollectionUser.privilegeType IN (:...privilegeTypes)
-                        `,
-                    {
+                .leftJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
+                .leftJoinAndSelect('allCredentialCollectionUser.user', 'user')
+                .leftJoin('credentialCollectionEntity.credentialCollectionUser', 'credentialCollectionUser')
+                .where(
+                new Brackets((qb) => {
+                    qb.where(
+                    'credentialCollectionEntity.tenantId = :tenantId AND credentialCollectionUser.user.id = :userId AND credentialCollectionUser.privilegeType IN (:...privilegeTypes)',
+                    ).orWhere(
+                    'credentialCollectionEntity.createdBy.id = :userId',
+                    );
+                })
+                )
+                .setParameters({
                         tenantId: user.tenantId,
                         userId: user.id,
                         privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE]
-                    }
-                )
-                .innerJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
-                .innerJoinAndSelect('allCredentialCollectionUser.user', 'user')
+                    })
                 .getMany();
-
         return collections;
     }
 
@@ -128,7 +128,7 @@ export class CredentialCollectionService {
         const userAccessedCollections = isTenantAdmin(user)
             ? page.content
             : page.content.filter((collection) =>
-                  collection.credentialCollectionUser.some(
+                collection.createdBy.id === user.id || collection.credentialCollectionUser.some(
                       (ccu) => ccu.userId === user.id
                   )
               );
@@ -142,21 +142,34 @@ export class CredentialCollectionService {
     async findAllAccessibleWithUser(user: User) {
         const collections = isTenantAdmin(user)
             ? await this.credentialCollectionRepository.find({
-                where: {
-                    tenantId: user.tenantId,
-                },
-                relations: [...RELATIONS, 'credentials.createdBy', 'credentials.collection']
-            })
-            : await this.credentialCollectionRepository.find({
-                where: {
-                    tenantId: user.tenantId,
-                    credentialCollectionUser: {
-                        userId: user.id,
-                        privilegeType: In([PrivilegeType.WRITE, PrivilegeType.READ])
-                    }
-                },
-                relations: [...RELATIONS, 'credentials.createdBy', 'credentials.collection']
-        });
+                  where: {
+                      tenantId: user.tenantId
+                  },
+                  relations: [...RELATIONS, 'credentials.createdBy', 'credentials.collection']
+              })
+            : await this.credentialCollectionRepository
+                  .createQueryBuilder('collection')
+                  .leftJoinAndSelect('collection.credentials', 'credentials')
+                  .leftJoinAndSelect('collection.credentialCollectionUser', 'collectionUser')
+                  .leftJoinAndSelect('collectionUser.user', 'userRelation')
+                  .leftJoinAndSelect('collection.createdBy', 'createdBy')
+                  .leftJoinAndSelect('credentials.createdBy', 'credentialCreatedBy')
+                  .leftJoinAndSelect('credentials.collection', 'credentialCollection')
+                  .where('collection.tenantId = :tenantId', { tenantId: user.tenantId })
+                  .andWhere(
+                      new Brackets(qb => {
+                          qb
+                            .where('collectionUser.user.id = :userId AND collectionUser.privilegeType IN (:...privilegeTypes)')
+                            .orWhere('createdBy.id = :userId');
+                      })
+                  )
+                  .setParameters({
+                      userId: user.id,
+                      privilegeTypes: [PrivilegeType.WRITE, PrivilegeType.READ]
+                  })
+                  .getMany();
+
+        console.log(collections);
 
         return collections;
     }
@@ -166,47 +179,30 @@ export class CredentialCollectionService {
             ? await this.credentialCollectionRepository.findOne({
                   where: {
                       tenantId: user.tenantId,
-                      id: id,
+                      id: id
                   },
-                  relations: RELATIONS,
+                  relations: RELATIONS
               })
             : await this.credentialCollectionRepository
                   .createQueryBuilder('credentialCollectionEntity')
-                  .leftJoinAndSelect(
-                      'credentialCollectionEntity.credentials',
-                      'allCredentials'
+                  .leftJoinAndSelect('credentialCollectionEntity.credentials', 'allCredentials')
+                  .leftJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
+                  .leftJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
+                  .leftJoinAndSelect('allCredentialCollectionUser.user', 'user')
+                  .leftJoin('credentialCollectionEntity.credentialCollectionUser', 'credentialCollectionUser')
+                  .where('credentialCollectionEntity.id = :id', { id })
+                  .andWhere('credentialCollectionEntity.tenantId = :tenantId', { tenantId: user.tenantId })
+                  .andWhere(
+                      new Brackets(qb => {
+                          qb.where(
+                              'credentialCollectionUser.user.id = :userId AND credentialCollectionUser.privilegeType IN (:...privilegeTypes)'
+                          ).orWhere('createdBy.id = :userId');
+                      })
                   )
-                  .leftJoinAndSelect(
-                      'credentialCollectionEntity.createdBy',
-                      'createdBy'
-                  )
-                  .innerJoinAndSelect(
-                      'credentialCollectionEntity.credentialCollectionUser',
-                      'credentialCollectionUser',
-                      `
-                    credentialCollectionEntity.id = :id AND
-                    credentialCollectionEntity.tenantId = :tenantId AND
-                    credentialCollectionUser.user.id = :userId AND
-                    credentialCollectionUser.privilegeType IN (:...privilegeTypes)
-                `,
-                      {
-                          id,
-                          tenantId: user.tenantId,
-                          userId: user.id,
-                          privilegeTypes: [
-                              PrivilegeType.READ,
-                              PrivilegeType.WRITE,
-                          ],
-                      }
-                  )
-                  .innerJoinAndSelect(
-                      'credentialCollectionEntity.credentialCollectionUser',
-                      'allCredentialCollectionUser'
-                  )
-                  .innerJoinAndSelect(
-                      'allCredentialCollectionUser.user',
-                      'user'
-                  )
+                  .setParameters({
+                      userId: user.id,
+                      privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE]
+                  })
                   .getOne();
 
         if (!collection) {
@@ -230,6 +226,22 @@ export class CredentialCollectionService {
         }
 
         return collection;
+    }
+
+    async findAllByCriteria(tenantId: string, criteria: Partial<CredentialCollection>) {
+        const collections = await this.credentialCollectionRepository.find({
+            where: {
+                tenantId,
+                ...criteria
+            },
+            relations: RELATIONS
+        });
+
+        if (!collections.length) {
+            throw new NotFoundException('Could not find any credential collection with given criteria');
+        }
+
+        return collections;
     }
 
     async update(id: string, updateCredentialCollectionDto: UpdateCredentialCollectionDto, user: User) {
@@ -364,13 +376,17 @@ export class CredentialCollectionService {
     }
 
     private async throwErrorIfNameTaken(user: User, tenantId: string, name: string, createdById: number, { id }: { id?: string } = {}) {
-        const collection = isTenantAdmin(user)
-            ? await this.findOneByCriteria(tenantId, { name })
+        const result = isTenantAdmin(user)
+            ? await this.findAllByCriteria(tenantId, { name })
             : await this.findOneByCriteria(tenantId, { name, createdById });
 
-        const isNameTaken = id
-            ? collection.id !== id
-            : Boolean(collection);
+        if (!result) return;
+
+        const collections = Array.isArray(result) ? result : [result];
+
+        const isNameTaken = collections.some((collection) =>
+            id ? collection.id !== id : Boolean(collection)
+          );
 
         if (isNameTaken) {
             throw new BadRequestException(`Credential collection with name "${name}" already exists`);
