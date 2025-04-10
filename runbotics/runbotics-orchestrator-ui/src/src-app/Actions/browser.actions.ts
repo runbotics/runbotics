@@ -1,9 +1,10 @@
 import { BrowserAction, ActionRegex, ActionCredentialType, BrowserScrollPageMode, BrowserScrollPagePosition } from 'runbotics-common';
 
+import { translate } from '#src-app/hooks/useTranslations';
+
 import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
-import { translate } from '#src-app/hooks/useTranslations';
 
 
 const exampleJsonConfiguration = {
