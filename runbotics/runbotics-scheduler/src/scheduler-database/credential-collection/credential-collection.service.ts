@@ -50,7 +50,7 @@ export class CredentialCollectionService {
                 credentialCollectionUser: []
             })
             .catch(async error => {
-                await this.throwErrorIfNameTaken(user, userDto.tenantId, name, userDto.id);
+                await this.throwErrorIfNameTaken(userDto.tenantId, name, userDto.id);
                 throw new BadRequestException(error.message);
             });
 
@@ -91,17 +91,16 @@ export class CredentialCollectionService {
                 .leftJoinAndSelect('credentialCollectionEntity.createdBy', 'createdBy')
                 .leftJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
                 .leftJoinAndSelect('allCredentialCollectionUser.user', 'user')
-                .leftJoin('credentialCollectionEntity.credentialCollectionUser', 'credentialCollectionUser')
                 .where('credentialCollectionEntity.tenantId = :tenantId', { tenantId: user.tenantId })
                 .andWhere(
-                new Brackets((qb) => {
-                    qb.where(
-                    'credentialCollectionUser.user.id = :userId',
-                    ).orWhere(
-                    'credentialCollectionEntity.createdBy.id = :userId',
-                    );
-                })
-                )
+                    new Brackets((qb) => {
+                        qb.where(
+                        'allCredentialCollectionUser.user.id = :userId',
+                        ).orWhere(
+                        'credentialCollectionEntity.createdBy.id = :userId',
+                        );
+                    })
+                    )
                 .setParameters({
                         userId: user.id,
                     })
@@ -158,13 +157,12 @@ export class CredentialCollectionService {
                   .andWhere(
                       new Brackets(qb => {
                           qb
-                            .where('collectionUser.user.id = :userId AND collectionUser.privilegeType IN (:...privilegeTypes)')
+                            .where('collectionUser.user.id = :userId')
                             .orWhere('createdBy.id = :userId');
                       })
                   )
                   .setParameters({
                       userId: user.id,
-                      privilegeTypes: [PrivilegeType.WRITE, PrivilegeType.READ]
                   })
                   .getMany();
 
@@ -227,22 +225,6 @@ export class CredentialCollectionService {
         return collection;
     }
 
-    async findAllByCriteria(tenantId: string, criteria: Partial<CredentialCollection>) {
-        const collections = await this.credentialCollectionRepository.find({
-            where: {
-                tenantId,
-                ...criteria
-            },
-            relations: RELATIONS
-        });
-
-        if (!collections.length) {
-            throw new NotFoundException('Could not find any credential collection with given criteria');
-        }
-
-        return collections;
-    }
-
     async update(id: string, updateCredentialCollectionDto: UpdateCredentialCollectionDto, user: User) {
         const credentialCollection = await this.findOneAccessibleById(id, user);
 
@@ -279,11 +261,9 @@ export class CredentialCollectionService {
                     .update(CredentialCollection, id, dto)
                     .catch(async (error) => {
                         await this.throwErrorIfNameTaken(
-                            user,
                             user.tenantId,
                             dto.name,
-                            user.id,
-                            { id }
+                            credentialCollection.createdById,
                         );
 
                         throw new BadRequestException(error.message);
@@ -374,20 +354,10 @@ export class CredentialCollectionService {
         });
     }
 
-    private async throwErrorIfNameTaken(user: User, tenantId: string, name: string, createdById: number, { id }: { id?: string } = {}) {
-        const result = isTenantAdmin(user)
-            ? await this.findAllByCriteria(tenantId, { name })
-            : await this.findOneByCriteria(tenantId, { name, createdById });
+    private async throwErrorIfNameTaken(tenantId: string, name: string, createdById: number) {
+        const collection = await this.credentialCollectionRepository.countBy({ name, tenantId, createdById });
 
-        if (!result) return;
-
-        const collections = Array.isArray(result) ? result : [result];
-
-        const isNameTaken = collections.some((collection) =>
-            id ? collection.id !== id : Boolean(collection)
-          );
-
-        if (isNameTaken) {
+        if (collection) {
             throw new BadRequestException(`Credential collection with name "${name}" already exists`);
         }
     }
