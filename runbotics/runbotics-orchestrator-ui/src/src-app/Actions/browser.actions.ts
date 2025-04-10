@@ -918,6 +918,11 @@ const getBrowserActions: () => Record<string, IBpmnAction> = () => ({
                     target: {
                         'ui:options': { defaultTarget: 'xpath='},
                         'ui:widget': 'BrowserTargetWidget',
+                    },
+                    mode: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Browser.Scroll.Page.Mode.Tooltip'),
+                        },
                     }
                 }
             },
