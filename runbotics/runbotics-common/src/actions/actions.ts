@@ -90,6 +90,7 @@ export enum BrowserAction {
     READ_INPUT = 'browser.read.input',
     INDEX = 'browser.index',
     SELENIUM_TAKE_SCREENSHOT = 'browser.selenium.takeScreenshot',
+    SCROLL_PAGE = 'browser.scroll.page',
 }
 
 export enum LoopAction {
