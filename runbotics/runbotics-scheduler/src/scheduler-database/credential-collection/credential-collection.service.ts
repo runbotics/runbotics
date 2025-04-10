@@ -355,9 +355,9 @@ export class CredentialCollectionService {
     }
 
     private async throwErrorIfNameTaken(tenantId: string, name: string, createdById: number) {
-        const collection = await this.credentialCollectionRepository.countBy({ name, tenantId, createdById });
+        const collectionCount = await this.credentialCollectionRepository.countBy({ name, tenantId, createdById });
 
-        if (collection) {
+        if (collectionCount) {
             throw new BadRequestException(`Credential collection with name "${name}" already exists`);
         }
     }
