@@ -92,19 +92,18 @@ export class CredentialCollectionService {
                 .leftJoinAndSelect('credentialCollectionEntity.credentialCollectionUser', 'allCredentialCollectionUser')
                 .leftJoinAndSelect('allCredentialCollectionUser.user', 'user')
                 .leftJoin('credentialCollectionEntity.credentialCollectionUser', 'credentialCollectionUser')
-                .where(
+                .where('credentialCollectionEntity.tenantId = :tenantId', { tenantId: user.tenantId })
+                .andWhere(
                 new Brackets((qb) => {
                     qb.where(
-                    'credentialCollectionEntity.tenantId = :tenantId AND credentialCollectionUser.user.id = :userId AND credentialCollectionUser.privilegeType IN (:...privilegeTypes)',
+                    'credentialCollectionUser.user.id = :userId',
                     ).orWhere(
                     'credentialCollectionEntity.createdBy.id = :userId',
                     );
                 })
                 )
                 .setParameters({
-                        tenantId: user.tenantId,
                         userId: user.id,
-                        privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE]
                     })
                 .getMany();
         return collections;
@@ -195,13 +194,13 @@ export class CredentialCollectionService {
                   .andWhere(
                       new Brackets(qb => {
                           qb.where(
-                              'credentialCollectionUser.user.id = :userId AND credentialCollectionUser.privilegeType IN (:...privilegeTypes)'
-                          ).orWhere('createdBy.id = :userId');
+                            'credentialCollectionUser.user.id = :userId'
+                          ).orWhere(
+                            'credentialCollectionEntity.tenantId = :tenantId AND createdBy.id = :userId');
                       })
                   )
                   .setParameters({
                       userId: user.id,
-                      privilegeTypes: [PrivilegeType.READ, PrivilegeType.WRITE]
                   })
                   .getOne();
 
