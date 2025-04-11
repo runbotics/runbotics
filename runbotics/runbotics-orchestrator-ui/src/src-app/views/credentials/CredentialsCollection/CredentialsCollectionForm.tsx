@@ -88,7 +88,7 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
         await dispatch(action)
             .unwrap()
             .then(() => {
-                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: { page: 0, pageSize } }));
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: { page: 0, size: pageSize } }));
                 const successMessage = collection
                     ? translate('Credential.Form.Create.Success', { name: credentialsCollectionFormState.name })
                     : translate('Credential.Form.Edit.Success', { name: credentialsCollectionFormState.name });

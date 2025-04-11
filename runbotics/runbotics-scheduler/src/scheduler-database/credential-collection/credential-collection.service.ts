@@ -115,26 +115,33 @@ export class CredentialCollectionService {
             relationLoadStrategy: 'join',
         };
 
-        options.where = {
+        const defaultWhereOptions = {
             ...options.where,
-            tenantId: user.tenantId,
-        };
+            tenantId: user.tenantId
+          };
+
+          options.where = isTenantAdmin(user)
+            ? defaultWhereOptions
+            : [
+                {
+                  ...defaultWhereOptions,
+                    credentialCollectionUser: {
+                      userId: user.id
+                  }
+                },
+                {
+                  ...defaultWhereOptions,
+                    createdBy: {
+                      id: user.id
+                    }
+                }
+              ];
 
         options.relations = RELATIONS;
+
         const page = await getPage(this.credentialCollectionRepository, options);
 
-        const userAccessedCollections = isTenantAdmin(user)
-            ? page.content
-            : page.content.filter((collection) =>
-                collection.createdBy.id === user.id || collection.credentialCollectionUser.some(
-                      (ccu) => ccu.userId === user.id
-                  )
-              );
-
-        return {
-            ...page,
-            content: userAccessedCollections,
-        };
+        return page;
     }
 
     async findAllAccessibleWithUser(user: User) {
@@ -165,8 +172,6 @@ export class CredentialCollectionService {
                       userId: user.id,
                   })
                   .getMany();
-
-        console.log(collections);
 
         return collections;
     }
