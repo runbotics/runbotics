@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { EntityManager, In, Repository } from 'typeorm';
 import { BotEntity } from './bot.entity';
 import {
     BotStatus,
@@ -19,6 +19,10 @@ export class BotService {
         @InjectRepository(BotEntity)
         private botRepository: Repository<BotEntity>
     ) {}
+
+    withEntityManager(em: EntityManager): BotService {
+        return new BotService(em.getRepository(BotEntity))
+    }
 
     findAll(): Promise<IBot[]> {
         return this.botRepository.find({ relations });
