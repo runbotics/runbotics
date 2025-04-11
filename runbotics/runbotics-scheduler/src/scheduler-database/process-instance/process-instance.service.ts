@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProcessInstance } from './process-instance.entity';
 import {
+    EntityManager,
     FindManyOptions,
     FindOptionsRelations,
     IsNull,
@@ -36,6 +37,13 @@ export class ProcessInstanceService {
         private readonly processInstanceRepository: Repository<ProcessInstance>,
         private readonly processService: ProcessService,
     ) {}
+
+    withEntityManager(em: EntityManager): ProcessInstanceService {
+        return new ProcessInstanceService(
+            em.getRepository(ProcessInstance),
+            this.processService.withEntityManager(em)
+        )
+    }
 
     async create(processInstanceDto: CreateProcessInstanceDto) {
         const createdInstance = await this.processInstanceRepository.save(

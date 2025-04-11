@@ -1,19 +1,19 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { BotStatus, IBot, IProcessInstance, isEmailTriggerData, ProcessInstanceNotification, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
-import { Connection } from 'typeorm';
 import Axios from 'axios';
+import { BotStatus, IBot, IProcessInstance, isEmailTriggerData, ProcessInstanceNotification, ProcessInstanceStatus, WsMessage } from 'runbotics-common';
+import { DataSource, EntityManager } from 'typeorm';
 
-import { Logger } from '#/utils/logger';
+import { MailTriggerService } from '#/mail-trigger/mail-trigger.service';
+import { NotificationService } from '#/microsoft/notification';
+import { ProcessFileService } from '#/queue/process/process-file.service';
 import { BotService } from '#/scheduler-database/bot/bot.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
-import { MailTriggerService } from '#/mail-trigger/mail-trigger.service';
-import { ProcessFileService } from '#/queue/process/process-file.service';
-import { NotificationService } from '#/microsoft/notification';
+import { Logger } from '#/utils/logger';
 
-import { UiGateway } from '../../ui/ui.gateway';
-import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process-instance.service.utils';
 import { ProcessInstance } from '#/scheduler-database/process-instance/process-instance.entity';
 import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
+import { UiGateway } from '../../ui/ui.gateway';
+import { getProcessInstanceUpdateFieldsByStatus, isProcessInstanceFinished } from './bot-process-instance.service.utils';
 
 @Injectable()
 export class BotProcessService {
@@ -23,7 +23,7 @@ export class BotProcessService {
         private readonly processInstanceService: ProcessInstanceService,
         private readonly botService: BotService,
         private readonly processService: ProcessService,
-        private readonly connection: Connection,
+        private readonly connection: DataSource,
         private readonly uiGateway: UiGateway,
         private readonly mailTriggerService: MailTriggerService,
         private readonly processFileService: ProcessFileService,
@@ -32,30 +32,22 @@ export class BotProcessService {
 
     async updateProcessInstance(installationId: string, processInstance: IProcessInstance) {
         const instanceToSave = this.setPropertiesFromProcessInstance(processInstance);
-        const { newProcessInstance, bot } = await this.setBotInProcessInstance(instanceToSave, installationId);
-
-        const queryRunner = this.connection.createQueryRunner();
-
+        
         try {
-            await queryRunner.connect();
-            await queryRunner.startTransaction();
-
-            const updatedLastInstanceRunTime = await this.updateProcessParams(processInstance, newProcessInstance, bot);
-            const dbProcessInstance = await queryRunner.manager.findOne(ProcessInstance, { where: { id: updatedLastInstanceRunTime.id } });
-
-            await queryRunner.manager.createQueryBuilder()
-                .insert()
-                .into(ProcessInstance)
-                .values({ ...updatedLastInstanceRunTime })
-                .orUpdate(getProcessInstanceUpdateFieldsByStatus(updatedLastInstanceRunTime.status, dbProcessInstance?.status), ['id'])
-                .execute();
-
-            await queryRunner.commitTransaction();
-            await queryRunner.release();
-        } catch (err: unknown) {
+            await this.connection.transaction(async (txEntityManager) => {
+                const { newProcessInstance, bot } = await this.setBotInProcessInstance(instanceToSave, installationId, txEntityManager);
+                const updatedLastInstanceRunTime = await this.updateProcessParams(processInstance, newProcessInstance, bot, txEntityManager);
+                const dbProcessInstance = await txEntityManager.findOne(ProcessInstance, { where: { id: updatedLastInstanceRunTime.id } });
+                    
+                await txEntityManager.createQueryBuilder()
+                    .insert()
+                    .into(ProcessInstance)
+                    .values({ ...updatedLastInstanceRunTime })
+                    .orUpdate(getProcessInstanceUpdateFieldsByStatus(updatedLastInstanceRunTime.status, dbProcessInstance?.status), ['id'])
+                    .execute();
+            })
+        } catch (err) {
             this.logger.error('Process instance update error:', err);
-            await queryRunner.rollbackTransaction();
-            await queryRunner.release();
             throw new InternalServerErrorException();
         }
     }
@@ -98,12 +90,13 @@ export class BotProcessService {
         await this.updateProcessLastRunTime(processInstance);
     }
 
-    async updateProcessLastRunTime(processInstance: IProcessInstance) {
+    async updateProcessLastRunTime(processInstance: IProcessInstance, entityManager?: EntityManager) {
+        const processService = entityManager ? this.processService.withEntityManager(entityManager) : this.processService
         if (!processInstance?.process?.id) return;
-        const process = await this.processService.findById(processInstance.process.id);
+        const process = await processService.findById(processInstance.process.id);
 
         if (process && processInstance.created) {
-            await this.processService.partialUpdate({ id: process.id, lastRun: processInstance.created });
+            await processService.partialUpdate({ id: process.id, lastRun: processInstance.created });
         }
     }
 
@@ -155,9 +148,11 @@ export class BotProcessService {
 
     private async setBotInProcessInstance(
         processInstance: IProcessInstance,
-        installationId: string
+        installationId: string,
+        entityManager: EntityManager,
     ) {
-        const bot = await this.botService.findByInstallationId(installationId)
+        const bot = await this.botService.withEntityManager(entityManager)
+            .findByInstallationId(installationId)
             .catch(() => {
                 this.logger.error(`Bot ${installationId} not found`);
                 throw new NotFoundException(`Bot ${installationId} not found`);
@@ -165,13 +160,13 @@ export class BotProcessService {
         const newProcessInstance = { ...processInstance };
         newProcessInstance.bot = bot;
 
-        return await this.setPropertiesFromDatabase(newProcessInstance);
+        return await this.setPropertiesFromDatabase(newProcessInstance, entityManager);
     }
 
-    private async setPropertiesFromDatabase(instanceToSave: IProcessInstance) {
+    private async setPropertiesFromDatabase(instanceToSave: IProcessInstance, entityManager: EntityManager) {
         const newProcessInstance = { ...instanceToSave };
         const dbProcessInstance =
-            await this.processInstanceService.findOneById(instanceToSave.id);
+            await this.processInstanceService.withEntityManager(entityManager).findOneById(instanceToSave.id);
         if (dbProcessInstance) {
             newProcessInstance.user = dbProcessInstance.user;
         }
@@ -182,6 +177,7 @@ export class BotProcessService {
         processInstance: IProcessInstance,
         instanceToSave: IProcessInstance,
         bot: IBot,
+        entityManager: EntityManager,
     ) {
         const newProcessInstance = {...instanceToSave};
 
@@ -190,7 +186,7 @@ export class BotProcessService {
             newBot.status = BotStatus.BUSY;
             newProcessInstance.input = processInstance.input;
         } else if (processInstance.status === ProcessInstanceStatus.INITIALIZING) {
-            await this.updateProcessLastRunTime(processInstance);
+            await this.updateProcessLastRunTime(processInstance, entityManager);
         } else if (isProcessInstanceFinished(processInstance.status)) {
             newProcessInstance.output = processInstance.output;
             if(!newProcessInstance.rootProcessInstanceId && bot.status !== BotStatus.DISCONNECTED) {
@@ -198,7 +194,7 @@ export class BotProcessService {
             }
         }
         if (!newProcessInstance.rootProcessInstanceId) {
-            const createdBot = await this.botService.save(newBot);
+            const createdBot = await this.botService.withEntityManager(entityManager).save(newBot);
             const tenantRoom = createdBot.tenantId;
             this.uiGateway.emitTenant(tenantRoom, WsMessage.BOT_STATUS, newBot);
         }

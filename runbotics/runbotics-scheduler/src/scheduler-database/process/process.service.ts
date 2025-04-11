@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { ProcessEntity } from './process.entity';
 import { IProcess } from 'runbotics-common';
 import { isTenantAdmin } from '#/utils/authority.utils';
@@ -30,6 +30,13 @@ export class ProcessService {
         private readonly processRepository: Repository<ProcessEntity>,
         private readonly processCollectionService: ProcessCollectionService,
     ) {}
+
+    withEntityManager(em: EntityManager): ProcessService {
+        return new ProcessService(
+            em.getRepository(ProcessEntity),
+            this.processCollectionService.withEntityManager(em)
+        )
+    }
 
     findById(id: number): Promise<IProcess | null> {
         return this.processRepository.findOne({ where: { id }, relations });
