@@ -110,7 +110,7 @@ const CredentialCollectionsGridView = () => {
                 search={searchValue}
                 setPage={setPage}
                 collectionId={null}
-                totalItems={credentialCollections?.length}
+                totalItems={allCredentialCollectionsByPage?.totalElements}
             >
                 <Header/>
                 <If condition={!isLoading} else={<LoadingScreen />}>
