@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 
 import { FormControl, InputLabel, MenuItem, Typography } from '@mui/material';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -13,7 +13,7 @@ import { EditCredentialsCollectionDto } from '../../CredentialsCollection.types'
 
 interface CollectionColorSelectProps {
     currentColor: ColorNames;
-    setFormState: (state: ((prevState: EditCredentialsCollectionDto) => EditCredentialsCollectionDto)) => void;
+    setFormState: Dispatch<SetStateAction<EditCredentialsCollectionDto>>;
 }
 
 const CollectionColorSelect: FC<CollectionColorSelectProps> = ({ currentColor, setFormState }) => {

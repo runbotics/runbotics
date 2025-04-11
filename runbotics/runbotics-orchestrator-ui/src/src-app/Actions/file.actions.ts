@@ -1,4 +1,4 @@
-import { FileAction, ActionRegex } from 'runbotics-common';
+import { FileAction, ActionRegex, ConflictFile } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
@@ -86,14 +86,14 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                                 title: translate('Process.Details.Modeler.Actions.File.CreateFile.FilePath'),
                                 type: 'string',
                             },
-                            // 'fileName': {
-                            //     'title': '(example.txt)',
-                            //     'type': 'string'
-                            // },
+                            conflict: {
+                                type: 'string',
+                                title: translate('Process.Details.Modeler.Actions.File.CreateFile.Conflict'),
+                                enum: [ConflictFile.OVERWRITE, ConflictFile.EXTEND_NAME, ConflictFile.THROW_ERROR],
+                            },
                         },
                         required: [
                             'path',
-                            // 'fileName',
                         ],
                     },
                     output: {},
@@ -101,11 +101,14 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             },
             uiSchema: {
                 'ui:order': ['input', 'output'],
+                conflict: {
+                    'ui:widget': 'radio',
+                },
             },
             formData: {
                 input: {
                     path: undefined,
-                    // fileName: "",
+                    conflict: ConflictFile.OVERWRITE,
                 },
                 output: {},
             },
@@ -256,6 +259,82 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
                 output: {},
             },
         },
+    },
+    'file.exists': {
+        id: FileAction.EXISTS,
+        label: translate('Process.Details.Modeler.Actions.File.Exists.Label'),
+        script: FileAction.EXISTS,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.File.Exists.Label'),
+                        type: 'object',
+                        properties: {
+                            name: {
+                                title: translate('Process.Details.Modeler.Actions.File.Exists.Name'),
+                                type: 'string',
+                            },
+                            path: {
+                                title: translate('Process.Details.Modeler.Actions.File.Path'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['name'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                                pattern: ActionRegex.VARIABLE_NAME,
+                            },
+                        },
+                    },
+                }
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    name: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.File.Exists.Name.Info'),
+                        },
+                    },
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.File.Exists.Path.Info'),
+                        },
+                    },
+                },
+                output: {
+                    variableName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.File.Exists.Output.Info'),
+                        },
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    path: undefined,
+                    name: undefined,
+                },
+                output: {
+                    variableName: undefined,
+                },
+            }
+        }
     },
 });
 

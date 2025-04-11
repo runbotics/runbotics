@@ -1,4 +1,4 @@
-import { BLOG_POST_FRAGMENT, QUERY_LANGAUGE, QueryBuilder } from '#contentful/common';
+import { BLOG_POST_FRAGMENT, MARKETPLACE_OFFER_FRAGMENT, QUERY_LANGAUGE, QueryBuilder } from '#contentful/common';
 
 
 import { GetPostOptions } from './types';

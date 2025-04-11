@@ -1,0 +1,22 @@
+@import '#src-landing/scss/main.scss';
+@import '#src-landing/components/Typography/Typography.module.scss';
+
+
+$PADDING-BOTTOM: 30px;
+
+.root {
+    display: grid;
+    grid-template-columns: $BLOG_FILTERS_WIDTH 1fr;
+    grid-template-rows: 1fr auto;
+    grid-gap: $x-content-padding;
+    max-width: $MAX_SECTION_CONTENT_WIDTH;
+    margin: 0 auto;
+    padding: 0 $x-content-padding $PADDING-BOTTOM $x-content-padding;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        grid-template-columns: auto;
+        column-gap: 0;
+    }
+}

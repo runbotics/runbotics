@@ -2,10 +2,11 @@ import { FC, useEffect } from 'react';
 
 import { Grid } from '@mui/material';
 
-import { FrontCredentialCollectionDto, FrontCredentialDto, PrivilegeType } from 'runbotics-common';
+import { FrontCredentialCollectionDto, FrontCredentialDto, PrivilegeType, Role } from 'runbotics-common';
 
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { credentialsActions } from '#src-app/store/slices/Credentials';
@@ -25,13 +26,14 @@ const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credentia
     const { credentialTemplates, loading: templatesLoading } = useSelector(credentialTemplatesSelector);
     const credentialTemplate = credentialTemplates && credentialTemplates.find(template => template.id === templateId);
     const { user } = useAuth();
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
     const isOwner = currentCollection ? currentCollection.createdById === user.id : false;
     const hasEditAccess = currentCollection
         ? currentCollection.credentialCollectionUser.some(
             collectionUser => collectionUser.userId === user.id && collectionUser.privilegeType === PrivilegeType.WRITE
         )
         : false;
-    const canEdit = isOwner || hasEditAccess;
+    const canEdit = isTenantAdmin || isOwner || hasEditAccess;
 
     useEffect(() => {
         dispatch(credentialsActions.fetchOneCredential({ resourceId: credential.id }));

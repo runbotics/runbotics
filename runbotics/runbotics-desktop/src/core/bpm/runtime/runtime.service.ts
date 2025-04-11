@@ -25,6 +25,7 @@ import {
     GeneralAction,
     Credential,
     ActionCredentialType,
+    License,
 } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
@@ -48,12 +49,14 @@ import {
     BpmnExecutionEventMessageExtendedApi,
     BpmnProcessInstance,
     BpmnExecutionEventMessageExtendedContent,
+    LicenseInfo,
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
-import { ServerConfigService } from '#config';
+import { schedulerAxios, ServerConfigService } from '#config';
 import { StorageService } from '#config';
 import LoopSubProcess from '#core/bpm/LoopSubProcessBehaviour';
+import { PLUGIN_PREFIX } from '../desktop-runner/desktop-runner.utils';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
@@ -579,6 +582,12 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                         ? this.determineCredentialsForAction(credentialId, credentialType, credentials)
                         : credentials;
 
+                    const licenseInfo = await this.getLicenseInfo(
+                        script,
+                        processInstanceId,
+                        executionId,
+                    );
+
                     this.logger.log(
                         `[${processInstanceId}] [${executionId}] [${script}] Running desktop script`,
                         desktopTask.input
@@ -586,6 +595,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
 
                     try {
                         const result = await this.desktopRunnerService.run({
+                            ...licenseInfo,
                             script,
                             credentials: credentialsForAction,
                             input: desktopTask.input,
@@ -616,6 +626,43 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                     }
                 },
     });
+
+    private async getLicenseInfo(
+        script: string,
+        processInstanceId: string,
+        executionId: string,
+    ) {
+        const licenseInfo: LicenseInfo = {
+            license: '',
+            licenseKey: '',
+        };
+
+        if (!script.startsWith(PLUGIN_PREFIX)) {
+            return licenseInfo;
+        }
+
+        try {
+            const tenantId = this.storageService.getValue('tenantId');
+            const pluginName = this.composePluginName(script);
+            const licenseRes = (await schedulerAxios.get<License>(
+                `/api/scheduler/tenants/${tenantId}/licenses/license/${pluginName}/info`
+            )).data;
+
+            licenseInfo.license = licenseRes.license;
+            licenseInfo.licenseKey = licenseRes.licenseKey;
+        } catch (e) {
+            this.logger.log(`[${processInstanceId}] [${executionId}] [${script}] No active license found`);
+        }
+
+        return licenseInfo;
+    }
+
+    private composePluginName(script: string) {
+        const scriptElement = script.split('.');
+        const pluginGroup = scriptElement[1];
+        const pluginPurpose = scriptElement[2];
+        return `${pluginGroup}-${pluginPurpose}-plugin`;
+    }
 
     private createCustomServices = (processInstanceId: string) => Object.entries(customServices)
         .reduce((acc, [serviceName, serviceFunction]) => {
@@ -659,6 +706,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             this.logger.log(`[${instanceId}] Terminating process instance`);
             this.engines[instanceId].stop();
             this.purgeEngine(instanceId);
+            this.desktopRunnerService.clearHandlers();
         }
         return Promise.resolve();
     };

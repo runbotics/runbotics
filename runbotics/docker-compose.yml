@@ -59,6 +59,8 @@ services:
       - MAIL_PASSWORD=
       - ENCRYPTION_KEY=O3OTmXJpIIyUb3ByT4t65xblgsxfDGQu
       - TZ=UTC
+      - MS_DISCOVERY_KEYS_URI=https://login.microsoftonline.com/common/discovery/v2.0/keys
+      - IS_SSO_ENABLED="false"
     ports:
       - 4000:4000
     depends_on:
@@ -86,6 +88,7 @@ services:
       - RUNBOTICS_BOT_COLLECTION=30bdfb61-841b-519b-ce54-1d0e56877f73
       - RUNBOTICS_LOGGER_FILE_MODE=false
       - RUNBOTICS_EXTENSION_DIR=./extensions
+      - RUNBOTICS_PLUGINS_DIR=./plugins
       - CHROME_ADDRESS=http://chrome:4444
     restart: on-failure
     depends_on:
@@ -132,7 +135,7 @@ services:
 
   chrome:
     container_name: chrome
-    image: selenium/standalone-chrome:4.0.0-beta-3-20210426
+    image: selenium/standalone-chrome:132.0.6834.159-chromedriver-132.0.6834.159-grid-4.28.1-20250202
     ports:
       - 7900:7900
       - 4444:4444

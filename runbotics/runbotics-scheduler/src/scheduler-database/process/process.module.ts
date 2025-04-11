@@ -16,7 +16,7 @@ import { ProcessCollection } from '../process-collection/process-collection.enti
     imports: [
         TypeOrmModule.forFeature([ProcessEntity, ProcessCollection, GlobalVariable, BotCollection]),
         ProcessCollectionModule,
-        UserModule,
+        forwardRef(() => UserModule),
         TagModule,
         forwardRef(() => ProcessCredentialModule),
     ],

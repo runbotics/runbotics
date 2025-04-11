@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "3.0.5",
+    "version": "3.1.0",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -55,7 +55,7 @@
         "rimraf": "^3.0.2",
         "runbotics-common": "workspace:^1.0.0",
         "@runbotics/runbotics-sdk": "workspace:^1.0.0",
-        "selenium-webdriver": "4.0.0-beta.4",
+        "selenium-webdriver": "4.28.1",
         "source-map-support": "^0.5.20",
         "tesseract.js": "^4.1.2",
         "typescript": "^5.0.3",
@@ -121,13 +121,13 @@
         "@types/lodash": "^4.14.158",
         "@types/node": "^22.5.5",
         "@types/nodemailer": "^6.4.1",
-        "@types/selenium-webdriver": "^4.0.12",
+        "@types/selenium-webdriver": "^4.1.28",
         "@types/uuid": "^8.3.0",
         "@typescript-eslint/eslint-plugin": "^5.60.1",
         "@typescript-eslint/parser": "^5.60.1",
         "@types/bpmn-moddle": "^5.1.6",
         "cross-env": "^7.0.3",
-        "vitest": "~1.6.0",
+        "vitest": "1.6.1",
         "vite": "~5.4.5",
         "electron-builder": "^24.13.3",
         "eslint": "^8.31.0",

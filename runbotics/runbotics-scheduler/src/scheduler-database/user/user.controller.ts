@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
-import { GetWithTenant, PatchWithTenant } from '#/utils/decorators/with-tenant.decorator';
+import { DeleteWithTenant, GetWithTenant, PatchWithTenant } from '#/utils/decorators/with-tenant.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { UserCriteria } from './criteria/user.criteria';
 import { User } from './user.entity';
@@ -10,6 +10,7 @@ import { UpdateUserDto, updateUserSchema } from './dto/update-user.dto';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
+import { DeleteUserDto, deleteUserSchema } from './dto/delete-user.dto';
 
 @Controller('/api/scheduler')
 export class UserController {
@@ -27,7 +28,7 @@ export class UserController {
     }
 
     @GetWithTenant('users')
-    @FeatureKeys(FeatureKey.TENANT_READ_USER)
+    @FeatureKeys(FeatureKey.TENANT_READ)
     getAllActivatedUsersInTenant(
         @UserDecorator() { tenantId }: User,
     ) {
@@ -46,6 +47,17 @@ export class UserController {
             userId,
             user
         );
+    }
+
+    @DeleteWithTenant('users/:id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @FeatureKeys(FeatureKey.TENANT_DECLINE_USER)
+    async deleteUserInTenant(
+        @UserDecorator() user: User,
+        @Param('id', ParseIntPipe) userId: User['id'],
+        @Body(new ZodValidationPipe(deleteUserSchema)) userDto: DeleteUserDto,
+    ) {
+        await this.userService.deleteInTenant(userId, user, userDto);
     }
 
     // -------------- ENDPOINTS FOR ADMIN ------------------

@@ -1,4 +1,5 @@
 import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
+import { BrowserScrollPageMode, BrowserScrollPagePosition } from 'runbotics-common';
 
 export type BrowserActionRequest =
 | DesktopRunRequest<'browser.launch', BrowserLaunchActionInput>
@@ -15,9 +16,12 @@ export type BrowserActionRequest =
 | DesktopRunRequest<'browser.selenium.element.attribute.change', BrowserElementAttributeChangeInput>
 | DesktopRunRequest<'browser.read.attribute', BrowserReadElementAttribute>
 | DesktopRunRequest<'browser.read.text', BrowserReadElementText>
-| DesktopRunRequest<'browser.read.input', BrowserReadElementInput>;
+| DesktopRunRequest<'browser.read.input', BrowserReadElementInput>
+| DesktopRunRequest<'browser.selenium.insertCredentials', BrowserInsertCredentials>
+| DesktopRunRequest<'browser.scroll.page', BrowserScrollPageInput>;
 
 export type BrowserLaunchActionInput = {
+    maximize: boolean;
     headless: boolean;
     target?: string;
 };
@@ -80,3 +84,20 @@ export type BrowserPrintToPdfActionInput = {
 export type BrowserPrintToPdfActionOutput = string;
 
 export type BrowserTakeScreenshotActionOutput = string;
+
+export type BrowserInsertCredentials = {
+    loginTarget: string
+    passwordTarget: string
+    submitButtonTarget: string
+}
+
+export type BrowserLoginCredential = {
+    login: string;
+    password: string;
+}
+
+export type BrowserScrollPageInput = {
+    position: BrowserScrollPagePosition;
+    mode: BrowserScrollPageMode;
+    target: string;
+}

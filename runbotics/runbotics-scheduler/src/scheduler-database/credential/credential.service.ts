@@ -18,6 +18,7 @@ import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { User } from '../user/user.entity';
 import { CredentialCollection } from '../credential-collection/credential-collection.entity';
+import { isTenantAdmin } from '#/utils/authority.utils';
 
 const RELATIONS = ['attributes', 'createdBy', 'collection.credentialCollectionUser'];
 
@@ -41,13 +42,7 @@ export class CredentialService {
       throw new NotFoundException(`Could not find collection with id ${collectionId}`);
     }
 
-    const hasEditCollectionAccess = collection.credentialCollectionUser.find(
-        collectionUser => collectionUser.userId === user.id && collectionUser.privilegeType === PrivilegeType.WRITE
-    );
-
-    if (!hasEditCollectionAccess) {
-      throw new ForbiddenException('You do not have access to edit this collection');
-    }
+    this.ensureUserHasEditAccessOrThrow(collection, user);
 
     if (!template) {
       throw new NotFoundException(`Could not find template with id ${credentialDto.templateId}`);
@@ -202,11 +197,31 @@ export class CredentialService {
       ...specs
     };
 
-    options.where = {
+    const defaultWhereOptions = {
       ...options.where,
-      tenantId: user.tenantId,
-      collection: { credentialCollectionUser: { userId: user.id } }
+      tenantId: user.tenantId
     };
+
+    options.where = isTenantAdmin(user)
+      ? defaultWhereOptions
+      : [
+          {
+            ...defaultWhereOptions,
+            collection: {
+              credentialCollectionUser: {
+                userId: user.id
+              }
+            }
+          },
+          {
+            ...defaultWhereOptions,
+            collection: {
+              createdBy: {
+                id: user.id
+              }
+            }
+          }
+        ];
 
     options.relations = RELATIONS;
 
@@ -453,14 +468,15 @@ export class CredentialService {
     }
 
     private ensureUserHasEditAccessOrThrow(collection: CredentialCollection, user: User) {
-        const hasEditCollectionAccess = collection.credentialCollectionUser
-            .some(collectionUser =>
-              collectionUser.userId === user.id &&
-              collectionUser.privilegeType === PrivilegeType.WRITE
-        );
+        const hasEditCollectionAccess =
+            isTenantAdmin(user)
+            || collection.createdById === user.id
+            || collection.credentialCollectionUser.some(
+                collectionUser => collectionUser.userId === user.id && collectionUser.privilegeType === PrivilegeType.WRITE
+            );
 
         if (!hasEditCollectionAccess) {
-            throw new ForbiddenException('You cannot modify this collection');
+            throw new ForbiddenException('You do not have access to edit this collection');
         }
     }
 }

@@ -7,6 +7,7 @@ import { FeatureKey, IBotSystem } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
+import useProcessConfigurator from '#src-app/hooks/useProcessConfigurator';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
 import { botSystemsSelector } from '#src-app/store/slices/BotSystem';
@@ -20,12 +21,14 @@ interface BotSystemProps {
 }
 
 const BotSystemComponent: VFC<BotSystemProps> = ({
-    selectedBotSystem, onSelectBotSystem,
+    selectedBotSystem,
+    onSelectBotSystem,
 }) => {
     const { botSystems } = useSelector(botSystemsSelector);
     const { translate } = useTranslations();
     const hasReadBotSystemAccess = useFeatureKey([FeatureKey.PROCESS_BOT_SYSTEM_READ]);
     const hasEditBotSystemAccess = useFeatureKey([FeatureKey.PROCESS_BOT_SYSTEM_EDIT]);
+    const canConfigure = useProcessConfigurator();
 
     const getBotSystemOptions = () => Object.values(botSystems)
         .map((system) => (
@@ -57,7 +60,7 @@ const BotSystemComponent: VFC<BotSystemProps> = ({
                     value={selectedBotSystem?.name ?? ''}
                     variant="standard"
                     onChange={handleBotSystemChange}
-                    disabled={!hasEditBotSystemAccess}
+                    disabled={!hasEditBotSystemAccess || !canConfigure}
                 >
                     {getBotSystemOptions()}
                 </Select>

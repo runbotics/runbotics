@@ -22,7 +22,8 @@ export enum ActionRegex {
     DIRECTORY_NAME = "^[^\\\\/?|<>*:]*$",
     DATE_FORMAT = '^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\/[0-9]{2}\/[0-9]{4}))$',
     WINDOWS_ABSOLUTE_PATH = "^[a-zA-Z]:[\\\/|\\\\]",
-    LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/"
+    LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/",
+    FILE_SUFFIX="/\(\d+\)/",
 }
 
 export enum ACTION_GROUP {
@@ -80,6 +81,7 @@ export enum BrowserAction {
     SELENIUM_ELEMENTS_COUNT = 'browser.selenium.elements.count',
     SELENIUM_ELEMENT_ATTRIBUTE_CHANGE = 'browser.selenium.element.attribute.change',
     SELENIUM_TYPE = 'browser.selenium.type',
+    SELENIUM_INSERT_CREDENTIALS = 'browser.selenium.insertCredentials',
     SELENIUM_WAIT = 'browser.selenium.wait',
     SELENIUM_EDIT_CONTENT = 'browser.selenium.editContent',
     SELENIUM_SELECT = 'browser.selenium.select',
@@ -88,6 +90,7 @@ export enum BrowserAction {
     READ_INPUT = 'browser.read.input',
     INDEX = 'browser.index',
     SELENIUM_TAKE_SCREENSHOT = 'browser.selenium.takeScreenshot',
+    SCROLL_PAGE = 'browser.scroll.page',
 }
 
 export enum LoopAction {
@@ -147,6 +150,7 @@ export enum FileAction {
     REMOVE_FILE = 'file.removeFile',
     READ_FILE = 'file.readFile',
     WRITE_FILE = 'file.writeFile',
+    EXISTS = "file.exists"
 }
 
 export enum CsvAction {
@@ -262,6 +266,7 @@ export enum DesktopAction {
     TAKE_SCREENSHOT = 'desktop.takeScreenshot',
     READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
+    TYPE_CREDENTIALS = 'desktop.typeCredentials',
 }
 
 export enum WindowsAction {
@@ -332,3 +337,9 @@ export type AllActionIds =
     | ImageAction
     | FolderAction
     | ZipAction;
+
+export enum ConflictFile {
+    OVERWRITE = 'Overwrite',
+    EXTEND_NAME = 'Extend name',
+    THROW_ERROR = 'Throw Error'
+}

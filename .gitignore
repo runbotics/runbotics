@@ -31,3 +31,5 @@ out/
 /runbotics-deployment
 CHANGELOG.*
 .fleet
+.cursorrules
+.vscode/settings.json

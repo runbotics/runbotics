@@ -6,6 +6,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import {
     BENEFITS_SECTION_ID,
     INTEGRATION_SECTION_ID,
+    REFERENCES_SECTION_ID,
     RPA_SECTION_ID,
     PARTNER_SECTION_ID,
     CONTACT_US_SECTION_ID,
@@ -13,6 +14,7 @@ import {
     OPEN_SOURCE_SECTION_ID,
     TEAM_SECTION_ID,
     BLOG_SECTION_ID,
+    MARKETPLACE_SECTION_ID,
 } from '#src-landing/utils/utils';
 
 import styles from './Navbar.module.scss';
@@ -38,7 +40,7 @@ const Navbar: FC<NavbarProps> = ({
                 }`}
             >
                 <li className={styles.listItem}>
-                    <LoginLink />
+                    <LoginLink/>
                 </li>
                 <li className={styles.listItem}>
                     <Link
@@ -105,6 +107,16 @@ const Navbar: FC<NavbarProps> = ({
                 </li>
                 <li className={styles.listItem}>
                     <Link
+                        href={`/#${REFERENCES_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate('Landing.Header.Nav.Option.References')}
+                    </Link>
+                </li>
+                <li className={styles.listItem}>
+                    <Link
                         href={`/#${PARTNER_SECTION_ID}`}
                         className={styles.link}
                         onClick={hideNav}
@@ -131,6 +143,16 @@ const Navbar: FC<NavbarProps> = ({
                         scroll={false}
                     >
                         {translate('Landing.Header.Nav.Option.Blog')}
+                    </Link>
+                </li>
+                <li className={styles.listItem}>
+                    <Link
+                        href={`/#${MARKETPLACE_SECTION_ID}`}
+                        className={styles.link}
+                        onClick={hideNav}
+                        scroll={false}
+                    >
+                        {translate('Landing.Header.Nav.Option.Marketplace')}
                     </Link>
                 </li>
                 <li className={styles.listItem}>

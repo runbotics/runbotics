@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 
-import { BlogPost, PostStatus } from './models';
+import { BlogPost, ContentfulContentPublishStatus, MarketplaceOffer } from './models';
 import { FilterQueryParams, FilterQueryParamsEnum } from './types';
 
 export const DEFAULT_PAGE_SIZE = 9;
@@ -8,7 +8,7 @@ export const DRAFT_BADGE_BACKGROUND_COLOR = '#FFC107';
 
 export const QUERY_LANGAUGE = {
     en: 'en-US',
-    pl: 'pl'
+    pl: 'pl',
 };
 
 export const FILTER_QUERY_PARAMS = [
@@ -18,13 +18,14 @@ export const FILTER_QUERY_PARAMS = [
     FilterQueryParamsEnum.StartDate,
     FilterQueryParamsEnum.EndDate,
     FilterQueryParamsEnum.Page,
+    FilterQueryParamsEnum.Industry,
 ];
 
 export const extractFilterQueryParams = (
-    query: GetServerSidePropsContext['query']
+    query: GetServerSidePropsContext['query'],
 ) => {
     const result: FilterQueryParams = {};
-    const { category, tag, search, startDate, endDate, page } = query;
+    const { category, industry, tag, search, startDate, endDate, page } = query;
     if (category) {
         result.categories = paramToArray(category);
     }
@@ -43,13 +44,19 @@ export const extractFilterQueryParams = (
     if (page) {
         result.page = paramToNumber(page);
     }
+    if (industry) {
+        result.industries = paramToArray(industry);
+    }
 
     return result;
 };
 
 export const filterPosts = (posts: BlogPost[], queryParams: FilterQueryParams) => posts
     .filter(post => {
+        if (!checkBlogPostMandatoryFields(post)) return false;
+
         const { categories, tags, startDate, endDate, search } = queryParams;
+
         const hasCategory = (
             !categories || categories
                 ?.includes(post.category.slug)
@@ -59,25 +66,25 @@ export const filterPosts = (posts: BlogPost[], queryParams: FilterQueryParams) =
                 ?.some(
                     tag => post.tags.items
                         .map(
-                            postTag => postTag.slug
+                            postTag => postTag.slug,
                         )
-                        .includes(tag)
+                        .includes(tag),
                 )
         );
         const isInTimePeriod = (
-            !queryParams.startDate || 
+            !startDate ||
             new Date(post.date) >= new Date(startDate)
         ) && (
-            !endDate || 
+            !endDate ||
             new Date(post.date) <= new Date(endDate)
         );
         const containsSearchPhrase = (
-            !search || 
+            !search ||
             post.title
                 .toLowerCase()
                 .includes(
-                    search.toLowerCase()
-                ) || 
+                    search.toLowerCase(),
+                ) ||
             post.summary
                 .toLowerCase()
                 .includes((
@@ -85,6 +92,49 @@ export const filterPosts = (posts: BlogPost[], queryParams: FilterQueryParams) =
                 ))
         );
         return hasCategory && hasTag && isInTimePeriod && containsSearchPhrase;
+    });
+
+export const filterOffers = (offers: MarketplaceOffer[], queryParams: FilterQueryParams) => offers
+    .filter(offer => {
+        if (!checkMarketplaceOfferMandatoryFields(offer)) return false;
+
+        const { industries, search } = queryParams;
+
+        const hasIndustry = (
+            !industries || industries
+                ?.some(
+                    industry => offer.industries.items
+                        .map(
+                            offerIndustry => offerIndustry.slug,
+                        )
+                        .includes(industry),
+                )
+        );
+
+        const containsSearchPhrase = (
+            !search ||
+            offer.title
+                .toLowerCase()
+                .includes(
+                    search.toLowerCase(),
+                ) ||
+            offer.description
+                .toLowerCase()
+                .includes((
+                    search.toLowerCase()
+                )) ||
+            offer.tags.items
+                .some(tag =>
+                    tag.name.toLowerCase()
+                        .includes(search.toLowerCase())
+                ) ||
+            offer.industries.items
+                .some(industry =>
+                    industry.title.toLowerCase()
+                        .includes(search.toLowerCase())
+                )
+        );
+        return hasIndustry && containsSearchPhrase;
     });
 
 const paramToNumber = (param: string | string[]): number | undefined => {
@@ -113,22 +163,34 @@ const paramToArray = <T>(param: string | string[]): T[] => {
 
 export const hasQueryParams = (
     query: GetServerSidePropsContext['query'],
-    paramsToInclude: string[]
+    paramsToInclude: string[],
 ) => paramsToInclude.some((param) => query[param]);
 
-export const getBlogUrl = (params: URLSearchParams): string => `/blog${
+export const getPageUrl = (baseUrl: string, params: URLSearchParams): string => `/${baseUrl}${
     params.toString() ?
-        '?' + params.toString() : 
+        '?' + params.toString() :
         ''
 }`;
 
-export const getPaginatedUrl = (page: number, initialParams?: string): string => {
+export const getPaginatedUrl = (page: number, baseUrl: string, initialParams?: string): string => {
     const searchParams = new URLSearchParams(initialParams);
     searchParams.set(FilterQueryParamsEnum.Page, String(page));
-    const newUrl = getBlogUrl(searchParams);
+    const newUrl = getPageUrl(baseUrl, searchParams);
 
     return newUrl;
 };
 
-export const checkIsDraft = (status: PostStatus): boolean => !status.publishedAt;
+export const checkIsDraft = (status: ContentfulContentPublishStatus): boolean => !status.publishedAt;
 
+const checkBlogPostMandatoryFields = (post: BlogPost) =>
+    post.category &&
+    post.tags &&
+    post.date &&
+    post.title &&
+    post.summary;
+
+const checkMarketplaceOfferMandatoryFields = (post: MarketplaceOffer) =>
+    post.industries &&
+    post.tags &&
+    post.title &&
+    post.description;

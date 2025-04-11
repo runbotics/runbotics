@@ -11,6 +11,9 @@ import { ActivityOwner } from '#core/bpm/bpmn.types';
 export interface BpmnProcessInstance extends IProcessInstance, IProcessParams {
     output?: any;
     processOutput?: Record<string, unknown>;
+    partialResponse?:{
+        processOutput?: Record<string, unknown>;
+    };
 }
 
 export interface IProcessEventData {
@@ -95,4 +98,9 @@ export interface IBpmnEngineEvent<T> {
 
 export interface ISubscription {
     unsubscribe(): void;
+}
+
+export interface LicenseInfo {
+    license: string;
+    licenseKey: string;
 }

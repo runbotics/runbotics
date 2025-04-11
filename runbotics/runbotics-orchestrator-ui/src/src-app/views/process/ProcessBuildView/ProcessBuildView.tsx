@@ -13,9 +13,11 @@ import extractNestedSchemaKeys from '#src-app/components/utils/extractNestedSche
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useProcessExport from '#src-app/hooks/useProcessExport';
+import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { activityActions } from '#src-app/store/slices/Action';
 import { globalVariableActions } from '#src-app/store/slices/GlobalVariable';
+import { pluginActions } from '#src-app/store/slices/Plugin';
 import { processActions } from '#src-app/store/slices/Process';
 
 import BpmnModeler, {
@@ -36,6 +38,8 @@ const ProcessBuildView: FC = () => {
     const [offSet, setOffSet] = useState<number>(null);
     const actionsLoading = useSelector((state) => state.action.actions.loading);
     const { process } = useSelector((state) => state.process.draft);
+    const { loadedPlugins } = useSelector((state) => state.plugin);
+    const { translate, currentLanguage } = useTranslations();
     const hasAdvancedActionsAccess = useFeatureKey([FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED]);
     const hasActionsAccess = useFeatureKey([FeatureKey.EXTERNAL_ACTION_READ]);
     const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
@@ -45,11 +49,19 @@ const ProcessBuildView: FC = () => {
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
-        hasActionsAccess && dispatch(activityActions.getAllActions());
+        if (hasActionsAccess) {
+            dispatch(activityActions.getAllActions());
+            dispatch(pluginActions.loadPlugins());
+        }
 
         dispatch(globalVariableActions.getGlobalVariables());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, hasAdvancedActionsAccess]);
+
+    useEffect(() => {
+        dispatch(pluginActions.setPluginBpmnActions({ translate }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadedPlugins, currentLanguage]);
 
     useEffect(() => {
         if (!process) return;

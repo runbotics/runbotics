@@ -1,4 +1,4 @@
-import { writeFile, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { Injectable } from '@nestjs/common';
 import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
@@ -12,6 +12,9 @@ import { RunboticsLogger } from '#logger';
 import { RunIndex } from './IndexAction';
 import * as BrowserTypes from './types';
 import { ServerConfigService } from '#config';
+import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
+import { BrowserLoginCredential } from './types';
+import { BrowserScrollPagePosition } from 'runbotics-common';
 
 @Injectable()
 export default class BrowserActionHandler extends StatefulActionHandler {
@@ -24,7 +27,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     ) {
         super();
     }
-    
+
     private async getFirefoxSession(isHeadless: boolean | undefined, isWin?: boolean) {
         const driversPath = process.cwd();
         const geckoDriver = driversPath + '/' + this.serverConfigService.cfgGeckoDriver;
@@ -38,7 +41,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             .setBinary(this.serverConfigService.cfgFirefoxBin);
 
         if (isHeadless) {
-            optionsFF = optionsFF.headless();
+            optionsFF = optionsFF.addArguments('--headless');
         }
 
         return new Builder()
@@ -47,11 +50,11 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             .setFirefoxService(
                 new firefox.ServiceBuilder()
                     //.enableVerboseLogging()
-                    .setStdio('inherit'), 
+                    .setStdio('inherit'),
             )
             .build();
     }
-    
+
     private async getChromeSession(isHeadless: boolean | undefined) {
         const chromeOptions = new chrome.Options();
         chromeOptions.addArguments(
@@ -62,7 +65,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         );
 
         if (isHeadless) {
-            chromeOptions.headless(); 
+            chromeOptions.addArguments('--headless');
         }
 
         return new Builder()
@@ -96,6 +99,10 @@ export default class BrowserActionHandler extends StatefulActionHandler {
                 target: input.target,
             });
         }
+
+        if (input.maximize) {
+            await this.session.manage().window().maximize();
+        }
     }
 
     async closeBrowser() {
@@ -106,7 +113,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     async openSite(input: BrowserTypes.BrowserOpenActionInput): Promise<BrowserTypes.BrowserOpenActionOutput> {
         // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
         //
-        // let driver = await new Builder().forBrowser('chrome').build();        
+        // let driver = await new Builder().forBrowser('chrome').build();
         await this.session.get(input.target);
 
         return {};
@@ -156,7 +163,8 @@ export default class BrowserActionHandler extends StatefulActionHandler {
 
         return this.session
             .wait(until.elementsLocated(locator), 10000)
-            .then((response) => ({ elementsCount: response.length }))
+            .then(() => this.session.findElements(By[key](locator[key])))
+            .then((elements) => ({ elementsCount: elements.length }))
             .catch(() => ({ elementsCount: 0 }));
     }
 
@@ -178,6 +186,21 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             await element.clear();
         }
         await element.sendKeys(input.value);
+
+        return {};
+    }
+    private async insertCredentials(input: BrowserTypes.BrowserInsertCredentials, credential: BrowserLoginCredential): Promise<BrowserTypes.BrowserClickActionOutput> {
+        const login = await this.findElement(input.loginTarget);
+        const password = await this.findElement(input.passwordTarget);
+        const element = await this.findElement(input.submitButtonTarget);
+
+        login.clear();
+        password.clear();
+
+        await login.sendKeys(credential.login);
+        await password.sendKeys(credential.password);
+
+        element.click();
 
         return {};
     }
@@ -245,6 +268,46 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         }
     }
 
+    private async scrollPage(input: BrowserTypes.BrowserScrollPageInput) {
+        const scrollMode = input.mode;
+
+        switch (input.position) {
+            case BrowserScrollPagePosition.TOP:
+                await this.session.executeScript((scrollMode: ScrollBehavior) => {
+                    window.scrollTo({ behavior: scrollMode, top: 0 });
+                }, scrollMode);
+                break;
+            case BrowserScrollPagePosition.BOTTOM: {
+                const doScroll = (scrollMode: ScrollBehavior) => {
+                    window.scrollTo({ behavior: scrollMode, top: document.body.scrollHeight });
+                };
+
+                await this.session.executeScript(doScroll, scrollMode);
+                break;
+            }
+            case BrowserScrollPagePosition.ELEMENT: {
+                const element = await this.findElement(input.target);
+                const doScroll = (element) => {
+                    element.scrollIntoView({ behavior: 'instant', block: 'center' });
+                };
+
+                await this.session.executeScript(doScroll, element);
+                break;
+            }
+            case BrowserScrollPagePosition.HEIGHT: {
+                const MARGIN_PX = 80;
+                const doScroll = (scrollMode: ScrollBehavior, margin: number) => {
+                    window.scrollBy({ behavior: scrollMode, top: window.innerHeight-margin });
+                };
+
+                await this.session.executeScript(doScroll, scrollMode, MARGIN_PX);
+                break;
+            }
+            default:
+                throw Error('Wrong scroll position');
+        }
+    }
+
     private isBrowserOpen() {
         if (!this.session) {
             throw new Error('The browser is not running');
@@ -263,6 +326,13 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.selenium.type':
                 this.isBrowserOpen();
                 return this.doType(request.input);
+            case 'browser.selenium.insertCredentials': {
+                this.isBrowserOpen();
+
+                const loginCredential = credentialAttributesMapper<BrowserLoginCredential>(request.credentials);
+
+                return this.insertCredentials(request.input, loginCredential);
+            }
             case 'browser.selenium.click':
                 this.isBrowserOpen();
                 return this.doClick(request.input);
@@ -293,8 +363,16 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.read.input':
                 this.isBrowserOpen();
                 return this.readElementInput(request.input);
-            default:
-                throw new Error('Action not found');
+            case 'browser.scroll.page':
+                this.isBrowserOpen();
+                return this.scrollPage(request.input);
+            default: {
+                if (!this.pluginService) {
+                    throw new Error('Action not found');
+                }
+                this.isBrowserOpen();
+                return this.pluginService.run(request, this);
+            }
         }
     }
 

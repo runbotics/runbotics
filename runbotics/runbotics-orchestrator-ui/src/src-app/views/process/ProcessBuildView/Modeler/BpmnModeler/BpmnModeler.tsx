@@ -73,6 +73,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
             null
         );
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
+        const { loadedPlugins } = useSelector((state) => state.plugin);
         const { draft: { credentials: processCredentials } } = useSelector(processSelector);
         const coveredCredentialTypes: ActionCredentialType[] = processCredentials.map(pc => pc?.credential?.template?.name);
         const { modelerListener, validateUnknownElement } = useModelerListener({
@@ -211,7 +212,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
                 );
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [modeler, definition, process]);
+        }, [loadedPlugins, modeler, definition, process]);
 
         useEffect(() => {
             modelerRef.current = modeler;

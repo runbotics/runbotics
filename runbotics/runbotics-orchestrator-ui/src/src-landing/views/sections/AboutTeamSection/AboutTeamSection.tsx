@@ -1,8 +1,8 @@
 import Image from 'next/image';
 
-import menager from '#public/images/photos/menager.png';
+import manager from '#public/images/photos/manager.png';
 import team from '#public/images/photos/team.jpg';
-import quotation_mark from '#public/images/shapes/quotation_ mark.png';
+import quotationMark from '#public/images/shapes/quotation_ mark.png';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import Typography from '#src-landing/components/Typography';
@@ -23,7 +23,7 @@ const AboutTeamSection = () => {
             >
                 <div className={styles.team}>
                     <Image
-                        src={quotation_mark}
+                        src={quotationMark}
                         alt=""
                         className={styles.iconBackground}
                     />
@@ -52,7 +52,7 @@ const AboutTeamSection = () => {
                         </Typography>
                     </div>
                     <div className={styles.manager}>
-                        <Image src={menager} alt="" />
+                        <Image src={manager} alt="" />
                         <div>
                             <Typography variant="h6" color="primary">
                                 {translate('Landing.AboutTeam.Manager.Name')}

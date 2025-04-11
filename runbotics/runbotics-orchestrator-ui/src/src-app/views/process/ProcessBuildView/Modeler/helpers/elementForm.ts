@@ -24,8 +24,10 @@ export const getActionFromElement = (
 
     if (actionId) {
         const externalBpmnActions = store.getState().action.bpmnActions.byId;
+        const { pluginBpmnActions } = store.getState().plugin;
         const externalAction = _.cloneDeep(externalBpmnActions[actionId]);
-        return externalAction || internalBpmnActions[actionId];
+
+        return externalAction || internalBpmnActions[actionId] || pluginBpmnActions[actionId];
     }
     return null;
 };

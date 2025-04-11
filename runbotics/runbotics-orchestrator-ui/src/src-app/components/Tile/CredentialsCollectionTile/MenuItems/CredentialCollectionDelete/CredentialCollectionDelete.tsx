@@ -35,7 +35,7 @@ export const CredentialCollectionDelete: FC<CredentialCollectionDeleteProps> = (
                 enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Success', { name: collection.name }), {
                     variant: 'success'
                 });
-                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: {page: 0, pageSize }}));
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: { page: 0, size: pageSize }}));
             })
             .catch(error => {
                 if (error.statusCode === 409) {

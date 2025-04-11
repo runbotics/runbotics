@@ -35,14 +35,14 @@ const useTranslations = () => {
         translate,
         translateHTML,
         switchLanguage,
-        currentLanguage
+        currentLanguage,
     };
 };
 
 export const isNamespaceLoaded = () => new Promise((resolve) => {
-    if (i18next.hasLoadedNamespace(i18next.language)) 
-    { resolve(true); }
-    
+    if (i18next.hasLoadedNamespace(i18next.language)) {
+        resolve(true);
+    }
 });
 
 export const translate = (

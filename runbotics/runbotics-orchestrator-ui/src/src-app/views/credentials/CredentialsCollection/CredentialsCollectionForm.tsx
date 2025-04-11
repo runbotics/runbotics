@@ -12,7 +12,7 @@ import { useDispatch } from '#src-app/store';
 import { credentialCollectionsActions } from '#src-app/store/slices/CredentialCollections';
 import { Content, Form } from '#src-app/views/utils/FormDialog.styles';
 
-import { EditCredentialsCollectionDto } from './CredentialsCollection.types';
+import { EditCredentialsCollectionWithCreatorDto } from './CredentialsCollection.types';
 import {
     getInitialCredentialsCollectionData,
     initialCredentialsCollectionData,
@@ -38,12 +38,12 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
     const { enqueueSnackbar } = useSnackbar();
 
     const editableCollection = collection ? mapToEditCredentialCollectionDto(collection) : null;
-    const [credentialsCollectionFormState, setCredentialsCollectionFormState] = useState<EditCredentialsCollectionDto>(
+    const [credentialsCollectionFormState, setCredentialsCollectionFormState] = useState<EditCredentialsCollectionWithCreatorDto>(
         getInitialCredentialsCollectionData(editableCollection)
     );
     const [formValidationState, setFormValidationState] = useState(initialFormValidationState);
     const [inputErrorType, setInputErrorType] = useState<InputErrorType>(null);
-    const [collectionData, setCollectionData] = useState<EditCredentialsCollectionDto>(
+    const [collectionData, setCollectionData] = useState<EditCredentialsCollectionWithCreatorDto>(
         getInitialCredentialsCollectionData(editableCollection)
     );
 
@@ -88,7 +88,7 @@ const CredentialsCollectionForm: FC<CredentialCollectionFormProps> = ({ open: is
         await dispatch(action)
             .unwrap()
             .then(() => {
-                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: { page: 0, pageSize } }));
+                dispatch(credentialCollectionsActions.fetchAllCredentialCollectionsByPage({ pageParams: { page: 0, size: pageSize } }));
                 const successMessage = collection
                     ? translate('Credential.Form.Create.Success', { name: credentialsCollectionFormState.name })
                     : translate('Credential.Form.Edit.Success', { name: credentialsCollectionFormState.name });

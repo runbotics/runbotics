@@ -12,6 +12,10 @@ export interface EditCredentialsCollectionDto {
     description?: string;
 }
 
+export interface EditCredentialsCollectionWithCreatorDto extends EditCredentialsCollectionDto {
+    createdById: number | null;
+}
+
 export type CredentialsCollectionKeys = { [Key in keyof FrontCredentialCollectionDto]: Key }[keyof FrontCredentialCollectionDto];
 
 export type CredenitalsCollectionValues = FrontCredentialCollectionDto[CredentialsCollectionKeys];

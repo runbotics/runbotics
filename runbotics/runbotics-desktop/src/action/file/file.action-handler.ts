@@ -1,50 +1,10 @@
-import { StatelessActionHandler, DesktopRunRequest } from '@runbotics/runbotics-sdk';
+import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import fs from 'fs';
+import path from 'path';
 import { Injectable } from '@nestjs/common';
-import { FileAction } from 'runbotics-common';
-
-export type FileActionRequest =
-    | DesktopRunRequest<FileAction.WRITE_FILE, FileWriteFileActionInput>
-    | DesktopRunRequest<FileAction.READ_FILE, FileReadFileActionInput>
-    | DesktopRunRequest<FileAction.APPEND_FILE, FileAppendFileActionInput>
-    | DesktopRunRequest<FileAction.CREATE_FILE, FileCreateFileActionInput>
-    | DesktopRunRequest<FileAction.REMOVE_FILE, FileRemoveFileActionInput>;
-
-// ----
-export type FileAppendFileActionInput = {
-    content: string;
-    path: string;
-    separator: string;
-};
-export type FileAppendFileActionOutput = any;
-
-// ----
-export type FileCreateFileActionInput = {
-    path: string;
-    // fileName: string;
-};
-export type FileCreateFileActionOutput = any;
-
-// ----
-export type FileRemoveFileActionInput = {
-    path: string;
-};
-export type FileRemoveFileActionOutput = any;
-
-// ----
-export type FileReadFileActionInput = {
-    path: string;
-};
-export type FileReadFileActionOutput = any;
-
-// ----
-export type FileWriteFileActionInput = {
-    path: string;
-    content: string;
-};
-export type FileWriteFileActionOutput = any;
-
-
+import { FileActionRequest, FileAppendFileActionInput, FileAppendFileActionOutput, FileCreateFileActionInput, FileCreateFileActionOutput, FileExistsActionInput, FileReadFileActionInput, FileReadFileActionOutput, FileRemoveFileActionInput, FileRemoveFileActionOutput, FileWriteFileActionInput, FileWriteFileActionOutput } from './types';
+import { createNewFile, getUniqueFileName } from './file.utils';
+import { ConflictFile } from 'runbotics-common';
 @Injectable()
 export default class FileActionHandler extends StatelessActionHandler {
     constructor() {
@@ -61,11 +21,23 @@ export default class FileActionHandler extends StatelessActionHandler {
     }
 
     async createFile(input: FileCreateFileActionInput): Promise<FileCreateFileActionOutput> {
-        try {
-            fs.closeSync(fs.openSync(`${input.path}`, 'a'));
-        } catch (err) {
-            throw Error(err);
-        }
+        if(fs.existsSync(input.path)) {
+            switch (input.conflict) {
+                case ConflictFile.OVERWRITE: 
+                    await createNewFile(input.path, true);
+                    return 'File overwritten successfully';
+                case ConflictFile.EXTEND_NAME: {
+                    const newFilePath = getUniqueFileName(input.path);
+                    await createNewFile(newFilePath);
+                    return 'File with extended name created successfully';
+                }
+                case ConflictFile.THROW_ERROR:
+                    throw Error('File with the same name already exists');
+                default: 
+                    throw Error('This case doesn\'t exist in the select option');
+            }
+        } 
+        await createNewFile(input.path);
         return 'File created successfully';
     }
 
@@ -97,6 +69,21 @@ export default class FileActionHandler extends StatelessActionHandler {
         return 'File saved successfully';
     }
 
+    async existsFile(input: FileExistsActionInput) {
+
+        if (!input.name) {
+            throw new Error('Name is not provided.');
+        }
+
+        if (input.path && !fs.existsSync(input.path)) {
+            throw new Error('Provided path does not exist.');
+        }
+
+        const filePath = path.join(input.path, input.name);
+
+        return fs.existsSync(filePath);
+    }
+
     run(request: FileActionRequest) {
         switch (request.script) {
             case 'file.writeFile':
@@ -109,8 +96,11 @@ export default class FileActionHandler extends StatelessActionHandler {
                 return this.createFile(request.input);
             case 'file.removeFile':
                 return this.removeFile(request.input);
+            case 'file.exists':
+                return this.existsFile(request.input);
             default:
                 throw new Error('Action not found');
         }
     }
 }
+

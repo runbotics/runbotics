@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, FC, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -12,7 +12,7 @@ import { usersActions } from '#src-app/store/slices/Users';
 
 import SearchBar from './SearchBar';
 import UsersTable from './UsersTable';
-import { EditCredentialsCollectionDto } from '../../CredentialsCollection.types';
+import { EditCredentialsCollectionWithCreatorDto } from '../../CredentialsCollection.types';
 import { filterSharableUsers } from '../EditCredentialsCollection.utils';
 
 export interface SharedWithUser {
@@ -21,8 +21,8 @@ export interface SharedWithUser {
 }
 
 interface SharedWithUsersProps {
-    credentialsCollectionFormState: EditCredentialsCollectionDto;
-    setCredentialsCollectionFormState: (state: (prevState: EditCredentialsCollectionDto) => EditCredentialsCollectionDto) => void;
+    credentialsCollectionFormState: EditCredentialsCollectionWithCreatorDto;
+    setCredentialsCollectionFormState: Dispatch<SetStateAction<EditCredentialsCollectionWithCreatorDto>>;
 }
 
 export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectionFormState, setCredentialsCollectionFormState }) => {
@@ -31,13 +31,14 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
         tenantActivated: { all }
     } = useSelector(state => state.users);
 
-    const { user: collectionCreator } = useAuth();
+    const { user: currentUser } = useAuth();
     const [selectedUsers, setSelectedUsers] = useState(credentialsCollectionFormState.sharedWith || []);
     const [availableUsers, setAvailableUsers] = useState(
         filterSharableUsers('', all, {
             sharedWithUsers: credentialsCollectionFormState.sharedWith,
             selectedUsers,
-            collectionCreatorId: collectionCreator.id
+            collectionCreatorId: credentialsCollectionFormState.createdById,
+            currentUserId: currentUser.id,
         })
     );
 
@@ -46,12 +47,12 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
             filterSharableUsers('', all, {
                 sharedWithUsers: credentialsCollectionFormState.sharedWith,
                 selectedUsers,
-                collectionCreatorId: collectionCreator.id
+                collectionCreatorId: credentialsCollectionFormState.createdById,
+                currentUserId: currentUser.id,
             })
         );
     }, [all]);
 
-    // TODO - to be updated after users migration to include all users in tenant
     useEffect(() => {
         dispatch(usersActions.getAllUsersInTenant());
     }, []);

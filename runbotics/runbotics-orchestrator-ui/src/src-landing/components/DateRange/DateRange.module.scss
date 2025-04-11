@@ -6,10 +6,9 @@
     align-items: center;
     justify-items: center;
 
-    max-width: $BLOG_FILTERS_WIDTH;
+    max-width: calc($BLOG_FILTERS_WIDTH - 10px);
 
-    gap: 10px;
-    padding: 5px;
+    gap: 5px;
 }
 
 .wrapper > input {
@@ -38,6 +37,7 @@
             cursor: pointer;
         }
     }
+    accent-color: $palette-background-accent;
 }
 
 .divider {
@@ -48,6 +48,8 @@
 
 @media (max-width: $breakpoint-sm) {
     .wrapper {
-        // flex-wrap: wrap;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
 }
