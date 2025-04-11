@@ -24,7 +24,7 @@ export default class FileActionHandler extends StatelessActionHandler {
         if(fs.existsSync(input.path)) {
             switch (input.conflict) {
                 case ConflictFile.OVERWRITE: 
-                    await createNewFile(input.path);
+                    await createNewFile(input.path, true);
                     return 'File overwritten successfully';
                 case ConflictFile.EXTEND_NAME: {
                     const newFilePath = getUniqueFileName(input.path);

@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { ActionRegex } from 'runbotics-common';
 
-export async function createNewFile(path: string){
+export async function createNewFile(path: string, truncate = false) {
     try {
-        fs.closeSync(fs.openSync(`${path}`, 'a'));
+        fs.closeSync(fs.openSync(`${path}`, truncate ? 'w' : 'a'));
     } catch (err) {
         throw Error(err);
     }
