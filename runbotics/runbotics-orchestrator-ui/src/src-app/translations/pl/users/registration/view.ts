@@ -2,6 +2,7 @@ import englishViewRegistrationTranslations from '#src-app/translations/en/users/
 
 const viewRegistrationTranslations: typeof englishViewRegistrationTranslations = {
     'Users.Registration.View.Events.Success.AcceptingUser': 'Pomyślnie zaakceptowano użytkowników',
+    'Users.Registration.View.Events.Success.Message': 'Twoje konto zostało aktywowane.',
     'Users.Registration.View.Events.Error.RolesNotSelected': 'Nie wszystkim użytkownikom nadano role',
     'Users.Registration.View.Events.Error.AcceptFailed': 'Nie można zaakceptować wybranych użytkowników',
     'Users.Registration.View.Events.Error.FindingUsers': 'Wystąpił błąd podczas znajdowania nieaktywowanych użytkowników',
