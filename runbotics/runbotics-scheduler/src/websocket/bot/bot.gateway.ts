@@ -141,28 +141,32 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         const installationId = socket.bot.installationId;
         this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
 
-        if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS ||
-            processInstance.status === ProcessInstanceStatus.INITIALIZING) {
-            await this.setBotStatusBusy(socket.bot);
+        try {
+            if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS ||
+                processInstance.status === ProcessInstanceStatus.INITIALIZING) {
+                await this.setBotStatusBusy(socket.bot);
+            }
+
+            if (!installationId) {
+                return HttpStatus.BAD_REQUEST;
+            }
+
+            await this.botProcessService.updateProcessInstanceAndNotify(installationId, processInstance);
+
+            if (
+                processInstance.status === ProcessInstanceStatus.ERRORED ||
+                processInstance.status === ProcessInstanceStatus.TERMINATED
+            ) {
+                await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
+                await this.guestService.decrementExecutionsCount(processInstance.user.id);
+                this.logger.log('Restored user\'s executions-count because of process interruption');
+            }
+
+            await this.handleProcessInstanceNotification(processInstance);
+        } catch (e) {
+            this.logger.error(e);
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
-
-        if (!installationId) {
-            return HttpStatus.BAD_REQUEST;
-        }
-
-        await this.botProcessService.updateProcessInstanceAndNotify(installationId, processInstance);
-
-        if (
-            processInstance.status === ProcessInstanceStatus.ERRORED ||
-            processInstance.status === ProcessInstanceStatus.TERMINATED
-        ) {
-            await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
-            await this.guestService.decrementExecutionsCount(processInstance.user.id);
-            this.logger.log('Restored user\'s executions-count because of process interruption');
-        }
-
-        await this.handleProcessInstanceNotification(processInstance);
-
         this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
 
         return this.mapProcessStatusToHttpStatus(processInstance.status);
@@ -174,11 +178,16 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
-        if (processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
-            this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
-            return;
-        } else {
-            await this.setBotStatusBusy(socket.bot);
+        try {
+            if (processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
+                this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
+                return;
+            } else {
+                await this.setBotStatusBusy(socket.bot);
+            }
+        } catch (e) {
+            this.logger.error(e);
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
         setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
@@ -198,7 +207,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         const installationId = socket.bot.installationId;
         this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-        await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
+        try {
+            await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
+        } catch (e) {
+            this.logger.error(e);
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
         this.logger.log(`<= Success: process-instance-loop-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
 
         return this.mapEventStatusToHttpStatus(processInstanceEvent.status);
