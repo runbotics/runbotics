@@ -21,6 +21,7 @@ export interface User {
     lastModifiedBy: string;
     tenantId: string;
     authorities: IAuthority[];
+    message?: string;
 }
 
 export type BasicUserDto = Pick<User, 'id' | 'email'>;

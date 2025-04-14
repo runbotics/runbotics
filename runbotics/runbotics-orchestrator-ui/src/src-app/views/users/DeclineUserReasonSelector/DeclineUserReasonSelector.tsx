@@ -54,7 +54,7 @@ export const DeclineUserReasonSelector = ({
             reason !== DeclineReason.THIRD_REASON &&
             inputValue === DeclineReason.THIRD_REASON
         ) {
-            onMessageChange(customMessage);
+            onMessageChange(`${declineReason[inputValue].message} ${customMessage}`);
         } else {
             onMessageChange(declineReason[inputValue].message);
         }

@@ -13,6 +13,7 @@ import { NotificationProcessService } from '#/scheduler-database/notification-pr
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { NotificationBotService } from '#/scheduler-database/notification-bot/notification-bot.service';
 import { DeleteUserDto } from '#/scheduler-database/user/dto/delete-user.dto';
+import { Message } from '#/scheduler-database/user/dto/update-user.dto';
 
 export type SendMailInput = {
     to?: string;
@@ -177,8 +178,7 @@ export class MailService {
         }
     }
 
-    public sendUserAcceptMail(userToUpdate: User) {
-        const message = 'Your account has been activated.';
+    public sendUserAcceptMail(userToUpdate: User, message: Message) {
 
         this.sendMail({
             to: userToUpdate.email,
