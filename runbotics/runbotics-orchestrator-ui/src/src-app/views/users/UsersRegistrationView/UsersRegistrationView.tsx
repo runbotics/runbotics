@@ -74,7 +74,7 @@ const UsersRegistrationView: FC = () => {
 
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
     const [selectedRoles, setSelectedRoles] = useState<SelectedRoles>({});
-    const [combinedUserWithTenantIds, setCombinedUserWithTenantIds ] = useState<CombinedUserWithTenant>({});
+    const [combinedUserWithTenantIds, setCombinedUserWithTenantIds] = useState<CombinedUserWithTenant>({});
     const [selections, setSelections] = useState<number[]>([]);
 
     const handleSelectedRolesChange = (id: number, value: Role) =>
@@ -121,8 +121,8 @@ const UsersRegistrationView: FC = () => {
         Promise
             .allSettled(
                 hasAdminAccess
-                    ? usersData.map((user) => dispatch(usersActions.update(user)))
-                    : usersData.map((user) => dispatch(usersActions.updateInTenant({ payload: user, resourceId: user.id })))
+                    ? usersData.map((user) => dispatch(usersActions.update({ ...user, message: translate('Users.Registration.View.Events.Success.Message') })))
+                    : usersData.map((user) => dispatch(usersActions.updateInTenant({ payload: { ...user, message: translate('Users.Registration.View.Events.Success.Message') }, resourceId: user.id })))
             )
             .then(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Success.AcceptingUser'), { variant: 'success' });
