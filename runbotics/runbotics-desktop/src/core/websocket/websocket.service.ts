@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnApplicationBootstrap, forwardRef } from '@nestjs/common';
+import { Inject, Injectable, OnApplicationBootstrap, forwardRef, HttpStatus } from '@nestjs/common';
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
 import { RunboticsLogger } from '#logger';
 import { Message, MessageQueueService } from './queue/message-queue.service';
@@ -28,7 +28,9 @@ export class WebsocketService implements OnApplicationBootstrap {
             this.messageService.add(message);
 
         this.io.emit(message.event, message.payload, (responseHttpStatus: number) => {
-            this.logger.log(`Recieved response with HTTP status: [${responseHttpStatus}]`)
+            if(responseHttpStatus !== HttpStatus.OK) {
+                this.logger.log(`Recieved response with HTTP status: [${responseHttpStatus}]`);
+            }
             if(message.payload?.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
                 this.messageService.clear();
                 return;
