@@ -13,8 +13,8 @@ import MarketplaceCartContainer from '#src-landing/components/MarketplaceCartCon
 import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSummary';
 
 import styles from './MarketplaceCartView.module.scss';
-import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 import MarketplaceBackToMainPageButton from '#src-landing/components/MarketplaceBackToMainPageButton';
+import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 
 
 const MarketplaceCartView: FC = () => {
