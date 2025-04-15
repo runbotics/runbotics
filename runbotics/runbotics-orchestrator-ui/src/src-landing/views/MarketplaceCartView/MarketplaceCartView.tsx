@@ -8,12 +8,12 @@ import { axiosInstance as axios } from '#src-app/utils/axios';
 import ContactForm from '#src-landing/components/ContactForm';
 import Layout from '#src-landing/components/Layout';
 
+import MarketplaceBackToMainPageButton from '#src-landing/components/MarketplaceBackToMainPageButton';
 import MarketplaceCartContainer from '#src-landing/components/MarketplaceCartContainer';
 
 import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSummary';
 
 import styles from './MarketplaceCartView.module.scss';
-import MarketplaceBackToMainPageButton from '#src-landing/components/MarketplaceBackToMainPageButton';
 import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 
 
