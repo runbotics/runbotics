@@ -65,7 +65,7 @@ export const AccordionElement: FC<CartItem> = (offer) => {
                         }
                         return (
                             <div key={parameter.name}  className={styles.parameterWrapper}>
-                                <Typography variant={'h6'}>{parameter.name}</Typography>
+                                <Typography variant={'h6'} color={'primary'}>{parameter.name}</Typography>
                                 <ParameterSelect selectedOption={selectedOption} options={parameter.options}
                                     onChange={(newValue) => updateParameter({
                                         name: parameter.name,

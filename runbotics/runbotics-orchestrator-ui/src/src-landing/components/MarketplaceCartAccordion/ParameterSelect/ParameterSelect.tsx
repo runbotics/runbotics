@@ -17,7 +17,8 @@ export const ParameterSelect: FC<Props> = ({ selectedOption, options, onChange }
         }}
         value={selectedOption.name}
         sx={{
-            width: '60%'
+            minWidth: '200px',
+            width: '200px'
         }}>
         {options.map(option => (
             <MenuItem key={option.name} value={option.name}>{option.name}</MenuItem>

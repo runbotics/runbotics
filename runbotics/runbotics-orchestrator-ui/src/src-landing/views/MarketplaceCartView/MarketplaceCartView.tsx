@@ -14,6 +14,7 @@ import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSumma
 
 import styles from './MarketplaceCartView.module.scss';
 import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
+import MarketplaceBackToMainPageButton from '#src-landing/components/MarketplaceBackToMainPageButton';
 
 
 const MarketplaceCartView: FC = () => {
@@ -21,7 +22,7 @@ const MarketplaceCartView: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const { cart, contactFormValue, selectedCartItems} = useCart();
 
-    const fullPrice = cart.filter(item => selectedItems.includes(item.slug))
+    const fullPrice = cart.filter(item => selectedCartItems.includes(item.slug))
         .reduce(
             (
                 accumulator,
@@ -64,6 +65,7 @@ const MarketplaceCartView: FC = () => {
     };
     return (
         <Layout>
+            <MarketplaceBackToMainPageButton page={'cart'} />
             <div className={styles.root}>
                 <div className={styles.cartWrapper}>
                     <h1 className={styles.cartHeader}>Your cart</h1>

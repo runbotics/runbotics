@@ -1,5 +1,17 @@
 @import '#src-landing/scss/main.scss';
 
+.accordion {
+    background-color: $palette-white !important;
+    
+    margin: 8px 0;
+    border-radius: 8px !important;
+    
+    &:before {
+        display: none;
+    }
+}
+
+
 .accordionSummary {
     display: flex;
     
@@ -20,24 +32,19 @@
 }
 
 .accordionDetails {
-    display: flex;
-    
-    flex-direction: column;
-    
+    display: flex;  
+    flex-wrap: wrap;
     gap: 1rem;
     
     border: 1px solid $palette-gray;
     border-radius: 8px;
-    border-top: 0;
-    
-    
+    border-top: 0;    
 }
 
 .parameterWrapper {
     display: flex;
-    width: 30%;
-    
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 1rem;
 }
