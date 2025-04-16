@@ -1,0 +1,43 @@
+@import '#src-landing/scss/main.scss';
+
+.root {
+    position: relative;
+    padding: 0.75rem 1rem;
+    background-color: $palette-white;
+    border-radius: 25px;
+    z-index: 1;
+}
+
+@mixin absolute-pos($top, $left) {
+    position: absolute;
+    top: $top;
+    left: $left;
+}
+
+.root--cart {
+    @include absolute-pos(6vh, 2vw);
+    width: fit-content;
+}
+
+.root--details {
+    @include absolute-pos(20px, 20px);
+}
+
+.backLink {
+    font-family: 'Roboto', sans-serif;
+
+    color: $palette-black;
+    z-index: 3;
+    text-decoration: none;
+    :hover {
+        text-decoration: underline;
+    }
+}
+
+.text {
+    display: flex;
+    gap: 8px;
+}
+
+
+

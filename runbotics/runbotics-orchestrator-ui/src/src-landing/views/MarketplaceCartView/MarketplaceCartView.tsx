@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useSnackbar } from 'notistack';
 
@@ -8,6 +8,7 @@ import { axiosInstance as axios } from '#src-app/utils/axios';
 import ContactForm from '#src-landing/components/ContactForm';
 import Layout from '#src-landing/components/Layout';
 
+import MarketplaceBackToMainPageButton from '#src-landing/components/MarketplaceBackToMainPageButton';
 import MarketplaceCartContainer from '#src-landing/components/MarketplaceCartContainer';
 
 import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSummary';
@@ -19,10 +20,9 @@ import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 const MarketplaceCartView: FC = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
-    const { cart, contactFormValue } = useCart();
-    const [selectedItems, setSelectedItems] = useState(cart.map(item => item.slug) ?? []);
+    const { cart, contactFormValue, selectedCartItems} = useCart();
 
-    const fullPrice = cart.filter(item => selectedItems.includes(item.slug))
+    const fullPrice = cart.filter(item => selectedCartItems.includes(item.slug))
         .reduce(
             (
                 accumulator,
@@ -32,15 +32,15 @@ const MarketplaceCartView: FC = () => {
         );
 
     const getSelectedCartItems = useCallback(
-        () => cart.filter(item => selectedItems.includes(item.slug)),
-        [selectedItems, cart],
+        () => cart.filter(item => selectedCartItems.includes(item.slug)),
+        [selectedCartItems, cart],
     );
 
     const onSubmit = async () => {
-        const selectedCartItems = getSelectedCartItems();
+        const selectedFullCartItems = getSelectedCartItems();
         const body: MarketplaceContactBody = {
             ...contactFormValue,
-            cartContent: selectedCartItems,
+            cartContent: selectedFullCartItems,
         };
         await axios
             .post('/api/marketplace/contact', body)
@@ -65,14 +65,13 @@ const MarketplaceCartView: FC = () => {
     };
     return (
         <Layout>
+            <MarketplaceBackToMainPageButton page={'cart'} />
             <div className={styles.root}>
                 <div className={styles.cartWrapper}>
                     <h1 className={styles.cartHeader}>Your cart</h1>
                     <div className={styles.cartProductsWrapper}>
                         <h2>Chosen products ({cart.length})</h2>
-                        <MarketplaceCartContainer
-                            setSelectedItems={setSelectedItems}
-                            selectedItems={selectedItems} />
+                        <MarketplaceCartContainer />
                     </div>
                     <ContactForm />
                 </div>

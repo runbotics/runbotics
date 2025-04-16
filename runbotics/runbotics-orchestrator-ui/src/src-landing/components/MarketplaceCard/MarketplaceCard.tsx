@@ -63,13 +63,18 @@ const MarketplaceCard: FC<MarketplaceCardProps> = ({ offer, className }) => {
                     <div className={styles.addToCart}>
                         <p>
                             <Typography color={'primary'}>{translate('Marketplace.Card.price')}:</Typography>
-                            <Typography variant={'h6'} color={'primary'}>{`${translate('Marketplace.Card.From')}: ${offer.parameters?.basePrice ?? 0} euro`}</Typography>
+                            <Typography variant={'h6'} color={'primary'}>{`${translate('Marketplace.Card.From')}: -- euro`}</Typography>
                         </p>
                         <button
                             className={styles.addToCartButton}
                             onClick={(e) => {
                                 e.preventDefault();
-                                addToCart({ ...offer, quantity: 1 });
+                                addToCart({ 
+                                    title: offer.title,
+                                    parameters: offer.parameters,
+                                    slug: offer.slug,
+                                    quantity: 1 
+                                });
                             }}
                         >
                             <Typography variant="body3">
