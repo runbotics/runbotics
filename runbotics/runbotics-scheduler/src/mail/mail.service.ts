@@ -186,7 +186,7 @@ export class MailService {
     private async handlePublicProcessesAndBotsNotificationEmail(subscribers: User[], emailInput: SendMailInput, assignedUserEmail: string) {
         const subscribersAddresses =
             subscribers && subscribers.length
-                ? subscribers.map(({ email }) => email)
+                ? subscribers.map((user) => user?.email ? user.email : null).filter(email => Boolean(email))
                 : [];
 
         await this.handleNotificationEmail(emailInput, [ assignedUserEmail, ...subscribersAddresses ]);
