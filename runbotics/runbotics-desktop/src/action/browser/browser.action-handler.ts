@@ -33,8 +33,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         const geckoDriver = driversPath + '/' + this.serverConfigService.cfgGeckoDriver;
         this.logger.log('geckoDriver', geckoDriver);
 
-        process.env['PATH'] = process.env['PATH'] + (isWin ? ';' : ':') + geckoDriver;
-        this.logger.log('Path', process.env['PATH']);
         let optionsFF = new firefox.Options()
             .setPreference('xpinstall.signatures.required', false)
             .setPreference('devtools.console.stdout.content', true)
@@ -48,7 +46,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             .forBrowser('firefox')
             .setFirefoxOptions(optionsFF)
             .setFirefoxService(
-                new firefox.ServiceBuilder()
+                new firefox.ServiceBuilder(geckoDriver)
                     //.enableVerboseLogging()
                     .setStdio('inherit'),
             )
