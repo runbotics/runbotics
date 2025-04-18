@@ -23,7 +23,7 @@ export class BotProcessService {
         private readonly processInstanceService: ProcessInstanceService,
         private readonly botService: BotService,
         private readonly processService: ProcessService,
-        private readonly connection: DataSource,
+        private readonly dataSource: DataSource,
         private readonly uiGateway: UiGateway,
         private readonly mailTriggerService: MailTriggerService,
         private readonly processFileService: ProcessFileService,
@@ -34,7 +34,7 @@ export class BotProcessService {
         const instanceToSave = this.setPropertiesFromProcessInstance(processInstance);
         
         try {
-            await this.connection.transaction(async (txEntityManager) => {
+            await this.dataSource.transaction(async (txEntityManager) => {
                 const { newProcessInstance, bot } = await this.setBotInProcessInstance(instanceToSave, installationId, txEntityManager);
                 const updatedLastInstanceRunTime = await this.updateProcessParams(processInstance, newProcessInstance, bot, txEntityManager);
                 const dbProcessInstance = await txEntityManager.findOne(ProcessInstance, { where: { id: updatedLastInstanceRunTime.id } });
