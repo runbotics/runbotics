@@ -1,17 +1,17 @@
 services:
   runbotics-portainer:
     container_name: runbotics-portainer
+    network_mode: host
     image: portainer/portainer-ce:2.20.3-alpine
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
-    ports:
-      - 127.0.0.1:9000:9000
 
   runbotics-postgresql:
     container_name: runbotics-postgresql
     image: postgres:13.2
+    network_mode: host
     volumes:
       - runbotics:/var/lib/postgresql/data/
     environment:
@@ -20,21 +20,18 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
-    ports:
-      - 127.0.0.1:5432:5432
 
   runbotics-orchestrator:
     container_name: runbotics-orchestrator
     image: runbotics/runbotics-orchestrator:latest
+    network_mode: host
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://runbotics-postgresql:5432/runbotics
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/runbotics
       - SPRING_DATASOURCE_USERNAME=runbotics
       - SPRING_DATASOURCE_PASSWORD=runbotics
       - BOT_INSTALLATION_FILE=./installation/RunBotics_2.0.7.zip
       - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
-    ports:
-      - 8080:8080
     depends_on:
       - runbotics-postgresql
     extra_hosts:
@@ -43,10 +40,11 @@ services:
   runbotics-scheduler:
     container_name: runbotics-scheduler
     image: runbotics/runbotics-scheduler:latest
+    network_mode: host
     environment:
-      - RUNBOTICS_SCHEDULER_REDIS_HOST=runbotics-redis
+      - RUNBOTICS_SCHEDULER_REDIS_HOST=localhost
       - RUNBOTICS_SCHEDULER_REDIS_PORT=6379
-      - RUNBOTICS_DB_HOST=runbotics-postgresql
+      - RUNBOTICS_DB_HOST=localhost
       - RUNBOTICS_DB_PORT=5432
       - RUNBOTICS_DB_USER=runbotics
       - RUNBOTICS_DB_PASSWORD=runbotics
@@ -61,8 +59,6 @@ services:
       - TZ=UTC
       - MS_DISCOVERY_KEYS_URI=https://login.microsoftonline.com/common/discovery/v2.0/keys
       - IS_SSO_ENABLED="false"
-    ports:
-      - 4000:4000
     depends_on:
       - runbotics-redis
       - runbotics-postgresql
@@ -72,14 +68,14 @@ services:
   runbotics-redis:
     container_name: runbotics-redis
     image: redis:6
-    ports:
-      - 6379:6379
+    network_mode: host
 
   runbotics-desktop:
     container_name: runbotics-desktop
     image: runbotics/runbotics-desktop:latest
+    network_mode: host
     environment:
-      - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
+      - RUNBOTICS_ENTRYPOINT_URL=http://localhost:8080
       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
       - RUNBOTICS_INSTALLATION_ID=admin
       - RUNBOTICS_USERNAME=runbotics@localhost
@@ -136,9 +132,8 @@ services:
   chrome:
     container_name: chrome
     image: selenium/standalone-chrome:132.0.6834.159-chromedriver-132.0.6834.159-grid-4.28.1-20250202
-    ports:
-      - 7900:7900
-      - 4444:4444
+    network_mode: host
+
     shm_size: 2gb
     environment:
       SE_NODE_OVERRIDE_MAX_SESSIONS: 'true'
@@ -152,8 +147,3 @@ volumes:
     external: false
   portainer_data:
     external: false
-
-networks:
-  default:
-    name: runbotics
-    attachable: true
