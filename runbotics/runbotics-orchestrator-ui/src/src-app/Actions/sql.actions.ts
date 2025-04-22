@@ -91,6 +91,14 @@ const getSQLActions: () => Record<string, IBpmnAction> = () => ({
                 },
             },
             uiSchema: {
+                input: {
+                    query: {
+                        'ui:widget': 'EditorWidget',
+                        'ui:options': {
+                            'language': "sql"
+                        }
+                    },
+                },
                 output: {
                     variableName: {
                         'ui:options': {
