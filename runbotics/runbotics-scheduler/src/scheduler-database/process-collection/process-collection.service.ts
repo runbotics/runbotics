@@ -1,6 +1,6 @@
 import { BadGatewayException, BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, FindManyOptions, In, IsNull, Repository } from 'typeorm';
+import { Brackets, EntityManager, FindManyOptions, In, IsNull, Repository } from 'typeorm';
 import { User } from '#/scheduler-database/user/user.entity';
 import { ProcessCollection } from './process-collection.entity';
 import { CreateProcessCollectionDto } from './dto/create-process-collection.dto';
@@ -24,6 +24,12 @@ export class ProcessCollectionService {
         @InjectRepository(ProcessCollection)
         private processCollectionRepository: Repository<ProcessCollection>,
     ) {}
+
+    withEntityManager(em: EntityManager): ProcessCollectionService {
+        return new ProcessCollectionService(
+            em.getRepository(ProcessCollection),
+        )
+    }
 
     async getProcessCollectionById(id: string, user: User): Promise<ProcessCollection> {
         const collection = await this.processCollectionRepository.findOneOrFail({ where: { id }, relations: RELATIONS })
