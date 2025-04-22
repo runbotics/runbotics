@@ -24,6 +24,7 @@ import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
 import getWindowsActions from '#src-app/Actions/windows.actions';
 import getZipActions from '#src-app/Actions/zip.actions';
+import getSQLActions from "#src-app/Actions/sql.actions";
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
@@ -181,6 +182,10 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.VisualBasic'
             ),
             items: Object.values(getVisualBasicActions())
+        },
+        sql: {
+            label: translate('Process.Details.Modeler.ActionsGroup.Sql'),
+            items: Object.values(getSQLActions())
         },
         external: {
             label: translate(
