@@ -2,7 +2,6 @@ import { FC, useState } from 'react';
 
 import { TextField } from '@mui/material';
 
-
 import { useCart } from '#src-app/contexts/CartContext';
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -73,7 +72,7 @@ const ContactForm: FC = () => {
                         <TextField
                             className={styles.formInput}
                             variant={'outlined'}
-                            placeholder={'email'}
+                            placeholder={'E-mail'}
                             value={contactFormValue.email}
                             onChange={(e) => changeFormValue('email', e.target.value)}
                             type={'email'}
