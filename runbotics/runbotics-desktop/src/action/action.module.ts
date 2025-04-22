@@ -30,6 +30,7 @@ import { CloudFileActionHandler } from './microsoft/automation/file';
 import { ImageActionHandler } from './image';
 import FolderActionHandler from './folder/folder.action-handler';
 import { MailService } from '#mailer/mailer.service';
+import { SqlActionHandler } from './sql/sql.action-handler';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -59,6 +60,7 @@ const ALL_ACTION_HANDLERS = [
     FolderActionHandler,
     ZipActionHandler,
     MailService,
+    SqlActionHandler
 ];
 
 @Module({

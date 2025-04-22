@@ -336,10 +336,17 @@ export type AllActionIds =
     | VisualBasicAction
     | ImageAction
     | FolderAction
-    | ZipAction;
+    | ZipAction
+    | SqlAction;
 
 export enum ConflictFile {
     OVERWRITE = 'Overwrite',
     EXTEND_NAME = 'Extend name',
     THROW_ERROR = 'Throw Error'
+}
+
+export enum SqlAction { 
+    CONNECT = "sql.connect",
+    QUERY = "sql.query",
+    CLOSE = "sql.close"
 }
