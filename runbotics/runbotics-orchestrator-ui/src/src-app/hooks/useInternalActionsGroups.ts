@@ -20,11 +20,11 @@ import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
 import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/SapActions/sap.actions';
+import getSQLActions from '#src-app/Actions/sql.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
 import getWindowsActions from '#src-app/Actions/windows.actions';
 import getZipActions from '#src-app/Actions/zip.actions';
-import getSQLActions from "#src-app/Actions/sql.actions";
 
 import useTranslations from '#src-app/hooks/useTranslations';
 

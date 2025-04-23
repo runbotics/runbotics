@@ -2,8 +2,8 @@ import { ActionCredentialType, ActionRegex, SqlAction } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 
-import { IBpmnAction, Runner } from './types';
 import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
+import { IBpmnAction, Runner } from './types';
 
 const getSQLActions: () => Record<string, IBpmnAction> = () => ({
     [SqlAction.CONNECT]: {
@@ -95,7 +95,7 @@ const getSQLActions: () => Record<string, IBpmnAction> = () => ({
                     query: {
                         'ui:widget': 'EditorWidget',
                         'ui:options': {
-                            'language': "sql"
+                            'language': 'sql'
                         }
                     },
                 },
@@ -109,7 +109,7 @@ const getSQLActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    query: `SELECT 1`,
+                    query: 'SELECT 1',
                     queryParams: [],
                 },
                 output: {
