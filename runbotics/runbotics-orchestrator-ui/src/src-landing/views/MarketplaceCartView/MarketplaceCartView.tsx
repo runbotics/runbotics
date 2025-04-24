@@ -42,6 +42,18 @@ const MarketplaceCartView: FC = () => {
             ...contactFormValue,
             cartContent: selectedFullCartItems,
         };
+
+        if (!/^\S+@\S+\.\S+$/.test(contactFormValue.email)) {
+            enqueueSnackbar(
+                translate('Marketplace.Cart.NoEmailError'),
+                {
+                    variant: 'error',
+                    autoHideDuration: 5000,
+                },
+            );
+            return;
+        }
+
         await axios
             .post('/api/marketplace/contact', body)
             .then(() => {

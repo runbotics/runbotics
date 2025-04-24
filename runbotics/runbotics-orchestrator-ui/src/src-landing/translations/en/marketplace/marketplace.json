@@ -41,6 +41,7 @@
     "Marketplace.Offer.NoticeText": "By completing this form and sending us a request for a quote, you voluntarily agree to provide us with the data contained in the form and for us to process this data in order to prepare a quote and contact you. The administrator of this data will be All For One Poland company. At any time you can correct your data and get access to it by contacting our RunBotics team.",
     "Marketplace.Cart.EmailSent": "Email sent successfully",
     "Marketplace.Cart.EmailError": "Error occurred while sending email",
+    "Marketplace.Cart.NoEmailError": "Enter valid email",
     "Marketplace.Cart.SuccessAdded": "Offer added successfully",
     "Marketplace.Cart.ErrorAdded": "Error occurred while adding new offer to cart",
     "Marketplace.Cart.FormError.RequiredField": "This is required field",
