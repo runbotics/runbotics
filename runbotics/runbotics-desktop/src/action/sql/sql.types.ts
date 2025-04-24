@@ -1,5 +1,5 @@
-import { DesktopRunRequest } from "@runbotics/runbotics-sdk";
-import { SqlAction } from "runbotics-common";
+import { DesktopRunRequest } from '@runbotics/runbotics-sdk';
+import { SqlAction } from 'runbotics-common';
 
 export type SQLActionRequest =
     | DesktopRunRequest<SqlAction.CONNECT>
