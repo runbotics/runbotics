@@ -138,8 +138,7 @@ export class QueueService implements OnModuleInit {
     async deleteJobFromQueue(id: JobId) {
         this.logger.log(`Deleting waiting job with id: ${id}`);
         const job = await this.processQueue.getJob(id);
-        const tenantRoom = job.data.process.tenantId;
-
+        const tenantRoom = job?.data.process.tenantId;
         this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_WAITING_SCHEDULE, job);
         await job?.remove();
         this.logger.log(`Job with id: ${id} successfully deleted`);
@@ -147,7 +146,7 @@ export class QueueService implements OnModuleInit {
 
     async deleteQueueJobsBySchedule(id: JobData['id']) {
         const jobs = await this.processQueue.getJobs(['delayed', 'waiting', 'active', 'paused'])
-            .then(jobs => jobs.filter(job => job.data.id === id));
+            .then(jobs => jobs.filter(job => job.data.id.toString() === id.toString()));
 
         await Promise.all(jobs.map(job => job.remove()));
     }
@@ -265,7 +264,6 @@ export class QueueService implements OnModuleInit {
             this.logger.warn(`No job with id: ${id} found`);
             return;
         }
-
         await this.deleteQueueJobsBySchedule(id);
 
         await this.processQueue.removeRepeatableByKey(scheduledJob.key);
