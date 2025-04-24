@@ -17,6 +17,5 @@ export type SqlCredentials = {
 
 export type SqlQueryActionOutput = {
     rows: Record<string, any>[],
-    columns: string[],
     rowCount: number
 }

@@ -68,7 +68,8 @@
         "obj-walker": "1.10.0",
         "rxjs": "^7.5.5",
         "pg": "~8.14.1",
-        "better-sqlite3": "~11.9.1"
+        "typeorm": "~0.3.22",
+        "sqlite3": "~5.1.7"
     },
     "build": {
         "productName": "RunBotics",
