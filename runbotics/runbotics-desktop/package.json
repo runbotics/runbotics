@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "3.2.0-SNAPSHOT.7",
+    "version": "3.2.0-SNAPSHOT.6",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -66,10 +66,7 @@
         "zod": "~3.22.4",
         "adm-zip": "~0.5.10",
         "obj-walker": "1.10.0",
-        "rxjs": "^7.5.5",
-        "pg": "~8.14.1",
-        "typeorm": "~0.3.22",
-        "sqlite3": "~5.1.7"
+        "rxjs": "^7.5.5"
     },
     "build": {
         "productName": "RunBotics",
@@ -140,9 +137,7 @@
         "vite-tsconfig-paths": "~4.2.1",
         "unplugin-swc": "~1.5.1",
         "@swc/core": "~1.7.26",
-        "@types/mime-types": "~2.1.4",
-        "@types/pg": "~8.11.13",
-        "@types/better-sqlite3": "~7.6.13"
+        "@types/mime-types": "~2.1.4"
     },
     "files": [
         "dist",
