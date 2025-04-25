@@ -4,7 +4,8 @@ import { DesktopRunResponse, StatefulActionHandler } from '@runbotics/runbotics-
 import Sqlite, { Database as SqliteDatabase } from 'better-sqlite3';
 import { Client as PostgresClient } from 'pg';
 import { SqlAction } from 'runbotics-common';
-import { SQLActionRequest, SqlCredentials, SqlQueryActionOutput } from './sql.types';
+import { SQLActionRequest, SqlQueryActionOutput } from './sql.types';
+import { sqlCredentialsSchema, sqlQueryActionInputSchema } from './sql.utils';
 
 enum DBDriverType {
     POSTGRES = 'postgres',
@@ -26,23 +27,25 @@ const castColumnNameToPropertyName = (x: string | symbol | number): string | sym
     return x;
 };
 
+
+
 @Injectable()
 export class SqlActionHandler extends StatefulActionHandler {
     private dbDriver: DBDriver | null = null;
 
     async run(request: SQLActionRequest): Promise<DesktopRunResponse | void> {
-        switch (request.script) {
-            case SqlAction.CONNECT:
-                await this.closeSession();
-                await this.openSession(credentialAttributesMapper<SqlCredentials>(request.credentials).url);
-                break;
-            case SqlAction.CLOSE:
-                return await this.closeSession();
-            case SqlAction.QUERY:
-                await this.checkSession();
-                return await this.query(request.input.query, request.input.queryParams ?? []);
-            default:
-                throw new Error('Action not found');
+        if (request.script === SqlAction.CONNECT) {
+            await this.closeSession();
+            const credentials = credentialAttributesMapper(request.credentials);
+            const parsedCredentials = sqlCredentialsSchema.parse(credentials);
+            await this.openSession(parsedCredentials.url);
+        } else if (request.script === SqlAction.CLOSE) {
+            return await this.closeSession();
+        } else if (request.script === SqlAction.QUERY) {
+            const inputParsed = sqlQueryActionInputSchema.parse(request.input);
+            return await this.query(inputParsed.query, inputParsed.queryParams);
+        } else {
+            throw new Error('Action not found');
         }
     }
 
@@ -52,13 +55,7 @@ export class SqlActionHandler extends StatefulActionHandler {
         }
     }
 
-    private async checkSession() {
-        if (!this.dbDriver) {
-            throw new Error('DB is not connected');
-        }
-    }
-
-    private async query(sql: string, parameters: string[]): Promise<SqlQueryActionOutput> {
+    private async query(sql: string, parameters: (string | number | null)[]): Promise<SqlQueryActionOutput> {
         if (!this.dbDriver) throw new Error('DB not connected');
 
         if (this.dbDriver.type === DBDriverType.POSTGRES) {
