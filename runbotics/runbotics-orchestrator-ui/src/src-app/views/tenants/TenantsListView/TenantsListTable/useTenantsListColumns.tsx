@@ -1,16 +1,19 @@
 import EditIcon from '@mui/icons-material/Edit';
 import { Link, IconButton } from '@mui/material';
-import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
+import { GridColDef, GridValidRowModel, GridValueFormatterParams } from '@mui/x-data-grid';
 import { BasicUserDto } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { formatDate } from '#src-app/utils/dateFormat';
 
+import { UserField } from '#src-app/views/users/UsersBrowseView/UsersBrowseView.utils';
+
 import { TenantField } from '../../TenantsBrowseView/TenantsBrowseView.utils';
+import { PluginGridField } from '#src-app/views/tenants/TenantsListView/PluginDialog/PluginGridField';
 
-const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => {
+const useTenantsListColumns = (pageSize, openTenantEditDialog, openPluginDialog): GridColDef[] => {
     const { translate } = useTranslations();
-
+    
     return [
         {
             field: TenantField.NAME,
@@ -52,6 +55,12 @@ const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => 
             headerName: translate('Tenants.List.Table.Columns.LastModifiedBy'),
             filterable: false,
             flex: 0.5
+        },
+        {
+            field: TenantField.PLUGINS,
+            headerName: translate('Users.List.Table.Columns.Plugins'),
+            flex: 0.1,
+            renderCell: ({ row }) => PluginGridField(row),
         },
         {
             field: TenantField.EDIT,

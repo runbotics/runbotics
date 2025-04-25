@@ -8,6 +8,7 @@ const tableListTranslations: typeof englishTableListTranslations = {
     'Users.List.Table.Columns.CreatedDate': 'Data utworzenia',
     'Users.List.Table.Columns.LastModifiedBy': 'Ostatnia modyfikacja',
     'Users.List.Table.Columns.LastModifiedDate': 'Data ostatniej modyfikacji',
+    'Users.List.Table.Columns.Plugins': 'Rozszerzenia',
     'Users.List.Table.Error.Rows': 'Nie znaleziono użytkowników',
 };
 

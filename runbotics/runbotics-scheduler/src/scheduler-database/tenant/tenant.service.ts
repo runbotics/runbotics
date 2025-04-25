@@ -16,7 +16,7 @@ import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 
-const relations = ['createdByUser', 'emailTriggerWhitelist'];
+const relations: (keyof Tenant)[] = ['createdByUser', 'emailTriggerWhitelist', 'licenses'];
 
 @Injectable()
 export class TenantService {

@@ -9,6 +9,8 @@ export interface Tenant {
     created?: string | null;
     updated?: string | null;
     lastModifiedBy?: string | null;
+    //TODO: add type of License
+    licenses?: Record<string, unknown>;
 }
 
 export interface TenantInviteCode {

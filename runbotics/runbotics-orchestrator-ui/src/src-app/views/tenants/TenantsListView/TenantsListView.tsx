@@ -16,6 +16,9 @@ import TenantsListTable from './TenantsListTable/TenantsListTable';
 import { StyledActionsContainer, StyledButton, StyledTextField } from './TenantsListView.styles';
 import CreateTenantDialog from '../CreateTenantDialog';
 
+import { PluginDialog } from '#src-app/views/tenants/PluginDialog';
+
+
 const TenantsListView: VFC = () => {
     const { translate } = useTranslations();
     const router = useRouter();
@@ -29,6 +32,10 @@ const TenantsListView: VFC = () => {
             ? pageSizeFromUrl
             : DEFAULT_TABLE_PAGING_VALUES.pageSize
     );
+    const [pluginDialogProps, setPluginDialogProps] = useState<PluginDialogProps>({
+        isVisible: false,
+        tenantData: null,
+    });
 
     const { allByPage } = useSelector(tenantsSelector);
 
@@ -53,6 +60,20 @@ const TenantsListView: VFC = () => {
 
     const closeCreateDialog = () => {
         setIsCreateDialogVisible(false);
+    };
+    
+    const closePluginDialog = () => {
+        setPluginDialogProps({
+            isVisible: false,
+            tenantId: null,
+        });
+    }; 
+    
+    const openPluginDialog = (row: Tenant) => {
+        setPluginDialogProps({
+            isVisible: true,
+            tenantData: row,
+        });
     };
 
     useEffect(() => {
@@ -80,6 +101,7 @@ const TenantsListView: VFC = () => {
                 onClose={closeEditDialog}
                 tenantData={tenantData}
             />
+            <PluginDialog {...pluginDialogProps} onClose={closePluginDialog} />
             <StyledActionsContainer>
                 <StyledTextField
                     margin='dense'
@@ -102,6 +124,7 @@ const TenantsListView: VFC = () => {
                 pageSize={limit}
                 onPageSizeChange={setLimit}
                 openTenantEditDialog={openEditDialog}
+                openPluginDialog={openPluginDialog}
             />
         </TablePagingProvider>
     );

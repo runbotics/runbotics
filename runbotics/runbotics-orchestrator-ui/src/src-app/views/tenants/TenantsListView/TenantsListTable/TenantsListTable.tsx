@@ -11,6 +11,7 @@ import { AVAILABLE_ROWS_PER_PAGE } from '#src-app/views/utils/TablePaging.provid
 
 import { DataGridStyle } from './TenantsListTable.styles';
 import useTenantsListColumns from './useTenantsListColumns';
+import { Tenant } from 'runbotics-common';
 
 
 interface TenantListTableProps {
@@ -19,6 +20,7 @@ interface TenantListTableProps {
     pageSize: number;
     onPageSizeChange: (pageSize: number) => void;
     openTenantEditDialog: (row) => void;
+    openPluginDialog: (row: Tenant) => void;
 }
 
 const TenantsListTable: VFC<TenantListTableProps> = ({
@@ -26,11 +28,12 @@ const TenantsListTable: VFC<TenantListTableProps> = ({
     onPageChange,
     pageSize,
     onPageSizeChange,
-    openTenantEditDialog
+    openTenantEditDialog,
+    openPluginDialog
 }) => {
     const { translate } = useTranslations();
 
-    const tenantsListColumns = useTenantsListColumns(pageSize, openTenantEditDialog);
+    const tenantsListColumns = useTenantsListColumns(pageSize, openTenantEditDialog, openPluginDialog);
     const { loading, allByPage } = useSelector(tenantsSelector);
 
     return (

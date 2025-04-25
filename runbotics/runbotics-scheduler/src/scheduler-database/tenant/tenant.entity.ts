@@ -8,6 +8,7 @@ import { CredentialCollection } from '../credential-collection/credential-collec
 import { Credential } from '../credential/credential.entity';
 import { User } from '../user/user.entity';
 import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
+import { License } from '#/scheduler-database/license/license.entity';
 
 @Entity()
 export class Tenant {
@@ -53,4 +54,7 @@ export class Tenant {
 
     @OneToMany(() => EmailTriggerWhitelistItem, emailTriggerWhitelistItem => emailTriggerWhitelistItem.tenant, { cascade: true })
     emailTriggerWhitelist: EmailTriggerWhitelistItem[];
+    
+    @OneToMany(() => License, license => license.tenant)
+    licenses: License[];
 }

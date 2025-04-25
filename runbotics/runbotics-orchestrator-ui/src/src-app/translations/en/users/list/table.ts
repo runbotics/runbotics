@@ -6,7 +6,9 @@ const tableListTranslations = {
     'Users.List.Table.Columns.CreatedDate': 'Created date',
     'Users.List.Table.Columns.LastModifiedBy': 'Last modified by',
     'Users.List.Table.Columns.LastModifiedDate': 'Last modified date',
+    'Users.List.Table.Columns.Plugins': 'Plugins',
     'Users.List.Table.Error.Rows': 'No users found',
+    
 };
 
 export default tableListTranslations;
