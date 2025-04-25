@@ -109,7 +109,7 @@ const getSQLActions: () => Record<string, IBpmnAction> = () => ({
             },
             formData: {
                 input: {
-                    query: 'SELECT 1',
+                    query: '',
                     queryParams: [],
                 },
                 output: {
