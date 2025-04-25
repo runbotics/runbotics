@@ -31,7 +31,9 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
 
     const onSubmit = () => {
         addToCart({
-            ...offer,
+            title: offer.title,
+            slug: offer.slug,
+            parameters: offer.parameters,
             selectedParameters,
             quantity: 1,
         });
@@ -41,7 +43,7 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
             <Typography variant={'h5'}>
                 {translate(
                     'Marketplace.Offer.ApproximatePriceStartsFrom',
-                    { price: parameters?.basePrice ?? 0 },
+                    { price: '--' },
                 )}
             </Typography>
             <div>

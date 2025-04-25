@@ -11,7 +11,7 @@ interface Props {
     onSubmit: Function;
 }
 
-const MarketplaceCartSummary: FC<Props> = ({ approximatePrice, onSubmit }) => {
+const MarketplaceCartSummary: FC<Props> = ({ onSubmit }) => {
     const { translate } = useTranslations();
     return (
         <div className={styles.root}>
@@ -23,7 +23,7 @@ const MarketplaceCartSummary: FC<Props> = ({ approximatePrice, onSubmit }) => {
                 </div>
                 <div>
                     <h3>{translate('Marketplace.Cart.ApproximatePrice')}:</h3>
-                    <p>{approximatePrice} euro</p>
+                    <p>-- euro</p>
                 </div>
                 <Button
                     fullWidth
