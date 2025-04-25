@@ -56,6 +56,7 @@ import {
     PLUGIN_PREFIX,
 } from './desktop-runner.utils';
 import { ImageActionHandler } from '#action/image';
+import { SqlActionHandler } from '#action/sql/sql.action-handler';
 
 
 @Injectable()
@@ -97,6 +98,7 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly imageActionHandler: ImageActionHandler,
         private readonly folderActionHandler: FolderActionHandler,
         private readonly zipActionHandler: ZipActionHandler,
+        private readonly sqlActionHandler: SqlActionHandler
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -122,7 +124,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('visualBasic', visualBasicActionHandler)
             .set('image', imageActionHandler)
             .set('folder', folderActionHandler)
-            .set('zip', zipActionHandler);
+            .set('zip', zipActionHandler)
+            .set('sql', sqlActionHandler);
     }
 
     async onModuleInit() {

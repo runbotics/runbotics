@@ -28,6 +28,7 @@ const actionsGroupsTranslations: typeof englishActionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.Image': 'Obraz',
     'Process.Details.Modeler.ActionsGroup.External': 'Zewnętrzne',
     'Process.Details.Modeler.ActionsGroup.Windows': 'Windows',
+    'Process.Details.Modeler.ActionsGroup.Sql': 'SQL'
 };
 
 export default actionsGroupsTranslations;
