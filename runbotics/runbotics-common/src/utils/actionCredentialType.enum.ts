@@ -9,5 +9,5 @@ export enum ActionCredentialType {
     AI = 'ai',
     BROWSER_LOGIN = 'browserLogin',
     DESKTOP = 'desktop',
-    SQL = "sql"
+    SQL = 'sql'
 }
