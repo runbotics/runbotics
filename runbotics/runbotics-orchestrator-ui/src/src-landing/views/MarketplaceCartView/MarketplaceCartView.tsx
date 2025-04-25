@@ -43,6 +43,17 @@ const MarketplaceCartView: FC = () => {
             cartContent: selectedFullCartItems,
         };
 
+        if (contactFormValue.name.trim().length === 0) {
+            enqueueSnackbar(
+                translate('Marketplace.Cart.NoNameAndSurnameError'),
+                {
+                    variant: 'error',
+                    autoHideDuration: 5000,
+                },
+            );
+            return;
+        }
+
         if (!/^\S+@\S+\.\S+$/.test(contactFormValue.email)) {
             enqueueSnackbar(
                 translate('Marketplace.Cart.NoEmailError'),
