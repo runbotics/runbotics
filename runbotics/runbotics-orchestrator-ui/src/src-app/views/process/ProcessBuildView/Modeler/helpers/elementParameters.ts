@@ -16,7 +16,7 @@ interface CamundaValue {
 
 interface CamundaParameterDefinition {
     $type: 'camunda:List' | 'camunda:Map';
-    items: CamundaValue[];
+    items?: CamundaValue[];
 }
 
 type CamundaMapParameterDefinition = CamundaParameterDefinition & {
@@ -166,7 +166,7 @@ export const getParameterValue = (parameter: CamundaParameter) => {
 
     switch (parameter.definition.$type) {
         case 'camunda:List':
-            return parameter.definition.items.map((item) => item.value);
+            return (parameter.definition?.items ?? []).map((item) => item.value);
         case 'camunda:Map':
             const map = parameter.definition as CamundaMapParameterDefinition;
             if (!map.entries) {
