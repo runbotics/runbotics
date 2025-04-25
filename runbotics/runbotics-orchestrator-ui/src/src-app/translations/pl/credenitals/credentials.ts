@@ -51,7 +51,6 @@ const credentials: typeof englishCredentials = {
     'Credential.Attribute.Tag.Optional': 'Opcjonalny',
     'Credential.Template.Atlassian.Name': 'Atlassian',
     'Credential.Template.BeeOffice.Name': 'Bee Office',
-    'Credential.Template.Sql.Name': 'SQL',
     'Credential.Template.MicrosoftGraph.Name': 'Microsoft',
     'Credential.Template.Sap.Name': 'SAP',
     'Credential.Template.Mail.Name': 'E-mail',
