@@ -3,23 +3,26 @@ import { Injectable } from '@nestjs/common';
 import { DesktopRunResponse, StatefulActionHandler } from '@runbotics/runbotics-sdk';
 import { SqlAction } from 'runbotics-common';
 import { DataSource } from 'typeorm';
-import { SQLActionRequest, SqlCredentials, SqlQueryActionOutput } from './sql.types';
+import { SQLActionRequest, SQLActionURLPrefix, SqlQueryActionOutput } from './sql.types';
+import { sqlCredentialsSchema, sqlQueryActionInputSchema } from './sql.utils';
+
 @Injectable()
 export class SqlActionHandler extends StatefulActionHandler {
     private dataSource: DataSource | null = null;
 
     async run(request: SQLActionRequest): Promise<DesktopRunResponse | void> {
-        switch (request.script) {
-            case SqlAction.CONNECT:
-                await this.closeSession();
-                await this.openSession(credentialAttributesMapper<SqlCredentials>(request.credentials).url);
-                break;
-            case SqlAction.CLOSE:
-                return await this.closeSession();
-            case SqlAction.QUERY:
-                return await this.query(request.input.query, request.input.queryParams ?? []);
-            default:
-                throw new Error('Action not found');
+        if (request.script === SqlAction.CONNECT) {
+            await this.closeSession();
+            const credentials = credentialAttributesMapper(request.credentials);
+            const parsedCredentials = sqlCredentialsSchema.parse(credentials);
+            await this.openSession(parsedCredentials.url);
+        } else if (request.script === SqlAction.CLOSE) {
+            return await this.closeSession();
+        } else if (request.script === SqlAction.QUERY) {
+            const inputParsed = sqlQueryActionInputSchema.parse(request.input);
+            return await this.query(inputParsed.query, inputParsed.queryParams ?? []);
+        } else {
+            throw new Error('Action not found');
         }
     }
 
@@ -29,7 +32,7 @@ export class SqlActionHandler extends StatefulActionHandler {
         }
     }
 
-    private async query(sql: string, parameters: string[]): Promise<SqlQueryActionOutput> {
+    private async query(sql: string, parameters: (string | number | null)[]): Promise<SqlQueryActionOutput> {
         if (!this.dataSource) {
             throw new Error('DB is not connected');
         }
@@ -42,18 +45,14 @@ export class SqlActionHandler extends StatefulActionHandler {
     }
 
     private async openSession(url: string) {
-        const sqlitePrefix = 'sqlite://';
-        const postgresPrefix = 'postgres://';
-
-
-        if (url.startsWith(postgresPrefix)) {
+        if (url.startsWith(SQLActionURLPrefix.POSTGRES)) {
             this.dataSource = new DataSource({
                 type: 'postgres',
                 url: url
             });
             await this.dataSource.initialize();
-        } else if (url.startsWith(sqlitePrefix)) {
-            const dbPath = url.slice(sqlitePrefix.length);
+        } else if (url.startsWith(SQLActionURLPrefix.SQLITE)) {
+            const dbPath = url.slice(SQLActionURLPrefix.SQLITE.length);
             this.dataSource = new DataSource({
                 type: 'sqlite',
                 database: dbPath,
