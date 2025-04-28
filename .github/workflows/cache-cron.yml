@@ -1,0 +1,23 @@
+name: Scheduled Cron Job
+
+on:
+    schedule:
+        - cron: "0 0 * * *"
+        - cron: "0 12 * * *"
+    workflow_dispatch:
+
+jobs:
+    run-cron:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                environment: [dev, prod]
+        
+        steps:
+            - name: API call for cron action
+              run: |
+                  if [ "${{ matrix.environment }}" == "dev" ]; then
+                    echo "Running in ${{ matrix.environment }} environment called"
+                  else
+                    echo "Running in ${{ matrix.environment }} environment called"
+                  fi

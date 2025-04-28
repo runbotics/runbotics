@@ -90,6 +90,7 @@ export enum BrowserAction {
     READ_INPUT = 'browser.read.input',
     INDEX = 'browser.index',
     SELENIUM_TAKE_SCREENSHOT = 'browser.selenium.takeScreenshot',
+    SCROLL_PAGE = 'browser.scroll.page',
 }
 
 export enum LoopAction {
@@ -336,10 +337,17 @@ export type AllActionIds =
     | VisualBasicAction
     | ImageAction
     | FolderAction
-    | ZipAction;
+    | ZipAction
+    | SqlAction;
 
 export enum ConflictFile {
     OVERWRITE = 'Overwrite',
     EXTEND_NAME = 'Extend name',
     THROW_ERROR = 'Throw Error'
+}
+
+export enum SqlAction { 
+    CONNECT = 'sql.connect',
+    QUERY = 'sql.query',
+    CLOSE = 'sql.close'
 }

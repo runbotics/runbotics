@@ -20,6 +20,7 @@ import getLoopActions from '#src-app/Actions/loop.actions';
 import getMailActions from '#src-app/Actions/mail.actions';
 import getPowerPointActions from '#src-app/Actions/powerpoint.actions';
 import getSapActions from '#src-app/Actions/SapActions/sap.actions';
+import getSQLActions from '#src-app/Actions/sql.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
 import getWindowsActions from '#src-app/Actions/windows.actions';
@@ -181,6 +182,10 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.VisualBasic'
             ),
             items: Object.values(getVisualBasicActions())
+        },
+        sql: {
+            label: translate('Process.Details.Modeler.ActionsGroup.Sql'),
+            items: Object.values(getSQLActions())
         },
         external: {
             label: translate(

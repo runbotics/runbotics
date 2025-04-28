@@ -2,10 +2,11 @@ import { Dispatch, FC, SetStateAction, useMemo } from 'react';
 
 import { Grid, SelectChangeEvent } from '@mui/material';
 
-import { PrivilegeType } from 'runbotics-common';
+import { PrivilegeType, Role } from 'runbotics-common';
 
 import useAuth from '#src-app/hooks/useAuth';
 
+import useRole from '#src-app/hooks/useRole';
 import { useSelector } from '#src-app/store';
 
 import { credentialCollectionsSelector } from '#src-app/store/slices/CredentialCollections';
@@ -32,13 +33,16 @@ export const GeneralInfoSelectFields: FC<GeneralInfoSelectFieldsProps> = ({
     setFormValidationState
 }) => {
     const { user: currentUser } = useAuth();
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
     const { credentialCollections } = useSelector(credentialCollectionsSelector);
-    const availableCredentialCollections = useMemo(() => credentialCollections
-        ?.filter(collection => collection.credentialCollectionUser
-            .find(collectionUser => collectionUser.userId === currentUser.id
-            && collectionUser.privilegeType === PrivilegeType.WRITE
-            )
-        ), [credentialCollections, currentUser.id]);
+    const availableCredentialCollections = useMemo(() => isTenantAdmin
+        ? credentialCollections
+        : credentialCollections
+            ?.filter(collection => collection.credentialCollectionUser
+                .find(collectionUser => collectionUser.userId === currentUser.id
+                && collectionUser.privilegeType === PrivilegeType.WRITE
+                )
+            ), [credentialCollections, currentUser.id, isTenantAdmin]);
 
     const handleDropdownChange = (name: string, value: string) => {
         const changeTo = (() => {

@@ -1,6 +1,6 @@
 @import "#src-landing/scss/main";
 
-.wrapper {
+.form {
     display: flex;
     width: 100%;
 }
@@ -19,7 +19,7 @@
     padding: $padding-1 $padding-2;
 }
 
-.icon {
+.button {
     display: flex;
     justify-content: center;
     align-items: center;

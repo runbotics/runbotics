@@ -50,4 +50,15 @@ $ sh build.sh
 $ sh build.sh
 ```
 
+## Local windows electron build
+### Requirements:
+- you should have write/read access to directory where you cloned GitHub repository (dir %USERPROFILE% in Windows is safe option for potential privileges issues)
+- run script in the same directory as this README
+- run script with bash interpreter but on **windows**
+- have valid GitHub token in .npmrc (repo dir - common/config/rush)
+- installed in system: **node, npm, pnpm, rush**
+```bash
+$ sh build-electron-local.sh
+```
+
 See [Nest.js docs](https://docs.nestjs.com/) to learn about Nest.js feature.

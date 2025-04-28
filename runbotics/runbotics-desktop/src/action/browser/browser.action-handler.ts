@@ -14,6 +14,7 @@ import * as BrowserTypes from './types';
 import { ServerConfigService } from '#config';
 import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 import { BrowserLoginCredential } from './types';
+import { BrowserScrollPagePosition } from 'runbotics-common';
 
 @Injectable()
 export default class BrowserActionHandler extends StatefulActionHandler {
@@ -32,8 +33,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         const geckoDriver = driversPath + '/' + this.serverConfigService.cfgGeckoDriver;
         this.logger.log('geckoDriver', geckoDriver);
 
-        process.env['PATH'] = process.env['PATH'] + (isWin ? ';' : ':') + geckoDriver;
-        this.logger.log('Path', process.env['PATH']);
         let optionsFF = new firefox.Options()
             .setPreference('xpinstall.signatures.required', false)
             .setPreference('devtools.console.stdout.content', true)
@@ -47,7 +46,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             .forBrowser('firefox')
             .setFirefoxOptions(optionsFF)
             .setFirefoxService(
-                new firefox.ServiceBuilder()
+                new firefox.ServiceBuilder(geckoDriver)
                     //.enableVerboseLogging()
                     .setStdio('inherit'),
             )
@@ -97,6 +96,10 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             await this.openSite({
                 target: input.target,
             });
+        }
+
+        if (input.maximize) {
+            await this.session.manage().window().maximize();
         }
     }
 
@@ -263,6 +266,46 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         }
     }
 
+    private async scrollPage(input: BrowserTypes.BrowserScrollPageInput) {
+        const scrollMode = input.mode;
+
+        switch (input.position) {
+            case BrowserScrollPagePosition.TOP:
+                await this.session.executeScript((scrollMode: ScrollBehavior) => {
+                    window.scrollTo({ behavior: scrollMode, top: 0 });
+                }, scrollMode);
+                break;
+            case BrowserScrollPagePosition.BOTTOM: {
+                const doScroll = (scrollMode: ScrollBehavior) => {
+                    window.scrollTo({ behavior: scrollMode, top: document.body.scrollHeight });
+                };
+
+                await this.session.executeScript(doScroll, scrollMode);
+                break;
+            }
+            case BrowserScrollPagePosition.ELEMENT: {
+                const element = await this.findElement(input.target);
+                const doScroll = (element) => {
+                    element.scrollIntoView({ behavior: 'instant', block: 'center' });
+                };
+
+                await this.session.executeScript(doScroll, element);
+                break;
+            }
+            case BrowserScrollPagePosition.HEIGHT: {
+                const MARGIN_PX = 80;
+                const doScroll = (scrollMode: ScrollBehavior, margin: number) => {
+                    window.scrollBy({ behavior: scrollMode, top: window.innerHeight-margin });
+                };
+
+                await this.session.executeScript(doScroll, scrollMode, MARGIN_PX);
+                break;
+            }
+            default:
+                throw Error('Wrong scroll position');
+        }
+    }
+
     private isBrowserOpen() {
         if (!this.session) {
             throw new Error('The browser is not running');
@@ -318,6 +361,9 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case 'browser.read.input':
                 this.isBrowserOpen();
                 return this.readElementInput(request.input);
+            case 'browser.scroll.page':
+                this.isBrowserOpen();
+                return this.scrollPage(request.input);
             default: {
                 if (!this.pluginService) {
                     throw new Error('Action not found');

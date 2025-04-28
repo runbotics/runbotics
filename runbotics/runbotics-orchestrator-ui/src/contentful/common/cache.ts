@@ -13,8 +13,8 @@ type ContentfulCache = Record<Language, LRUMap<CacheKeys, unknown>>;
 const CONTENTFUL_CACHE_KEY = 'contentfulCache';
 const contentfulCacheSymbol = Symbol.for(CONTENTFUL_CACHE_KEY);
 
-const BLOG_CACHE_SIZE = 53;
-const MARKETPLACE_CACHE_SIZE = 42;
+const BLOG_CACHE_SIZE = 55;
+const MARKETPLACE_CACHE_SIZE = 45;
 
 /**
  * Cache instance singleton

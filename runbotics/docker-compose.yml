@@ -88,6 +88,7 @@ services:
       - RUNBOTICS_BOT_COLLECTION=30bdfb61-841b-519b-ce54-1d0e56877f73
       - RUNBOTICS_LOGGER_FILE_MODE=false
       - RUNBOTICS_EXTENSION_DIR=./extensions
+      - RUNBOTICS_PLUGINS_DIR=./plugins
       - CHROME_ADDRESS=http://chrome:4444
     restart: on-failure
     depends_on:
