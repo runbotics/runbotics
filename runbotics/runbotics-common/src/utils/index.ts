@@ -7,3 +7,4 @@ export * from "./httpErrorCodes.enum";
 export * from "./criteria.enum";
 export * from "./language.enum";
 export * from "./emailTriggerWhitelistItemPattern";
+export * from "./emailValidation";

@@ -2,6 +2,8 @@ import { FC, useCallback } from 'react';
 
 import { useSnackbar } from 'notistack';
 
+import { isEmailValid } from 'runbotics-common';
+
 import { useCart } from '#src-app/contexts/CartContext';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { axiosInstance as axios } from '#src-app/utils/axios';
@@ -16,6 +18,7 @@ import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSumma
 import styles from './MarketplaceCartView.module.scss';
 import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 
+const snackbarAutoHideDuration = 5000;
 
 const MarketplaceCartView: FC = () => {
     const { translate } = useTranslations();
@@ -48,42 +51,33 @@ const MarketplaceCartView: FC = () => {
                 translate('Marketplace.Cart.NoNameAndSurnameError'),
                 {
                     variant: 'error',
-                    autoHideDuration: 5000,
-                },
+                    autoHideDuration: snackbarAutoHideDuration,
+                }
             );
             return;
         }
 
-        if (!/^\S+@\S+\.\S+$/.test(contactFormValue.email)) {
-            enqueueSnackbar(
-                translate('Marketplace.Cart.NoEmailError'),
-                {
-                    variant: 'error',
-                    autoHideDuration: 5000,
-                },
-            );
+        if (!isEmailValid(contactFormValue.email)) {
+            enqueueSnackbar(translate('Marketplace.Cart.NoEmailError'), {
+                variant: 'error',
+                autoHideDuration: snackbarAutoHideDuration,
+            });
             return;
         }
 
         await axios
             .post('/api/marketplace/contact', body)
             .then(() => {
-                enqueueSnackbar(
-                    translate('Marketplace.Cart.EmailSent'),
-                    {
-                        variant: 'success',
-                        autoHideDuration: 5000,
-                    },
-                );
+                enqueueSnackbar(translate('Marketplace.Cart.EmailSent'), {
+                    variant: 'success',
+                    autoHideDuration: snackbarAutoHideDuration,
+                });
             })
             .catch(() => {
-                enqueueSnackbar(
-                    translate('Marketplace.Cart.EmailError'),
-                    {
-                        variant: 'error',
-                        autoHideDuration: 5000,
-                    },
-                );
+                enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
+                    variant: 'error',
+                    autoHideDuration: snackbarAutoHideDuration,
+                });
             });
     };
     return (
@@ -100,7 +94,8 @@ const MarketplaceCartView: FC = () => {
                 </div>
                 <MarketplaceCartSummary
                     approximatePrice={fullPrice}
-                    onSubmit={onSubmit} />
+                    onSubmit={onSubmit}
+                />
             </div>
         </Layout>
     );
