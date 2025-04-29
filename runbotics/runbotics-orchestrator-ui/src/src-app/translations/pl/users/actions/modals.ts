@@ -13,6 +13,7 @@ const modalsActionsTranslations: typeof englishModalsActionsTranslations  = {
     'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.FirstReason': 'W tej chwili nie możemy aktywować konta. Spróbuj później lub skontaktuj się z administratorem.',
     'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.SecondReason': 'Aktywacja konta nie została zatwierdzona, ponieważ nie spełnia naszych kryteriów.',
     'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.ThirdReason': 'Prośba o aktywację twojego konta została odrzucona. Z powodu:',
+    'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.DefaultReason': 'Prośba o aktywację twojego konta została odrzucona.',
     'Users.Actions.Modals.DeleteModal.DeclineReason.TextField.Label.Message': 'Wiadomość'
 };
 
