@@ -15,6 +15,7 @@ enum DeclineReason {
     FIRST_REASON = 'FIRST_REASON',
     SECOND_REASON = 'SECOND_REASON',
     THIRD_REASON = 'THIRD_REASON',
+    DEFAULT_REASON = 'DEFAULT_REASON'
 }
 
 export const DeclineUserReasonSelector = ({
@@ -22,7 +23,7 @@ export const DeclineUserReasonSelector = ({
 }: DeclineUserReasonSelectorProps) => {
     const { translate } = useTranslations();
     const [customMessage, setCustomMessage] = React.useState('');
-    const [reason, setReason] = React.useState<string | null>(null);
+    const [reason, setReason] = React.useState(DeclineReason.DEFAULT_REASON);
 
     const declineReason = {
         [DeclineReason.FIRST_REASON]: {
@@ -43,12 +44,18 @@ export const DeclineUserReasonSelector = ({
                 'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.ThirdReason'
             ),
         },
+        [DeclineReason.DEFAULT_REASON]: {
+            value: DeclineReason.DEFAULT_REASON,
+            message: translate(
+                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.DefaultReason'
+            ),
+        }
     };
 
     const handleRadioControlChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        const inputValue = (event.target as HTMLInputElement).value;
+        const inputValue = (event.target as HTMLInputElement).value as DeclineReason;
 
         if (
             reason !== DeclineReason.THIRD_REASON &&
@@ -80,6 +87,10 @@ export const DeclineUserReasonSelector = ({
                 )}
             </Typography>
             <StyledRadioGroup value={reason} onChange={handleRadioControlChange}>
+                <RadioControl
+                    label={declineReason[DeclineReason.DEFAULT_REASON].message}
+                    value={declineReason[DeclineReason.DEFAULT_REASON].value}
+                />
                 <RadioControl
                     label={declineReason[DeclineReason.FIRST_REASON].message}
                     value={declineReason[DeclineReason.FIRST_REASON].value}
