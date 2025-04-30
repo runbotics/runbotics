@@ -61,7 +61,8 @@ const ProcessConfigureView: VFC = () => {
     const notificationTableRows = useMemo(() => processSubscriptions
         .map<ProcessNotificationRow>((sub: NotificationProcess) => ({
             id: sub.id,
-            user: sub.user.email,
+            userEmail: sub.user.email,
+            email: sub.email,
             subscribedAt: sub.createdAt,
         })), [processSubscriptions]);
 
@@ -194,7 +195,7 @@ const ProcessConfigureView: VFC = () => {
                         <StyledPaper>
                             <NotificationSwitchComponent
                                 onClick={() => setOpen(true)}
-                                isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id)}
+                                isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id && !sub.email)}
                                 onSubscriptionChange={handleSubscriptionChange}
                                 label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
                                 tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
