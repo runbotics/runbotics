@@ -72,9 +72,9 @@ export class MailService {
         }
 
         await this.mailerService.sendMail(sendMailOptions)
-        .catch(error => {
-        this.logger.error(`Failed to send the mail with error: ${error.message}`);
-        });
+            .catch(error => {
+                this.logger.error(`Failed to send the mail with error: ${error.message}`);
+            });
     }
 
     public async sendBotDisconnectionNotificationMail(bot: BotEntity, installationId: string) {
@@ -102,40 +102,41 @@ export class MailService {
                 return acc;
             }, []);
 
-            await this.handleNotificationEmail(sendMailInput, [ botAssignedUserEmail, ...filteredSubscribers ]);
+            await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...filteredSubscribers]);
         } else {
-            await this.handlePublicProcessesAndBotsNotificationEmail(subscribers, sendMailInput, botAssignedUserEmail);
+            const subscribersAddresses = subscribers.map(e => e.email);
+            await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...subscribersAddresses]);
         }
     }
 
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
         const failedProcess = await this.processService.findById(process.id);
         const processCreatorEmail = failedProcess.createdBy.email;
-        const subscribers = await this.notificationProcessService
-            .getAllByProcessId(failedProcess.id)
-            .then((notifications) =>
-                notifications.map((notification) => notification.user)
-            );
+        const subscriptions = await this.notificationProcessService
+            .getAllByProcessId(failedProcess.id);
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
             content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\nYou can visit us here ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\nBest regards,\nRunBotics`,
             isHtml: false,
         };
-
         if (!failedProcess.isPublic) {
-            const filteredSubscribers = subscribers.reduce((acc, subscriber) => {
-                const adminSubscriber = subscriber.authorities
-                    .find(authority => [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN].includes(authority.name));
+            const filteredSubscriptions = subscriptions
+                .filter(
+                    sub => sub
+                        .user
+                        .authorities
+                        .find(
+                            authority => [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN].includes(authority.name)
+                        )
+                )
+                .filter(e => !!e)
+                .map(x => x.getNotificationEmail());
 
-                adminSubscriber && acc.push(subscriber.email);
-
-                return acc;
-            }, []);
-
-            await this.handleNotificationEmail(sendMailInput, [ processCreatorEmail, ...filteredSubscribers ]);
+            await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...filteredSubscriptions]);
         } else {
-            await this.handlePublicProcessesAndBotsNotificationEmail(subscribers, sendMailInput, processCreatorEmail);
+            const subscribersAddresses = subscriptions.map(x => x.getNotificationEmail()).filter(e => !!e);
+            await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...subscribersAddresses]);
         }
     }
 
@@ -192,14 +193,5 @@ export class MailService {
         const emailAddresses = mergeArraysWithoutDuplicates(addresses).join(',');
 
         await this.sendMail({ ...emailInput, bcc: emailAddresses });
-    }
-
-    private async handlePublicProcessesAndBotsNotificationEmail(subscribers: User[], emailInput: SendMailInput, assignedUserEmail: string) {
-        const subscribersAddresses =
-            subscribers && subscribers.length
-                ? subscribers.map((user) => user?.email ? user.email : null).filter(email => Boolean(email))
-                : [];
-
-        await this.handleNotificationEmail(emailInput, [ assignedUserEmail, ...subscribersAddresses ]);
     }
 }

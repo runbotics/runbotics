@@ -44,6 +44,6 @@ export class NotificationProcessController {
         @UserDecorator() user: User,
     ) {
         this.logger.log('REST request to delete process notification by id: ', id);
-        await this.notificationProcessService.delete(id, user.id);
+        await this.notificationProcessService.delete(id, user);
     }
 }
