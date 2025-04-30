@@ -32,10 +32,12 @@ const useProcessNotificationColumns = ({
         },
         {
             field: 'email',
-            headerName: translate('Process.Edit.Table.Columns.User'),
+            headerName: translate('Process.Edit.Table.Columns.Email'),
             flex: 0.4,
             valueFormatter: (params: GridValueFormatterParams) =>
-                params.value ? params.value : '—',
+                params.value
+                    ? params.value
+                    : translate('Process.Edit.Table.EmailSameAsUser'),
         },
         {
             field: 'subscribedAt',

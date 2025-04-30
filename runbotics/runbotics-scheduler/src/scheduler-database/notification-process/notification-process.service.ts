@@ -70,10 +70,10 @@ export class NotificationProcessService {
         return {
             type: notificationProcess.type,
             id: notificationProcess.id,
-            user: notificationProcess.user ? {
+            user: {
                 id: notificationProcess.user.id,
                 email: notificationProcess.user.email
-            } : null,
+            },
             email: notificationProcess.email ?? '',
             createdAt: notificationProcess.createdAt
         };
