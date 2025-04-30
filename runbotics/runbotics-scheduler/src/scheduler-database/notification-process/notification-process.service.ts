@@ -36,6 +36,7 @@ export class NotificationProcessService {
         createNotificationProcessDto: CreateNotificationProcessDto,
         user: User
     ) {
+        this.logger.log('CREATE BEGIN');
         const process = await this.processService.checkAccessAndGetById(
             createNotificationProcessDto.processId, user
         );
@@ -43,6 +44,7 @@ export class NotificationProcessService {
         const newNotification = new NotificationProcess();
         newNotification.process = process;
         newNotification.user = user;
+        newNotification.email = createNotificationProcessDto.email ?? '';
         newNotification.type = createNotificationProcessDto.type;
 
         return this.notificationProcessRepository
@@ -50,8 +52,10 @@ export class NotificationProcessService {
             .then(this.formatToDTO);
     }
 
-    async delete(notificationProcessId: string, userId: number) {
-        const findOptions = { id: notificationProcessId, user: { id: userId } };
+    async delete(notificationProcessId: string, user: User) {
+        const findOptions = { id: notificationProcessId };
+
+        // TODO(teawithsand): ~here check user permissions to process
 
         await this.notificationProcessRepository
             .findOneByOrFail(findOptions).catch(() => {
@@ -66,10 +70,11 @@ export class NotificationProcessService {
         return {
             type: notificationProcess.type,
             id: notificationProcess.id,
-            user: {
+            user: notificationProcess.user ? {
                 id: notificationProcess.user.id,
                 email: notificationProcess.user.email
-            },
+            } : null,
+            email: notificationProcess.email ?? '',
             createdAt: notificationProcess.createdAt
         };
     }
