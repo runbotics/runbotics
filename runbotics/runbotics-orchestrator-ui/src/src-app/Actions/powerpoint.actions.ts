@@ -151,11 +151,12 @@ const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
                             },
                             functionParams: {
                                 title: translate('Process.Details.Modeler.Actions.Powerpoint.RunMacro.FunctionParams'),
+                                description: translate('Process.Details.Modeler.Actions.Powerpoint.RunMacro.FunctionParams.Info'),
                                 type: 'array',
                                 items: {
                                     type: 'string',
                                 },
-                                maxItems: 10,
+                                maxItems: 30,
                             },
                         },
                         required: ['macro'],

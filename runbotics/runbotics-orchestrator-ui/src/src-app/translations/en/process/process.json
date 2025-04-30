@@ -252,6 +252,7 @@
     "Process.Details.Modeler.Actions.Powerpoint.RunMacro.Label": "Run Macro",
     "Process.Details.Modeler.Actions.Powerpoint.RunMacro.Title": "Macro name",
     "Process.Details.Modeler.Actions.Powerpoint.RunMacro.FunctionParams": "Macro Parameters",
+    "Process.Details.Modeler.Actions.Powerpoint.RunMacro.FunctionParams.Info": "Macro can have maximum 30 arguments",
     "Process.Details.Modeler.Actions.File.AppendFile.Label": "Append",
     "Process.Details.Modeler.Actions.File.AppendFile.FilePath": "File path (e.g. C://RunBotics/example.txt)",
     "Process.Details.Modeler.Actions.File.AppendFile.Content": "Content",
