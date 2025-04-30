@@ -38,13 +38,13 @@ export class MailService {
         private readonly notificationProcessService: NotificationProcessService,
         private readonly notificationBotService: NotificationBotService,
         private readonly serverConfigService: ServerConfigService
-    ) {}
+    ) { }
 
     public async sendMail(input: SendMailInput) {
         const sendMailOptions: ISendMailOptions = {
             from: process.env.MAIL_USERNAME,
             subject: input.subject,
-            [input.isHtml ? 'html': 'text']: input.content,
+            [input.isHtml ? 'html' : 'text']: input.content,
         };
 
         const to = input.to;
@@ -123,15 +123,17 @@ export class MailService {
         if (!failedProcess.isPublic) {
             const filteredSubscriptions = subscriptions
                 .filter(
-                    sub => sub
-                        .user
-                        .authorities
-                        .find(
-                            authority => [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN].includes(authority.name)
-                        )
+                    sub => sub.email !== ''
+                        ||
+                        sub
+                            .user
+                            .authorities
+                            .some(
+                                authority => [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN].includes(authority.name)
+                            )
                 )
-                .filter(e => !!e)
-                .map(x => x.getNotificationEmail());
+                .map(x => x.getNotificationEmail())
+                .filter(e => !!e);
 
             await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...filteredSubscriptions]);
         } else {

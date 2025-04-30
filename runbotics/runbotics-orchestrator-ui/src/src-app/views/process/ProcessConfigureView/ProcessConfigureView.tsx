@@ -2,7 +2,12 @@ import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Dialog } from '@mui/material';
 import { useRouter } from 'next/router';
-import { IBotSystem, IBotCollection, NotificationProcess, NotificationProcessType } from 'runbotics-common';
+import {
+    IBotSystem,
+    IBotCollection,
+    NotificationProcess,
+    NotificationProcessType,
+} from 'runbotics-common';
 
 import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.model';
 
@@ -24,6 +29,7 @@ import { processOutputActions } from '#src-app/store/slices/ProcessOutput';
 
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
+import ProcessAddEmailSubscriptionComponent from './ProcessAddEmailSubscriptionComponent';
 import ProcessAttendedComponent from './ProcessAttended.component';
 import {
     AttendancePaper,
@@ -40,13 +46,18 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
-    const { draft: { process, processSubscriptions }, all: { loading } } = useSelector(processSelector);
+    const {
+        draft: { process, processSubscriptions },
+        all: { loading },
+    } = useSelector(processSelector);
     const { id } = useRouter().query;
     const processId = Number(id);
 
-    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(process?.output);
+    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(
+        process?.output
+    );
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(
-        process?.system,
+        process?.system
     );
     const [selectedBotCollection, setSelectedBotCollection] =
         useState<IBotCollection>(process?.botCollection);
@@ -56,18 +67,27 @@ const ProcessConfigureView: VFC = () => {
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
 
-    const notificationTableColumns = useProcessNotificationColumns({ onDelete: handleDeleteSubscription });
+    const notificationTableColumns = useProcessNotificationColumns({
+        onDelete: handleDeleteSubscription,
+    });
 
-    const notificationTableRows = useMemo(() => processSubscriptions
-        .map<ProcessNotificationRow>((sub: NotificationProcess) => ({
-            id: sub.id,
-            userEmail: sub.user.email,
-            email: sub.email,
-            subscribedAt: sub.createdAt,
-        })), [processSubscriptions]);
+    const notificationTableRows = useMemo(
+        () =>
+            processSubscriptions.map<ProcessNotificationRow>(
+                (sub: NotificationProcess) => ({
+                    id: sub.id,
+                    userEmail: sub.user.email,
+                    email: sub.email,
+                    subscribedAt: sub.createdAt,
+                })
+            ),
+        [processSubscriptions]
+    );
 
     const handleGetProcessSubscribers = async () => {
-        await dispatch(processActions.getProcessSubscriptionInfo({ resourceId: processId }));
+        await dispatch(
+            processActions.getProcessSubscriptionInfo({ resourceId: processId })
+        );
     };
 
     useEffect(() => {
@@ -95,20 +115,33 @@ const ProcessConfigureView: VFC = () => {
     };
 
     const handleSelectProcessOutputType = async (output: ProcessOutput) => {
-        await dispatch(processActions.updateProcessOutputType({ resourceId: process.id, payload: { output } }));
+        await dispatch(
+            processActions.updateProcessOutputType({
+                resourceId: process.id,
+                payload: { output },
+            })
+        );
         setProcessOutputType(output);
         await fetchProcess();
     };
 
     const handleSelectBotSystem = async (system: IBotSystem) => {
-        await dispatch(processActions.updateBotSystem({ resourceId: process.id, payload: { system } }));
+        await dispatch(
+            processActions.updateBotSystem({
+                resourceId: process.id,
+                payload: { system },
+            })
+        );
         setSelectedBotSystem(system);
         await fetchProcess();
     };
 
     const handleSelectBotCollection = async (botCollection: IBotCollection) => {
         await dispatch(
-            processActions.updateBotCollection({ resourceId: process.id, payload: { botCollection } }),
+            processActions.updateBotCollection({
+                resourceId: process.id,
+                payload: { botCollection },
+            })
         );
         setSelectedBotCollection(botCollection);
         await fetchProcess();
@@ -116,7 +149,10 @@ const ProcessConfigureView: VFC = () => {
 
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(
-            processActions.updateAttendance({ resourceId: process.id, payload: { isAttended } }),
+            processActions.updateAttendance({
+                resourceId: process.id,
+                payload: { isAttended },
+            })
         );
         setAttended(isAttended);
         await fetchProcess();
@@ -124,7 +160,10 @@ const ProcessConfigureView: VFC = () => {
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
         await dispatch(
-            processActions.updateTriggerable({ resourceId: process.id, payload: { isTriggerable } }),
+            processActions.updateTriggerable({
+                resourceId: process.id,
+                payload: { isTriggerable },
+            })
         );
         setTriggerable(isTriggerable);
         await fetchProcess();
@@ -132,18 +171,47 @@ const ProcessConfigureView: VFC = () => {
 
     const handleSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
-            ? await dispatch(processActions.subscribeProcessNotifications({
-                payload: { processId, type: NotificationProcessType.PROCESS_ERROR },
-            }))
-            : await dispatch(processActions.unsubscribeProcessNotifications({
-                resourceId: processSubscriptions.find(sub => sub.user.id === user.id).id,
-            }));
+            ? await dispatch(
+                processActions.subscribeProcessNotifications({
+                    payload: {
+                        processId,
+                        type: NotificationProcessType.PROCESS_ERROR,
+                    },
+                })
+            )
+            : await dispatch(
+                processActions.unsubscribeProcessNotifications({
+                    resourceId: processSubscriptions.find(
+                        (sub) => sub.user.id === user.id && !sub.email
+                    ).id,
+                })
+            );
 
         await handleGetProcessSubscribers();
     };
 
-    async function handleDeleteSubscription(subscriptionInfo: ProcessNotificationRow) {
-        await dispatch(processActions.unsubscribeProcessNotifications({ resourceId: subscriptionInfo.id }));
+    const handleSubscribeToCustomEmail = async (customEmail: string) => {
+        await dispatch(
+            processActions.subscribeProcessNotifications({
+                payload: {
+                    processId,
+                    type: NotificationProcessType.PROCESS_ERROR,
+                    email: customEmail,
+                },
+            })
+        );
+
+        await handleGetProcessSubscribers();
+    };
+
+    async function handleDeleteSubscription(
+        subscriptionInfo: ProcessNotificationRow
+    ) {
+        await dispatch(
+            processActions.unsubscribeProcessNotifications({
+                resourceId: subscriptionInfo.id,
+            })
+        );
         await handleGetProcessSubscribers();
     }
 
@@ -163,7 +231,9 @@ const ProcessConfigureView: VFC = () => {
                         <StyledPaper elevation={1}>
                             <BotCollectionComponent
                                 selectedBotCollection={selectedBotCollection}
-                                onSelectBotCollection={handleSelectBotCollection}
+                                onSelectBotCollection={
+                                    handleSelectBotCollection
+                                }
                             />
                         </StyledPaper>
                     </Box>
@@ -171,7 +241,9 @@ const ProcessConfigureView: VFC = () => {
                         <StyledPaper elevation={1}>
                             <ProcessOutputComponent
                                 selectedProcessOutput={processOutputType}
-                                onSelectProcessOutput={handleSelectProcessOutputType}
+                                onSelectProcessOutput={
+                                    handleSelectProcessOutputType
+                                }
                             />
                         </StyledPaper>
                     </Box>
@@ -195,31 +267,35 @@ const ProcessConfigureView: VFC = () => {
                         <StyledPaper>
                             <NotificationSwitchComponent
                                 onClick={() => setOpen(true)}
-                                isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id && !sub.email)}
+                                isSubscribed={processSubscriptions.some(
+                                    (sub) =>
+                                        sub.user.id === user.id && !sub.email
+                                )}
                                 onSubscriptionChange={handleSubscriptionChange}
-                                label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
-                                tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
+                                label={translate(
+                                    'Process.Edit.Form.Fields.IsSubscribed.Label'
+                                )}
+                                tooltip={translate(
+                                    'Process.Edit.Form.Fields.IsSubscribed.Tooltip'
+                                )}
                             />
                         </StyledPaper>
                     </Box>
                 </SettingsContainer>
                 <CredentialsContainer>
                     <StyledPaper>
-                        <ProcessCredentials/>
+                        <ProcessCredentials />
                     </StyledPaper>
                 </CredentialsContainer>
             </PageContainer>
-            <Dialog
-                open={open}
-                onClose={() => setOpen(false)}
-                maxWidth={false}
-            >
+            <Dialog open={open} onClose={() => setOpen(false)} maxWidth={false}>
                 <NotificationTableComponent
                     notificationTableColumns={notificationTableColumns}
                     subscribersList={notificationTableRows ?? []}
                     onClose={() => setOpen(false)}
                     loading={loading}
                 />
+                <ProcessAddEmailSubscriptionComponent onEmailAdd={handleSubscribeToCustomEmail} />
             </Dialog>
         </ContainerWrapper>
     );

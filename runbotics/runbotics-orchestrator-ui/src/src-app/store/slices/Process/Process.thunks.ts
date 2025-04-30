@@ -139,7 +139,7 @@ export const deleteProcess = ApiTenantResource.delete<number>('process/delete', 
 export const getTagsByName = ApiTenantResource.get<Tag[]>('tags/getByName', TAGS_PATH);
 
 export const subscribeProcessNotifications = ApiTenantResource
-    .post<NotificationProcess, { processId: number, type: NotificationProcessType }>
+    .post<NotificationProcess, { processId: number, type: NotificationProcessType, email?: string }>
     ('processes/subscribeProcessNotifications', PROCESS_NOTIFICATION_PATH);
 
 export const unsubscribeProcessNotifications = ApiTenantResource
