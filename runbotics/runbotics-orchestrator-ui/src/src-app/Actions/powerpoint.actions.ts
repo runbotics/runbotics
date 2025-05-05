@@ -131,6 +131,42 @@ const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    'powerpoint.runMacro': {
+        id: 'powerpoint.runMacro',
+        label: translate('Process.Details.Modeler.Actions.Powerpoint.RunMacro.Label'),
+        script: 'powerpoint.runMacro',
+        runner: Runner.DESKTOP_SCRIPT,
+        system: ActionSystem.WINDOWS,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            macro: {
+                                title: translate('Process.Details.Modeler.Actions.Powerpoint.RunMacro.Title'),
+                                type: 'string',
+                            },
+                            functionParams: {
+                                title: translate('Process.Details.Modeler.Actions.Powerpoint.RunMacro.FunctionParams'),
+                                description: translate('Process.Details.Modeler.Actions.Powerpoint.RunMacro.FunctionParams.Info'),
+                                type: 'array',
+                                items: {
+                                    type: 'string',
+                                },
+                                maxItems: 30,
+                            },
+                        },
+                        required: ['macro'],
+                    },
+                },
+            },
+            uiSchema: {},
+            formData: {},
+        },
+    },
     'powerpoint.close': {
         id: 'powerpoint.close',
         label: translate('Process.Details.Modeler.Actions.Powerpoint.Close.Label'),

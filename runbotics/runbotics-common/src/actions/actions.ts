@@ -164,6 +164,7 @@ export enum DesktopOfficeAction {
     POWERPOINT_OPEN = 'powerpoint.open',
     POWERPOINT_INSERT = 'desktop.powerpoint.insert',
     POWERPOINT_SAVE = 'powerpoint.save',
+    POWERPOINT_RUN_MACRO = 'powerpoint.runMacro',
     POWERPOINT_CLOSE = 'powerpoint.close',
 }
 
