@@ -34,8 +34,6 @@ services:
       - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
     depends_on:
       - runbotics-postgresql
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
 
   runbotics-scheduler:
     container_name: runbotics-scheduler
@@ -62,8 +60,6 @@ services:
     depends_on:
       - runbotics-redis
       - runbotics-postgresql
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
 
   runbotics-redis:
     container_name: runbotics-redis
@@ -76,7 +72,7 @@ services:
     network_mode: host
     environment:
       - RUNBOTICS_ENTRYPOINT_URL=http://localhost:8080
-      - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
+      - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://localhost:4000
       - RUNBOTICS_INSTALLATION_ID=admin
       - RUNBOTICS_USERNAME=runbotics@localhost
       - RUNBOTICS_PASSWORD=runbotics
@@ -91,8 +87,6 @@ services:
       - runbotics-scheduler
       - runbotics-orchestrator
       - chrome
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
 
 #   runbotics-desktop-guest:
 #     container_name: runbotics-desktop-guest
