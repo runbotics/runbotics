@@ -35,7 +35,7 @@ export class ProcessService {
         return new ProcessService(
             em.getRepository(ProcessEntity),
             this.processCollectionService.withEntityManager(em)
-        )
+        );
     }
 
     findById(id: number): Promise<IProcess | null> {
@@ -102,7 +102,14 @@ export class ProcessService {
     }
 
     async hasAccess(user: User, processId: number): Promise<boolean> {
-        const process = await this.processRepository.findOneByOrFail({id: processId});
+        const process = await this.processRepository
+            .findOneByOrFail({
+                id: processId,
+                tenantId: user.tenantId
+            })
+            .catch(() => {
+                throw new NotFoundException();
+            });
 
         return this.processCollectionService.hasAccess(user, process.processCollectionId);
     }
