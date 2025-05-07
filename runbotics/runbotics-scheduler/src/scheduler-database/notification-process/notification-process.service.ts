@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -6,6 +6,7 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { NotificationProcess } from './notification-process.entity';
 import { CreateNotificationProcessDto } from './dto/create-notification-process.dto';
 import { ProcessService } from '#/scheduler-database/process/process.service';
+import { isTenantAdmin } from '#/utils/authority.utils';
 
 
 @Injectable()
@@ -16,7 +17,7 @@ export class NotificationProcessService {
         @InjectRepository(NotificationProcess)
         private readonly notificationProcessRepository: Repository<NotificationProcess>,
         private readonly processService: ProcessService,
-    ) {}
+    ) { }
 
     async getAllByProcessId(processId: number) {
         return this.notificationProcessRepository.find({ where: { process: { id: processId } }, relations: ['user'] });
@@ -28,7 +29,7 @@ export class NotificationProcessService {
         );
 
         return this.notificationProcessRepository
-            .find({ where: { process: { id: process.id } }, relations: ['user']})
+            .find({ where: { process: { id: process.id } }, relations: ['user'] })
             .then(processes => processes.map(this.formatToDTO));
     }
 
@@ -36,10 +37,15 @@ export class NotificationProcessService {
         createNotificationProcessDto: CreateNotificationProcessDto,
         user: User
     ) {
-        this.logger.log('CREATE BEGIN');
         const process = await this.processService.checkAccessAndGetById(
             createNotificationProcessDto.processId, user
         );
+
+        if (createNotificationProcessDto.email) {
+            if (user.tenantId !== process.tenantId && !isTenantAdmin(user)) {
+                throw new ForbiddenException();
+            }
+        }
 
         const newNotification = new NotificationProcess();
         newNotification.process = process;
@@ -53,14 +59,28 @@ export class NotificationProcessService {
     }
 
     async delete(notificationProcessId: string, user: User) {
-        const findOptions = { id: notificationProcessId };
-
-        // TODO(teawithsand): ~here check user permissions to process
-
-        await this.notificationProcessRepository
-            .findOneByOrFail(findOptions).catch(() => {
+        const findOptions =  {
+            id: notificationProcessId
+        };
+        
+        const notification = await this.notificationProcessRepository
+            .findOneOrFail({
+                where: findOptions, 
+                relations: ['process']
+            }).catch(() => {
                 throw new BadRequestException('Cannot delete process notification');
             });
+
+        const process = await this.processService.checkAccessAndGetById(
+            notification.process.id,
+            user,
+        );
+
+        if (notification.email) {
+            if (user.tenantId !== process.tenantId && !isTenantAdmin(user)) {
+                throw new ForbiddenException();
+            }
+        }
 
         await this.notificationProcessRepository
             .delete(findOptions);
