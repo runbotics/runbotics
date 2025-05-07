@@ -18,7 +18,7 @@ import MarketplaceCartSummary from '#src-landing/components/MarketplaceCartSumma
 import styles from './MarketplaceCartView.module.scss';
 import { MarketplaceContactBody } from '../../../pages/api/marketplace/contact';
 
-const snackbarAutoHideDuration = 5000;
+const SNACKBAR_AUTOHIDE_DURATION = 5000;
 
 const MarketplaceCartView: FC = () => {
     const { translate } = useTranslations();
@@ -51,7 +51,7 @@ const MarketplaceCartView: FC = () => {
                 translate('Marketplace.Cart.NoNameAndSurnameError'),
                 {
                     variant: 'error',
-                    autoHideDuration: snackbarAutoHideDuration,
+                    autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
                 }
             );
             return;
@@ -60,7 +60,7 @@ const MarketplaceCartView: FC = () => {
         if (!isEmailValid(contactFormValue.email)) {
             enqueueSnackbar(translate('Marketplace.Cart.NoEmailError'), {
                 variant: 'error',
-                autoHideDuration: snackbarAutoHideDuration,
+                autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
             });
             return;
         }
@@ -70,13 +70,13 @@ const MarketplaceCartView: FC = () => {
             .then(() => {
                 enqueueSnackbar(translate('Marketplace.Cart.EmailSent'), {
                     variant: 'success',
-                    autoHideDuration: snackbarAutoHideDuration,
+                    autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
                 });
             })
             .catch(() => {
                 enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
                     variant: 'error',
-                    autoHideDuration: snackbarAutoHideDuration,
+                    autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
                 });
             });
     };
