@@ -108,7 +108,7 @@ export class ProcessService {
                 tenantId: user.tenantId
             })
             .catch(() => {
-                throw new NotFoundException();
+                throw new NotFoundException(`Process with id ${processId} not found`);
             });
 
         return this.processCollectionService.hasAccess(user, process.processCollectionId);
