@@ -27,8 +27,6 @@ const castColumnNameToPropertyName = (x: string | symbol | number): string | sym
     return x;
 };
 
-
-
 @Injectable()
 export class SqlActionHandler extends StatefulActionHandler {
     private dbDriver: DBDriver | null = null;
@@ -60,7 +58,7 @@ export class SqlActionHandler extends StatefulActionHandler {
 
         if (this.dbDriver.type === DBDriverType.POSTGRES) {
             const rawResult = await this.dbDriver.client.query(sql, parameters);
-            const rows = rawResult.rows;
+            const rows = rawResult.rows ?? [];
             const res = [];
             for (const row of rows) {
                 const obj = {};
@@ -73,13 +71,17 @@ export class SqlActionHandler extends StatefulActionHandler {
             return {
                 rowCount: res.length,
                 rows: res,
-                columns: rawResult.fields.map(x => x.name)
+                columns: !rawResult.fields || !rawResult.fields.length ? [] : rawResult.fields.map(x => x.name) ?? []
             };
         } else if (this.dbDriver.type === DBDriverType.SQLITE) {
             const rawResult = this.dbDriver.db.prepare(sql);
-            const columns = rawResult.columns();
 
-            const rows = rawResult.all(parameters);
+            let rows: any[] = [];
+            if (rawResult.reader) {
+                rows = rawResult.all(parameters);
+            } else {
+                rawResult.run(parameters);
+            }
 
             const res = [];
             for (const row of rows) {
@@ -90,10 +92,19 @@ export class SqlActionHandler extends StatefulActionHandler {
                 res.push(obj);
             }
 
+            let columns: string[] = [];
+            try {
+                columns = rawResult.columns().map(x => x.name);
+            } catch (e) {
+                // This path fails, when query is one, which does not return data (think of ALTER TABLE)
+                // ignore this error and return no columns instead
+                // Note that we can't extract columns from results, as there may be no results, and thus no columns.
+            }
+
             return {
                 rowCount: rows.length,
                 rows: res,
-                columns: columns.map(x => x.name)
+                columns: columns
             };
         } else {
             throw new Error('Unsupported database driver');
