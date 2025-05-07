@@ -7,6 +7,7 @@ import {
     IBotCollection,
     NotificationProcess,
     NotificationProcessType,
+    Role,
 } from 'runbotics-common';
 
 import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.model';
@@ -15,7 +16,9 @@ import NotificationSwitchComponent from '#src-app/components/tables/Notification
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
 import { ProcessNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
 import useProcessNotificationColumns from '#src-app/components/tables/NotificationTable/useProcessNotificationColumns';
+import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
@@ -70,6 +73,8 @@ const ProcessConfigureView: VFC = () => {
     const notificationTableColumns = useProcessNotificationColumns({
         onDelete: handleDeleteSubscription,
     });
+
+    const hasAddMailPermission = useRole([Role.ROLE_TENANT_ADMIN]) && process.tenantId === user.tenant.id;
 
     const notificationTableRows = useMemo(
         () =>
@@ -295,7 +300,9 @@ const ProcessConfigureView: VFC = () => {
                     onClose={() => setOpen(false)}
                     loading={loading}
                 />
-                <ProcessAddEmailSubscriptionComponent onEmailAdd={handleSubscribeToCustomEmail} />
+                <If condition={hasAddMailPermission}>
+                    <ProcessAddEmailSubscriptionComponent onEmailAdd={handleSubscribeToCustomEmail} />
+                </If>
             </Dialog>
         </ContainerWrapper>
     );
