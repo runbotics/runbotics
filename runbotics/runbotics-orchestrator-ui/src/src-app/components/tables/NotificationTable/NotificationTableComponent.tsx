@@ -45,7 +45,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
         () =>
             subscribersList.filter(
                 (sub) =>
-                    sub.userEmail.includes(search) || sub.email.includes(search)
+                    sub.userEmail.includes(search) || sub.customEmail.includes(search)
             ),
         [search, subscribersList]
     );
@@ -82,7 +82,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
             <DataGrid
                 columns={notificationTableColumns}
                 columnVisibilityModel={{
-                    'actions': isTenantAdmin,
+                    actions: isTenantAdmin,
                 }}
                 rows={filteredSubscribersList}
                 rowCount={filteredSubscribersList.length}

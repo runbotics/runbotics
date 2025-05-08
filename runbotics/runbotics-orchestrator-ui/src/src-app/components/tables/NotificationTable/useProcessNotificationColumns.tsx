@@ -10,8 +10,7 @@ import moment from 'moment';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { ProcessNotificationRow } from './NotificationTableComponent.types';
-import { SubscriberProcessTableFields } from './NotificationTableComponent.utils';
+import { ProcessNotificationRow, ProcessNotificationTableFields } from './NotificationTableComponent.types';
 
 interface ColumnsActions {
     onDelete: (processSubscriber: ProcessNotificationRow) => Promise<void>;
@@ -20,18 +19,18 @@ interface ColumnsActions {
 const useProcessNotificationColumns = ({
     onDelete,
 }: ColumnsActions): (GridEnrichedColDef & {
-    field: SubscriberProcessTableFields;
+    field: ProcessNotificationTableFields;
 })[] => {
     const { translate } = useTranslations();
 
     return [
         {
-            field: 'userEmail',
+            field: ProcessNotificationTableFields.USER_EMAIL,
             headerName: translate('Process.Edit.Table.Columns.User'),
             flex: 0.4,
         },
         {
-            field: 'email',
+            field: ProcessNotificationTableFields.CUSTOM_EMAIL,
             headerName: translate('Process.Edit.Table.Columns.Email'),
             flex: 0.4,
             valueFormatter: (params: GridValueFormatterParams) =>
@@ -40,14 +39,14 @@ const useProcessNotificationColumns = ({
                     : translate('Process.Edit.Table.EmailSameAsUser'),
         },
         {
-            field: 'subscribedAt',
+            field: ProcessNotificationTableFields.SUBSCRIBED_AT,
             headerName: translate('Process.Edit.Table.Columns.SubscribedAt'),
             flex: 0.4,
             valueFormatter: (params: GridValueFormatterParams) =>
                 moment(params.value as string).format('YYYY-MM-DD HH:mm'),
         },
         {
-            field: 'actions',
+            field: ProcessNotificationTableFields.ACTIONS,
             headerName: translate('Process.Edit.Table.Columns.Actions'),
             type: 'actions',
             flex: 0.2,
