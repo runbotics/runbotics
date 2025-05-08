@@ -41,10 +41,8 @@ export class NotificationProcessService {
             createNotificationProcessDto.processId, user
         );
 
-        if (createNotificationProcessDto.email) {
-            if (user.tenantId !== process.tenantId && !isTenantAdmin(user)) {
-                throw new ForbiddenException();
-            }
+        if (createNotificationProcessDto.email && !isTenantAdmin(user)) {
+            throw new ForbiddenException();
         }
 
         const newNotification = new NotificationProcess();
@@ -71,15 +69,13 @@ export class NotificationProcessService {
                 throw new BadRequestException('Cannot delete process notification');
             });
 
-        const process = await this.processService.checkAccessAndGetById(
+        await this.processService.checkAccessAndGetById(
             notification.process.id,
             user,
         );
 
-        if (notification.email) {
-            if (user.tenantId !== process.tenantId && !isTenantAdmin(user)) {
-                throw new ForbiddenException();
-            }
+        if (notification.email && !isTenantAdmin(user)) {
+            throw new ForbiddenException();
         }
 
         await this.notificationProcessRepository
