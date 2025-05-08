@@ -20,7 +20,7 @@ export class NotificationBotService {
         private readonly notificationBotRepository: Repository<NotificationBot>,
         @InjectRepository(BotEntity)
         private readonly botRepository: Repository<BotEntity>,
-    ) {}
+    ) { }
 
     async getAllByBotId(botId: number) {
         return this.notificationBotRepository.find({ where: { bot: { id: botId } }, relations: ['user'] });
@@ -32,7 +32,7 @@ export class NotificationBotService {
         );
 
         return this.notificationBotRepository
-            .find({ where: { bot: { id: bot.id } }, relations: ['user']})
+            .find({ where: { bot: { id: bot.id } }, relations: ['user'] })
             .then(bots => bots.map(this.formatToDTO));
     }
 
@@ -57,8 +57,13 @@ export class NotificationBotService {
     async delete(notificationBotId: string, user: User) {
         const findOptions = {
             id: notificationBotId,
-            tenantId: user.tenantId,
-            ...(!isTenantAdmin(user) && { user: { id: user.id } })
+            ...(isTenantAdmin(user) ? {
+                user: {
+                    tenantId: user.tenantId
+                }
+            } : {
+                user: { id: user.id }
+            })
         };
 
         await this.notificationBotRepository
@@ -102,9 +107,9 @@ export class NotificationBotService {
                 .andWhere('collection.tenantId = :tenantId', { tenantId: user.tenantId })
                 .andWhere(new Brackets(qb => {
                     qb.where('bot.user.id = :userId')
-                    .orWhere('collection.publicBotsIncluded = true')
-                    .orWhere('collection.createdByUser.id = :userId')
-                    .orWhere('user.id = :userId');
+                        .orWhere('collection.publicBotsIncluded = true')
+                        .orWhere('collection.createdByUser.id = :userId')
+                        .orWhere('user.id = :userId');
                 })).getOneOrFail().catch(() => {
                     throw new NotFoundException();
                 });
