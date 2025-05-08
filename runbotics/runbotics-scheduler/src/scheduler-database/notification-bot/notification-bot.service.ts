@@ -57,17 +57,23 @@ export class NotificationBotService {
     async delete(notificationBotId: string, user: User) {
         const findOptions = {
             id: notificationBotId,
-            tenantId: user.tenantId,
-            ...(!isTenantAdmin(user) && { user: { id: user.id } })
+            ...(isTenantAdmin(user) ? {
+                user: {
+                    tenantId: user.tenantId,
+                }
+            } : { user: { id: user.id } })
         };
 
-        await this.notificationBotRepository
-            .findOneByOrFail(findOptions).catch(() => {
+        const notification = await this.notificationBotRepository
+            .findOneOrFail({
+                where: findOptions,
+                relations: ['user']
+            }).catch(() => {
                 throw new BadRequestException('Cannot delete bot notification');
             });
 
         await this.notificationBotRepository
-            .delete(findOptions);
+            .delete(notification.id);
     }
 
     private formatToDTO(notificationBot: NotificationBot) {
