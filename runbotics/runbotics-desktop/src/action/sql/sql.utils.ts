@@ -7,6 +7,10 @@ export const sqlQueryActionInputSchema = z.object({
     ).optional(),
 });
 
+export const sqlExecActionInputSchema = z.object({
+    query: z.string(),
+});
+
 export const sqlCredentialsSchema = z.object({
     url: z.string(),
 });

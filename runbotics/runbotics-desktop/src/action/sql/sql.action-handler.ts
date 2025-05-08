@@ -5,7 +5,7 @@ import Sqlite, { Database as SqliteDatabase } from 'better-sqlite3';
 import { Client as PostgresClient } from 'pg';
 import { SqlAction } from 'runbotics-common';
 import { SQLActionRequest, SqlQueryActionOutput } from './sql.types';
-import { sqlCredentialsSchema, sqlQueryActionInputSchema } from './sql.utils';
+import { sqlCredentialsSchema, sqlExecActionInputSchema, sqlQueryActionInputSchema } from './sql.utils';
 
 enum DBDriverType {
     POSTGRES = 'postgres',
@@ -42,6 +42,9 @@ export class SqlActionHandler extends StatefulActionHandler {
         } else if (request.script === SqlAction.QUERY) {
             const inputParsed = sqlQueryActionInputSchema.parse(request.input);
             return await this.query(inputParsed.query, inputParsed.queryParams);
+        } else if(request.script === SqlAction.EXEC) {
+            const inputParsed = sqlExecActionInputSchema.parse(request.input);
+            return await this.exec(inputParsed.query);
         } else {
             throw new Error('Action not found');
         }
@@ -50,6 +53,18 @@ export class SqlActionHandler extends StatefulActionHandler {
     async tearDown(): Promise<void> {
         if (this.dbDriver) {
             await this.closeSession();
+        }
+    }
+
+    private async exec(sql: string): Promise<void> {
+        if (!this.dbDriver) throw new Error('DB not connected');
+
+        if (this.dbDriver.type === DBDriverType.POSTGRES) {
+            await this.dbDriver.client.query(sql);
+        } else if (this.dbDriver.type === DBDriverType.SQLITE) {
+            this.dbDriver.db.exec(sql);
+        } else {
+            throw new Error('Unsupported database driver');
         }
     }
 
