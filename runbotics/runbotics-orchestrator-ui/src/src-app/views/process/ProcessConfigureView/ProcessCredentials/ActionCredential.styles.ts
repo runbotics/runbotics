@@ -34,7 +34,7 @@ export const CredentialTile = styled.div<CredentialTileProps>(({
     borderRadius: '10px',
     backgroundColor: $isPrimary ? theme.palette.grey[300]: theme.palette.grey[200],
     alignItems: 'center',
-    height: '120px',
+    minHeight: '120px',
     transform: $transform ? `translate3d(${$transform.x}px, ${$transform.y}px, 0)` : undefined,
     transition: $transition,
 }));

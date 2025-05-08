@@ -164,6 +164,7 @@ export enum DesktopOfficeAction {
     POWERPOINT_OPEN = 'powerpoint.open',
     POWERPOINT_INSERT = 'desktop.powerpoint.insert',
     POWERPOINT_SAVE = 'powerpoint.save',
+    POWERPOINT_RUN_MACRO = 'powerpoint.runMacro',
     POWERPOINT_CLOSE = 'powerpoint.close',
 }
 
@@ -336,10 +337,17 @@ export type AllActionIds =
     | VisualBasicAction
     | ImageAction
     | FolderAction
-    | ZipAction;
+    | ZipAction
+    | SqlAction;
 
 export enum ConflictFile {
     OVERWRITE = 'Overwrite',
     EXTEND_NAME = 'Extend name',
     THROW_ERROR = 'Throw Error'
+}
+
+export enum SqlAction { 
+    CONNECT = 'sql.connect',
+    QUERY = 'sql.query',
+    CLOSE = 'sql.close'
 }
