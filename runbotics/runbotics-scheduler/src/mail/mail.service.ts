@@ -13,7 +13,7 @@ import { NotificationProcessService } from '#/scheduler-database/notification-pr
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { NotificationBotService } from '#/scheduler-database/notification-bot/notification-bot.service';
 import { DeleteUserDto } from '#/scheduler-database/user/dto/delete-user.dto';
-import { hasFeatureKey } from '#/utils/authority.utils';
+import { hasRole } from '#/utils/authority.utils';
 
 export type SendMailInput = {
     to?: string;
@@ -123,21 +123,13 @@ export class MailService {
         };
         if (!failedProcess.isPublic) {
             const filteredSubscriptions = subscriptions
-                .filter(
-                    sub =>
-                        sub.email !== '' ||
-                        sub
-                            .user
-                            .authorities
-                            .some(
-                                authority => [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN].includes(authority.name)
-                            )
-                )
-                .map(x => x.getNotificationEmail());
+                .filter(sub => hasRole(sub.user, Role.ROLE_ADMIN) || hasRole(sub.user, Role.ROLE_TENANT_ADMIN))
+                .map(notification => notification.getNotificationEmail())
+                .filter(email => !!email);
 
             await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...filteredSubscriptions]);
         } else {
-            const subscribersAddresses = subscriptions.map(x => x.getNotificationEmail());
+            const subscribersAddresses = subscriptions.map(notification => notification.getNotificationEmail()).filter(email => !!email);
             await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...subscribersAddresses]);
         }
     }
