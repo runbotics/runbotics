@@ -8,7 +8,6 @@ import { CreateNotificationProcessDto } from './dto/create-notification-process.
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { isTenantAdmin } from '#/utils/authority.utils';
 
-
 @Injectable()
 export class NotificationProcessService {
     private readonly logger = new Logger(NotificationProcessService.name);
@@ -57,13 +56,13 @@ export class NotificationProcessService {
     }
 
     async delete(notificationProcessId: string, user: User) {
-        const findOptions =  {
+        const findOptions = {
             id: notificationProcessId
         };
-        
+
         const notification = await this.notificationProcessRepository
             .findOneOrFail({
-                where: findOptions, 
+                where: findOptions,
                 relations: ['process']
             }).catch(() => {
                 throw new BadRequestException('Cannot delete process notification');
@@ -88,9 +87,9 @@ export class NotificationProcessService {
             id: notificationProcess.id,
             user: {
                 id: notificationProcess.user.id,
-                email: notificationProcess.user.email
+                email: notificationProcess.user.email,
             },
-            email: notificationProcess.email ?? '',
+            customEmail: notificationProcess.email ?? '',
             createdAt: notificationProcess.createdAt
         };
     }
