@@ -74,7 +74,7 @@ const ProcessConfigureView: VFC = () => {
         onDelete: handleDeleteSubscription,
     });
 
-    const hasAddMailPermission = useRole([Role.ROLE_TENANT_ADMIN]) && process.tenantId === user.tenant.id;
+    const hasAddMailPermission = useRole([Role.ROLE_TENANT_ADMIN]);
 
     const notificationTableRows = useMemo(
         () =>
