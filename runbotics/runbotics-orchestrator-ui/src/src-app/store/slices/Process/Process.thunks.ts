@@ -39,12 +39,16 @@ export const fetchProcessById = createAsyncThunk<
     const { currentRequestId, loading } = getState().process.draft;
 
     if (loading !== LoadingType.PENDING || requestId !== currentRequestId) {
-        rejectWithValue(undefined);
+        return rejectWithValue(undefined);
     }
 
     const result = await dispatch(getProcessById({ resourceId: processId }));
 
-    return result.payload;
+    if (getProcessById.rejected.match(result)) {
+        return rejectWithValue(result.payload);
+    }
+
+    return result.payload as ProcessDto;
 });
 
 export const fetchGuestDemoProcess = ApiTenantResource.get<ProcessDto>(

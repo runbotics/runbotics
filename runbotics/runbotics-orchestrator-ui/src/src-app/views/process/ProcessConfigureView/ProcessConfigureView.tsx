@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Dialog } from '@mui/material';
+import { unwrapResult } from '@reduxjs/toolkit';
+import type { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import { IBotSystem, IBotCollection, NotificationProcess, NotificationProcessType } from 'runbotics-common';
 
@@ -40,6 +42,7 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const { draft: { process, processSubscriptions }, all: { loading } } = useSelector(processSelector);
     const { id } = useRouter().query;
     const processId = Number(id);
@@ -68,6 +71,15 @@ const ProcessConfigureView: VFC = () => {
     const handleGetProcessSubscribers = async () => {
         await dispatch(processActions.getProcessSubscriptionInfo({ resourceId: processId }));
     };
+
+    useEffect(() => {
+        dispatch(processActions.fetchProcessById(Number(id)))
+            .then(unwrapResult)
+            .catch((err: AxiosError & { statusCode?: number }) => {
+                const status = err.statusCode ?? err.response?.status;
+                router.replace(`/${status}`);
+            });
+    }, [id]);
 
     useEffect(() => {
         dispatch(botCollectionActions.getAll());

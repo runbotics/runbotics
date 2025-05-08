@@ -1,7 +1,8 @@
 import { useCallback, useRef, useState, useEffect, FC } from 'react';
 
 import { Box, DialogContent } from '@mui/material';
-
+import { unwrapResult } from '@reduxjs/toolkit';
+import type { AxiosError } from 'axios';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import { saveAs } from 'file-saver';
 import moment from 'moment';
@@ -31,6 +32,7 @@ import { resolveCredentials } from './ProcessImportDialog.utils';
 
 const ProcessBuildView: FC = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const { createRbexFile } = useProcessExport();
     const { enqueueSnackbar } = useSnackbar();
     const { id } = useRouter().query;
@@ -46,6 +48,15 @@ const ProcessBuildView: FC = () => {
     const [processDefinition, setProcessDefinition] = useState('');
     const [importedCustomCredentials, setImportedCustomCredentials] = useState<Credential[]>(null);
     const [additionalProps, setAdditionalProps] = useState<AdditionalInfo>(null);
+
+    useEffect(() => {
+        dispatch(processActions.fetchProcessById(Number(id)))
+            .then(unwrapResult)
+            .catch((err: AxiosError & { statusCode?: number }) => {
+                const status = err.statusCode ?? err.response?.status;
+                router.replace(`/${status}`);
+            });
+    }, [id]);
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
