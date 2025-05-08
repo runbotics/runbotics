@@ -5,6 +5,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
+// eslint-disable-next-line max-lines-per-function
 const getSQLActions: () => Record<string, IBpmnAction> = () => ({
     [SqlAction.CONNECT]: {
         id: SqlAction.CONNECT,
@@ -114,6 +115,46 @@ const getSQLActions: () => Record<string, IBpmnAction> = () => ({
                 },
                 output: {
                     variableName: undefined,
+                },
+            },
+        },
+    },
+    [SqlAction.EXEC]: {
+        id: SqlAction.EXEC,
+        credentialType: ActionCredentialType.SQL,
+        label: translate('Process.Details.Modeler.Actions.Sql.Exec.Label'),
+        script: SqlAction.EXEC,
+        runner: Runner.DESKTOP_SCRIPT,
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            query: {
+                                title: translate('Process.Details.Modeler.Actions.Sql.Exec.Query'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['query'],
+                    },
+                },
+            },
+            uiSchema: {
+                input: {
+                    query: {
+                        'ui:widget': 'EditorWidget',
+                        'ui:options': {
+                            'language': 'sql'
+                        }
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    query: '',
                 },
             },
         },
