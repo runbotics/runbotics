@@ -10,9 +10,7 @@ import moment from 'moment';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { BotNotificationRow } from './NotificationTableComponent.types';
-import { SubscriberBotTableFields } from './NotificationTableComponent.utils';
-
+import { BotNotificationRow, BotNotificationTableFields } from './NotificationTableComponent.types';
 interface ColumnsActions {
     onDelete: (botSubscriber: BotNotificationRow) => Promise<void>;
 }
@@ -20,25 +18,25 @@ interface ColumnsActions {
 const useBotNotificationColumns = ({
     onDelete,
 }: ColumnsActions): (GridEnrichedColDef & {
-    field: SubscriberBotTableFields;
+    field: BotNotificationTableFields;
 })[] => {
     const { translate } = useTranslations();
 
     return [
         {
-            field: 'userEmail',
+            field: BotNotificationTableFields.USER_EMAIL,
             headerName: translate('Bot.Edit.Table.Columns.User'),
             flex: 0.4,
         },
         {
-            field: 'subscribedAt',
+            field: BotNotificationTableFields.SUBSCRIBED_AT,
             headerName: translate('Bot.Edit.Table.Columns.SubscribedAt'),
             flex: 0.4,
             valueFormatter: (params: GridValueFormatterParams) =>
                 moment(params.value as string).format('YYYY-MM-DD HH:mm'),
         },
         {
-            field: 'actions',
+            field: BotNotificationTableFields.ACTIONS,
             headerName: translate('Bot.Edit.Table.Columns.Actions'),
             type: 'actions',
             flex: 0.2,
@@ -49,9 +47,7 @@ const useBotNotificationColumns = ({
 
                 return [
                     <GridActionsCellItem
-                        label={translate(
-                            'Bot.Edit.Table.Columns.Actions.Delete'
-                        )}
+                        label={translate('Bot.Edit.Table.Columns.Actions.Delete')}
                         icon={<DeleteIcon />}
                         onClick={handleDeleteClick}
                         key="delete"

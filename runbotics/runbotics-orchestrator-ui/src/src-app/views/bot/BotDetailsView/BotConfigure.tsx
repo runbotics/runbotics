@@ -34,7 +34,7 @@ const BotConfigure: FC = () => {
         .map<BotNotificationRow>((sub: NotificationBot) => ({
             id: sub.id,
             userEmail: sub.user.email,
-            email: '',
+            customEmail: '',
             subscribedAt: sub.createdAt,
         })), [botSubscriptions]);
 

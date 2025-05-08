@@ -105,7 +105,7 @@ export class MailService {
 
             await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...filteredSubscribers]);
         } else {
-            const subscribersAddresses = subscribers.map(e => e.email);
+            const subscribersAddresses = subscribers.map(subscriber => subscriber.email);
             await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...subscribersAddresses]);
         }
     }

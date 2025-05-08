@@ -4,7 +4,7 @@ import { User } from "./user.model";
 export interface NotificationProcess {
     id: string;
     user: User;
-    email: string | '';
+    customEmail: string;
     type: NotificationProcessType;
     createdAt: string;
 }

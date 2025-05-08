@@ -82,13 +82,13 @@ const ProcessConfigureView: VFC = () => {
                 (sub: NotificationProcess) => ({
                     id: sub.id,
                     userEmail: sub.user.email,
-                    email: sub.email,
+                    customEmail: sub.customEmail,
                     subscribedAt: sub.createdAt,
                 })
             ),
         [processSubscriptions]
     );
-
+    
     const handleGetProcessSubscribers = async () => {
         await dispatch(
             processActions.getProcessSubscriptionInfo({ resourceId: processId })
@@ -187,7 +187,7 @@ const ProcessConfigureView: VFC = () => {
             : await dispatch(
                 processActions.unsubscribeProcessNotifications({
                     resourceId: processSubscriptions.find(
-                        (sub) => sub.user.id === user.id && !sub.email
+                        (sub) => sub.user.id === user.id && !sub.customEmail
                     ).id,
                 })
             );
@@ -268,7 +268,7 @@ const ProcessConfigureView: VFC = () => {
                         <StyledPaper>
                             <NotificationSwitchComponent
                                 onClick={() => setOpen(true)}
-                                isSubscribed={processSubscriptions.some((sub) => sub.user.id === user.id && !sub.email)}
+                                isSubscribed={processSubscriptions.some((sub) => sub.user.id === user.id && !sub.customEmail)}
                                 onSubscriptionChange={handleSubscriptionChange}
                                 label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
                                 tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
