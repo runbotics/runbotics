@@ -42,7 +42,7 @@ export class SqlActionHandler extends StatefulActionHandler {
         } else if (request.script === SqlAction.QUERY) {
             const inputParsed = sqlQueryActionInputSchema.parse(request.input);
             return await this.query(inputParsed.query, inputParsed.queryParams);
-        } else if(request.script === SqlAction.EXEC) {
+        } else if (request.script === SqlAction.EXEC) {
             const inputParsed = sqlExecActionInputSchema.parse(request.input);
             return await this.exec(inputParsed.query);
         } else {
@@ -86,7 +86,7 @@ export class SqlActionHandler extends StatefulActionHandler {
             return {
                 rowCount: res.length,
                 rows: res,
-                columns: !rawResult.fields || !rawResult.fields.length ? [] : rawResult.fields.map(x => x.name) ?? []
+                columns: !rawResult.fields || !rawResult.fields.length ? [] : rawResult.fields.map(fieldObject => fieldObject.name) ?? []
             };
         } else if (this.dbDriver.type === DBDriverType.SQLITE) {
             const rawResult = this.dbDriver.db.prepare(sql);
@@ -109,7 +109,7 @@ export class SqlActionHandler extends StatefulActionHandler {
 
             let columns: string[] = [];
             try {
-                columns = rawResult.columns().map(x => x.name);
+                columns = rawResult.columns().map(columnDefinition => columnDefinition.name);
             } catch (e) {
                 // This path fails, when query is one, which does not return data (think of ALTER TABLE)
                 // ignore this error and return no columns instead
