@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { PartialUserDto, UserDto } from 'runbotics-common';
+import { ActivateUserDto, PartialUserDto, UserDto } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
@@ -44,6 +44,12 @@ export const update = createAsyncThunk<UserDto, PartialUserDto>(
     'users/update',
     (user) => axios.patch<UserDto>(`/api/scheduler/users/${user.id}`, user)
         .then((response => response.data))
+);
+
+export const activate = createAsyncThunk<void, ActivateUserDto>(
+    'users/activate',
+    (activateData) => axios.post<ActivateUserDto>(`/api/scheduler/users/${activateData.id}/activate`, activateData)
+        .then((response => void response))
 );
 
 export const updateInTenant = ApiTenantResource.patch<UserDto, PartialUserDto>(
