@@ -349,5 +349,6 @@ export enum ConflictFile {
 export enum SqlAction { 
     CONNECT = 'sql.connect',
     QUERY = 'sql.query',
-    CLOSE = 'sql.close'
+    CLOSE = 'sql.close',
+    EXEC = 'sql.exec'
 }
