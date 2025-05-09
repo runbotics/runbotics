@@ -8,6 +8,11 @@ export const updateUserSchema = z.object({
     activated: z.boolean(),
     tenantId: z.string(),
     roles: z.array(z.nativeEnum(Role)),
+    message: z.string().trim().min(1).optional(),
 }).partial();
 
 export type UpdateUserDto = z.infer<typeof updateUserSchema>;
+
+export const message =  z.string().trim().min(1).optional();
+
+export type Message = z.infer<typeof message>;
