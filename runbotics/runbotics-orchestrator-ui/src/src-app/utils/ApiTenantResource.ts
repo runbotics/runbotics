@@ -11,7 +11,6 @@ export interface PayloadWrap<T> {
     payload?: T;
     resourceId?: string | number;
     pageParams?: PageRequestParams;
-    message?: string;
 }
 
 type ResourcePath = string | ((resourceId: string | number) => string);
