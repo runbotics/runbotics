@@ -41,3 +41,10 @@ export type UserDto = Omit<
     roles: Role[];
     featureKeys: FeatureKey[];
 };
+
+export type ActivateUserDto = {
+    id: number,
+    roles: Role[],
+    message?: string
+    tenantId: string
+}
