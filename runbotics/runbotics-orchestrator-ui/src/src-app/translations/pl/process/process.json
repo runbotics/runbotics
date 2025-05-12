@@ -568,7 +568,7 @@
     "Process.Edit.Form.Fields.IsPublic.False.Label": "Prywatny",
     "Process.Edit.Form.Fields.IsPublic.False.Tooltip": "Ten proces jest widoczny tylko dla ciebie i adminów",
     "Process.Details.Modeler.ActionPanel.Form.ActionName.Title": "Nazwa akcji",
-    "Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title": "{{ system }}",
+    "Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title": "Działa wyłącznie na botach z systemem {{ system }}",
     "Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title": "Działa wyłącznie na botach z systemem {{ system }}",
     "Process.Details.Modeler.ActionPanel.Form.Connection.Expression": "Wyrażenie",
     "Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression": "Wyrażenie",
