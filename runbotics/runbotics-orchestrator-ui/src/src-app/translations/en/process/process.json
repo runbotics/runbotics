@@ -563,7 +563,7 @@
     "Process.Details.Modeler.ActionPanel.Form.RunFromHere.Title": "Run from here",
     "Process.Details.Modeler.ActionPanel.Form.ProcessOutput.Title": "Process Output",
     "Process.Details.Modeler.ActionPanel.Form.ActionName.Title": "Action name",
-    "Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title": "{{ system }}",
+    "Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title": "Limited to {{ system }} system",
     "Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title": "Runs on bots with {{ system }} system only",
     "Process.Details.Modeler.ActionPanel.Form.Connection.Expression": "Expression",
     "Process.Details.Modeler.ActionPanel.Form.Connection.Expression.Expression": "Expression",
