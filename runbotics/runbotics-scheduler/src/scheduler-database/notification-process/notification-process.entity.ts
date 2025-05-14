@@ -27,12 +27,4 @@ export class NotificationProcess {
     @ManyToOne(() => ProcessEntity, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'process_id' })
     process: ProcessEntity;
-
-    getNotificationEmail(): string {
-        if (!this.email) {
-            return this.user.email;
-        }
-
-        return this.email;
-    }
 }
