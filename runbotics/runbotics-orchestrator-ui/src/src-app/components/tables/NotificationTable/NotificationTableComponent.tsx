@@ -38,14 +38,9 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
     const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
     const [search, setSearch] = useState('');
 
-    const filteredSubscribersList = useMemo(
-        () =>
-            subscribersList.filter(
-                (sub) =>
-                    sub.userEmail.includes(search)
-            ),
-        [search, subscribersList]
-    );
+    const filteredSubscribersList = useMemo(() => subscribersList
+        .filter(sub => sub[NotificationTableFields.EMAIL].includes(search)),
+    [search, subscribersList]);
 
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value);
@@ -67,11 +62,9 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
             </StyledHeaderWrapper>
             <StyledActionsContainer>
                 <StyledTextField
-                    margin="dense"
-                    placeholder={translate(
-                        'Component.NotificationTable.View.SearchBarPlaceholder'
-                    )}
-                    size="small"
+                    margin='dense'
+                    placeholder={translate('Component.NotificationTable.View.SearchBarPlaceholder')}
+                    size='small'
                     value={search}
                     onChange={handleSearch}
                 />
@@ -87,9 +80,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
                 disableSelectionOnClick
                 pageSize={DEFAULT_TABLE_PAGING_VALUES.pageSize}
                 localeText={{
-                    noRowsLabel: translate(
-                        'Component.NotificationTable.Results.Error'
-                    ),
+                    noRowsLabel: translate('Component.NotificationTable.Results.Error'),
                 }}
             />
         </StyledWrapper>
