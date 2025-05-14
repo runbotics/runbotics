@@ -81,11 +81,8 @@ export class MailService {
     public async sendBotDisconnectionNotificationMail(bot: BotEntity, installationId: string) {
         const disconnectedBot = await this.botService.findById(bot.id);
         const botAssignedUserEmail = disconnectedBot.user.email;
-        const subscribers = await this.notificationBotService
-            .getAllByBotId(disconnectedBot.id)
-            .then((notifications) =>
-                notifications.map((notification) => notification.user)
-            );
+        const subscriptions = await this.notificationBotService
+            .getAllByBotId(disconnectedBot.id);
 
         const sendMailInput: SendMailInput = {
             subject: NOTIFICATION_MAIL_SUBJECT,
@@ -94,18 +91,22 @@ export class MailService {
         };
 
         if (disconnectedBot.collection.name !== 'Public') {
-            const filteredSubscribers = subscribers.reduce((acc, subscriber) => {
+
+            const filteredSubscribers: string[] = [];
+
+            for (const subscription of subscriptions) {
                 const botCollectionAssignedUser = disconnectedBot.collection.users
-                    .find(user => user.id === subscriber.id);
+                    .find(user => user.id === subscription.user.id);
 
-                botCollectionAssignedUser && acc.push(subscriber.email);
-
-                return acc;
-            }, []);
+                if (botCollectionAssignedUser) {
+                    filteredSubscribers.push(subscription.email || subscription.user.email);
+                }
+            }
 
             await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...filteredSubscribers]);
         } else {
-            const subscribersAddresses = subscribers.map(subscriber => subscriber.email);
+            const subscribersAddresses = subscriptions
+                .map(subscription => subscription.email || subscription.user.email);
             await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...subscribersAddresses]);
         }
     }

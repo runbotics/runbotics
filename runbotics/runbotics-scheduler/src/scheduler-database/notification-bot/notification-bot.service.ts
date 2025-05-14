@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 import { Role } from 'runbotics-common';
@@ -47,6 +47,7 @@ export class NotificationBotService {
         const newNotification = new NotificationBot();
         newNotification.bot = bot;
         newNotification.user = user;
+        newNotification.email = createNotificationBotDto.email ?? '';
         newNotification.type = createNotificationBotDto.type;
 
         return this.notificationBotRepository
@@ -72,6 +73,10 @@ export class NotificationBotService {
                 throw new BadRequestException('Cannot delete bot notification');
             });
 
+        if (notification.email && !isTenantAdmin(user)) {
+            throw new ForbiddenException();
+        }
+
         await this.notificationBotRepository
             .delete(notification.id);
     }
@@ -84,6 +89,7 @@ export class NotificationBotService {
                 id: notificationBot.user.id,
                 email: notificationBot.user.email
             },
+            customEmail: notificationBot.email,
             createdAt: notificationBot.createdAt
         };
     }
