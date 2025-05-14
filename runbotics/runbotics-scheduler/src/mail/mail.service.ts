@@ -125,12 +125,14 @@ export class MailService {
         if (!failedProcess.isPublic) {
             const filteredSubscriptions = subscriptions
                 .filter(sub => hasRole(sub.user, Role.ROLE_ADMIN) || hasRole(sub.user, Role.ROLE_TENANT_ADMIN))
-                .map(notification => notification.getNotificationEmail())
+                .map(notification => notification.email || notification.user.email)
                 .filter(email => !!email);
 
             await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...filteredSubscriptions]);
         } else {
-            const subscribersAddresses = subscriptions.map(notification => notification.getNotificationEmail()).filter(email => !!email);
+            const subscribersAddresses = subscriptions
+                .map(notification => notification.email || notification.user.email)
+                .filter(email => !!email);
             await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...subscribersAddresses]);
         }
     }
