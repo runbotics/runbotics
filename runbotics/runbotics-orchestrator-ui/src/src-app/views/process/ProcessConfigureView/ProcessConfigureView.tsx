@@ -194,7 +194,7 @@ const ProcessConfigureView: VFC = () => {
         await handleGetProcessSubscribers();
     };
 
-    const handleSubscribeToCustomEmail = async (customEmail: string) => {
+    const handleCustomEmailSubscription = async (customEmail: string) => {
         await dispatch(
             processActions.subscribeProcessNotifications({
                 payload: {
@@ -289,7 +289,7 @@ const ProcessConfigureView: VFC = () => {
                     loading={loading}
                 />
                 <If condition={hasAddMailPermission}>
-                    <AddEmailSubscriptionComponent onEmailAdd={handleSubscribeToCustomEmail} />
+                    <AddEmailSubscriptionComponent onEmailAdd={handleCustomEmailSubscription} />
                 </If>
             </Dialog>
         </ContainerWrapper>
