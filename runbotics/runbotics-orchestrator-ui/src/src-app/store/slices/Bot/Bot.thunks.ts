@@ -31,7 +31,7 @@ export const getLogs = createAsyncThunk<string[], { id: IBot['id'], lines?: numb
 );
 
 export const subscribeBotNotifications = ApiTenantResource
-    .post<NotificationBot, { botId: number, type: NotificationBotType }>
+    .post<NotificationBot, { botId: number, type: NotificationBotType, email?: string }>
     ('bot/subscribeBotNotifications', BOT_NOTIFICATION_PATH);
 
 export const unsubscribeBotNotifications = ApiTenantResource
