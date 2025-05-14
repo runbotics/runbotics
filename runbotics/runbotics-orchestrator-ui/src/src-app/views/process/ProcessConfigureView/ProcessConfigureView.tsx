@@ -30,9 +30,9 @@ import { processActions, processSelector } from '#src-app/store/slices/Process';
 
 import { processOutputActions } from '#src-app/store/slices/ProcessOutput';
 
+import AddEmailSubscriptionComponent from './AddEmailSubscriptionComponent';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
-import AddEmailSubscriptionComponent from './ProcessAddEmailSubscriptionComponent';
 import ProcessAttendedComponent from './ProcessAttended.component';
 import {
     AttendancePaper,

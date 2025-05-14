@@ -19,7 +19,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { botActions, botSelector } from '#src-app/store/slices/Bot';
 
-import AddEmailSubscriptionComponent from '#src-app/views/process/ProcessConfigureView/ProcessAddEmailSubscriptionComponent';
+import AddEmailSubscriptionComponent from '#src-app/views/process/ProcessConfigureView/AddEmailSubscriptionComponent';
 
 import { Container, ContainerWrapper, StyledPaper } from './BotDetailsView.styles';
 
