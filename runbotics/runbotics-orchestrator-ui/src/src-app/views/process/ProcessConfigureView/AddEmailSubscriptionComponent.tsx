@@ -16,6 +16,12 @@ const AddEmailSubscriptionComponent: VFC<
     const [email, setEmail] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const handleSubmit = () => {
+        onEmailAdd(email).finally(() => {
+            setIsSubmitting(false);
+        });
+    };
+
     return (
         <Grid
             container
@@ -30,11 +36,9 @@ const AddEmailSubscriptionComponent: VFC<
                     onSubmit={(e) => {
                         e.preventDefault();
                         if (isSubmitting) return;
-
                         setIsSubmitting(true);
-                        onEmailAdd(email).finally(() => {
-                            setIsSubmitting(false);
-                        });
+
+                        handleSubmit();
                     }}
                 >
                     <StyledTextField
