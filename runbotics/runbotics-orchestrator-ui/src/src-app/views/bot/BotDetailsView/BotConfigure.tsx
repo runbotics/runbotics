@@ -52,7 +52,7 @@ const BotConfigure: FC = () => {
     const hasAddMailPermission = useRole([Role.ROLE_TENANT_ADMIN]);
 
 
-    const handleSubscribeToCustomEmail = async (customEmail: string) => {
+    const handleCustomEmailSubscription = async (customEmail: string) => {
         await dispatch(
             botActions.subscribeBotNotifications({
                 payload: {
@@ -110,7 +110,7 @@ const BotConfigure: FC = () => {
                     loading={loading}
                 />
                 <If condition={hasAddMailPermission}>
-                    <AddEmailSubscriptionComponent onEmailAdd={handleSubscribeToCustomEmail} />
+                    <AddEmailSubscriptionComponent onEmailAdd={handleCustomEmailSubscription} />
                 </If>
             </Dialog>
         </ContainerWrapper>
