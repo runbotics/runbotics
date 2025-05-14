@@ -19,14 +19,11 @@ import {
     StyledHeaderWrapper,
     StyledWrapper,
 } from './NotificationTableComponent.styles';
-import {
-    BotNotificationRow,
-    ProcessNotificationRow,
-} from './NotificationTableComponent.types';
+import { NotificationRow, NotificationTableFields } from './NotificationTableComponent.types';
 
 interface NotificationTableProps {
     notificationTableColumns: GridColDef[];
-    subscribersList: (BotNotificationRow | ProcessNotificationRow)[];
+    subscribersList: NotificationRow[];
     loading?: boolean;
     onClose: () => void;
 }
@@ -45,7 +42,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
         () =>
             subscribersList.filter(
                 (sub) =>
-                    sub.userEmail.includes(search) || sub.customEmail.includes(search)
+                    sub.userEmail.includes(search)
             ),
         [search, subscribersList]
     );
@@ -82,7 +79,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
             <DataGrid
                 columns={notificationTableColumns}
                 columnVisibilityModel={{
-                    actions: isTenantAdmin,
+                    [NotificationTableFields.ACTIONS]: isTenantAdmin,
                 }}
                 rows={filteredSubscribersList}
                 rowCount={filteredSubscribersList.length}

@@ -10,7 +10,7 @@ interface ProcessAddEmailSubscriptionComponentProps {
     onEmailAdd: (email: string) => Promise<void>;
 }
 
-const ProcessAddEmailSubscriptionComponent: VFC<
+const AddEmailSubscriptionComponent: VFC<
     ProcessAddEmailSubscriptionComponentProps
 > = ({ onEmailAdd }) => {
     const [email, setEmail] = useState('');
@@ -57,4 +57,4 @@ const ProcessAddEmailSubscriptionComponent: VFC<
         </Grid>
     );
 };
-export default ProcessAddEmailSubscriptionComponent;
+export default AddEmailSubscriptionComponent;

@@ -14,7 +14,7 @@ import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.mo
 
 import NotificationSwitchComponent from '#src-app/components/tables/NotificationTable/NotificationSwitchComponent';
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
-import { ProcessNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
+import { NotificationRow, NotificationTableFields } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
 import useProcessNotificationColumns from '#src-app/components/tables/NotificationTable/useProcessNotificationColumns';
 import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
@@ -32,7 +32,7 @@ import { processOutputActions } from '#src-app/store/slices/ProcessOutput';
 
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
-import ProcessAddEmailSubscriptionComponent from './ProcessAddEmailSubscriptionComponent';
+import AddEmailSubscriptionComponent from './ProcessAddEmailSubscriptionComponent';
 import ProcessAttendedComponent from './ProcessAttended.component';
 import {
     AttendancePaper,
@@ -78,12 +78,11 @@ const ProcessConfigureView: VFC = () => {
 
     const notificationTableRows = useMemo(
         () =>
-            processSubscriptions.map<ProcessNotificationRow>(
+            processSubscriptions.map<NotificationRow>(
                 (sub: NotificationProcess) => ({
                     id: sub.id,
-                    userEmail: sub.user.email,
-                    customEmail: sub.customEmail,
-                    subscribedAt: sub.createdAt,
+                    [NotificationTableFields.EMAIL]: sub.customEmail || sub.user.email,
+                    [NotificationTableFields.SUBSCRIBED_AT]: sub.createdAt,
                 })
             ),
         [processSubscriptions]
@@ -210,7 +209,7 @@ const ProcessConfigureView: VFC = () => {
     };
 
     async function handleDeleteSubscription(
-        subscriptionInfo: ProcessNotificationRow
+        subscriptionInfo: NotificationRow
     ) {
         await dispatch(
             processActions.unsubscribeProcessNotifications({
@@ -290,7 +289,7 @@ const ProcessConfigureView: VFC = () => {
                     loading={loading}
                 />
                 <If condition={hasAddMailPermission}>
-                    <ProcessAddEmailSubscriptionComponent onEmailAdd={handleSubscribeToCustomEmail} />
+                    <AddEmailSubscriptionComponent onEmailAdd={handleSubscribeToCustomEmail} />
                 </If>
             </Dialog>
         </ContainerWrapper>
