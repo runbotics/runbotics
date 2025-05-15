@@ -167,7 +167,7 @@ export class UserService {
 
         const updatedUserEntity = await this.userRepository.save(updatedUserDto);
 
-        const isFirstActivation = user.hasBeenActivated;
+        const isFirstActivation = !user.hasBeenActivated;
 
         if (isFirstActivation) {
             this.mailService.sendUserAcceptMail(user, activateDto.message);
