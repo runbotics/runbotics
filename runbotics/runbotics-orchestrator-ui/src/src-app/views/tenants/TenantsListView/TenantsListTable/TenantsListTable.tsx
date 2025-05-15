@@ -19,6 +19,7 @@ interface TenantListTableProps {
     pageSize: number;
     onPageSizeChange: (pageSize: number) => void;
     openTenantEditDialog: (row) => void;
+    openTenantPluginDrawer: (row) => void;
 }
 
 const TenantsListTable: VFC<TenantListTableProps> = ({
@@ -26,11 +27,12 @@ const TenantsListTable: VFC<TenantListTableProps> = ({
     onPageChange,
     pageSize,
     onPageSizeChange,
-    openTenantEditDialog
+    openTenantEditDialog,
+    openTenantPluginDrawer,
 }) => {
     const { translate } = useTranslations();
 
-    const tenantsListColumns = useTenantsListColumns(pageSize, openTenantEditDialog);
+    const tenantsListColumns = useTenantsListColumns(pageSize, openTenantEditDialog, openTenantPluginDrawer);
     const { loading, allByPage } = useSelector(tenantsSelector);
 
     return (

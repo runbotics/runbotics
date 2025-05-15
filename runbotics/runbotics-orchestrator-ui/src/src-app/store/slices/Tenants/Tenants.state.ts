@@ -1,4 +1,4 @@
-import { Tenant } from 'runbotics-common';
+import { Tenant, TenantPlugin } from 'runbotics-common';
 
 import { Page } from '#src-app/utils/types/page';
 
@@ -8,4 +8,9 @@ export interface TenantsState {
     allByPage: Page<Tenant> | null;
     inviteCode: string | null;
     invitingTenant: string | null;
+    tenantPlugins: { 
+        loading: boolean;
+        error: string | ErrorConstructor;
+        data: TenantPlugin[] | null;
+    };
 }

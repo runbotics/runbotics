@@ -5,4 +5,5 @@ export enum TenantField {
     UPDATED_DATE = 'updated',
     LAST_MODIFIED_BY = 'lastModifiedBy',
     EDIT = 'edit',
-};
+    PLUGINS = 'activePlugins'
+}
