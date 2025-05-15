@@ -39,7 +39,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
     const [search, setSearch] = useState('');
 
     const filteredSubscribersList = useMemo(() => subscribersList
-        .filter(sub => sub[NotificationTableFields.EMAIL].includes(search)),
+        .filter(sub => sub[NotificationTableFields.EMAIL].toLowerCase().includes(search.toLowerCase())),
     [search, subscribersList]);
 
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
