@@ -2,6 +2,10 @@
 
 $BACKGROUND-HEIGHT: 400px;
 
+.marketplaceSection {
+    min-height: 600px;
+}
+
 .marketplaceTitle {
     composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
     display: grid;
