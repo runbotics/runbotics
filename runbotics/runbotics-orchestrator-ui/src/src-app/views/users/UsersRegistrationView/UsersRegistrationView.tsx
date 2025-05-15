@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { useSelector } from 'react-redux';
-import { Role, UserDto, PartialUserDto } from 'runbotics-common';
+import { Role, UserDto, ActivateUserDto } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 import useRole from '#src-app/hooks/useRole';
@@ -33,14 +33,6 @@ import {
 import DeleteUserDialog from '../DeleteUserDialog';
 
 interface SelectedRoles { [id: number]: Role };
-
-interface MapActivatedUserParams {
-    id: number;
-    email: string;
-    roles: Role[];
-    tenantId: string;
-    activated: boolean;
-}
 
 // eslint-disable-next-line max-lines-per-function
 const UsersRegistrationView: FC = () => {
@@ -103,26 +95,19 @@ const UsersRegistrationView: FC = () => {
         handleSubmit(payload);
     };
 
-    const mapUserActivateRequest = (id: number, role: Role, tenantId: string): MapActivatedUserParams => {
-        const { email } = hasAdminAccess
-            ? notActivated.allByPage.content.find((row) => row.id === id)
-            : tenantNotActivated.allByPage.content.find((row) => row.id === id);
+    const mapUserActivateRequest = (id: number, role: Role, tenantId: string): ActivateUserDto => ({
+        id,
+        roles: [role],
+        message: translate('Users.Registration.View.Events.Success.Message'),
+        ...(tenantId && { tenantId })
+    });
 
-        return {
-            id,
-            email,
-            roles: [role],
-            activated: true,
-            ...(tenantId && { tenantId })
-        };
-    };
-
-    const handleSubmit = (usersData: PartialUserDto[]) =>
+    const handleSubmit = (activations: ActivateUserDto[]) =>
         Promise
             .allSettled(
                 hasAdminAccess
-                    ? usersData.map((user) => dispatch(usersActions.update({ ...user, message: translate('Users.Registration.View.Events.Success.Message') })))
-                    : usersData.map((user) => dispatch(usersActions.updateInTenant({ payload: { ...user, message: translate('Users.Registration.View.Events.Success.Message') }, resourceId: user.id })))
+                    ? activations.map((activationDto) => dispatch(usersActions.activate(activationDto)))
+                    : activations.map((activationDto) => dispatch(usersActions.activateInTenant({ payload: activationDto, resourceId: activationDto.id })))
             )
             .then(() => {
                 enqueueSnackbar(translate('Users.Registration.View.Events.Success.AcceptingUser'), { variant: 'success' });
