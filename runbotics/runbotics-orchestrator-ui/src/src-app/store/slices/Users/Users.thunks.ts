@@ -56,6 +56,10 @@ export const updateInTenant = ApiTenantResource.patch<UserDto, PartialUserDto>(
     'users/updateInTenant', USERS_PATH
 );
 
+export const activateInTenant = ApiTenantResource.post<UserDto, ActivateUserDto>(
+    'users/activateInTenant', `${USERS_PATH}/activate`
+);
+
 export const deleteUser = createAsyncThunk<
     void,
     { resourceId: number; },

@@ -18,6 +18,7 @@ import { MailService } from '#/mail/mail.service';
 import { MicrosoftSSOUserDto } from '#/auth/auth.service.types';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
+import { ActivateUserDto } from './dto/activate-user.dto';
 
 @Injectable()
 export class UserService {
@@ -31,7 +32,7 @@ export class UserService {
         private readonly tenantService: TenantService,
         private readonly mailService: MailService,
         private readonly dataSource: DataSource,
-    ) {}
+    ) { }
 
     async createMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
         const user = new User();
@@ -132,6 +133,48 @@ export class UserService {
         return this.userRepository.findOne({ where: { email } });
     }
 
+    async activate(activateDto: ActivateUserDto, id: number, executor: User) {
+        const { roles, tenantId } = activateDto;
+
+        this.checkUpdateAllowedRole(executor, roles);
+        const tenantRelation = await this.getTenantRelation(tenantId);
+
+        const authority = await (async () =>
+            roles
+                ? await this.authorityRepository
+                    .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
+                    .then((auth) => ({ authorities: [auth] }))
+                : {})();
+
+        const user = await this.userRepository
+            .findOneByOrFail({
+                id,
+                ...(!isAdmin(executor) && { tenantId: executor.tenantId }),
+            })
+            .catch((err) => {
+                this.logger.error('Cannot find user with id: ', id, 'Error:', err);
+                throw new BadRequestException('User not found', 'NotFound');
+            });
+
+        const updatedUserDto: PartialUserDto = {
+            ...user,
+            ...authority,
+            ...(tenantRelation && { ...tenantRelation }),
+            hasBeenActivated: true,
+            activated: true,
+            lastModifiedBy: executor.email,
+        };
+
+        const updatedUserEntity = await this.userRepository.save(updatedUserDto);
+
+        const isFirstActivation = user.hasBeenActivated;
+
+        if (isFirstActivation) {
+            this.mailService.sendUserAcceptMail(user, activateDto.message);
+        }
+        return this.mapToUserDto(updatedUserEntity);
+    }
+
     async update(userDto: UpdateUserDto, id: number, executor: User) {
         const { roles, tenantId, ...partialUser } = userDto;
 
@@ -165,8 +208,6 @@ export class UserService {
             ...(isFirstActivation && { hasBeenActivated: true }),
             lastModifiedBy: executor.email,
         };
-
-        this.mailService.sendUserAcceptMail(user, userDto.message);
 
         return this.userRepository.save(updatedUser).then(this.mapToUserDto);
     }
