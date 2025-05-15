@@ -281,7 +281,11 @@ const ProcessConfigureView: VFC = () => {
                     </StyledPaper>
                 </CredentialsContainer>
             </PageContainer>
-            <Dialog open={open} onClose={() => setOpen(false)} maxWidth={false}>
+            <Dialog
+                open={open}
+                onClose={() => setOpen(false)} 
+                maxWidth={false}
+            >
                 <NotificationTableComponent
                     notificationTableColumns={notificationTableColumns}
                     subscribersList={notificationTableRows ?? []}
