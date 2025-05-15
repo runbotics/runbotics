@@ -1,9 +1,11 @@
 import { Logger } from '#/utils/logger';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { License } from './license.entity';
 import { Raw, Repository } from 'typeorm';
+import { CreateLicenseDto } from './dto/create-license.dto';
+import { UpdateLicenseDto } from './dto/update-license.dto';
 
 @Injectable()
 export class LicenseService {
@@ -36,28 +38,55 @@ export class LicenseService {
     }
 
     async countLicensesByTenant(tenantId: string): Promise<number> {
-
-        this.logger.log(`${tenantId} tenant id`);
         const licenses = await this.licenseRepository.findBy({ tenantId });
 
+        const resp = licenses.filter(this.isExpDateValid);
 
-        const resp = licenses
-            .filter(this.isExpDateValid);
-        
         return resp.length;
-        // this.logger.log(`${tenantId} tenant id`);
-        
-        // const resp = this.licenseRepository.count({
-        //     where: [
-        //         { tenantId: '95a45144-6eb9-430f-ab64-82af0a164f1b' },
-        //         { expDate: Raw((alias) => `${alias} > NOW()`) },
-        //     ],
-        // });
-        
-        // return resp;
     }
 
-    private isExpDateValid({ expDate }: License) {
+    async create(licenseDto: CreateLicenseDto): Promise<License> {
+        const isLicenseKeyUsed = await this.licenseRepository.findOneBy({
+            licenseKey: licenseDto.licenseKey,
+        });
+        if (isLicenseKeyUsed)
+            throw new BadRequestException(
+                'License already used',
+                'LicenseUsed'
+            );
+
+        const newLicense = new License();
+        newLicense.tenantId = licenseDto.tenantId;
+        newLicense.pluginName = licenseDto.pluginName;
+        newLicense.licenseKey = licenseDto.licenseKey;
+        newLicense.license = licenseDto.license;
+        newLicense.expDate = licenseDto.expDate;
+
+        return this.licenseRepository.save(newLicense);
+    }
+
+    async update(licenseDto: UpdateLicenseDto, id: string): Promise<License> {
+        const license = await this.licenseRepository
+            .findOneByOrFail({ id })
+            .catch(() => {
+                this.logger.error('Cannot find license with id: ', id);
+                throw new BadRequestException('License not found', 'NotFound');
+            });
+
+        if (!this.isExpDateValid(licenseDto)) {
+            throw new BadRequestException(
+                'Cant update date to expired one',
+                'InvalidDate'
+            );
+        }
+
+        license.expDate = licenseDto.expDate;
+        await this.licenseRepository.save(license);
+
+        return this.licenseRepository.findOne({ where: { id } });
+    }
+
+    private isExpDateValid({ expDate }: License | UpdateLicenseDto) {
         const currentDate = new Date();
         const expirationDate = new Date(expDate);
         return currentDate < expirationDate;
