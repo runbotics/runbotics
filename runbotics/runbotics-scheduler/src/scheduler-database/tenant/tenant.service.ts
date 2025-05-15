@@ -16,6 +16,8 @@ import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 
+import { LicenseService } from '../license/license.service';
+
 const relations = ['createdByUser', 'emailTriggerWhitelist'];
 
 @Injectable()
@@ -25,6 +27,7 @@ export class TenantService {
     constructor(
         @InjectRepository(Tenant)
         private readonly tenantRepository: Repository<Tenant>,
+        private readonly licenseService: LicenseService,
         @InjectRepository(TenantInviteCode)
         private readonly inviteCodeRepository: Repository<TenantInviteCode>,
         @InjectRepository(EmailTriggerWhitelistItem)
@@ -48,15 +51,25 @@ export class TenantService {
 
         const page = await getPage(this.tenantRepository, options);
 
-        return {
-            ...page,
-            content: page.content.map(tenant => ({
+        const contentWithLicenses = await Promise.all(
+            page.content.map(async (tenant) => {
+                this.logger.log(tenant.id);
+                return {
+                
+                
                 ...tenant,
                 createdByUser: {
                     id: tenant.createdByUser.id,
                     email: tenant.createdByUser.email
-                }
-            })),
+                },
+                
+                activeLicenses: await this.licenseService.countLicensesByTenant(tenant.id),
+            };})
+        );
+
+        return {
+            ...page,
+            content: contentWithLicenses,
         };
     }
 

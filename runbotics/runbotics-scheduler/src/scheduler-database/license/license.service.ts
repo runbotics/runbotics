@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { License } from './license.entity';
-import { Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 
 @Injectable()
 export class LicenseService {
@@ -33,6 +33,28 @@ export class LicenseService {
         }
 
         return license;
+    }
+
+    async countLicensesByTenant(tenantId: string): Promise<number> {
+
+        this.logger.log(`${tenantId} tenant id`);
+        const licenses = await this.licenseRepository.findBy({ tenantId });
+
+
+        const resp = licenses
+            .filter(this.isExpDateValid);
+        
+        return resp.length;
+        // this.logger.log(`${tenantId} tenant id`);
+        
+        // const resp = this.licenseRepository.count({
+        //     where: [
+        //         { tenantId: '95a45144-6eb9-430f-ab64-82af0a164f1b' },
+        //         { expDate: Raw((alias) => `${alias} > NOW()`) },
+        //     ],
+        // });
+        
+        // return resp;
     }
 
     private isExpDateValid({ expDate }: License) {
