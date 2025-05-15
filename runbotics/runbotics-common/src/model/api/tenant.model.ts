@@ -9,6 +9,7 @@ export interface Tenant {
     created?: string | null;
     updated?: string | null;
     lastModifiedBy?: string | null;
+    activePlugins?: number | null
 }
 
 export interface TenantInviteCode {
@@ -18,4 +19,11 @@ export interface TenantInviteCode {
 export interface BasicTenantDto {
     id: string;
     name: string;
+}
+
+export interface TenantPlugin {
+    id: string;
+    pluginName: string;
+    expDate: string;
+    license: string;
 }

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Tenant, TenantInviteCode } from 'runbotics-common';
+import { Tenant, TenantInviteCode, TenantPlugin } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
@@ -76,5 +76,29 @@ export const fetchTenantNameByInviteCode = createAsyncThunk<{ tenantName: string
     (inviteCode, { rejectWithValue }) =>
         axios.post<{ tenantName: string }>('/api/scheduler/tenants/invite-code', { inviteCode })
             .then((response) => response.data)
+            .catch((error) => rejectWithValue(error.response.data))
+);
+
+export const fetchTenantPlugins = createAsyncThunk<{ data: TenantPlugin[] }, string>(
+    'tenants/fetchTenantPlugins',
+    (tenantId, { rejectWithValue }) =>
+        axios.get(`api/scheduler/tenants/fetchTenantPlugins/${tenantId}`)
+            .then(response => response.data)
+            .catch((error) => rejectWithValue(error.response.data))
+);
+
+export const createTenantPlugin = createAsyncThunk<TenantPlugin, string>(
+    'tenants/createTenantPlugin',
+    (tenantId, { rejectWithValue }) =>
+        axios.post(`api/scheduler/tenants/fetchTenantPlugins/${tenantId}`)
+            .then(response => response.data)
+            .catch((error) => rejectWithValue(error.response.data))
+);
+
+export const updateTenantPlugin = createAsyncThunk<TenantPlugin, string>(
+    'tenants/updateTenantPlugin',
+    (tenantId, { rejectWithValue }) =>
+        axios.patch(`api/scheduler/tenants/fetchTenantPlugins/${tenantId}`)
+            .then(response => response.data)
             .catch((error) => rejectWithValue(error.response.data))
 );
