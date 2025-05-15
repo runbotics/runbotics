@@ -178,12 +178,14 @@ export class MailService {
     }
 
     public sendUserAcceptMail(userToUpdate: User, message: string) {
-        this.sendMail({
-            to: userToUpdate.email,
-            subject: 'RunBotics - User Activation',
-            content: message,
-            isHtml: false,
-        });
+        if(message) {
+            this.sendMail({
+                to: userToUpdate.email,
+                subject: 'RunBotics - User Activation',
+                content: message,
+                isHtml: false,
+            });
+        }
     }
 
     private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {
