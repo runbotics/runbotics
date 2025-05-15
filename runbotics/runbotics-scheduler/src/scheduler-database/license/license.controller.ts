@@ -25,3 +25,5 @@ export class LicenseController {
         return this.licenseService.getLicenseInfo(user, pluginName);
     }
 }
+
+
