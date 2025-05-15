@@ -14,6 +14,8 @@ import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { NotificationBotService } from '#/scheduler-database/notification-bot/notification-bot.service';
 import { DeleteUserDto } from '#/scheduler-database/user/dto/delete-user.dto';
 import { hasRole } from '#/utils/authority.utils';
+import { NotificationBot } from '#/scheduler-database/notification-bot/notification-bot.entity';
+import { NotificationProcess } from '#/scheduler-database/notification-process/notification-process.entity';
 
 export type SendMailInput = {
     to?: string;
@@ -81,7 +83,7 @@ export class MailService {
     public async sendBotDisconnectionNotificationMail(bot: BotEntity, installationId: string) {
         const disconnectedBot = await this.botService.findById(bot.id);
         const botAssignedUserEmail = disconnectedBot.user.email;
-        const subscriptions = await this.notificationBotService
+        const allSubscriptions = await this.notificationBotService
             .getAllByBotId(disconnectedBot.id);
 
         const sendMailInput: SendMailInput = {
@@ -90,31 +92,19 @@ export class MailService {
             isHtml: false,
         };
 
-        if (disconnectedBot.collection.name !== 'Public') {
+        const targetSubscribers =
+            disconnectedBot.collection.name === 'Public' ?
+                allSubscriptions :
+                allSubscriptions.filter(subscription => disconnectedBot.collection.users.some(user => user.id === subscription.user.id));
 
-            const filteredSubscribers: string[] = [];
-
-            for (const subscription of subscriptions) {
-                const botCollectionAssignedUser = disconnectedBot.collection.users
-                    .find(user => user.id === subscription.user.id);
-
-                if (botCollectionAssignedUser) {
-                    filteredSubscribers.push(subscription.email || subscription.user.email);
-                }
-            }
-
-            await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...filteredSubscribers]);
-        } else {
-            const subscribersAddresses = subscriptions
-                .map(subscription => subscription.email || subscription.user.email);
-            await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...subscribersAddresses]);
-        }
+        const targetEmails = targetSubscribers.map(subscription => this.extractTargetEmailFromNotification(subscription));
+        await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...targetEmails]);
     }
 
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
         const failedProcess = await this.processService.findById(process.id);
         const processCreatorEmail = failedProcess.createdBy.email;
-        const subscriptions = await this.notificationProcessService
+        const allSubscriptions = await this.notificationProcessService
             .getAllByProcessId(failedProcess.id);
 
         const sendMailInput: SendMailInput = {
@@ -122,19 +112,15 @@ export class MailService {
             content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\nYou can visit us here ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\nBest regards,\nRunBotics`,
             isHtml: false,
         };
-        if (!failedProcess.isPublic) {
-            const filteredSubscriptions = subscriptions
-                .filter(sub => hasRole(sub.user, Role.ROLE_ADMIN) || hasRole(sub.user, Role.ROLE_TENANT_ADMIN))
-                .map(notification => notification.email || notification.user.email)
-                .filter(email => !!email);
 
-            await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...filteredSubscriptions]);
-        } else {
-            const subscribersAddresses = subscriptions
-                .map(notification => notification.email || notification.user.email)
-                .filter(email => !!email);
-            await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...subscribersAddresses]);
-        }
+        const filteredSubscriptions = failedProcess.isPublic ?
+            allSubscriptions :
+            allSubscriptions
+                .filter(sub => hasRole(sub.user, Role.ROLE_ADMIN) || hasRole(sub.user, Role.ROLE_TENANT_ADMIN));
+
+        const targetEmails = filteredSubscriptions.map(subscription => this.extractTargetEmailFromNotification(subscription));
+
+        await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...targetEmails]);
     }
 
     public sendCredentialChangeNotificationMail(params: CredentialChangeMailPayload) {
@@ -190,5 +176,9 @@ export class MailService {
         const emailAddresses = mergeArraysWithoutDuplicates(addresses).join(',');
 
         await this.sendMail({ ...emailInput, bcc: emailAddresses });
+    }
+
+    private extractTargetEmailFromNotification(notification: NotificationBot | NotificationProcess) {
+        return notification.email || notification.user.email;
     }
 }
