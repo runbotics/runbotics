@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import { ZipAction } from 'runbotics-common';
-import { ZipActionRequest, UnzipFileActionInput, ZipFileActionInput } from './zip.types';
+import { ZipActionRequest, UnzipFileActionInput, ZipFileActionInput, unzipFileActionInputSchema } from './zip.types';
 import { ServerConfigService } from '#config';
 import { RunboticsLogger } from '../../logger';
 import { handleFileSystemError } from '#utils/fileSystemError';
@@ -24,20 +24,22 @@ export default class ZipActionHandler extends StatelessActionHandler {
     }
 
     async unzipFile(input: UnzipFileActionInput) {
-        const { path, fileName } = input;
-        const fullPath = this.resolvePath(fileName, path);
-
+        const { path, fileName, outDirName, outDirPath } = input;
+        
         if (!fileName) {
             throw new Error('File name is mandatory');
         }
+                
+        const sourceZipPath = this.resolvePath(`${fileName}.zip`, path);
+        const outputDir = this.resolvePath(outDirName || fileName, outDirPath || path);
 
-        if (fs.existsSync(fullPath)) {
+        if (fs.existsSync(outputDir)) {
             throw new Error('File/folder with this name already exists');
         }
 
         try {
-            const zip = new AdmZip(`${fullPath}.zip`);
-            zip.extractAllTo(fullPath);
+            const zip = new AdmZip(sourceZipPath);
+            zip.extractAllTo(outputDir, true);
         } catch (e) {
             handleFileSystemError('Unzip archive', e);
         }
@@ -92,7 +94,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
     run(request: ZipActionRequest) {
         switch (request.script) {
             case ZipAction.UNZIP_FILE:
-                return this.unzipFile(request.input);
+                return this.unzipFile(unzipFileActionInputSchema.parse(request.input));
             case ZipAction.ZIP_FILE:
                 return this.zipFile(request.input);
             default:

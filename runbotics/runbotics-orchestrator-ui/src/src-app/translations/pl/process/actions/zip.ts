@@ -5,6 +5,10 @@ const zipTranslations: typeof englishZipTranslations  = {
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Label': 'Rozpakuj archiwum',
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Name': 'Nazwa',
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Path.Info': 'Ścieżka do folderu zawierającego plik zip, np. "C:\\Users\\User\\Documents". Rozpakowany plik znajduje się w podfolderze, np. "C:\\Users\\User\\Documents\\fileName\\fileName.txt".',
+
+    'Process.Details.Modeler.Actions.Zip.UnzipArchive.OutputDirectory': 'Ścieżka wyjściowa',
+    'Process.Details.Modeler.Actions.Zip.UnzipArchive.OutputName': 'Nazwa katalogu wyjściowego',
+
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Name.Info': 'Nazwa pliku (bez rozszerzenia), np. "zippedArchive".',
     'Process.Details.Modeler.Actions.Zip.CreateArchive.Label': 'Stwórz archiwum',
     'Process.Details.Modeler.Actions.Zip.Zip.Path': 'Pełna ścieżka do pliku/folderu do archiwizacji',
