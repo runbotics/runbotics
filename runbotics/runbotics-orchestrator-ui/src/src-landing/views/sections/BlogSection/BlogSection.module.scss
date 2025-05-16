@@ -2,6 +2,10 @@
 
 $BACKGROUND-HEIGHT: 400px;
 
+.blogSection {
+    min-height: 600px;
+}
+
 .blogTitle {
     composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
     display: grid;
