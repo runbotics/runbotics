@@ -11,6 +11,7 @@ const BrowserTargetWidget = dynamic(() => import('./BrowserTargetWidget'), { ssr
 const TypographyWidget = dynamic(() => import('./TypographyWidget'), { ssr: false });
 const DatePickerWidget = dynamic(() => import('./DatePickerWidget'), { ssr: false });
 const CredentialWidget = dynamic(() => import('./CredentialWidget/CredentialWidget'), { ssr: false });
+const CustomSelectWidget = dynamic(() => import('./CustomSelectWidget'), { ssr: false });
 
 const customWidgets = {
     TextWidget: CustomTextWidget,
@@ -24,6 +25,7 @@ const customWidgets = {
     TypographyWidget,
     DatePickerWidget,
     CredentialWidget,
+    SelectWidget: CustomSelectWidget,
 };
 
 export default customWidgets;
