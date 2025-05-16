@@ -27,6 +27,7 @@ const BlogSection: VFC<Props> = ({ posts }) => {
         <section
             id={BLOG_SECTION_ID}
             aria-labelledby={BLOG_SECTION_TITLE_ID}
+            className={styles.blogSection}
         >
             <div className={styles.blogTitle}>
                 <Typography className={styles.mainTitle} variant="h2" id={BLOG_SECTION_TITLE_ID}>
