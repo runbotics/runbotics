@@ -4,6 +4,7 @@ import { User } from "./user.model";
 export interface NotificationBot {
     id: string;
     user: User;
+    customEmail: string;
     type: NotificationBotType;
     createdAt: string;
 }
