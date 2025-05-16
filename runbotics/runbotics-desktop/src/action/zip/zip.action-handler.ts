@@ -39,7 +39,7 @@ export default class ZipActionHandler extends StatelessActionHandler {
 
         try {
             const zip = new AdmZip(sourceZipPath);
-            zip.extractAllTo(outputDir, true);
+            zip.extractAllTo(outputDir);
         } catch (e) {
             handleFileSystemError('Unzip archive', e);
         }
