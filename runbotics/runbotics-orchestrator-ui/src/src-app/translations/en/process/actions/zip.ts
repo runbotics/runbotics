@@ -4,6 +4,10 @@ const zipTranslations = {
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Name': 'Name',
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Path.Info': 'Path of folder containing zip file, e.g. "C:\\Users\\User\\Documents". Unziped file will be located in subfolder, e.g. "C:\\Users\\User\\Documents\\fileName\\fileName.txt".',
     'Process.Details.Modeler.Actions.Zip.UnzipArchive.Name.Info': 'File name (without extension), e.g. "zippedArchive".',
+
+    'Process.Details.Modeler.Actions.Zip.UnzipArchive.OutputDirectory': 'Output path',
+    'Process.Details.Modeler.Actions.Zip.UnzipArchive.OutputName': 'Output directory name',
+    
     'Process.Details.Modeler.Actions.Zip.CreateArchive.Label': 'Create archive',
     'Process.Details.Modeler.Actions.Zip.Zip.Path': 'Path to the file/folder to archive',
     'Process.Details.Modeler.Actions.Zip.CreateArchive.ZipPath': 'Full zip file destination path',

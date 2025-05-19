@@ -41,6 +41,8 @@
     "Marketplace.Offer.NoticeText": "Wypełniając ten formularz i wysyłając do nas prośbę o wycenę, dobrowolnie wyrażasz zgodę na podanie nam danych zawartych w formularzu oraz na przetwarzanie tych danych w celu przygotowania wyceny i skontaktowania się z Tobą. Administratorem tych danych będzie firma All For One Poland. W każdej chwili możesz poprawić swoje dane i uzyskać do nich dostęp, kontaktując się z naszym zespołem RunBotics.",
     "Marketplace.Cart.EmailSent": "Wysłano email",
     "Marketplace.Cart.EmailError": "Błąd podczas wysyłania wiadomości",
+    "Marketplace.Cart.NoEmailError": "Wprowadź poprawny adres email",
+    "Marketplace.Cart.NoNameAndSurnameError": "Wprowadź imię i nazwisko",
     "Marketplace.Cart.SuccessAdded": "Dodano ofertę do koszyka",
     "Marketplace.Cart.ErrorAdded": "Wystąpił błąd podczas dodawania nowej oferty do koszyka",
     "Marketplace.Cart.FormError.RequiredField": "To pole jest wymagane",

@@ -63,7 +63,7 @@ export const usePublicSections = (): Section[] => {
                     title: translate('Nav.Items.History'),
                     icon: HistoryIcon,
                     href: '/app/history',
-                    authorities: [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN],
+                    authorities: [Role.ROLE_TENANT_ADMIN],
                     featureKeys: [FeatureKey.HISTORY_READ],
                 },
             ],
