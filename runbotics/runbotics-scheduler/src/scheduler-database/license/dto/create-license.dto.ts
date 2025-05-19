@@ -5,7 +5,7 @@ export const createLicenseSchema = z
         pluginName: z.string().min(2),
         tenantId: z.string().uuid(),
         licenseKey: z.string().min(2).max(255),
-        license: z.string().min(2),
+        license: z.string().min(2).max(255),
         expDate: z.string().date(),
     })
     .required();

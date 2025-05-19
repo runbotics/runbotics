@@ -3,7 +3,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { User } from '../user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { License } from './license.entity';
-import { Raw, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateLicenseDto } from './dto/create-license.dto';
 import { UpdateLicenseDto } from './dto/update-license.dto';
 
@@ -81,14 +81,46 @@ export class LicenseService {
         }
 
         license.expDate = licenseDto.expDate;
+        license.license = licenseDto.license;
+        license.licenseKey = licenseDto.licenseKey;
+
         await this.licenseRepository.save(license);
 
         return this.licenseRepository.findOne({ where: { id } });
+    }
+
+    async getAllLicensesByTenant(tenantId: string): Promise<License[]> {
+        const licenses = await this.licenseRepository.findBy({ tenantId });
+
+        return this.sortLicenses(licenses);
     }
 
     private isExpDateValid({ expDate }: License | UpdateLicenseDto) {
         const currentDate = new Date();
         const expirationDate = new Date(expDate);
         return currentDate < expirationDate;
+    }
+
+    private sortLicenses(licensesArray: License[]) {
+        return licensesArray.slice().sort((a, b) => {
+            const isaValid = this.isExpDateValid(a);
+            const isbValid = this.isExpDateValid(b);
+
+            if (isaValid && !isbValid) {
+                return -1;
+            }
+
+            if (!isaValid && isbValid) {
+                return 1;
+            }
+
+            const aExpDate = new Date(a.expDate);
+            const bExpDate = new Date(b.expDate);
+
+            if (!isaValid && !isbValid) {
+                return bExpDate.getTime() - aExpDate.getTime();
+            }
+            return aExpDate.getTime() - bExpDate.getTime();
+        });
     }
 }
