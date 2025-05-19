@@ -24,6 +24,7 @@ import LoadingType from '#src-app/types/loading';
 import RunProcessInstantly from './RunProcessInstantly';
 import SavedSchedule from './SavedSchedule';
 import ScheduleProcess from './ScheduleProcess';
+import { isKnownHttpStatus } from '../../utils/httpStatus';
 
 const ValidationSchedule = styled('div')(
     ({ theme }) => `
@@ -56,8 +57,10 @@ const ProcessRunView: FC = () => {
         dispatch(processActions.fetchProcessById(Number(id)))
             .then(unwrapResult)
             .catch((err: AxiosError & { statusCode?: number }) => {
-                const status = err.statusCode ?? err.response?.status;
-                router.replace(`/${status}`);
+                const status = err.statusCode;
+                if (isKnownHttpStatus(status)) {
+                    router.replace(`/${status}`);
+                }
             });
     }, [id]);
 

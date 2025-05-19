@@ -29,6 +29,7 @@ import { StyledCard } from './ProcessBuildView.styled';
 import { BORDER_SIZE, saveProcess } from './ProcessBuildView.utils';
 import ProcessImportDialog from './ProcessImportDialog';
 import { resolveCredentials } from './ProcessImportDialog.utils';
+import { isKnownHttpStatus } from '../../utils/httpStatus';
 
 const ProcessBuildView: FC = () => {
     const dispatch = useDispatch();
@@ -50,13 +51,15 @@ const ProcessBuildView: FC = () => {
     const [additionalProps, setAdditionalProps] = useState<AdditionalInfo>(null);
 
     useEffect(() => {
-        dispatch(processActions.fetchProcessById(Number(id)))
-            .then(unwrapResult)
-            .catch((err: AxiosError & { statusCode?: number }) => {
-                const status = err.statusCode ?? err.response?.status;
-                router.replace(`/${status}`);
-            });
-    }, [id]);
+            dispatch(processActions.fetchProcessById(Number(id)))
+                .then(unwrapResult)
+                .catch((err: AxiosError & { statusCode?: number }) => {
+                    const status = err.statusCode;
+                    if (isKnownHttpStatus(status)) {
+                        router.replace(`/${status}`);
+                    }
+                });
+        }, [id]);
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;

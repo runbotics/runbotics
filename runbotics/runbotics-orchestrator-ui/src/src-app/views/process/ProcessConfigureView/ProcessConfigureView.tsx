@@ -38,6 +38,7 @@ import {
 import ProcessCredentials from './ProcessCredentials';
 import ProcessOutputComponent from './ProcessOutput.component';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
+import { isKnownHttpStatus } from '../../utils/httpStatus';
 
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
@@ -76,8 +77,10 @@ const ProcessConfigureView: VFC = () => {
         dispatch(processActions.fetchProcessById(Number(id)))
             .then(unwrapResult)
             .catch((err: AxiosError & { statusCode?: number }) => {
-                const status = err.statusCode ?? err.response?.status;
-                router.replace(`/${status}`);
+                const status = err.statusCode;
+                if (isKnownHttpStatus(status)) {
+                    router.replace(`/${status}`);
+                }
             });
     }, [id]);
 
