@@ -43,12 +43,12 @@ export class LicenseController {
 
     @Patch('licenses/:id')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
-    updateTenant(
+    updateLicense(
         @Param('id', ParseUUIDPipe) id: License['id'],
         @Body(new ZodValidationPipe(updateLicenseSchema))
-        tenantDto: UpdateLicenseDto
+        updateLicenseDto: UpdateLicenseDto
     ) {
-        return this.licenseService.update(tenantDto, id);
+        return this.licenseService.update(updateLicenseDto, id);
     }
 }
 
