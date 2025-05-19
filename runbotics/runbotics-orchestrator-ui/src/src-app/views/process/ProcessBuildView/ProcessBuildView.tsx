@@ -51,14 +51,14 @@ const ProcessBuildView: FC = () => {
     const [additionalProps, setAdditionalProps] = useState<AdditionalInfo>(null);
 
     useEffect(() => {
-            dispatch(processActions.fetchProcessById(Number(id)))
-                .then(unwrapResult)
-                .catch((err: AxiosError & { statusCode?: number }) => {
-                    const status = err.statusCode;
-                    if (isKnownHttpStatus(status)) {
-                        router.replace(`/${status}`);
-                    }
-                });
+        dispatch(processActions.fetchProcessById(Number(id)))
+            .then(unwrapResult)
+            .catch((err: AxiosError & { statusCode?: number }) => {
+                const status = err.statusCode;
+                if (isKnownHttpStatus(status)) {
+                    router.replace(`/${status}`);
+                }
+            });
         }, [id]);
 
     useEffect(() => {
