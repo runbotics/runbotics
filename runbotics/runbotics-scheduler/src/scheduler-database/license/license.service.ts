@@ -84,9 +84,8 @@ export class LicenseService {
         license.license = licenseDto.license;
         license.licenseKey = licenseDto.licenseKey;
 
-        await this.licenseRepository.save(license);
 
-        return this.licenseRepository.findOne({ where: { id } });
+        return this.licenseRepository.save(license);
     }
 
     async getAllLicensesByTenant(tenantId: string): Promise<License[]> {
