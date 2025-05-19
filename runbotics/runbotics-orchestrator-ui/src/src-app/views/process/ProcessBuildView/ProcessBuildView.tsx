@@ -59,7 +59,7 @@ const ProcessBuildView: FC = () => {
                     router.replace(`/${status}`);
                 }
             });
-        }, [id]);
+    }, [id]);
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
