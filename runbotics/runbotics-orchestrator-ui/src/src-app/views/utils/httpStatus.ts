@@ -1,4 +1,6 @@
-const HTTP_STATUS_CODES_SET = new Set<number>([
+type HttpCode = number;
+
+const HTTP_STATUS_CODES_SET = new Set<HttpCode>([
     100, 101, 102, 103,
     200, 201, 202, 203, 204, 205, 206, 207, 208, 226,
     300, 301, 302, 303, 304, 305, 307, 308,
@@ -8,7 +10,7 @@ const HTTP_STATUS_CODES_SET = new Set<number>([
     500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511
 ]);
 
-export function isKnownHttpStatus(status: unknown): status is number {
+export function isKnownHttpStatus(status: unknown): status is HttpCode {
     return typeof status === 'number' && HTTP_STATUS_CODES_SET.has(status);
 }
 
