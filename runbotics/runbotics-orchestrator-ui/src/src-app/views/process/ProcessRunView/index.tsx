@@ -2,8 +2,6 @@ import { FC, useEffect, useRef } from 'react';
 
 import { Card, Grid, Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { unwrapResult } from '@reduxjs/toolkit';
-import type { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 
 import { FeatureKey } from 'runbotics-common';
@@ -14,7 +12,6 @@ import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector, useDispatch } from '#src-app/store';
-import { processActions } from '#src-app/store/slices/Process';
 import {
     scheduleProcessActions,
     scheduleProcessSelector,
@@ -24,7 +21,6 @@ import LoadingType from '#src-app/types/loading';
 import RunProcessInstantly from './RunProcessInstantly';
 import SavedSchedule from './SavedSchedule';
 import ScheduleProcess from './ScheduleProcess';
-import { isKnownHttpStatus } from '../../utils/httpStatus';
 
 const ValidationSchedule = styled('div')(
     ({ theme }) => `
@@ -52,17 +48,6 @@ const ProcessRunView: FC = () => {
     const hasAddScheduleAccess = useFeatureKey([FeatureKey.SCHEDULE_ADD]);
 
     const { translate } = useTranslations();
-
-    useEffect(() => {
-        dispatch(processActions.fetchProcessById(Number(id)))
-            .then(unwrapResult)
-            .catch((err: AxiosError & { statusCode?: number }) => {
-                const status = err.statusCode;
-                if (isKnownHttpStatus(status)) {
-                    router.replace(`/${status}`);
-                }
-            });
-    }, [id]);
 
     useEffect(() => {
         if (hasReadSchedulesAccess)

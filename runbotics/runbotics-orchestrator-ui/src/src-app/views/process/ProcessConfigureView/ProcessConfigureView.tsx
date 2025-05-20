@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Dialog } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
-import type { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import { IBotSystem, IBotCollection, NotificationProcess, NotificationProcessType } from 'runbotics-common';
 
@@ -38,7 +36,6 @@ import {
 import ProcessCredentials from './ProcessCredentials';
 import ProcessOutputComponent from './ProcessOutput.component';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
-import { isKnownHttpStatus } from '../../utils/httpStatus';
 
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
@@ -72,17 +69,6 @@ const ProcessConfigureView: VFC = () => {
     const handleGetProcessSubscribers = async () => {
         await dispatch(processActions.getProcessSubscriptionInfo({ resourceId: processId }));
     };
-
-    useEffect(() => {
-        dispatch(processActions.fetchProcessById(Number(id)))
-            .then(unwrapResult)
-            .catch((err: AxiosError & { statusCode?: number }) => {
-                const status = err.statusCode;
-                if (isKnownHttpStatus(status)) {
-                    router.replace(`/${status}`);
-                }
-            });
-    }, [id]);
 
     useEffect(() => {
         dispatch(botCollectionActions.getAll());

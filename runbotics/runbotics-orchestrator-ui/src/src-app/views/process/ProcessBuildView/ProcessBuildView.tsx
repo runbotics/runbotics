@@ -1,8 +1,6 @@
 import { useCallback, useRef, useState, useEffect, FC } from 'react';
 
 import { Box, DialogContent } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
-import type { AxiosError } from 'axios';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import { saveAs } from 'file-saver';
 import moment from 'moment';
@@ -29,7 +27,6 @@ import { StyledCard } from './ProcessBuildView.styled';
 import { BORDER_SIZE, saveProcess } from './ProcessBuildView.utils';
 import ProcessImportDialog from './ProcessImportDialog';
 import { resolveCredentials } from './ProcessImportDialog.utils';
-import { isKnownHttpStatus } from '../../utils/httpStatus';
 
 const ProcessBuildView: FC = () => {
     const dispatch = useDispatch();
@@ -49,17 +46,6 @@ const ProcessBuildView: FC = () => {
     const [processDefinition, setProcessDefinition] = useState('');
     const [importedCustomCredentials, setImportedCustomCredentials] = useState<Credential[]>(null);
     const [additionalProps, setAdditionalProps] = useState<AdditionalInfo>(null);
-
-    useEffect(() => {
-        dispatch(processActions.fetchProcessById(Number(id)))
-            .then(unwrapResult)
-            .catch((err: AxiosError & { statusCode?: number }) => {
-                const status = err.statusCode;
-                if (isKnownHttpStatus(status)) {
-                    router.replace(`/${status}`);
-                }
-            });
-    }, [id]);
 
     useEffect(() => {
         if (!hasAdvancedActionsAccess) return;
