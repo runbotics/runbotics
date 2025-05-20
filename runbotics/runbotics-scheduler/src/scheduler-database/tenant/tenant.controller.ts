@@ -23,14 +23,16 @@ import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { TenantCriteria } from './criteria/tenant.criteria';
 import { Tenant } from './tenant.entity';
+import { LicenseService } from '../license/license.service';
 
 @Controller('/api/scheduler')
 export class TenantController {
     private readonly logger = new Logger(TenantController.name);
 
     constructor(
-        private readonly tenantService: TenantService
-    ) { }
+        private readonly tenantService: TenantService,
+        private readonly licenseService: LicenseService
+    ) {}
 
     @GetWithTenant('me')
     @FeatureKeys(FeatureKey.TENANT_READ)
@@ -49,13 +51,15 @@ export class TenantController {
 
     @GetWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_GET_INVITE_CODE)
-    async getActiveInviteCode(
-        @UserDecorator() { tenantId }: User,
-    ) {
-        const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(tenantId);
+    async getActiveInviteCode(@UserDecorator() { tenantId }: User) {
+        const inviteCodeDto =
+            await this.tenantService.getActiveInviteCodeByTenantId(tenantId);
 
         if (!inviteCodeDto) {
-            this.logger.error('Cannot find valid invite code for tenant with id: ', tenantId);
+            this.logger.error(
+                'Cannot find valid invite code for tenant with id: ',
+                tenantId
+            );
             throw new NotFoundException('Invite code not found');
         }
 
@@ -64,12 +68,12 @@ export class TenantController {
 
     @PostWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_CREATE_INVITE_CODE)
-    async createInviteCode(
-        @UserDecorator() { tenantId }: User,
-    ) {
-
+    async createInviteCode(@UserDecorator() { tenantId }: User) {
         if (await this.tenantService.getActiveInviteCodeByTenantId(tenantId)) {
-            this.logger.error('Valid code exists for tenant with id: ', tenantId);
+            this.logger.error(
+                'Valid code exists for tenant with id: ',
+                tenantId
+            );
             throw new BadRequestException('Valid code exists for tenant');
         }
 
@@ -77,6 +81,8 @@ export class TenantController {
     }
 
     // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
+
+
 
     @Get('tenants')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
@@ -88,20 +94,22 @@ export class TenantController {
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     getAllTenantsByPage(
         @Pageable() paging: Paging,
-        @Specifiable(TenantCriteria) specs: Specs<Tenant>,
+        @Specifiable(TenantCriteria) specs: Specs<Tenant>
     ) {
         return this.tenantService.getAllByPageWithSpecs(specs, paging);
     }
 
     @Get('tenants/invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_GET_ALL_INVITE_CODE)
-    async getActiveInviteCodeByTenant(
-        @Param('tenantId') id: Tenant['id'],
-    ) {
-        const inviteCodeDto = await this.tenantService.getActiveInviteCodeByTenantId(id);
+    async getActiveInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
+        const inviteCodeDto =
+            await this.tenantService.getActiveInviteCodeByTenantId(id);
 
         if (!inviteCodeDto) {
-            this.logger.error('Cannot find valid invite code for tenant with id: ', id);
+            this.logger.error(
+                'Cannot find valid invite code for tenant with id: ',
+                id
+            );
             throw new NotFoundException('Invite code not found');
         }
 
@@ -110,9 +118,7 @@ export class TenantController {
 
     @Get('tenants/:id')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
-    async getTenantById(
-        @Param('id', ParseUUIDPipe) id: Tenant['id'],
-    ) {
+    async getTenantById(@Param('id', ParseUUIDPipe) id: Tenant['id']) {
         const tenant = await this.tenantService.getById(id);
 
         if (!tenant) {
@@ -127,7 +133,8 @@ export class TenantController {
     @Public()
     @HttpCode(HttpStatus.OK)
     validateInviteCode(
-        @Body(new ZodValidationPipe(tenantInviteCodeSchema)) inviteCodeDto: TenantInviteCodeDto,
+        @Body(new ZodValidationPipe(tenantInviteCodeSchema))
+        inviteCodeDto: TenantInviteCodeDto
     ) {
         return this.tenantService.validateInviteCode(inviteCodeDto);
     }
@@ -135,18 +142,16 @@ export class TenantController {
     @Post('tenants')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     createTenant(
-        @Body(new ZodValidationPipe(createTenantSchema)) tenantDto: CreateTenantDto,
-        @UserDecorator() user: User,
+        @Body(new ZodValidationPipe(createTenantSchema))
+        tenantDto: CreateTenantDto,
+        @UserDecorator() user: User
     ) {
         return this.tenantService.create(tenantDto, user);
     }
 
     @Post('tenants/invite-code/:tenantId')
     @FeatureKeys(FeatureKey.TENANT_CREATE_ALL_INVITE_CODE)
-    async createInviteCodeByTenant(
-        @Param('tenantId') id: Tenant['id'],
-    ) {
-
+    async createInviteCodeByTenant(@Param('tenantId') id: Tenant['id']) {
         if (await this.tenantService.getActiveInviteCodeByTenantId(id)) {
             this.logger.error('Valid code exists for tenant with id: ', id);
             throw new BadRequestException('Valid code exists for tenant');
@@ -159,7 +164,8 @@ export class TenantController {
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     updateTenant(
         @Param('id', ParseUUIDPipe) id: Tenant['id'],
-        @Body(new ZodValidationPipe(updateTenantSchema)) tenantDto: UpdateTenantDto,
+        @Body(new ZodValidationPipe(updateTenantSchema))
+        tenantDto: UpdateTenantDto,
         @UserDecorator() user: User
     ) {
         return this.tenantService.update(tenantDto, id, user);
@@ -168,9 +174,7 @@ export class TenantController {
     @Delete('tenants/:id')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteTenant(
-        @Param('id', ParseUUIDPipe) id: Tenant['id'],
-    ) {
+    async deleteTenant(@Param('id', ParseUUIDPipe) id: Tenant['id']) {
         await this.tenantService.delete(id);
     }
 }
