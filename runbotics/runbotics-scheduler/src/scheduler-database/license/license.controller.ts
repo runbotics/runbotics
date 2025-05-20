@@ -32,6 +32,15 @@ export class LicenseController {
 
     // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
 
+
+    @GetWithTenant('licenses')
+    @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
+    getAllLicensesByTenant(
+        @Param('tenantId') tenantId: string
+    ) {
+        return this.licenseService.getAllLicensesByTenant(tenantId);
+    }
+
     @Post('licenses')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     createLicense(

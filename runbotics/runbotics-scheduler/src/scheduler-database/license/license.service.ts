@@ -37,7 +37,7 @@ export class LicenseService {
         return license;
     }
 
-    async countLicensesByTenant(tenantId: string): Promise<number> {
+    async countLicensesByTenant(tenantId: string) {
         const licenses = await this.licenseRepository.findBy({ tenantId });
 
         const resp = licenses.filter(this.isExpDateValid);

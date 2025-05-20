@@ -24,7 +24,6 @@ import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator'
 import { TenantCriteria } from './criteria/tenant.criteria';
 import { Tenant } from './tenant.entity';
 import { LicenseService } from '../license/license.service';
-import { GetTenantLicensesDto, getTenantLicensesSchema } from './dto/get-tenant-licenses.dto';
 
 @Controller('/api/scheduler')
 export class TenantController {
@@ -83,14 +82,7 @@ export class TenantController {
 
     // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
 
-    @Get('tenants')
-    @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
-    getAllLicensesByTenant(
-        @Body(new ZodValidationPipe(getTenantLicensesSchema))
-        tenantIdDto: GetTenantLicensesDto
-    ) {
-        return this.licenseService.getAllLicensesByTenant(tenantIdDto.tenantId);
-    }
+
 
     @Get('tenants')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
