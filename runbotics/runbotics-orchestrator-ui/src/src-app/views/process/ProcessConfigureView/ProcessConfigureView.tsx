@@ -40,6 +40,7 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const { draft: { process, processSubscriptions }, all: { loading } } = useSelector(processSelector);
     const { id } = useRouter().query;
     const processId = Number(id);
