@@ -16,6 +16,8 @@ import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 
+import { LicenseService } from '../license/license.service';
+
 const relations = ['createdByUser', 'emailTriggerWhitelist'];
 
 @Injectable()
@@ -25,6 +27,7 @@ export class TenantService {
     constructor(
         @InjectRepository(Tenant)
         private readonly tenantRepository: Repository<Tenant>,
+        private readonly licenseService: LicenseService,
         @InjectRepository(TenantInviteCode)
         private readonly inviteCodeRepository: Repository<TenantInviteCode>,
         @InjectRepository(EmailTriggerWhitelistItem)
@@ -43,27 +46,40 @@ export class TenantService {
         const options: FindManyOptions<Tenant> = {
             ...paging,
             ...specs,
-            relations
+            relations,
         };
 
         const page = await getPage(this.tenantRepository, options);
 
+        const contentWithLicenses = await Promise.all(
+            page.content.map(async (tenant) => {
+                return {
+                    ...tenant,
+                    createdByUser: {
+                        id: tenant.createdByUser.id,
+                        email: tenant.createdByUser.email,
+                    },
+
+                    activeLicenses:
+                        await this.licenseService.countLicensesByTenant(
+                            tenant.id
+                        ),
+                };
+            })
+        );
+
         return {
             ...page,
-            content: page.content.map(tenant => ({
-                ...tenant,
-                createdByUser: {
-                    id: tenant.createdByUser.id,
-                    email: tenant.createdByUser.email
-                }
-            })),
+            content: contentWithLicenses,
         };
     }
 
     async create(tenantDto: CreateTenantDto, requester: User): Promise<Tenant> {
-        const tenantByName = await this.tenantRepository.findOneBy({ name: tenantDto.name });
-        if (tenantByName) throw new BadRequestException('Name already exist', 'NameExist');
-
+        const tenantByName = await this.tenantRepository.findOneBy({
+            name: tenantDto.name,
+        });
+        if (tenantByName)
+            throw new BadRequestException('Name already exist', 'NameExist');
 
         const newTenant = new Tenant();
         newTenant.name = tenantDto.name;
@@ -78,15 +94,22 @@ export class TenantService {
         id: string,
         requester: User
     ): Promise<Tenant> {
-        const tenant = await this.tenantRepository.findOneByOrFail({ id })
+        const tenant = await this.tenantRepository
+            .findOneByOrFail({ id })
             .catch(() => {
                 this.logger.error('Cannot find tenant with id: ', id);
                 throw new BadRequestException('Tenant not found', 'NotFound');
             });
 
         if (tenantDto.name) {
-            const tenantByName = await this.tenantRepository.findOneBy({ name: tenantDto.name });
-            if (tenantByName) throw new BadRequestException('Name already exist', 'NameExist');
+            const tenantByName = await this.tenantRepository.findOneBy({
+                name: tenantDto.name,
+            });
+            if (tenantByName)
+                throw new BadRequestException(
+                    'Name already exist',
+                    'NameExist'
+                );
 
             tenant.name = tenantDto.name;
             tenant.lastModifiedBy = requester.email;
@@ -95,13 +118,14 @@ export class TenantService {
         if (tenantDto.emailTriggerWhitelist) {
             await this.emailTriggerWhitelistItem.delete({ tenantId: id });
 
-            const emailTriggerWhitelist = tenantDto.emailTriggerWhitelist
-                .map((whitelistItem) => {
+            const emailTriggerWhitelist = tenantDto.emailTriggerWhitelist.map(
+                (whitelistItem) => {
                     const item = new EmailTriggerWhitelistItem();
                     item.tenantId = id;
                     item.whitelistItem = whitelistItem;
                     return item;
-                });
+                }
+            );
 
             tenant.emailTriggerWhitelist = emailTriggerWhitelist;
             tenant.lastModifiedBy = requester.email;
@@ -113,62 +137,89 @@ export class TenantService {
     }
 
     async validateInviteCode(inviteCodeDto: TenantInviteCodeDto) {
-        const inviteCode = await this.inviteCodeRepository.findOneOrFail({
-            where: {
-                inviteId: inviteCodeDto.inviteCode,
-                expirationDate: MoreThanOrEqual(new Date())
-            },
-            relations: ['tenant']
-        }).catch(() => {
-            throw new BadRequestException('Invite code not valid or expired');
-        });
+        const inviteCode = await this.inviteCodeRepository
+            .findOneOrFail({
+                where: {
+                    inviteId: inviteCodeDto.inviteCode,
+                    expirationDate: MoreThanOrEqual(new Date()),
+                },
+                relations: ['tenant'],
+            })
+            .catch(() => {
+                throw new BadRequestException(
+                    'Invite code not valid or expired'
+                );
+            });
 
         return { tenantName: inviteCode.tenant.name };
     }
 
-    getActiveInviteCodeByTenantId(tenantId: string): Promise<TenantInviteCodeDto | null> {
-        return this.inviteCodeRepository.findOneBy({
-            tenantId,
-            expirationDate: MoreThanOrEqual(new Date())
-        }).then(inviteCode => inviteCode ? ({ inviteCode: inviteCode.inviteId }) : null);
+    getActiveInviteCodeByTenantId(
+        tenantId: string
+    ): Promise<TenantInviteCodeDto | null> {
+        return this.inviteCodeRepository
+            .findOneBy({
+                tenantId,
+                expirationDate: MoreThanOrEqual(new Date()),
+            })
+            .then((inviteCode) =>
+                inviteCode ? { inviteCode: inviteCode.inviteId } : null
+            );
     }
 
     async createInviteCodeByTenantId(tenantId: string) {
         const tenant = await this.tenantRepository
             .findOneByOrFail({ id: tenantId })
             .catch(() => {
-                throw new NotFoundException('Cannot find tenant with id: ', tenantId);
+                throw new NotFoundException(
+                    'Cannot find tenant with id: ',
+                    tenantId
+                );
             });
 
-        await this.inviteCodeRepository.findBy({
-            tenantId: tenant.id,
-            expirationDate: LessThan(new Date())
-        }).then(codes => {
-            if (codes.length > 0) {
-                this.inviteCodeRepository.delete([...codes.map(code => code.inviteId)]);
-                this.logger.log('Removed expired invite codes for tenant with id: ', tenant.id);
-            }
-        });
+        await this.inviteCodeRepository
+            .findBy({
+                tenantId: tenant.id,
+                expirationDate: LessThan(new Date()),
+            })
+            .then((codes) => {
+                if (codes.length > 0) {
+                    this.inviteCodeRepository.delete([
+                        ...codes.map((code) => code.inviteId),
+                    ]);
+                    this.logger.log(
+                        'Removed expired invite codes for tenant with id: ',
+                        tenant.id
+                    );
+                }
+            });
 
         const newInviteCode = {
             tenantId: tenant.id,
             creationDate: dayjs(),
-            expirationDate: dayjs().add(7, 'days')
+            expirationDate: dayjs().add(7, 'days'),
         };
 
-        return this.inviteCodeRepository.save(newInviteCode)
-            .then(inviteCode => ({ inviteCode: inviteCode.inviteId }));
+        return this.inviteCodeRepository
+            .save(newInviteCode)
+            .then((inviteCode) => ({ inviteCode: inviteCode.inviteId }));
     }
 
     async delete(tenantId: string) {
         await this.tenantRepository
-            .findOneByOrFail({ id: tenantId }).catch(() => {
-                throw new BadRequestException('Cannot find tenant with provided id', 'BadTenantID');
+            .findOneByOrFail({ id: tenantId })
+            .catch(() => {
+                throw new BadRequestException(
+                    'Cannot find tenant with provided id',
+                    'BadTenantID'
+                );
             });
 
-        await this.tenantRepository
-            .delete(tenantId).catch(() => {
-                throw new BadRequestException('Cannot delete tenant related to other resources', 'RelatedTenant');
-            });
+        await this.tenantRepository.delete(tenantId).catch(() => {
+            throw new BadRequestException(
+                'Cannot delete tenant related to other resources',
+                'RelatedTenant'
+            );
+        });
     }
 }
