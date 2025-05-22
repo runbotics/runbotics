@@ -13,23 +13,24 @@ import styles from './MarketplaceCartAccordion.module.scss';
 
 export const AccordionElement: FC<CartItem> = (offer) => {
     const { removeFromCart, updateCartItem } = useCart();
-    const updateParameter = (parameter: SelectedParameter) => {
+    const updateParameter = (parameter: SelectedParameter) => {      
         const newSelection = structuredClone(offer.selectedParameters);
-        const index = newSelection.findIndex(option => option.name === parameter.name);
-        newSelection[index] = parameter;
-        
-        if(!newSelection) {
+        const preSetParameterIndex = (newSelection ?? []).findIndex(option => option.name === parameter.name);
+
+        if(!newSelection || preSetParameterIndex < 0) {
             updateCartItem(offer.slug, {
-                selectedParameters: [parameter]
+                selectedParameters: [...(newSelection ?? []), parameter]
             });
             return;
         }
+
+        newSelection[preSetParameterIndex] = parameter;
+
         if (newSelection) {
             updateCartItem(offer.slug, {
                 selectedParameters: newSelection,
             });
         }
-
     };
     return (
         <Accordion className={styles.accordion}>
