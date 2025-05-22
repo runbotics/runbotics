@@ -1,13 +1,13 @@
-import { UserDto, NotificationBot, NotificationProcess } from 'runbotics-common';
+import { NotificationProcess } from 'runbotics-common';
 
-export interface ProcessNotificationRow {
-    id: string;
-    user: UserDto['email'];
-    subscribedAt: NotificationProcess['createdAt'];
+export enum NotificationTableFields {
+    EMAIL = 'userEmail',
+    ACTIONS = 'actions',
+    SUBSCRIBED_AT = 'subscribedAt'
 }
 
-export interface BotNotificationRow {
+export interface NotificationRow {
     id: string;
-    user: UserDto['email'];
-    subscribedAt: NotificationBot['createdAt'];
+    [NotificationTableFields.EMAIL]: string;
+    [NotificationTableFields.SUBSCRIBED_AT]: NotificationProcess['createdAt'];
 }

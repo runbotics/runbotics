@@ -5,6 +5,13 @@ export const isTenantAdmin = (user: User) => user.authorities.some(authority => 
 
 export const isAdmin = (user: User) => user.authorities.some(authority => authority.name === Role.ROLE_ADMIN);
 
+export const hasRole = (user: User, role: Role): boolean => {
+    const userRoles = user.authorities
+            .map((authority) => authority.name);
+
+    return userRoles.includes(role);
+};
+
 export const hasFeatureKey = (user: User, featureKey: FeatureKey) => {
     const userFeatureKeys = user.authorities
             .flatMap((authority) => authority.featureKeys)
