@@ -36,7 +36,6 @@ const ValidationSchedule = styled('div')(
 const ProcessRunView: FC = () => {
     const historyRef = useRef(null);
     const dispatch = useDispatch();
-    const router = useRouter();
     const { id } = useRouter().query;
     const processId = Number(id);
     const { process, loading } = useSelector((state) => state.process.draft);
