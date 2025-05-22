@@ -30,7 +30,6 @@ import { resolveCredentials } from './ProcessImportDialog.utils';
 
 const ProcessBuildView: FC = () => {
     const dispatch = useDispatch();
-    const router = useRouter();
     const { createRbexFile } = useProcessExport();
     const { enqueueSnackbar } = useSnackbar();
     const { id } = useRouter().query;
