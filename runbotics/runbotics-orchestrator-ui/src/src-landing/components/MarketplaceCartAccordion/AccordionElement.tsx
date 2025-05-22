@@ -54,7 +54,7 @@ export const AccordionElement: FC<CartItem> = (offer) => {
             </AccordionSummary>
             <AccordionDetails className={styles.accordionDetails}>
                 {
-                    offer.parameters.additionalParameters?.map(parameter => {
+                    offer.parameters?.additionalParameters?.map(parameter => {
                         const selectedParameter = offer.selectedParameters
                             ?.find(selected => selected.name === parameter.name);
                         const selectedOption = parameter.options
