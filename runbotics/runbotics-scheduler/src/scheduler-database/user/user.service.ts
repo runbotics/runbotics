@@ -136,6 +136,10 @@ export class UserService {
     async activate(activateDto: ActivateUserDto, id: number, executor: User) {
         const { roles, tenantId } = activateDto;
 
+        if (!isAdmin(executor) && executor.tenantId !== tenantId) {
+            throw new ForbiddenException();
+        }
+
         this.checkUpdateAllowedRole(executor, roles);
         const tenantRelation = await this.getTenantRelation(tenantId);
 
@@ -178,14 +182,18 @@ export class UserService {
     async update(userDto: UpdateUserDto, id: number, executor: User) {
         const { roles, tenantId, ...partialUser } = userDto;
 
+        if (!isAdmin(executor) && executor.tenantId !== tenantId) {
+            throw new ForbiddenException();
+        }
+
         this.checkUpdateAllowedRole(executor, roles);
         const tenantRelation = await this.getTenantRelation(tenantId);
 
         const authority = await (async () =>
             roles
                 ? await this.authorityRepository
-                      .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
-                      .then((auth) => ({ authorities: [auth] }))
+                    .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
+                    .then((auth) => ({ authorities: [auth] }))
                 : {})();
 
         const user = await this.userRepository
