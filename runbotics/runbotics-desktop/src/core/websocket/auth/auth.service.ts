@@ -9,11 +9,31 @@ import getBotSystem from '#utils/botSystem';
 @Injectable()
 export class AuthService {
     private readonly logger = new RunboticsLogger(AuthService.name);
-
+    private reauthenticateIntervalHandle: ReturnType<typeof setInterval> | null = null;
     constructor(
         private serverConfigService: ServerConfigService,
         private storageService: StorageService,
     ) { }
+
+    setupTokenRefreshingTask() {
+        this.clearTokenRefreshingTask();
+
+        this.reauthenticateIntervalHandle = setInterval(async () => {
+            this.logger.log('Refreshing credentials...');
+            try {
+                await this.getCredentials();
+            } catch(e) {
+                this.logger.error('Credential refreshing filed', e);
+            }
+        }, this.serverConfigService.authTokenRefreshSeconds * 1000);
+    }
+
+    clearTokenRefreshingTask() {
+        if (this.reauthenticateIntervalHandle !== null) {
+            clearInterval(this.reauthenticateIntervalHandle);
+            this.reauthenticateIntervalHandle = null;
+        }
+    }
 
     async getCredentials() {
         this.logger.log('=> Authenticating with server: ' + this.serverConfigService.entrypointUrl);
