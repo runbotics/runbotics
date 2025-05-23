@@ -24,7 +24,7 @@ export class AuthService {
             try {
                 await this.getCredentials();
             } catch(e) {
-                this.logger.error('Periodic credential refreshing filed', e);
+                this.logger.error('Periodic credential refreshing failed', e);
             }
         }, refreshEvery * 1000);
     }
