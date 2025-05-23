@@ -136,29 +136,12 @@ export class UserService {
     async activate(activateDto: ActivateUserDto, id: number, executor: User) {
         const { roles, tenantId } = activateDto;
 
-        if (!isAdmin(executor) && executor.tenantId !== tenantId) {
-            throw new ForbiddenException();
-        }
-
+        this.checkTenantAccess(tenantId, executor);
         this.checkUpdateAllowedRole(executor, roles);
+
         const tenantRelation = await this.getTenantRelation(tenantId);
-
-        const authority = await (async () =>
-            roles
-                ? await this.authorityRepository
-                    .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
-                    .then((auth) => ({ authorities: [auth] }))
-                : {})();
-
-        const user = await this.userRepository
-            .findOneByOrFail({
-                id,
-                ...(!isAdmin(executor) && { tenantId: executor.tenantId }),
-            })
-            .catch((err) => {
-                this.logger.error('Cannot find user with id: ', id, 'Error:', err);
-                throw new BadRequestException('User not found', 'NotFound');
-            });
+        const authority = await this.getAuthorityFromRoles(roles);
+        const user = await this.getUserForExecutorOrFail(id, executor);
 
         const updatedUserDto: PartialUserDto = {
             ...user,
@@ -182,29 +165,12 @@ export class UserService {
     async update(userDto: UpdateUserDto, id: number, executor: User) {
         const { roles, tenantId, ...partialUser } = userDto;
 
-        if (!isAdmin(executor) && executor.tenantId !== tenantId) {
-            throw new ForbiddenException();
-        }
-
+        this.checkTenantAccess(tenantId, executor);
         this.checkUpdateAllowedRole(executor, roles);
+
         const tenantRelation = await this.getTenantRelation(tenantId);
-
-        const authority = await (async () =>
-            roles
-                ? await this.authorityRepository
-                    .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
-                    .then((auth) => ({ authorities: [auth] }))
-                : {})();
-
-        const user = await this.userRepository
-            .findOneByOrFail({
-                id,
-                ...(!isAdmin(executor) && { tenantId: executor.tenantId }),
-            })
-            .catch(() => {
-                this.logger.error('Cannot find user with id: ', id);
-                throw new BadRequestException('User not found', 'NotFound');
-            });
+        const authority = await this.getAuthorityFromRoles(roles);
+        const user = await this.getUserForExecutorOrFail(id, executor);
 
         const isFirstActivation = partialUser.activated && !user.hasBeenActivated;
 
@@ -217,7 +183,9 @@ export class UserService {
             lastModifiedBy: executor.email,
         };
 
-        return this.userRepository.save(updatedUser).then(this.mapToUserDto);
+        const remoteUpdatedUser = await this.userRepository.save(updatedUser);
+        
+        return this.mapToUserDto(remoteUpdatedUser);
     }
 
     async delete(id: number) {
@@ -290,6 +258,33 @@ export class UserService {
                 .map((featureKey) => featureKey.name),
             roles: user.authorities.map((auth) => auth.name),
         };
+    }
+
+    private checkTenantAccess(tenantId: string, actionExecutor: User) {
+        if (!isAdmin(actionExecutor) && actionExecutor.tenantId !== tenantId) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private async getUserForExecutorOrFail(userId: number, executor: User) {
+        return await this.userRepository
+            .findOneByOrFail({
+                id: userId,
+                ...(!isAdmin(executor) && { tenantId: executor.tenantId }),
+            })
+            .catch(() => {
+                this.logger.error('Cannot find user with id: ', userId);
+                throw new BadRequestException('User not found', 'NotFound');
+            });
+    }
+
+    private async getAuthorityFromRoles(roles?: Role[]) {
+        return await (async () =>
+            roles
+                ? await this.authorityRepository
+                    .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
+                    .then((auth) => ({ authorities: [auth] }))
+                : {})();
     }
 
     private checkUpdateAllowedRole(user: User, roles: Role[]) {
