@@ -9,13 +9,38 @@ import getBotSystem from '#utils/botSystem';
 @Injectable()
 export class AuthService {
     private readonly logger = new RunboticsLogger(AuthService.name);
-
+    private reauthenticateIntervalHandle: ReturnType<typeof setInterval> | null = null;
     constructor(
         private serverConfigService: ServerConfigService,
         private storageService: StorageService,
     ) { }
 
+    setupTokenRefreshingTask() {
+        const refreshEvery = this.serverConfigService.authTokenRefreshSeconds;
+        this.logger.log(`Setting up token refresh every ${Math.round(refreshEvery)}s`);
+        this.clearTokenRefreshingTask();
+
+        this.reauthenticateIntervalHandle = setInterval(async () => {
+            try {
+                await this.getCredentials();
+            } catch(e) {
+                this.logger.error('Periodic credential refreshing failed', e);
+            }
+        }, refreshEvery * 1000);
+    }
+
+    clearTokenRefreshingTask() {
+        if (this.reauthenticateIntervalHandle !== null) {
+            clearInterval(this.reauthenticateIntervalHandle);
+            this.reauthenticateIntervalHandle = null;
+        }
+    }
+
     async getCredentials() {
+        if (this.reauthenticateIntervalHandle === null) {
+            this.setupTokenRefreshingTask();
+        }
+
         this.logger.log('=> Authenticating with server: ' + this.serverConfigService.entrypointUrl);
         orchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
         schedulerAxios.defaults.baseURL = this.serverConfigService.entrypointSchedulerUrl;
@@ -36,6 +61,7 @@ export class AuthService {
             });
 
         const token = response.data['id_token'];
+        
         orchestratorAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
         schedulerAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
         this.storageService.setValue('token', token);
