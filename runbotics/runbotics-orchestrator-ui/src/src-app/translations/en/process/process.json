@@ -260,6 +260,7 @@
     "Process.Details.Modeler.Actions.File.CreateFile.Label": "Create",
     "Process.Details.Modeler.Actions.File.CreateFile.FilePath": "File path (e.g. C://RunBotics/example.txt)",
     "Process.Details.Modeler.Actions.File.CreateFile.Conflict": "Conflict",
+    "Process.Details.Modeler.Actions.File.CreateFile.ConflictInfo": "To resolve a file conflict when a file already exists, you can handle the error, overwrite the existing file, or save the new file with a different name.",
     "Process.Details.Modeler.Actions.File.RemoveFile.Label": "Remove",
     "Process.Details.Modeler.Actions.File.RemoveFile.FilePath": "File path (e.g. C://RunBotics/example.txt)",
     "Process.Details.Modeler.Actions.File.ReadFile.Label": "Read",
