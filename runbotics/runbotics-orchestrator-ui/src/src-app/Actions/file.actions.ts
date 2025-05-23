@@ -102,6 +102,11 @@ const getFileActions = (): Record<string, IBpmnAction> => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
+                    path: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.File.CreateFile.FilePathInfo'),
+                        },
+                    },
                     conflict: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.File.CreateFile.ConflictInfo'),
