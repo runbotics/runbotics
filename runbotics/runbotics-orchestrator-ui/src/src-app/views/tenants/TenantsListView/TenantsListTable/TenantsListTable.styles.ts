@@ -17,5 +17,6 @@ export const DataGridStyle = {
     },
     '& .MuiDataGrid-cell:nth-of-type(6):hover': {
         backgroundColor: 'rgba(0,0,0,0.04)',
+        cursor: 'pointer',
     }
 };
