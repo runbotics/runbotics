@@ -6,8 +6,14 @@ import { Button, Divider, IconButton, Stack, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useSnackbar } from 'notistack';
 import { Controller, useForm } from 'react-hook-form';
 
+import { Tenant } from 'runbotics-common';
+
+import useTranslations from '#src-app/hooks/useTranslations';
+import { useDispatch } from '#src-app/store';
+import { createTenantPlugin, fetchTenantPlugins, updateTenantPlugin } from '#src-app/store/slices/Tenants/Tenants.thunks';
 import {
     PluginDrawerTitle, PluginsDrawer,
 } from '#src-app/views/tenants/TenantsListView/TenantPluginsDrawer/TenantPluginsView/TenantPluginsView.styles';
@@ -16,28 +22,64 @@ interface TenantPluginsEditProps {
     open: boolean,
     onClose: () => void,
     pluginData?: any,
+    tenantData: Tenant
 }
 
-interface PluginFormData {
-    id: string;
+export interface PluginFormData {
+    id?: string;
     pluginName: string;
     expDate: Date | null;
+    licenseKey: string;
     license: string;
+    tenantId: string;
 }
 
-const TenantPluginsEdit: VFC<TenantPluginsEditProps> = ({open, onClose, pluginData}) => {
+// eslint-disable-next-line max-lines-per-function
+const TenantPluginsEdit: VFC<TenantPluginsEditProps> = ({open, onClose, pluginData, tenantData}) => {
+    const dispatch = useDispatch();
+    const { translate } = useTranslations();
+    const { enqueueSnackbar } = useSnackbar();
     const { control, handleSubmit, reset } = useForm<PluginFormData>({
         defaultValues: {
-            id: '',
-            pluginName: '',
-            expDate: null,
-            license: '',
+            pluginName: pluginData?.pluginName || '',
+            tenantId: tenantData?.id || '',
+            licenseKey: pluginData?.licenseKey || '',
+            license: pluginData?.license || '',
+            expDate: pluginData?.expDate ?? null,
+            id: pluginData?.id,
         },
     });
-        
-    const onSubmit = (data) => {
-        console.log('Form data:', data);
-        reset();
+    
+    const onSubmit = async (data) => {
+        const formattedDate = new Date(data.expDate);
+        const formattedData = {
+            ...data,
+            expDate: formattedDate.toISOString().split('T')[0],
+        };
+
+        try{
+            if(data.id) {
+                await dispatch(updateTenantPlugin(formattedData)).unwrap();
+                enqueueSnackbar(translate('Tenants.List.Edit.Form.Event.Success'), {
+                    variant: 'success',
+                });
+            }
+            else {
+                await dispatch(createTenantPlugin(formattedData)).unwrap();
+                enqueueSnackbar(translate('Tenants.List.Edit.Form.Event.Success'), {
+                    variant: 'success',
+                });
+            }
+
+            dispatch(fetchTenantPlugins(tenantData.id));
+            onCloseDrawer();
+        }
+        catch (error) {
+            enqueueSnackbar(translate(error.errorKey), {
+                variant: 'error',
+            });
+            onCloseDrawer();
+        }
     };
     
     const onCloseDrawer = () => {
@@ -46,10 +88,15 @@ const TenantPluginsEdit: VFC<TenantPluginsEditProps> = ({open, onClose, pluginDa
     };
 
     useEffect(() => {
-        if(pluginData) {
-            reset(pluginData);
-        }
-    }, [pluginData, reset]);
+        reset({
+            pluginName: pluginData?.pluginName || '',
+            tenantId: tenantData?.id || '',
+            licenseKey: pluginData?.licenseKey || '',
+            license: pluginData?.license || '',
+            expDate: pluginData?.expDate ?? null,
+            id: pluginData?.id,
+        });
+    }, [pluginData, tenantData, reset]);
     
     return (
         <PluginsDrawer
@@ -67,7 +114,7 @@ const TenantPluginsEdit: VFC<TenantPluginsEditProps> = ({open, onClose, pluginDa
                     <IconButton onClick={onCloseDrawer}>
                         <ArrowBackIcon />
                     </IconButton>
-                    <PluginDrawerTitle>Activate new plugin</PluginDrawerTitle>
+                    {pluginData?.id ? (<PluginDrawerTitle>{translate('Tenant.Plugins.edit.editTitle') +  pluginData.pluginName}</PluginDrawerTitle>) : (<PluginDrawerTitle>{translate('Tenant.Plugins.edit.createTitle')}</PluginDrawerTitle>)}
                 </Stack>
                 <Divider />
                 <Divider />
@@ -75,16 +122,16 @@ const TenantPluginsEdit: VFC<TenantPluginsEditProps> = ({open, onClose, pluginDa
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <Stack spacing={2}>
-                                <Controller
+                                {!pluginData?.id && <Controller
                                     name="pluginName"
                                     control={control}
                                     rules={{
-                                        required: 'To pole jest wymagane',
+                                        required: translate('Tenant.Plugins.edit.required'),
                                     }}
                                     render={({ field, fieldState }) => (
                                         <TextField
                                             {...field}
-                                            label="Nazwa plugina"
+                                            label={translate('Tenant.Plugins.edit.pluginName')}
                                             error={!!fieldState.error}
                                             helperText={
                                                 fieldState.error?.message
@@ -92,16 +139,16 @@ const TenantPluginsEdit: VFC<TenantPluginsEditProps> = ({open, onClose, pluginDa
                                             fullWidth
                                         />
                                     )}
-                                />
+                                />}
                                 <Controller
                                     name="expDate"
                                     control={control}
                                     rules={{
-                                        required: 'To pole jest wymagane',
+                                        required: translate('Tenant.Plugins.edit.required'),
                                     }}
                                     render={({ field, fieldState }) => (
                                         <DatePicker
-                                            label="Data wygaśnięcia"
+                                            label={translate('Tenant.Plugins.edit.expDate')}
                                             value={field.value}
                                             onChange={field.onChange}
                                             renderInput={(params) => (
@@ -118,32 +165,48 @@ const TenantPluginsEdit: VFC<TenantPluginsEditProps> = ({open, onClose, pluginDa
                                         />
                                     )}
                                 />
-                                { !pluginData &&
-                                    <Controller
-                                        name="license"
-                                        control={control}
-                                        rules={{
-                                            required: 'To pole jest wymagane',
-                                        }}
-                                        render={({ field, fieldState }) => (
-                                            <TextField
-                                                {...field}
-                                                label="Licencja"
-                                                error={!!fieldState.error}
-                                                helperText={
-                                                    fieldState.error?.message
-                                                }
-                                                fullWidth
-                                            />
-                                        )}
-                                    />
-                                }
+                                <Controller
+                                    name="license"
+                                    control={control}
+                                    rules={{
+                                        required: translate('Tenant.Plugins.edit.required'),
+                                    }}
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            {...field}
+                                            label={translate('Tenant.Plugins.edit.license')}
+                                            error={!!fieldState.error}
+                                            helperText={
+                                                fieldState.error?.message
+                                            }
+                                            fullWidth
+                                        />
+                                    )}
+                                />
+                                <Controller
+                                    name="licenseKey"
+                                    control={control}
+                                    rules={{
+                                        required: translate('Tenant.Plugins.edit.required'),
+                                    }}
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            {...field}
+                                            label={translate('Tenant.Plugins.edit.licenseKey')}
+                                            error={!!fieldState.error}
+                                            helperText={
+                                                fieldState.error?.message
+                                            }
+                                            fullWidth
+                                        />
+                                    )}
+                                />
                                 <Button
                                     type="submit"
                                     variant="contained"
                                     fullWidth
                                 >
-                                    Submit
+                                    {translate('Tenant.Plugins.edit.Submit')}
                                 </Button>
                             </Stack>
                         </form>

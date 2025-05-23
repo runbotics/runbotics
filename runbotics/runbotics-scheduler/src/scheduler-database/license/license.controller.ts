@@ -1,6 +1,6 @@
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { Logger } from '#/utils/logger';
-import { Body, Controller, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { User } from '../user/user.entity';
 import { LicenseService } from './license.service';
 import { GetWithTenant } from '#/utils/decorators/with-tenant.decorator';
@@ -33,7 +33,7 @@ export class LicenseController {
     // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
 
 
-    @GetWithTenant('licenses')
+    @Get('tenants/:tenantId/licenses')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     getAllLicensesByTenant(
         @Param('tenantId') tenantId: string

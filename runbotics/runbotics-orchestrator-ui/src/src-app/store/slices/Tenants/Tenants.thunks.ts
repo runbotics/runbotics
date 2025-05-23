@@ -5,6 +5,7 @@ import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
 import { Page, PageRequestParams } from '#src-app/utils/types/page';
 import URLBuilder from '#src-app/utils/URLBuilder';
+import { PluginFormData } from '#src-app/views/tenants/TenantsListView/TenantPluginsDrawer/TenantPluginsEdit/TenantPluginsEdit';
 
 export type TenantRawBody = Omit<Tenant, 'emailTriggerWhitelist'> & {
     emailTriggerWhitelist: {
@@ -79,26 +80,42 @@ export const fetchTenantNameByInviteCode = createAsyncThunk<{ tenantName: string
             .catch((error) => rejectWithValue(error.response.data))
 );
 
-export const fetchTenantPlugins = createAsyncThunk<{ data: TenantPlugin[] }, string>(
+export const fetchTenantPlugins = createAsyncThunk<TenantPlugin[], string>(
     'tenants/fetchTenantPlugins',
-    (tenantId, { rejectWithValue }) =>
-        axios.get(`api/scheduler/tenants/fetchTenantPlugins/${tenantId}`)
-            .then(response => response.data)
-            .catch((error) => rejectWithValue(error.response.data))
+    async (tenantId, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(`/api/scheduler/tenants/${tenantId}/licenses`);
+            const plugins = response.data.map((plugin: any) => ({
+                ...plugin,
+                expDate: plugin.expDate ? new Date(plugin.expDate).toISOString() : null,
+            }));
+            return plugins;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
 );
 
-export const createTenantPlugin = createAsyncThunk<TenantPlugin, string>(
+export const createTenantPlugin = createAsyncThunk<TenantPlugin, PluginFormData>(
     'tenants/createTenantPlugin',
-    (tenantId, { rejectWithValue }) =>
-        axios.post(`api/scheduler/tenants/fetchTenantPlugins/${tenantId}`)
-            .then(response => response.data)
-            .catch((error) => rejectWithValue(error.response.data))
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('/api/scheduler/licenses', data);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
 );
 
-export const updateTenantPlugin = createAsyncThunk<TenantPlugin, string>(
+export const updateTenantPlugin = createAsyncThunk<TenantPlugin, PluginFormData>(
     'tenants/updateTenantPlugin',
-    (tenantId, { rejectWithValue }) =>
-        axios.patch(`api/scheduler/tenants/fetchTenantPlugins/${tenantId}`)
-            .then(response => response.data)
-            .catch((error) => rejectWithValue(error.response.data))
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await axios.patch(`/api/scheduler/licenses/${data.id}`, data);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
 );
