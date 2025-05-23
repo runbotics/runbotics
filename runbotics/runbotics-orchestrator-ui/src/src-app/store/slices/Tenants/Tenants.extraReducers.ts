@@ -12,7 +12,9 @@ import {
     getInviteCodeByTenantId,
     partialUpdate,
     fetchTenantNameByInviteCode,
-    TenantRawBody,
+    TenantRawBody, fetchTenantPlugins,
+    createTenantPlugin,
+    updateTenantPlugin,
 } from './Tenants.thunks';
 
 const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState>) => {
@@ -107,6 +109,49 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
         })
         .addCase(fetchTenantNameByInviteCode.rejected, (state) => {
             state.invitingTenant = null;
+        })
+    
+        // GET TENANT PLUGINS
+        .addCase(fetchTenantPlugins.pending, (state) => {
+            state.tenantPlugins.allPlugins.loading = true;
+            state.tenantPlugins.allPlugins.error = null;
+        })
+        .addCase(fetchTenantPlugins.fulfilled, (state, action) => {
+            state.tenantPlugins.allPlugins.loading = false;
+            state.tenantPlugins.allPlugins.error = null;
+            state.tenantPlugins.allPlugins.data = action.payload;
+        })
+        .addCase(fetchTenantPlugins.rejected, (state, action) => {
+            state.tenantPlugins.allPlugins.loading = false;
+            state.tenantPlugins.allPlugins.error = action.error.message || Error;
+        })
+
+        //ADD NEW PLUGIN LICENSE
+        .addCase(createTenantPlugin.pending, (state) => {
+            state.tenantPlugins.createPlugin.loading = true;
+            state.tenantPlugins.createPlugin.error = null;
+        })
+        .addCase(createTenantPlugin.fulfilled, (state) => {
+            state.tenantPlugins.createPlugin.loading = false;
+            state.tenantPlugins.createPlugin.error = null;
+        })
+        .addCase(createTenantPlugin.rejected, (state, action) => {
+            state.tenantPlugins.createPlugin.loading = true;
+            state.tenantPlugins.createPlugin.error = action.error.message || Error;
+        })
+
+        // UPDATE PLUGIN LICENSE EXPIRATION DATE
+        .addCase(updateTenantPlugin.pending, (state) => {
+            state.tenantPlugins.updatePlugin.loading = true;
+            state.tenantPlugins.updatePlugin.error = null;
+        })
+        .addCase(updateTenantPlugin.fulfilled, (state) => {
+            state.tenantPlugins.updatePlugin.loading = false;
+            state.tenantPlugins.updatePlugin.error = null;
+        })
+        .addCase(updateTenantPlugin.rejected, (state, action) => {
+            state.tenantPlugins.updatePlugin.loading = true;
+            state.tenantPlugins.updatePlugin.error = action.error.message || Error;
         });
 };
 

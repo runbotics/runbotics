@@ -1,5 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
-import { Link, IconButton } from '@mui/material';
+import WidgetsOutlinedIcon from '@mui/icons-material/WidgetsOutlined';
+import { Link, IconButton, Stack } from '@mui/material';
 import { GridColDef, GridValueFormatterParams } from '@mui/x-data-grid';
 import { BasicUserDto } from 'runbotics-common';
 
@@ -8,9 +9,8 @@ import { formatDate } from '#src-app/utils/dateFormat';
 
 import { TenantField } from '../../TenantsBrowseView/TenantsBrowseView.utils';
 
-const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => {
+const useTenantsListColumns = (pageSize, openTenantEditDialog, openTenantPluginDrawer): GridColDef[] => {
     const { translate } = useTranslations();
-
     return [
         {
             field: TenantField.NAME,
@@ -52,6 +52,23 @@ const useTenantsListColumns = (pageSize, openTenantEditDialog): GridColDef[] => 
             headerName: translate('Tenants.List.Table.Columns.LastModifiedBy'),
             filterable: false,
             flex: 0.5
+        },
+        {
+            field: TenantField.PLUGINS,
+            headerName: translate('Tenants.List.Table.Columns.Plugins'),
+            filterable: false,
+            flex: 0.5,
+            renderCell: (params) => (
+                <Stack 
+                    onClick={() => openTenantPluginDrawer(params.row)}
+                    direction='row' 
+                    spacing={1} 
+                    useFlexGap
+                >
+                    <WidgetsOutlinedIcon style={{ fontSize: '22px' }}/>
+                    <span>{ params.value }{translate('Tenants.List.Table.Columns.Plugins.Count')}</span>
+                </Stack>
+            )
         },
         {
             field: TenantField.EDIT,

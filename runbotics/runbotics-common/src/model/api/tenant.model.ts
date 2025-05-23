@@ -9,6 +9,7 @@ export interface Tenant {
     created?: string | null;
     updated?: string | null;
     lastModifiedBy?: string | null;
+    activePlugins?: number | null
 }
 
 export interface TenantInviteCode {
