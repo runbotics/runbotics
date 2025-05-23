@@ -16,16 +16,17 @@ export class AuthService {
     ) { }
 
     setupTokenRefreshingTask() {
+        const refreshEvery = this.serverConfigService.authTokenRefreshSeconds;
+        this.logger.log(`Setting up token refresh every ${Math.round(refreshEvery)}s`);
         this.clearTokenRefreshingTask();
 
         this.reauthenticateIntervalHandle = setInterval(async () => {
-            this.logger.log('Refreshing credentials...');
             try {
                 await this.getCredentials();
             } catch(e) {
-                this.logger.error('Credential refreshing filed', e);
+                this.logger.error('Periodic credential refreshing filed', e);
             }
-        }, this.serverConfigService.authTokenRefreshSeconds * 1000);
+        }, refreshEvery * 1000);
     }
 
     clearTokenRefreshingTask() {
@@ -36,6 +37,10 @@ export class AuthService {
     }
 
     async getCredentials() {
+        if (this.reauthenticateIntervalHandle === null) {
+            this.setupTokenRefreshingTask();
+        }
+
         this.logger.log('=> Authenticating with server: ' + this.serverConfigService.entrypointUrl);
         orchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
         schedulerAxios.defaults.baseURL = this.serverConfigService.entrypointSchedulerUrl;
@@ -56,6 +61,7 @@ export class AuthService {
             });
 
         const token = response.data['id_token'];
+        
         orchestratorAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
         schedulerAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
         this.storageService.setValue('token', token);
