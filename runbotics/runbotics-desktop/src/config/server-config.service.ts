@@ -65,7 +65,7 @@ export class ServerConfigService {
         }
         const parsedValue = parseInt(stringValue);
         if (isNaN(parsedValue)) {
-            throw new Error(`Filed to parse ${envVarName}; ${stringValue} is not a number`);
+            throw new Error(`Failed to parse ${envVarName}; ${stringValue} is not a number`);
         }
         return parsedValue;
     }
