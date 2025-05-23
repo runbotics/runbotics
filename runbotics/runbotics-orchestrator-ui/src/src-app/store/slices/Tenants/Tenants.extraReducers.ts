@@ -113,45 +113,45 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
     
         // GET TENANT PLUGINS
         .addCase(fetchTenantPlugins.pending, (state) => {
-            state.tenantPlugins.loading = true;
-            state.tenantPlugins.error = null;
+            state.tenantPlugins.allPlugins.loading = true;
+            state.tenantPlugins.allPlugins.error = null;
         })
         .addCase(fetchTenantPlugins.fulfilled, (state, action) => {
-            state.tenantPlugins.loading = false;
-            state.tenantPlugins.error = null;
-            state.tenantPlugins.data = [action.payload.data];
+            state.tenantPlugins.allPlugins.loading = false;
+            state.tenantPlugins.allPlugins.error = null;
+            state.tenantPlugins.allPlugins.data = action.payload;
         })
         .addCase(fetchTenantPlugins.rejected, (state, action) => {
-            state.tenantPlugins.loading = false;
-            state.tenantPlugins.error = action.error.message || Error;
+            state.tenantPlugins.allPlugins.loading = false;
+            state.tenantPlugins.allPlugins.error = action.error.message || Error;
         })
 
         //ADD NEW PLUGIN LICENSE
         .addCase(createTenantPlugin.pending, (state) => {
-            state.tenantPlugins.loading = true;
-            state.tenantPlugins.error = null;
+            state.tenantPlugins.createPlugin.loading = true;
+            state.tenantPlugins.createPlugin.error = null;
         })
         .addCase(createTenantPlugin.fulfilled, (state) => {
-            state.tenantPlugins.loading = false;
-            state.tenantPlugins.error = null;
+            state.tenantPlugins.createPlugin.loading = false;
+            state.tenantPlugins.createPlugin.error = null;
         })
         .addCase(createTenantPlugin.rejected, (state, action) => {
-            state.tenantPlugins.loading = true;
-            state.tenantPlugins.error = action.error.message || Error;
+            state.tenantPlugins.createPlugin.loading = true;
+            state.tenantPlugins.createPlugin.error = action.error.message || Error;
         })
 
         // UPDATE PLUGIN LICENSE EXPIRATION DATE
         .addCase(updateTenantPlugin.pending, (state) => {
-            state.tenantPlugins.loading = true;
-            state.tenantPlugins.error = null;
+            state.tenantPlugins.updatePlugin.loading = true;
+            state.tenantPlugins.updatePlugin.error = null;
         })
         .addCase(updateTenantPlugin.fulfilled, (state) => {
-            state.tenantPlugins.loading = false;
-            state.tenantPlugins.error = null;
+            state.tenantPlugins.updatePlugin.loading = false;
+            state.tenantPlugins.updatePlugin.error = null;
         })
         .addCase(updateTenantPlugin.rejected, (state, action) => {
-            state.tenantPlugins.loading = true;
-            state.tenantPlugins.error = action.error.message || Error;
+            state.tenantPlugins.updatePlugin.loading = true;
+            state.tenantPlugins.updatePlugin.error = action.error.message || Error;
         });
 };
 

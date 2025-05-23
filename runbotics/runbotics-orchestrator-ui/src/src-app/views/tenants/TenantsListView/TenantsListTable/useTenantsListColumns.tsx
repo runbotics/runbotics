@@ -11,7 +11,6 @@ import { TenantField } from '../../TenantsBrowseView/TenantsBrowseView.utils';
 
 const useTenantsListColumns = (pageSize, openTenantEditDialog, openTenantPluginDrawer): GridColDef[] => {
     const { translate } = useTranslations();
-
     return [
         {
             field: TenantField.NAME,
@@ -56,7 +55,7 @@ const useTenantsListColumns = (pageSize, openTenantEditDialog, openTenantPluginD
         },
         {
             field: TenantField.PLUGINS,
-            headerName: 'Plugins',
+            headerName: translate('Tenants.List.Table.Columns.Plugins'),
             filterable: false,
             flex: 0.5,
             renderCell: (params) => (
@@ -67,7 +66,7 @@ const useTenantsListColumns = (pageSize, openTenantEditDialog, openTenantPluginD
                     useFlexGap
                 >
                     <WidgetsOutlinedIcon style={{ fontSize: '22px' }}/>
-                    <span>{params.value ? params.value : 0} Active Plugins</span>
+                    <span>{ params.value }{translate('Tenants.List.Table.Columns.Plugins.Count')}</span>
                 </Stack>
             )
         },

@@ -13,9 +13,19 @@ const initialState: TenantsState = {
     inviteCode: null,
     invitingTenant: null,
     tenantPlugins: {
-        loading: false,
-        error: null,
-        data: null,
+        allPlugins: {
+            loading: false,
+            error: null,
+            data: [],
+        },
+        createPlugin: {
+            loading: false,
+            error: null,
+        },
+        updatePlugin: {
+            loading: false,
+            error: null,
+        }
     },
 };
 

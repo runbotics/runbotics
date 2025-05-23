@@ -121,7 +121,7 @@ const TenantsListView: VFC = () => {
                 openTenantEditDialog={openEditDialog}
                 openTenantPluginDrawer={openPluginDrawer}
             />
-            <TenantPluginsDrawer open={isPluginDrawerVisible} onClose={closePluginDrawer} />
+            <TenantPluginsDrawer open={isPluginDrawerVisible} onClose={closePluginDrawer} tenantData={tenantData} />
         </TablePagingProvider>
     );
 };
