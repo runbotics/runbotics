@@ -47,11 +47,11 @@ const ProcessMainViewManager: VFC = () => {
     useProcessQueueSocket();
 
     useEffect(() => {
-        if (!hasViewAccess) {
+        if (!hasViewAccess || Number.isNaN(processId)) {
             router.replace('/404');
         }
 
-        if (!Number.isNaN(processId) && draft.process?.id !== processId) {
+        if (draft.process?.id !== processId) {
             dispatch(processActions.fetchProcessById(processId))
                 .then(unwrapResult)
                 .catch((err: AxiosError & { statusCode?: number }) => {
@@ -60,8 +60,6 @@ const ProcessMainViewManager: VFC = () => {
                         router.replace(`/${status}`);
                     }
                 });
-        } else {
-            router.replace('/404');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId, tab, hasViewAccess]);
