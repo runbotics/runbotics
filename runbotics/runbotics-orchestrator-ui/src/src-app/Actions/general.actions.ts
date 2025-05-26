@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GeneralAction, ActionRegex } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';

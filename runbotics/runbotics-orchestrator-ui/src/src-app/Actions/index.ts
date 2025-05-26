@@ -57,4 +57,34 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getSQLActions(),
 };
 
-export default internalBpmnActions;
+const getInternalBpmnActions: () => Readonly<Record<string, IBpmnAction>> = () => ({
+    ...getLoopActions(),
+    ...getBeeOfficeActions(),
+    ...getSapActions(),
+    ...getApplicationActions(),
+    ...getGeneralActions(),
+    ...getVariablesActions(),
+    ...getFileActions(),
+    ...getFolderActions(),
+    ...getCsvActions(),
+    ...getCloudExcelActions(),
+    ...getCloudFileActions(),
+    ...getPowerPointActions(),
+    ...getBrowserActions(),
+    ...getJavascriptActions(),
+    ...getMailActions(),
+    ...getAsanaActions(),
+    ...getGoogleSheetsActions(),
+    ...getJiraCloudActions(),
+    ...getJiraServerActions(),
+    ...getApiActions(),
+    ...getExcelActions(),
+    ...getDesktopActions(),
+    ...getVisualBasicActions(),
+    ...getImageActions(),
+    ...getZipActions(),
+    ...getWindowsActions(),
+    ...getSQLActions(),
+});
+
+export {internalBpmnActions as default, getInternalBpmnActions};
