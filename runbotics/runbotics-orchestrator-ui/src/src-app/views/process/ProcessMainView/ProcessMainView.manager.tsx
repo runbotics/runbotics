@@ -49,6 +49,7 @@ const ProcessMainViewManager: VFC = () => {
     useEffect(() => {
         if (!hasViewAccess || Number.isNaN(processId)) {
             router.replace('/404');
+            return;
         }
 
         if (draft.process?.id !== processId) {
