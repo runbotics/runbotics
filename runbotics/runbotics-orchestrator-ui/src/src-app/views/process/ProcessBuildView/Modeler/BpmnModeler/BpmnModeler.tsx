@@ -2,7 +2,6 @@ import React, { useEffect, useImperativeHandle, useState } from 'react';
 
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
-import { PayloadAction } from '@reduxjs/toolkit';
 import BpmnIoModeler from 'bpmn-js/lib/Modeler';
 import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
 import i18n from 'i18next';
@@ -15,7 +14,6 @@ import 'react-resizable/css/styles.css';
 import InfoPanel from '#src-app/components/InfoPanel';
 import VariablesPanel from '#src-app/components/ProcessVariablesPanel/VariablesPanel';
 import ResizableDrawer from '#src-app/components/ResizableDrawer';
-import useCustomValidation from '#src-app/hooks/useCustomValidation';
 import useModelerListener, {
     isModelerSync,
 } from '#src-app/hooks/useModelerListener';
@@ -24,14 +22,10 @@ import useTranslations from '#src-app/hooks/useTranslations';
 import useUpdateEffect from '#src-app/hooks/useUpdateEffect';
 import ModelerProvider from '#src-app/providers/ModelerProvider';
 import { useDispatch, useSelector } from '#src-app/store';
-import { credentialsActions, credentialsSelector } from '#src-app/store/slices/Credentials';
 import {
     CommandStackInfo,
-    ModelerError,
-    ModelerErrorType,
     processActions,
     processSelector,
-    ProcessState,
 } from '#src-app/store/slices/Process';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { ProcessBuildTab } from '#src-app/types/sidebar';
@@ -46,7 +40,6 @@ import {
     ModelerProps,
     initializeBpmnDiagram,
     Wrapper,
-    setNoCredentialsSpecifiedError,
 } from '.';
 import { getBpmnModelerConfig } from './BpmnModeler.config';
 import ImportExportPanel from '../../ModelerPanels/ImportExportPanel';
@@ -217,11 +210,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         useEffect(() => {
             modelerRef.current = modeler;
         }, [modeler, offsetTop]);
-
-        useEffect(() => {
-            setNoCredentialsSpecifiedError(dispatch, definition, coveredCredentialTypes);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [definition, coveredCredentialTypes]);
 
         const handleSave = () => {
             recordItemClick({ itemName: CLICKABLE_ITEM.SAVE_BUTTON, sourcePage: identifyPageByUrl(pathname) });
