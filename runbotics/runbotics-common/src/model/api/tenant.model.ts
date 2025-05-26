@@ -20,3 +20,12 @@ export interface BasicTenantDto {
     id: string;
     name: string;
 }
+
+export interface TenantPlugin {
+    id: string;
+    pluginName: string;
+    tenantId: string;
+    licenseKey: string;
+    license: string;
+    expDate: string;
+}
