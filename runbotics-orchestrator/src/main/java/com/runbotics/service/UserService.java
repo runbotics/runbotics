@@ -562,16 +562,17 @@ public class UserService {
      * <p>
      * This is scheduled to get fired everyday, at 01:00 (am).
      */
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "0 * * * * *")
+    // @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         userRepository
-            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
-            .forEach(
-                user -> {
-                    log.debug("Deleting not activated user {}", user.getEmail());
-                    userRepository.delete(user);
-                }
-            );
+        .findAllByHasBeenActivatedIsFalseAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
+        .forEach(
+            user -> {
+                log.debug("Removing not activated user: {}", user.getEmail());
+                userRepository.delete(user);
+            }
+        );
     }
 
     /**
