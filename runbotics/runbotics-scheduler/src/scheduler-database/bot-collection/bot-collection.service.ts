@@ -207,7 +207,6 @@ export class BotCollectionService {
     }
 
     async findIdsForUser(user: User, specs: Specs<BotCollection>, paging: Paging) {
-        console.log('findIdsForUser');
         const options = this.getFindOptions(user, specs, paging);
         options.select = { id: true };
 
