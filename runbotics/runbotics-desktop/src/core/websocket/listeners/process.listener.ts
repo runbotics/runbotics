@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import {
     InjectIoClientProvider,
     IoClient,
@@ -91,17 +91,25 @@ export class ProcessListener {
 
             const { processId, input, ...rest } = data;
             const tenantId = this.storageService.getValue('tenantId');
+            console.log('tenantId', tenantId);
             const process = await schedulerAxios
                 .get<IProcess>(
                     `/api/scheduler/tenants/${tenantId}/processes/${processId}`
                 )
                 .then((response) => {
                     return response.data;
+                }).catch(e => {
+                    this.logger.log(`Error getting process id: ${e}`);
+                    throw new Error(`The process was not found in the tenant to which the bot is authenticated. Process id: ${processId}, bot tenant id: ${tenantId}`);
                 });
 
-            if (!process) {
-                throw new Error(`The process was not found in the tenant to which the bot is authenticated. Process id: ${processId}, bot tenant id: ${tenantId}`);
+            // TODO - error caused because ROLE_ADMIN still have PROCESS_COLLECTION_ALL_ACCESS and process get request does not catch error
+            // once admin role will have feature_keys related to process removed below can be deleted, to consider changing method for getting one process
+            if (!process.name) {
+                throw new ForbiddenException(`Bot user does not have access to the process. Process id: ${processId}`);
             }
+
+            this.logger.log(`Process name: ${process.name}`);
 
             this.logger.log('Starting process: ' + process.name);
 
