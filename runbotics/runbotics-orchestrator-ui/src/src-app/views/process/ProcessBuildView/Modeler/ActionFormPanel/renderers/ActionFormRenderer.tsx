@@ -33,13 +33,13 @@ const ActionFormRenderer: FC = () => {
         selectedAction.id === selectedElement.businessObject.actionId;
 
     const defaultUISchema = React.useMemo<UiSchema>(
-        () => getFormUiSchema(selectedElement, selectedAction),
+        () => getFormUiSchema(selectedElement),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [selectedAction.form.uiSchema, i18n.language]
     );
 
     const defaultSchema = React.useMemo<JSONSchema7>(
-        () => getFormSchema(selectedElement, selectedAction),
+        () => getFormSchema(selectedElement),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [selectedAction.form.schema, i18n.language]
     );

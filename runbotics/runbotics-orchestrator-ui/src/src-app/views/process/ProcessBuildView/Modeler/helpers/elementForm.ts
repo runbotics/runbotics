@@ -85,11 +85,9 @@ export const getFormData = (
 
 export const getFormSchema = (
     selectedElement: BPMNElement,
-    action?: IBpmnAction
 ): JSONSchema7 => {
     if (!selectedElement) return null;
-    let selectedAction = action;
-    selectedAction = getActionFromElement(selectedElement);
+    const selectedAction = getActionFromElement(selectedElement);
 
     const hasOutput = selectedAction?.form?.schema?.properties?.output;
 
@@ -128,11 +126,9 @@ export const getFormSchema = (
 
 export const getFormUiSchema = (
     selectedElement: BPMNElement,
-    action?: IBpmnAction
 ): UiSchema => {
     if (!selectedElement) return null;
-    let selectedAction = action;
-    selectedAction = getActionFromElement(selectedElement);
+    const selectedAction = getActionFromElement(selectedElement);
 
     const hasOutput = selectedAction.form?.schema?.properties?.output;
     const cloned = { ...selectedAction.form.uiSchema };

@@ -27,36 +27,6 @@ import getVisualBasicActions from './visualBasic.actions';
 import getWindowsActions from './windows.actions';
 import getZipActions from './zip.actions';
 
-const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
-    ...getLoopActions(),
-    ...getBeeOfficeActions(),
-    ...getSapActions(),
-    ...getApplicationActions(),
-    ...getGeneralActions(),
-    ...getVariablesActions(),
-    ...getFileActions(),
-    ...getFolderActions(),
-    ...getCsvActions(),
-    ...getCloudExcelActions(),
-    ...getCloudFileActions(),
-    ...getPowerPointActions(),
-    ...getBrowserActions(),
-    ...getJavascriptActions(),
-    ...getMailActions(),
-    ...getAsanaActions(),
-    ...getGoogleSheetsActions(),
-    ...getJiraCloudActions(),
-    ...getJiraServerActions(),
-    ...getApiActions(),
-    ...getExcelActions(),
-    ...getDesktopActions(),
-    ...getVisualBasicActions(),
-    ...getImageActions(),
-    ...getZipActions(),
-    ...getWindowsActions(),
-    ...getSQLActions(),
-};
-
 const getInternalBpmnActions: () => Readonly<Record<string, IBpmnAction>> = () => ({
     ...getLoopActions(),
     ...getBeeOfficeActions(),
@@ -86,5 +56,9 @@ const getInternalBpmnActions: () => Readonly<Record<string, IBpmnAction>> = () =
     ...getWindowsActions(),
     ...getSQLActions(),
 });
+
+const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
+    ...getInternalBpmnActions()
+};
 
 export {internalBpmnActions as default, getInternalBpmnActions};
