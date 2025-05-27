@@ -85,7 +85,7 @@ export class ProcessCrudService {
                 const newTag = await this.tagService.create(user, tag);
                 return newTag;
             })
-        ) as Tag[];
+        );
 
         const createdProcess = await this.processRepository.save(process);
 
