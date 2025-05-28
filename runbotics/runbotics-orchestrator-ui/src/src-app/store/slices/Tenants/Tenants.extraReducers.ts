@@ -12,7 +12,8 @@ import {
     getInviteCodeByTenantId,
     partialUpdate,
     fetchTenantNameByInviteCode,
-    TenantRawBody, fetchTenantPlugins,
+    TenantRawBody, 
+    fetchTenantPlugins,
     createTenantPlugin,
     updateTenantPlugin,
 } from './Tenants.thunks';
@@ -123,7 +124,7 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
         })
         .addCase(fetchTenantPlugins.rejected, (state, action) => {
             state.tenantPlugins.allPlugins.loading = false;
-            state.tenantPlugins.allPlugins.error = action.error.message || Error;
+            state.tenantPlugins.allPlugins.error = action.error.message;
         })
 
         //ADD NEW PLUGIN LICENSE
@@ -137,7 +138,7 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
         })
         .addCase(createTenantPlugin.rejected, (state, action) => {
             state.tenantPlugins.createPlugin.loading = true;
-            state.tenantPlugins.createPlugin.error = action.error.message || Error;
+            state.tenantPlugins.createPlugin.error = action.error.message;
         })
 
         // UPDATE PLUGIN LICENSE EXPIRATION DATE
@@ -151,7 +152,7 @@ const buildTenantsExtraReducers = (builder: ActionReducerMapBuilder<TenantsState
         })
         .addCase(updateTenantPlugin.rejected, (state, action) => {
             state.tenantPlugins.updatePlugin.loading = true;
-            state.tenantPlugins.updatePlugin.error = action.error.message || Error;
+            state.tenantPlugins.updatePlugin.error = action.error.message;
         });
 };
 

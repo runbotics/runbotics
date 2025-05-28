@@ -21,11 +21,3 @@ export interface BasicTenantDto {
     name: string;
 }
 
-export interface TenantPlugin {
-    id: string;
-    pluginName: string;
-    tenantId: string;
-    licenseKey: string;
-    license: string;
-    expDate: string;
-}

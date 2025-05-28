@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Tenant, TenantInviteCode, TenantPlugin } from 'runbotics-common';
+import { Tenant, TenantInviteCode, License } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
@@ -80,7 +80,7 @@ export const fetchTenantNameByInviteCode = createAsyncThunk<{ tenantName: string
             .catch((error) => rejectWithValue(error.response.data))
 );
 
-export const fetchTenantPlugins = createAsyncThunk<TenantPlugin[], string>(
+export const fetchTenantPlugins = createAsyncThunk<License[], string>(
     'tenants/fetchTenantPlugins',
     async (tenantId, { rejectWithValue }) => {
         try {
@@ -96,7 +96,7 @@ export const fetchTenantPlugins = createAsyncThunk<TenantPlugin[], string>(
     }
 );
 
-export const createTenantPlugin = createAsyncThunk<TenantPlugin, PluginFormData>(
+export const createTenantPlugin = createAsyncThunk<License, PluginFormData>(
     'tenants/createTenantPlugin',
     async (data, { rejectWithValue }) => {
         try {
@@ -108,7 +108,7 @@ export const createTenantPlugin = createAsyncThunk<TenantPlugin, PluginFormData>
     }
 );
 
-export const updateTenantPlugin = createAsyncThunk<TenantPlugin, PluginFormData>(
+export const updateTenantPlugin = createAsyncThunk<License, PluginFormData>(
     'tenants/updateTenantPlugin',
     async (data, { rejectWithValue }) => {
         try {
