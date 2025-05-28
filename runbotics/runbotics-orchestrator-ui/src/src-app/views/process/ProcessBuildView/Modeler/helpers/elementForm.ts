@@ -4,7 +4,8 @@ import { JSONSchema7 } from 'json-schema';
 
 import _ from 'lodash';
 
-import internalBpmnActions from '#src-app/Actions';
+
+import { getInternalBpmnActions } from '#src-app/Actions';
 import { IBpmnAction } from '#src-app/Actions/types';
 import { translate } from '#src-app/hooks/useTranslations';
 import store from '#src-app/store';
@@ -18,6 +19,9 @@ import {
 export const getActionFromElement = (
     selectedElement: BPMNElement
 ): IBpmnAction => {
+
+    const currentInternalBpmnActions = getInternalBpmnActions();
+
     const actionId = selectedElement
         ? selectedElement.businessObject.actionId
         : undefined;
@@ -27,7 +31,7 @@ export const getActionFromElement = (
         const { pluginBpmnActions } = store.getState().plugin;
         const externalAction = _.cloneDeep(externalBpmnActions[actionId]);
 
-        return externalAction || internalBpmnActions[actionId] || pluginBpmnActions[actionId];
+        return externalAction || currentInternalBpmnActions[actionId] || pluginBpmnActions[actionId];
     }
     return null;
 };
@@ -81,11 +85,9 @@ export const getFormData = (
 
 export const getFormSchema = (
     selectedElement: BPMNElement,
-    action?: IBpmnAction
 ): JSONSchema7 => {
     if (!selectedElement) return null;
-    let selectedAction = action;
-    if (!action) selectedAction = getActionFromElement(selectedElement);
+    const selectedAction = getActionFromElement(selectedElement);
 
     const hasOutput = selectedAction?.form?.schema?.properties?.output;
 
@@ -124,11 +126,9 @@ export const getFormSchema = (
 
 export const getFormUiSchema = (
     selectedElement: BPMNElement,
-    action?: IBpmnAction
 ): UiSchema => {
     if (!selectedElement) return null;
-    let selectedAction = action;
-    if (!action) selectedAction = getActionFromElement(selectedElement);
+    const selectedAction = getActionFromElement(selectedElement);
 
     const hasOutput = selectedAction.form?.schema?.properties?.output;
     const cloned = { ...selectedAction.form.uiSchema };
