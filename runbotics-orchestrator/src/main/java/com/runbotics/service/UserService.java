@@ -564,14 +564,9 @@ public class UserService {
      */
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
-        userRepository
-        .findAllByHasBeenActivatedIsFalseAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
-        .forEach(
-            user -> {
-                log.debug("Removing not activated user: {}", user.getEmail());
-                userRepository.delete(user);
-            }
-        );
+        var usersToRemove = userRepository
+            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS));
+        userRepository.deleteAll(usersToRemove);
     }
 
     /**
