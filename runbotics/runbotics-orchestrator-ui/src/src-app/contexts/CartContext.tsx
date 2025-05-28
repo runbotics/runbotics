@@ -28,6 +28,7 @@ export interface ContactFormValue {
 interface CartContextType {
     cart: CartItem[];
     contactFormValue: ContactFormValue;
+    resetFormValue: () => void;
     changeFormValue: (key: keyof ContactFormValue, value: string) => void;
     addToCart: (item: CartItem) => void;
     removeFromCart: (id: string) => void;
@@ -50,6 +51,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const [selectedCartItems, setSelectedCartItems] = useState<string[]>(cart.map(item => item.slug) ?? []);
     const {enqueueSnackbar} = useSnackbar();
     
+    const resetFormValue = () => {
+        setContactFormValue({
+            name: '',
+            email: '',
+            phone: '',
+            additionalInfo: '',
+        });
+    };
+
     const changeFormValue = (key: keyof ContactFormValue, value: string) => {
         setContactFormValue((prevState) => ({
             ...prevState,
@@ -95,6 +105,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         <CartContext.Provider value={{ 
             cart, 
             contactFormValue,
+            resetFormValue,
             changeFormValue,  
             addToCart, 
             removeFromCart,

@@ -23,7 +23,7 @@ const SNACKBAR_AUTOHIDE_DURATION = 5000;
 const MarketplaceCartView: FC = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
-    const { cart, contactFormValue, selectedCartItems} = useCart();
+    const { cart, contactFormValue, selectedCartItems, resetFormValue} = useCart();
 
     const fullPrice = cart.filter(item => selectedCartItems.includes(item.slug))
         .reduce(
@@ -72,6 +72,7 @@ const MarketplaceCartView: FC = () => {
                     variant: 'success',
                     autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
                 });
+                resetFormValue();
             })
             .catch(() => {
                 enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
