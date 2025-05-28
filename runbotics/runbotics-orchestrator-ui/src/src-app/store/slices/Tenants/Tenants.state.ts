@@ -1,4 +1,4 @@
-import { Tenant, TenantPlugin } from 'runbotics-common';
+import { License, Tenant } from 'runbotics-common';
 
 import { Page } from '#src-app/utils/types/page';
 
@@ -11,16 +11,16 @@ export interface TenantsState {
     tenantPlugins: {
         allPlugins: {
             loading: boolean;
-            error: string | ErrorConstructor;
-            data: TenantPlugin[];
+            error: string | null,
+            data: License[];
         },
         createPlugin: {
             loading: boolean;
-            error: string | ErrorConstructor;
+            error: string | null;
         },
         updatePlugin: {
             loading: boolean;
-            error: string | ErrorConstructor;
+            error: string | null;
         },
     };
 }

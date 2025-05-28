@@ -1,6 +1,6 @@
 import { useState, VFC } from 'react';
 
-import { Tenant, TenantPlugin } from 'runbotics-common';
+import { License, Tenant } from 'runbotics-common';
 
 import TenantPluginsEdit
     from '#src-app/views/tenants/TenantsListView/TenantPluginsDrawer/TenantPluginsEdit/TenantPluginsEdit';
@@ -14,21 +14,21 @@ interface TenantPluginsDrawerProps {
 }
 
 const TenantPluginsDrawer: VFC<TenantPluginsDrawerProps> = ({open, onClose, tenantData}) => {
-    const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-    const [pluginData, setPluginData] = useState<TenantPlugin>();
+    const [isEditDrawerOpen, setEditDrawerOpen] = useState(false);
+    const [pluginData, setPluginData] = useState<License>();
     
-    const openEditDrawer = (data?) => {
+    const openEditDrawer = (data?: License) => {
         setPluginData(
             {
                 ...data,
                 tenantId: tenantData.id,
             }
         );
-        setIsEditDrawerOpen(true);
+        setEditDrawerOpen(true);
     };
 
     const closeEditDrawer = () => {
-        setIsEditDrawerOpen(false);
+        setEditDrawerOpen(false);
         setPluginData(null);
     };
     

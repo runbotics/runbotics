@@ -49,9 +49,9 @@ const TenantPluginsView: VFC<TenantPluginsViewProps> = ({
         if (!expDateStr) return false;
         const expDate = parseISO(expDateStr);
         const today = new Date();
-        const inTwoWeeks = addDays(today, 14);
+        const expPeriod = addDays(today, 14);
         return (isAfter(expDate, today) || isSameDay(expDate, today)) &&
-            (isBefore(expDate, inTwoWeeks) || isSameDay(expDate, inTwoWeeks));
+            (isBefore(expDate, expPeriod) || isSameDay(expDate, expPeriod));
     };
 
     const getBadgeText = (expired: boolean, expiringSoon: boolean) => {
@@ -82,11 +82,11 @@ const TenantPluginsView: VFC<TenantPluginsViewProps> = ({
                     </PluginBadge>
                     <Typography
                         variant="h5"
-                        style={{ color: expired ? '#aaa' : undefined }}
+                        style={{ color: expired ? 'grey.A400' : undefined }}
                     >
                         {plugin.pluginName}
                     </Typography>
-                    {<PluginExpDate style={{ color: expired ? '#aaa' : undefined }}>
+                    {<PluginExpDate expired={expired}>
                         {translate('Tenant.Plugins.View.Expiration.Date')}
                         <PluginDate expired={expired} expiringSoon={expiringSoon}>
                             {displayDate}

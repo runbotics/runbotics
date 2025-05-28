@@ -1,49 +1,60 @@
 import { Drawer, Stack } from '@mui/material';
+import { grey, red, amber } from '@mui/material/colors';
 import styled from 'styled-components';
 
 export const PluginDrawerTitle = styled('h4')(({theme}) => ({
     padding: '16px 24px',
-    fontFamily: 'Roboto',
+    fontFamily: theme.typography.fontFamily,
     fontSize: theme.typography.pxToRem(20),
     fontWeight: 500,
 }));
 
-export const PluginExpDate = styled('p')(() => ({
-    fontFamily: 'Roboto',
-    fontSize: '14px',
+export const PluginExpDate = styled('p')<{expired?: boolean}>(({expired, theme}) => ({
+    fontFamily: theme.typography.fontFamily,
+    fontSize: theme.typography.pxToRem(14),
     fontWeight: 400,
+    color: expired ? grey.A400 : 'inherit',
 }));
 
 export const PluginDate = styled('span')<{
     expired?: boolean;
     expiringSoon?: boolean;
-}>`
-    fontFamily: 'Roboto';
-    fontSize: '14px';
-    fontWeight: 400;
-    color: ${({ expired, expiringSoon }) =>
-        // eslint-disable-next-line no-nested-ternary
-        expired ? '#aaa' : expiringSoon ? '#863034' : 'inherit'};
-`;
+}>(({ theme, expired, expiringSoon }) => ({
+    fontFamily: theme.typography.fontFamily,
+    fontSize: theme.typography.pxToRem(14),
+    fontWeight: 400,
+    // eslint-disable-next-line no-nested-ternary
+    color: expired
+        ? grey.A400
+        : expiringSoon
+            ? theme.palette.error.main
+            : 'inherit',
+}));
 
 export const PluginBadge = styled('span')<{
     expired?: boolean;
     expiringSoon?: boolean;
-}>`
-    font-family: Roboto;
-    font-size: 0.75rem;
-    font-weight: 500;
-    align-self: flex-start;
-    padding: 2px 10px;
-    border-radius: 12px;
-    margin-bottom: 4px;
-    background-color: ${({ expired, expiringSoon }) =>
-        // eslint-disable-next-line no-nested-ternary
-        expired ? '#F5F5F5' : expiringSoon ? '#FDEDED' : '#FBB04014'};
-    color: ${({ expired, expiringSoon }) =>
-        // eslint-disable-next-line no-nested-ternary
-        expired ? 'rgba(0,0,0,0.3)' : expiringSoon ? '#863034' : '#E4A03A'};
-`;
+}>(({ expired, expiringSoon, theme }) => ({
+    fontFamily: theme.typography.fontFamily,
+    fontSize: theme.typography.pxToRem(14),
+    fontWeight: 400,
+    alignSelf: 'flex-start',
+    padding: '2px 10px',
+    borderRadius: '12px',
+    marginBottom: '4px',
+    // eslint-disable-next-line no-nested-ternary
+    backgroundColor: expired
+        ? grey[100]
+        : expiringSoon
+            ? red[100]
+            : amber[100],
+    // eslint-disable-next-line no-nested-ternary
+    color: expired
+        ? 'rgba(0,0,0,0.3)'
+        : expiringSoon
+            ? red[800]
+            : amber[800],
+}));
 
 export const PluginsDrawer = styled(Drawer)(() => ({
     '& .MuiDrawer-paperAnchorRight': {
@@ -51,9 +62,9 @@ export const PluginsDrawer = styled(Drawer)(() => ({
     },
 }));
 
-export const PluginActivateButton = styled(Stack)(() => ({
-    fontFamily: 'Roboto',
-    fontSize: '14px',
+export const PluginActivateButton = styled(Stack)(({theme}) => ({
+    fontFamily: theme.typography.fontFamily,
+    fontSize: theme.typography.pxToRem(14),
     fontWeight: 400,
     cursor: 'pointer',
     
