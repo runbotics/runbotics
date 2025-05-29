@@ -6,12 +6,14 @@ import { RuntimeService } from './bpm/runtime';
 import { ActionModule } from '#action';
 import { RuntimeSubscriptionsService } from './websocket/bpmn/runtime-subscriptions.service';
 import { LoopHandlerService } from './bpm/loop-handler';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
     imports: [
         forwardRef(() => ActionModule),
         forwardRef(() => WebsocketModule),
+        forwardRef(() => AuthModule),
     ],
     providers: [
         RuntimeService,

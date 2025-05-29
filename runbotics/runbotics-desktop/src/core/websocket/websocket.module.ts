@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { IoClientModule } from 'nestjs-io-client';
-import { AuthService } from './auth/auth.service';
+import { WebSocketAuthService } from './auth/webSocketAuth.service';
 
 import { ConfigModule, ServerConfigService } from '#config';
 import { CoreModule } from '#core';
@@ -12,20 +12,22 @@ import { WebsocketService } from './websocket.service';
 import { MessageQueueService } from './queue/message-queue.service';
 import { LoopHandlerService } from '#core/bpm/loop-handler';
 import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.service';
+import { AuthModule } from '#core/auth/auth.module';
 
 
 @Module({
     imports: [
+        AuthModule,
         IoClientModule.forRootAsync({
-            imports: [ConfigModule],
-            providers: [AuthService],
-            inject: [ServerConfigService, AuthService],
-            useFactory: async (config: ServerConfigService, auth: AuthService) => {
+            imports: [ConfigModule, AuthModule],
+            providers: [WebSocketAuthService],
+            inject: [ServerConfigService, WebSocketAuthService],
+            useFactory: async (config: ServerConfigService, auth: WebSocketAuthService) => {
                 const logger = new RunboticsLogger(WebsocketModule.name);
                 const schedulerServer = new URL(config.entrypointSchedulerUrl);
                 const wsUrl = `${schedulerServer.protocol == 'https:' ? 'wss' : 'ws'}://${schedulerServer.host}`;
                 logger.log(`Connecting with Scheduler (url: ${wsUrl})`);
-                const credentials = await auth.getCredentials();
+                const credentials = await auth.getWebSocketCredentials();
                 return {
                     uri: wsUrl,
                     options: {
@@ -42,7 +44,7 @@ import { RuntimeSubscriptionsService } from './bpmn/runtime-subscriptions.servic
         forwardRef(() => CoreModule),
     ],
     providers: [
-        AuthService,
+        WebSocketAuthService,
         ProcessListener,
         WebsocketLogsService,
         LoopHandlerService,
