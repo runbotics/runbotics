@@ -1,4 +1,4 @@
-import { orchestratorAxios, schedulerAxios, ServerConfigService, StorageService } from '#config';
+import { ServerConfigService, StorageService } from '#config';
 import { RunboticsLogger } from '#logger';
 import getBotSystem from '#utils/botSystem';
 import { Injectable } from '@nestjs/common';
@@ -114,11 +114,6 @@ export class AuthService {
 
         const collection = this.serverConfigService.collection;
         this.logger.log('Collection: ' + collection);
-
-        orchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
-        schedulerAxios.defaults.baseURL = this.serverConfigService.entrypointSchedulerUrl;
-        orchestratorAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        schedulerAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
         const tokenData: TokenData = {
             expiresAt: decodedToken.exp ?? 0,
