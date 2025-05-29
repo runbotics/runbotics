@@ -71,6 +71,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     private String resetKey;
 
+    @Column(name = "has_been_activated")
+    private boolean hasBeenActivated = false;
+
     @Column(name = "reset_date")
     private Instant resetDate = null;
 
@@ -153,6 +156,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.activated = activated;
     }
 
+    public boolean isHasBeenActivated() { return hasBeenActivated; }
+
+    public void setHasBeenActivated(boolean hasBeenActivated ) { this.hasBeenActivated = hasBeenActivated; }
+
     public String getActivationKey() {
         return activationKey;
     }
@@ -227,6 +234,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", email='" + email + '\'' +
             ", imageUrl='" + imageUrl + '\'' +
             ", activated='" + activated + '\'' +
+            ", hasBeenActivated='" + hasBeenActivated + '\'' +
             ", langKey='" + langKey + '\'' +
             ", activationKey='" + activationKey + '\'' +
             ", tenantId=" + (tenant != null ? tenant.getId() : "") +
