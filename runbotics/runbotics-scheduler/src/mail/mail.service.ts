@@ -97,7 +97,10 @@ export class MailService {
                 allSubscriptions :
                 allSubscriptions.filter(subscription => disconnectedBot.collection.users.some(user => user.id === subscription.user.id));
 
-        const targetEmails = targetSubscribers.map(subscription => this.extractTargetEmailFromNotification(subscription));
+        const targetEmails = targetSubscribers
+            .map(subscription => this.extractTargetEmailFromNotification(subscription))
+            .filter(email => !!email);
+
         await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...targetEmails]);
     }
 
@@ -118,7 +121,9 @@ export class MailService {
             allSubscriptions
                 .filter(sub => hasRole(sub.user, Role.ROLE_ADMIN) || hasRole(sub.user, Role.ROLE_TENANT_ADMIN));
 
-        const targetEmails = filteredSubscriptions.map(subscription => this.extractTargetEmailFromNotification(subscription));
+        const targetEmails = filteredSubscriptions
+            .map(subscription => this.extractTargetEmailFromNotification(subscription))
+            .filter(email => !!email);
 
         await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...targetEmails]);
     }
@@ -179,6 +184,6 @@ export class MailService {
     }
 
     private extractTargetEmailFromNotification(notification: NotificationBot | NotificationProcess) {
-        return notification.customEmail || notification.user.email;
+        return notification.customEmail || notification.user?.email || '';
     }
 }
