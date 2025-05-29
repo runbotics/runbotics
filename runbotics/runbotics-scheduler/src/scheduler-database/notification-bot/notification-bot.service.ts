@@ -1,10 +1,9 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
-import { Role } from 'runbotics-common';
+import { CreateNotificationBotDto, Role } from 'runbotics-common';
 
 import { NotificationBot } from './notification-bot.entity';
-import { CreateNotificationBotDto } from './dto/create-notification-bot.dto';
 
 import { User } from '#/scheduler-database/user/user.entity';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
@@ -44,14 +43,14 @@ export class NotificationBotService {
             createNotificationBotDto.botId, user
         );
 
-        if (createNotificationBotDto.email && !isTenantAdmin(user)) {
+        if (createNotificationBotDto.customEmail && !isTenantAdmin(user)) {
             throw new ForbiddenException();
         }
 
         const newNotification = new NotificationBot();
         newNotification.bot = bot;
         newNotification.user = user;
-        newNotification.customEmail = createNotificationBotDto.email ?? '';
+        newNotification.customEmail = createNotificationBotDto.customEmail ?? '';
         newNotification.type = createNotificationBotDto.type;
 
         return this.notificationBotRepository

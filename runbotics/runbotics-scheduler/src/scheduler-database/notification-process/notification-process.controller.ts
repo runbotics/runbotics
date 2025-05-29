@@ -5,8 +5,9 @@ import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
 
-import { CreateNotificationProcessDto, createNotificationProcessSchema } from './dto/create-notification-process.dto';
+import { createNotificationProcessSchema } from './dto/create-notification-process.dto';
 import { NotificationProcessService } from './notification-process.service';
+import { CreateNotificationProcessDto } from 'runbotics-common';
 
 
 @UseInterceptors(TenantInterceptor)

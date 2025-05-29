@@ -5,8 +5,9 @@ import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
 
-import { createNotificationBotSchema, CreateNotificationBotDto } from './dto/create-notification-bot.dto';
+import { createNotificationBotSchema } from './dto/create-notification-bot.dto';
 import { NotificationBotService } from './notification-bot.service';
+import { CreateNotificationBotDto } from 'runbotics-common';
 
 
 

@@ -4,9 +4,9 @@ import { Repository } from 'typeorm';
 
 import { User } from '#/scheduler-database/user/user.entity';
 import { NotificationProcess } from './notification-process.entity';
-import { CreateNotificationProcessDto } from './dto/create-notification-process.dto';
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { isTenantAdmin } from '#/utils/authority.utils';
+import { CreateNotificationProcessDto } from 'runbotics-common';
 
 @Injectable()
 export class NotificationProcessService {
@@ -40,14 +40,14 @@ export class NotificationProcessService {
             createNotificationProcessDto.processId, user
         );
 
-        if (createNotificationProcessDto.email && !isTenantAdmin(user)) {
+        if (createNotificationProcessDto.customEmail && !isTenantAdmin(user)) {
             throw new ForbiddenException();
         }
 
         const newNotification = new NotificationProcess();
         newNotification.process = process;
         newNotification.user = user;
-        newNotification.customEmail = createNotificationProcessDto.email ?? '';
+        newNotification.customEmail = createNotificationProcessDto.customEmail ?? '';
         newNotification.type = createNotificationProcessDto.type;
 
         return this.notificationProcessRepository
