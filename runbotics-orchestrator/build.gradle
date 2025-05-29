@@ -86,17 +86,6 @@ springBoot {
     mainClassName = "com.runbotics.RunboticsApp"
 }
 
-task setVersion {
-    doLast {
-        group = 'Versioning'
-        description = "Sets the version to the specified parameter -PnewVersion=\'x.x.x\'"
-        if(project.hasProperty('newVersion')) {
-            String s=buildFile.getText().replaceFirst(/version = \".+\"/, "version = \"" + newVersion + "\"")
-            buildFile.setText(s)
-        }
-    }
-}
-
 test {
     useJUnitPlatform()
     exclude "**/*IT*", "**/*IntTest*"
