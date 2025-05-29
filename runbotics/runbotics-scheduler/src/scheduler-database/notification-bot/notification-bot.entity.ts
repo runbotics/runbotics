@@ -21,7 +21,7 @@ export class NotificationBot {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @Column({ type: 'varchar', nullable: false, default: '', length: 256 })
+    @Column({ type: 'varchar', nullable: false, default: '', length: 256, name: 'custom_email' })
     customEmail: string;
 
     @ManyToOne(() => BotEntity, { nullable: false, onDelete: 'CASCADE' })

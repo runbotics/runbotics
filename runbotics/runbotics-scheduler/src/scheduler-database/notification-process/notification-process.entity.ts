@@ -21,7 +21,7 @@ export class NotificationProcess {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @Column({ type: 'varchar', nullable: false, default: '', length: 256 })
+    @Column({ type: 'varchar', nullable: false, default: '', length: 256, name: 'custom_email' })
     customEmail: string;
 
     @ManyToOne(() => ProcessEntity, { nullable: false, onDelete: 'CASCADE' })
