@@ -1,14 +1,14 @@
 import { ServerConfigService, StorageService } from '#config';
 import { RunboticsLogger } from '#logger';
 import getBotSystem from '#utils/botSystem';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import Axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { v4 as uuidv4 } from 'uuid';
 import { TokenData } from './auth.types';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnApplicationBootstrap {
     private readonly logger = new RunboticsLogger(AuthService.name);
     private reauthenticateIntervalHandle: ReturnType<typeof setInterval> | null = null;
     private readonly authOrchestratorAxios = Axios.create({ maxRedirects: 0 });
@@ -19,6 +19,10 @@ export class AuthService {
         private readonly storageService: StorageService,
     ) { 
         this.authOrchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
+    }
+
+    onApplicationBootstrap() {
+        this.setupTokenRefreshingTask();
     }
 
     setupTokenRefreshingTask() {
