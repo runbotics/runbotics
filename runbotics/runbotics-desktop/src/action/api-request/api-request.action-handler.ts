@@ -1,53 +1,22 @@
 import Axios, { AxiosResponse } from 'axios';
 import fs from 'fs';
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import mimeTypes from 'mime-types';
 import { v4 as uuid } from 'uuid';
 
-import { StorageService, orchestratorAxios } from '#config';
+import { StorageService } from '#config';
 import { RunboticsLogger } from '#logger';
 
 import { ApiDownloadFileOutput, ApiRequestActionRequest, ApiRequestInput, ApiRequestOutput } from '.';
 
 @Injectable()
-export default class ApiRequestActionHandler extends StatelessActionHandler implements OnApplicationBootstrap {
+export default class ApiRequestActionHandler extends StatelessActionHandler {
     private logger = new RunboticsLogger(ApiRequestActionHandler.name);
 
     constructor(private storageService: StorageService) {
         super();
     }
-
-    async onApplicationBootstrap() {
-        await this.asyncInit();
-    }
-
-    public asyncInit = async () => {
-        const setupAxiosInterceptors = (onUnauthenticated: any) => {
-            const onRequestSuccess = async (config: any) => {
-                const token = this.storageService.getValue('token');
-                if (!config.headers.Authorization && token) {
-                    config.headers.Authorization = `Bearer ${token}`;
-                }
-                return config;
-            };
-            const onResponseSuccess = (response: any) => response;
-            const onResponseError = (err: any) => {
-                const status = err.status || (err.response ? err.response.status : 0);
-                if (status === 403 || status === 401) {
-                    onUnauthenticated();
-                }
-                return Promise.reject(err);
-            };
-            orchestratorAxios.interceptors.request.use(onRequestSuccess);
-            orchestratorAxios.interceptors.response.use(onResponseSuccess, onResponseError);
-        };
-
-        await setupAxiosInterceptors(() => {
-            this.logger.error('Unauthenticated', 'BackgroundPageApiRequestHandler');
-        });
-        return;
-    };
 
     private request = async <T>(input: ApiRequestInput): Promise<ApiRequestOutput<T>> => {
         let response: AxiosResponse | undefined;
