@@ -8,3 +8,9 @@ export interface NotificationBot {
     type: NotificationBotType;
     createdAt: string;
 }
+
+export type CreateNotificationBotDto = { 
+    botId: number, 
+    type: NotificationBotType, 
+    customEmail?: string 
+}

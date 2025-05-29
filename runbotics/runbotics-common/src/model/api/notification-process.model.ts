@@ -8,3 +8,9 @@ export interface NotificationProcess {
     type: NotificationProcessType;
     createdAt: string;
 }
+
+export type CreateNotificationProcessDto = { 
+    processId: number, 
+    type: NotificationProcessType, 
+    customEmail?: string 
+}
