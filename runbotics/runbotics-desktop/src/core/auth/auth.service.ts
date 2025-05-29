@@ -1,29 +1,41 @@
-import { Injectable } from '@nestjs/common';
-import { RunboticsLogger } from '../../../logger/RunboticsLogger';
-import { ServerConfigService } from '../../../config/server-config.service';
-import { StorageService } from '../../../config/storage.service';
-import { orchestratorAxios, schedulerAxios } from '../../../config/axios-configuration';
-import { v4 as uuidv4 } from 'uuid';
+import { orchestratorAxios, schedulerAxios, ServerConfigService, StorageService } from '#config';
+import { RunboticsLogger } from '#logger';
 import getBotSystem from '#utils/botSystem';
+import { Injectable } from '@nestjs/common';
+import Axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { v4 as uuidv4 } from 'uuid';
+
+export type TokenData = {
+    token: string,
+    expiresAt: number,
+    tenantId: string,
+    installationId: string
+}
 
 @Injectable()
 export class AuthService {
     private readonly logger = new RunboticsLogger(AuthService.name);
     private reauthenticateIntervalHandle: ReturnType<typeof setInterval> | null = null;
+    private readonly authOrchestratorAxios = Axios.create({ maxRedirects: 0 });
+    private tokenData: TokenData | null = null;
+
     constructor(
-        private serverConfigService: ServerConfigService,
-        private storageService: StorageService,
-    ) { }
+        private readonly serverConfigService: ServerConfigService,
+        private readonly storageService: StorageService,
+    ) { 
+        this.authOrchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
+    }
 
     setupTokenRefreshingTask() {
         const refreshEvery = this.serverConfigService.authTokenRefreshSeconds;
-        this.logger.log(`Setting up token refresh every ${Math.round(refreshEvery)}s`);
+        this.logger.log(`Setting up token refresh every ${refreshEvery}s`);
         this.clearTokenRefreshingTask();
 
         this.reauthenticateIntervalHandle = setInterval(async () => {
             try {
-                await this.getCredentials();
-            } catch(e) {
+                await this.authenticate();
+            } catch (e) {
                 this.logger.error('Periodic credential refreshing failed', e);
             }
         }, refreshEvery * 1000);
@@ -36,15 +48,26 @@ export class AuthService {
         }
     }
 
-    async getCredentials() {
+    async getValidTokenData(): Promise<TokenData> {
+        const now = Date.now() / 1000;
+        const leeway = this.serverConfigService.autoTokenRefreshLeewaySeconds;
+
+        if (!this.tokenData || (leeway >= 0 && now + leeway > this.tokenData.expiresAt)) await this.authenticate();
+
+        const token = this.tokenData;
+        if (!token) throw new Error('Authenticate filed to set token');
+
+        return { ...token };
+    }
+
+    private async authenticate(): Promise<TokenData> {
         if (this.reauthenticateIntervalHandle === null) {
             this.setupTokenRefreshingTask();
         }
 
         this.logger.log('=> Authenticating with server: ' + this.serverConfigService.entrypointUrl);
-        orchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
-        schedulerAxios.defaults.baseURL = this.serverConfigService.entrypointSchedulerUrl;
-        const response = await orchestratorAxios.post(
+
+        const response = await this.authOrchestratorAxios.post(
             '/api/authenticate',
             {
                 username: this.serverConfigService.credentials.username,
@@ -60,21 +83,25 @@ export class AuthService {
                 throw error;
             });
 
-        const token = response.data['id_token'];
-        
-        orchestratorAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        schedulerAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        this.storageService.setValue('token', token);
+        const token: string = response.data['id_token'];
 
-        const authUser = await orchestratorAxios.get<{ tenant: { id: string } }>('/api/account')
+        const decodedToken = jwtDecode(token);
+        const authUser = await this.authOrchestratorAxios.get<{ tenant: { id: string } }>('/api/account', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(res => res.data)
             .catch((error) => {
                 this.logger.error('<= Error getting user from server: ' + this.serverConfigService.entrypointSchedulerUrl, error);
                 throw error;
             });
+
+        this.storageService.setValue('token', token);
         this.storageService.setValue('tenantId', authUser.tenant.id);
 
         const installationId = await this.getInstallationId();
+
         this.logger.log('<= Authenticated with server: ' + this.serverConfigService.entrypointUrl);
 
         this.logger.log('Installation ID: ' + installationId);
@@ -88,18 +115,25 @@ export class AuthService {
         const collection = this.serverConfigService.collection;
         this.logger.log('Collection: ' + collection);
 
-        return {
-            token,
-            installationId,
-            system,
-            collection,
-            version,
+        orchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
+        schedulerAxios.defaults.baseURL = this.serverConfigService.entrypointSchedulerUrl;
+        orchestratorAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
+        schedulerAxios.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+        const tokenData: TokenData = {
+            expiresAt: decodedToken.exp ?? 0,
+            token: token,
+            tenantId: authUser.tenant.id,
+            installationId: installationId,
         };
+
+        this.tokenData = tokenData;
+        return tokenData;
     }
 
-    async getInstallationId() {
+    private async getInstallationId() {
         const response = this.storageService.getValue('installationId');
-        let installationId;
+        let installationId: string;
         if (response && response['installationId']) {
             installationId = response['installationId'];
         } else if (this.serverConfigService.installationId) {

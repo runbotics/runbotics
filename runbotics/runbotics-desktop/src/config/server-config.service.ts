@@ -70,6 +70,19 @@ export class ServerConfigService {
         return parsedValue;
     }
 
+    get autoTokenRefreshLeewaySeconds(): number {
+        const envVarName = 'RUNBOTICS_AUTO_REFRESH_AUTH_TOKEN_LEEWAY_SECONDS';
+        const stringValue = this.getEnvValue(envVarName);
+        if(stringValue === undefined) {
+            return 60 * 60 * 24; // 1 day
+        }
+        const parsedValue = parseInt(stringValue);
+        if (isNaN(parsedValue)) {
+            throw new Error(`Failed to parse ${envVarName}; ${stringValue} is not a number`);
+        }
+        return parsedValue;
+    }
+
     get credentials(): Credentials {
         const username = this.argumentsService.getFlagValue(flagNames.USERNAME) || this.getEnvValue('RUNBOTICS_USERNAME');
         const password = this.argumentsService.getFlagValue(flagNames.PASSWORD) || this.getEnvValue('RUNBOTICS_PASSWORD');

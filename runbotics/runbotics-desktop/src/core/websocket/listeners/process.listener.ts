@@ -14,7 +14,7 @@ import { RuntimeService } from '#core/bpm/runtime';
 import { RunboticsLogger } from '#logger';
 import { delay, SECOND } from '#utils';
 
-import { AuthService } from '../auth/auth.service';
+import { WebSocketAuthService } from '../auth/webSocketAuth.service';
 import { StartProcessMessageBody, KeepAliveStatus } from './process.listener.types';
 import { initKeepAliveStatus } from './process.listener.utils';
 import { MessageQueueService, Message } from '../queue/message-queue.service';
@@ -28,7 +28,7 @@ export class ProcessListener {
     constructor(
         @InjectIoClientProvider() private readonly io: IoClient,
         private readonly runtimeService: RuntimeService,
-        private readonly authService: AuthService,
+        private readonly authService: WebSocketAuthService,
         private readonly queueService: MessageQueueService,
         private readonly websocketService: WebsocketService,
         private readonly storageService: StorageService,
@@ -74,7 +74,7 @@ export class ProcessListener {
         this.clearKeepAliveInterval();
         this.logger.error('Scheduler connection has been closed: ', reason);
         await delay(5 * SECOND);
-        this.io.auth = await this.authService.getCredentials();
+        this.io.auth = await this.authService.getWebSocketCredentials();
         this.io.connect();
     }
 
