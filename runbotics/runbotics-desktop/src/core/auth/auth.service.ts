@@ -5,13 +5,7 @@ import { Injectable } from '@nestjs/common';
 import Axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { v4 as uuidv4 } from 'uuid';
-
-export type TokenData = {
-    token: string,
-    expiresAt: number,
-    tenantId: string,
-    installationId: string
-}
+import { TokenData } from './auth.types';
 
 @Injectable()
 export class AuthService {

@@ -2,14 +2,7 @@ import { AuthService } from '#core/auth/auth.service';
 import getBotSystem from '#utils/botSystem';
 import { Injectable } from '@nestjs/common';
 import { ServerConfigService } from '../../../config/server-config.service';
-
-export type WebSocketAuthData = {
-    token: string
-    installationId: string
-    system: string
-    collection: string
-    version: string
-}
+import { WebSocketAuthData } from './webSocketAuth.types';
 
 @Injectable()
 export class WebSocketAuthService {
