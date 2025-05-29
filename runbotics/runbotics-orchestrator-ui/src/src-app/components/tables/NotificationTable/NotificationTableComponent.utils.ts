@@ -4,9 +4,3 @@ export enum DefaultPageValue {
     PAGE_SIZE = 10,
     PAGE = 0,
 }
-
-export enum SubscribersTableFields {
-    USER = 'user',
-    SUBSCRIBED_AT = 'subscribedAt',
-    ACTIONS = 'actions',
-};
