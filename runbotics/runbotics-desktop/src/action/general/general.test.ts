@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import GeneralActionHandler from './general.action-handler';
 import { RuntimeService } from '../../core/bpm/runtime';
 import { StorageService } from '#config';
+import { RequestService } from '#core/auth/request.service';
 
 describe ('GeneralActionHandler', () => {
     let generalActionHandler: GeneralActionHandler;
@@ -10,6 +11,10 @@ describe ('GeneralActionHandler', () => {
         const module = await Test.createTestingModule({
             providers: [
                 GeneralActionHandler,
+                {
+                    provide: RequestService,
+                    useValue: {}
+                },
                 {
                     provide: RuntimeService,
                     useValue: {}
