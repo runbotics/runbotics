@@ -21,8 +21,4 @@ export class RequestService {
             }
         });
     }
-    
-    async getExternalAxios() {
-        return Axios.create({ maxRedirects: 0 });
-    }
 }
