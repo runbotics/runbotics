@@ -2,15 +2,23 @@ import React, { useEffect, useMemo, useState, VFC } from 'react';
 
 import { Box, Dialog } from '@mui/material';
 import { useRouter } from 'next/router';
-import { IBotSystem, IBotCollection, NotificationProcess, NotificationProcessType } from 'runbotics-common';
+import {
+    IBotSystem,
+    IBotCollection,
+    NotificationProcess,
+    NotificationProcessType,
+    Role,
+} from 'runbotics-common';
 
 import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.model';
 
 import NotificationSwitchComponent from '#src-app/components/tables/NotificationTable/NotificationSwitchComponent';
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
-import { ProcessNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
+import { NotificationRow, NotificationTableFields } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
 import useProcessNotificationColumns from '#src-app/components/tables/NotificationTable/useProcessNotificationColumns';
+import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import { translate } from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
@@ -22,6 +30,7 @@ import { processActions, processSelector } from '#src-app/store/slices/Process';
 
 import { processOutputActions } from '#src-app/store/slices/ProcessOutput';
 
+import AddEmailSubscriptionComponent from './AddEmailSubscriptionComponent';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
 import ProcessAttendedComponent from './ProcessAttended.component';
@@ -40,13 +49,18 @@ import ProcessTriggerableComponent from './ProcessTriggerableComponent';
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
     const dispatch = useDispatch();
-    const { draft: { process, processSubscriptions }, all: { loading } } = useSelector(processSelector);
+    const {
+        draft: { process, processSubscriptions },
+        all: { loading },
+    } = useSelector(processSelector);
     const { id } = useRouter().query;
     const processId = Number(id);
 
-    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(process?.output);
+    const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(
+        process?.output
+    );
     const [selectedBotSystem, setSelectedBotSystem] = useState<IBotSystem>(
-        process?.system,
+        process?.system
     );
     const [selectedBotCollection, setSelectedBotCollection] =
         useState<IBotCollection>(process?.botCollection);
@@ -56,17 +70,28 @@ const ProcessConfigureView: VFC = () => {
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
 
-    const notificationTableColumns = useProcessNotificationColumns({ onDelete: handleDeleteSubscription });
+    const notificationTableColumns = useProcessNotificationColumns({
+        onDelete: handleDeleteSubscription,
+    });
 
-    const notificationTableRows = useMemo(() => processSubscriptions
-        .map<ProcessNotificationRow>((sub: NotificationProcess) => ({
-            id: sub.id,
-            user: sub.user.email,
-            subscribedAt: sub.createdAt,
-        })), [processSubscriptions]);
+    const hasAddMailPermission = useRole([Role.ROLE_TENANT_ADMIN]);
 
+    const notificationTableRows = useMemo(
+        () =>
+            processSubscriptions.map<NotificationRow>(
+                (sub: NotificationProcess) => ({
+                    id: sub.id,
+                    [NotificationTableFields.EMAIL]: sub.customEmail || sub.user.email,
+                    [NotificationTableFields.SUBSCRIBED_AT]: sub.createdAt,
+                })
+            ),
+        [processSubscriptions]
+    );
+    
     const handleGetProcessSubscribers = async () => {
-        await dispatch(processActions.getProcessSubscriptionInfo({ resourceId: processId }));
+        await dispatch(
+            processActions.getProcessSubscriptionInfo({ resourceId: processId })
+        );
     };
 
     useEffect(() => {
@@ -94,20 +119,33 @@ const ProcessConfigureView: VFC = () => {
     };
 
     const handleSelectProcessOutputType = async (output: ProcessOutput) => {
-        await dispatch(processActions.updateProcessOutputType({ resourceId: process.id, payload: { output } }));
+        await dispatch(
+            processActions.updateProcessOutputType({
+                resourceId: process.id,
+                payload: { output },
+            })
+        );
         setProcessOutputType(output);
         await fetchProcess();
     };
 
     const handleSelectBotSystem = async (system: IBotSystem) => {
-        await dispatch(processActions.updateBotSystem({ resourceId: process.id, payload: { system } }));
+        await dispatch(
+            processActions.updateBotSystem({
+                resourceId: process.id,
+                payload: { system },
+            })
+        );
         setSelectedBotSystem(system);
         await fetchProcess();
     };
 
     const handleSelectBotCollection = async (botCollection: IBotCollection) => {
         await dispatch(
-            processActions.updateBotCollection({ resourceId: process.id, payload: { botCollection } }),
+            processActions.updateBotCollection({
+                resourceId: process.id,
+                payload: { botCollection },
+            })
         );
         setSelectedBotCollection(botCollection);
         await fetchProcess();
@@ -115,7 +153,10 @@ const ProcessConfigureView: VFC = () => {
 
     const handleAttendanceChange = async (isAttended: boolean) => {
         await dispatch(
-            processActions.updateAttendance({ resourceId: process.id, payload: { isAttended } }),
+            processActions.updateAttendance({
+                resourceId: process.id,
+                payload: { isAttended },
+            })
         );
         setAttended(isAttended);
         await fetchProcess();
@@ -123,26 +164,58 @@ const ProcessConfigureView: VFC = () => {
 
     const handleTriggerableChange = async (isTriggerable: boolean) => {
         await dispatch(
-            processActions.updateTriggerable({ resourceId: process.id, payload: { isTriggerable } }),
+            processActions.updateTriggerable({
+                resourceId: process.id,
+                payload: { isTriggerable },
+            })
         );
         setTriggerable(isTriggerable);
         await fetchProcess();
     };
 
-    const handleSubscriptionChange = async (subscriptionState: boolean) => {
+    const handleOwnSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
-            ? await dispatch(processActions.subscribeProcessNotifications({
-                payload: { processId, type: NotificationProcessType.PROCESS_ERROR },
-            }))
-            : await dispatch(processActions.unsubscribeProcessNotifications({
-                resourceId: processSubscriptions.find(sub => sub.user.id === user.id).id,
-            }));
+            ? await dispatch(
+                processActions.subscribeProcessNotifications({
+                    payload: {
+                        processId,
+                        type: NotificationProcessType.PROCESS_ERROR,
+                    },
+                })
+            )
+            : await dispatch(
+                processActions.unsubscribeProcessNotifications({
+                    resourceId: processSubscriptions.find(
+                        (sub) => sub.user.id === user.id && !sub.customEmail
+                    ).id,
+                })
+            );
 
         await handleGetProcessSubscribers();
     };
 
-    async function handleDeleteSubscription(subscriptionInfo: ProcessNotificationRow) {
-        await dispatch(processActions.unsubscribeProcessNotifications({ resourceId: subscriptionInfo.id }));
+    const handleCustomEmailSubscription = async (customEmail: string) => {
+        await dispatch(
+            processActions.subscribeProcessNotifications({
+                payload: {
+                    processId,
+                    type: NotificationProcessType.PROCESS_ERROR,
+                    customEmail,
+                },
+            })
+        );
+
+        await handleGetProcessSubscribers();
+    };
+
+    async function handleDeleteSubscription(
+        subscriptionInfo: NotificationRow
+    ) {
+        await dispatch(
+            processActions.unsubscribeProcessNotifications({
+                resourceId: subscriptionInfo.id,
+            })
+        );
         await handleGetProcessSubscribers();
     }
 
@@ -194,8 +267,8 @@ const ProcessConfigureView: VFC = () => {
                         <StyledPaper>
                             <NotificationSwitchComponent
                                 onClick={() => setOpen(true)}
-                                isSubscribed={processSubscriptions.some(sub => sub.user.id === user.id)}
-                                onSubscriptionChange={handleSubscriptionChange}
+                                isSubscribed={processSubscriptions.some((sub) => sub.user.id === user.id && !sub.customEmail)}
+                                onSubscriptionChange={handleOwnSubscriptionChange}
                                 label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
                                 tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
                             />
@@ -210,7 +283,7 @@ const ProcessConfigureView: VFC = () => {
             </PageContainer>
             <Dialog
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={() => setOpen(false)} 
                 maxWidth={false}
             >
                 <NotificationTableComponent
@@ -219,6 +292,9 @@ const ProcessConfigureView: VFC = () => {
                     onClose={() => setOpen(false)}
                     loading={loading}
                 />
+                <If condition={hasAddMailPermission}>
+                    <AddEmailSubscriptionComponent onEmailAdd={handleCustomEmailSubscription} />
+                </If>
             </Dialog>
         </ContainerWrapper>
     );

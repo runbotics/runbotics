@@ -38,6 +38,7 @@
     "Bot.Details.Tabs.Logs.TabName": "Logi",
     "Bot.Details.Tabs.Configure.TabName": "Konfiguruj",
 
+    "Bot.Edit.Table.Columns.Email": "Email",
     "Bot.Edit.Table.Columns.User": "Użytkownik",
     "Bot.Edit.Table.Columns.SubscribedAt": "Zasubskrybowano",
     "Bot.Edit.Table.Columns.Actions": "Akcje",

@@ -4,9 +4,9 @@ import {
     IProcess,
     Tag,
     NotificationProcess,
-    NotificationProcessType,
     ProcessCredentialDto,
     ProcessDto,
+    CreateNotificationProcessDto,
 } from 'runbotics-common';
 
 import { Socket } from 'socket.io-client';
@@ -139,7 +139,7 @@ export const deleteProcess = ApiTenantResource.delete<number>('process/delete', 
 export const getTagsByName = ApiTenantResource.get<Tag[]>('tags/getByName', TAGS_PATH);
 
 export const subscribeProcessNotifications = ApiTenantResource
-    .post<NotificationProcess, { processId: number, type: NotificationProcessType }>
+    .post<NotificationProcess, CreateNotificationProcessDto>
     ('processes/subscribeProcessNotifications', PROCESS_NOTIFICATION_PATH);
 
 export const unsubscribeProcessNotifications = ApiTenantResource

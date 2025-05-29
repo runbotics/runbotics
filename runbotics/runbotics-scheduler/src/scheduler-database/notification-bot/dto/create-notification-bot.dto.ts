@@ -3,7 +3,6 @@ import { NotificationBotType } from 'runbotics-common';
 
 export const createNotificationBotSchema = z.object({
     botId: z.number(),
-    type: z.nativeEnum(NotificationBotType)
-}).required();
-
-export type CreateNotificationBotDto = z.infer<typeof createNotificationBotSchema>;
+    type: z.nativeEnum(NotificationBotType),
+    customEmail: z.string().optional(),
+});
