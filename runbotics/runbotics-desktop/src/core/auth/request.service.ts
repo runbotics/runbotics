@@ -21,18 +21,7 @@ export class RequestService {
             }
         });
     }
-
-    async getOrchestratorAxios() {
-        const authToken = await this.authService.getValidTokenData();
-
-        return Axios.create({
-            maxRedirects: 0,
-            headers: {
-                Authorization: `Bearer ${authToken}`
-            }
-        });
-    }
-
+    
     async getExternalAxios() {
         return Axios.create({ maxRedirects: 0 });
     }
