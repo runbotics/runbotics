@@ -179,6 +179,6 @@ export class MailService {
     }
 
     private extractTargetEmailFromNotification(notification: NotificationBot | NotificationProcess) {
-        return notification.email || notification.user.email;
+        return notification.customEmail || notification.user.email;
     }
 }

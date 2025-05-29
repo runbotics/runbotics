@@ -47,7 +47,7 @@ export class NotificationBotService {
         const newNotification = new NotificationBot();
         newNotification.bot = bot;
         newNotification.user = user;
-        newNotification.email = createNotificationBotDto.email ?? '';
+        newNotification.customEmail = createNotificationBotDto.email ?? '';
         newNotification.type = createNotificationBotDto.type;
 
         return this.notificationBotRepository
@@ -73,7 +73,7 @@ export class NotificationBotService {
                 throw new BadRequestException('Cannot delete bot notification');
             });
 
-        if (notification.email && !isTenantAdmin(user)) {
+        if (notification.customEmail && !isTenantAdmin(user)) {
             throw new ForbiddenException();
         }
 
@@ -89,7 +89,7 @@ export class NotificationBotService {
                 id: notificationBot.user.id,
                 email: notificationBot.user.email
             },
-            customEmail: notificationBot.email,
+            customEmail: notificationBot.customEmail,
             createdAt: notificationBot.createdAt
         };
     }

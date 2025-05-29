@@ -47,7 +47,7 @@ export class NotificationProcessService {
         const newNotification = new NotificationProcess();
         newNotification.process = process;
         newNotification.user = user;
-        newNotification.email = createNotificationProcessDto.email ?? '';
+        newNotification.customEmail = createNotificationProcessDto.email ?? '';
         newNotification.type = createNotificationProcessDto.type;
 
         return this.notificationProcessRepository
@@ -73,7 +73,7 @@ export class NotificationProcessService {
             user,
         );
 
-        if (notification.email && !isTenantAdmin(user)) {
+        if (notification.customEmail && !isTenantAdmin(user)) {
             throw new ForbiddenException();
         }
 
@@ -89,7 +89,7 @@ export class NotificationProcessService {
                 id: notificationProcess.user.id,
                 email: notificationProcess.user.email,
             },
-            customEmail: notificationProcess.email ?? '',
+            customEmail: notificationProcess.customEmail ?? '',
             createdAt: notificationProcess.createdAt
         };
     }

@@ -6,7 +6,7 @@ import { User } from '../user/user.entity';
 
 
 @Entity({ name: 'notification_bot' })
-@Unique(['email', 'user', 'bot', 'type'])
+@Unique(['customEmail', 'user', 'bot', 'type'])
 export class NotificationBot {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -22,7 +22,7 @@ export class NotificationBot {
     user: User;
 
     @Column({ type: 'varchar', nullable: false, default: '', length: 256 })
-    email: string;
+    customEmail: string;
 
     @ManyToOne(() => BotEntity, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'bot_id' })
