@@ -565,7 +565,7 @@ public class UserService {
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         var usersToRemove = userRepository
-            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS));
+            .findAllByHasBeenActivatedIsFalseAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS));
         userRepository.deleteAll(usersToRemove);
     }
 
