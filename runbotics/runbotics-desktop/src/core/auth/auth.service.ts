@@ -59,10 +59,6 @@ export class AuthService implements OnApplicationBootstrap {
     }
 
     private async authenticate(): Promise<TokenData> {
-        if (this.reauthenticateIntervalHandle === null) {
-            this.setupTokenRefreshingTask();
-        }
-
         this.logger.log('=> Authenticating with server: ' + this.serverConfigService.entrypointUrl);
 
         const response = await this.authOrchestratorAxios.post(
