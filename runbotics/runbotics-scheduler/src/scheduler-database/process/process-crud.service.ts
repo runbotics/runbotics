@@ -77,7 +77,7 @@ export class ProcessCrudService {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
-        process.tags = await this.resolveTags(user, processDto.tags);
+        process.tags = await this.resolveTags(user, processDto.tags as Tag[]);
 
         const createdProcess = await this.processRepository.save(process);
 
