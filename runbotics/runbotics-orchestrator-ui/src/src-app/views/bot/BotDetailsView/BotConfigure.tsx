@@ -58,7 +58,7 @@ const BotConfigure: FC = () => {
                 payload: {
                     botId,
                     type: NotificationBotType.BOT_DISCONNECTED,
-                    email: customEmail,
+                    customEmail,
                 },
             })
         );
@@ -66,13 +66,13 @@ const BotConfigure: FC = () => {
         await handleGetBotSubscribers();
     };
 
-    const handleSubscriptionChange = async (subscriptionState: boolean) => {
+    const handleOwnSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
             ? await dispatch(botActions.subscribeBotNotifications({
                 payload: { botId, type: NotificationBotType.BOT_DISCONNECTED }
             }))
             : await dispatch(botActions.unsubscribeBotNotifications({
-                resourceId: botSubscriptions.find(sub => sub.user.id === user.id && sub.customEmail === '').id
+                resourceId: botSubscriptions.find(sub => sub.user.id === user.id && !sub.customEmail).id
             }));
 
         await handleGetBotSubscribers();
@@ -91,7 +91,7 @@ const BotConfigure: FC = () => {
                         <NotificationSwitchComponent
                             onClick={() => setOpen(true)}
                             isSubscribed={botSubscriptions.some(sub => sub.user.id === user.id && sub.customEmail === '')}
-                            onSubscriptionChange={handleSubscriptionChange}
+                            onSubscriptionChange={handleOwnSubscriptionChange}
                             label={translate('Bot.Edit.Form.Fields.IsSubscribed.Label')}
                             tooltip={translate('Bot.Edit.Form.Fields.IsSubscribed.Tooltip')}
                         />

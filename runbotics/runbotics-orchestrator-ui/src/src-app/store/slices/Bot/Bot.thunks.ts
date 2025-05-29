@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IBot, NotificationBot, NotificationBotType } from 'runbotics-common';
+import { CreateNotificationBotDto, IBot, NotificationBot } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import Axios from '#src-app/utils/axios';
@@ -31,7 +31,7 @@ export const getLogs = createAsyncThunk<string[], { id: IBot['id'], lines?: numb
 );
 
 export const subscribeBotNotifications = ApiTenantResource
-    .post<NotificationBot, { botId: number, type: NotificationBotType, email?: string }>
+    .post<NotificationBot, CreateNotificationBotDto>
     ('bot/subscribeBotNotifications', BOT_NOTIFICATION_PATH);
 
 export const unsubscribeBotNotifications = ApiTenantResource

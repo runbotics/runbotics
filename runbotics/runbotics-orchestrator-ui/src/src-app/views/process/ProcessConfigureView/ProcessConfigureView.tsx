@@ -173,7 +173,7 @@ const ProcessConfigureView: VFC = () => {
         await fetchProcess();
     };
 
-    const handleSubscriptionChange = async (subscriptionState: boolean) => {
+    const handleOwnSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
             ? await dispatch(
                 processActions.subscribeProcessNotifications({
@@ -200,7 +200,7 @@ const ProcessConfigureView: VFC = () => {
                 payload: {
                     processId,
                     type: NotificationProcessType.PROCESS_ERROR,
-                    email: customEmail,
+                    customEmail,
                 },
             })
         );
@@ -268,7 +268,7 @@ const ProcessConfigureView: VFC = () => {
                             <NotificationSwitchComponent
                                 onClick={() => setOpen(true)}
                                 isSubscribed={processSubscriptions.some((sub) => sub.user.id === user.id && !sub.customEmail)}
-                                onSubscriptionChange={handleSubscriptionChange}
+                                onSubscriptionChange={handleOwnSubscriptionChange}
                                 label={translate('Process.Edit.Form.Fields.IsSubscribed.Label')}
                                 tooltip={translate('Process.Edit.Form.Fields.IsSubscribed.Tooltip')}
                             />
