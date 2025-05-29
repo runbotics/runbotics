@@ -95,5 +95,5 @@ export interface MarketplaceOffer {
     tags: ContentfulCollection<Tag>;
     body: ContentfulRichText;
     industries: ContentfulCollection<Industry>;
-    parameters?: MarketplaceOfferParameters;
+    parameters?: MarketplaceOfferParameters | null;
 }
