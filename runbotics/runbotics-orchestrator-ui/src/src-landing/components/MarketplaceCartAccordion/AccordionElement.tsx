@@ -14,22 +14,20 @@ import styles from './MarketplaceCartAccordion.module.scss';
 export const AccordionElement: FC<CartItem> = (offer) => {
     const { removeFromCart, updateCartItem } = useCart();
     const updateParameter = (parameter: SelectedParameter) => {
-        const newSelection = structuredClone(offer.selectedParameters);
-        const index = newSelection.findIndex(option => option.name === parameter.name);
-        newSelection[index] = parameter;
-        
-        if(!newSelection) {
+        const newSelection = structuredClone(offer.selectedParameters) ?? [];
+        const alreadySetParameterIndex = newSelection.findIndex(option => option.name === parameter.name);
+
+        if (alreadySetParameterIndex < 0) {
             updateCartItem(offer.slug, {
-                selectedParameters: [parameter]
+                selectedParameters: [...newSelection, parameter]
             });
-            return;
-        }
-        if (newSelection) {
+        } else {
+            newSelection[alreadySetParameterIndex] = parameter;
+
             updateCartItem(offer.slug, {
                 selectedParameters: newSelection,
             });
         }
-
     };
     return (
         <Accordion className={styles.accordion}>
@@ -54,7 +52,7 @@ export const AccordionElement: FC<CartItem> = (offer) => {
             </AccordionSummary>
             <AccordionDetails className={styles.accordionDetails}>
                 {
-                    offer.parameters.additionalParameters?.map(parameter => {
+                    offer.parameters?.additionalParameters?.map(parameter => {
                         const selectedParameter = offer.selectedParameters
                             ?.find(selected => selected.name === parameter.name);
                         const selectedOption = parameter.options
@@ -64,7 +62,7 @@ export const AccordionElement: FC<CartItem> = (offer) => {
                             return null;
                         }
                         return (
-                            <div key={parameter.name}  className={styles.parameterWrapper}>
+                            <div key={parameter.name} className={styles.parameterWrapper}>
                                 <Typography variant={'h6'} color={'primary'}>{parameter.name}</Typography>
                                 <ParameterSelect selectedOption={selectedOption} options={parameter.options}
                                     onChange={(newValue) => updateParameter({
