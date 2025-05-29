@@ -1,4 +1,4 @@
-import { useState, VFC } from 'react';
+import { FormEvent, useState, VFC } from 'react';
 
 import { Button, Grid } from '@mui/material';
 
@@ -16,7 +16,11 @@ const AddEmailSubscriptionComponent: VFC<
     const [email, setEmail] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
         onEmailAdd(email).finally(() => {
             setIsSubmitting(false);
         });
@@ -33,13 +37,7 @@ const AddEmailSubscriptionComponent: VFC<
         >
             <Grid item xs={1}>
                 <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        if (isSubmitting) return;
-                        setIsSubmitting(true);
-
-                        handleSubmit();
-                    }}
+                    onSubmit={handleSubmit}
                 >
                     <StyledTextField
                         margin="dense"
