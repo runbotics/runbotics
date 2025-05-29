@@ -12,9 +12,7 @@ interface DeclineUserReasonSelectorProps {
 }
 
 enum DeclineReason {
-    FIRST_REASON = 'FIRST_REASON',
-    SECOND_REASON = 'SECOND_REASON',
-    THIRD_REASON = 'THIRD_REASON',
+    CUSTOM_REASON = 'FIRST_REASON',
     DEFAULT_REASON = 'DEFAULT_REASON'
 }
 
@@ -26,22 +24,10 @@ export const DeclineUserReasonSelector = ({
     const [reason, setReason] = React.useState(DeclineReason.DEFAULT_REASON);
 
     const declineReason = {
-        [DeclineReason.FIRST_REASON]: {
-            value: DeclineReason.FIRST_REASON,
+        [DeclineReason.CUSTOM_REASON]: {
+            value: DeclineReason.CUSTOM_REASON,
             message: translate(
-                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.FirstReason'
-            ),
-        },
-        [DeclineReason.SECOND_REASON]: {
-            value: DeclineReason.SECOND_REASON,
-            message: translate(
-                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.SecondReason'
-            ),
-        },
-        [DeclineReason.THIRD_REASON]: {
-            value: DeclineReason.THIRD_REASON,
-            message: translate(
-                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.ThirdReason'
+                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.CustomReason'
             ),
         },
         [DeclineReason.DEFAULT_REASON]: {
@@ -58,8 +44,8 @@ export const DeclineUserReasonSelector = ({
         const inputValue = (event.target as HTMLInputElement).value as DeclineReason;
 
         if (
-            reason !== DeclineReason.THIRD_REASON &&
-            inputValue === DeclineReason.THIRD_REASON
+            reason !== DeclineReason.CUSTOM_REASON &&
+            inputValue === DeclineReason.CUSTOM_REASON
         ) {
             onMessageChange(`${declineReason[inputValue].message} ${customMessage}`);
         } else {
@@ -73,7 +59,7 @@ export const DeclineUserReasonSelector = ({
     ) => {
         const inputValue = (event.target as HTMLInputElement).value;
 
-        if (reason === DeclineReason.THIRD_REASON) {
+        if (reason === DeclineReason.CUSTOM_REASON) {
             onMessageChange(inputValue);
             setCustomMessage(inputValue);
         }
@@ -92,16 +78,8 @@ export const DeclineUserReasonSelector = ({
                     value={declineReason[DeclineReason.DEFAULT_REASON].value}
                 />
                 <RadioControl
-                    label={declineReason[DeclineReason.FIRST_REASON].message}
-                    value={declineReason[DeclineReason.FIRST_REASON].value}
-                />
-                <RadioControl
-                    label={declineReason[DeclineReason.SECOND_REASON].message}
-                    value={declineReason[DeclineReason.SECOND_REASON].value}
-                />
-                <RadioControl
-                    label={declineReason[DeclineReason.THIRD_REASON].message}
-                    value={declineReason[DeclineReason.THIRD_REASON].value}
+                    label={declineReason[DeclineReason.CUSTOM_REASON].message}
+                    value={declineReason[DeclineReason.CUSTOM_REASON].value}
                 />
                 <TextField
                     label={translate(
@@ -111,7 +89,7 @@ export const DeclineUserReasonSelector = ({
                     rows={4}
                     value={customMessage}
                     onChange={handleTextFiledChange}
-                    disabled={reason !== DeclineReason.THIRD_REASON}
+                    disabled={reason !== DeclineReason.CUSTOM_REASON}
                 />
             </StyledRadioGroup>
         </StyledFormControl>
