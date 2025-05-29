@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 import { User } from '#/scheduler-database/user/user.entity';
 import { NotificationProcess } from './notification-process.entity';
 import { ProcessService } from '#/scheduler-database/process/process.service';
-import { isTenantAdmin } from '#/utils/authority.utils';
-import { CreateNotificationProcessDto } from 'runbotics-common';
+import { hasRole, isTenantAdmin } from '#/utils/authority.utils';
+import { CreateNotificationProcessDto, Role } from 'runbotics-common';
 
 @Injectable()
 export class NotificationProcessService {
@@ -27,9 +27,15 @@ export class NotificationProcessService {
             processId, user
         );
 
-        return this.notificationProcessRepository
-            .find({ where: { process: { id: process.id } }, relations: ['user'] })
-            .then(processes => processes.map(this.formatToDTO));
+        if (hasRole(user, Role.ROLE_TENANT_ADMIN)) {
+            return this.notificationProcessRepository
+                .find({ where: { process: { id: process.id } }, relations: ['user'] })
+                .then(processes => processes.map(this.formatToDTO));
+        } else {
+            return this.notificationProcessRepository
+                .find({ where: { process: { id: process.id }, customEmail: '' }, relations: ['user'] })
+                .then(processes => processes.map(this.formatToDTO));
+        }
     }
 
     async create(

@@ -7,7 +7,7 @@ import { NotificationBot } from './notification-bot.entity';
 
 import { User } from '#/scheduler-database/user/user.entity';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
-import { isTenantAdmin } from '#/utils/authority.utils';
+import { hasRole, isTenantAdmin } from '#/utils/authority.utils';
 
 
 @Injectable()
@@ -30,9 +30,15 @@ export class NotificationBotService {
             botId, user
         );
 
-        return this.notificationBotRepository
-            .find({ where: { bot: { id: bot.id } }, relations: ['user'] })
-            .then(bots => bots.map(this.formatToDTO));
+        if (hasRole(user, Role.ROLE_TENANT_ADMIN)) {
+            return this.notificationBotRepository
+                .find({ where: { bot: { id: bot.id } }, relations: ['user'] })
+                .then(bots => bots.map(this.formatToDTO));
+        } else {
+            return this.notificationBotRepository
+                .find({ where: { bot: { id: bot.id }, customEmail: '' }, relations: ['user'] })
+                .then(bots => bots.map(this.formatToDTO));
+        }
     }
 
     async create(
