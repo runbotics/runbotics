@@ -44,6 +44,10 @@ export class NotificationBotService {
             createNotificationBotDto.botId, user
         );
 
+        if (createNotificationBotDto.email && !isTenantAdmin(user)) {
+            throw new ForbiddenException();
+        }
+
         const newNotification = new NotificationBot();
         newNotification.bot = bot;
         newNotification.user = user;
