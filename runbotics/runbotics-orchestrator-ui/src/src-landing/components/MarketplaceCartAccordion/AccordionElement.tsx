@@ -17,16 +17,13 @@ export const AccordionElement: FC<CartItem> = (offer) => {
         const newSelection = structuredClone(offer.selectedParameters) ?? [];
         const alreadySetParameterIndex = newSelection.findIndex(option => option.name === parameter.name);
 
-        if(!newSelection || alreadySetParameterIndex < 0) {
+        if (alreadySetParameterIndex < 0) {
             updateCartItem(offer.slug, {
                 selectedParameters: [...newSelection, parameter]
             });
-            return;
-        }
+        } else {
+            newSelection[alreadySetParameterIndex] = parameter;
 
-        newSelection[alreadySetParameterIndex] = parameter;
-
-        if (newSelection) {
             updateCartItem(offer.slug, {
                 selectedParameters: newSelection,
             });
@@ -65,7 +62,7 @@ export const AccordionElement: FC<CartItem> = (offer) => {
                             return null;
                         }
                         return (
-                            <div key={parameter.name}  className={styles.parameterWrapper}>
+                            <div key={parameter.name} className={styles.parameterWrapper}>
                                 <Typography variant={'h6'} color={'primary'}>{parameter.name}</Typography>
                                 <ParameterSelect selectedOption={selectedOption} options={parameter.options}
                                     onChange={(newValue) => updateParameter({
