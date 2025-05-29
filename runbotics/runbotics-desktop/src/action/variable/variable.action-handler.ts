@@ -4,7 +4,7 @@ import { GlobalVariableType, IGlobalVariable } from 'runbotics-common';
 import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
 
 import { RuntimeService } from '#core/bpm/runtime';
-import {  StorageService } from '#config';
+import { StorageService } from '#config';
 import { RunboticsLogger } from '#logger';
 import { RequestService } from '#core/auth/request.service';
 
