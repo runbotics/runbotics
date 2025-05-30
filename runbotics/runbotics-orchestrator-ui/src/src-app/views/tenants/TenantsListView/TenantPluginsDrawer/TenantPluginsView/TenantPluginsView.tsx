@@ -11,7 +11,6 @@ import {
     Typography,
 } from '@mui/material';
 
-import { addDays, isAfter, isBefore, isSameDay, parseISO } from 'date-fns';
 import { Tenant } from 'runbotics-common/dist/model/api/tenant.model';
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -22,6 +21,8 @@ import {
     PluginExpDate,
     PluginsDrawer,
 } from '#src-app/views/tenants/TenantsListView/TenantPluginsDrawer/TenantPluginsView/TenantPluginsView.styles';
+
+import { isExpired, isExpiringSoon } from './utils';
 
 interface TenantPluginsViewProps {
     open: boolean,
@@ -36,23 +37,8 @@ const TenantPluginsView: VFC<TenantPluginsViewProps> = ({
     openEditDrawer,
     tenantData
 }) => {
-    const { tenantPlugins } = useSelector(tenantsSelector);
+    const { plugins } = useSelector(tenantsSelector);
     const { translate } = useTranslations();
-    const isExpired = (expDateStr?: string): boolean => {
-        if (!expDateStr) return false;
-        const expDate = parseISO(expDateStr);
-        const today = new Date();
-        return isBefore(expDate, today) && !isSameDay(expDate, today);
-    };
-
-    const isExpiringSoon = (expDateStr?: string): boolean => {
-        if (!expDateStr) return false;
-        const expDate = parseISO(expDateStr);
-        const today = new Date();
-        const expPeriod = addDays(today, 14);
-        return (isAfter(expDate, today) || isSameDay(expDate, today)) &&
-            (isBefore(expDate, expPeriod) || isSameDay(expDate, expPeriod));
-    };
 
     const getBadgeText = (expired: boolean, expiringSoon: boolean) => {
         if (expired) return translate('Tenant.Plugins.View.Expiration.Date.Expired');
@@ -65,7 +51,8 @@ const TenantPluginsView: VFC<TenantPluginsViewProps> = ({
         const expired = isExpired(plugin.expDate);
         const expiringSoon = isExpiringSoon(plugin.expDate);
         const displayDate = plugin.expDate?.slice(0, 10);
-
+        const canExtend = !expired && expiringSoon;
+        
         return (
             <Stack
                 direction="row"
@@ -93,7 +80,7 @@ const TenantPluginsView: VFC<TenantPluginsViewProps> = ({
                         </PluginDate>
                     </PluginExpDate>}
                 </Stack>
-                {!expired && expiringSoon && (
+                {canExtend && (
                     <Button onClick={() => openEditDrawer(plugin)}>{translate('Tenant.Plugins.View.Extend')}</Button>
                 )}
             </Stack>
@@ -123,11 +110,11 @@ const TenantPluginsView: VFC<TenantPluginsViewProps> = ({
                 </PluginActivateButton>
                 <Divider />
                 <Stack direction="column" spacing={2} padding={2}>
-                    {tenantPlugins.allPlugins.loading && <CircularProgress />}
-                    {tenantPlugins.allPlugins.data && tenantPlugins.allPlugins.data.length > 0 ? (
-                        tenantPlugins.allPlugins.data.map(renderPlugin)
+                    {plugins.all.loading && <CircularProgress />}
+                    {plugins.all.data && plugins.all.data.length > 0 ? (
+                        plugins.all.data.map(renderPlugin)
                     ) : (
-                        !tenantPlugins.allPlugins.loading && <span>{translate('Tenant.Plugins.View.Empty.List')}</span>
+                        !plugins.all.loading && <span>{translate('Tenant.Plugins.View.Empty.List')}</span>
                     )}
                 </Stack>
             </Stack>

@@ -63,9 +63,10 @@ const TenantsListView: VFC = () => {
     };
     
     const openPluginDrawer = (rowData) => {
-        dispatch(tenantsActions.fetchTenantPlugins(rowData.id));
-        setIsPluginDrawerVisible(true);
-        setTenantData(rowData);
+        dispatch(tenantsActions.fetchTenantPlugins(rowData.id)).unwrap().then(() => {
+            setIsPluginDrawerVisible(true);
+            setTenantData(rowData);
+        });
     };
     
     const closePluginDrawer = () => {

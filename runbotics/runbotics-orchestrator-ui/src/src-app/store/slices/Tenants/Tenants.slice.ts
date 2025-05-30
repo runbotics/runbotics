@@ -12,8 +12,8 @@ const initialState: TenantsState = {
     allByPage: null,
     inviteCode: null,
     invitingTenant: null,
-    tenantPlugins: {
-        allPlugins: {
+    plugins: {
+        all: {
             loading: false,
             error: null,
             data: [],

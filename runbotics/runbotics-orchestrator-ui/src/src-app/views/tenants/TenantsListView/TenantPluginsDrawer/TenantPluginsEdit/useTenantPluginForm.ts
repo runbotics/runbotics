@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { useSnackbar } from 'notistack';
 
 import { License } from 'runbotics-common';
@@ -12,24 +13,29 @@ export const useTenantPluginForm = (tenantId: string, translate: (key: string) =
     const { enqueueSnackbar } = useSnackbar();
 
     const submit = async (data: License) => {
-        const formattedDate = new Date(data.expDate);
         const formattedData = {
             ...data,
-            expDate: formattedDate.toISOString().split('T')[0],
+            expDate: moment(data.expDate).format('YYYY-MM-DD'),
         };
         
         try{
             if(data.id) {
-                await dispatch(updateTenantPlugin(formattedData)).unwrap();
-                enqueueSnackbar(translate('Tenants.List.Edit.Form.Event.Success'), {
-                    variant: 'success',
-                });
+                await dispatch(updateTenantPlugin(formattedData))
+                    .unwrap()
+                    .then(() => {
+                        enqueueSnackbar(translate('Tenants.List.Edit.Form.Event.UpdateSuccess'), {
+                            variant: 'success',
+                        });
+                    });
             }
             else {
-                await dispatch(createTenantPlugin(formattedData)).unwrap();
-                enqueueSnackbar(translate('Tenants.List.Edit.Form.Event.Success'), {
-                    variant: 'success',
-                });
+                await dispatch(createTenantPlugin(formattedData))
+                    .unwrap()
+                    .then(() => {
+                        enqueueSnackbar(translate('Tenants.List.Edit.Form.Event.Success'), {
+                            variant: 'success',
+                        });
+                    });
             }
         
             dispatch(fetchTenantPlugins(tenantId));

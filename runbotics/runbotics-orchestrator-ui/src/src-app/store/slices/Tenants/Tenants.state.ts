@@ -8,8 +8,8 @@ export interface TenantsState {
     allByPage: Page<Tenant> | null;
     inviteCode: string | null;
     invitingTenant: string | null;
-    tenantPlugins: {
-        allPlugins: {
+    plugins: {
+        all: {
             loading: boolean;
             error: string | null,
             data: License[];

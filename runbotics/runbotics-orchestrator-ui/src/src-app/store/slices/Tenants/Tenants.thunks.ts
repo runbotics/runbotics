@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Tenant, TenantInviteCode, License } from 'runbotics-common';
+import { License, Tenant, TenantInviteCode } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 import axios from '#src-app/utils/axios';
@@ -13,7 +13,7 @@ export type TenantRawBody = Omit<Tenant, 'emailTriggerWhitelist'> & {
         tenantId: string;
         whitelistItem: string;
     }[];
-}
+};
 
 const INVITE_CODE_PATH = 'invite-code';
 
@@ -84,12 +84,13 @@ export const fetchTenantPlugins = createAsyncThunk<License[], string>(
     'tenants/fetchTenantPlugins',
     async (tenantId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`/api/scheduler/tenants/${tenantId}/licenses`);
-            const plugins = response.data.map((plugin: any) => ({
+            const response = await axios.get(`/api/scheduler/licenses/tenants/${tenantId}`);
+            return response.data.map((plugin: any) => ({
                 ...plugin,
-                expDate: plugin.expDate ? new Date(plugin.expDate).toISOString() : null,
+                expDate: plugin.expDate
+                    ? new Date(plugin.expDate).toISOString()
+                    : null,
             }));
-            return plugins;
         } catch (error) {
             return rejectWithValue(error.response.data);
         }

@@ -33,7 +33,7 @@ export class LicenseController {
     // -------------- ENDPOINTS FOR ADMIN & ONE PUBLIC ------------------
 
 
-    @Get('tenants/:tenantId/licenses')
+    @Get('licenses/tenants/:tenantId')
     @FeatureKeys(FeatureKey.MANAGE_ALL_TENANTS)
     getAllLicensesByTenant(
         @Param('tenantId') tenantId: string
