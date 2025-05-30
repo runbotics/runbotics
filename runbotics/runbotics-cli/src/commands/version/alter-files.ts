@@ -32,11 +32,13 @@ const alterFiles = async (rbRootDir: string, newVersion: string) => {
         {
             title: 'orchestrator',
             task: async () => {
-                try {
-                    await spawn('sh', ['gradlew', 'setVersion', `-PnewVersion=${newVersion}`], { cwd: join(rbRootDir, 'runbotics-orchestrator') });
-                } catch (e: any) {
-                    throw new Error(chalk.red(`${Emoji.error} Error: Could not overwrite orchestrator config version`));
-                }
+                const absolutePath = join(rbRootDir, 'runbotics-orchestrator/build.gradle');
+
+                const file = fs.readFileSync(absolutePath, 'utf-8');
+
+                const expr = /version = ".+"/;
+                const newFile = file.replace(expr, 'version = "' + newVersion + '"');
+                fs.writeFileSync(absolutePath, newFile, { encoding: 'utf-8' });
             },
         },
         {

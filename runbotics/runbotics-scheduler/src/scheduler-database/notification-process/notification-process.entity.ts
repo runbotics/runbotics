@@ -6,7 +6,7 @@ import { User } from '#/scheduler-database/user/user.entity';
 
 
 @Entity({ name: 'notification_process' })
-@Unique(['user', 'process', 'type'])
+@Unique(['customEmail', 'user', 'process', 'type'])
 export class NotificationProcess {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -20,6 +20,9 @@ export class NotificationProcess {
     @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id' })
     user: User;
+
+    @Column({ type: 'varchar', nullable: false, default: '', length: 256, name: 'custom_email' })
+    customEmail: string;
 
     @ManyToOne(() => ProcessEntity, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'process_id' })
