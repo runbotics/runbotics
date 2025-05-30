@@ -116,6 +116,8 @@ export class AuthService implements OnApplicationBootstrap {
             installationId: installationId,
         };
 
+        this.logger.log('Token expires at: ', new Date(decodedToken.exp * 1000).toISOString());
+
         this.tokenData = tokenData;
         return tokenData;
     }
