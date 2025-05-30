@@ -27,6 +27,8 @@ export class AuthService implements OnApplicationBootstrap {
 
     setupTokenRefreshingTask() {
         const refreshEvery = this.serverConfigService.authTokenRefreshSeconds;
+        if (refreshEvery <= 0) return;
+
         this.logger.log(`Setting up token refresh every ${refreshEvery}s`);
         this.clearTokenRefreshingTask();
 
