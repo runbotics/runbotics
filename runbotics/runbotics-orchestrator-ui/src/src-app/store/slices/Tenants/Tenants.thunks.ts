@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import moment from 'moment';
 import { License, Tenant, TenantInviteCode } from 'runbotics-common';
 
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
@@ -88,7 +89,7 @@ export const fetchTenantPlugins = createAsyncThunk<License[], string>(
             return response.data.map((plugin: any) => ({
                 ...plugin,
                 expDate: plugin.expDate
-                    ? new Date(plugin.expDate).toISOString()
+                    ? moment(plugin.expDate).toISOString()
                     : null,
             }));
         } catch (error) {
