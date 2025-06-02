@@ -37,16 +37,18 @@ export const DeclineUserReasonSelector = ({
             ),
         }
     };
+    
+    React.useEffect(() => {
+        onMessageChange(declineReason[reason].message);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleRadioControlChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         const inputValue = (event.target as HTMLInputElement).value as DeclineReason;
 
-        if (
-            reason !== DeclineReason.CUSTOM_REASON &&
-            inputValue === DeclineReason.CUSTOM_REASON
-        ) {
+        if (inputValue === DeclineReason.CUSTOM_REASON) {
             onMessageChange(`${declineReason[inputValue].message} ${customMessage}`);
         } else {
             onMessageChange(declineReason[inputValue].message);
@@ -60,7 +62,7 @@ export const DeclineUserReasonSelector = ({
         const inputValue = (event.target as HTMLInputElement).value;
 
         if (reason === DeclineReason.CUSTOM_REASON) {
-            onMessageChange(inputValue);
+            onMessageChange(`${declineReason[reason].message} ${inputValue}`);
             setCustomMessage(inputValue);
         }
     };
@@ -81,17 +83,17 @@ export const DeclineUserReasonSelector = ({
                     label={declineReason[DeclineReason.CUSTOM_REASON].message}
                     value={declineReason[DeclineReason.CUSTOM_REASON].value}
                 />
-                <TextField
-                    label={translate(
-                        'Users.Actions.Modals.DeleteModal.DeclineReason.TextField.Label.Message'
-                    )}
-                    multiline
-                    rows={4}
-                    value={customMessage}
-                    onChange={handleTextFiledChange}
-                    disabled={reason !== DeclineReason.CUSTOM_REASON}
-                />
             </StyledRadioGroup>
+            <TextField
+                label={translate(
+                    'Users.Actions.Modals.DeleteModal.DeclineReason.TextField.Label.Message'
+                )}
+                multiline
+                rows={4}
+                value={customMessage}
+                onChange={handleTextFiledChange}
+                disabled={reason !== DeclineReason.CUSTOM_REASON}
+            />
         </StyledFormControl>
     );
 };
