@@ -558,21 +558,23 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 ) => {
                     const desktopTask: DesktopTask = executionContext.content;
                     const script = desktopTask.input.script;
-                    desktopTask.input = (await FieldResolver.resolveFields(
-                        desktopTask.input
-                    )) as DesktopTask['input'];
                     const executionId = input.content.executionId;
+                    
                     const runboticsExecutionEnvironment: RunBoticsExecutionEnvironment =
                         executionContext.environment;
-
                     if (runboticsExecutionEnvironment.runbotic?.disabled) {
                         this.logger.warn(
+
                             `[${processInstanceId}] [${executionId}] [${script}] Desktop script is skipped`
                         );
                         callback(null, { disabled: true });
                         return;
                     }
 
+                    desktopTask.input = (await FieldResolver.resolveFields(
+                        desktopTask.input
+                    )) as DesktopTask['input'];
+                    
                     const credentialType =
                         runboticsExecutionEnvironment.runbotic?.credentialType ??
                         desktopTask?.input?.credentialType;
