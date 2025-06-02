@@ -7,6 +7,8 @@ const tableListTranslations: typeof englishTableListTranslations = {
     'Tenants.List.Table.Columns.UpdatedDate': 'Data ostatniej modyfikacji',
     'Tenants.List.Table.Columns.LastModifiedBy': 'Ostatnia modyfikacja',
     'Tenants.List.Table.Columns.Edit': 'Edycja',
+    'Tenants.List.Table.Columns.Plugins': 'Pluginy',
+    'Tenants.List.Table.Columns.Plugins.Count': ' aktywnych pluginów',
     'Tenants.List.Table.Error.Rows': 'Nie znaleziono organizacji',
 };
 
