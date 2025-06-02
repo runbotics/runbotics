@@ -206,6 +206,9 @@ export class ProcessController {
         @Pageable() paging: Paging,
         @UserDecorator() user: User,
     ) {
+        if (!specs.where.processCollectionId) {
+            return this.processCrudService.getPage(user, specs, paging);
+        }
         // @todo after process collection migration probably split these two endpoints into two separate (collection/all processes view (collection/all processes view)
         // @ts-expect-error property not in built-in type
         const { _type, _value } = specs.where.processCollectionId?.valueOf()?.value.at(0) ?? {};
