@@ -210,8 +210,6 @@ export class ProcessController {
         // @ts-expect-error property not in built-in type
         const { _type = 'isNull', _value } = specs.where.processCollectionId?.valueOf()?.value.at(0) ?? {};
 
-        console.log("_type: " + _type)
-
         const isRootCollection = _type === 'isNull';
         const isNotAllProcessesView = _type === 'equal' && _value.trim();
 
