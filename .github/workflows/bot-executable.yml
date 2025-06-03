@@ -7,6 +7,8 @@ on:
       - 'master'
       - 'release/**'
       - 'hotfix/**'
+      - 'feature/**'
+      - 'bugfix/**'
   workflow_dispatch:
 
 env:
@@ -108,6 +110,7 @@ jobs:
 
       - name: Sign bot
         uses: dlemstra/code-sign-action@v1
+        if: ${{ ! startsWith(github.ref, 'refs/heads/feature/') && ! startsWith(github.ref, 'refs/heads/bugfix/') }}
         with:
           certificate: '${{ secrets.CERT_BASE64 }}'
           password: '${{ secrets.CERT_PASSWORD }}'
@@ -117,6 +120,7 @@ jobs:
       - name: Upload bot artifact
         id: upload-bot-executable-artifact
         uses: actions/upload-artifact@v4.0.0
+        if: ${{ ! startsWith(github.ref, 'refs/heads/feature/') && ! startsWith(github.ref, 'refs/heads/bugfix/') }}
         with:
           name: RunBotics-${{ env.PACKAGE_VERSION }}
           path: |
@@ -124,6 +128,7 @@ jobs:
           if-no-files-found: error
 
       - name: Create patch notes
+        if: ${{ ! startsWith(github.ref, 'refs/heads/feature/') && ! startsWith(github.ref, 'refs/heads/bugfix/') }}
         run: |
           echo "## Bot version ${{ env.PACKAGE_VERSION }}" >> patch_notes.md
           echo "## How to Set Up" >> patch_notes.md
@@ -136,6 +141,7 @@ jobs:
       - name: Upload patch notes
         id: upload-patch-notes-artifact
         uses: actions/upload-artifact@v4.0.0
+        if: ${{ ! startsWith(github.ref, 'refs/heads/feature/') && ! startsWith(github.ref, 'refs/heads/bugfix/') }}
         with:
           name: patch-notes-${{ env.PACKAGE_VERSION }}
           path: './runbotics/runbotics-desktop/patch_notes.md'

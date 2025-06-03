@@ -13,6 +13,8 @@ import {
     update,
     updateInTenant,
     deleteUserInTenant,
+    activate,
+    activateInTenant,
 } from './Users.thunks';
 
 const getActionAdminFilterContext = (
@@ -108,6 +110,34 @@ const buildUsersExtraReducers = (builder: ActionReducerMapBuilder<UsersState>) =
         })
         .addCase(getAllUsersInTenant.rejected, (state) => {
             state.tenantActivated.loading = true;
+        })
+
+        // ACTIVATE USERS FOR ADMIN
+        .addCase(activate.pending, (state) => {
+            state.notActivated.loading = true;
+            state.activated.loading = true;
+        })
+        .addCase(activate.fulfilled, (state) => {
+            state.notActivated.loading = false;
+            state.activated.loading = false;
+        })
+        .addCase(activate.rejected, (state) => {
+            state.notActivated.loading = false;
+            state.activated.loading = false;
+        })
+
+        // ACTIVATE USERS FOR TENANT ADMIN
+        .addCase(activateInTenant.pending, (state) => {
+            state.notActivated.loading = true;
+            state.activated.loading = true;
+        })
+        .addCase(activateInTenant.fulfilled, (state) => {
+            state.notActivated.loading = false;
+            state.activated.loading = false;
+        })
+        .addCase(activateInTenant.rejected, (state) => {
+            state.notActivated.loading = false;
+            state.activated.loading = false;
         })
 
         // UPDATE USERS FOR ADMIN

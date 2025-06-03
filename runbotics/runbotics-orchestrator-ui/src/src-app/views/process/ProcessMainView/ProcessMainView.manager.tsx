@@ -1,7 +1,7 @@
 import React, { VFC, useEffect } from 'react';
 
 import { unwrapResult } from '@reduxjs/toolkit';
-import { AxiosResponse } from 'axios';
+import type { AxiosError } from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
@@ -15,7 +15,10 @@ import { processActions, processSelector } from '#src-app/store/slices/Process';
 import { processInstanceSelector } from '#src-app/store/slices/ProcessInstance';
 import { ProcessTab } from '#src-app/utils/process-tab';
 
+import { isKnownHttpStatus } from '../../utils/httpStatus';
+
 import ProcessConfigureView from '../ProcessConfigureView';
+
 
 const ProcessBuildView = dynamic(() => import('../ProcessBuildView'), {
     ssr: false,
@@ -44,16 +47,18 @@ const ProcessMainViewManager: VFC = () => {
     useProcessQueueSocket();
 
     useEffect(() => {
-        if (!hasViewAccess) {
+        if (!hasViewAccess || Number.isNaN(processId)) {
             router.replace('/404');
+            return;
         }
 
-        if (!Number.isNaN(processId) && draft.process?.id !== processId) {
+        if (draft.process?.id !== processId) {
             dispatch(processActions.fetchProcessById(processId))
                 .then(unwrapResult)
-                .catch((response: AxiosResponse) => {
-                    if (response.status >= 400) {
-                        router.replace('/404');
+                .catch((err: AxiosError & { statusCode?: number }) => {
+                    const status = err.statusCode;
+                    if (isKnownHttpStatus(status)) {
+                        router.replace(`/${status}`);
                     }
                 });
         }

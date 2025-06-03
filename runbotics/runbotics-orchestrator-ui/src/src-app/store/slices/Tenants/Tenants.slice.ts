@@ -12,6 +12,21 @@ const initialState: TenantsState = {
     allByPage: null,
     inviteCode: null,
     invitingTenant: null,
+    plugins: {
+        all: {
+            loading: false,
+            error: null,
+            data: [],
+        },
+        createPlugin: {
+            loading: false,
+            error: null,
+        },
+        updatePlugin: {
+            loading: false,
+            error: null,
+        }
+    },
 };
 
 export const slice = createSlice({

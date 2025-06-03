@@ -12,9 +12,8 @@ interface DeclineUserReasonSelectorProps {
 }
 
 enum DeclineReason {
-    FIRST_REASON = 'FIRST_REASON',
-    SECOND_REASON = 'SECOND_REASON',
-    THIRD_REASON = 'THIRD_REASON',
+    CUSTOM_REASON = 'FIRST_REASON',
+    DEFAULT_REASON = 'DEFAULT_REASON'
 }
 
 export const DeclineUserReasonSelector = ({
@@ -22,39 +21,35 @@ export const DeclineUserReasonSelector = ({
 }: DeclineUserReasonSelectorProps) => {
     const { translate } = useTranslations();
     const [customMessage, setCustomMessage] = React.useState('');
-    const [reason, setReason] = React.useState<string | null>(null);
+    const [reason, setReason] = React.useState(DeclineReason.DEFAULT_REASON);
 
     const declineReason = {
-        [DeclineReason.FIRST_REASON]: {
-            value: DeclineReason.FIRST_REASON,
+        [DeclineReason.CUSTOM_REASON]: {
+            value: DeclineReason.CUSTOM_REASON,
             message: translate(
-                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.FirstReason'
+                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.CustomReason'
             ),
         },
-        [DeclineReason.SECOND_REASON]: {
-            value: DeclineReason.SECOND_REASON,
+        [DeclineReason.DEFAULT_REASON]: {
+            value: DeclineReason.DEFAULT_REASON,
             message: translate(
-                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.SecondReason'
+                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.DefaultReason'
             ),
-        },
-        [DeclineReason.THIRD_REASON]: {
-            value: DeclineReason.THIRD_REASON,
-            message: translate(
-                'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.ThirdReason'
-            ),
-        },
+        }
     };
+    
+    React.useEffect(() => {
+        onMessageChange(declineReason[reason].message);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleRadioControlChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        const inputValue = (event.target as HTMLInputElement).value;
+        const inputValue = (event.target as HTMLInputElement).value as DeclineReason;
 
-        if (
-            reason !== DeclineReason.THIRD_REASON &&
-            inputValue === DeclineReason.THIRD_REASON
-        ) {
-            onMessageChange(customMessage);
+        if (inputValue === DeclineReason.CUSTOM_REASON) {
+            onMessageChange(`${declineReason[inputValue].message} ${customMessage}`);
         } else {
             onMessageChange(declineReason[inputValue].message);
         }
@@ -66,8 +61,8 @@ export const DeclineUserReasonSelector = ({
     ) => {
         const inputValue = (event.target as HTMLInputElement).value;
 
-        if (reason === DeclineReason.THIRD_REASON) {
-            onMessageChange(inputValue);
+        if (reason === DeclineReason.CUSTOM_REASON) {
+            onMessageChange(`${declineReason[reason].message} ${inputValue}`);
             setCustomMessage(inputValue);
         }
     };
@@ -81,28 +76,24 @@ export const DeclineUserReasonSelector = ({
             </Typography>
             <StyledRadioGroup value={reason} onChange={handleRadioControlChange}>
                 <RadioControl
-                    label={declineReason[DeclineReason.FIRST_REASON].message}
-                    value={declineReason[DeclineReason.FIRST_REASON].value}
+                    label={declineReason[DeclineReason.DEFAULT_REASON].message}
+                    value={declineReason[DeclineReason.DEFAULT_REASON].value}
                 />
                 <RadioControl
-                    label={declineReason[DeclineReason.SECOND_REASON].message}
-                    value={declineReason[DeclineReason.SECOND_REASON].value}
-                />
-                <RadioControl
-                    label={declineReason[DeclineReason.THIRD_REASON].message}
-                    value={declineReason[DeclineReason.THIRD_REASON].value}
-                />
-                <TextField
-                    label={translate(
-                        'Users.Actions.Modals.DeleteModal.DeclineReason.TextField.Label.Message'
-                    )}
-                    multiline
-                    rows={4}
-                    value={customMessage}
-                    onChange={handleTextFiledChange}
-                    disabled={reason !== DeclineReason.THIRD_REASON}
+                    label={declineReason[DeclineReason.CUSTOM_REASON].message}
+                    value={declineReason[DeclineReason.CUSTOM_REASON].value}
                 />
             </StyledRadioGroup>
+            <TextField
+                label={translate(
+                    'Users.Actions.Modals.DeleteModal.DeclineReason.TextField.Label.Message'
+                )}
+                multiline
+                rows={4}
+                value={customMessage}
+                onChange={handleTextFiledChange}
+                disabled={reason !== DeclineReason.CUSTOM_REASON}
+            />
         </StyledFormControl>
     );
 };

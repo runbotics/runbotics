@@ -4,18 +4,22 @@ import { Dialog } from '@mui/material';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
 
-import { NotificationBot, NotificationBotType } from 'runbotics-common';
+import { NotificationBot, NotificationBotType, Role } from 'runbotics-common';
 
 import NotificationSwitchComponent from '#src-app/components/tables/NotificationTable/NotificationSwitchComponent';
 
 import NotificationTableComponent from '#src-app/components/tables/NotificationTable/NotificationTableComponent';
-import { BotNotificationRow } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
+import { NotificationRow, NotificationTableFields } from '#src-app/components/tables/NotificationTable/NotificationTableComponent.types';
 import useBotNotificationColumns from '#src-app/components/tables/NotificationTable/useBotNotificationColumns';
+import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
+import useRole from '#src-app/hooks/useRole';
 import { translate } from '#src-app/hooks/useTranslations';
 
 import { useDispatch, useSelector } from '#src-app/store';
 import { botActions, botSelector } from '#src-app/store/slices/Bot';
+
+import AddEmailSubscriptionComponent from '#src-app/views/process/ProcessConfigureView/AddEmailSubscriptionComponent';
 
 import { Container, ContainerWrapper, StyledPaper } from './BotDetailsView.styles';
 
@@ -31,10 +35,10 @@ const BotConfigure: FC = () => {
     const notificationTableColumns = useBotNotificationColumns({ onDelete: handleDeleteSubscription });
 
     const notificationTableRows = useMemo(() => botSubscriptions
-        .map<BotNotificationRow>((sub: NotificationBot) => ({
+        .map<NotificationRow>((sub: NotificationBot) => ({
             id: sub.id,
-            user: sub.user.email,
-            subscribedAt: sub.createdAt,
+            [NotificationTableFields.EMAIL]: sub.customEmail || sub.user.email,
+            [NotificationTableFields.SUBSCRIBED_AT]: sub.createdAt,
         })), [botSubscriptions]);
 
     const handleGetBotSubscribers = async () => {
@@ -45,19 +49,36 @@ const BotConfigure: FC = () => {
         handleGetBotSubscribers();
     }, [botId]);
 
-    const handleSubscriptionChange = async (subscriptionState: boolean) => {
+    const hasAddMailPermission = useRole([Role.ROLE_TENANT_ADMIN]);
+
+
+    const handleCustomEmailSubscription = async (customEmail: string) => {
+        await dispatch(
+            botActions.subscribeBotNotifications({
+                payload: {
+                    botId,
+                    type: NotificationBotType.BOT_DISCONNECTED,
+                    customEmail,
+                },
+            })
+        );
+
+        await handleGetBotSubscribers();
+    };
+
+    const handleOwnSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState
             ? await dispatch(botActions.subscribeBotNotifications({
                 payload: { botId, type: NotificationBotType.BOT_DISCONNECTED }
             }))
             : await dispatch(botActions.unsubscribeBotNotifications({
-                resourceId: botSubscriptions.find(sub => sub.user.id === user.id ).id
+                resourceId: botSubscriptions.find(sub => sub.user.id === user.id && !sub.customEmail).id
             }));
 
         await handleGetBotSubscribers();
     };
 
-    async function handleDeleteSubscription(botInfo: BotNotificationRow) {
+    async function handleDeleteSubscription(botInfo: NotificationRow) {
         await dispatch(botActions.unsubscribeBotNotifications({ resourceId: botInfo.id }));
         await handleGetBotSubscribers();
     }
@@ -69,8 +90,8 @@ const BotConfigure: FC = () => {
                     <StyledPaper>
                         <NotificationSwitchComponent
                             onClick={() => setOpen(true)}
-                            isSubscribed={botSubscriptions.some(sub => sub.user.id === user.id )}
-                            onSubscriptionChange={handleSubscriptionChange}
+                            isSubscribed={botSubscriptions.some(sub => sub.user.id === user.id && sub.customEmail === '')}
+                            onSubscriptionChange={handleOwnSubscriptionChange}
                             label={translate('Bot.Edit.Form.Fields.IsSubscribed.Label')}
                             tooltip={translate('Bot.Edit.Form.Fields.IsSubscribed.Tooltip')}
                         />
@@ -88,6 +109,9 @@ const BotConfigure: FC = () => {
                     onClose={() => setOpen(false)}
                     loading={loading}
                 />
+                <If condition={hasAddMailPermission}>
+                    <AddEmailSubscriptionComponent onEmailAdd={handleCustomEmailSubscription} />
+                </If>
             </Dialog>
         </ContainerWrapper>
     );

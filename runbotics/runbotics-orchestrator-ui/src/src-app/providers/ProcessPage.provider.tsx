@@ -1,4 +1,4 @@
-import { FC, MouseEvent, createContext, Dispatch, SetStateAction } from 'react';
+import { FC, MouseEvent, createContext, Dispatch, SetStateAction, useEffect } from 'react';
 
 import { OrderDirection, OrderPropertyName } from 'runbotics-common';
 
@@ -38,6 +38,10 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
 }) => {
     const dispatch = useDispatch();
     const replaceQueryParams = useReplaceQueryParams();
+
+    useEffect(() => {
+        setPage(0);
+    }, [collectionId]);
 
     useUpdateEffect(() => {
         if (collectionId !== undefined) {

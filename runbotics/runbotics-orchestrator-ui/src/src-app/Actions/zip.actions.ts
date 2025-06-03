@@ -26,6 +26,14 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                             path: {
                                 title: translate('Process.Details.Modeler.Actions.Zip.Path'),
                                 type: 'string',
+                            },
+                            outDirName: {
+                                title: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.OutputName'),
+                                type: 'string',
+                            },
+                            outDirPath: {
+                                title: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.OutputDirectory'),
+                                type: 'string',
                             }
                         },
                         required: ['fileName']
@@ -44,13 +52,25 @@ const getZipActions: () => Record<string, IBpmnAction> = () => ({
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Path.Info'),
                         },
-                    }
+                    },
+                    outDirName: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Name.Info'),
+                        }
+                    },
+                    outDirPath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Zip.UnzipArchive.Path.Info'),
+                        }
+                    },
                 }
             },
             formData: {
                 input: {
                     toZipPath: undefined,
-                    zipPath: undefined
+                    zipPath: undefined,
+                    outDirName: undefined,
+                    outDirPath: undefined,
                 }
             }
         }

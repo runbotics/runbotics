@@ -35,7 +35,7 @@ export class ProcessCrudService {
         private botCollectionRepository: Repository<BotCollection>,
         @Inject(forwardRef(() => ProcessCredentialService))
         private readonly processCredentialService: ProcessCredentialService,
-        private readonly tagService: TagService,    ) {
+        private readonly tagService: TagService,) {
     }
 
     async checkCreateProcessViability(user: User) {
@@ -64,7 +64,7 @@ export class ProcessCrudService {
         process.editor = user;
         process.processCollectionId = processDto.processCollection?.id;
 
-        if(processDto.botCollection){
+        if (processDto.botCollection) {
             process.botCollectionId = processDto.botCollection.id;
         }
         else {
@@ -77,7 +77,7 @@ export class ProcessCrudService {
             throw new BadRequestException('Tag limit of 15 exceeded');
         }
 
-        process.tags = processDto.tags as Tag[];
+        process.tags = await this.resolveTags(user, processDto.tags as Tag[]);
 
         const createdProcess = await this.processRepository.save(process);
 
@@ -368,7 +368,7 @@ export class ProcessCrudService {
         };
     }
 
-    private simplifiedProcessMapper (processes: ProcessEntity[]) {
+    private simplifiedProcessMapper(processes: ProcessEntity[]) {
         if (!processes.length) return [];
 
         return processes.map(process => ({
@@ -376,5 +376,15 @@ export class ProcessCrudService {
             name: process.name,
             system: process.system,
         }));
+    }
+
+    private async resolveTags(user: User, tags: Tag[]): Promise<Tag[]> {
+        return Promise.all(
+            tags.map(async (tag) => {
+                const existingTag = await this.tagService.getByName(tag.name, user.tenantId);
+                if (existingTag) return existingTag;
+                return this.tagService.create(user, tag);
+            })
+        );
     }
 }

@@ -6,17 +6,23 @@ import { Tenant } from 'runbotics-common';
 
 import useTenantSearch from '#src-app/hooks/useTenantSearch';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { useSelector } from '#src-app/store';
-import { tenantsSelector } from '#src-app/store/slices/Tenants';
+import { useDispatch, useSelector } from '#src-app/store';
+import { tenantsActions, tenantsSelector } from '#src-app/store/slices/Tenants';
 
+
+import TenantPluginsDrawer from '#src-app/views/tenants/TenantsListView/TenantPluginsDrawer/TenantPluginsDrawer';
 import TablePagingProvider, { AVAILABLE_ROWS_PER_PAGE, DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
+
 
 import TenantsListEditDialog from './TenantsListEdit';
 import TenantsListTable from './TenantsListTable/TenantsListTable';
 import { StyledActionsContainer, StyledButton, StyledTextField } from './TenantsListView.styles';
 import CreateTenantDialog from '../CreateTenantDialog';
 
+
+
 const TenantsListView: VFC = () => {
+    const dispatch = useDispatch();
     const { translate } = useTranslations();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -31,12 +37,13 @@ const TenantsListView: VFC = () => {
     );
 
     const { allByPage } = useSelector(tenantsSelector);
-
+    
     const { search, handleSearch, refreshSearch } = useTenantSearch({ page, pageSize: limit });
 
     const [tenantData, setTenantData] = useState<Tenant>();
     const [isEditDialogVisible, setIsEditDialogVisible] = useState(false);
     const [isCreateDialogVisible, setIsCreateDialogVisible] = useState(false);
+    const [isPluginDrawerVisible, setIsPluginDrawerVisible] = useState(false);
 
     const openEditDialog = (rowData) => {
         setIsEditDialogVisible(true);
@@ -54,7 +61,18 @@ const TenantsListView: VFC = () => {
     const closeCreateDialog = () => {
         setIsCreateDialogVisible(false);
     };
-
+    
+    const openPluginDrawer = (rowData) => {
+        dispatch(tenantsActions.fetchTenantPlugins(rowData.id)).unwrap().then(() => {
+            setIsPluginDrawerVisible(true);
+            setTenantData(rowData);
+        });
+    };
+    
+    const closePluginDrawer = () => {
+        setIsPluginDrawerVisible(false);
+    };
+    
     useEffect(() => {
         const isPageNotAvailable = allByPage?.totalPages && page >= allByPage?.totalPages;
         if (isPageNotAvailable) {
@@ -102,7 +120,9 @@ const TenantsListView: VFC = () => {
                 pageSize={limit}
                 onPageSizeChange={setLimit}
                 openTenantEditDialog={openEditDialog}
+                openTenantPluginDrawer={openPluginDrawer}
             />
+            <TenantPluginsDrawer open={isPluginDrawerVisible} onClose={closePluginDrawer} tenantData={tenantData} />
         </TablePagingProvider>
     );
 };

@@ -20,13 +20,14 @@ import getLoopActions from './loop.actions';
 import getMailActions from './mail.actions';
 import getPowerPointActions from './powerpoint.actions';
 import getSapActions from './SapActions/sap.actions';
+import getSQLActions from './sql.actions';
 import { IBpmnAction } from './types';
 import getVariablesActions from './variables.actions';
 import getVisualBasicActions from './visualBasic.actions';
 import getWindowsActions from './windows.actions';
 import getZipActions from './zip.actions';
 
-const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
+const getInternalBpmnActions: () => Readonly<Record<string, IBpmnAction>> = () => ({
     ...getLoopActions(),
     ...getBeeOfficeActions(),
     ...getSapActions(),
@@ -53,6 +54,11 @@ const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
     ...getImageActions(),
     ...getZipActions(),
     ...getWindowsActions(),
+    ...getSQLActions(),
+});
+
+const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {
+    ...getInternalBpmnActions()
 };
 
-export default internalBpmnActions;
+export {internalBpmnActions as default, getInternalBpmnActions};
