@@ -181,7 +181,7 @@ export class BotCollectionService {
         : collections.map(collection => this.mapCollectionUserToBasic(collection));
     }
 
-    async findIdsForAdmin(user: User, specs: Specs<BotCollection>, paging: Paging) {
+    async findIdsForTenantAdmin(user: User, specs: Specs<BotCollection>, paging: Paging) {
         const options: FindManyOptions<BotCollection> = {
             ...paging,
             where: [
@@ -200,7 +200,7 @@ export class BotCollectionService {
 
     async findIds(user: User, specs: Specs<BotCollection>, paging: Paging) {
         if (hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS)) {
-            return this.findIdsForAdmin(user, specs, paging);
+            return this.findIdsForTenantAdmin(user, specs, paging);
         }
 
         return this.findIdsForUser(user, specs, paging);

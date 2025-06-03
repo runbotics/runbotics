@@ -102,11 +102,8 @@ export class ProcessListener {
                     throw new Error(`The process was not found in the tenant to which the bot is authenticated. Process id: ${processId}, bot tenant id: ${tenantId}`);
                 });
 
-            // TODO - error caused because ROLE_ADMIN still have
-            // PROCESS_COLLECTION_ALL_ACCESS and process get request does not catch error
-            // once admin role will have feature_keys related to process removed below can be deleted, to consider changing method for getting one process
-            // to think how can handle it without changing much in processes
-            if (!process.name) {
+            // TODO - after updating get method to findOneByOrFail in process-crud.service it can be removed
+            if (!process) {
                 throw new ForbiddenException(`Bot user does not have access to the process. Process id: ${processId}`);
             }
 
