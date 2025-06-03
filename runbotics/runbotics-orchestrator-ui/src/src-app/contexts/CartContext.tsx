@@ -25,9 +25,17 @@ export interface ContactFormValue {
     additionalInfo: string;
 }
 
+const initialFormValues = {
+    name: '',
+    email: '',
+    phone: '',
+    additionalInfo: '',
+};
+
 interface CartContextType {
     cart: CartItem[];
     contactFormValue: ContactFormValue;
+    resetFormValue: () => void;
     changeFormValue: (key: keyof ContactFormValue, value: string) => void;
     addToCart: (item: CartItem) => void;
     removeFromCart: (id: string) => void;
@@ -41,15 +49,14 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
     const [cart, setCart] = useTypedLocalStorage<CartItem[]>('cart', []);
-    const [contactFormValue, setContactFormValue] = useState<ContactFormValue>({
-        name: '',
-        email: '',
-        phone: '',
-        additionalInfo: '',
-    });
+    const [contactFormValue, setContactFormValue] = useState<ContactFormValue>(initialFormValues);
     const [selectedCartItems, setSelectedCartItems] = useState<string[]>(cart.map(item => item.slug) ?? []);
     const {enqueueSnackbar} = useSnackbar();
     
+    const resetFormValue = () => {
+        setContactFormValue(initialFormValues);
+    };
+
     const changeFormValue = (key: keyof ContactFormValue, value: string) => {
         setContactFormValue((prevState) => ({
             ...prevState,
@@ -95,6 +102,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         <CartContext.Provider value={{ 
             cart, 
             contactFormValue,
+            resetFormValue,
             changeFormValue,  
             addToCart, 
             removeFromCart,
