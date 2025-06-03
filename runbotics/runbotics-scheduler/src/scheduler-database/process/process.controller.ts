@@ -208,7 +208,7 @@ export class ProcessController {
     ) {
         // @todo after process collection migration probably split these two endpoints into two separate (collection/all processes view (collection/all processes view)
         // @ts-expect-error property not in built-in type
-        const { _type, _value } = specs.where.processCollectionId?.valueOf()?.value.at(0) ?? {};
+        const { _type = 'isNull', _value } = specs.where.processCollectionId?.valueOf()?.value.at(0) ?? {};
 
         const isRootCollection = _type === 'isNull';
         const isNotAllProcessesView = _type === 'equal' && _value.trim();

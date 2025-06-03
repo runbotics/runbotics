@@ -16,6 +16,14 @@ $FORM-MAX-WIDTH: 800px;
     gap: $margin-6;
 }
 
+.form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 48px;
+}
+
 .formRow {
     position: relative;
     width: 100%;
@@ -41,9 +49,9 @@ $FORM-MAX-WIDTH: 800px;
     transition: all 300ms ease-in-out;
 
     li {
-      margin-top: 5px;
+        margin-top: 5px;
     }
-  }
+}
 
 .processingData {
     @include common-styles;

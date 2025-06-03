@@ -8,9 +8,8 @@ const modalsActionsTranslations = {
     'Users.Actions.Modals.DeleteModal.Button.Delete': 'Delete',
     'Users.Actions.Modals.DeleteModal.Button.Decline': 'Decline',
     'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Title': 'Select reason:',
-    'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.FirstReason': 'We cannot activate your account at this time. Please contact administrator.',
-    'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.SecondReason': 'Your account activation was not approved. It does not meet our criteria.',
-    'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.ThirdReason': 'Other reason:',
+    'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.CustomReason': 'Your account activation request has been rejected. Reason:',
+    'Users.Actions.Modals.DeleteModal.DeclineReason.RadioControl.Label.DefaultReason': 'Your account activation was not approved.',
     'Users.Actions.Modals.DeleteModal.DeclineReason.TextField.Label.Message': 'Message'
 };
 

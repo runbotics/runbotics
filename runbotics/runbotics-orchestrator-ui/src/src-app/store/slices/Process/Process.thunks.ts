@@ -4,9 +4,9 @@ import {
     IProcess,
     Tag,
     NotificationProcess,
-    NotificationProcessType,
     ProcessCredentialDto,
     ProcessDto,
+    CreateNotificationProcessDto,
 } from 'runbotics-common';
 
 import { Socket } from 'socket.io-client';
@@ -39,12 +39,16 @@ export const fetchProcessById = createAsyncThunk<
     const { currentRequestId, loading } = getState().process.draft;
 
     if (loading !== LoadingType.PENDING || requestId !== currentRequestId) {
-        rejectWithValue(undefined);
+        return rejectWithValue(undefined);
     }
 
     const result = await dispatch(getProcessById({ resourceId: processId }));
 
-    return result.payload;
+    if (getProcessById.rejected.match(result)) {
+        return rejectWithValue(result.payload);
+    }
+
+    return result.payload as ProcessDto;
 });
 
 export const fetchGuestDemoProcess = ApiTenantResource.get<ProcessDto>(
@@ -135,7 +139,7 @@ export const deleteProcess = ApiTenantResource.delete<number>('process/delete', 
 export const getTagsByName = ApiTenantResource.get<Tag[]>('tags/getByName', TAGS_PATH);
 
 export const subscribeProcessNotifications = ApiTenantResource
-    .post<NotificationProcess, { processId: number, type: NotificationProcessType }>
+    .post<NotificationProcess, CreateNotificationProcessDto>
     ('processes/subscribeProcessNotifications', PROCESS_NOTIFICATION_PATH);
 
 export const unsubscribeProcessNotifications = ApiTenantResource

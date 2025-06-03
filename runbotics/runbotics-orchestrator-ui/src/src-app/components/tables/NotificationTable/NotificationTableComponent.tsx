@@ -8,18 +8,22 @@ import { Role } from 'runbotics-common';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { StyledActionsContainer, StyledTextField } from '#src-app/views/users/UsersListView/UsersListView.styles';
+import {
+    StyledActionsContainer,
+    StyledTextField,
+} from '#src-app/views/users/UsersListView/UsersListView.styles';
 
 import { DEFAULT_TABLE_PAGING_VALUES } from '#src-app/views/utils/TablePaging.provider';
 
-import { StyledHeaderWrapper, StyledWrapper } from './NotificationTableComponent.styles';
-import { BotNotificationRow, ProcessNotificationRow } from './NotificationTableComponent.types';
-import { SubscribersTableFields } from './NotificationTableComponent.utils';
-
+import {
+    StyledHeaderWrapper,
+    StyledWrapper,
+} from './NotificationTableComponent.styles';
+import { NotificationRow, NotificationTableFields } from './NotificationTableComponent.types';
 
 interface NotificationTableProps {
     notificationTableColumns: GridColDef[];
-    subscribersList: (BotNotificationRow | ProcessNotificationRow)[];
+    subscribersList: NotificationRow[];
     loading?: boolean;
     onClose: () => void;
 }
@@ -35,8 +39,7 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
     const [search, setSearch] = useState('');
 
     const filteredSubscribersList = useMemo(() => subscribersList
-        .filter(sub => sub.user
-            .includes(search)),
+        .filter(sub => sub[NotificationTableFields.EMAIL].toLowerCase().includes(search.toLowerCase())),
     [search, subscribersList]);
 
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,14 +71,16 @@ const NotificationTableComponent: VFC<NotificationTableProps> = ({
             </StyledActionsContainer>
             <DataGrid
                 columns={notificationTableColumns}
-                columnVisibilityModel={{ [SubscribersTableFields.ACTIONS]: isTenantAdmin }}
+                columnVisibilityModel={{
+                    [NotificationTableFields.ACTIONS]: isTenantAdmin,
+                }}
                 rows={filteredSubscribersList}
                 rowCount={filteredSubscribersList.length}
                 loading={loading}
                 disableSelectionOnClick
                 pageSize={DEFAULT_TABLE_PAGING_VALUES.pageSize}
                 localeText={{
-                    noRowsLabel: translate('Component.NotificationTable.Results.Error')
+                    noRowsLabel: translate('Component.NotificationTable.Results.Error'),
                 }}
             />
         </StyledWrapper>

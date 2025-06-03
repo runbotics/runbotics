@@ -28,6 +28,7 @@ const MarketplaceSection: VFC<Props> = ({ offers }) => {
         <section
             id={MARKETPLACE_SECTION_ID}
             aria-labelledby={MARKETPLACE_SECTION_TITLE_ID}
+            className={styles.marketplaceSection}
         >
             <div className={styles.marketplaceTitle}>
                 <Typography className={styles.mainTitle} variant="h2" id={MARKETPLACE_SECTION_TITLE_ID}>
