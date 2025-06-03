@@ -17,7 +17,7 @@ export class LicenseController {
 
     constructor(private readonly licenseService: LicenseService) {}
 
-    @GetWithTenant('plugins/available')
+    @GetWithTenant('licenses/plugins/available')
     getAvailablePlugins(@UserDecorator() user: User) {
         return this.licenseService.getAvailablePlugins(user);
     }
