@@ -23,7 +23,7 @@ const SNACKBAR_AUTOHIDE_DURATION = 5000;
 const MarketplaceCartView: FC = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
-    const { cart, contactFormValue, selectedCartItems} = useCart();
+    const { cart, contactFormValue, selectedCartItems, resetFormValue} = useCart();
 
     const fullPrice = cart.filter(item => selectedCartItems.includes(item.slug))
         .reduce(
@@ -72,12 +72,20 @@ const MarketplaceCartView: FC = () => {
                     variant: 'success',
                     autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
                 });
+                resetFormValue();
             })
-            .catch(() => {
-                enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
-                    variant: 'error',
-                    autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
-                });
+            .catch((res) => {
+                if (res.status === 429) {
+                    enqueueSnackbar(translate('Marketplace.Cart.TooManyRequests'), {
+                        variant: 'error',
+                        autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
+                    });
+                } else {
+                    enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
+                        variant: 'error',
+                        autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
+                    });
+                }
             });
     };
     return (
