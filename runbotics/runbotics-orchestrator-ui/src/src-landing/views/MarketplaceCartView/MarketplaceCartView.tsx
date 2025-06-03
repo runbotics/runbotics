@@ -74,11 +74,18 @@ const MarketplaceCartView: FC = () => {
                 });
                 resetFormValue();
             })
-            .catch(() => {
-                enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
-                    variant: 'error',
-                    autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
-                });
+            .catch((res) => {
+                if (res.status === 429) {
+                    enqueueSnackbar(translate('Marketplace.Cart.TooManyRequests'), {
+                        variant: 'error',
+                        autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
+                    });
+                } else {
+                    enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
+                        variant: 'error',
+                        autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
+                    });
+                }
             });
     };
     return (

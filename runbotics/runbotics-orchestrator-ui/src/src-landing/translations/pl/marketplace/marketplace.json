@@ -42,6 +42,7 @@
     "Marketplace.Cart.EmailSent": "Wysłano email",
     "Marketplace.Cart.EmailError": "Błąd podczas wysyłania wiadomości",
     "Marketplace.Cart.NoEmailError": "Wprowadź poprawny adres email",
+    "Marketplace.Cart.TooManyRequests": "Za dużo prób wysłania wiadomości. Spróbuj ponownie za parę minut.",
     "Marketplace.Cart.NoNameAndSurnameError": "Wprowadź imię i nazwisko",
     "Marketplace.Cart.SuccessAdded": "Dodano ofertę do koszyka",
     "Marketplace.Cart.ErrorAdded": "Wystąpił błąd podczas dodawania nowej oferty do koszyka",

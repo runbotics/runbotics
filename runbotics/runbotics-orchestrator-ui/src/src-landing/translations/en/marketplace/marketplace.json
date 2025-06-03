@@ -42,6 +42,7 @@
     "Marketplace.Cart.EmailSent": "Email sent successfully",
     "Marketplace.Cart.EmailError": "Error occurred while sending email",
     "Marketplace.Cart.NoEmailError": "Enter valid email",
+    "Marketplace.Cart.TooManyRequests": "Too many contact attempts. Try again in a few minutes.",
     "Marketplace.Cart.NoNameAndSurnameError": "Enter name and surname",
     "Marketplace.Cart.SuccessAdded": "Offer added successfully",
     "Marketplace.Cart.ErrorAdded": "Error occurred while adding new offer to cart",
