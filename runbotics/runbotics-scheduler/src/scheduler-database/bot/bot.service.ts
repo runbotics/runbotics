@@ -21,7 +21,7 @@ export class BotService {
     ) {}
 
     withEntityManager(em: EntityManager): BotService {
-        return new BotService(em.getRepository(BotEntity))
+        return new BotService(em.getRepository(BotEntity));
     }
 
     findAll(): Promise<IBot[]> {
@@ -50,7 +50,7 @@ export class BotService {
         collection: IBotCollection,
         system: IBotSystem,
     ): Promise<IBot[]> {
-        const availableBots = await this.botRepository.find({
+        const availableBots = collection.publicBotsIncluded ? await this.botRepository.find({
             where: [
                 {
                     ...(system.name !== BotSystemType.ANY && { system }),
@@ -61,13 +61,25 @@ export class BotService {
                 {
                     ...(system.name !== BotSystemType.ANY && { system }),
                     status: In([BotStatus.CONNECTED, BotStatus.BUSY]),
+                    tenantId: collection.tenantId,
                     collection: {
                         name: In([DefaultCollections.PUBLIC, DefaultCollections.GUEST]),
-                    }
+                    },
                 }
             ],
             relations,
-        });
+        }) : await this.botRepository.find({
+            where: [
+                {
+                    ...(system.name !== BotSystemType.ANY && { system }),
+                    status: In([BotStatus.CONNECTED, BotStatus.BUSY]),
+                    tenantId: collection.tenantId,
+                    collectionId: collection.id,
+                },
+            ],
+            relations,
+        })
+        ;
 
         return availableBots;
     }

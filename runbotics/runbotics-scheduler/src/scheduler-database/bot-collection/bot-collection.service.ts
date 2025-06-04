@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, FindOptionsRelations, In, Repository, And, Equal, FindOperator } from 'typeorm';
 import { IBotCollection, FeatureKey } from 'runbotics-common';
 import { BotCollection } from './bot-collection.entity';
 import { User } from '#/scheduler-database/user/user.entity';
+import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { CreateBotCollectionDto } from '#/scheduler-database/bot-collection/dto/create-bot-collection.dto';
 import { UpdateBotCollectionDto } from '#/scheduler-database/bot-collection/dto/update-bot-collection.dto';
 import { Specs } from '#/utils/specification/specifiable.decorator';
@@ -11,7 +12,7 @@ import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { DefaultCollections } from 'runbotics-common';
 import { UserService } from '../user/user.service';
-import { hasFeatureKey } from '#/utils/authority.utils';
+import { hasFeatureKey, isTenantAdmin } from '#/utils/authority.utils';
 
 const RELATIONS: FindOptionsRelations<BotCollection> = {
     createdByUser: true,
@@ -25,9 +26,10 @@ export class BotCollectionService {
         private botCollectionRepository: Repository<BotCollection>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        private readonly userService: UserService,
-    ) {
-    }
+        @InjectRepository(ProcessEntity)
+        private processRepository: Repository<ProcessEntity>,
+        private readonly userService: UserService
+    ) {}
 
     getById(id: string): Promise<BotCollection> {
         return this.botCollectionRepository.findOne({ where: { id }, relations: RELATIONS });
@@ -39,6 +41,8 @@ export class BotCollectionService {
     }
 
     async saveDto(user: User, collectionDto: CreateBotCollectionDto) {
+        const isUserTenantAdmin = isTenantAdmin(user);
+
         const collection = new BotCollection();
         collection.name = collectionDto.name;
         collection.description = collectionDto.description;
@@ -46,6 +50,12 @@ export class BotCollectionService {
         collection.createdByUser = user;
         collection.tenantId = user.tenantId;
 
+        await this.isCollectionNameTakenInTenant(collection.name, collection.tenantId);
+
+        if (!isUserTenantAdmin && this.isDefaultCollectionName(collection.name)) {
+            throw new BadRequestException('Collection name restricted');
+        }
+
         if (collectionDto.users) {
             const userIds = collectionDto.users.map(user => user.id);
             const users = await this.userRepository.findBy({ id: In(userIds), tenantId: user.tenantId });
@@ -55,20 +65,23 @@ export class BotCollectionService {
             collection.users = users;
         }
 
-        return this.botCollectionRepository.save(collection);
+        const newCollection = await this.botCollectionRepository.save(collection);
+
+        return this.mapCollectionUserToBasic(newCollection);
     }
 
     async updateDto(id: string, user: User, collectionDto: UpdateBotCollectionDto) {
-        const collection = await this.botCollectionRepository
-            .findOneByOrFail({ tenantId: user.tenantId, id })
-            .catch(() => {
-                throw new NotFoundException();
-            });
+        const collection = await this.botCollectionRepository.findOneByOrFail({ tenantId: user.tenantId, id }).catch(() => {
+            throw new NotFoundException();
+        });
+
         collection.name = collectionDto.name;
         collection.description = collectionDto.description;
         collection.publicBotsIncluded = collectionDto.publicBotsIncluded;
         collection.createdByUser = user;
 
+        await this.isCollectionNameTakenInTenant(collection.name, collection.tenantId);
+
         if (collectionDto.users) {
             const userIds = collectionDto.users.map(user => user.id);
             const users = await this.userRepository.findBy({ id: In(userIds), tenantId: user.tenantId });
@@ -78,53 +91,35 @@ export class BotCollectionService {
             collection.users = users;
         }
 
-        await this.botCollectionRepository.save(collection);
+        const updatedCollection = await this.botCollectionRepository.save(collection);
 
-        return collection;
+        return this.mapCollectionUserToBasic(updatedCollection);
     }
 
-    findAll(user: User, specs: Specs<BotCollection>) {
+    async findAll(user: User, specs: Specs<BotCollection>) {
         const options: FindManyOptions<BotCollection> = {};
         options.where = [
             {
                 ...specs.where,
-                tenantId: user.tenantId,
-            },
-            {
-                name: specs.where.name ?
-                    And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                    : DefaultCollections.GUEST,
-            },
-            {
-                name: specs.where.name ?
-                    And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
-                    : DefaultCollections.PUBLIC,
-            },
+                tenantId: user.tenantId
+            }
         ];
 
         options.order = specs.order;
         options.relations = RELATIONS;
 
-        return this.botCollectionRepository.find(options);
+        const foundCollections = await this.botCollectionRepository.find(options);
+
+        return foundCollections.map(collection => this.mapCollectionUserToBasic(collection));
     }
 
-    findAllPage(user: User, specs: Specs<BotCollection>, paging: Paging) {
+    async findAllPage(user: User, specs: Specs<BotCollection>, paging: Paging) {
         const options: FindManyOptions<BotCollection> = {};
         options.where = [
             {
                 ...specs.where,
-                tenantId: user.tenantId,
-            },
-            {
-                name: specs.where.name ?
-                    And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                    : DefaultCollections.GUEST,
-            },
-            {
-                name: specs.where.name ?
-                    And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
-                    : DefaultCollections.PUBLIC,
-            },
+                tenantId: user.tenantId
+            }
         ];
 
         options.order = specs.order;
@@ -136,94 +131,67 @@ export class BotCollectionService {
         return getPage(this.botCollectionRepository, options);
     }
 
-    findById(id: string, user: User) {
-        return this.botCollectionRepository.find({ where: { tenantId: user.tenantId, id }, relations: RELATIONS });
+    findByIdForAdmin(id: string, user: User) {
+        return this.botCollectionRepository
+            .findOneOrFail({
+                where: {
+                    tenantId: user.tenantId,
+                    id
+                },
+                relations: RELATIONS
+            })
+            .catch(() => {
+                throw new NotFoundException('Collection with provided id does not exist');
+            });
     }
 
-    delete(id: string, user: User) {
+    async findByIdForUser(id: string, user: User) {
+        const foundCollection = await this.findByIdForAdmin(id, user);
+
+        if (this.isDefaultCollectionName(foundCollection.name)) return foundCollection;
+
+        if (foundCollection.createdByUser.id === user.id || foundCollection.users.find(sharedWithUser => sharedWithUser.id === user.id)) {
+            return foundCollection;
+        }
+
+        throw new ForbiddenException('You don\'t have access to this collection');
+    }
+
+    findById(id: string, user: User) {
+        if (hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS)) {
+            return this.findByIdForAdmin(id, user);
+        }
+        return this.findByIdForUser(id, user);
+    }
+
+    async delete(id: string, user: User) {
+        await this.findById(id, user);
+
+        await this.checkIfCollectionIsUsedInProcess(id);
+
         return this.botCollectionRepository.delete({ id, tenantId: user.tenantId });
     }
 
+    async findForUser(user: User, specs: Specs<BotCollection>) {
+        const options = this.getFindOptions(user, specs);
 
-    findForUser(user: User, specs: Specs<BotCollection>) {
-        if (hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS)) {
-            return this.botCollectionRepository.find(
-                {
-                    where: [
-                        {
-                            tenantId: user.tenantId,
-                            name: specs.where.name,
-                        },
-                        {
-                            name: specs.where.name ?
-                                And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                                : DefaultCollections.GUEST,
-                        },
-                        {
-                            name: specs.where.name ?
-                                And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
-                                : DefaultCollections.PUBLIC,
-                        },
-                    ],
-                    relations: RELATIONS,
-                });
-        }
+        const collections = await this.botCollectionRepository.find(options);
+        return hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS)
+        ? collections
+        : collections.map(collection => this.mapCollectionUserToBasic(collection));
+    }
 
-        return this.botCollectionRepository.find({
-            relations: RELATIONS,
+    async findIdsForTenantAdmin(user: User, specs: Specs<BotCollection>, paging: Paging) {
+        const options: FindManyOptions<BotCollection> = {
+            ...paging,
             where: [
                 {
                     tenantId: user.tenantId,
-                    users: {
-                        id: user.id,
-                    },
-                    name: specs.where.name,
-                },
-                {
-                    tenantId: user.tenantId,
-                    createdByUser: user,
-                    name: specs.where.name,
-                },
-                {
-                    name: specs.where.name ?
-                        And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                        : DefaultCollections.GUEST,
-                },
-                {
-                    name: specs.where.name ?
-                        And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
-                        : DefaultCollections.PUBLIC,
-                },
+                    name: specs.where.name
+                }
             ],
-        }).then(collections => collections.map(collection => ({
-            ...collection,
-            createdByUser: this.userService.mapToBasicUserDto(collection.createdByUser),
-            users: collection.users.map(user => this.userService.mapToBasicUserDto(user)),
-        })));
-    }
-
-    async findIdsForAdmin(user: User, specs: Specs<BotCollection>, paging: Paging) {
-        const options: FindManyOptions<BotCollection> =
-            {
-                ...paging,
-                where: [
-                    {
-                        tenantId: user.tenantId,
-                        name: specs.where.name,
-                    },
-                    {
-                        name: specs.where.name ?
-                            And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                            : DefaultCollections.GUEST,
-                    },
-                    {
-                        name: specs.where.name ?
-                            And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
-                            : DefaultCollections.PUBLIC,
-                    },
-                ],
-                relations: RELATIONS,
-            };
+            relations: RELATIONS
+        };
 
         const page = await getPage(this.botCollectionRepository, options);
 
@@ -232,45 +200,15 @@ export class BotCollectionService {
 
     async findIds(user: User, specs: Specs<BotCollection>, paging: Paging) {
         if (hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS)) {
-            return this.findIdsForAdmin(user, specs, paging);
+            return this.findIdsForTenantAdmin(user, specs, paging);
         }
+
         return this.findIdsForUser(user, specs, paging);
     }
 
     async findIdsForUser(user: User, specs: Specs<BotCollection>, paging: Paging) {
-        const options: FindManyOptions<BotCollection> = {
-            select: {
-                id: true,
-            },
-            relations: RELATIONS,
-            ...paging,
-            where: [
-                {
-                    tenantId: user.tenantId,
-                    users: {
-                        id: user.id,
-                    },
-                    name: specs.where.name,
-                },
-                {
-                    tenantId: user.tenantId,
-                    createdByUser: {
-                        id: user.id,
-                    },
-                    name: specs.where.name,
-                },
-                {
-                    name: specs.where.name ?
-                        And(Equal(DefaultCollections.GUEST), specs.where.name as FindOperator<string>)
-                        : DefaultCollections.GUEST,
-                },
-                {
-                    name: specs.where.name ?
-                        And(Equal(DefaultCollections.PUBLIC), specs.where.name as FindOperator<string>)
-                        : DefaultCollections.PUBLIC,
-                },
-            ],
-        };
+        const options = this.getFindOptions(user, specs, paging);
+        options.select = { id: true };
 
         const page = await getPage(this.botCollectionRepository, options);
 
@@ -278,47 +216,99 @@ export class BotCollectionService {
     }
 
     async findPageForUser(user: User, specs: Specs<BotCollection>, paging: Paging) {
-        // preserved java version functionality
-        if (hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS)) {
-            const ids = await this.findIdsForAdmin(user, specs, paging);
-            const options: FindManyOptions<BotCollection> = {
-                where: { id: In(ids) },
-                relations: RELATIONS,
-            };
-
-            const page = await getPage(this.botCollectionRepository, options);
-
-            return {
-                ...page,
-                content: page.content.map(collection => ({
-                    ...collection,
-                    createdByUser: this.userService.mapToBasicUserDto(collection.createdByUser),
-                    users: collection.users.map(user => this.userService.mapToBasicUserDto(user)),
-                }))
-            };
-        }
-
-        const ids = await this.findIdsForUser(user, specs, paging);
+        const ids = await this.findIds(user, specs, paging);
         const options: FindManyOptions<BotCollection> = {
             where: { id: In(ids) },
-            relations: RELATIONS,
+            relations: RELATIONS
         };
 
         const page = await getPage(this.botCollectionRepository, options);
 
         return {
             ...page,
-            content: page.content.map(collection => ({
-                ...collection,
-                createdByUser: this.userService.mapToBasicUserDto(collection.createdByUser),
-                users: collection.users.map(user => this.userService.mapToBasicUserDto(user)),
-            }))
+            content: page.content.map(collection => this.mapCollectionUserToBasic(collection))
         };
     }
 
     async isDefaultCollection(id: string) {
-        const collection = await this.botCollectionRepository.findOneByOrFail({ id });
+        const collection = await this.botCollectionRepository.findOneBy({ id });
 
-        return (Object.values(DefaultCollections) as string[]).includes(collection.name);
+        if (!collection) return false;
+
+        return this.isDefaultCollectionName(collection.name);
+    }
+
+    async isCollectionNameTakenInTenant(name: string, tenantId: string) {
+        const collections = await this.botCollectionRepository.findBy({ name, tenantId });
+
+        if (collections.length) {
+            throw new BadRequestException('Collection with this name already exists in tenant');
+        }
+    }
+
+    private isDefaultCollectionName(name: string) {
+        return Object.values(DefaultCollections).includes(name as DefaultCollections);
+    }
+
+    private mapCollectionUserToBasic(collection: BotCollection) {
+        return {
+            ...collection,
+            createdByUser: this.userService.mapToBasicUserDto(collection.createdByUser),
+            users: collection.users.map(user => this.userService.mapToBasicUserDto(user))
+        };
+    }
+
+    private buildWhereConditions(user: User, specs: Specs<BotCollection>) {
+        const nameCondition = specs.where.name;
+
+        return [
+            {
+                tenantId: user.tenantId,
+                users: { id: user.id },
+                name: nameCondition
+            },
+            {
+                tenantId: user.tenantId,
+                createdByUser: { id: user.id },
+                name: nameCondition
+            },
+            {
+                tenantId: user.tenantId,
+                name: nameCondition ? And(Equal(DefaultCollections.GUEST), nameCondition as FindOperator<string>) : DefaultCollections.GUEST
+            },
+            {
+                tenantId: user.tenantId,
+                name: nameCondition
+                    ? And(Equal(DefaultCollections.PUBLIC), nameCondition as FindOperator<string>)
+                    : DefaultCollections.PUBLIC
+            }
+        ];
+    }
+
+    private getFindOptions(user: User, specs: Specs<BotCollection>, paging?: Paging): FindManyOptions<BotCollection> {
+        const baseOptions: FindManyOptions<BotCollection> = {
+            relations: RELATIONS
+        };
+
+        if (hasFeatureKey(user, FeatureKey.BOT_COLLECTION_ALL_ACCESS)) {
+            return {
+                ...baseOptions,
+                where: [{ tenantId: user.tenantId, name: specs.where.name }]
+            };
+        }
+
+        return {
+            ...baseOptions,
+            ...(paging || {}),
+            where: this.buildWhereConditions(user, specs)
+        };
+    }
+
+    private async checkIfCollectionIsUsedInProcess(collectionId: string) {
+        const processesUsingCollection = await this.processRepository.countBy({ botCollectionId: collectionId });
+
+        if (processesUsingCollection) {
+            throw new BadRequestException('Cannot delete collection which used in at least one process');
+        }
     }
 }

@@ -8,12 +8,12 @@ const BOT_COLLECTIONS_PATH = 'bot-collections';
 
 export const getAll = ApiTenantResource.get<BotCollectionDto[]>(
     'botCollection/getAllForUser',
-    `${BOT_COLLECTIONS_PATH}/current-user`,
+    `${BOT_COLLECTIONS_PATH}`,
 );
 
 export const getByPage = ApiTenantResource.get<Page<BotCollectionDto>>(
     'botCollection/getPageForUser',
-    `${BOT_COLLECTIONS_PATH}/current-user/GetPage`,
+    `${BOT_COLLECTIONS_PATH}/GetPage`,
 );
 
 export const deleteOne = ApiTenantResource.delete(
