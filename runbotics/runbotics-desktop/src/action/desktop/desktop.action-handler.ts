@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { DesktopAction } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
-import { createWorker } from 'tesseract.js';
+import Tesseract, { createWorker } from 'tesseract.js';
 
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import {
@@ -199,7 +199,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     async readTextFromImage(rawInput: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
         const { imageFullPath, language } = await validateInput(rawInput, readTextFromImageInputSchema);
 
-        let worker: any;
+        let worker: Tesseract.Worker;
         try {
             this.checkFileExist(imageFullPath);
             const imageBuffer = fs.readFileSync(imageFullPath);
@@ -207,6 +207,8 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             worker = await createWorker({ langPath: '.\\trained_data' });
             await worker.loadLanguage(language);
             await worker.initialize(language);
+            const pageseg_mode: Tesseract.PSM = Tesseract.PSM.SPARSE_TEXT;
+            await worker.setParameters({tessedit_pageseg_mode: pageseg_mode});
             const { data: { text } } = await worker.recognize(imageBuffer);
 
             return text;
