@@ -23,7 +23,7 @@
         "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create"
     },
     "dependencies": {
-        "@azure/msal-node": "^1.15.0",
+        "@azure/msal-node": "~3.6.0",
         "@microsoft/microsoft-graph-client": "^3.0.5",
         "@nestjs/bull": "^0.6.2",
         "@nestjs/cli": "^9.1.5",

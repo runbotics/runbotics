@@ -594,8 +594,8 @@ importers:
   ../../runbotics-scheduler:
     dependencies:
       '@azure/msal-node':
-        specifier: ^1.15.0
-        version: 1.18.2
+        specifier: ~3.6.0
+        version: 3.6.0
       '@microsoft/microsoft-graph-client':
         specifier: ^3.0.5
         version: 3.0.6
@@ -917,11 +917,25 @@ packages:
     engines: {node: '>=0.8.0'}
     dev: false
 
+  /@azure/msal-common@15.7.0:
+    resolution: {integrity: sha512-m9M5hoFoxhe/HlXNVa4qBHekrX60CVPkWzsjhKQGuzw/OPOmurosKRPDIMn8fug/E1hHI5v33DvT1LVJfItjcg==}
+    engines: {node: '>=0.8.0'}
+    dev: false
+
   /@azure/msal-node@1.18.2:
     resolution: {integrity: sha512-bLbuhF9Q5cgwj9tt8R7EV9MbCwGuFgZiv6Gw0VvHx5AcWHhh2m8hYginGagB4EucxKueFDwZP6aZVAxfuD/lUQ==}
     engines: {node: 10 || 12 || 14 || 16 || 18}
     dependencies:
       '@azure/msal-common': 13.3.0
+      jsonwebtoken: 9.0.2
+      uuid: 8.3.2
+    dev: false
+
+  /@azure/msal-node@3.6.0:
+    resolution: {integrity: sha512-MRZ38Ou6l9LiRkz/968mG0czfIvD1PxMZ/3Jyz5k00ZMnhNOwv+DIliEcy//laoWDobAAq+/cz97xefCcHPgjg==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@azure/msal-common': 15.7.0
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
     dev: false
