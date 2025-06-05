@@ -23,7 +23,8 @@ import ProcessTable from '../ProcessTable/ProcessTable';
 
 const ProcessList: VFC = () => {
     const router = useRouter();
-    const { page: processesPage, loading: isStoreLoading, listDisplayMode } = useSelector((state) => state.process.all);
+    const { page: processesPage, loading: isStoreLoading, listDisplayMode: rawListDisplayMode } = useSelector((state) => state.process.all);
+
     const dispatch = useDispatch();
     const showLoading = useLoading(isStoreLoading, LOADING_DEBOUNCE);
     const searchParams = useSearchParams();
@@ -37,6 +38,8 @@ const ProcessList: VFC = () => {
     const { handleSearch, search, handleAdvancedSearch, clearSearch } = useProcessSearch(collectionId, pageSize, page);
     const replaceQueryParams = useReplaceQueryParams();
     useProcessQueueSocket();
+
+    const listDisplayMode = isCollectionsTab ? ProcessListDisplayMode.GRID : rawListDisplayMode;
 
     useEffect(() => {
         const pageNotAvailable = processesPage && page >= processesPage.totalPages;
