@@ -15,13 +15,14 @@ import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
+import { Page } from '#src-app/utils/types/page';
 
 interface ColumnsActions {
     onDelete: (globalVariable: IGlobalVariable) => void;
     onEdit: (globalVariable: IGlobalVariable) => void;
     hasEditVariableAccess: boolean;
     hasDeleteVariableAccess: boolean;
-    globalVariables: IGlobalVariable[];
+    globalVariables: Page<IGlobalVariable>;
 }
 
 const useGlobalVariablesColumns = ({
@@ -34,7 +35,7 @@ const useGlobalVariablesColumns = ({
     const { translate } = useTranslations();
     const isGlobalVariableOwner = useOwner();
     const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
-    const isActionsColumnHidden = globalVariables.every(({ creator }) =>
+    const isActionsColumnHidden = globalVariables && globalVariables.content.every(({ creator }) =>
         !(isTenantAdmin || isGlobalVariableOwner(creator.id))
     );
 
