@@ -26,7 +26,7 @@ export class GlobalVariableService {
         private readonly processRepository: Repository<ProcessEntity>,
     ) {}
 
-    getAllByPage(tenantId: string, paging: Paging, search?: string, sortField?: string, sortDirection?: string) {
+    getAllByPage(tenantId: string, paging: Paging, search?: string, sortField = 'lastModiefied', sortDirection = 'DESC') {
         const findOptions: FindManyOptions<GlobalVariable> = {
             where: { 
                 tenantId,
@@ -34,7 +34,7 @@ export class GlobalVariableService {
             },
             relations,
             order: {
-                lastModified: 'DESC'
+                [sortField]: sortDirection,
             },
             ...paging
         };
