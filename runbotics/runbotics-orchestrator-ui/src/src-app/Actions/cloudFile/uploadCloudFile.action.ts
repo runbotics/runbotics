@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
 
-export const uploadCloudFileAction = {
+export const getUploadCloudFileAction =() => ({
     id: CloudFileAction.UPLOAD_FILE,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.Upload.Label'),
@@ -106,4 +106,6 @@ export const uploadCloudFileAction = {
             },
         },
     },
-} satisfies IBpmnAction;
+} satisfies IBpmnAction
+);
+
