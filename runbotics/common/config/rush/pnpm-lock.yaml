@@ -618,8 +618,8 @@ importers:
   ../../runbotics-scheduler:
     dependencies:
       '@azure/msal-node':
-        specifier: ^1.15.0
-        version: 1.18.2
+        specifier: ~3.6.0
+        version: 3.6.1
       '@microsoft/microsoft-graph-client':
         specifier: ^3.0.5
         version: 3.0.6
@@ -704,6 +704,9 @@ importers:
       jwks-rsa:
         specifier: ~3.1.0
         version: 3.1.0
+      jwt-decode:
+        specifier: ~4.0.0
+        version: 4.0.0
       lodash:
         specifier: ^4.17.19
         version: 4.17.21
@@ -860,7 +863,7 @@ importers:
         version: 0.13.3
       rollup-plugin-typescript2:
         specifier: ^0.30.0
-        version: 0.30.0(rollup@4.22.0)(typescript@5.2.2)
+        version: 0.30.0(rollup@4.43.0)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -951,11 +954,25 @@ packages:
     engines: {node: '>=0.8.0'}
     dev: false
 
+  /@azure/msal-common@15.7.1:
+    resolution: {integrity: sha512-a0eowoYfRfKZEjbiCoA5bPT3IlWRAdGSvi63OU23Hv+X6EI8gbvXCoeqokUceFMoT9NfRUWTJSx5FiuzruqT8g==}
+    engines: {node: '>=0.8.0'}
+    dev: false
+
   /@azure/msal-node@1.18.2:
     resolution: {integrity: sha512-bLbuhF9Q5cgwj9tt8R7EV9MbCwGuFgZiv6Gw0VvHx5AcWHhh2m8hYginGagB4EucxKueFDwZP6aZVAxfuD/lUQ==}
     engines: {node: 10 || 12 || 14 || 16 || 18}
     dependencies:
       '@azure/msal-common': 13.3.0
+      jsonwebtoken: 9.0.2
+      uuid: 8.3.2
+    dev: false
+
+  /@azure/msal-node@3.6.1:
+    resolution: {integrity: sha512-ctcVz4xS+st5KxOlQqgpvA+uDFAa59CvkmumnuhlD2XmNczloKBdCiMQG7/TigSlaeHe01qoOlDjz3TyUAmKUg==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@azure/msal-common': 15.7.1
       jsonwebtoken: 9.0.2
       uuid: 8.3.2
     dev: false
@@ -16625,7 +16642,7 @@ packages:
       typescript: 4.9.5
     dev: true
 
-  /rollup-plugin-typescript2@0.30.0(rollup@4.22.0)(typescript@5.2.2):
+  /rollup-plugin-typescript2@0.30.0(rollup@4.43.0)(typescript@5.2.2):
     resolution: {integrity: sha512-NUFszIQyhgDdhRS9ya/VEmsnpTe+GERDMmFo0Y+kf8ds51Xy57nPNGglJY+W6x1vcouA7Au7nsTgsLFj2I0PxQ==}
     peerDependencies:
       rollup: '>=1.26.3'
@@ -16635,7 +16652,7 @@ packages:
       find-cache-dir: 3.3.2
       fs-extra: 8.1.0
       resolve: 1.20.0
-      rollup: 4.22.0
+      rollup: 4.43.0
       tslib: 2.1.0
       typescript: 5.2.2
     dev: true
@@ -19033,7 +19050,7 @@ packages:
         optional: true
     dependencies:
       '@types/eslint-scope': 3.7.4
-      '@types/estree': 1.0.5
+      '@types/estree': 1.0.7
       '@webassemblyjs/ast': 1.11.6
       '@webassemblyjs/wasm-edit': 1.11.6
       '@webassemblyjs/wasm-parser': 1.11.6

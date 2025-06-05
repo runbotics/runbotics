@@ -15,7 +15,7 @@ import { isAdmin, isTenantAdmin } from '#/utils/authority.utils';
 import postgresError from '#/utils/postgresError';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { MailService } from '#/mail/mail.service';
-import { MicrosoftSSOUserDto } from '#/auth/auth.service.types';
+import { MicrosoftSSOUserDto, MsalSsoUserDto } from '#/auth/auth.service.types';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
 import { ActivateUserDto } from './dto/activate-user.dto';
@@ -49,6 +49,38 @@ export class UserService {
         user.activationKey = generate({ length: 20 });
         user.createdBy = 'system';
         user.lastModifiedBy = 'system';
+
+        const { id } = await this.userRepository.save(user);
+
+        await this.dataSource
+            .createQueryBuilder()
+            .insert()
+            .into('jhi_user_authority')
+            .values({ user_id: id, authority_name: Role.ROLE_USER })
+            .execute();
+
+        return this.userRepository.findOneOrFail({
+            where: { id },
+            relations: ['authorities'],
+        });
+    }
+
+    async createMsalSsoUser(msalSsoUserDto: MsalSsoUserDto) {
+        const user = new User();
+        const randomPassword = generate({
+            length: 24,
+            numbers: true,
+            symbols: true,
+        });
+        user.passwordHash = bcrypt.hashSync(randomPassword, 10);
+        user.email = msalSsoUserDto.email;
+        user.langKey = msalSsoUserDto.langKey;
+        user.activated = true;
+        user.hasBeenActivated = true;
+        user.activationKey = generate({ length: 20 });
+        user.createdBy = 'system';
+        user.lastModifiedBy = 'system';
+        // TODO: add ms tenant id saving here
 
         const { id } = await this.userRepository.save(user);
 

@@ -2,7 +2,7 @@ import { AuthenticationResult } from '@azure/msal-browser';
 import { IMsalContext } from '@azure/msal-react';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
-import { UserDto } from 'runbotics-common';
+import { MsalLoginError, UserDto } from 'runbotics-common';
 
 import Axios from '#src-app/utils/axios';
 
@@ -178,3 +178,33 @@ export const register = createAsyncThunk(
         }
     }
 );
+
+export const loginWithMsalCookie = createAsyncThunk<
+    AuthState['user'],
+    void
+>('auth/loginWithMsalToken', async (_, { rejectWithValue }) => {
+    try {
+        const getCookie = (name: string) => {
+            const cookies = document.cookie.split('; ');
+            for (const cookie of cookies) {
+                const [key, ...rest] = cookie.split('=');
+                if (key === name) return rest.join('=');
+            }
+            return undefined;
+        };
+        const idToken = getCookie('msal_token_transfer');
+        document.cookie = 'msal_token_transfer=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        if (idToken === undefined) {
+            return rejectWithValue(MsalLoginError.BAD_COOKIE);
+        }
+        if (!idToken) {
+            return rejectWithValue(MsalLoginError.BAD_COOKIE);
+        }
+        setAccessToken(idToken);
+        const responseUser = await Axios.get<UserDto>('/api/account');
+        const user = responseUser.data;
+        return { ...user, authoritiesById: user?.roles };
+    } catch (error) {
+        return rejectWithValue(error?.message || 'Unknown error');
+    }
+});
