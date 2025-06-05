@@ -13,7 +13,7 @@ import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
 import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
-import { MicrosoftSSOUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
+import { MicrosoftSSOUserDto, MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
 import { User } from '#/scheduler-database/user/user.entity';
 
@@ -97,6 +97,14 @@ export class AuthService {
                 }
             );
         });
+    }
+
+    async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
+        const user = await this.userService.findByEmail(userDto.email);
+        if (!user) {
+            return this.registerMicrosoftSSOUser(userDto);
+        }
+        return this.signInMicrosoftSSOUser(user);
     }
 
     async handleMicrosoftSSOUserAuth(msUserAuthDto: MicrosoftSSOUserDto) {

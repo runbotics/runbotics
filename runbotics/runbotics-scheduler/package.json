@@ -23,7 +23,7 @@
         "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create"
     },
     "dependencies": {
-        "@azure/msal-node": "^1.15.0",
+        "@azure/msal-node": "~3.6.0",
         "@microsoft/microsoft-graph-client": "^3.0.5",
         "@nestjs/bull": "^0.6.2",
         "@nestjs/cli": "^9.1.5",
@@ -70,7 +70,8 @@
         "bpmn-moddle": "^9.0.1",
         "jwks-rsa": "~3.1.0",
         "generate-password": "~1.7.1",
-        "bcryptjs": "~3.0.2"
+        "bcryptjs": "~3.0.2",
+        "jwt-decode": "~4.0.0"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",
