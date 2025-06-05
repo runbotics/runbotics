@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import type { AuthState } from './Auth.state';
-import { initialize, login, logout, createGuestAccount, microsoftLogin } from './Auth.thunks';
+import { initialize, login, logout, createGuestAccount, microsoftLogin, loginWithMsalCookie } from './Auth.thunks';
 
 const buildAuthExtraReducers = (builder: ActionReducerMapBuilder<AuthState>) => {
     builder
@@ -19,6 +19,15 @@ const buildAuthExtraReducers = (builder: ActionReducerMapBuilder<AuthState>) => 
             state.isAuthenticated = true;
         })
         .addCase(microsoftLogin.rejected, (state) => {
+            state.user = null;
+            state.isAuthenticated = false;
+        })
+
+        .addCase(loginWithMsalCookie.fulfilled, (state, { payload }) => {
+            state.user = payload;
+            state.isAuthenticated = true;
+        })
+        .addCase(loginWithMsalCookie.rejected, (state) => {
             state.user = null;
             state.isAuthenticated = false;
         })
