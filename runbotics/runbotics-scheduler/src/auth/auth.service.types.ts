@@ -16,6 +16,12 @@ export interface RegisterNewBotParams extends MutableBotParams {
     installationId: string;
 }
 
+export interface MsalSsoUserDto {
+    msTenantId: string,
+    email: string,
+    langKey: string;
+}
+
 export interface MicrosoftSSOUserDto
     extends Omit<MicrosoftAuthDto, 'accessToken'> {
     email: string;
