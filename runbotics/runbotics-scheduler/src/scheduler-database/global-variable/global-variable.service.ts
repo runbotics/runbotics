@@ -1,4 +1,4 @@
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, ILike, Like, Repository } from 'typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -10,8 +10,10 @@ import { isTenantAdmin } from '#/utils/authority.utils';
 import { GlobalVariable } from './global-variable.entity';
 import { CreateGlobalVariableDto } from './dto/create-global-variable.dto';
 import { UpdateGlobalVariableDto } from './dto/update-global-variable.dto';
+import { Paging } from '#/utils/page/pageable.decorator';
+import { getPage } from '#/utils/page/page';
 
-const relations = ['user', 'creator'];
+const relations = ['user', 'creator', 'creator.email'];
 
 @Injectable()
 export class GlobalVariableService {
@@ -24,15 +26,66 @@ export class GlobalVariableService {
         private readonly processRepository: Repository<ProcessEntity>,
     ) {}
 
-    getAll(tenantId: string) {
-        const findOptions: FindOptionsWhere<GlobalVariable> = {
-            tenantId,
+    getAllByPage(tenantId: string, paging: Paging, search?: string, sortField?: string, sortDirection?: string) {
+        const findOptions: FindManyOptions<GlobalVariable> = {
+            where: { 
+                tenantId,
+                ...(search && { name: ILike(`%${search}%`)})
+            },
+            relations,
+            order: {
+                lastModified: 'DESC'
+            },
+            ...paging
         };
+        this.logger.log(`REST request to get all global variables with tenantId: ${tenantId}, search: ${search}, sortField: ${sortField}, sortDirection: ${sortDirection}`);
+        if (sortField === 'createdBy' || sortField === 'modifiedBy') {
+            return this.globalVariableRepository
+                .createQueryBuilder('globalVariable')
+                .leftJoinAndSelect('globalVariable.creator', 'creator')
+                .leftJoinAndSelect('globalVariable.user', 'user')
+                .where('globalVariable.tenantId = :tenantId', { tenantId })
+                .andWhere(search ? 'globalVariable.name ILIKE :search' : '1=1', { search: `%${search}%` })
+                .orderBy(
+                    sortField === 'createdBy'
+                        ? 'creator.email'
+                        : 'user.email',
+                    sortDirection.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'
+                )
+                .skip(paging.skip)
+                .take(paging.take)
+                .getManyAndCount()
+                .then(([content, total]) => {
+                    const size = paging.take;
+                    const page = Math.floor(paging.skip / paging.take);
+                    const totalPages = Math.ceil(total / size);
+                    const isFirstPage = page === 0;
+                    const isLastPage = page >= totalPages - 1;
 
-        return this.globalVariableRepository
-            .find({ where: findOptions, relations })
-            .then(globalVariables => globalVariables
-                .map(globalVariable => this.formatUserDTO(globalVariable)));
+                    return {
+                        content: content.map(globalVariable => this.formatUserDTO(globalVariable)),
+                        totalElements: total,
+                        totalPages,
+                        number: page,
+                        size,
+                        numberOfElements: content.length,
+                        first: isFirstPage,
+                        last: isLastPage,
+                        empty: content.length === 0,
+                    };
+            });
+        }
+ 
+        if (sortField) {
+            findOptions.order = {
+                [sortField]: sortDirection.toUpperCase(),
+            };
+        }
+
+        return getPage(this.globalVariableRepository, findOptions).then(page => ({
+            ...page,
+            content: page.content.map(GlobalVariable => this.formatUserDTO(GlobalVariable))
+        }));
     }
 
     getById(tenantId: string, id: number) {

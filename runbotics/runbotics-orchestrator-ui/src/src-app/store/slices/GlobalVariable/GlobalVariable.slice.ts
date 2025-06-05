@@ -8,7 +8,7 @@ import * as globalVariableThunks from './GlobalVariable.thunks';
 
 
 const initialState: GlobalVariableState = {
-    globalVariables: [],
+    globalVariables: null,
     loading: false,
 };
 
