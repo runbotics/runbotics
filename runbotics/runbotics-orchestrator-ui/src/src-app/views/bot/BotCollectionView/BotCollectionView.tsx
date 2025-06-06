@@ -1,7 +1,6 @@
 import React, { MouseEvent, useEffect, useState, VFC } from 'react';
 
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
 
 import useBotCollectionSearch from '#src-app/hooks/useBotCollectionSearch';
 import useQuery from '#src-app/hooks/useQuery';
@@ -22,7 +21,6 @@ const BotCollectionView: VFC = () => {
     
     const displayMode = useSelector(state => state.botCollection.displayMode);
 
-    const router = useRouter();
     const { firstValueFrom } = useQuery();
     const pageFromUrl = firstValueFrom('page');
     const pageSizeFromUrl = firstValueFrom('pageSize');
