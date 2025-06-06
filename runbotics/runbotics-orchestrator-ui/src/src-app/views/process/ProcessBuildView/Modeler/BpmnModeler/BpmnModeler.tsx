@@ -139,7 +139,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         useEffect(() => {
             dispatch(processActions.clearErrors());
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [processCredentials]);
+        }, [processCredentials, i18n.language]);
 
         useEffect(() => {
             dispatch(
