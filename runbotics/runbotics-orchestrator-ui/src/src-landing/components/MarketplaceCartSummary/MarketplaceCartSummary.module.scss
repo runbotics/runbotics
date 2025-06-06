@@ -1,4 +1,5 @@
 @import '#src-landing/scss/main';
+@import '#src-landing/scss/variables/_breakpoints';
 
 .root {
     display: flex;
@@ -19,9 +20,9 @@
     display: flex;
     flex-direction: column;
 
-    width: 400px;
+    width: 380px;
     min-height: fit-content;
-    height: 400px;
+    height: 380px;
 
     align-items: flex-start;
     justify-content: space-between;
@@ -36,13 +37,13 @@
 
     @include font-face-roboto;
 
-    @media (max-width: 1600px) {
-        width: 350px;
+    @media (max-width: $breakpoint-lg) {
+        width: 320px;
         padding: 40px
     }
 
-    @media (max-width: 1350px) {
-        width: 300px;
-        padding: 30px
+    @media (max-width: $breakpoint-md) {
+        width: 280px;
+        padding: 25px
     }
 }
