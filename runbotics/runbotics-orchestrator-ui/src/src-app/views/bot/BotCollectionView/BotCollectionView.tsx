@@ -19,7 +19,8 @@ import { CollectionsDisplayMode } from '../BotBrowseView/BotBrowseView.utils';
 const BotCollectionView: VFC = () => {
     const dispatch = useDispatch();
     const { byPage } = useSelector(botCollectionSelector);
-    const [displayMode, setDisplayMode] = useState<CollectionsDisplayMode>(CollectionsDisplayMode.GRID);
+    
+    const displayMode = useSelector(state => state.botCollection.displayMode);
 
     const router = useRouter();
     const { firstValueFrom } = useQuery();
@@ -51,7 +52,7 @@ const BotCollectionView: VFC = () => {
     const handleDisplayModeChange = (event: MouseEvent<HTMLElement>, value: CollectionsDisplayMode) => {
         setLimit(getLimitByDisplayMode(value));
         setPage(0);
-        setDisplayMode(value);
+        dispatch(botCollectionActions.setCollectionDisplayMode(value));
     };
 
     const renderGrid = () => (
