@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { DeleteWithTenant, GetWithTenant, PatchWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
@@ -96,7 +96,7 @@ export class UserController {
         return this.userService.update(userDto, userId, user);
     }
 
-    @Patch('users/activate/:id')
+    @Post('users/activate/:id')
     @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS, FeatureKey.MANAGE_ALL_TENANTS)
     activateUser(
         @UserDecorator() user: User,
