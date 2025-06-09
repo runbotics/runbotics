@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
 
-export const deleteCloudItemAction = {
+export const getDeleteCloudItemAction = () => ({
     id: CloudFileAction.DELETE_ITEM,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.DeleteItem.Label'),
@@ -94,4 +94,5 @@ export const deleteCloudItemAction = {
             }
         }
     }
-} satisfies IBpmnAction;
+} satisfies IBpmnAction
+);

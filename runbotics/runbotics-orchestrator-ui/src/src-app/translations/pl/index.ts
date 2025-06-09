@@ -9,7 +9,7 @@ import botTranslations from './bot.json';
 import collectionTranslations from './collections';
 import commonTranslations from './common.json';
 import componentsTranslations from './components.json';
-import credenitalsTranslations from './credenitals';
+import credenitalsTranslations from './credentials';
 import demoTranslations from './demo.json';
 import historyTranslations from './history.json';
 import httpErrorsTranslations from './httpErrors.json';
