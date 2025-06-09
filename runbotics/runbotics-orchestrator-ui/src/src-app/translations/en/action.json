@@ -5,7 +5,7 @@
     "Action.List.Header.Title": "Actions",
     "Action.List.Header.AddAction": "Add action",
     "Action.List.Results.Id": "id",
-    "Action.List.Results.Label": "label",
+    "Action.List.Results.Label": "Name",
     "Action.List.Results.Script": "script",
     "Action.List.Results.Actions": "Actions",
     "Action.List.Item.Disabled.Tooltip": "Runs on bots with {{ system }} system only",

@@ -4,7 +4,7 @@
     "Action.List.Header.Title": "Akcje",
     "Action.List.Header.AddAction": "Dodaj akcję",
     "Action.List.Results.Id": "Id",
-    "Action.List.Results.Label": "Etykieta",
+    "Action.List.Results.Label": "Nazwa",
     "Action.List.Results.Script": "Skrypt",
     "Action.List.Results.Actions": "Akcje",
     "Action.List.Item.Disabled.Tooltip": "Działa wyłącznie na botach z systemem {{ system }}",
