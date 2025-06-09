@@ -4,6 +4,7 @@
 
     "Action.List.Header.Title": "Actions",
     "Action.List.Header.AddAction": "Add action",
+    "Action.List.Info": "Below actions will be available in the process build view under \"External\" action group",
     "Action.List.Results.Id": "id",
     "Action.List.Results.Label": "Name",
     "Action.List.Results.Script": "script",
