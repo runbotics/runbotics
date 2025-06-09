@@ -13,7 +13,7 @@ import { UpdateGlobalVariableDto } from './dto/update-global-variable.dto';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 
-const relations = ['user', 'creator', 'creator.email'];
+const relations = ['user', 'creator'];
 
 @Injectable()
 export class GlobalVariableService {
@@ -26,19 +26,7 @@ export class GlobalVariableService {
         private readonly processRepository: Repository<ProcessEntity>,
     ) {}
 
-    getAllByPage(tenantId: string, paging: Paging, search?: string, sortField = 'lastModiefied', sortDirection = 'DESC') {
-        const findOptions: FindManyOptions<GlobalVariable> = {
-            where: { 
-                tenantId,
-                ...(search && { name: ILike(`%${search}%`)})
-            },
-            relations,
-            order: {
-                [sortField]: sortDirection,
-            },
-            ...paging
-        };
-        this.logger.log(`REST request to get all global variables with tenantId: ${tenantId}, search: ${search}, sortField: ${sortField}, sortDirection: ${sortDirection}`);
+    getAllByPage(tenantId: string, paging: Paging, search?: string, sortField = 'lastModified', sortDirection = 'DESC') {
         if (sortField === 'createdBy' || sortField === 'modifiedBy') {
             return this.globalVariableRepository
                 .createQueryBuilder('globalVariable')
@@ -75,12 +63,18 @@ export class GlobalVariableService {
                     };
             });
         }
- 
-        if (sortField) {
-            findOptions.order = {
-                [sortField]: sortDirection.toUpperCase(),
-            };
-        }
+        const findOptions: FindManyOptions<GlobalVariable> = {
+            where: { 
+                tenantId,
+                ...(search && { name: ILike(`%${search}%`)})
+            },
+            order: {
+                [sortField]: sortDirection,
+            },
+            relations,
+            ...paging
+        };
+        this.logger.log(`REST request to get all global variables with tenantId: ${tenantId}, search: ${search}, sortField: ${sortField}, sortDirection: ${sortDirection}, findOptions: ${JSON.stringify(findOptions)}`);
 
         return getPage(this.globalVariableRepository, findOptions).then(page => ({
             ...page,

@@ -1,9 +1,9 @@
 import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 
 import { Card, Grid } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridSortModel } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
-import { FeatureKey, OrderDirection } from 'runbotics-common';
+import { FeatureKey } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 
@@ -33,10 +33,10 @@ export interface DeleteDialogState {
 const initialDeleteDialogState: DeleteDialogState = {
     open: false,
 };
-
+type SortDirection = 'ASC' | 'DESC' | '';
 type SortModelType = {
     field: string;
-    sort: OrderDirection;
+    sort: SortDirection;
 }
 
 const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailState, searchValue }) => {
@@ -76,25 +76,24 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
     });
 
     useEffect(() => {
-        if(!isInitializedFromQuery) {
-            const queryPage = parseInt(router.query.page as string) || 0;
-            const queryPageSize = parseInt(router.query.pageSize as string) || 10;
-            const querySearch = router.query.search as string || '';
-            const querySortField = router.query.sortField as string || 'lastModified';
-            const querySortDirection = router.query.sortDirection as OrderDirection || 'DESC';
+        const queryPage = parseInt(router.query.page as string) || 0;
+        const queryPageSize = parseInt(router.query.pageSize as string) || 10;
+        const querySearch = router.query.search as string || '';
+        const querySortField = router.query.sortField as string || 'lastModified';
+        const querySortDirection = router.query.sortDirection || 'DESC';
 
-            setPage(queryPage);
-            setPageSize(queryPageSize);
-            setSearch(querySearch);
-            setSortModel(querySortField ? { field: querySortField, sort: querySortDirection as OrderDirection } : undefined);
+        setPage(queryPage);
+        setPageSize(queryPageSize);
+        setSearch(querySearch);
+        setSortModel(querySortField ? { field: querySortField, sort: querySortDirection } : undefined);
 
-            dispatch(globalVariableActions.getGlobalVariables({ 
-                pageParams: { page: queryPage, size: queryPageSize, search: querySearch, sort: {by: sortModel?.field, order: sortModel?.sort} } 
-            }));
+        dispatch(globalVariableActions.getGlobalVariables({ 
+            pageParams: { page: queryPage, size: queryPageSize, search: querySearch, sort: {by: sortModel?.field, order: sortModel?.sort} } 
+        }));
             
-            setIsInitializedFromQuery(true);
-        }
-    }, [dispatch, isInitializedFromQuery, router.query.page, router.query.pageSize, router.query.search, router.query.sortDirection, router.query.sortField, sortModel]);
+        setIsInitializedFromQuery(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         dispatch(globalVariableActions.getGlobalVariables({ pageParams: { page, size: pageSize, search, sortField: sortModel?.field, sortDirection: sortModel?.sort } }));
@@ -109,7 +108,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
     }, [dispatch, page, pageSize, search, isInitializedFromQuery, sortModel]);
 
     const handlePageChange = (newPage: number) => {
-        setPage(newPage++);
+        setPage(newPage);
     };
 
     const handlePageSizeChange = (newPageSize: number) => {
@@ -117,13 +116,13 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
         setPage(0);
     };
 
-    const handleSort = (sortM: any[]) => {
+    const handleSort = (sortM: GridSortModel) => {
         if(!sortM[0]) {
-            setSortModel(undefined);
+            setSortModel({field: '', sort: ''});
             return;
         }
         const { field, sort } = sortM[0];
-        setSortModel({field, sort});
+        setSortModel({field, sort: sort as SortDirection});
     };
 
     useEffect(() => {

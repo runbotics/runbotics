@@ -5,7 +5,6 @@ import { Box, TextField } from '@mui/material';
 import InternalPage from '#src-app/components/pages/InternalPage';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-
 import Header from './Header';
 import { VariableDetailState } from '../Variable.types';
 import Table from './Table/Table';
