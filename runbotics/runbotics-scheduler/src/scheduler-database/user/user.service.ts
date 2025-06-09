@@ -184,7 +184,6 @@ export class UserService {
         };
 
         const remoteUpdatedUser = await this.userRepository.save(updatedUser);
-        
         return this.mapToUserDto(remoteUpdatedUser);
     }
 
@@ -287,16 +286,21 @@ export class UserService {
                 : {})();
     }
 
-    private checkUpdateAllowedRole(user: User, roles: Role[]) {
+    private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
-        const TENANT_ALLOWED_ROLES = [
-            Role.ROLE_USER,
-            Role.ROLE_TENANT_ADMIN,
-            Role.ROLE_EXTERNAL_USER,
-        ];
 
-        if (!isTenantAdmin(user) && !TENANT_ALLOWED_ROLES.includes(roles[0])) {
-            throw new BadRequestException('Wrong role');
+        if (isAdmin(user)) {
+            // Admin can grant any role
+        } else if (isTenantAdmin(user)) {
+            const TENANT_ALLOWED_ROLES = [
+                Role.ROLE_USER,
+                Role.ROLE_TENANT_ADMIN,
+                Role.ROLE_EXTERNAL_USER,
+            ];
+
+            if (!TENANT_ALLOWED_ROLES.includes(roles[0])) {
+                throw new BadRequestException('Wrong role');
+            }
         }
     }
 
