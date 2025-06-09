@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
 
-export const getdDownloadCloudFileAction = () => ({
+export const getDownloadCloudFileAction = () => ({
     id: CloudFileAction.DOWNLOAD_FILE,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.Download.Label'),
