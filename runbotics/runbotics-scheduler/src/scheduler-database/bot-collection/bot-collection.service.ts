@@ -75,12 +75,14 @@ export class BotCollectionService {
             throw new NotFoundException();
         });
 
+        if (collection.name !== collectionDto.name) {
+            await this.isCollectionNameTakenInTenant(collectionDto.name, collection.tenantId);
+        }
+
         collection.name = collectionDto.name;
         collection.description = collectionDto.description;
         collection.publicBotsIncluded = collectionDto.publicBotsIncluded;
         collection.createdByUser = user;
-
-        await this.isCollectionNameTakenInTenant(collection.name, collection.tenantId);
 
         if (collectionDto.users) {
             const userIds = collectionDto.users.map(user => user.id);
