@@ -84,6 +84,8 @@ export class BotCollectionService {
         collection.publicBotsIncluded = collectionDto.publicBotsIncluded;
         collection.createdByUser = user;
 
+        await this.isCollectionNameTakenInTenant(collection.name, collection.tenantId);
+
         if (collectionDto.users) {
             const userIds = collectionDto.users.map(user => user.id);
             const users = await this.userRepository.findBy({ id: In(userIds), tenantId: user.tenantId });

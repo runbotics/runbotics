@@ -6,7 +6,7 @@ import { isEmailValid } from 'runbotics-common';
 
 import { useCart } from '#src-app/contexts/CartContext';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { axiosInstance as axios } from '#src-app/utils/axios';
+import { axiosInstance as axios, AxiosInstanceError } from '#src-app/utils/axios';
 import ContactForm from '#src-landing/components/ContactForm';
 import Layout from '#src-landing/components/Layout';
 
@@ -74,8 +74,8 @@ const MarketplaceCartView: FC = () => {
                 });
                 resetFormValue();
             })
-            .catch((res) => {
-                if (res.status === 429) {
+            .catch((error: AxiosInstanceError) => {
+                if (error.status === 429) {
                     enqueueSnackbar(translate('Marketplace.Cart.TooManyRequests'), {
                         variant: 'error',
                         autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,

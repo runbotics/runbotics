@@ -11,7 +11,8 @@ import { useProcessQueueSocket } from '#src-app/hooks/useProcessQueueSocket';
 import useProcessSearch from '#src-app/hooks/useProcessSearch';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import ProcessPageProvider from '#src-app/providers/ProcessPage.provider';
-import { useSelector } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
+import { processActions } from '#src-app/store/slices/Process';
 import { getLastParamOfUrl } from '#src-app/views/utils/routerUtils';
 
 import ProcessListHeader from './Header/ProcessList.header';
@@ -22,8 +23,9 @@ import ProcessTable from '../ProcessTable/ProcessTable';
 
 const ProcessList: VFC = () => {
     const router = useRouter();
-    const { page: processesPage, loading: isStoreLoading } = useSelector((state) => state.process.all);
-    const [displayMode, setDisplayMode] = useState(ProcessListDisplayMode.GRID);
+    const { page: processesPage, loading: isStoreLoading, listDisplayMode: rawListDisplayMode } = useSelector((state) => state.process.all);
+
+    const dispatch = useDispatch();
     const showLoading = useLoading(isStoreLoading, LOADING_DEBOUNCE);
     const searchParams = useSearchParams();
 
@@ -36,6 +38,8 @@ const ProcessList: VFC = () => {
     const { handleSearch, search, handleAdvancedSearch, clearSearch } = useProcessSearch(collectionId, pageSize, page);
     const replaceQueryParams = useReplaceQueryParams();
     useProcessQueueSocket();
+
+    const listDisplayMode = isCollectionsTab ? ProcessListDisplayMode.GRID : rawListDisplayMode;
 
     useEffect(() => {
         const pageNotAvailable = processesPage && page >= processesPage.totalPages;
@@ -52,13 +56,15 @@ const ProcessList: VFC = () => {
                 search={search}
                 onSearchChange={handleSearch}
                 processesLength={processesPage?.numberOfElements ?? 0}
-                displayMode={displayMode}
+                displayMode={listDisplayMode}
                 isCollectionView={isCollectionsTab}
                 onDisplayModeChange={(mode) => {
                     const newPageSize =
                         mode === ProcessListDisplayMode.GRID ? DefaultPageSize.GRID : DefaultPageSize.TABLE;
                     setPageSize(newPageSize);
-                    if (mode) setDisplayMode(mode);
+                    if (mode) {
+                        dispatch(processActions.setProcessListDisplayMode(mode));
+                    }
                     replaceQueryParams({ page, pageSize: newPageSize, search });
                     clearSearch();
                 }}
@@ -73,13 +79,13 @@ const ProcessList: VFC = () => {
                     collectionId
                 }}
             >
-                <If condition={displayMode === ProcessListDisplayMode.GRID}>
+                <If condition={listDisplayMode === ProcessListDisplayMode.GRID}>
                     <If condition={!showLoading} else={<LoadingScreen />}>
                         <GridView />
                     </If>
                 </If>
 
-                <If condition={displayMode === ProcessListDisplayMode.LIST}>
+                <If condition={listDisplayMode === ProcessListDisplayMode.LIST}>
                     <ProcessTable onAdvancedSearchChange={handleAdvancedSearch} />
                 </If>
             </ProcessPageProvider>
