@@ -96,7 +96,7 @@ export class UserController {
         return this.userService.update(userDto, userId, user);
     }
 
-    @Post('users/activate/:id')
+    @Patch('users/activate/:id')
     @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS, FeatureKey.MANAGE_ALL_TENANTS)
     activateUser(
         @UserDecorator() user: User,

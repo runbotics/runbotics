@@ -48,7 +48,7 @@ export const update = createAsyncThunk<UserDto, PartialUserDto>(
 
 export const activate = createAsyncThunk<void, ActivateUserDto>(
     'users/activate',
-    (activateData) => axios.post<ActivateUserDto>(`/api/scheduler/users/activate/${activateData.id}`, activateData)
+    (activateData) => axios.patch<ActivateUserDto>(`/api/scheduler/users/activate/${activateData.id}`, activateData)
         .then((response => void response))
 );
 
