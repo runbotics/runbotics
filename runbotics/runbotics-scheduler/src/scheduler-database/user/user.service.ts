@@ -289,15 +289,13 @@ export class UserService {
     private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
 
-        if (isAdmin(user)) {
-            // Admin can grant any role
-        } else if (isTenantAdmin(user)) {
-            const TENANT_ALLOWED_ROLES = [
-                Role.ROLE_USER,
-                Role.ROLE_TENANT_ADMIN,
-                Role.ROLE_EXTERNAL_USER,
-            ];
+        const TENANT_ALLOWED_ROLES = [
+            Role.ROLE_USER,
+            Role.ROLE_TENANT_ADMIN,
+            Role.ROLE_EXTERNAL_USER,
+        ];
 
+        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS)) {
             if (!TENANT_ALLOWED_ROLES.includes(roles[0])) {
                 throw new BadRequestException('Wrong role');
             }
