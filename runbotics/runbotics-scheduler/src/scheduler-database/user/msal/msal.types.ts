@@ -1,14 +1,12 @@
-import { AuthorizationCodePayload } from '@azure/msal-node'
-
 export type MsalLoginData = {
-    url: string,
-    challenge: string,
-    verifier: string
+    url: string
 }
 
 export type MsalCallbackData = {
-    challenge: string,
-    verifier: string,
+    code: string
+}
 
-    payload: AuthorizationCodePayload
+export type MsalLoginResponse = {
+    accessToken: string
+    tenantId: string
 }

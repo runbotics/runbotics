@@ -1,7 +1,21 @@
 import { ServerConfigService } from '#/config/server-config';
 import { Logger } from '#/utils/logger';
-import { ConfidentialClientApplication, Configuration, CryptoProvider, LogLevel, ResponseMode } from '@azure/msal-node';
-import { MsalCallbackData, MsalLoginData } from './msal.types';
+import { ConfidentialClientApplication, Configuration, LogLevel, ResponseMode } from '@azure/msal-node';
+import { MsalCallbackData, MsalLoginData, MsalLoginResponse } from './msal.types';
+
+import { jwtDecode } from 'jwt-decode';
+import { z } from 'zod';
+import axios from 'axios';
+
+const MSAL_SCOPES = ["openid", "profile", "email"];
+
+const idTokenSchema = z.object({
+    tid: z.string()
+})
+
+const MsalProfileDataSchema = z.object({
+    email: z.string()
+})
 
 export class MsalService {
     private readonly logger = new Logger(MsalService.name);
@@ -10,23 +24,55 @@ export class MsalService {
         private readonly serverConfigService: ServerConfigService
     ) { }
 
-    getScopes(): string[] {
-        return [];
+    async handleLoginCallback(
+        loginData: MsalCallbackData
+    ): Promise<MsalLoginResponse> {
+        const msalInstance = this.getMsalInstance();
+
+        const tokenResponse = await msalInstance.acquireTokenByCode({
+            code: loginData.code,
+            scopes: MSAL_SCOPES,
+            redirectUri: this.getRedirectUri(),
+        })
+
+        const rawIdToken = jwtDecode(tokenResponse.idToken)
+        const idToken = idTokenSchema.parse(rawIdToken)
+
+        const accessToken = tokenResponse.accessToken
+
+        return {
+            accessToken,
+            tenantId: idToken.tid,
+        }
     }
 
-    getMsalCryptoProvider() {
-        return new CryptoProvider();
+    async beginLogin(): Promise<MsalLoginData> {
+        const msalInstance = this.getMsalInstance();
+
+        const url = await msalInstance.getAuthCodeUrl({
+            scopes: MSAL_SCOPES,
+            redirectUri: this.getRedirectUri(),
+            responseMode: ResponseMode.FORM_POST,
+        });
+
+        return { url };
     }
 
-    getRedirectUri() {
-        return this.serverConfigService.microsoftAuth.redirectUri;
+    async fetchProfileData(authToken: string): Promise<z.infer<typeof MsalProfileDataSchema>> {
+        const response = await axios.get("https://graph.microsoft.com/v1.0/me", {
+            headers: {
+                Authorization: `Bearer ${authToken}`,
+            },
+        });
+
+        return MsalProfileDataSchema.parse(response.data)
     }
 
-    getPostLogoutRedirectUri() {
-        return this.serverConfigService.microsoftAuth.postLogoutRedirectUri;
+    private getMsalInstance() {
+        return new ConfidentialClientApplication(this.getMsalConfiguration());
     }
 
-    getMsalConfiguration(): Configuration {
+    private getMsalConfiguration(): Configuration {
         return {
             auth: {
                 clientId: this.serverConfigService.microsoftAuth.clientId,
@@ -43,11 +89,11 @@ export class MsalService {
 
                         if (logLevel === LogLevel.Error) {
                             this.logger.error(message);
-                        } else if(logLevel === LogLevel.Warning) {
+                        } else if (logLevel === LogLevel.Warning) {
                             this.logger.warn(message);
-                        }  else if(logLevel === LogLevel.Info) {
+                        } else if (logLevel === LogLevel.Info) {
                             this.logger.log(message);
-                        } 
+                        }
 
                         // Trace and verbose log levels are skipped
                     },
@@ -57,84 +103,7 @@ export class MsalService {
         };
     }
 
-    async handleLoginCallback(
-        loginData: MsalCallbackData
-    ) {
-        const msalInstance = this.getMsalInstance();
-
-        const tokenResponse = await msalInstance.acquireTokenByCode(
-            {
-                code: loginData.payload.code,
-                codeVerifier: loginData.verifier,
-                scopes: this.getScopes(),
-                redirectUri: this.getRedirectUri(),
-            },
-            loginData.payload,
-        );
-
-        const idToken = tokenResponse.idToken;
-        const accessToken = tokenResponse.accessToken;
-        const msTenantId = tokenResponse.account.tenantId;
-    }
-
-    /**
-     * Creates URL redirecting user to Microsoft servers with appropriate parameters, like client/app id.
-     */
-    async beginLogin(): Promise<MsalLoginData> {
-        const cryptoProvider = this.getMsalCryptoProvider();
-
-        /**
-         * MSAL Node library allows you to pass your custom state as state parameter in the Request object.
-         * The state parameter can also be used to encode information of the app's state before redirect.
-         * You can pass the user's state in the app, such as the page or view they were on, as input to this parameter.
-         */
-        const state = cryptoProvider.base64Encode(
-            JSON.stringify({
-                successRedirect: '/',
-            })
-        );
-
-        const authCodeUrlRequestParams = {
-            state: state,
-
-            /**
-             * By default, MSAL Node will add OIDC scopes to the auth code url request. For more information, visit:
-             * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
-             */
-            scopes: this.getScopes(),
-            redirectUri: this.getRedirectUri(),
-        };
-
-        const authCodeRequestParams = {
-            state: state,
-
-            /**
-             * By default, MSAL Node will add OIDC scopes to the auth code request. For more information, visit:
-             * https://docs.microsoft.com/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
-             */
-            scopes: this.getScopes(),
-            redirectUri: this.getRedirectUri(),
-        };
-
-        const msalInstance = this.getMsalInstance();
-
-        const { verifier, challenge } = await cryptoProvider.generatePkceCodes();
-
-        const url = await msalInstance.getAuthCodeUrl({
-            ...authCodeUrlRequestParams,
-            responseMode: ResponseMode.FORM_POST,
-            codeChallenge: challenge,
-            codeChallengeMethod: 'S256'
-        });
-
-        return {
-            url,
-            challenge,
-            verifier
-        };
-    }
-
-    private getMsalInstance() {
-        return new ConfidentialClientApplication(this.getMsalConfiguration());
+    private getRedirectUri() {
+        return this.serverConfigService.microsoftAuth.redirectUri;
     }
 }
