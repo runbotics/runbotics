@@ -15,6 +15,7 @@ import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
+
 import Logo from '#src-app/components/utils/Logo/Logo';
 import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
@@ -89,9 +90,9 @@ const LoginPage: FC = () => {
                     email: user.email,
                     trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
                 });
-                router.push({ pathname: '/app/processes/collections' }, null, {
-                    locale: user.langKey,
-                });
+                // router.push({ pathname: '/app/processes/collections' }, null, {
+                //     locale: user.langKey,
+                // });
                 return user;
             })
             .catch(() => {
@@ -139,9 +140,6 @@ const LoginPage: FC = () => {
                     sourcePage: SOURCE_PAGE.LOGIN,
                     email: user.email,
                     trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
-                });
-                router.push({ pathname: '/app/processes/collections' }, null, {
-                    locale: user.langKey,
                 });
             })
             .catch((error) => {

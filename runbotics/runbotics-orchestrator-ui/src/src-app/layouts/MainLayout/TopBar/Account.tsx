@@ -134,25 +134,6 @@ const Account: FC = () => {
                 open={isOpen}
                 onBlur={handleClose}
             >
-                <If condition={hasUsersPageAccess}>
-                    <MenuLink href={usersHref}>
-                        <MenuItem>
-                            {translate('Account.Users')}
-                        </MenuItem>
-                    </MenuLink>
-                </If>
-                <If condition={hasAdminAccess}>
-                    <MenuLink href='/app/tenants'>
-                        <MenuItem>
-                            {translate('Account.Tenants')}
-                        </MenuItem>
-                    </MenuLink>
-                    <MenuLink href='/monitoring/grafana'>
-                        <MenuItem>
-                            {translate('Account.Monitoring')}
-                        </MenuItem>
-                    </MenuLink>
-                </If>
                 <MenuItem onClick={handleLogout}>{translate('Account.Logout')}</MenuItem>
             </Menu>
         </Root>

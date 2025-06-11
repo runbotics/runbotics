@@ -72,7 +72,8 @@ interface TopBarProps {
 
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
     const { user } = useAuth();
-    const hasAdminAccess = useRole([Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN]);
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
+    const isAdmin = useRole([Role.ROLE_ADMIN]);
     const isGuest = user?.roles.includes(Role.ROLE_GUEST);
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -103,15 +104,21 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
         <StyledAppBar className={clsx(classes.root, className)} {...rest}>
             <Toolbar className={classes.toolbar}>
                 <Hidden mdDown>
-                    {isGuest ? (
+                    <If condition={isAdmin}>
+                        <RouterLink href="/app/tenants">
+                            <Logo white />
+                        </RouterLink>
+                    </If>
+                    <If condition={isGuest}>
                         <Logo white />
-                    ) : (
+                    </If>
+                    <If condition={!isGuest && !isAdmin}>
                         <RouterLink href="/app/processes/collections">
                             <Logo white />
                         </RouterLink>
-                    )}
+                    </If>
                 </Hidden>
-                <If condition={hasAdminAccess}>
+                <If condition={isTenantAdmin || isAdmin}>
                     <Typography variant="h5" sx={{ fontSize: '0.8rem', opacity: '0.5' }}>
                         {environment.version}
                     </Typography>
@@ -134,7 +141,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     <Divider className={classes.divider} orientation="vertical" flexItem />
                 </If>
                 <LanguageSwitcher />
-                {hasAdminAccess && <HowToRun />}
+                {isTenantAdmin && <HowToRun />}
                 <Box ml={2}>
                     <Account />
                 </Box>
