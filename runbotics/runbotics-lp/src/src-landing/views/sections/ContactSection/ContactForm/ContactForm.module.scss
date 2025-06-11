@@ -1,0 +1,91 @@
+@import '#src-landing/scss/main.scss';
+
+$FORM-MAX-WIDTH: 800px;
+
+.root {
+    width: 100%;
+    height: fit-content;
+    max-width: $FORM-MAX-WIDTH;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: $margin-6;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 48px;
+}
+
+.formRow {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: $padding-3;
+    flex-wrap: wrap;
+}
+
+.submitRow {
+    img {
+        margin-left: auto;
+    }
+}
+
+
+@mixin common-styles() {
+    @include font-face-base;
+
+    padding-inline: 10px;
+
+    transition: all 300ms ease-in-out;
+
+    li {
+        margin-top: 5px;
+    }
+}
+
+.processingData {
+    @include common-styles;
+
+    height: 100%;
+
+    opacity: 1;
+}
+
+.hidden {
+    @include common-styles;
+    opacity: 0;
+    height: 0;
+    margin: 0;
+
+    li {
+        margin: 0;
+        opacity: 0;
+        height: 0;
+    }
+}
+
+
+
+@media (max-width: $breakpoint-sm) {
+    .formRow {
+        justify-content: center;
+    }
+
+    .submitRow {
+        width: 100%;
+
+        img {
+            margin-inline: auto;
+        }
+    }
+}

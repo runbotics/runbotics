@@ -1,0 +1,152 @@
+@import '#src-landing/scss/main.scss';
+@import '#src-landing/components/Typography/Typography.module.scss';
+
+.header {
+    position: fixed;
+    z-index: $header-z-index;
+    top: 0;
+    width: 100%;
+    background-image: $palette-background-gradient;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+}
+
+.inner {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: $margin-0;
+    height: $HEADER_HEIGHT;
+    padding: $padding-0;
+}
+
+.logo {
+    width: $LOGO_WIDTH;
+    height: $LOGO_HEIGHT;
+}
+
+.btn {
+    display: inline-block;
+    border: none;
+    border-radius: 24px;
+    padding: 10px $padding-3;
+    background-color: $palette-background-tertiary;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+
+    & > *:hover {
+        color: $text-color-light;
+    }
+}
+
+
+
+.buttonGroup{
+    display: flex;
+ 
+}
+
+
+
+.menuIcon {
+    display: none;
+}
+
+.skipNavLink {
+    composes: btn;
+    position: absolute;
+    z-index: $header-z-index;
+    left: $LOGO_WIDTH - 10px;
+    transform: translateY(-200%);
+}
+
+.skipNavLink:focus {
+    transform: translateY(0);
+}
+
+
+
+@media (max-width: $breakpoint-lg) {
+
+    .btnText {
+        font-weight: $font-weight-semi-bold;
+    }
+    
+
+    .buttonGroup{
+        display: flex;
+        gap:10px;
+    }
+    
+
+    .menuIcon {
+        display: block;
+        user-select: none;
+        -webkit-user-select: none;
+        appearance: none;
+        margin-left: auto;
+        margin-right: $margin-3;
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+
+        span {
+            position: relative;
+            display: block;
+            transform-origin: 0 0;
+            transition: 0.4s;
+            margin-bottom: 4px;
+            border-radius: 6px;
+            width: 33px;
+            height: 4px;
+            background-color: $palette-background-tertiary;
+        }
+    }
+
+    .menuIcon span:last-child {
+        margin-bottom: $margin-0;
+    }
+
+    .menuIcon.isActive {
+        margin-top: 3px;
+        margin-right: $margin-2;  
+    }
+
+    .header.isActive {
+        background-color: $palette-background-primary;
+    }
+
+
+    .menuIcon.isActive span:nth-child(1) {
+        transform: translate(0px, -4px) rotate(45deg);
+    }
+
+    .menuIcon.isActive span:nth-child(2) {
+        opacity: 0;
+        transform: translateX(15px);
+    }
+
+    .menuIcon.isActive span:nth-child(3) {
+        transform: translate(-3px, 3px) rotate(-45deg);
+    }
+
+    .loginLink {
+        display: none;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .btn {
+        border-radius: 8px;
+        padding: 4px 9px;
+    }
+}
