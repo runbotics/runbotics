@@ -295,10 +295,8 @@ export class UserService {
             Role.ROLE_EXTERNAL_USER,
         ];
 
-        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS)) {
-            if (!TENANT_ALLOWED_ROLES.includes(roles[0])) {
-                throw new BadRequestException('Wrong role');
-            }
+        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !TENANT_ALLOWED_ROLES.includes(roles[0])) {
+            throw new BadRequestException('Wrong role');
         }
     }
 
