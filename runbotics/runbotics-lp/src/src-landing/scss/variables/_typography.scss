@@ -1,0 +1,42 @@
+$font-size-h1: clamp(2rem, 6vw + 1rem, 3.75rem);
+$font-size-h2: clamp(2rem, 5vw + 1rem, 2rem);
+$font-size-h3: clamp(2rem, 4vw + 1rem, 1.75rem);
+$font-size-h4: clamp(1rem, 3vw + 1rem, 1.375rem);
+$font-size-h5: clamp(1rem, 2vw + 1rem, 1.25rem);
+$font-size-h6: clamp(1rem, 1vw + 1rem, 1.125rem);
+$font-size-body1: clamp(1rem, 2vw + 1rem, 1.75rem);
+$font-size-body2: clamp(1rem, 1vw + 1rem, 1.125rem);
+$font-size-body3: 1rem;
+$font-size-body4: 0.875rem;
+$font-size-body5: 0.75rem;
+$font-size-caption: 0.875rem;
+
+$font-weight-bold: 700;
+$font-weight-semi-bold: 600;
+$font-weight-medium: 500;
+$font-weight-regular: 400;
+
+$line-height-h1: 4.25rem;
+$line-height-h2: 2.875rem;
+$line-height-h3: 2rem;
+$line-height-h4: 1.875rem;
+$line-height-base: 1.5rem;
+$line-height-body1: 2rem;
+$line-height-body2: 1.5rem;
+
+$text-color-dark: #000000;
+$text-color-light: #ffffff;
+$text-color-gray: $palette-gray;
+$text-color-disabled: #bbbbbb;
+$text-placeholder-color: rgb($text-color-gray, 0.4);
+$text-color-error: #e73e3e;
+$text-color-success: #428f29;
+$text-accent-color: $palette-accent-primary;
+
+@mixin font-face-base {
+    font-family: 'Montserrat', sans-serif;
+}
+
+@mixin font-face-roboto {
+    font-family: 'Roboto', sans-serif;
+}

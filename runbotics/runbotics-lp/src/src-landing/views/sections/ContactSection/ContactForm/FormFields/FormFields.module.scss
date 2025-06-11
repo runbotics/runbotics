@@ -1,0 +1,82 @@
+@import '#src-landing/scss/main.scss';
+
+$INPUT-BORDER-RADIUS: 10px;
+$INPUT-BORDER-THICKNESS: 2px;
+$INPUT-HEIGHT: 60px;
+$INPUT-INLINE-PADDING: 10px;
+
+$TEXT-AREA-BASE-HEIGHT: 200px;
+
+$LABEL-TRANSFORM-Y: -25px;
+
+.label {
+    @include font-face-roboto;
+    position: absolute;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-caption;
+    color: $text-color-dark;
+    top: $LABEL-TRANSFORM-Y;
+    left: $padding-3 + $INPUT-BORDER-THICKNESS;
+    transition: 0.2s ease all;
+    pointer-events: none;
+    background-color: $palette-background-primary;
+}
+
+.input {
+    @include font-face-roboto;
+    font-size: $font-size-body3;
+    display: block;
+    width: 100%;
+    height: $INPUT-HEIGHT;
+    padding: 0 $padding-3;
+    border: #000 $INPUT-BORDER-THICKNESS solid;
+    border-radius: $INPUT-BORDER-RADIUS;
+    background: #fff;
+    color: $text-color-dark;
+    caret-color: $palette-accent-primary;
+
+    &:focus {
+        border-color: $palette-accent-primary;
+        outline: none;
+        background: $palette-background-primary;
+
+        ~.label {
+            color: $palette-accent-primary;
+        }
+    }
+
+    &:disabled {
+        color: $text-color-disabled;
+    }
+}
+
+.textarea {
+    composes: input;
+    height: $TEXT-AREA-BASE-HEIGHT;
+    min-height: $INPUT-HEIGHT;
+    padding: $padding-3 $padding-3 + $INPUT-BORDER-THICKNESS;
+    resize: vertical;
+}
+
+.submit {
+    @include font-face-base;
+    font-size: $font-size-body2;
+    font-weight: $font-weight-bold;
+    padding: $padding-2 $padding-6;
+    cursor: pointer;
+    transition: background-color 0.4s;
+    border: none;
+    border-radius: $INPUT-BORDER-RADIUS;
+    background-color: $palette-background-accent;
+    box-shadow: $box-shadow-primary;
+    appearance: none;
+
+    &:hover {
+        background-color: $palette-background-accent-dark;
+    }
+
+    &:disabled {
+        background-color: $palette-background-disabled;
+        color: $text-color-dark;
+    }
+}

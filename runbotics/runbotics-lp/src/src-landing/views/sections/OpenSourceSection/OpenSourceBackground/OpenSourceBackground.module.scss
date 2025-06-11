@@ -1,0 +1,18 @@
+@import "#src-landing/scss/main.scss";
+
+$IMAGE_HEIGHT: 500px;
+
+.root {
+    position: relative;
+    width: 100%;
+    background: $palette-background-tertiary;
+    isolation: isolate;
+}
+
+.backgroundBanner {
+    position: absolute;
+    min-height: $IMAGE_HEIGHT;
+    object-fit: cover;
+    filter: blur(1px);
+    opacity: 0.25;
+}

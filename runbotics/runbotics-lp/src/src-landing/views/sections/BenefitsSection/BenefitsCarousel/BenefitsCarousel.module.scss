@@ -1,0 +1,94 @@
+@import '#src-landing/scss/main.scss';
+
+$BEFORE-X-OFFSET: 20px;
+$BEFORE-Y-OFFSET: 40px;
+
+$CARD-BORDER-RADIUS: 20px 20px 150px 20px;
+$COUNTER-MIN-WIDTH: 120px;
+$CONTENT-WRAPPER-WIDTH: 532px;
+
+.root {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    isolation: isolate;
+}
+
+.buttonWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: $BEFORE-X-OFFSET;
+}
+
+.contentWrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: $CONTENT-WRAPPER-WIDTH;
+    height: 100%;
+    min-height: 550px;
+    margin: $margin-0 $margin-2;
+    // padding to offset border radius for correct word wrapping
+    padding: 90px 30px 70px 20px;
+    border-radius: $CARD-BORDER-RADIUS;
+    background-color: $palette-background-primary;
+    box-shadow: $box-shadow-primary;
+
+    &::before {
+        position: absolute;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        content: '';
+        transform: translate(-$BEFORE-X-OFFSET, calc($BEFORE-Y-OFFSET - 90px));
+        border-radius: $CARD-BORDER-RADIUS;
+        background-color: $palette-accent-secondary;
+    }
+}
+
+.counter {
+    font-size: $font-size-h2;
+    font-weight: $font-weight-bold;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    min-width: $COUNTER-MIN-WIDTH;
+    text-align: right;
+    color: $text-color-gray;
+}
+
+.counterCurrent {
+    font-size: $font-size-h1;
+    font-weight: $font-weight-bold;
+    margin-right: $margin-1;
+    color: $palette-accent-primary;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        align-items: center;
+        flex-direction: column;
+        gap: $margin-8;
+    }
+
+    .buttonWrapper {
+        display: none;
+    }
+
+    .contentWrapper {
+        width: calc(100% - $BEFORE-X-OFFSET);
+        max-width: 520px;
+
+        &::before {
+            transform: translate(-5px, calc($BEFORE-X-OFFSET - 90px));
+        }
+    }
+
+    .counter {
+        position: relative;
+        min-width: none;
+        text-align: center;
+    }
+}

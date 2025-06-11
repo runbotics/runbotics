@@ -1,0 +1,41 @@
+@import "#src-landing/scss/main";
+
+.form {
+    display: flex;
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+    outline: none;
+    border: none;
+    
+    border: 1px solid $palette-background-secondary-dark;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    border-right-width: 0;
+
+    font-size: $font-size-body3;
+    padding: $padding-1 $padding-2;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 50px;
+
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    border: none;
+    
+    background-color: $palette-background-accent;
+    
+    transition: background-color 300ms;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $palette-background-accent-dark;
+    }
+}

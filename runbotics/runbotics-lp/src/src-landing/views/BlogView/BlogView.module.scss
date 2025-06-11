@@ -1,0 +1,49 @@
+@import '#src-landing/scss/main';
+
+$PADDING-INLINE: 1.5rem;
+
+.filter {
+    display: none;
+}
+
+.emptyPageContentWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding-inline: $PADDING-INLINE;
+    text-align: center;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .emptyPageContentWrapper {
+        grid-row: 3;
+        grid-column: 1;
+    }
+}
+
+@media (max-width: $breakpoint-xs){
+    .filter {
+        display: block;
+
+        position: absolute;
+        right: 10px;
+        top: $HEADER_HEIGHT + $BACKGROUND-HEIGHT-XS +2px;
+
+        padding: 14px;
+
+        width: 24px;
+        height: 24px;
+
+        background-color: transparent;
+        transition: background-color ease-in-out 100ms;
+        user-select: none;
+        border: none;
+        outline: none;
+        border-radius: 5px;
+        cursor: pointer;
+        &:active{
+            background-color: rgba($palette-gray,0.6);
+        }
+    }
+}

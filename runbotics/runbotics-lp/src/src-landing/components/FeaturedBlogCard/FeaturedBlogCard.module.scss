@@ -1,0 +1,188 @@
+@import '#src-landing/scss/main.scss';
+
+$CARD-PADDING: 20px 0;
+$ROOT-MIN-HEIGHT: 400px;
+$IMG-BORDER-RADIUS: 20px;
+$IMG-MARGIN-BOTTOM: 12px;
+$TITLE-MARGIN-BOTTOM: 10px;
+$CONTENT-TOP-MARGIN: 180px;
+$CONTENT-TOP-MARGIN-XS: 140px;
+$CONTENT-PADDING: $margin-3;
+$CONTENT-MIN-HEIGHT: 220px;
+$CONTENT-BORDER-RADIUS: 20px;
+$CONTENT-BORDER-TOP-RIGHT-RADIUS: 120px;
+$DESCRIPTION-MAX-WIDTH: 966px;
+$READ-MORE-HEIGHT: 32px;
+$READ-MORE-GAP-BETWEEN: 6px;
+$READ-MORE-MARGIN-RIGHT: 7px;
+$READ-MORE-BACKGROUND-COLOR: #ffffff80;
+$READ-MORE-BORDER-RADIUS: 20px;
+$READ-MORE-BORDER: #2e2e22 1px solid;
+$READ-MORE-ICON-HEIGHT: 24px;
+$READ-MORE-ICON-WIDTH: 24px;
+$CARD-HOVER-TRANSLATE-Y: -3px;
+$CARD-HOVER-TRANSITION: 200ms;
+$FONT-COLOR: #000;
+
+.root {
+    grid-column: 1 / 4;
+}
+
+.link {
+    position: relative;
+    display: flex;
+    color: $FONT-COLOR;
+    text-decoration: none;
+    transition: all $CARD-HOVER-TRANSITION ease;
+    border-radius: $IMG-BORDER-RADIUS;
+    box-shadow: $box-shadow-primary;
+    border-bottom: none;
+
+    &:hover {
+        .title,
+        .readMore {
+            text-decoration: underline;
+        }
+    }
+}
+
+.link:hover[data-brief='false']
+.link:hover[data-brief='undefined'] {
+    transform: translateY($CARD-HOVER-TRANSLATE-Y);
+    box-shadow: $box-shadow-primary-hover;
+}
+
+.wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+
+    min-height: $ROOT-MIN-HEIGHT;
+    width: 100%;
+
+    color: $FONT-COLOR;
+    text-decoration: none;
+    transition: all $CARD-HOVER-TRANSITION ease;
+    isolation: isolate;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-top: $CONTENT-TOP-MARGIN;
+    border-radius: $CONTENT-BORDER-RADIUS;
+    border-top-right-radius: $CONTENT-BORDER-TOP-RIGHT-RADIUS;
+    width: 100%;
+    min-height: $CONTENT-MIN-HEIGHT;
+    padding: $CONTENT-PADDING;
+    background-color: rgba($palette-white, 70%);
+}
+
+.draftBadge {
+    position: absolute;
+    right: $CONTENT-PADDING;
+    top: $CONTENT-PADDING;
+}
+
+.img {
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    
+    z-index: -1;
+    object-fit: cover;
+    border-radius: $IMG-BORDER-RADIUS;
+    margin-bottom: $IMG-MARGIN-BOTTOM;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $margin-2;
+}
+
+.category {
+    font-weight: $font-weight-semi-bold;
+}
+
+.title {
+    font-weight: $font-weight-bold;
+    font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
+    margin: 0;
+    margin-bottom: $TITLE-MARGIN-BOTTOM;
+}
+
+.title[data-brief='true'] {
+    font-size: clamp(0.5rem, 2vw + 0.5rem, 1.25rem);
+}
+
+.description {
+    max-width: $DESCRIPTION-MAX-WIDTH;
+}
+
+.readMore {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.buttonWrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $READ-MORE-GAP-BETWEEN;
+    height: $READ-MORE-HEIGHT;
+    background-color: $READ-MORE-BACKGROUND-COLOR;
+    border-radius: $READ-MORE-BORDER-RADIUS;
+    border: $READ-MORE-BORDER;
+
+        p {
+            padding-left: $padding-2;
+            color: $FONT-COLOR;
+            text-decoration: none;
+        }
+
+        img {
+            margin-right: $READ-MORE-MARGIN-RIGHT;
+        }
+}
+
+@media (max-width: $breakpoint-md) {
+    .root {
+        grid-column: 1/ 3;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        grid-column: 1/ 2;
+    }
+    .content {
+        padding-top: $padding-5;
+        padding-right: $padding-5;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .content {
+        margin-top: $CONTENT-TOP-MARGIN-XS;
+        border-top-right-radius: $CONTENT-BORDER-RADIUS;
+        background-color: $palette-white;
+        padding-right: $CONTENT-PADDING;
+    }
+
+    .title {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+                line-clamp: 3; 
+        -webkit-box-orient: vertical;
+    }
+    
+    .addToCart {
+        justify-content: center;
+    }
+}

@@ -1,0 +1,12 @@
+@import "#src-landing/scss/main.scss";
+
+.title {
+    @include font-face-base;
+    font-weight: $font-weight-semi-bold;
+    font-size: $font-size-h2;
+    padding-bottom: $padding-4;
+}
+
+.paragraphs {
+    padding-bottom: $padding-4;
+}
