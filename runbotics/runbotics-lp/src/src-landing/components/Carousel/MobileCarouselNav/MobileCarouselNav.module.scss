@@ -1,0 +1,23 @@
+@import '#src-landing/scss/main.scss';
+
+.root {
+    display: none;
+    padding: $padding-1
+}
+
+.counter {
+    composes: counter from '../Carousel.module.scss';
+}
+
+.counterCurrent {
+    composes: counterCurrent from '../Carousel.module.scss';
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-evenly;
+        width: 100%;
+    }
+}

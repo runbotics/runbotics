@@ -1,0 +1,134 @@
+@import '#src-landing/scss/main';
+@import '#src-landing/components/Typography/Typography.module.scss';
+
+
+$WRAPPER_WIDTH_AND_HEIGHT: 35px;
+$AFTER_WIDTH_AND_HEIGHT: $WRAPPER_WIDTH_AND_HEIGHT - 10px;
+$ARROW_HEIGHT: 13px;
+$CONTENT_BACKGROUND_COLOR: $palette-background-primary;
+$TICK_DIMENSIONS: 15px;
+$OPTION_BORDER_RADIUS: 5px;
+
+
+@mixin darken-on-hover {
+    position: relative;
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: $OPTION_BORDER_RADIUS;
+        background: rgba(0, 0, 0, 0);
+    }
+
+    &:hover:before {
+        background: rgba(0, 0, 0, 0.05);
+    }
+}
+
+
+.selectGroup{
+    @include font-face-base;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: $font-weight-semi-bold;
+}
+
+.languageButton{
+    @include darken-on-hover;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: $WRAPPER_WIDTH_AND_HEIGHT;
+    height: $WRAPPER_WIDTH_AND_HEIGHT;
+
+    border-radius: 0.25em;
+    outline: none;
+    border: none;
+    isolation: isolate;
+    background-color: transparent;
+    transition: background-color ease-in-out 150ms;
+    cursor: pointer;
+
+    &::after {
+        position: absolute;
+
+        width: $AFTER_WIDTH_AND_HEIGHT;
+        height: $AFTER_WIDTH_AND_HEIGHT;
+
+        content: '';
+        background: url('/images/flags/globe.svg') no-repeat;
+        background-size: cover;
+    }
+}
+
+.content{
+    position: absolute;
+
+    display: grid;
+
+    row-gap: 5px;
+
+    top: $WRAPPER_WIDTH_AND_HEIGHT + $ARROW_HEIGHT + 1px;
+
+    padding: 8px 3px 8px 3px;
+
+    background-color: $CONTENT_BACKGROUND_COLOR;
+    border-radius: 5px;
+
+    &::after {
+        position: absolute;
+
+        top: -6px;
+
+        justify-self: center;
+
+        width: 0;
+        height: 0;
+
+        border-style: solid;
+        border-width: $ARROW_HEIGHT $ARROW_HEIGHT 0 0;
+        border-color:  $CONTENT_BACKGROUND_COLOR transparent transparent;
+        transform: rotate(45deg);
+        -webkit-filter:  drop-shadow(-1px -1px 1px rgba(0,0,0,0.2));;
+        filter: drop-shadow(-1px -1px 1px rgba(0,0,0,0.2));
+        content: '';
+    }
+
+    box-shadow: 0px 0px 3px -1px rgba(0,0,0,0.75);
+}
+
+.hide{
+    display: none;
+}
+
+
+.option{
+    @include darken-on-hover;
+
+    display: flex;
+    align-items: center;
+
+    padding: 5px;
+
+    cursor: pointer;
+    border-radius: $OPTION_BORDER_RADIUS;
+}
+
+.active{
+    background-color: $palette-accent-primary;
+}

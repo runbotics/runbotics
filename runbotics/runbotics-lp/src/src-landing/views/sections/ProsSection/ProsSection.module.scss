@@ -1,0 +1,106 @@
+@import '#src-landing/scss/main.scss';
+
+$MIN-CARD-WIDTH: 280px;
+$ONE-COLUMN-BREAKPOINT: 600px;
+$ARROWS-WIDTH: 375px;
+$ARROWS-HEIGHT: 63px;
+
+$GRID-ROWS: minmax(80px, auto);
+$GRID-GAPS: 27px 23px;
+
+.root {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    display: grid;
+    height: max-content;
+    grid-gap: $GRID-GAPS;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: dense;
+    grid-auto-rows: $GRID-ROWS;
+}
+
+.mediaScroller {
+    display: none !important;
+}
+
+.grid {
+    &__item {
+        max-width: 100%;
+        // padding of 20px on top and bottom, 20% of cell width on left and right
+        padding: 20px 20%;
+        transition: all 0.2s;
+        grid-row: span 4;
+
+        &:hover {
+            background-color: $palette-accent-primary;
+            color: $text-color-light;
+        }
+
+        &:hover img {
+            filter: brightness(0) invert(1);
+        }
+    }
+
+    &__head__1 {
+        grid-column: 1 / 4;
+    }
+
+    &__head__2 {
+        isolation: isolate;
+        grid-column: 1 / 3;
+        position: relative;
+    }
+
+    &__head__2::before {
+        z-index: -1;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin-left: 35%;
+        background-image: url('/images/shapes/pros-arrows.svg');
+        background-repeat: no-repeat;
+        width: $ARROWS_WIDTH;
+        height: $ARROWS_HEIGHT;
+    }
+
+    &__head__3 {
+        grid-column: 1 / 2;
+    }
+}
+
+@media (max-width: $breakpoint-md) {
+    .root {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid__head__1 {
+        display: none;
+    }
+
+    .grid__head__2::before {
+        margin-left: unset;
+        right: 0;
+        left: auto;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .root > article {
+        display: none;
+    }
+
+    .grid__head__3 {
+        display: none;
+    }
+
+    .mediaScroller {
+        display: grid !important;
+        grid-auto-columns: minmax(300px, 40%);
+        padding: 5px;
+    }
+}
