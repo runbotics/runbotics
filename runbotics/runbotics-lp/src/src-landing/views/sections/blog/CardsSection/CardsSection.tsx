@@ -54,17 +54,17 @@ const CardsSection: FC<CardsSectionPropsType> = ({
             <CardsPagination page={page} basePageUrl={pageType} />
         </If>
     </>;
-    
+
     return (
         <div className={pageType === 'marketplace' ? styles.root : styles.justifiedRoot}>
             {searchBar}
             <ClientOnly>
-            {notFoundInfo ?
-                <If condition={isNotFoundVisible} else={notFoundInfo}>
-                    {cardsGrid}
-                </If> :
-                cardsGrid
-            }
+                {notFoundInfo ?
+                    <If condition={isNotFoundVisible} else={notFoundInfo}>
+                        {cardsGrid}
+                    </If> :
+                    cardsGrid
+                }
             </ClientOnly>
         </div>
     );

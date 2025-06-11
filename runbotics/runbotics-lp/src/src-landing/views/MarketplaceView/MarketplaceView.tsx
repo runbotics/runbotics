@@ -25,7 +25,6 @@ interface MarketplaceViewProps {
 }
 
 const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, page }) => {
-
     const [isFilterDisplayed, setFilterDisplayed] = useState(false);
 
     const { translate } = useTranslations();
