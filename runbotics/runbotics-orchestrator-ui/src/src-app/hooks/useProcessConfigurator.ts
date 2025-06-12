@@ -13,9 +13,9 @@ import useRole from './useRole';
 const useProcessConfigurator = () => {
     const { draft: { process} } = useSelector(processSelector);
     const isProcessOwner = useOwner();
-    const isAdminOrTenantAdmin = useRole([Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN]);
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
 
-    return isProcessOwner(process.createdBy?.id) || isAdminOrTenantAdmin;
+    return isProcessOwner(process.createdBy?.id) || isTenantAdmin;
 };
 
 export default useProcessConfigurator;
