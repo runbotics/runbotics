@@ -78,7 +78,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         const body = createCollectionEntityToSend();
         const { type, payload } = await updateCollection(body);
 
-        if (type === REJECT_REQUEST_TYPE || type === REJECT_UPDATE_REQUEST_TYPE) {
+        if ([REJECT_REQUEST_TYPE, REJECT_UPDATE_REQUEST_TYPE].includes(type)) {
             setError(payload);
         } else {
             setError(null);
