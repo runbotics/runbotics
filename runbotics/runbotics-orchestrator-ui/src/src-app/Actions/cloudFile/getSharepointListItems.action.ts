@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
 
-export const getSharepointListItemsAction = {
+export const getSharepointListItemsAction = () => ({
     id: CloudFileAction.GET_SHAREPOINT_LIST_ITEMS,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.GetSharePointListItems.Label'),
@@ -75,4 +75,5 @@ export const getSharepointListItemsAction = {
             },
         },
     },
-} satisfies IBpmnAction;
+} satisfies IBpmnAction
+);

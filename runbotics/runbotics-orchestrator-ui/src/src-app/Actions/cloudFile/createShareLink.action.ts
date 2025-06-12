@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
 
-export const createShareLinkAction = {
+export const getCreateShareLinkAction = () => ({
     id: CloudFileAction.CREATE_SHARE_LINK,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.CreateShareLink.Label'),
@@ -152,4 +152,5 @@ export const createShareLinkAction = {
             },
         },
     },
-} satisfies IBpmnAction;
+} satisfies IBpmnAction
+);

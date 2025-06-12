@@ -45,7 +45,7 @@ const CredentialWidget: FC<WidgetProps> = (props) => {
     }, [credentialType, processId]);
 
     useEffect(() => {
-        setCredential(alreadySelectedCredential)
+        setCredential(alreadySelectedCredential);
     }, [alreadySelectedCredential]);
 
     const [credential, setCredential] = useState<CredentialDto | string>(alreadySelectedCredential);

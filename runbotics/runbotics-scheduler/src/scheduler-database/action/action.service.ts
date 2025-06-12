@@ -69,6 +69,6 @@ export class ActionService {
                 throw new BadRequestException('Cannot find action with provided id');
             });
 
-        await this.actionRepository.delete(id);
+        await this.actionRepository.delete({ tenantId, id });
     }
 }

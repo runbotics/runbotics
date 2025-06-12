@@ -1,13 +1,16 @@
 {
     "Action.DeleteAction.Dialog.Title": "Usuń akcję {{ script }}",
     "Action.DeleteAction.Dialog.ConfirmationMessage": "Czy na pewno chcesz usunąć: {{ actionName }} ?",
+
     "Action.List.Header.Title": "Akcje",
     "Action.List.Header.AddAction": "Dodaj akcję",
+    "Action.List.Info": "Poniższe akcje będą dostępne w widoku budowania procesu pod grupą akcji \"Zewnętrzne\"",
     "Action.List.Results.Id": "Id",
-    "Action.List.Results.Label": "Etykieta",
+    "Action.List.Results.Label": "Nazwa",
     "Action.List.Results.Script": "Skrypt",
     "Action.List.Results.Actions": "Akcje",
     "Action.List.Item.Disabled.Tooltip": "Działa wyłącznie na botach z systemem {{ system }}",
+
     "Action.Details.Script": "Skrypt",
     "Action.Details.Label": "Etykieta",
     "Action.Details.CredentialType": "Typ poświadczenia",
@@ -19,6 +22,7 @@
     "Action.Details.ExternalScript.Error": "Zewnętrzny skrypt musi zaczynać się od external.",
     "Action.Details.Dialog.SaveAction": "Zapisz akcję: {{ script }}",
     "Action.Details.Dialog.LiveView": "PODGLĄD NA ŻYWO",
+
     "Process.BuildView.Modeler.Widgets.VariableNameIsTaken": "Zmienna o wybranej nazwie już istnieje",
     "Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable": "Przypisz dane wyjściowe do zmiennej",
     "Process.BuildView.Modeler.Widgets.FieldTemplate.IsARequiredProperty": "To pole jest wymagane",

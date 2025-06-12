@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
-import { CreateNotificationBotDto, Role } from 'runbotics-common';
+import { Brackets, In, Repository } from 'typeorm';
+import { CreateNotificationBotDto, DefaultCollections, Role } from 'runbotics-common';
 
 import { NotificationBot } from './notification-bot.entity';
 
@@ -120,10 +120,12 @@ export class NotificationBotService {
                 .leftJoin('collection.users', 'user')
                 .where('bot.id = :botId', { botId })
                 .setParameter('userId', user.id)
+                .setParameter('guestCollectionName', DefaultCollections.GUEST)
+                .setParameter('publicCollectionName', DefaultCollections.PUBLIC)
                 .andWhere('collection.tenantId = :tenantId', { tenantId: user.tenantId })
                 .andWhere(new Brackets(qb => {
                     qb.where('bot.user.id = :userId')
-                        .orWhere('collection.publicBotsIncluded = true')
+                        .orWhere('collection.name IN (:guestCollectionName, :publicCollectionName)')
                         .orWhere('collection.createdByUser.id = :userId')
                         .orWhere('user.id = :userId');
                 })).getOneOrFail().catch(() => {
