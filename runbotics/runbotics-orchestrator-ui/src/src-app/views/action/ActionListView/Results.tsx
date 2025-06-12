@@ -1,8 +1,9 @@
 import { useState, FC } from 'react';
 
+import { InfoOutlined } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Card, Grid, IconButton } from '@mui/material';
+import { Card, Grid, IconButton, Typography, Box } from '@mui/material';
 import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
 import clsx from 'clsx';
 import { FeatureKey } from 'runbotics-common';
@@ -71,24 +72,19 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
 
     const columns: GridColDef[] = [
         {
-            field: 'id',
-            headerName: translate('Action.List.Results.Id'),
-            flex: 0.3,
-        },
-        {
             field: 'label',
             headerName: translate('Action.List.Results.Label'),
-            flex: 0.3,
+            flex: 0.5,
         },
         {
             field: 'script',
             headerName: translate('Action.List.Results.Script'),
-            flex: 0.3,
+            flex: 0.5,
         },
         {
             field: 'actions',
             headerName: translate('Action.List.Results.Actions'),
-            width: 200,
+            width: 100,
             renderCell: (params: GridCellParams) => <Actions params={params} />,
         },
     ];
@@ -96,19 +92,25 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
     const actions = useSelector((state) => state.action.actions);
 
     return (
-        <StyledCard className={clsx(classes.root, className)} {...rest}>
-            <Grid container>
-                <Grid item xs={12} md={12}>
-                    <DataGrid
-                        loading={actions.loading}
-                        getRowId={(row) => row.id}
-                        autoHeight
-                        rows={Object.values(actions.byId)}
-                        columns={columns}
-                    />
+        <>
+            <Box m={2} border='none' display='flex' gap={1}>
+                <InfoOutlined color='secondary'/>
+                <Typography>{translate('Action.List.Info')}</Typography>
+            </Box>
+            <StyledCard className={clsx(classes.root, className)} {...rest}>
+                <Grid container>
+                    <Grid item xs={12} md={12}>
+                        <DataGrid
+                            loading={actions.loading}
+                            getRowId={(row) => row.id}
+                            autoHeight
+                            rows={Object.values(actions.byId)}
+                            columns={columns}
+                        />
+                    </Grid>
                 </Grid>
-            </Grid>
-        </StyledCard>
+            </StyledCard>
+        </>
     );
 };
 
