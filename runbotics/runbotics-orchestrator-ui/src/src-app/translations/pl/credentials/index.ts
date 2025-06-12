@@ -1,4 +1,4 @@
-import actionFormSelect from '#src-app/translations/en/credenitals/actionFormSelect';
+import actionFormSelect from '#src-app/translations/pl/credentials/actionFormSelect';
 
 import credentialsCollections from './collections';
 import credentials from './credentials';
