@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
-import { DeleteWithTenant, GetWithTenant, PatchWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
+import { DeleteWithTenant, GetWithTenant, PatchWithTenant } from '#/utils/decorators/with-tenant.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { UserCriteria } from './criteria/user.criteria';
 import { User } from './user.entity';
@@ -50,7 +50,7 @@ export class UserController {
         );
     }
 
-    @PostWithTenant('users/activate/:id')
+    @PatchWithTenant('users/:id/activate')
     @FeatureKeys(FeatureKey.TENANT_EDIT_USER)
     activateUserInTenant(
         @UserDecorator() user: User,
@@ -96,7 +96,7 @@ export class UserController {
         return this.userService.update(userDto, userId, user);
     }
 
-    @Patch('users/activate/:id')
+    @Patch('users/:id/activate')
     @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS, FeatureKey.MANAGE_ALL_TENANTS)
     activateUser(
         @UserDecorator() user: User,
