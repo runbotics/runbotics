@@ -4,7 +4,7 @@ const httpProxy = require('http-proxy');
 const PORT = 8888;
 const TARGET = 'https://runbotics-dev.clouddc.eu'
 
-// For debugging: set target to localhost:8888 and run mitmproxy in reverse-proxy mode for debugging
+// For debugging: set target to localhost:8889 and run mitmproxy in reverse-proxy mode for debugging
 // mitmweb --listen-port 8889 --mode reverse:https://runbotics-dev.clouddc.eu
 
 const proxy = httpProxy.createProxyServer({
