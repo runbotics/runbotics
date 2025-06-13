@@ -1,6 +1,6 @@
 # Playwright testing suite
 
-Requires application being deployed at some URL. Right now it uses https://runbotics-dev.clouddc.eu/ . This can be changed in configuration file.
+Requires application being deployed at some URL. Right now it uses https://runbotics-dev.clouddc.eu/ . This can be changed in the configuration file.
 
 ## Setup
 
@@ -31,25 +31,6 @@ tsconfig.json here is added, so that linting works fine in code editor.
 
 Other files like `.prettierrc` or `.eslintrc` may be included here as well.
 
-## CI/CD deployment
+## Running local UI + dev setup
 
-Right now this test suite expect application to be already deployed somewhere.
-
-Playwright supports running web server as a part of test suite.
-
-See this example configuration:
-
-```javascript
-/* Run your local dev server before starting the tests */
-{
-    webServer: {
-        command: 'npm run start',
-        url: 'http://localhost:3000',
-        reuseExistingServer: !process.env.CI,
-        stdout: 'ignore',
-        stderr: 'pipe',
-    },
-}
-```
-
-For more info see https://playwright.dev/docs/test-webserver
+See [README_localUi.md](README_localUi.md)
