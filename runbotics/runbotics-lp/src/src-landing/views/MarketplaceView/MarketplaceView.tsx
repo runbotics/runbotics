@@ -13,6 +13,7 @@ import ContentFulLayout from 'src/src-landing/components/ContentFulLayout';
 
 import styles from './MarketplaceView.module.scss';
 import CardsSection from '../sections/blog/CardsSection';
+import { ClientOnly } from '#src-landing/noSSR';
 
 
 

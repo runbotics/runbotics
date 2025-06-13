@@ -13,16 +13,17 @@ interface Props {
 
 const LoginLink: VFC<Props> = ({ className }) => {
     const { translate } = useTranslations();
+    const baseUrl = process.env.RUNBOTICS_URL || '/login';
 
     return (
-        <Link className={`${styles.link} ${className}`} href={'/login'}>
+        <a className={`${styles.link} ${className}`} href={`${baseUrl}/login`}>
             <Typography
                 variant="h6"
                 color="accent"
                 className={styles.linkText}
                 text={translate('Landing.Header.Button.LogIn')}
             />
-        </Link>
+        </a>
     );
 };
 

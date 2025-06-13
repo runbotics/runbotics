@@ -1,0 +1,8 @@
+{
+    "History.Meta.Title": "History",
+    "History.Header.Title": "History",
+    "History.Table.Expand": "Show subprocesses",
+    "History.Table.Error.InstancesNotFound": "Process run history cannot be retrieved",
+    "History.Table.Error.SubprocessesNotFound": "No subprocesses found for this process run",
+    "History.Table.Error.ProcessInstanceNotFound": "Process instance not found"
+}

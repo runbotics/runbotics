@@ -1,5 +1,5 @@
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -18,7 +18,12 @@ interface PaginationNavigationProps {
 
 const PaginationNavigation: FC<PaginationNavigationProps> = ({ basePageUrl, currentPage, totalPages }) => {
     const { translate } = useTranslations();
-    const currentUrl = window.location.href;
+    const [currentUrl, setCurrentUrl] = useState('');
+ 
+    useEffect(() => {
+        setCurrentUrl(window.location.href);
+    }, []);
+    // const currentUrl = window.location.href;
     const pageNumbers = Array.from(
         Array(totalPages).keys(), page => page + 1
     );
