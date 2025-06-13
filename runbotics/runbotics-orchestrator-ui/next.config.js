@@ -1,39 +1,10 @@
-let rewrites = [
-    {
-        source: '/api/scheduler/:path*',
-        destination: 'http://127.0.0.1:4000/api/scheduler/:path*',
-    },
-    {
-        source: '/api/:path*',
-        destination: 'http://127.0.0.1:8080/api/:path*', // The :path parameter is used here so will not be automatically passed in the query
-    },
-    {
-        source: '/scheduler/:path*',
-        destination: 'http://127.0.0.1:4000/scheduler/:path*',
-    },
-]
-
 const PROXY_HOST = `http://localhost:8888`
-const PROXYING_ENABLED = ['on', '1', 'yes'].includes(process.env.DEV_PROXY_ENABLED?.toLowerCase())
+const IS_PROXYING_ENABLED = ['on', '1', 'yes'].includes(process.env.DEV_PROXY_ENABLED?.toLowerCase())
 
-if (PROXYING_ENABLED) {
-    rewrites = [
-        {
-            source: '/api/scheduler/:path*',
-            destination: `${PROXY_HOST}/api/scheduler/:path*`,
-        },
-        {
-            source: '/api/:path*',
-            destination: `${PROXY_HOST}/api/:path*`,
-        },
-        {
-            source: '/scheduler/:path*',
-            destination: `${PROXY_HOST}/scheduler/:path*`,
-        },
-    ]
-}
+const API_HOST = IS_PROXYING_ENABLED ? PROXY_HOST : `http://127.0.0.1:8080`
+const SCHEDULER_HOST = IS_PROXYING_ENABLED ? PROXY_HOST : `http://127.0.0.1:4000`
 
-const FALLBACK_RUNBOTICS_ENTRY_URL = PROXYING_ENABLED ? PROXY_HOST : 'http://127.0.0.1:4000'
+const FALLBACK_RUNBOTICS_ENTRY_URL = IS_PROXYING_ENABLED ? PROXY_HOST : 'http://127.0.0.1:4000'
 
 module.exports = {
     rewrites: () => process.env.NODE_ENV === 'development'
@@ -42,7 +13,18 @@ module.exports = {
                 source: '/api/plugins/:path*',
                 destination: '/api/plugins/:path*',
             },
-            ...rewrites,
+            {
+                source: '/api/scheduler/:path*',
+                destination: `${SCHEDULER_HOST}/api/scheduler/:path*`,
+            },
+            {
+                source: '/api/:path*',
+                destination: `${API_HOST}/api/:path*`, // The :path parameter is used here so will not be automatically passed in the query
+            },
+            {
+                source: '/scheduler/:path*',
+                destination: `${SCHEDULER_HOST}/scheduler/:path*`,
+            },
         ]
         : [],
     webpack: (config) => {
