@@ -7,6 +7,8 @@ const authData = JSON.parse(readFileSync(authFile, 'utf-8'))
 const login = authData.login;
 const password = authData.password;
 
+if (!login || !password) throw new Error(`Either login or password are not provided`)
+
 test('can login', async ({ page }) => {
 	await page.goto('/login');
 	await page.waitForLoadState("load");
