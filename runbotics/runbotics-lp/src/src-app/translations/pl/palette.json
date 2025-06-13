@@ -1,0 +1,11 @@
+{
+    "Palette.HandTool": "Przesuwanie (h)",
+    "Palette.LassoTool": "Lasso (l)",
+    "Palette.SpaceTool": "Dodaj/usuń przestrzeń (s)",
+    "Palette.GlobalConnectTool": "Globalne połączenie (c)",
+    "Palette.Create.StartEvent": "Utwórz Zdarzenie Początkowe",
+    "Palette.Create.EndEvent": "Utwórz Zdarzenie Końcowe",
+    "Palette.Create.IntermediateEvent": "Utwórz Zdarzenie Pośrednie",
+    "Palette.Create.ExclusiveGateway": "Utwórz Bramkę Logiczną",
+    "Palette.Create.Group": "Utwórz Grupę"
+}

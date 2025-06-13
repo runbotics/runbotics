@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <g id="smart_toy_black_24dp" transform="translate(0.433 -0.418)">
+    <g id="Group_169" data-name="Group 169">
+      <rect id="Rectangle_119" data-name="Rectangle 119" width="36" height="36" transform="translate(-0.433 0.418)" fill="none"/>
+    </g>
+    <g id="Group_171" data-name="Group 171" transform="translate(1.502 3.004)">
+      <g id="Group_170" data-name="Group 170">
+        <path id="Path_303" data-name="Path 303" d="M29.535,12.513v-3a3.012,3.012,0,0,0-3-3H22.025a4.505,4.505,0,0,0-9.011,0H8.509a3.012,3.012,0,0,0-3,3v3a4.505,4.505,0,0,0,0,9.011v6.007a3.012,3.012,0,0,0,3,3H26.531a3.012,3.012,0,0,0,3-3V21.524a4.505,4.505,0,0,0,0-9.011Zm-3,15.018H8.509V9.509H26.531ZM13.015,18.52a2.253,2.253,0,1,1,2.253-2.253A2.25,2.25,0,0,1,13.015,18.52Zm11.264-2.253a2.253,2.253,0,1,1-2.253-2.253A2.25,2.25,0,0,1,24.278,16.267ZM11.513,21.524H23.527v3H11.513Z" transform="translate(-1 -2)"/>
+      </g>
+    </g>
+  </g>
+</svg>

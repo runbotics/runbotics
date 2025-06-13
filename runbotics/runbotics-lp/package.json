@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,7 +11,36 @@
   "dependencies": {
     "react": "^18",
     "react-dom": "^18",
-    "next": "13.5.11"
+    "next": "13.1.1",
+    "@azure/msal-react": "~3.0.5",
+    "@azure/msal-browser": "~4.5.1",
+    "@emotion/react": "~11.10.5",
+    "react-i18next": "^11.18.1",
+    "@reduxjs/toolkit": "^1.4.0",
+    "react-redux": "^7.2.0",
+    "notistack": "^2.0.8",
+    "runbotics-common": "workspace:^1.0.0",
+    "@contentful/rich-text-react-renderer": "^15.4.0",
+    "@contentful/rich-text-types": "^16.0.3",
+    "clsx": "^1.1.1",
+    "styled-components": "^5.3.3",
+    "axios": "^0.21.1",
+    "dompurify": "^2.3.9",
+    "i18next": "^21.8.14",
+    "@emotion/cache": "~11.10.3",
+    "mixpanel-browser": "^2.47.0",
+    "lodash": "^4.17.19",
+    "redux-thunk": "^2.3.0",
+    "redux-form": "^8.3.8",
+    "react-feather": "^2.0.10",
+    "mnemonist": "^0.39.5",
+    "@mui/icons-material": "^5.10.6",
+    "@mui/material": "^5.10.12",
+    "@mui/lab": "^5.0.0-alpha.106",
+    "@mui/system": "^5.11.2",
+    "@mui/x-data-grid": "^5.17.0",
+    "@mui/x-date-pickers": "~5.0.7",
+    "@mui/x-tree-view": "~6.17.0"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -19,6 +48,15 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "13.5.11"
-  }
+    "eslint-config-next": "13.5.11",
+    "moment": "^2.27.0",
+    "@types/lodash": "^4.14.158",
+    "@types/react-redux": "^7.1.9"
+  },
+  "resolutions": {
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
+  },
+  "files": [
+    "public"
+  ]
 }

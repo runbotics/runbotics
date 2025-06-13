@@ -38,9 +38,8 @@ const Header = () => {
 
     return (
         <header
-            className={`${styles.header} ${
-                !isNavExpanded ? '' : styles.isActive
-            }`}
+            className={`${styles.header} ${!isNavExpanded ? '' : styles.isActive
+                }`}
         >
             <div className={styles.inner}>
                 <Link href={'/'} locale={locale}>
