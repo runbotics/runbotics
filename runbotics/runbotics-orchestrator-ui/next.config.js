@@ -1,24 +1,53 @@
+let rewrites = [
+    // order of rules matters
+    {
+        source: '/api/plugins/:path*',
+        destination: '/api/plugins/:path*',
+    },
+    {
+        source: '/api/scheduler/:path*',
+        destination: 'http://127.0.0.1:4000/api/scheduler/:path*',
+    },
+    {
+        source: '/api/:path*',
+        destination: 'http://127.0.0.1:8080/api/:path*', // The :path parameter is used here so will not be automatically passed in the query
+    },
+    {
+        source: '/scheduler/:path*',
+        destination: 'http://127.0.0.1:4000/scheduler/:path*',
+    },
+]
+
+const PROXY_HOST = `http://localhost:8888`
+const PROXYING_ENABLED = ['on', '1', 'yes'].includes(process.env.DEV_PROXY_ENABLED?.toLowerCase())
+
+if (PROXYING_ENABLED) {
+    rewrites = [
+        // order of rules matters
+        {
+            source: '/api/plugins/:path*',
+            destination: '/api/plugins/:path*',
+        },
+        {
+            source: '/api/scheduler/:path*',
+            destination: `${PROXY_HOST}/api/scheduler/:path*`, // The :path parameter is used here so will not be automatically passed in the query
+        },
+        {
+            source: '/api/:path*',
+            destination: `${PROXY_HOST}/api/:path*`,
+        },
+        {
+            source: '/scheduler/:path*',
+            destination: `${PROXY_HOST}/scheduler/:path*`,
+        },
+    ]
+}
+
+const FALLBACK_RUNBOTICS_ENTRY_URL = PROXYING_ENABLED ? PROXY_HOST : 'http://127.0.0.1:4000'
+
 module.exports = {
     rewrites: () => process.env.NODE_ENV === 'development'
-        ? [
-            // order of rules matters
-            {
-                source: '/api/plugins/:path*',
-                destination: '/api/plugins/:path*',
-            },
-            {
-                source: '/api/scheduler/:path*',
-                destination: 'http://127.0.0.1:4000/api/scheduler/:path*',
-            },
-            {
-                source: '/api/:path*',
-                destination: 'http://127.0.0.1:8080/api/:path*', // The :path parameter is used here so will not be automatically passed in the query
-            },
-            {
-                source: '/scheduler/:path*',
-                destination: 'http://127.0.0.1:4000/scheduler/:path*',
-            },
-        ]
+        ? rewrites
         : [],
     webpack: (config) => {
         config.resolve.fallback = { '@material-ui/core': false, '@material-ui/icons': false };
@@ -26,7 +55,7 @@ module.exports = {
         return config;
     },
     publicRuntimeConfig: {
-        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://127.0.0.1:4000',
+        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || FALLBACK_RUNBOTICS_ENTRY_URL,
         mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN,
         copilotChatUrl: process.env.COPILOT_CHAT_URL,
         microsoftAppId: process.env.MICROSOFT_APP_ID,
@@ -56,6 +85,7 @@ module.exports = {
     images: {
         domains: [ "images.ctfassets.net" ]
     },
+
     // consts declared at: runbotics\runbotics\runbotics-orchestrator-ui\src\src-app\translations\translations.ts
     i18n: {
         locales: [ 'en', 'pl' ],
