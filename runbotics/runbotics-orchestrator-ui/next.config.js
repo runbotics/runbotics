@@ -1,9 +1,4 @@
 let rewrites = [
-    // order of rules matters
-    {
-        source: '/api/plugins/:path*',
-        destination: '/api/plugins/:path*',
-    },
     {
         source: '/api/scheduler/:path*',
         destination: 'http://127.0.0.1:4000/api/scheduler/:path*',
@@ -23,14 +18,9 @@ const PROXYING_ENABLED = ['on', '1', 'yes'].includes(process.env.DEV_PROXY_ENABL
 
 if (PROXYING_ENABLED) {
     rewrites = [
-        // order of rules matters
-        {
-            source: '/api/plugins/:path*',
-            destination: '/api/plugins/:path*',
-        },
         {
             source: '/api/scheduler/:path*',
-            destination: `${PROXY_HOST}/api/scheduler/:path*`, // The :path parameter is used here so will not be automatically passed in the query
+            destination: `${PROXY_HOST}/api/scheduler/:path*`,
         },
         {
             source: '/api/:path*',
@@ -47,7 +37,13 @@ const FALLBACK_RUNBOTICS_ENTRY_URL = PROXYING_ENABLED ? PROXY_HOST : 'http://127
 
 module.exports = {
     rewrites: () => process.env.NODE_ENV === 'development'
-        ? rewrites
+        ? [
+            {
+                source: '/api/plugins/:path*',
+                destination: '/api/plugins/:path*',
+            },
+            ...rewrites,
+        ]
         : [],
     webpack: (config) => {
         config.resolve.fallback = { '@material-ui/core': false, '@material-ui/icons': false };
