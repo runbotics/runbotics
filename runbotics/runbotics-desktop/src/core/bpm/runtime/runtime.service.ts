@@ -645,7 +645,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
             const tenantId = this.storageService.getValue('tenantId');
             const pluginName = this.composePluginName(script);
             const licenseRes = (await schedulerAxios.get<License>(
-                `/api/scheduler/tenants/${tenantId}/licenses/license/${pluginName}/info`
+                `/api/scheduler/tenants/${tenantId}/licenses/${pluginName}/info`
             )).data;
 
             licenseInfo.license = licenseRes.license;
