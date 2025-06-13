@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,7 +20,12 @@ interface SwitchPageButtonProps {
 
 const SwitchPageButton: FC<SwitchPageButtonProps> = ({ basePageUrl, direction, currentPage }) => {
     const { translate } = useTranslations();
-    const currentUrl = window.location.href;
+    const [currentUrl, setCurrentUrl] = useState('');
+     
+    useEffect(() => {
+        setCurrentUrl(window.location.href);
+    }, []);
+    // const currentUrl = window.location.href;
     const paginatedUrl = getPaginatedUrl(
         direction === 'Previous' ?
             currentPage - 1 :

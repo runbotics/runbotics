@@ -1,41 +1,28 @@
 import React, { VFC, useEffect, useState, useRef } from 'react';
 
 import { useRouter } from 'next/router';
-import { PartialUserDto } from 'runbotics-common';
 
-import useAuth from '#src-app/hooks/useAuth';
 import useClickOutsideComponent from '#src-app/hooks/useClickOutsideComponent';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { useDispatch } from '#src-app/store';
-import { usersActions } from '#src-app/store/slices/Users';
-import { languages, Language } from '#src-app/translations/translations';
 
 import styles from './LanguageSwitcher.module.scss';
 import { capitalizeFirstLetter } from '../../utils/utils';
+import { languages, Language } from '#src-app/translations/translations';
 
 const LanguageSwitcher: VFC = () => {
     const [toggle, setToggle] = useState(false);
-    const dispatch = useDispatch();
     const selectRef = useRef();
-    const { isAuthenticated } = useAuth();
 
     useClickOutsideComponent(selectRef, () => setToggle(false));
 
     const { switchLanguage, translate } = useTranslations();
     const { push, locale: activeLocale, asPath } = useRouter();
 
-    const updateDatabaseLanguage = async (patchPayload: PartialUserDto) => {
-        await dispatch(usersActions.partialUpdate(patchPayload));
-    };
-
     const handleLanguageSwitch = (language: Language) => {
         push(asPath, null, {
             locale: language,
         });
         setToggle(!toggle);
-        if (isAuthenticated) {
-            updateDatabaseLanguage({ langKey: language });
-        }
     };
 
     useEffect(() => {
@@ -56,9 +43,8 @@ const LanguageSwitcher: VFC = () => {
                     <div
                         onClick={() => handleLanguageSwitch(language)}
                         key={language}
-                        className={`${styles.option} ${
-                            language === activeLocale ? styles.active : ''
-                        }`}
+                        className={`${styles.option} ${language === activeLocale ? styles.active : ''
+                            }`}
                     >
                         {capitalizeFirstLetter(
                             translate(`Common.Languages.${language}`)
