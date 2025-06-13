@@ -48,7 +48,7 @@ export const update = createAsyncThunk<UserDto, PartialUserDto>(
 
 export const activate = createAsyncThunk<void, ActivateUserDto>(
     'users/activate',
-    (activateData) => axios.patch<ActivateUserDto>(`/api/scheduler/users/${activateData.id}/activation`, activateData)
+    (activateData) => axios.patch<ActivateUserDto>(`/api/scheduler/users/${activateData.id}/activate`, activateData)
         .then((response => void response))
 );
 
@@ -57,7 +57,7 @@ export const updateInTenant = ApiTenantResource.patch<UserDto, PartialUserDto>(
 );
 
 export const activateInTenant = ApiTenantResource.patch<UserDto, ActivateUserDto>(
-    'users/activateInTenant', (id) => `${USERS_PATH}/${id}/activation`
+    'users/activateInTenant', (id) => `${USERS_PATH}/${id}/activate`
 );
 
 export const deleteUser = createAsyncThunk<

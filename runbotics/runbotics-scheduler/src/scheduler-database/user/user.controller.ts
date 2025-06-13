@@ -50,7 +50,7 @@ export class UserController {
         );
     }
 
-    @PatchWithTenant('users/:id/activation')
+    @PatchWithTenant('users/:id/activate')
     @FeatureKeys(FeatureKey.TENANT_EDIT_USER)
     activateUserInTenant(
         @UserDecorator() user: User,
@@ -96,7 +96,7 @@ export class UserController {
         return this.userService.update(userDto, userId, user);
     }
 
-    @Patch('users/:id/activation')
+    @Patch('users/:id/activate')
     @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS, FeatureKey.MANAGE_ALL_TENANTS)
     activateUser(
         @UserDecorator() user: User,
