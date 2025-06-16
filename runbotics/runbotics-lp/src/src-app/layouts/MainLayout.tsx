@@ -5,17 +5,14 @@ import { useTheme } from '@mui/material/styles';
 
 import i18n from 'i18next';
 
-// import { withAuthGuard } from '#src-app/components/guards/AuthGuard';
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
-// import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAsyncEffect from '#src-app/hooks/useAsyncEffect';
 import useAuth from '#src-app/hooks/useAuth';
 
 import { Main, ContentContainer, Content } from './MainLayout.styles';
 import NavBar from './NavBar';
 import { usePublicSections } from './NavBar/usePublicSections';
-// import TopBar from './TopBar';
 
 const MainLayout: FC = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
@@ -57,7 +54,6 @@ const MainLayout: FC = ({ children }) => {
 
     return (
         <>
-            {/* <TopBar /> */}
             <If condition={isNavBarVisible}>
                 <NavBar
                     isShrank={isMenuShrank}
@@ -83,5 +79,4 @@ const MainLayout: FC = ({ children }) => {
     );
 };
 
-// export default withAuthGuard({ Component: MainLayout });
 export default MainLayout;
