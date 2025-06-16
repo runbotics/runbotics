@@ -6,7 +6,7 @@ import { isEmailValid } from 'runbotics-common';
 
 import { useCart } from '#src-app/contexts/CartContext';
 import useTranslations from '#src-app/hooks/useTranslations';
-import { axiosInstance as axios } from '#src-app/utils/axios';
+import { axiosInstance as axios, AxiosInstanceError } from '#src-app/utils/axios';
 import ContactForm from '#src-landing/components/ContactForm';
 import Layout from '#src-landing/components/Layout';
 
@@ -23,7 +23,7 @@ const SNACKBAR_AUTOHIDE_DURATION = 5000;
 const MarketplaceCartView: FC = () => {
     const { translate } = useTranslations();
     const { enqueueSnackbar } = useSnackbar();
-    const { cart, contactFormValue, selectedCartItems} = useCart();
+    const { cart, contactFormValue, selectedCartItems, resetFormValue} = useCart();
 
     const fullPrice = cart.filter(item => selectedCartItems.includes(item.slug))
         .reduce(
@@ -72,12 +72,20 @@ const MarketplaceCartView: FC = () => {
                     variant: 'success',
                     autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
                 });
+                resetFormValue();
             })
-            .catch(() => {
-                enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
-                    variant: 'error',
-                    autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
-                });
+            .catch((error: AxiosInstanceError) => {
+                if (error.status === 429) {
+                    enqueueSnackbar(translate('Marketplace.Cart.TooManyRequests'), {
+                        variant: 'error',
+                        autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
+                    });
+                } else {
+                    enqueueSnackbar(translate('Marketplace.Cart.EmailError'), {
+                        variant: 'error',
+                        autoHideDuration: SNACKBAR_AUTOHIDE_DURATION,
+                    });
+                }
             });
     };
     return (
