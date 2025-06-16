@@ -14,14 +14,12 @@ import { CartProvider } from '#src-app/contexts/CartContext';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
 import MainLayout from '#src-app/layouts/MainLayout';
 import SnackbarProvider from '#src-app/providers/Snackbar.provider';
-// import SocketProvider from '#src-app/providers/Socket.provider';
 import StylesProvider from '#src-app/providers/Styles.provider';
 import store from '#src-app/store';
 import i18n from '#src-app/translations/i18n';
 import { DEFAULT_LANG } from '#src-app/translations/translations';
 import createEmotionCache from '#src-app/utils/createEmotionCache';
 import msalInstance from '#src-app/utils/msal';
-// import InitializeAuth from '#src-app/views/auth/InitializeAuth';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -64,18 +62,11 @@ function App(props: AppProps) {
                             <StylesProvider>
                                 <SnackbarProvider>
                                     <MsalProvider instance={msalInstance}>
-                                        {/* <InitializeAuth> */}
-                                        {/* <SocketProvider
-                                            uri={props.runboticsEntrypointUrl}
-                                            shouldAttach={router.pathname.includes('/app/')}
-                                        > */}
                                         <CartProvider>
                                             <Layout>
                                                 <Component {...restPageProps} />
                                             </Layout>
                                         </CartProvider>
-                                        {/* </SocketProvider> */}
-                                        {/* </InitializeAuth> */}
                                     </MsalProvider>
                                 </SnackbarProvider>
                             </StylesProvider>

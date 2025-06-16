@@ -21,11 +21,10 @@ interface SwitchPageButtonProps {
 const SwitchPageButton: FC<SwitchPageButtonProps> = ({ basePageUrl, direction, currentPage }) => {
     const { translate } = useTranslations();
     const [currentUrl, setCurrentUrl] = useState('');
-     
+
     useEffect(() => {
         setCurrentUrl(window.location.href);
     }, []);
-    // const currentUrl = window.location.href;
     const paginatedUrl = getPaginatedUrl(
         direction === 'Previous' ?
             currentPage - 1 :
@@ -33,9 +32,9 @@ const SwitchPageButton: FC<SwitchPageButtonProps> = ({ basePageUrl, direction, c
         basePageUrl,
         currentUrl.split('?')[1]
     );
-    
+
     return (
-        <Link 
+        <Link
             className={styles[direction.toLowerCase()]}
             href={paginatedUrl}
             title={translate(`Blog.Post.Pagination.${direction}`)}
