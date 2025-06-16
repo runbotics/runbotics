@@ -25,7 +25,7 @@ interface MarketplaceViewProps {
 }
 
 const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, page }) => {
-    
+
     const [isFilterDisplayed, setFilterDisplayed] = useState(false);
 
     const { translate } = useTranslations();
@@ -39,26 +39,28 @@ const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, p
     );
     return (
         <Layout disableScroll={isFilterDisplayed}>
-            <ContentFulLayout
-                baseImage={'hero-background'}
-                headImageClass={HeadImage.MARKETPLACE}
-            >
-                <FiltersSection 
-                    handleFilterDisplayed={setFilterDisplayed} 
-                    isFilterDisplayed={isFilterDisplayed}
-                    industries={industries}
-                />
-                <CardsSection
-                    pageType={PageType.MARKETPLACE}
-                    cards={offers}
-                    featuredCard={null}
-                    page={page}
-                    searchBar={<SearchBarSection />}
-                    notFoundInfo={offersNotFoundInfo}
-                    isNotFoundVisible={Boolean(offers.length)}
-                />
-            </ContentFulLayout>
-            <MarketplaceCartButton />
+            <ClientOnly>
+                <ContentFulLayout
+                    baseImage={'hero-background'}
+                    headImageClass={HeadImage.MARKETPLACE}
+                >
+                    <FiltersSection
+                        handleFilterDisplayed={setFilterDisplayed}
+                        isFilterDisplayed={isFilterDisplayed}
+                        industries={industries}
+                    />
+                    <CardsSection
+                        pageType={PageType.MARKETPLACE}
+                        cards={offers}
+                        featuredCard={null}
+                        page={page}
+                        searchBar={<SearchBarSection />}
+                        notFoundInfo={offersNotFoundInfo}
+                        isNotFoundVisible={Boolean(offers.length)}
+                    />
+                </ContentFulLayout>
+                <MarketplaceCartButton />
+            </ClientOnly>
         </Layout>
     );
 };

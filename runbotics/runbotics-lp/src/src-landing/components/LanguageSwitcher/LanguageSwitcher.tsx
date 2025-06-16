@@ -11,26 +11,29 @@ import { languages, Language } from '#src-app/translations/translations';
 
 const LanguageSwitcher: VFC = () => {
     const [toggle, setToggle] = useState(false);
-    const selectRef = useRef();
+    const selectRef = useRef<HTMLDivElement | null>(null);
 
     useClickOutsideComponent(selectRef, () => setToggle(false));
 
     const { switchLanguage, translate } = useTranslations();
     const { push, locale: activeLocale, asPath } = useRouter();
+    const [prevLocale, setPrevLocale] = useState(activeLocale);
 
-    const handleLanguageSwitch = (language: Language) => {
-        push(asPath, null, {
+    const handleLanguageSwitch = async (language: Language) => {
+        if (language === activeLocale) return;
+        setToggle(!toggle);
+        await push(asPath, undefined, {
             locale: language,
         });
-        setToggle(!toggle);
+
     };
 
     useEffect(() => {
-        switchLanguage(activeLocale as Language);
-        push(asPath, undefined, {
-            locale: activeLocale,
-        });
-    }, [activeLocale]);
+        if (activeLocale !== prevLocale) {
+            switchLanguage(activeLocale as Language);
+            setPrevLocale(activeLocale);
+        }
+    }, [activeLocale, switchLanguage]);
 
     return (
         <div ref={selectRef} className={styles.selectGroup}>

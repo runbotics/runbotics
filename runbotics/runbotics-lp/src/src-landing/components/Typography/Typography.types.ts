@@ -32,4 +32,5 @@ export interface TypographyProps {
     className?: string;
     text?: string;
     id?: string;
+    children?: React.ReactNode;
 }

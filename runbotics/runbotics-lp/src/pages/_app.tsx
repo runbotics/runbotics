@@ -28,8 +28,6 @@ const { publicRuntimeConfig } = getConfig();
 import '#src-landing/scss/main.scss';
 import '#src-landing/scss/global.scss';
 import Metadata from '#src-landing/components/Matadata/Metadata';
-import { NoSsr } from '@mui/material';
-import { ClientOnly } from '#src-landing/noSSR';
 
 interface AppProps extends PageProps {
     children: ReactNode | ReactNode[];
@@ -56,9 +54,8 @@ function App(props: AppProps) {
     }
 
     return (
-        
+
         <div style={{ height: '100%' }}>
-            {/* <ClientOnly> */}
             <Metadata metadata={metadata} />
             <CacheProvider value={emotionCache}>
                 <Provider store={store}>
@@ -86,9 +83,8 @@ function App(props: AppProps) {
                     </SettingsProvider>
                 </Provider>
             </CacheProvider>
-            {/* </ClientOnly>> */}
         </div>
-        
+
     );
 }
 
