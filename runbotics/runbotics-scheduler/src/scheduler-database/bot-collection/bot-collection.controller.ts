@@ -34,7 +34,7 @@ export class BotCollectionController {
     ) {
     }
 
-    @Get('current-user')
+    @Get()
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getForCurrentUser(
         @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
@@ -43,7 +43,7 @@ export class BotCollectionController {
         return this.botCollectionService.findForUser(user, specs);
     }
 
-    @Get('current-user/GetPage')
+    @Get('GetPage')
     @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
     getPageForCurrentUser(
         @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
@@ -74,25 +74,6 @@ export class BotCollectionController {
         }
 
         return this.botCollectionService.updateDto(id, user, collectionDto);
-    }
-
-    @Get()
-    @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
-    getAll(
-        @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
-        @UserDecorator() user: User,
-    ){
-        return this.botCollectionService.findAll(user, specs);
-    }
-
-    @Get('GetPage')
-    @FeatureKeys(FeatureKey.BOT_COLLECTION_READ)
-    getPage(
-        @Specifiable(BotCollectionCriteria) specs: Specs<BotCollection>,
-        @Pageable() paging: Paging,
-        @UserDecorator() user: User,
-    ){
-        return this.botCollectionService.findAllPage(user, specs, paging);
     }
 
     @Get(':id')

@@ -4,6 +4,7 @@ import { IBpmnAction } from '#src-app/Actions/types';
 import { Options, Variable } from '#src-app/hooks/useOptions';
 import LoadingType from '#src-app/types/loading';
 import { Page } from '#src-app/utils/types/page';
+import { ProcessListDisplayMode } from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 export interface CommandStackInfo {
@@ -55,6 +56,7 @@ export interface ProcessState {
         byId: Record<string, ProcessDto>;
         ids: string[];
         page: Page<ProcessDto> | null;
+        listDisplayMode: ProcessListDisplayMode
     };
 }
 

@@ -6,7 +6,7 @@ import { translate } from '#src-app/hooks/useTranslations';
 
 import { propertyCustomCredential, schemaCustomCredential } from '../actions.utils';
 
-export const createCloudFolderAction = {
+export const getCreateCloudFolderAction = () => ({
     id: CloudFileAction.CREATE_FOLDER,
     credentialType: ActionCredentialType.MICROSOFT_GRAPH,
     label: translate('Process.Details.Modeler.Actions.CloudFile.CreateFolder.Label'),
@@ -106,4 +106,6 @@ export const createCloudFolderAction = {
             },
         },
     },
-} satisfies IBpmnAction;
+} satisfies IBpmnAction
+);
+

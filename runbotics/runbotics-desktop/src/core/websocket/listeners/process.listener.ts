@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import {
     InjectIoClientProvider,
     IoClient,
@@ -97,10 +97,14 @@ export class ProcessListener {
                 )
                 .then((response) => {
                     return response.data;
+                }).catch(e => {
+                    this.logger.log(`Error getting process id: ${e}`);
+                    throw new Error(`The process was not found in the tenant to which the bot is authenticated. Process id: ${processId}, bot tenant id: ${tenantId}`);
                 });
 
+            // TODO - after updating get method to findOneByOrFail in process-crud.service it can be removed
             if (!process) {
-                throw new Error(`The process was not found in the tenant to which the bot is authenticated. Process id: ${processId}, bot tenant id: ${tenantId}`);
+                throw new ForbiddenException(`Bot user does not have access to the process. Process id: ${processId}`);
             }
 
             this.logger.log('Starting process: ' + process.name);

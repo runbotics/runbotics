@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "3.2.1",
+    "version": "3.3.0-SNAPSHOT.16",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -93,7 +93,7 @@
         "styled-components": "^5.3.3",
         "cronstrue": "^1.123.0",
         "react-dropzone": "~14.2.2",
-        "next": "13.1.1",
+        "next": "13.5.9",
         "sass": "~1.55.0",
         "@emotion/cache": "~11.10.3",
         "eslint-config-next": "~13.0.0",
