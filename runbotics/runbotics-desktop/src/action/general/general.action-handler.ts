@@ -4,9 +4,10 @@ import { GeneralAction, IProcess, ProcessInstanceStatus, ITriggerEvent, BotSyste
 import { delay } from '#utils';
 import { RunboticsLogger } from '#logger';
 import { RuntimeService } from '#core/bpm/runtime';
-import { schedulerAxios, StorageService } from '#config';
+import { StorageService } from '#config';
 import getBotSystem from '#utils/botSystem';
 import { ConsoleLogActionInput, ConsoleLogActionOutput, DelayActionInput, DelayActionOutput, StartProcessActionInput, StartProcessActionOutput, ThrowErrorActionInput, ThrowErrorActionOutput } from './general.types';
+import { RequestService } from '#core/auth/request.service';
 
 export type GeneralActionRequest =
 | DesktopRunRequest<GeneralAction.DELAY, DelayActionInput>
@@ -22,6 +23,7 @@ export default class GeneralActionHandler extends StatelessActionHandler {
         @Inject(forwardRef(() => RuntimeService))
         private runtimeService: RuntimeService,
         private readonly storageService: StorageService,
+        private readonly requestService: RequestService
     ) {
         super();
     }
@@ -46,6 +48,8 @@ export default class GeneralActionHandler extends StatelessActionHandler {
         request: DesktopRunRequest<GeneralAction.START_PROCESS, StartProcessActionInput>
     ): Promise<StartProcessActionOutput> {
         const tenantId = this.storageService.getValue('tenantId');
+        const schedulerAxios = await this.requestService.getSchedulerAxios();
+        
         const response = await schedulerAxios.get<IProcess>(
             `/api/scheduler/tenants/${tenantId}/processes/${request.input.processId}`,
             { maxRedirects: 0 },

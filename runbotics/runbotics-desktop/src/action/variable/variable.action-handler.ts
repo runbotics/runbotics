@@ -4,8 +4,9 @@ import { GlobalVariableType, IGlobalVariable } from 'runbotics-common';
 import { DesktopRunRequest, StatelessActionHandler } from '@runbotics/runbotics-sdk';
 
 import { RuntimeService } from '#core/bpm/runtime';
-import { schedulerAxios, StorageService } from '#config';
+import { StorageService } from '#config';
 import { RunboticsLogger } from '#logger';
+import { RequestService } from '#core/auth/request.service';
 
 export type VariablesActionRequest =
 | DesktopRunRequest<'variables.assign', AssignVariableActionInput>
@@ -30,6 +31,7 @@ export default class VariableActionHandler extends StatelessActionHandler {
         @Inject(forwardRef(() => RuntimeService))
         private runtimeService: RuntimeService,
         private readonly storageService: StorageService,
+        private readonly requestService: RequestService
     ) {
         super();
     }
@@ -61,9 +63,11 @@ export default class VariableActionHandler extends StatelessActionHandler {
         return actionInput;
     }
 
-    private fetchGlobalVariable(globalVariableId: number): Promise<AxiosResponse<IGlobalVariable>> {
+    private async fetchGlobalVariable(globalVariableId: number): Promise<AxiosResponse<IGlobalVariable>> {
+        const schedulerAxios = await this.requestService.getSchedulerAxios();
+
         const tenantId = this.storageService.getValue('tenantId');
-        return schedulerAxios.get(`/api/scheduler/tenants/${tenantId}/global-variables/${globalVariableId}`);
+        return await schedulerAxios.get(`/api/scheduler/tenants/${tenantId}/global-variables/${globalVariableId}`);
     }
 
     private async assignGlobalVariable (
