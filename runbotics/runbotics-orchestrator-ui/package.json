@@ -14,7 +14,7 @@
         "build": "next build",
         "lint": "next lint",
         "lint:fix": "next lint --fix",
-        "test": "vitest",
+        "test": "vitest run",
         "test:watch": "vitest dev",
         "test:cov": "vitest run --coverage",
         "test:debug": "vitest --inspect-brk --threads false"
