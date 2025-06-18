@@ -16,7 +16,9 @@ import { GlobalVariableService } from './global-variable.service';
 import { CreateGlobalVariableDto, createGlobalVariableSchema } from './dto/create-global-variable.dto';
 import { UpdateGlobalVariableDto, updateGlobalVariableSchema } from './dto/update-global-variable.dto';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
-import { GetGlobalVariableDto, getGlobalVariableSchema } from './dto/get-global-variable.dto';
+import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
+import { GlobalVariableCriteria } from './criteria/global-variable.criteria';
+import { GlobalVariable } from './global-variable.entity';
 
 
 @UseInterceptors(TenantInterceptor)
@@ -26,18 +28,18 @@ export class GlobalVariableController {
 
     constructor(
         private readonly globalVariableService: GlobalVariableService,
-    ) {}
+    ) { }
 
     @Get()
     @FeatureKeys(FeatureKey.GLOBAL_VARIABLE_READ)
     getAllGlobalVariablesByPage(
         @Pageable() paging: Paging,
         @UserDecorator() { id, tenantId }: User,
-        @Query(new ZodValidationPipe(getGlobalVariableSchema)) globalVariableDto: GetGlobalVariableDto,
+        @Specifiable(GlobalVariableCriteria) specs: Specs<GlobalVariable>,
     ) {
         this.logger.log('REST request to get all global variables by user with id: ', id);
-        const { search, sortField, sortDirection } = globalVariableDto;
-        return this.globalVariableService.getAllByPage(tenantId, paging, search, sortField, sortDirection);
+        specs.where = { ...specs.where, tenantId };
+        return this.globalVariableService.getAllByPage(paging, specs);
     }
 
     @Get(':id')

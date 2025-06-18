@@ -12,6 +12,7 @@ import { CreateGlobalVariableDto } from './dto/create-global-variable.dto';
 import { UpdateGlobalVariableDto } from './dto/update-global-variable.dto';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
+import { Specs } from '#/utils/specification/specifiable.decorator';
 
 const relations = ['user', 'creator'];
 
@@ -24,62 +25,21 @@ export class GlobalVariableService {
         private readonly globalVariableRepository: Repository<GlobalVariable>,
         @InjectRepository(ProcessEntity)
         private readonly processRepository: Repository<ProcessEntity>,
-    ) {}
+    ) { }
 
-    getAllByPage(tenantId: string, paging: Paging, search?: string, sortField = 'lastModified', sortDirection = 'DESC') {
-        if (sortField === 'createdBy' || sortField === 'modifiedBy') {
-            return this.globalVariableRepository
-                .createQueryBuilder('globalVariable')
-                .leftJoinAndSelect('globalVariable.creator', 'creator')
-                .leftJoinAndSelect('globalVariable.user', 'user')
-                .where('globalVariable.tenantId = :tenantId', { tenantId })
-                .andWhere(search ? 'globalVariable.name ILIKE :search' : '1=1', { search: `%${search}%` })
-                .orderBy(
-                    sortField === 'createdBy'
-                        ? 'creator.email'
-                        : 'user.email',
-                    sortDirection.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'
-                )
-                .skip(paging.skip)
-                .take(paging.take)
-                .getManyAndCount()
-                .then(([content, total]) => {
-                    const size = paging.take;
-                    const page = Math.floor(paging.skip / paging.take);
-                    const totalPages = Math.ceil(total / size);
-                    const isFirstPage = page === 0;
-                    const isLastPage = page >= totalPages - 1;
-
-                    return {
-                        content: content.map(globalVariable => this.formatUserDTO(globalVariable)),
-                        totalElements: total,
-                        totalPages,
-                        number: page,
-                        size,
-                        numberOfElements: content.length,
-                        first: isFirstPage,
-                        last: isLastPage,
-                        empty: content.length === 0,
-                    };
-            });
-        }
-        const findOptions: FindManyOptions<GlobalVariable> = {
-            where: { 
-                tenantId,
-                ...(search && { name: ILike(`%${search}%`)})
-            },
-            order: {
-                [sortField]: sortDirection,
-            },
-            relations,
-            ...paging
+    async getAllByPage(paging: Paging, specs: Specs<GlobalVariable>) {
+        const options: FindManyOptions<GlobalVariable> = {
+            ...paging,
+            relations: ['user', 'creator'],
+            ...specs,
         };
-        this.logger.log(`REST request to get all global variables with tenantId: ${tenantId}, search: ${search}, sortField: ${sortField}, sortDirection: ${sortDirection}, findOptions: ${JSON.stringify(findOptions)}`);
 
-        return getPage(this.globalVariableRepository, findOptions).then(page => ({
+        const page = await getPage(this.globalVariableRepository, options);
+
+        return {
             ...page,
-            content: page.content.map(GlobalVariable => this.formatUserDTO(GlobalVariable))
-        }));
+            content: page.content.map(globalVariable => this.formatUserDTO(globalVariable))
+        }
     }
 
     getById(tenantId: string, id: number) {
@@ -171,20 +131,20 @@ export class GlobalVariableService {
     private formatUserDTO(globalVariable: GlobalVariable | null) {
         return globalVariable
             ? {
-                  ...globalVariable,
-                  ...(globalVariable.user && {
-                      user: {
-                          id: globalVariable.user.id,
-                          email: globalVariable.user.email,
-                      },
-                  }),
-                  ...(globalVariable.creator && {
-                      creator: {
-                          id: globalVariable.creator.id,
-                          email: globalVariable.creator.email,
-                      },
-                  }),
-              }
+                ...globalVariable,
+                ...(globalVariable.user && {
+                    user: {
+                        id: globalVariable.user.id,
+                        email: globalVariable.user.email,
+                    },
+                }),
+                ...(globalVariable.creator && {
+                    creator: {
+                        id: globalVariable.creator.id,
+                        email: globalVariable.creator.email,
+                    },
+                }),
+            }
             : null;
     }
 }
