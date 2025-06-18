@@ -44,21 +44,25 @@ const useGlobalVariablesColumns = ({
             field: 'name',
             headerName: translate('Variables.ListView.Table.Header.Name'),
             flex: 0.6,
+            sortable: false,
         },
         {
             field: 'description',
             headerName: translate('Variables.ListView.Table.Header.Description'),
             flex: 1,
+            sortable: false,
         },
         {
             field: 'type',
             headerName: translate('Variables.ListView.Table.Header.Type'),
             flex: 0.4,
+            sortable: false,
         },
         {
             field: 'lastModified',
             headerName: translate('Variables.ListView.Table.Header.LastModified'),
             flex: 0.5,
+            sortable: false,
             valueFormatter: (params: GridValueFormatterParams) =>
                 moment(params.value as string).format('YYYY-MM-DD HH:mm'),
         },
@@ -66,6 +70,7 @@ const useGlobalVariablesColumns = ({
             field: 'createdBy',
             headerName: translate('Variables.ListView.Table.Header.CreatedBy'),
             flex: 0.8,
+            sortable: false,
             renderCell: (params: GridCellParams) => {
                 const creator = params.row.creator as BasicUserDto;
                 return creator?.email ?? '';
@@ -75,6 +80,7 @@ const useGlobalVariablesColumns = ({
             field: 'modifiedBy',
             headerName: translate('Variables.ListView.Table.Header.ModifiedBy'),
             flex: 0.8,
+            sortable: false,
             renderCell: (params: GridCellParams) => {
                 const user = params.row.user as BasicUserDto;
                 return user?.email ?? '';
