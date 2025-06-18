@@ -1,7 +1,7 @@
 import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 
 import { Card, Grid } from '@mui/material';
-import { DataGrid, GridSortModel } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
 
@@ -33,11 +33,6 @@ export interface DeleteDialogState {
 const initialDeleteDialogState: DeleteDialogState = {
     open: false,
 };
-type SortDirection = 'ASC' | 'DESC' | '';
-type SortModelType = {
-    field: string;
-    sort: SortDirection;
-}
 
 const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailState, searchValue }) => {
     const dispatch = useDispatch();
@@ -50,7 +45,6 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
     const [pageSize, setPageSize] = useState(10);
     const [search, setSearch] = useState<string | undefined>(searchValue);
     const [isInitializedFromQuery, setIsInitializedFromQuery] = useState(false);
-    const [sortModel, setSortModel] = useState<SortModelType>();
 
     const replaceQueryParams = useReplaceQueryParams();
     const router = useRouter();
@@ -78,34 +72,29 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
     useEffect(() => {
         const queryPage = parseInt(router.query.page as string) || 0;
         const queryPageSize = parseInt(router.query.pageSize as string) || 10;
-        const querySearch = router.query.search as string || '';
-        const querySortField = router.query.sortField as string || 'lastModified';
-        const querySortDirection = router.query.sortDirection || 'DESC';
+        const querySearch = router.query.name as string || '';
 
         setPage(queryPage);
         setPageSize(queryPageSize);
         setSearch(querySearch);
-        setSortModel(querySortField ? { field: querySortField, sort: querySortDirection } : undefined);
 
-        dispatch(globalVariableActions.getGlobalVariables({ 
-            pageParams: { page: queryPage, size: queryPageSize, search: querySearch, sort: {by: sortModel?.field, order: sortModel?.sort} } 
+        dispatch(globalVariableActions.getGlobalVariables({
+            pageParams: { page: queryPage, size: queryPageSize, 'name.contains': querySearch }
         }));
-            
+
         setIsInitializedFromQuery(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        dispatch(globalVariableActions.getGlobalVariables({ pageParams: { page, size: pageSize, search, sortField: sortModel?.field, sortDirection: sortModel?.sort } }));
+        dispatch(globalVariableActions.getGlobalVariables({ pageParams: { page, size: pageSize, 'name.contains': search } }));
         replaceQueryParams({
             page,
             pageSize,
             search,
-            sortField: sortModel?.field,
-            sortDirection: sortModel?.sort
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, page, pageSize, search, isInitializedFromQuery, sortModel]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, page, pageSize, search, isInitializedFromQuery]);
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
@@ -114,15 +103,6 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
     const handlePageSizeChange = (newPageSize: number) => {
         setPageSize(newPageSize);
         setPage(0);
-    };
-
-    const handleSort = (sortM: GridSortModel) => {
-        if(!sortM[0]) {
-            setSortModel({field: '', sort: ''});
-            return;
-        }
-        const { field, sort } = sortM[0];
-        setSortModel({field, sort: sort as SortDirection});
     };
 
     useEffect(() => {
@@ -147,7 +127,6 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
                             pageSize={pageSize}
                             onPageSizeChange={handlePageSizeChange}
                             rowsPerPageOptions={[5, 10, 20, 50]}
-                            onSortModelChange={handleSort}
                             rowCount={globalVariables?.totalElements ?? 0}
                             onCellClick={(param) => {
                                 if (param.field !== 'actions') onReadOnlyView(param.row as IGlobalVariable);
