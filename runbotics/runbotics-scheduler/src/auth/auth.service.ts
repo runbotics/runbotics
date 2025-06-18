@@ -55,6 +55,16 @@ export class AuthService {
         return this.validatePayload(jwtPayload);
     }
 
+    parseToken(token: string) {
+        let jwtPayload;
+        try {
+            jwtPayload = jwt.decode(token) as JWTPayload;
+        } catch (e: unknown) {
+            return Promise.reject(e);
+        }
+        return this.validatePayload(jwtPayload);
+    }
+
     async validateWebsocketConnection(client: Socket) {
         const { token } = client.handshake.auth;
 
@@ -206,7 +216,7 @@ export class AuthService {
 
         this.validateParameterFromBot(token, 'empty token', client);
 
-        const user = await this.validateToken(token)
+        const user = await (isGuard ? this.parseToken.bind(this) : this.validateToken.bind(this))(token)
             .catch((error) => {
                 client.disconnect();
                 this.logger.error('token validation error', error);
