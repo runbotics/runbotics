@@ -1,16 +1,15 @@
-import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
 
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useRouter } from 'next/router';
 import { FeatureKey } from 'runbotics-common';
 
 import If from '#src-app/components/utils/If';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
-import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
-import { useDispatch, useSelector } from '#src-app/store';
-import { globalVariableActions, globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
+import useGlobalVariableSearch from '#src-app/hooks/useGlobalVariableSearch';
+import { useSelector } from '#src-app/store';
+import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
 
 
@@ -27,15 +26,13 @@ interface TableProps {
 export interface DeleteDialogState {
     open: boolean;
     globalVariable?: IGlobalVariable;
-    searchValue?: string;
 }
 
 const initialDeleteDialogState: DeleteDialogState = {
     open: false,
 };
 
-const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailState, searchValue }) => {
-    const dispatch = useDispatch();
+const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailState }) => {
     const { globalVariables, loading } = useSelector(globalVariableSelector);
     const [deleteDialogState, setDeleteDialogState] = useState<DeleteDialogState>(initialDeleteDialogState);
     const hasDeleteVariableAccess = useFeatureKey([FeatureKey.GLOBAL_VARIABLE_DELETE]);
@@ -43,11 +40,6 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
 
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-    const [search, setSearch] = useState<string | undefined>(searchValue);
-    const [isInitializedFromQuery, setIsInitializedFromQuery] = useState(false);
-
-    const replaceQueryParams = useReplaceQueryParams();
-    const router = useRouter();
 
     const onEdit = (variable: IGlobalVariable) => {
         setVariableDetailState({ show: true, variable });
@@ -69,32 +61,7 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
         globalVariables
     });
 
-    useEffect(() => {
-        const queryPage = parseInt(router.query.page as string) || 0;
-        const queryPageSize = parseInt(router.query.pageSize as string) || 10;
-        const querySearch = router.query.name as string || '';
-
-        setPage(queryPage);
-        setPageSize(queryPageSize);
-        setSearch(querySearch);
-
-        dispatch(globalVariableActions.getGlobalVariables({
-            pageParams: { page: queryPage, size: queryPageSize, 'name.contains': querySearch }
-        }));
-
-        setIsInitializedFromQuery(true);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        dispatch(globalVariableActions.getGlobalVariables({ pageParams: { page, size: pageSize, 'name.contains': search } }));
-        replaceQueryParams({
-            page,
-            pageSize,
-            search,
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, page, pageSize, search, isInitializedFromQuery]);
+    useGlobalVariableSearch(pageSize, page);
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
@@ -104,10 +71,6 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
         setPageSize(newPageSize);
         setPage(0);
     };
-
-    useEffect(() => {
-        setSearch(searchValue);
-    }, [searchValue]);
 
     return (
         <div>
@@ -121,7 +84,6 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
                             autoHeight
                             disableSelectionOnClick
                             paginationMode='server'
-                            sortingMode='server'
                             page={page}
                             onPageChange={handlePageChange}
                             pageSize={pageSize}

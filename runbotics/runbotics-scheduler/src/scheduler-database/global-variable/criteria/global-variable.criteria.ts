@@ -5,13 +5,4 @@ import { StringFilter } from "#/utils/specification/filter/string-filter/string.
 
 export class GlobalVariableCriteria extends Criteria {
     name = new StringFilter();
-    description = new StringFilter();
-    type = new StringFilter();
-    lastModified = new StringFilter();
-    creator = {
-        email: new StringFilter(),
-    };
-    user = {
-        email: new StringFilter(),
-    };
 }
