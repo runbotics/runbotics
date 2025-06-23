@@ -16,11 +16,11 @@ export default defineConfig({
 	workers: 1,
 	reporter: 'html',
 	use: {
-		baseURL: 'https://runbotics-dev.clouddc.eu', // USE TO TEST DEV DIRECTLY
-		// baseURL: 'http://localhost:3000', // USE WITH LOCAL INSTANCE TEST
+		// baseURL: 'https://runbotics-dev.clouddc.eu', // USE TO TEST DEV DIRECTLY
+		baseURL: 'http://localhost:3000', // USE WITH LOCAL INSTANCE TEST
 
 		trace: 'on-first-retry',
-		
+
 		viewport: {
 			width: 1920,
 			height: 1080
