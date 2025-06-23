@@ -50,7 +50,7 @@ export class BotCollectionService {
         collection.createdByUser = user;
         collection.tenantId = user.tenantId;
 
-        await this.isCollectionNameTakenInTenant(collection.name, collection.tenantId);
+        await this.checkCollectionNameTakenInTenant(collection.name, collection.tenantId);
 
         if (!isUserTenantAdmin && this.isDefaultCollectionName(collection.name)) {
             throw new BadRequestException('Collection name restricted');
@@ -75,12 +75,14 @@ export class BotCollectionService {
             throw new NotFoundException();
         });
 
+        if (collection.name !== collectionDto.name) {
+            await this.checkCollectionNameTakenInTenant(collectionDto.name, collection.tenantId);
+        }
+
         collection.name = collectionDto.name;
         collection.description = collectionDto.description;
         collection.publicBotsIncluded = collectionDto.publicBotsIncluded;
         collection.createdByUser = user;
-
-        await this.isCollectionNameTakenInTenant(collection.name, collection.tenantId);
 
         if (collectionDto.users) {
             const userIds = collectionDto.users.map(user => user.id);
@@ -238,7 +240,7 @@ export class BotCollectionService {
         return this.isDefaultCollectionName(collection.name);
     }
 
-    async isCollectionNameTakenInTenant(name: string, tenantId: string) {
+    async checkCollectionNameTakenInTenant(name: string, tenantId: string) {
         const collections = await this.botCollectionRepository.findBy({ name, tenantId });
 
         if (collections.length) {

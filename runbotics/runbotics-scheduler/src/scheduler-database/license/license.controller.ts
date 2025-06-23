@@ -22,7 +22,7 @@ export class LicenseController {
         return this.licenseService.getAvailablePlugins(user);
     }
 
-    @GetWithTenant('license/:pluginName/info')
+    @GetWithTenant('licenses/:pluginName/info')
     getLicenseInfo(
         @UserDecorator() user: User,
         @Param('pluginName') pluginName: string
