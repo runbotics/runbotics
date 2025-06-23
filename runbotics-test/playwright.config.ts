@@ -18,9 +18,11 @@ export default defineConfig({
 		['html', { open: 'never' }]
 	],
 	use: {
-		baseURL: 'https://runbotics-dev.clouddc.eu', // USE TO TEST DEV DIRECTLY
+		// baseURL: 'https://runbotics-dev.clouddc.eu', // USE TO TEST DEV DIRECTLY
+		baseURL: 'http://localhost:3000', // USE WITH LOCAL INSTANCE TEST
 
 		trace: 'on-first-retry',
+
 
 		viewport: {
 			width: 1920,
