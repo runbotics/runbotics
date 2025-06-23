@@ -7,19 +7,17 @@ on:
 
 jobs:
   e2e-tests:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
 
     steps:
-      - name: Checkout E2E Tests
+      - name: Chechout E2E Tests
         uses: actions/checkout@v4
         with:
-          ref: develop
           sparse-checkout: |
             runbotics-test
             .github
 
       - name: Create user.json file
-        working-directory: ./runbotics-test
         run: |
           mkdir -p .auth
           echo '{
@@ -27,25 +25,7 @@ jobs:
             "password": "${{ secrets.RUNBOTICS_PASSWORD }}"
           }' > .auth/user.json
 
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          
-      - name: Install node Dependencies
-        run: npm install
-        working-directory: ./runbotics-test
-
-      - name: Install playwright
-        run: npx playwright install --with-deps
-        working-directory: ./runbotics-test
-
-      - name: Run tests
-        run: npm run test
-        working-directory: ./runbotics-test
-
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: './runbotics-test/playwright-report'
+      - name: Run E2E Tests in Docker
+        run: |
+          docker build -t e2e-tests .
+          docker run --rm -v ${{ github.workspace }}/.auth:/app/.auth e2e-tests
