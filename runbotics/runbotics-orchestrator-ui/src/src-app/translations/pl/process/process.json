@@ -172,7 +172,7 @@
     "Process.Details.Modeler.Actions.Browser.Target.PartialLinkText": "Część tekstu linku",
     "Process.Details.Modeler.Actions.Browser.Target.None": "Niestandardowy",
     "Process.Details.Modeler.Actions.Browser.Target.ID.Tooltip": "Znajduje element po jego ID (np. <strong>my-id</strong>)",
-    "Process.Details.Modeler.Actions.Browser.Target.XPath.Tooltip": "Znajduje element po jego XPath (np. <strong>//div[@id='my-id']</strong>)",
+    "Process.Details.Modeler.Actions.Browser.Target.XPath.Tooltip": "Znajduje element po jego XPath (np. <strong>//div[@id='my-id']</strong>). Uwaga: xpath może się różnić w zależności od przeglądarki.",
     "Process.Details.Modeler.Actions.Browser.Target.CSS.Tooltip": "Znajduje element po jego selektorze CSS (np. <strong>input[name='username']</strong>, <strong>css=#my-id</strong>)",
     "Process.Details.Modeler.Actions.Browser.Target.ClassName.Tooltip": "Znajduje element po nazwie jego klasy (np. <strong>my-class</strong>",
     "Process.Details.Modeler.Actions.Browser.Target.LinkText.Tooltip": "Znajduje link html po jego dokładnym tekście (np. <strong>Click here</strong>)",

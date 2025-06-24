@@ -174,7 +174,7 @@
     "Process.Details.Modeler.Actions.Browser.Target.PartialLinkText": "Partial Link Text",
     "Process.Details.Modeler.Actions.Browser.Target.None": "Custom",
     "Process.Details.Modeler.Actions.Browser.Target.ID.Tooltip": "Selects an element by its ID attribute (e.g. <strong>my-id</strong>)",
-    "Process.Details.Modeler.Actions.Browser.Target.XPath.Tooltip": "Selects an element by its XPath (e.g. <strong>//div[@id='my-id']</strong>)",
+    "Process.Details.Modeler.Actions.Browser.Target.XPath.Tooltip": "Selects an element by its XPath (e.g. <strong>//div[@id='my-id']</strong>). Please note xpath may differ depending on the browser.",
     "Process.Details.Modeler.Actions.Browser.Target.CSS.Tooltip": "Selects an element by its CSS selector (e.g. <strong>input[name='username']</strong>, <strong>css=#my-id</strong>)",
     "Process.Details.Modeler.Actions.Browser.Target.ClassName.Tooltip": "Selects an element by its class name (e.g. <strong>my-class</strong>",
     "Process.Details.Modeler.Actions.Browser.Target.LinkText.Tooltip": "Selects a link html element by its exact text (e.g. <strong>Click here</strong>)",
