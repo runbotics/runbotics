@@ -93,22 +93,35 @@ const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
                         },
                         required: ['filePath'],
                     },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                        type: 'object',
-                        properties: {},
-                        required: [],
-                    },
                 },
             },
             uiSchema: {
-                'ui:order': ['input', 'output'],
+                'ui:order': ['input'],
+                input: {
+                    index: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.index.tooltip')
+                        }
+                    },
+                    slideStart: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.slideStart.tooltip')
+                        }
+                    },
+                    slideEnd: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.slideEnd.tooltip')
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
                     filePath: undefined,
+                    index: undefined,
+                    slideStart: undefined,
+                    slideEnd: undefined,
                 },
-                output: {},
             },
         },
     },
