@@ -123,6 +123,11 @@ export class MsalService {
     }
 
     private getRedirectUri() {
-        return this.serverConfigService.microsoftAuth.redirectUri;
+        let baseUrl = this.serverConfigService.entrypointUrl;
+        if (!/^https?:\/\//i.test(baseUrl)) {
+            baseUrl = `http://${baseUrl}`;
+        }
+        const url = new URL('/scheduler/msal/callback', baseUrl);
+        return url.toString();
     }
 }
