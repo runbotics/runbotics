@@ -116,24 +116,16 @@ export class AuthService {
         }
         return this.signInMicrosoftSSOUser(user);
     }
-
-    async handleMicrosoftSSOUserAuth(msUserAuthDto: MicrosoftSSOUserDto) {
-        const user = await this.userService.findByEmail(msUserAuthDto.email);
-        if (!user) {
-            return this.registerMicrosoftSSOUser(msUserAuthDto);
-        }
-        return this.signInMicrosoftSSOUser(user);
-    }
-
+    
     private signInMicrosoftSSOUser({ email, authorities }: User) {
         const roles = authorities.map((authority) => authority.name);
 
         return this.signNewIdToken(email, roles);
     }
 
-    private async registerMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
+    private async registerMicrosoftSSOUser(msUserAuthDto: MsalSsoUserDto) {
         const { email, authorities } =
-            await this.userService.createMicrosoftSSOUser(msUserAuthDto);
+            await this.userService.createMsalSsoUser(msUserAuthDto);
         const roles = authorities.map((authority) => authority.name);
 
         return this.signNewIdToken(email, roles);
