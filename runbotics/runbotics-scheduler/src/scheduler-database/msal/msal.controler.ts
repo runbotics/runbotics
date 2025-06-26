@@ -34,12 +34,12 @@ export class MsalController {
         @Res({ passthrough: true }) response: Response
     ) {
         const code = req.body.code;
-        const res = await this.msalService.handleLoginCallback({ code });
+        const loginResponse = await this.msalService.handleLoginCallback({ code });
 
         let profileData: MsalProfileData;
         try {
-            profileData = await this.msalService.fetchProfileData(res.accessToken);
-            if (!profileData) {
+            profileData = await this.msalService.fetchProfileData(loginResponse.accessToken);
+            if (!profileData.email) {
                 return response.status(302).redirect(`${MSAL_FRONTEND_CALLBACK_URL}?error=${encodeURIComponent(MsalLoginError.BAD_EMAIL)}`);
             }
         } catch (e) {
@@ -51,8 +51,8 @@ export class MsalController {
         try {
             authToken = await this.authService.handleMsalSsoAuth({
                 email: profileData.email,
-                langKey: profileData.langKey || 'en',
-                msTenantId: res.tenantId,
+                langKey: profileData.langKey,
+                msTenantId: loginResponse.tenantId,
             });
         } catch (e) {
             this.logger.error('Filed to login MSAL-authenticated user to RB', e);

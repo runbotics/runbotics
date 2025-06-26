@@ -9,6 +9,16 @@ export type MsalCallbackData = {
 export type MsalLoginResponse = {
     accessToken: string
     tenantId: string
+
+    /**
+     * Identifies user within MS tenant.
+     */
+    subjectIdentifier: string;
+
+    /**
+     * Identifies user globally across all MS tenants.
+     */
+    userIdentifier: string
 }
 
 export type MsalProfileData = {

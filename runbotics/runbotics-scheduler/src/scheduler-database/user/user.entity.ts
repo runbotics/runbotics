@@ -87,6 +87,10 @@ export class User {
         type: () => Tenant,
         description: 'Tenant the user belongs to.',
     })
+    
+    @Column({ name: 'microsoft_tenant_id', type: 'varchar', length: 256, nullable: true })
+    microsoftTenantId: string;
+
     @ManyToOne(() => Tenant, { eager: true })
     @JoinColumn({ name: 'tenant_id', referencedColumnName: 'id' })
     tenant: Tenant;
