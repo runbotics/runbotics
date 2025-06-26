@@ -1,6 +1,5 @@
 import React, { FC, ReactNode } from 'react';
 
-import { MsalProvider } from '@azure/msal-react';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import moment from 'moment';
@@ -20,7 +19,6 @@ import store from '#src-app/store';
 import i18n from '#src-app/translations/i18n';
 import { DEFAULT_LANG } from '#src-app/translations/translations';
 import createEmotionCache from '#src-app/utils/createEmotionCache';
-import msalInstance from '#src-app/utils/msal';
 import InitializeAuth from '#src-app/views/auth/InitializeAuth';
 
 const { publicRuntimeConfig } = getConfig();
@@ -62,20 +60,18 @@ function App(props: AppProps) {
                         <I18nextProvider i18n={i18n}>
                             <StylesProvider>
                                 <SnackbarProvider>
-                                    <MsalProvider instance={msalInstance}>
-                                        <InitializeAuth>
-                                            <SocketProvider
-                                                uri={props.runboticsEntrypointUrl}
-                                                shouldAttach={router.pathname.includes('/app/')}
-                                            >
-                                                <CartProvider>
-                                                    <Layout>
-                                                        <Component {...restPageProps} />
-                                                    </Layout>
-                                                </CartProvider>
-                                            </SocketProvider>
-                                        </InitializeAuth>
-                                    </MsalProvider>
+                                    <InitializeAuth>
+                                        <SocketProvider
+                                            uri={props.runboticsEntrypointUrl}
+                                            shouldAttach={router.pathname.includes('/app/')}
+                                        >
+                                            <CartProvider>
+                                                <Layout>
+                                                    <Component {...restPageProps} />
+                                                </Layout>
+                                            </CartProvider>
+                                        </SocketProvider>
+                                    </InitializeAuth>
                                 </SnackbarProvider>
                             </StylesProvider>
                         </I18nextProvider>
