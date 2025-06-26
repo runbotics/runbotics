@@ -157,7 +157,6 @@ const LoginPage: FC = () => {
                             initialValues={initialValues}
                             loginValidationSchema={loginValidationSchema}
                             handleFormSubmit={handleFormSubmit}
-                            isSigningIn={false}
                             handleLoginWithMicrosoft={handleLoginWithMicrosoft}
                             isSsoEnabled={isSsoEnabled}
                         />

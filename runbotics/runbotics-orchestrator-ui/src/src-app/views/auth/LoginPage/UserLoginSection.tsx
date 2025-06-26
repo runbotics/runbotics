@@ -16,7 +16,6 @@ interface Props {
     initialValues: LoginFormState;
     loginValidationSchema: UseLoginValidationSchema;
     handleFormSubmit: (values: LoginFormState, { setErrors, setStatus, setSubmitting }) => Promise<void>;
-    isSigningIn: boolean;
     handleLoginWithMicrosoft: () => Promise<void>;
     isSsoEnabled: boolean;
 }
@@ -25,7 +24,6 @@ const UserLoginSection: FC<Props> = ({
     initialValues,
     loginValidationSchema,
     handleFormSubmit,
-    isSigningIn,
     handleLoginWithMicrosoft,
     isSsoEnabled,
 }) => {
@@ -115,7 +113,6 @@ const UserLoginSection: FC<Props> = ({
                         size="large"
                         variant="contained"
                         sx={{ marginTop: 3 }}
-                        disabled={isSigningIn}
                         onClick={handleLoginWithMicrosoft}
                     >
                         <MicrosoftIcon sx={{ marginRight: 1 }} />
