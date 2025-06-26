@@ -99,9 +99,7 @@ export class ServerConfigService {
             username: this.configService.get('MS_USERNAME'),
             password: this.configService.get('MS_PASSWORD'),
             discoveryKeysUri: this.configService.get('MS_DISCOVERY_KEYS_URI'),
-            isSsoEnabled: this.configService.get('IS_SSO_ENABLED'),
-            redirectUri: this.configService.get('MS_REDIRECT_URI'),
-            postLogoutRedirectUri: this.configService.get('MS_POST_LOGOUT_REDIRECT_URI'),
+            isSsoEnabled: this.configService.get('IS_SSO_ENABLED')
         };
     }
 
