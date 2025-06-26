@@ -12,10 +12,12 @@ import { isEmailValid } from 'runbotics-common';
 const MSAL_SCOPES = ['openid', 'profile', 'email', 'User.Read'];
 
 const idTokenSchema = z.object({
-    tid: z.string()
+    tid: z.string(),
+    sub: z.string(),
+    oid: z.string(),
 });
 
-const MsalProfileDataSchema = z.object({
+const profileDataSchema = z.object({
     mail: z.string().optional(),
     userPrincipalName: z.string().optional(),
     preferredLanguage: z.string().optional(),
@@ -48,6 +50,8 @@ export class MsalService {
         return {
             accessToken,
             tenantId: idToken.tid,
+            subjectIdentifier: idToken.sub,
+            userIdentifier: idToken.oid,
         };
     }
 
@@ -70,14 +74,11 @@ export class MsalService {
             },
         });
 
-        const data = MsalProfileDataSchema.parse(response.data);
-        const email = data.mail || data.userPrincipalName;
-        if (!email) {
-            throw new Error('No email found in Microsoft profile');
-        }
+        const data = profileDataSchema.parse(response.data);
+        const email = data.mail || '';
 
-        if (!isEmailValid(email)) {
-            throw new Error('Invalid email format in Microsoft profile');
+        if (email && !isEmailValid(email)) {
+            throw new Error('Received invalid email from MS API');
         }
 
         // Extract langKey from preferredLanguage, fallback to 'en'
