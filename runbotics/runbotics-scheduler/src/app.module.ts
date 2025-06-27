@@ -8,10 +8,12 @@ import { QueueModule } from './queue/queue.module';
 import { MailTriggerModule } from './mail-trigger/mail-trigger.module';
 import { WebsocketModule } from './websocket/websocket.module';
 import { SchedulerDatabaseModule } from './scheduler-database/scheduler-database.module';
+import { MsalModule } from './scheduler-database/msal/msal.module';
 
 @Module({
     imports: [
         AuthModule,
+        MsalModule,
         DatabaseModule,
         QueueModule,
         MailTriggerModule,

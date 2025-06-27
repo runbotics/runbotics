@@ -13,7 +13,7 @@ import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
 import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
-import { MicrosoftSSOUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
+import { MicrosoftSSOUserDto, MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import dayjs from 'dayjs';
 import { User } from '#/scheduler-database/user/user.entity';
 
@@ -109,23 +109,23 @@ export class AuthService {
         });
     }
 
-    async handleMicrosoftSSOUserAuth(msUserAuthDto: MicrosoftSSOUserDto) {
-        const user = await this.userService.findByEmail(msUserAuthDto.email);
+    async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
+        const user = await this.userService.findByEmail(userDto.email);
         if (!user) {
-            return this.registerMicrosoftSSOUser(msUserAuthDto);
+            return this.registerMicrosoftSSOUser(userDto);
         }
         return this.signInMicrosoftSSOUser(user);
     }
-
+    
     private signInMicrosoftSSOUser({ email, authorities }: User) {
         const roles = authorities.map((authority) => authority.name);
 
         return this.signNewIdToken(email, roles);
     }
 
-    private async registerMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
+    private async registerMicrosoftSSOUser(msUserAuthDto: MsalSsoUserDto) {
         const { email, authorities } =
-            await this.userService.createMicrosoftSSOUser(msUserAuthDto);
+            await this.userService.createMsalSsoUser(msUserAuthDto);
         const roles = authorities.map((authority) => authority.name);
 
         return this.signNewIdToken(email, roles);

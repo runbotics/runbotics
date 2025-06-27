@@ -34,6 +34,9 @@ export class User {
     @Column({ name: 'tenant_id', type: 'uuid', default: 'b7f9092f-5973-c781-08db-4d6e48f78e98' })
     tenantId: string;
 
+    @Column({ name: 'microsoft_tenant_id', type: 'varchar', length: 256, nullable: true })
+    microsoftTenantId: string;
+
     @ManyToOne(() => Tenant, { eager: true })
     @JoinColumn({ name: 'tenant_id', referencedColumnName: 'id' })
     tenant: Tenant;
