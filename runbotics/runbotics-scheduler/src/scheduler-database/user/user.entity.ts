@@ -1,10 +1,24 @@
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import { Authority } from '../authority/authority.entity';
 import { IAuthority } from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
+import { ProcessCollection } from '#/process-collections/process-collection/process-collection.entity';
+import { ProcessCollectionUser } from '#/process-collections/process-collection-user/process-collection-user.entity';
+import { ProcessCollectionLink } from '#/process-collections/process-collection-link/process-collection-link.entity';
 
-@Entity({ name: 'jhi_user' })
+@Entity({ name: 'jhi_user', schema: 'public' })
 export class User {
     @PrimaryColumn({
         type: 'bigint',
@@ -82,4 +96,13 @@ export class User {
         inverseJoinColumn: { name: 'authority_name', referencedColumnName: 'name' },
     })
     authorities: IAuthority[];
+
+    @OneToMany(() => ProcessCollection, (processCollection) => processCollection.createdBy)
+    processCollections: ProcessCollection[];
+
+    @OneToMany(() => ProcessCollectionUser, (processCollectionUser) => processCollectionUser.processCollection)
+    processCollectionPrivileges: ProcessCollectionUser[];
+
+    @OneToMany(() => ProcessCollectionLink, (processCollectionUser) => processCollectionUser.user)
+    sharedCollections: ProcessCollectionLink[];
 }
