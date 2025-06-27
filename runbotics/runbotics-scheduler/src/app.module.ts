@@ -8,6 +8,7 @@ import { QueueModule } from './queue/queue.module';
 import { MailTriggerModule } from './mail-trigger/mail-trigger.module';
 import { WebsocketModule } from './websocket/websocket.module';
 import { SchedulerDatabaseModule } from './scheduler-database/scheduler-database.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { SchedulerDatabaseModule } from './scheduler-database/scheduler-database
         MailTriggerModule,
         WebsocketModule,
         SchedulerDatabaseModule,
+        HealthModule,
         PrometheusModule.register(),
     ],
     providers: [
