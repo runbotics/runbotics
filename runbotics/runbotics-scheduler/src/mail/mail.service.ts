@@ -119,7 +119,7 @@ export class MailService {
         const filteredSubscriptions = failedProcess.isPublic ?
             allSubscriptions :
             allSubscriptions
-                .filter(sub => hasRole(sub.user, Role.ROLE_ADMIN) || hasRole(sub.user, Role.ROLE_TENANT_ADMIN));
+                .filter(sub => hasRole(sub.user, Role.ROLE_TENANT_ADMIN));
 
         const targetEmails = filteredSubscriptions
             .map(subscription => this.extractTargetEmailFromNotification(subscription))
