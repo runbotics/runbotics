@@ -8,6 +8,8 @@ import { QueueModule } from './queue/queue.module';
 import { MailTriggerModule } from './mail-trigger/mail-trigger.module';
 import { WebsocketModule } from './websocket/websocket.module';
 import { SchedulerDatabaseModule } from './scheduler-database/scheduler-database.module';
+import { ProcessCollectionsModule } from './process-collections/process-collections.module';
+import { PermissionCheckModule } from './process-collections/permission-check/permission-check.module';
 
 @Module({
     imports: [
@@ -18,9 +20,12 @@ import { SchedulerDatabaseModule } from './scheduler-database/scheduler-database
         WebsocketModule,
         SchedulerDatabaseModule,
         PrometheusModule.register(),
+        ProcessCollectionsModule,
+        PermissionCheckModule,
     ],
     providers: [
-        StorageService, Logger
+        StorageService, Logger,
     ],
 })
-export class AppModule { }
+export class AppModule {
+}
