@@ -49,7 +49,7 @@ const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'powerpoint.insert': {
-        id: 'desktop.powerpoint.insert',
+        id: 'powerpoint.insert',
         label: translate('Process.Details.Modeler.Actions.Powerpoint.Insert.Label'),
         script: 'powerpoint.insert',
         runner: Runner.DESKTOP_SCRIPT,
