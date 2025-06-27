@@ -7,6 +7,7 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
+    OneToMany,
     PrimaryColumn,
     Unique,
     UpdateDateColumn,
@@ -14,9 +15,12 @@ import {
 import { Authority } from '../authority/authority.entity';
 import { IAuthority, Role } from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
+import { ProcessCollection } from '#/process-collections/process-collection/process-collection.entity';
+import { ProcessCollectionUser } from '#/process-collections/process-collection-user/process-collection-user.entity';
+import { ProcessCollectionLink } from '#/process-collections/process-collection-link/process-collection-link.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity({ name: 'jhi_user' })
+@Entity({ name: 'jhi_user', schema: 'public' })
 @Unique(['microsoftTenantId', 'microsoftUserId'])
 export class User {
     @ApiProperty({ example: 1, description: 'Unique user ID (primary key).' })
@@ -207,4 +211,13 @@ export class User {
         },
     })
     authorities: IAuthority[];
+
+    @OneToMany(() => ProcessCollection, (processCollection) => processCollection.createdBy)
+    processCollections: ProcessCollection[];
+
+    @OneToMany(() => ProcessCollectionUser, (processCollectionUser) => processCollectionUser.processCollection)
+    processCollectionPrivileges: ProcessCollectionUser[];
+
+    @OneToMany(() => ProcessCollectionLink, (processCollectionUser) => processCollectionUser.user)
+    sharedCollections: ProcessCollectionLink[];
 }

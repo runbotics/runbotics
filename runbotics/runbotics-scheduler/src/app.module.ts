@@ -13,6 +13,8 @@ import { HealthModule } from './health/health.module';
 import { ActiveTenantGuard } from '#/global-guards/active-tenant.guard';
 import { UserTenantActiveGuard } from '#/global-guards/user-tenant-active.guard';
 import { TenantValidationModule } from '#/tenant-validation/tenant-validation.module';
+import { ProcessCollectionsModule } from './process-collections/process-collections.module';
+import { PermissionCheckModule } from './process-collections/permission-check/permission-check.module';
 
 @Module({
     imports: [
@@ -26,6 +28,8 @@ import { TenantValidationModule } from '#/tenant-validation/tenant-validation.mo
         HealthModule,
         PrometheusModule.register(),
         TenantValidationModule,
+        ProcessCollectionsModule,
+        PermissionCheckModule,
     ],
     providers: [
         StorageService, Logger, ActiveTenantGuard, UserTenantActiveGuard
