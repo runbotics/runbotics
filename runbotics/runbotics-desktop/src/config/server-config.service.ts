@@ -60,7 +60,7 @@ export class ServerConfigService {
     get authTokenRefreshSeconds(): number {
         const envVarName = 'RUNBOTICS_REFRESH_AUTH_TOKEN_SECONDS';
         const stringValue = this.getEnvValue(envVarName);
-        if(stringValue === undefined) {
+        if (stringValue === undefined) {
             return 60 * 60 * 24 * 14; // 14 days
         }
         const parsedValue = parseInt(stringValue);
@@ -73,7 +73,7 @@ export class ServerConfigService {
     get autoTokenRefreshLeewaySeconds(): number {
         const envVarName = 'RUNBOTICS_AUTO_REFRESH_AUTH_TOKEN_LEEWAY_SECONDS';
         const stringValue = this.getEnvValue(envVarName);
-        if(stringValue === undefined) {
+        if (stringValue === undefined) {
             return 60 * 60 * 24; // 1 day
         }
         const parsedValue = parseInt(stringValue);
