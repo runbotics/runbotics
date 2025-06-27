@@ -6,5 +6,8 @@
     "Nav.Items.GlobalVariables": "Zmienne globalne",
     "Nav.Items.Scheduler": "Harmonogram",
     "Nav.Items.History": "Historia",
+    "Nav.Items.Tenants": "Organizacje",
+    "Nav.Items.Users": "Użytkownicy",
+    "Nav.Items.Monitoring": "Monitoring",
     "Nav.Hide": "Ukryj"
 }

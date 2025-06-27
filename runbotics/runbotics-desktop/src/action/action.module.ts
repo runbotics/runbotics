@@ -31,6 +31,7 @@ import { ImageActionHandler } from './image';
 import FolderActionHandler from './folder/folder.action-handler';
 import { MailService } from '#mailer/mailer.service';
 import { SqlActionHandler } from './sql/sql.action-handler';
+import { AuthModule } from '#core/auth/auth.module';
 
 const ALL_ACTION_HANDLERS = [
     ApiRequestHandler,
@@ -65,6 +66,7 @@ const ALL_ACTION_HANDLERS = [
 
 @Module({
     imports: [
+        AuthModule,
         MicrosoftModule,
         forwardRef(() => CoreModule),
     ],

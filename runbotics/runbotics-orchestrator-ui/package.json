@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "3.3.0-SNAPSHOT.17",
+    "version": "3.3.0-SNAPSHOT.19",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -13,7 +13,11 @@
         "start:debug": "cross-env NODE_OPTIONS='--inspect' next dev",
         "build": "next build",
         "lint": "next lint",
-        "lint:fix": "next lint --fix"
+        "lint:fix": "next lint --fix",
+        "test": "vitest run",
+        "test:watch": "vitest dev",
+        "test:cov": "vitest run --coverage",
+        "test:debug": "vitest --inspect-brk --threads false"
     },
     "browserslist": {
         "production": [
@@ -143,7 +147,14 @@
         "eslint": "8.26.0",
         "cross-env": "^7.0.3",
         "eslint-config-prettier": "~8.6.0",
-        "eslint-plugin-prettier": "~4.2.1"
+        "eslint-plugin-prettier": "~4.2.1",
+        "vitest": "~3.2.3",
+        "jsdom": "~26.1.0",
+        "@vitejs/plugin-react": "~4.5.2",
+        "vite-tsconfig-paths": "~5.1.4",
+        "@testing-library/react": "~16.3.0",
+        "dotenv": "~16.5.0",
+        "vite": "~6.3.5"
     },
     "resolutions": {
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
