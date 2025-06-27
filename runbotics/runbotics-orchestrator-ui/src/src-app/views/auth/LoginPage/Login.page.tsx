@@ -90,9 +90,6 @@ const LoginPage: FC = () => {
                     email: user.email,
                     trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
                 });
-                // router.push({ pathname: '/app/processes/collections' }, null, {
-                //     locale: user.langKey,
-                // });
                 return user;
             })
             .catch(() => {

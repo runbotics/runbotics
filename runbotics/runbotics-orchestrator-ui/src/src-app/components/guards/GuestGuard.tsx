@@ -29,7 +29,7 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
             router.replace('/app/tenants', null, { locale: user.langKey });
         }
 
-        if (!user.roles.includes(Role.ROLE_GUEST) && !user.roles.includes(Role.ROLE_ADMIN)) {
+        if (![Role.ROLE_GUEST, Role.ROLE_ADMIN].some(role => user.roles.includes(role))) {
             router.replace('/app/processes/collections', null, { locale: user.langKey });
         }
 
