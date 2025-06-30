@@ -10,8 +10,7 @@ import { Logger } from '#/utils/logger';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import dayjs from 'dayjs';
-import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from 'jsonwebtoken';
-import jwksClient, { JwksClient } from 'jwks-rsa';
+import jwt from 'jsonwebtoken';
 import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
 import { Socket } from 'socket.io';
 import { Connection } from 'typeorm';
@@ -25,7 +24,6 @@ interface ValidatorBotWsProps {
 @Injectable()
 export class AuthService {
     private readonly logger = new Logger(AuthService.name);
-    private jwksClient: JwksClient;
 
     constructor(
         private readonly userService: UserService,
@@ -35,9 +33,6 @@ export class AuthService {
         private readonly serverConfigService: ServerConfigService,
         private readonly connection: Connection,
     ) {
-        this.jwksClient = jwksClient({
-            jwksUri: this.serverConfigService.microsoftAuth.discoveryKeysUri,
-        });
     }
 
     validatePayload(payload: JWTPayload) {
@@ -87,28 +82,7 @@ export class AuthService {
 
         return user;
     }
-
-    validateMicrosoftAccessToken(idToken: string) {
-        return new Promise<JwtPayload | string>((resolve, reject) => {
-            jwt.verify(
-                idToken,
-                this.getSigningKey.bind(this),
-                {
-                    algorithms: ['RS256'],
-                    complete: false,
-                },
-                (err, decoded) => {
-                    if (err) {
-                        console.error(err);
-                        reject(new UnauthorizedException('Invalid token'));
-                    } else {
-                        resolve(decoded);
-                    }
-                }
-            );
-        });
-    }
-
+    
     async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
         const user = await this.userService.findByEmail(userDto.email);
         if (user) {
@@ -146,16 +120,6 @@ export class AuthService {
         return jwt.sign(payload, secret, {
             algorithm: 'HS512',
             expiresIn: '1d',
-        });
-    }
-
-    private getSigningKey(header: JwtHeader, callback: SigningKeyCallback) {
-        this.jwksClient.getSigningKey(header.kid, (err, key) => {
-            if (err) {
-                return callback(err, null);
-            }
-            const signingKey = key.getPublicKey();
-            callback(null, signingKey);
         });
     }
 
