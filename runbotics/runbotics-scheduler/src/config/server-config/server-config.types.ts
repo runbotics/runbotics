@@ -30,6 +30,7 @@ export interface MicrosoftAuth {
     password: string | undefined;
     discoveryKeysUri: string | undefined;
     isSsoEnabled: string | undefined;
+    msCallbackUrlBase: string | undefined;
 }
 
 export interface EmailTriggerConfig {

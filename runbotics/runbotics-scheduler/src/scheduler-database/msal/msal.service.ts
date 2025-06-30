@@ -123,7 +123,7 @@ export class MsalService {
     }
 
     private getRedirectUri() {
-        let baseUrl = this.serverConfigService.entrypointUrl;
+        let baseUrl = this.serverConfigService.microsoftAuth.msCallbackUrlBase;
         if (!/^https?:\/\//i.test(baseUrl)) {
             baseUrl = `http://${baseUrl}`;
         }

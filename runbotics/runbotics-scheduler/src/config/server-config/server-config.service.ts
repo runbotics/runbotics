@@ -92,6 +92,10 @@ export class ServerConfigService {
     }
 
     get microsoftAuth(): MicrosoftAuth {
+        let msCallbackUrlBase = this.configService.get('MS_CALLBACK_URL_BASE');
+        if (!msCallbackUrlBase) {
+            msCallbackUrlBase = this.configService.get('RUNBOTICS_ENTRYPOINT_URL');
+        }
         return {
             tenantId: this.configService.get('MS_TENANT_ID'),
             clientId: this.configService.get('MS_CLIENT_ID'),
@@ -99,7 +103,8 @@ export class ServerConfigService {
             username: this.configService.get('MS_USERNAME'),
             password: this.configService.get('MS_PASSWORD'),
             discoveryKeysUri: this.configService.get('MS_DISCOVERY_KEYS_URI'),
-            isSsoEnabled: this.configService.get('IS_SSO_ENABLED')
+            isSsoEnabled: this.configService.get('IS_SSO_ENABLED'),
+            msCallbackUrlBase,
         };
     }
 
