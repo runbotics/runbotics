@@ -91,10 +91,11 @@ export class MsalService {
     }
 
     private getMsalConfiguration(): Configuration {
+        const config = this.serverConfigService.microsoftSso;
         return {
             auth: {
-                clientId: this.serverConfigService.microsoftAuth.clientId,
-                clientSecret: this.serverConfigService.microsoftAuth.clientSecret,
+                clientId: config.clientId,
+                clientSecret: config.clientSecret,
                 authority: 'https://login.microsoftonline.com/common'
             },
             system: {
@@ -122,7 +123,8 @@ export class MsalService {
     }
 
     private getRedirectUri() {
-        let baseUrl = this.serverConfigService.microsoftAuth.msCallbackUrlBase;
+        const config = this.serverConfigService.microsoftSso;
+        let baseUrl = config.callbackUrlBase;
         if (!/^https?:\/\//i.test(baseUrl)) {
             baseUrl = `http://${baseUrl}`;
         }
