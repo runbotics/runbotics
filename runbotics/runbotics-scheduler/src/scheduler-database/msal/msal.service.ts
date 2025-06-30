@@ -18,9 +18,9 @@ const idTokenSchema = z.object({
 });
 
 const profileDataSchema = z.object({
-    mail: z.string().optional(),
-    userPrincipalName: z.string().optional(),
-    preferredLanguage: z.string().optional(),
+    mail: z.string().optional().nullable(),
+    userPrincipalName: z.string().optional().nullable(),
+    preferredLanguage: z.string().optional().nullable(),
 });
 
 @Injectable()
@@ -50,8 +50,7 @@ export class MsalService {
         return {
             accessToken,
             tenantId: idToken.tid,
-            subjectIdentifier: idToken.sub,
-            userIdentifier: idToken.oid,
+            objectId: idToken.oid,
         };
     }
 

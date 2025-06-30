@@ -8,6 +8,7 @@ import {
     ManyToMany,
     ManyToOne,
     PrimaryColumn,
+    Unique,
     UpdateDateColumn,
 } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
@@ -15,7 +16,10 @@ import { IAuthority, Role } from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity({ name: 'jhi_user' })
+@Entity({ 
+    name: 'jhi_user',
+})
+@Unique(['microsoftTenantId', 'microsoftUserId'])
 export class User {
     @ApiProperty({ example: 1, description: 'Unique user ID (primary key).' })
     @PrimaryColumn({
@@ -90,6 +94,9 @@ export class User {
     
     @Column({ name: 'microsoft_tenant_id', type: 'varchar', length: 256, nullable: true })
     microsoftTenantId: string;
+
+    @Column({ name: 'microsoft_user_id', type: 'varchar', length: 256, nullable: true })
+    microsoftUserId: string;
 
     @ManyToOne(() => Tenant, { eager: true })
     @JoinColumn({ name: 'tenant_id', referencedColumnName: 'id' })

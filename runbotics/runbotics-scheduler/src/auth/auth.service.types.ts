@@ -18,6 +18,7 @@ export interface RegisterNewBotParams extends MutableBotParams {
 
 export interface MsalSsoUserDto {
     msTenantId: string,
+    msObjectId: string,
     email: string,
     langKey: string;
 }

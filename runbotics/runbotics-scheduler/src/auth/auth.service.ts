@@ -1,21 +1,21 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Connection } from 'typeorm';
-import jwt, { JwtHeader, JwtPayload, Secret, SigningKeyCallback } from 'jsonwebtoken';
-import jwksClient, { JwksClient } from 'jwks-rsa';
-import { WsException } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
 import { ServerConfigService } from '#/config/server-config';
+import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
+import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { BotService } from '#/scheduler-database/bot/bot.service';
-import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
-import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
+import { User } from '#/scheduler-database/user/user.entity';
 import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
-import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
-import { MicrosoftSSOUserDto, MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import dayjs from 'dayjs';
-import { User } from '#/scheduler-database/user/user.entity';
+import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from 'jsonwebtoken';
+import jwksClient, { JwksClient } from 'jwks-rsa';
+import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
+import { Socket } from 'socket.io';
+import { Connection } from 'typeorm';
+import { MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -111,10 +111,16 @@ export class AuthService {
 
     async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
         const user = await this.userService.findByEmail(userDto.email);
-        if (!user) {
-            return this.registerMicrosoftSSOUser(userDto);
+        if (user) {
+            if (
+                user.microsoftTenantId !== userDto.msTenantId ||
+                user.microsoftUserId !== userDto.msObjectId
+            ) {
+                throw new UnauthorizedException('Tenant ID or Microsoft User ID does not match');
+            }
+            return this.signInMicrosoftSSOUser(user);
         }
-        return this.signInMicrosoftSSOUser(user);
+        return this.registerMicrosoftSSOUser(userDto);
     }
     
     private signInMicrosoftSSOUser({ email, authorities }: User) {

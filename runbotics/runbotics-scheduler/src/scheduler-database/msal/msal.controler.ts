@@ -53,6 +53,7 @@ export class MsalController {
                 email: profileData.email,
                 langKey: profileData.langKey,
                 msTenantId: loginResponse.tenantId,
+                msObjectId: loginResponse.objectId,
             });
         } catch (e) {
             this.logger.error('Filed to login MSAL-authenticated user to RB', e);
