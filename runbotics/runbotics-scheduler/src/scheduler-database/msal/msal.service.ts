@@ -6,7 +6,7 @@ import { MsalCallbackData, MsalLoginData, MsalLoginResponse, MsalProfileData } f
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 import axios from 'axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { isEmailValid } from 'runbotics-common';
 
 const MSAL_SCOPES = ['openid', 'profile', 'email', 'User.Read'];
@@ -30,6 +30,12 @@ export class MsalService {
     constructor(
         private readonly serverConfigService: ServerConfigService
     ) { }
+
+    ensureSsoEnabled() {
+        if(!this.serverConfigService.microsoftSso.isSsoEnabled) {
+            throw new NotFoundException();
+        }
+    }
 
     async handleLoginCallback(
         loginData: MsalCallbackData
