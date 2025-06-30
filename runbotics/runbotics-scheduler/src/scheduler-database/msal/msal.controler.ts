@@ -23,6 +23,7 @@ export class MsalController {
     async begin(
         @Res() res: Response
     ) {
+        this.msalService.ensureSsoEnabled();
         const data = await this.msalService.beginLogin();
         res.status(302).redirect(data.url);
     }
@@ -33,6 +34,7 @@ export class MsalController {
         @Req() req: Request,
         @Res({ passthrough: true }) response: Response
     ) {
+        this.msalService.ensureSsoEnabled();
         const code = req.body.code;
         const loginResponse = await this.msalService.handleLoginCallback({ code });
 
