@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import {
-    DatabaseSettings, EmailConfig, EmailTriggerConfig, MailConfig, MicrosoftAuth, RedisSettings,
+    DatabaseSettings, EmailConfig, EmailTriggerConfig, MailConfig, MicrosoftAuth, MicrosoftSSO, RedisSettings,
 } from './server-config.types';
 
 @Injectable()
@@ -92,19 +92,27 @@ export class ServerConfigService {
     }
 
     get microsoftAuth(): MicrosoftAuth {
-        let msCallbackUrlBase = this.configService.get('MS_CALLBACK_URL_BASE');
-        if (!msCallbackUrlBase) {
-            msCallbackUrlBase = this.configService.get('RUNBOTICS_ENTRYPOINT_URL');
-        }
         return {
             tenantId: this.configService.get('MS_TENANT_ID'),
             clientId: this.configService.get('MS_CLIENT_ID'),
             clientSecret: this.configService.get('MS_CLIENT_SECRET'),
             username: this.configService.get('MS_USERNAME'),
             password: this.configService.get('MS_PASSWORD'),
-            discoveryKeysUri: this.configService.get('MS_DISCOVERY_KEYS_URI'),
-            isSsoEnabled: this.configService.get('IS_SSO_ENABLED'),
-            msCallbackUrlBase,
+        };
+    }
+
+    get microsoftSso(): MicrosoftSSO {
+        let msCallbackUrlBase = this.configService.get('MS_SSO_CALLBACK_URL_BASE');
+        if (!msCallbackUrlBase) {
+            msCallbackUrlBase = this.configService.get('RUNBOTICS_ENTRYPOINT_URL');
+        }
+        return {
+            tenantId: this.configService.get('MS_SSO_TENANT_ID') || this.configService.get('MS_TENANT_ID'),
+            clientId: this.configService.get('MS_SSO_CLIENT_ID'),
+            clientSecret: this.configService.get('MS_SSO_CLIENT_SECRET'),
+            isSsoEnabled: ['1', 'yes', 'true', 'TRUE', 'YES'].includes(this.configService.get('MS_SSO_IS_ENABLED')),
+            callbackUrlBase: msCallbackUrlBase,
+            appAuthority: this.configService.get('MS_SSO_AUTHORITY') || 'https://login.microsoftonline.com/common'
         };
     }
 
