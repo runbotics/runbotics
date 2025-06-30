@@ -1,10 +1,13 @@
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { Authority } from '../authority/authority.entity';
 import { IAuthority } from 'runbotics-common';
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, Unique, UpdateDateColumn } from 'typeorm';
+import { Authority } from '../authority/authority.entity';
 import { Tenant } from '../tenant/tenant.entity';
 
-@Entity({ name: 'jhi_user' })
+@Entity({ 
+    name: 'jhi_user',
+})
+@Unique(['microsoftTenantId', 'microsoftUserId'])
 export class User {
     @PrimaryColumn({
         type: 'bigint',
@@ -36,6 +39,9 @@ export class User {
 
     @Column({ name: 'microsoft_tenant_id', type: 'varchar', length: 256, nullable: true })
     microsoftTenantId: string;
+
+    @Column({ name: 'microsoft_user_id', type: 'varchar', length: 256, nullable: true })
+    microsoftUserId: string;
 
     @ManyToOne(() => Tenant, { eager: true })
     @JoinColumn({ name: 'tenant_id', referencedColumnName: 'id' })

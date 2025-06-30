@@ -50,6 +50,7 @@ export class UserService {
         user.createdBy = 'system';
         user.lastModifiedBy = 'system';
         user.microsoftTenantId = msalSsoUserDto.msTenantId;
+        user.microsoftUserId = msalSsoUserDto.msObjectId;
 
         const { id } = await this.userRepository.save(user);
 
