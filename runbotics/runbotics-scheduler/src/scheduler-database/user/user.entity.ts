@@ -16,9 +16,7 @@ import { IAuthority, Role } from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity({ 
-    name: 'jhi_user',
-})
+@Entity({ name: 'jhi_user' })
 @Unique(['microsoftTenantId', 'microsoftUserId'])
 export class User {
     @ApiProperty({ example: 1, description: 'Unique user ID (primary key).' })
