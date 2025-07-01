@@ -15,13 +15,14 @@ import { useOwner } from '#src-app/hooks/useOwner';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
+import { Page } from '#src-app/utils/types/page';
 
 interface ColumnsActions {
     onDelete: (globalVariable: IGlobalVariable) => void;
     onEdit: (globalVariable: IGlobalVariable) => void;
     hasEditVariableAccess: boolean;
     hasDeleteVariableAccess: boolean;
-    globalVariables: IGlobalVariable[];
+    globalVariables: Page<IGlobalVariable>;
 }
 
 const useGlobalVariablesColumns = ({
@@ -34,7 +35,7 @@ const useGlobalVariablesColumns = ({
     const { translate } = useTranslations();
     const isGlobalVariableOwner = useOwner();
     const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
-    const isActionsColumnHidden = globalVariables.every(({ creator }) =>
+    const isActionsColumnHidden = globalVariables && globalVariables.content.every(({ creator }) =>
         !(isTenantAdmin || isGlobalVariableOwner(creator.id))
     );
 
@@ -43,21 +44,25 @@ const useGlobalVariablesColumns = ({
             field: 'name',
             headerName: translate('Variables.ListView.Table.Header.Name'),
             flex: 0.6,
+            sortable: false,
         },
         {
             field: 'description',
             headerName: translate('Variables.ListView.Table.Header.Description'),
             flex: 1,
+            sortable: false,
         },
         {
             field: 'type',
             headerName: translate('Variables.ListView.Table.Header.Type'),
             flex: 0.4,
+            sortable: false,
         },
         {
             field: 'lastModified',
             headerName: translate('Variables.ListView.Table.Header.LastModified'),
             flex: 0.5,
+            sortable: false,
             valueFormatter: (params: GridValueFormatterParams) =>
                 moment(params.value as string).format('YYYY-MM-DD HH:mm'),
         },
@@ -65,6 +70,7 @@ const useGlobalVariablesColumns = ({
             field: 'createdBy',
             headerName: translate('Variables.ListView.Table.Header.CreatedBy'),
             flex: 0.8,
+            sortable: false,
             renderCell: (params: GridCellParams) => {
                 const creator = params.row.creator as BasicUserDto;
                 return creator?.email ?? '';
@@ -74,6 +80,7 @@ const useGlobalVariablesColumns = ({
             field: 'modifiedBy',
             headerName: translate('Variables.ListView.Table.Header.ModifiedBy'),
             flex: 0.8,
+            sortable: false,
             renderCell: (params: GridCellParams) => {
                 const user = params.row.user as BasicUserDto;
                 return user?.email ?? '';
