@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
 import { Box, Button, Card, CircularProgress, Container, Typography } from '@mui/material';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
@@ -10,8 +9,6 @@ import { MsalLoginError } from 'runbotics-common';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { loginWithMsalCookie } from '#src-app/store/slices/Auth/Auth.thunks';
-
-
 
 const MsalCallbackPage = () => {
     const router = useRouter();
@@ -50,7 +47,6 @@ const MsalCallbackPage = () => {
             return;
         }
         dispatch(loginWithMsalCookie())
-            .then(unwrapResult)
             .then(() => {
                 router.replace('/');
             })
