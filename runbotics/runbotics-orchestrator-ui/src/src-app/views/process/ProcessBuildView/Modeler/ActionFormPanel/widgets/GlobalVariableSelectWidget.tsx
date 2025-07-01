@@ -15,7 +15,7 @@ const GlobalVariableSelectWidget: FC<WidgetProps> = (props) => {
     const dispatch = useDispatch();
     const { globalVariables } = useSelector(globalVariableSelector);
 
-    const options = useMemo(() => globalVariables
+    const options = useMemo(() => globalVariables.content
         .map<GlobalVariableOption>((variable) => ({
             id: variable.id,
             name: variable.name,
@@ -30,7 +30,7 @@ const GlobalVariableSelectWidget: FC<WidgetProps> = (props) => {
     };
 
     const getValue = () => {
-        const globalVariable = globalVariables.find(
+        const globalVariable = globalVariables.content.find(
             (variable) => variable.id.toString() === props.value
         );
         return globalVariable
