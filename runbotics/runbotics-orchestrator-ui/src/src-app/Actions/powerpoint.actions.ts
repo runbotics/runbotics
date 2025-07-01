@@ -74,19 +74,19 @@ const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
                             },
                             index: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.index',
+                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.Index',
                                 ),
                                 type: 'string',
                             },
                             slideStart: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.slideStart',
+                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.SlideStart',
                                 ),
                                 type: 'string',
                             },
                             slideEnd: {
                                 title: translate(
-                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.slideEnd',
+                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.SlideEnd',
                                 ),
                                 type: 'string',
                             },
@@ -98,19 +98,24 @@ const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input'],
                 input: {
+                    filePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.FilePath.Tooltip')
+                        }
+                    },
                     index: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.index.tooltip')
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.Index.Tooltip')
                         }
                     },
                     slideStart: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.slideStart.tooltip')
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.SlideStart.Tooltip')
                         }
                     },
                     slideEnd: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.slideEnd.tooltip')
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.SlideEnd.Tooltip')
                         }
                     }
                 }
