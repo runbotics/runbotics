@@ -36,7 +36,7 @@ const useProcessGlobalVariables = (): GlobalVariable[] => {
         }
 
         return globalVariableList.definition.items.map((item) => {
-            const globalVariableName = globalVariables.find(
+            const globalVariableName = globalVariables.content.find(
                 (variable) => variable.id === Number(item.value)
             )?.name;
 
