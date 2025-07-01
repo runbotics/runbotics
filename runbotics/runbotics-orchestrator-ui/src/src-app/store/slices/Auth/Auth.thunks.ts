@@ -151,9 +151,6 @@ export const loginWithMsalCookie = createAsyncThunk<
         };
         const idToken = getCookie('msal_token_transfer');
         document.cookie = 'msal_token_transfer=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        if (idToken === undefined) {
-            return rejectWithValue(MsalLoginError.BAD_COOKIE);
-        }
         if (!idToken) {
             return rejectWithValue(MsalLoginError.BAD_COOKIE);
         }
