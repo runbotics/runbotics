@@ -21,7 +21,7 @@ export class ProcessCollectionLinkService {
     async addNewProcessCollectionLink(processCollectionLinkDto: AddProcessCollectionLinkDto): Promise<ProcessCollectionLink> {
         const newProcessCollectionLink = await this.processCollectionLinkRepository.save(processCollectionLinkDto);
         this.logger.log(inspect(newProcessCollectionLink, { depth: 3 }));
-        return newProcessCollectionLink[0] as ProcessCollectionLink;
+        return newProcessCollectionLink;
     }
 
     async getProcessCollectionLink(id: string): Promise<ProcessCollectionLink> {
