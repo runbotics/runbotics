@@ -1,15 +1,12 @@
-import { BadGatewayException, BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, EntityManager, FindManyOptions, In, IsNull, Repository } from 'typeorm';
+import { Brackets, EntityManager, Equal, In, IsNull, Repository } from 'typeorm';
 import { User } from '#/scheduler-database/user/user.entity';
 import { ProcessCollection } from './process-collection.entity';
 import { CreateProcessCollectionDto } from './dto/create-process-collection.dto';
 import { ProcessCollectionDto } from './dto/process-collection.dto';
 import { FeatureKey } from 'runbotics-common';
 import { UpdateProcessCollectionDto } from './dto/update-process-collection.dto';
-import { Specs } from '#/utils/specification/specifiable.decorator';
-import { Paging } from '#/utils/page/pageable.decorator';
-import { getPage, Page } from '#/utils/page/page';
 import { UnmappedProcessCollectionDto } from './dto/unmapped-process-collection.dto';
 import { hasFeatureKey } from '#/utils/authority.utils';
 
@@ -28,7 +25,7 @@ export class ProcessCollectionService {
     withEntityManager(em: EntityManager): ProcessCollectionService {
         return new ProcessCollectionService(
             em.getRepository(ProcessCollection),
-        )
+        );
     }
 
     async getProcessCollectionById(id: string, user: User): Promise<ProcessCollection> {
@@ -69,38 +66,59 @@ export class ProcessCollectionService {
         }
 
         const parentId = (await this.processCollectionRepository.findOne({ where: { id: processCollectionId } })).parentId;
-
         const hasAccessToParent = await this.checkHasAccessToCollection(user, parentId);
         const hasAccess = await this.processCollectionRepository.query(`
-                SELECT 1 FROM process_collection pc
+                SELECT count(*) FROM process_collection pc
                 WHERE
                     (id = $1 AND
                     (EXISTS (SELECT 1 FROM process_collection_user pcu WHERE pcu.user_id = $2 AND pcu.collection_id = $1)
-                    OR pc.isPublic = true
-                    OR pc.createdBy = $2))
+                    OR pc.is_public = true
+                    OR pc.created_by = $2))
             `, [processCollectionId, user.id])
             .catch(() => false)
-            .then(() => true);
+            .then((res) => {
+                return (res[0].count != 0);
+            });
+        
 
-        return hasAccessToParent && hasAccess;
+        return (hasAccessToParent && hasAccess);
     }
 
     async hasAccess(user: User, collectionId: string): Promise<boolean> {
-        const hasAllAccess = hasFeatureKey(user, FeatureKey.PROCESS_COLLECTION_ALL_ACCESS);
+        const hasAllAccess = hasFeatureKey(
+            user,
+            FeatureKey.PROCESS_COLLECTION_ALL_ACCESS
+        );
 
-        if (hasAllAccess)
+        if (hasAllAccess) return true;
+
+        if (collectionId === null) {
             return true;
+        }
 
-        return this.checkHasAccessToCollection(user, collectionId) &&
-            await this.processCollectionRepository.findOneOrFail({
-                where: {
-                    users: In([user]),
-                    id: collectionId,
-                },
-            })
-            .catch(() => false)
-            .then(() => true);
-   }
+        return (
+            (await this.checkHasAccessToCollection(user, collectionId)) &&
+            (await this.processCollectionRepository
+                .findOneOrFail({
+                    relations: {
+                        createdBy: true,
+                    },
+                    where: [
+                        {
+                            users: { id: user.id },
+                            id: collectionId,
+                        },
+                        {
+                            createdBy: Equal(user.id),
+                        },
+                    ],
+                })
+                .catch(() => false)
+                .then((res) => {
+                    return res === false ? false : true;
+                }))
+        );
+    }
 
    async countCollectionsById(collectionId: string, tenantId: string): Promise<number> {
         return this.processCollectionRepository.count({
