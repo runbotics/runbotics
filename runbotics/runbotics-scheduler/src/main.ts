@@ -5,6 +5,7 @@ import morgan from 'morgan';
 
 import { AppModule } from './app.module';
 import { Logger } from './utils/logger';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 setDefaultResultOrder('ipv4first');
 
@@ -14,6 +15,16 @@ async function bootstrap() {
     app.use(json({ limit: '4mb' }));
     app.use(urlencoded({ extended: true, limit: '4mb' }));
     
+    const config = new DocumentBuilder()
+    .setTitle('Runbotics docs')
+    .setDescription('The Runbotics API documentation')
+    .setVersion('1.0')
+    .addTag('tenant')
+    .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('docs', app, document);
+
+
     await app.listen(4000);
 }
 
