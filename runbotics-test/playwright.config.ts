@@ -14,10 +14,11 @@ export default defineConfig({
 	forbidOnly: !!process.env.CI,
 	retries: 0,
 	workers: 1,
-	reporter: 'html',
+	reporter: [
+		['html', { open: 'never' }]
+	],
 	use: {
-		// baseURL: 'https://runbotics-dev.clouddc.eu', // USE TO TEST DEV DIRECTLY
-		baseURL: 'http://localhost:3000', // USE WITH LOCAL INSTANCE TEST
+		baseURL: 'https://runbotics-dev.clouddc.eu', // USE TO TEST DEV DIRECTLY
 
 		trace: 'on-first-retry',
 
