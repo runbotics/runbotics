@@ -1,24 +1,24 @@
+import { MsalSsoUserDto } from '#/auth/auth.service.types';
+import { MailService } from '#/mail/mail.service';
+import { isAdmin, isTenantAdmin } from '#/utils/authority.utils';
+import { Logger } from '#/utils/logger';
+import { getPage } from '#/utils/page/page';
+import { Paging } from '#/utils/page/pageable.decorator';
+import postgresError from '#/utils/postgresError';
+import { Specs } from '#/utils/specification/specifiable.decorator';
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { DataSource, FindManyOptions, In, Not, Repository } from 'typeorm';
-import { BasicUserDto, FeatureKey, PartialUserDto, Role, UserDto } from 'runbotics-common';
-import { Specs } from '#/utils/specification/specifiable.decorator';
-import { Paging } from '#/utils/page/pageable.decorator';
-import { getPage } from '#/utils/page/page';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Authority } from '../authority/authority.entity';
-import { Logger } from '#/utils/logger';
-import { TenantService } from '../tenant/tenant.service';
-import { Tenant } from '../tenant/tenant.entity';
-import { isAdmin, isTenantAdmin } from '#/utils/authority.utils';
-import postgresError from '#/utils/postgresError';
-import { DeleteUserDto } from './dto/delete-user.dto';
-import { MailService } from '#/mail/mail.service';
-import { MicrosoftSSOUserDto } from '#/auth/auth.service.types';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
+import { BasicUserDto, FeatureKey, PartialUserDto, Role, UserDto } from 'runbotics-common';
+import { DataSource, FindManyOptions, In, Not, Repository } from 'typeorm';
+import { Authority } from '../authority/authority.entity';
+import { Tenant } from '../tenant/tenant.entity';
+import { TenantService } from '../tenant/tenant.service';
 import { ActivateUserDto } from './dto/activate-user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -34,7 +34,7 @@ export class UserService {
         private readonly dataSource: DataSource,
     ) { }
 
-    async createMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
+    async createMsalSsoUser(msalSsoUserDto: MsalSsoUserDto) {
         const user = new User();
         const randomPassword = generate({
             length: 24,
@@ -42,13 +42,15 @@ export class UserService {
             symbols: true,
         });
         user.passwordHash = bcrypt.hashSync(randomPassword, 10);
-        user.email = msUserAuthDto.email;
-        user.langKey = msUserAuthDto.langKey;
+        user.email = msalSsoUserDto.email;
+        user.langKey = msalSsoUserDto.langKey;
         user.activated = true;
         user.hasBeenActivated = true;
         user.activationKey = generate({ length: 20 });
         user.createdBy = 'system';
         user.lastModifiedBy = 'system';
+        user.microsoftTenantId = msalSsoUserDto.msTenantId;
+        user.microsoftUserId = msalSsoUserDto.msObjectId;
 
         const { id } = await this.userRepository.save(user);
 
