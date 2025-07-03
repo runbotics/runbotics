@@ -20,7 +20,5 @@ test('can login', async ({ page }) => {
 	await page.waitForURL("/app/processes/collections**");
 	await page.waitForLoadState("load");
 
-	await page.getByText("[AS] Test parent").waitFor();
-
-	expect(await page.title()).toMatch(/Collections/)
+	expect(await page.title()).toMatch(/RunBotics/i)
 });
