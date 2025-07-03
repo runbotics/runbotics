@@ -13,19 +13,26 @@ jobs:
       - name: Chechout E2E Tests
         uses: actions/checkout@v4
         with:
+          ref: develop
           sparse-checkout: |
             runbotics-test
             .github
 
       - name: Create user.json file
+        working-directory: ./runbotics-test
         run: |
           mkdir -p .auth
           echo '{
             "login": "${{ secrets.RUNBOTICS_USER }}",
             "password": "${{ secrets.RUNBOTICS_PASSWORD }}"
           }' > .auth/user.json
-
       - name: Run E2E Tests in Docker
+        working-directory: ./runbotics-test
         run: |
           docker build -t e2e-tests .
-          docker run --rm -v ${{ github.workspace }}/.auth:/app/.auth e2e-tests
+          docker run --network host -v ./playwright-report:/app/playwright-report --rm e2e-tests
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
