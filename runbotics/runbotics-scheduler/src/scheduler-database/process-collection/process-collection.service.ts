@@ -84,7 +84,7 @@ export class ProcessCollectionService {
         return (hasAccessToParent && hasAccess);
     }
 
-    async hasAccess(user: User, collectionId: string): Promise<boolean> {
+    async hasAccess(user: User, collectionId?: string): Promise<boolean> {
         const hasAllAccess = hasFeatureKey(
             user,
             FeatureKey.PROCESS_COLLECTION_ALL_ACCESS
@@ -92,7 +92,7 @@ export class ProcessCollectionService {
 
         if (hasAllAccess) return true;
 
-        if (collectionId === null) {
+        if (!collectionId) {
             return true;
         }
 
@@ -115,7 +115,7 @@ export class ProcessCollectionService {
                 })
                 .catch(() => false)
                 .then((res) => {
-                    return res === false ? false : true;
+                    return !!res;
                 }))
         );
     }

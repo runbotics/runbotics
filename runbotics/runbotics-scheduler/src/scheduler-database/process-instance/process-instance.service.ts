@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProcessInstance } from './process-instance.entity';
 import {
@@ -28,12 +28,10 @@ const RELATIONS: FindOptionsRelations<ProcessInstance> = {
         processCollection: {
             users: true,
             createdBy: true,
-
         },
     },
     user: true,
     trigger: true,
-    
 };
 
 
@@ -138,15 +136,22 @@ export class ProcessInstanceService {
             },
         };
 
+        if (
+            specs.where.processId === undefined &&
+            specs.where.botId === undefined
+        ) {
+            throw new BadRequestException(
+                'Either processId or botId must be provided'
+            );
+        }
 
         if (
             !isTenantAdmin(user) &&
-            specs.where.processId === undefined &&
-            specs.where.botId === undefined &&
             !(await this.processService.hasAccess(user, +processId))
         ) {
             throw new ForbiddenException('No access to whole page');
         }
+
 
         const hasAllAccess = hasFeatureKey(
             user,
