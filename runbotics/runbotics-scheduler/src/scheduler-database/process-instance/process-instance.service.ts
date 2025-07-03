@@ -136,9 +136,12 @@ export class ProcessInstanceService {
             },
         };
 
+        const isProcessIdGiven = specs.where.processId !== undefined;
+
         if (
-            specs.where.processId === undefined &&
-            specs.where.botId === undefined
+            !isProcessIdGiven &&
+            specs.where.botId === undefined &&
+            !isTenantAdmin(user)
         ) {
             throw new BadRequestException(
                 'Either processId or botId must be provided'
@@ -147,11 +150,11 @@ export class ProcessInstanceService {
 
         if (
             !isTenantAdmin(user) &&
+            isProcessIdGiven &&
             !(await this.processService.hasAccess(user, +processId))
         ) {
             throw new ForbiddenException('No access to whole page');
         }
-
 
         const hasAllAccess = hasFeatureKey(
             user,
@@ -161,7 +164,6 @@ export class ProcessInstanceService {
         options.relations = RELATIONS;
 
         if (!botId || hasAllAccess) {
-
             options.where = {
                 ...options.where,
                 process: {
@@ -175,7 +177,6 @@ export class ProcessInstanceService {
                 { ...options.where, ...conditionIsPublic },
                 { ...options.where, ...conditionIsProcessPublic },
             ];
-
         }
 
         const processInstancePage = await getPage(
