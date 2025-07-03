@@ -39,8 +39,9 @@ export class ProcessInstanceController {
         @Pageable() paging: Paging,
         @UserDecorator() user: User,
         @Query('processId.equals') processId: string,
+        @Query('botId.equals') botId: string,
     ) {
-        return this.processInstanceService.getPage(user, specs, paging, processId);
+        return this.processInstanceService.getPage(user, specs, paging, processId, botId);
     }
 
     @Get(':id')
