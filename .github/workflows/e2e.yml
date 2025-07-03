@@ -7,7 +7,7 @@ on:
 
 jobs:
   e2e-tests:
-    runs-on: [self-hosted, runner]
+    runs-on: [self-hosted]
 
     steps:
       - name: Chechout E2E Tests
