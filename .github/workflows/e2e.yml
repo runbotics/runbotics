@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout E2E Tests
+      - name: Chechout E2E Tests
         uses: actions/checkout@v4
         with:
           ref: develop
@@ -27,20 +27,19 @@ jobs:
             "password": "${{ secrets.RUNBOTICS_PASSWORD }}"
           }' > .auth/user.json
 
-      - name: Setup node
+      - name: Install Dependencies
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          
-      - name: Install node Dependencies
+      - name: Install Dependencies v2
         run: npm install
         working-directory: ./runbotics-test
 
-      - name: Install playwright
+      - name: Install Dependencies v2
         run: npx playwright install --with-deps
         working-directory: ./runbotics-test
 
-      - name: Run tests
+      - name: Install Dependencies v2
         run: npm run test
         working-directory: ./runbotics-test
 
