@@ -7,7 +7,7 @@ on:
 
 jobs:
   e2e-tests:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
 
     steps:
       - name: Chechout E2E Tests
@@ -23,9 +23,18 @@ jobs:
         run: |
           mkdir -p .auth
           echo '{
+          "tenant_admin": {
+            "login": "${{ secrets.RUNBOTICS_USER_TENANT_ADMIN }}",
+            "password": "${{ secrets.RUNBOTICS_PASSWORD_TENANT_ADMIN }}"
+          },
+          "admin": {
+            "login": "${{ secrets.RUNBOTICS_USER_ADMIN }}",
+            "password": "${{ secrets.RUNBOTICS_PASSWORD_ADMIN }}"
+          },
+          "user":{
             "login": "${{ secrets.RUNBOTICS_USER }}",
             "password": "${{ secrets.RUNBOTICS_PASSWORD }}"
-          }' > .auth/user.json
+          }}' > .auth/user.json
 
       - name: Install Dependencies
         uses: actions/setup-node@v4
