@@ -7,7 +7,7 @@ on:
 
 jobs:
   e2e-tests:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
 
     steps:
       - name: Checkout E2E Tests
@@ -23,24 +23,32 @@ jobs:
         run: |
           mkdir -p .auth
           echo '{
+          "tenant_admin": {
+            "login": "${{ secrets.RUNBOTICS_USER_TENANT_ADMIN }}",
+            "password": "${{ secrets.RUNBOTICS_PASSWORD_TENANT_ADMIN }}"
+          },
+          "admin": {
+            "login": "${{ secrets.RUNBOTICS_USER_ADMIN }}",
+            "password": "${{ secrets.RUNBOTICS_PASSWORD_ADMIN }}"
+          },
+          "user":{
             "login": "${{ secrets.RUNBOTICS_USER }}",
             "password": "${{ secrets.RUNBOTICS_PASSWORD }}"
-          }' > .auth/user.json
+          }}' > .auth/user.json
 
-      - name: Setup node
+      - name: Install node
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          
-      - name: Install node Dependencies
+      - name: Install dependencies
         run: npm install
         working-directory: ./runbotics-test
 
-      - name: Install playwright
+      - name: Install Playwright dependencies
         run: npx playwright install --with-deps
         working-directory: ./runbotics-test
 
-      - name: Run tests
+      - name: Run Playwright E2E tests
         run: npm run test
         working-directory: ./runbotics-test
 
