@@ -16,7 +16,7 @@ export class PublicCollectionHandler extends BaseAuthorizationHandler {
         super();
     }
 
-    async handle(request: AuthRequest, collectionId?: number): Promise<boolean> {
+    async handle(request: AuthRequest, collectionId?: string): Promise<boolean> {
         const processCollection = await this.processCollectionRepository.findOne({
             where: { id: collectionId },
         });

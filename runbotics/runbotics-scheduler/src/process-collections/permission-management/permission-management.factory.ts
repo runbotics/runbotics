@@ -10,7 +10,7 @@ export class PermissionStrategyFactory {
     static createStrategy(
         type: PermissionOperationType,
         userId: number,
-        collectionId: number,
+        collectionId: string,
         permissionRepository: PermissionRepository,
         permissionLevel?: PrivilegeType,
     ): PermissionStrategy {

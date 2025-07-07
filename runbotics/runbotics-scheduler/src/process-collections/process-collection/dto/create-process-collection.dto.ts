@@ -1,8 +1,7 @@
-export class InsertProcessCollectionDTO {
+export class CreateProcessCollectionDto {
     name: string;
     description: string;
-    createdBy?: string;
     isPublic?: boolean;
     tenantId?: string;
-    parentId?: number;
+    parentId?: string;
 }

@@ -4,7 +4,7 @@ import { AuthRequest } from '#/types';
 
 export class GrantPermissionRequest {
     userId: number;
-    collectionId: number;
+    collectionId: string;
     privilegeType: PrivilegeType;
 }
 

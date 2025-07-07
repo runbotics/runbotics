@@ -9,7 +9,7 @@ export abstract class BaseAuthorizationHandler implements AuthorizationHandler {
         return handler;
     }
 
-    public async handle(request: AuthRequest, collectionId?: number): Promise<boolean> {
+    public async handle(request: AuthRequest, collectionId?: string): Promise<boolean> {
         if (this.nextHandler) {
             return this.nextHandler.handle(request, collectionId);
         }

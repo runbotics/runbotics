@@ -22,7 +22,7 @@ export class PermissionCheckService {
             .setNext(this.permissionTableHandler);
     }
 
-    async authorize(request: AuthRequest, collectionId: number): Promise<boolean> {
+    async authorize(request: AuthRequest, collectionId: string): Promise<boolean> {
         return this.tenantAdminHandler.handle(request, collectionId);
     }
 }

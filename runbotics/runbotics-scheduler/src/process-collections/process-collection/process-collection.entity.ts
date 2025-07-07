@@ -2,10 +2,11 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    Generated,
     JoinColumn,
     ManyToOne,
     OneToMany,
-    PrimaryGeneratedColumn,
+    PrimaryColumn,
     Tree,
     TreeChildren,
     TreeParent,
@@ -21,8 +22,9 @@ import { ProcessCollectionLink } from '../process-collection-link/process-collec
 @Entity({ schema: 'scheduler' })
 @Tree('closure-table')
 export class ProcessCollection {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn({ type: 'uuid' })
+    @Generated('uuid')
+    id: string;
 
     @Column()
     name: string;
@@ -36,12 +38,25 @@ export class ProcessCollection {
     @UpdateDateColumn({ type: 'timestamp', transformer: dateTransformer })
     updated: Date;
 
-    @ManyToOne(() => User, { nullable: true })
+    @ManyToOne(() => User, (user) => user.createdProcessCollections, { nullable: true, onDelete: 'CASCADE' })
     @JoinColumn({
         name: 'created_by',
         referencedColumnName: 'id',
     })
     createdBy?: User;
+
+    @Column({ nullable: true })
+    created_by: number;
+
+    @ManyToOne(() => User, (user) => user.ownedProcessCollections, { nullable: true, onDelete: 'CASCADE' })
+    @JoinColumn({
+        name: 'owner_id',
+        referencedColumnName: 'id',
+    })
+    owner?: User;
+
+    @Column({ name: 'owner_id', nullable: true })
+    ownerId: number;
 
     @Column({ type: 'boolean', default: false })
     isPublic: boolean;
@@ -53,7 +68,8 @@ export class ProcessCollection {
     })
     tenantId: string;
 
-    @ManyToOne(() => Tenant)
+    @ManyToOne(() => Tenant, () => {
+    }, { onDelete: 'CASCADE' })
     @JoinColumn({
         name: 'tenant_id',
         referencedColumnName: 'id',
@@ -66,8 +82,10 @@ export class ProcessCollection {
     )
     processCollectionPrivileges: ProcessCollectionUser[];
 
-    @OneToMany(() => ProcessCollectionLink,
-            processCollectionLink => processCollectionLink.collection)
+    @OneToMany(
+        () => ProcessCollectionLink,
+        processCollectionLink => processCollectionLink.collection,
+    )
     processCollectionLinks: ProcessCollectionLink[];
 
     @TreeChildren({ cascade: true })

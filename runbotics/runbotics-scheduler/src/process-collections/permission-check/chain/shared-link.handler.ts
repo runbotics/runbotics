@@ -5,7 +5,7 @@ import { AuthRequest } from '#/types';
 @Injectable()
 export class SharedLinkHandler extends BaseAuthorizationHandler {
     //TODO: implement handler after shared link feature is implemented
-    async handle(request: AuthRequest, _collectionId?: number): Promise<boolean> {
+    async handle(request: AuthRequest, _collectionId?: string): Promise<boolean> {
         return true;
 
         return super.handle(request);

@@ -15,13 +15,13 @@ export class OwnerHandler extends BaseAuthorizationHandler {
         super();
     }
 
-    async handle(request: AuthRequest, collectionId: number): Promise<boolean> {
+    async handle(request: AuthRequest, collectionId: string): Promise<boolean> {
         const processCollection = await this.processCollectionRepository.findOne({ where: { id: collectionId }, relations: ['createdBy']});
         if (!processCollection) {
             throw new NotFoundException('No process collection found');
         }
         
-        if (processCollection.createdBy.id === request.user.id) {
+        if (processCollection.ownerId === request.user.id) {
             this.logger.log(`Authorized by owner handler for ${request.user.id}`);
             return true;
         }

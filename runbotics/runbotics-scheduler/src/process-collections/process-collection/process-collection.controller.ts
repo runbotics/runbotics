@@ -1,31 +1,56 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ProcessCollectionService } from './process-collection.service';
-import { InsertProcessCollectionDTO } from './dto/insert-process-collection.dto';
+import { CreateProcessCollectionDto } from './dto/create-process-collection.dto';
 import { ProcessCollection } from './process-collection.entity';
-import { User } from 'runbotics-common';
+import { FeatureKey, User } from 'runbotics-common';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
+import { FeatureKeys } from '#/auth/featureKey.decorator';
+import { UpdateProcessCollectionDto } from '#/process-collections/process-collection/dto/update-process-collection.dto';
 
-@Controller('api/process-collection')
+@Controller('/api/v2/scheduler/tenants/:tenantId/process-collection')
 export class ProcessCollectionController {
 
     constructor(private readonly processCollectionService: ProcessCollectionService) {
     }
 
-    @Post()
-    async createProcessCollection(
-        @Body() processCollection: InsertProcessCollectionDTO,
+    @FeatureKeys(FeatureKey.PROCESS_COLLECTION_READ)
+    @Get()
+    async getAllByCollectionId(
         @UserDecorator() user: User,
+        @Query('parentId') parentId?: string,
     ): Promise<ProcessCollection> {
-        return this.processCollectionService.insertNewProcessCollection(processCollection, user.id);
+        return this.processCollectionService.getAllProcessCollections(user.id, parentId);
     }
 
+    @FeatureKeys(FeatureKey.PROCESS_COLLECTION_ADD)
+    @Post()
+    async createProcessCollection(
+        @Body() processCollection: CreateProcessCollectionDto,
+        @Param('tenantId') tenantId: string,
+        @UserDecorator() user: User,
+    ): Promise<ProcessCollection> {
+        return this.processCollectionService.createProcessCollection({ tenantId, ...processCollection }, user.id);
+    }
+
+    @FeatureKeys(FeatureKey.PROCESS_COLLECTION_DELETE)
     @Delete(':id')
-    async deleteProcessCollection(@Param('id') id: number): Promise<ProcessCollection> {
+    async deleteProcessCollection(@Param('id') id: string): Promise<ProcessCollection> {
         return this.processCollectionService.deleteProcessCollection(id);
     }
 
+    @FeatureKeys(FeatureKey.PROCESS_COLLECTION_READ)
     @Get(':id')
-    async getProcessCollection(@Param('id') id: number): Promise<ProcessCollection | ProcessCollection[]> {
+    async getProcessCollectionTree(@Param('id') id: string): Promise<ProcessCollection | ProcessCollection[]> {
         return this.processCollectionService.getProcessCollectionTree(id);
+    }
+    
+    @FeatureKeys(FeatureKey.PROCESS_COLLECTION_EDIT)
+    @Put(':id')
+    async updateProcessCollection(
+        @Param('id') id: string,
+        @Body() processCollection: Omit<UpdateProcessCollectionDto, 'id'>,
+        @UserDecorator() user: User,
+    ): Promise<ProcessCollection> {
+        return this.processCollectionService.updateProcessCollection({ id, ...processCollection });
     }
 }
