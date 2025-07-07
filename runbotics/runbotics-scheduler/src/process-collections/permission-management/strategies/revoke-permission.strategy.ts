@@ -6,7 +6,7 @@ import {
 export class RevokePermissionStrategy implements PermissionStrategy {
     constructor(
         private readonly userId: number,
-        private readonly collectionId: number,
+        private readonly collectionId: string,
         private readonly accessRepo: PermissionRepository,
     ) {}
     // TODO: implement function to revoke permission in whole tree of ProcessCollection, not only removing 1 table entry

@@ -29,15 +29,15 @@ export class ProcessCollectionUserService {
         return newProcessCollectionUser;
     }
 
-    async getProcessCollectionUser(userId: number, processCollectionId: number): Promise<ProcessCollectionUser> {
+    async getProcessCollectionUser(userId: number, processCollectionId: string): Promise<ProcessCollectionUser> {
         return this.processCollectionUserRepository.findOne({ where: { userId, processCollectionId } });
     }
 
-    async deleteProcessCollectionUser(userId: number, processCollectionId: number): Promise<DeleteResult> {
+    async deleteProcessCollectionUser(userId: number, processCollectionId: string): Promise<DeleteResult> {
         return this.processCollectionUserRepository.delete({ userId, processCollectionId });
     }
 
-    async getAllProcessCollectionUserByCollectionId(processCollectionId: number): Promise<ProcessCollectionUser[]> {
+    async getAllProcessCollectionUserByCollectionId(processCollectionId: string): Promise<ProcessCollectionUser[]> {
         return this.processCollectionUserRepository.find({ where: { processCollectionId } });
     }
 }

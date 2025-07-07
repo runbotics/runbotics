@@ -16,7 +16,7 @@ export class ProcessCollectionLink {
     collection: ProcessCollection;
 
     @PrimaryColumn()
-    collectionId: number;
+    collectionId: string;
 
     @Column({ type: 'uuid' })
     @Generated('uuid')

@@ -7,14 +7,14 @@ import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
 import { DeleteResult } from 'typeorm';
 
-@Controller('api/process-collection-link')
+@Controller('/api/v2/scheduler/tenants/:tenantId/process-collection-link')
 export class ProcessCollectionLinkController {
 
     constructor(private readonly processCollectionLinkService: ProcessCollectionLinkService) {
     }
 
     @Post(':id')
-    async addNewProcessCollectionLink(@Param('id') collectionId: number, @UserDecorator() user: User): Promise<ProcessCollectionLink> {
+    async addNewProcessCollectionLink(@Param('id') collectionId: string, @UserDecorator() user: User): Promise<ProcessCollectionLink> {
         return this.processCollectionLinkService.addNewProcessCollectionLink({collectionId, userId: user.id});
     }
     

@@ -15,7 +15,7 @@ export class PermissionTableHandler extends BaseAuthorizationHandler {
         super();
     }
 
-    async handle(request: AuthRequest, collectionId: number): Promise<boolean> {
+    async handle(request: AuthRequest, collectionId: string): Promise<boolean> {
         const processCollectionUser = this.processCollectionRepository.find({
             where: {
                 processCollectionId: collectionId,

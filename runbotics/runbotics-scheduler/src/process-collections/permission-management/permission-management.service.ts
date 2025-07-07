@@ -9,7 +9,7 @@ export class PermissionManagementService {
     constructor(private readonly permissionRepository: PermissionRepository) {
     }
 
-    async grant(userId: number, collectionId: number, level: PrivilegeType) {
+    async grant(userId: number, collectionId: string, level: PrivilegeType) {
         const strategy = PermissionStrategyFactory.createStrategy(
             PermissionOperationType.GRANT,
             userId,
@@ -20,7 +20,7 @@ export class PermissionManagementService {
         await strategy.execute();
     }
 
-    async revoke(userId: number, collectionId: number) {
+    async revoke(userId: number, collectionId: string) {
         const strategy = PermissionStrategyFactory.createStrategy(
             PermissionOperationType.REVOKE,
             userId,
@@ -30,7 +30,7 @@ export class PermissionManagementService {
         await strategy.execute();
     }
 
-    async update(userId: number, collectionId: number, level: PrivilegeType) {
+    async update(userId: number, collectionId: string, level: PrivilegeType) {
         const strategy = PermissionStrategyFactory.createStrategy(
             PermissionOperationType.UPDATE,
             userId,
