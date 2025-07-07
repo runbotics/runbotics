@@ -90,6 +90,17 @@ export class ProcessInstanceEventService {
         });
     }
 
+    async findAllByProcessInstanceId(processInstanceId: ProcessInstance['id']) {
+        return this.processInstanceEventRepository.find({
+            where: {
+                processInstance: { 
+                    id: processInstanceId 
+                }
+            },
+            relations: RELATIONS,
+        });
+    }
+    
     findAllActiveByProcessInstanceId(processInstanceId: ProcessInstance['id']) {
         return this.processInstanceEventRepository.find({
             where: {

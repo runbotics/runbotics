@@ -19,6 +19,7 @@ import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage, Page } from '#/utils/page/page';
 import { hasFeatureKey, isTenantAdmin } from '#/utils/authority.utils';
 import { ProcessService } from '../process/process.service';
+import { ProcessEntity } from '../process/process.entity';
 
 type MappedProcessInstance = ProcessInstance & { hasSubprocesses: boolean };
 
@@ -216,6 +217,16 @@ export class ProcessInstanceService {
         )) as MappedProcessInstance;
 
         return mappedProcessInstance;
+    }
+
+    findAllByProcessId(id: ProcessEntity['id'], user: User) {
+        return this.processInstanceRepository.find({
+            where: {
+                processId: id,
+                process: { tenantId: user.tenantId },
+            },
+            relations: RELATIONS,
+        });
     }
 
     async getSubprocesses(
