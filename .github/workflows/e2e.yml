@@ -36,19 +36,19 @@ jobs:
             "password": "${{ secrets.RUNBOTICS_PASSWORD }}"
           }}' > .auth/user.json
 
-      - name: Install Dependencies
+      - name: Install node
         uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Install Dependencies v2
+      - name: Install dependencies
         run: npm install
         working-directory: ./runbotics-test
 
-      - name: Install Dependencies v2
+      - name: Install Playwright dependencies
         run: npx playwright install --with-deps
         working-directory: ./runbotics-test
 
-      - name: Install Dependencies v2
+      - name: Run Playwright E2E tests
         run: npm run test
         working-directory: ./runbotics-test
 
