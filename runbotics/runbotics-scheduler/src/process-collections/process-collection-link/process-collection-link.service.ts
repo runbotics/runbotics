@@ -32,7 +32,7 @@ export class ProcessCollectionLinkService {
         return this.processCollectionLinkRepository.delete(id);
     }
 
-    async getProcessCollectionLinkByCollectionId(collectionId: number): Promise<ProcessCollectionLink[]> {
+    async getProcessCollectionLinkByCollectionId(collectionId: string): Promise<ProcessCollectionLink[]> {
         return this.processCollectionLinkRepository.find({ where: { collectionId } });
     }
 }

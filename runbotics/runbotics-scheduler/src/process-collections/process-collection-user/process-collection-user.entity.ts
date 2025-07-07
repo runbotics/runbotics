@@ -1,9 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { PrivilegeType } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';
 import { ProcessCollection } from '../process-collection/process-collection.entity';
 
 @Entity({ schema: 'scheduler' })
+@Index(['userId', 'processCollectionId'], { unique: true })
 export class ProcessCollectionUser {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: string;
@@ -27,5 +28,5 @@ export class ProcessCollectionUser {
     processCollection: ProcessCollection;
 
     @Column()
-    processCollectionId: number;
+    processCollectionId: string;
 }

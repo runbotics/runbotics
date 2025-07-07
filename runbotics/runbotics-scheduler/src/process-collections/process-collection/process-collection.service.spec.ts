@@ -1,156 +1,100 @@
-import { Test } from '@nestjs/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProcessCollectionService } from './process-collection.service';
+import { ProcessCollectionLinkService } from './../process-collection-link/process-collection-link.service';
+import { ProcessCollectionUserService } from './../process-collection-user/process-collection-user.service';
+import { TreeRepository } from 'typeorm';
 import { ProcessCollection } from './process-collection.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { ProcessCollectionLinkService } from '../process-collection-link/process-collection-link.service';
-import { ProcessCollectionUserService } from '../process-collection-user/process-collection-user.service';
-import { NotFoundException } from '@nestjs/common';
-import { vi } from 'vitest';
+import { StrategyFactory } from './process-collection-strategy.factory';
+import { CreateProcessCollectionDto } from './dto/create-process-collection.dto';
+import { UpdateProcessCollectionDto } from './dto/update-process-collection.dto';
+
+vi.mock('../process-collection-strategy.factory');
 
 describe('ProcessCollectionService', () => {
     let service: ProcessCollectionService;
+    let mockRepo: TreeRepository<ProcessCollection>;
+    let mockLinkService: ProcessCollectionLinkService;
+    let mockUserService: ProcessCollectionUserService;
+    let mockStrategyFactory: StrategyFactory;
 
-    const mockRepo = {
-        findOne: vi.fn(),
-        findDescendantsTree: vi.fn(),
-        save: vi.fn(),
-        delete: vi.fn(),
-    };
+    beforeEach(() => {
+        mockRepo = {} as unknown as TreeRepository<ProcessCollection>;
+        mockLinkService = {} as ProcessCollectionLinkService;
+        mockUserService = {} as ProcessCollectionUserService;
 
-    const mockLinkService = {
-        getProcessCollectionLinkByCollectionId: vi.fn(),
-    };
+        mockStrategyFactory = {
+            createCreateStrategy: vi.fn(),
+            cretateGetAllStrategy: vi.fn(),
+            createDeleteStrategy: vi.fn(),
+            createLoadTreeStrategy: vi.fn(),
+            createUpdateStrategy: vi.fn(),
+        } as unknown as StrategyFactory;
 
-    const mockUserService = {
-        getAllProcessCollectionUserByCollectionId: vi.fn(),
-    };
-
-    beforeEach(async () => {
-        const moduleRef = await Test.createTestingModule({
-            providers: [
-                ProcessCollectionService,
-                {
-                    provide: getRepositoryToken(ProcessCollection),
-                    useValue: mockRepo,
-                },
-                {
-                    provide: ProcessCollectionLinkService,
-                    useValue: mockLinkService,
-                },
-                {
-                    provide: ProcessCollectionUserService,
-                    useValue: mockUserService,
-                },
-            ],
-        }).compile();
-
-        service = moduleRef.get(ProcessCollectionService);
-
-        Object.values(mockRepo).forEach((fn) => fn.mockReset());
-        Object.values(mockLinkService).forEach((fn) => fn.mockReset());
-        Object.values(mockUserService).forEach((fn) => fn.mockReset());
+        // ręczne wstrzyknięcie factory (bo constructor sam tworzy nową instancję)
+        service = new ProcessCollectionService(mockRepo, mockLinkService, mockUserService);
+        (service as any).strategyFactory = mockStrategyFactory;
     });
 
-    describe('insertNewProcessCollection', () => {
-        it('should insert a new process collection with parent', async () => {
-            const dto = { name: 'Test', parentId: 1, description: 'Test Desc' };
-            const parent = { id: 1, name: 'Parent' };
-            const saved = { id: 2, name: 'Test', parent };
+    it('should call CreateProcessCollectionStrategy with correct DTO and userId', async () => {
+        const dto: CreateProcessCollectionDto = { name: 'Test', description: 'Desc', parentId: null };
+        const userId = 1;
 
-            mockRepo.findOne.mockResolvedValue(parent);
-            mockRepo.save.mockResolvedValue(saved);
+        const mockResult = { id: 'abc', name: 'Test' } as ProcessCollection;
+        const execute = vi.fn().mockResolvedValue(mockResult);
+        (mockStrategyFactory.createCreateStrategy as any).mockReturnValue({ execute });
 
-            const result = await service.insertNewProcessCollection(dto, 99);
+        const result = await service.createProcessCollection(dto, userId);
 
-            expect(mockRepo.findOne).toHaveBeenCalledWith({ where: { id: dto.parentId } });
-            expect(mockRepo.save).toHaveBeenCalledWith({
-                ...dto,
-                createdBy: null,
-                parentId: dto.parentId,
-                parent,
-                userId: 99,
-            });
-            expect(result).toEqual(saved);
-        });
+        expect(execute).toHaveBeenCalledWith(dto, userId);
+        expect(result).toEqual(mockResult);
     });
 
-    describe('deleteProcessCollection', () => {
-        it('should delete an existing process collection', async () => {
-            const collection = { id: 1, name: 'ToDelete' };
-            const deletionResult = { raw: collection };
+    it('should call DeleteProcessCollectionStrategy with correct id', async () => {
+        const id = 'collection-id';
+        const mockResult = { id } as ProcessCollection;
+        const execute = vi.fn().mockResolvedValue(mockResult);
+        (mockStrategyFactory.createDeleteStrategy as any).mockReturnValue({ execute });
 
-            mockRepo.findOne.mockResolvedValue(collection);
-            mockRepo.delete.mockResolvedValue(deletionResult);
+        const result = await service.deleteProcessCollection(id);
 
-            const result = await service.deleteProcessCollection(1);
-
-            expect(mockRepo.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
-            expect(mockRepo.delete).toHaveBeenCalledWith({ id: 1 });
-            expect(result).toEqual(collection);
-        });
-
-        it('should throw NotFoundException when not found', async () => {
-            mockRepo.findOne.mockResolvedValue(null);
-
-            await expect(() => service.deleteProcessCollection(999)).rejects.toThrow(NotFoundException);
-        });
+        expect(execute).toHaveBeenCalledWith(id);
+        expect(result).toEqual(mockResult);
     });
 
-    describe('getProcessCollectionTree', () => {
-        it('should return null if base collection is not found', async () => {
-            mockRepo.findOne.mockResolvedValue(null);
+    it('should call LoadTreeStrategy with correct collectionId', async () => {
+        const id = 'collection-id';
+        const mockResult = { id, children: [] } as ProcessCollection;
+        const execute = vi.fn().mockResolvedValue(mockResult);
+        (mockStrategyFactory.createLoadTreeStrategy as any).mockReturnValue({ execute });
 
-            const result = await service.getProcessCollectionTree(100);
+        const result = await service.getProcessCollectionTree(id);
 
-            expect(result).toBeNull();
-        });
-
-        it('should return the tree with loaded relations', async () => {
-            const base = { id: 1, name: 'Root', children: [] };
-            const tree = { ...base, children: [] };
-
-            mockRepo.findOne.mockResolvedValue(base);
-            mockRepo.findDescendantsTree.mockResolvedValue(tree);
-            mockLinkService.getProcessCollectionLinkByCollectionId.mockResolvedValue([]);
-            mockUserService.getAllProcessCollectionUserByCollectionId.mockResolvedValue([]);
-
-            const result = await service.getProcessCollectionTree(1);
-
-            expect(mockRepo.findDescendantsTree).toHaveBeenCalledWith(base);
-            expect(result).toMatchObject({
-                id: 1,
-                processCollectionLinks: [],
-                processCollectionPrivileges: [],
-                children: [],
-            });
-        });
+        expect(execute).toHaveBeenCalledWith(id);
+        expect(result).toEqual(mockResult);
     });
 
-    describe('loadRelationsRecursive', () => {
-        it('should recursively load children and their relations', async () => {
-            const collection = {
-                id: 1,
-                children: [
-                    {
-                        id: 2,
-                        children: [],
-                    },
-                ],
-            };
+    it('should call UpdateProcessCollectionStrategy with DTO', async () => {
+        const dto: UpdateProcessCollectionDto = { id: 'id', name: 'new name', description: 'desc' };
+        const mockResult = { ...dto } as ProcessCollection;
+        const execute = vi.fn().mockResolvedValue(mockResult);
+        (mockStrategyFactory.createUpdateStrategy as any).mockReturnValue({ execute });
 
-            mockLinkService.getProcessCollectionLinkByCollectionId
-                .mockResolvedValueOnce(['link1'])
-                .mockResolvedValueOnce(['link2']);
-            mockUserService.getAllProcessCollectionUserByCollectionId
-                .mockResolvedValueOnce(['priv1'])
-                .mockResolvedValueOnce(['priv2']);
+        const result = await service.updateProcessCollection(dto);
 
-            const result = await service.loadRelationsRecursive(collection as any);
+        expect(execute).toHaveBeenCalledWith(dto);
+        expect(result).toEqual(mockResult);
+    });
 
-            expect(result.processCollectionLinks).toEqual(['link1']);
-            expect(result.processCollectionPrivileges).toEqual(['priv1']);
-            expect(result.children[0].processCollectionLinks).toEqual(['link2']);
-            expect(result.children[0].processCollectionPrivileges).toEqual(['priv2']);
-        });
+    it('should call GetAllStrategy with userId and parentId', async () => {
+        const userId = 1;
+        const parentId = 'parent-1';
+        const mockResult = [{ id: '1', name: 'A' }] as ProcessCollection[];
+        const execute = vi.fn().mockResolvedValue(mockResult);
+        (mockStrategyFactory.createGetAllCollectionStrategy as any).mockReturnValue({ execute });
+
+        const result = await service.getAllProcessCollections(userId, parentId);
+
+        expect(execute).toHaveBeenCalledWith(userId, parentId);
+        expect(result).toEqual(mockResult);
     });
 });

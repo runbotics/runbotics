@@ -6,7 +6,7 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { ProcessCollectionUser } from './process-collection-user.entity';
 import { DeleteResult } from 'typeorm';
 
-@Controller('api/process-collection-user')
+@Controller('/api/v2/scheduler/tenants/:tenantId/process-collection-user')
 export class ProcessCollectionUserController {
 
     constructor(private readonly processCollectionUserService: ProcessCollectionUserService) {
@@ -20,18 +20,18 @@ export class ProcessCollectionUserController {
         return this.processCollectionUserService.addNewProcessCollectionUser(id, data);
     }
 
-    @Get(':id/:collectionId')
+    @Get(':id/process-collection/:collectionId')
     async getProcessCollectionUser(
         @Param('id') id: number,
-        @Param('collectionId') collectionId: number,
+        @Param('collectionId') collectionId: string,
     ): Promise<ProcessCollectionUser> {
         return this.processCollectionUserService.getProcessCollectionUser(id, collectionId);
     }
 
-    @Delete(':id/:collectionId')
+    @Delete(':id/process-collection/:collectionId')
     async deleteProcessCollectionUser(
         @Param('id') id: number,
-        @Param('collectionId') collectionId: number,
+        @Param('collectionId') collectionId: string,
     ): Promise<DeleteResult> {
         return this.processCollectionUserService.deleteProcessCollectionUser(id, collectionId);
     }

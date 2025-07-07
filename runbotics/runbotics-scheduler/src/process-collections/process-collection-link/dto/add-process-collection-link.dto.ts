@@ -1,4 +1,4 @@
 export class AddProcessCollectionLinkDto {
-    collectionId: number;
+    collectionId: string;
     userId: number;
 }

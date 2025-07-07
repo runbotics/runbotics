@@ -98,8 +98,11 @@ export class User {
     authorities: IAuthority[];
 
     @OneToMany(() => ProcessCollection, (processCollection) => processCollection.createdBy)
-    processCollections: ProcessCollection[];
+    createdProcessCollections: ProcessCollection[];
 
+    @OneToMany(() => ProcessCollection, (processCollection) => processCollection.owner)
+    ownedProcessCollections: ProcessCollection[];
+    
     @OneToMany(() => ProcessCollectionUser, (processCollectionUser) => processCollectionUser.processCollection)
     processCollectionPrivileges: ProcessCollectionUser[];
 

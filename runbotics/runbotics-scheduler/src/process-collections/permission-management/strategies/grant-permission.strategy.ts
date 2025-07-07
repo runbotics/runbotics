@@ -5,7 +5,7 @@ import { PermissionStrategy } from './permission-strategy.interface';
 export class GrantPermissionStrategy implements PermissionStrategy {
     constructor(
         private readonly userId: number,
-        private readonly collectionId: number,
+        private readonly collectionId: string,
         private readonly level: PrivilegeType, // e.g. 'READ' | 'WRITE'
         private readonly accessRepo: PermissionRepository,
     ) {

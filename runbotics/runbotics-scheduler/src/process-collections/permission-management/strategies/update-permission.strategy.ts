@@ -5,13 +5,14 @@ import { PrivilegeType } from 'runbotics-common';
 export class UpdatePermissionStrategy implements PermissionStrategy {
     constructor(
         private readonly userId: number,
-        private readonly collectionId: number,
+        private readonly collectionId: string,
         private readonly newLevel: PrivilegeType,
         private readonly permissionRepository: PermissionRepository,
     ) {
     }
     //TODO: Implement function based on changes in ProcessCollection not only ProcessCollectionUser table to recreate tree
     async execute(): Promise<void> {
+        
         // 1. Zapamiętaj stan (można logować do audytu)
         const previous = await this.permissionRepository.getUserAccess(this.userId, this.collectionId);
 

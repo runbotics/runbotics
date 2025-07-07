@@ -5,7 +5,7 @@ import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { GrantPermissionRequest } from '#/process-collections/dto/grant-permission.dto';
 import { AuthRequest } from '#/types';
 
-@Controller('/api/scheduler/tenants/:tenantId/process-collections')
+@Controller('/api/v2/scheduler/tenants/:tenantId/process-collections')
 export class ProcessCollectionsController {
 
     constructor(private readonly processCollectionsService: ProcessCollectionsService) {
