@@ -302,7 +302,7 @@ export class ProcessCollectionService {
             .andWhere(
                 new Brackets(qb => {
                     qb.where('pc.isPublic = true')
-                      .orWhere('pc.createdById = :userId', { userId })
+                      .orWhere('pc.createdBy = :userId', { userId })
                       .orWhere('u.id = :userId', { userId });
                 })
             )
@@ -399,6 +399,7 @@ export class ProcessCollectionService {
             });
 
         if (!hasCollectionAccess) {
+            console.log('Nie ma collection access');
             throw new ForbiddenException('No access to process collection');
         }
 
