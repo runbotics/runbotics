@@ -1,3 +1,5 @@
+import { EntityManager } from 'typeorm';
+
 export interface PermissionStrategy {
-    execute(): Promise<void>;
+    execute(entityManager?: EntityManager): Promise<void>;
 }

@@ -8,6 +8,7 @@ import { ProcessCollectionLinkService } from '../process-collection-link/process
 import { ProcessCollectionUserService } from '../process-collection-user/process-collection-user.service';
 import { StrategyFactory } from './process-collection-strategy.factory';
 import { UpdateProcessCollectionDto } from '#/process-collections/process-collection/dto/update-process-collection.dto';
+import { PermissionManagementService } from '#/process-collections/permission-management/permission-management.service';
 
 @Injectable()
 export class ProcessCollectionService {
@@ -22,8 +23,9 @@ export class ProcessCollectionService {
         @Inject(forwardRef(() => ProcessCollectionLinkService))
         private readonly linkService: ProcessCollectionLinkService,
         private readonly userService: ProcessCollectionUserService,
+        private readonly permissionManagementService: PermissionManagementService,
     ) {
-        this.strategyFactory = new StrategyFactory(this.repo, this.linkService, this.userService);
+        this.strategyFactory = new StrategyFactory(this.repo, this.linkService, this.userService, this.permissionManagementService);
     }
 
     async createProcessCollection(dto: CreateProcessCollectionDto, userId?: number) {
@@ -46,8 +48,8 @@ export class ProcessCollectionService {
         return strategy.execute(processCollectionId);
     }
 
-    async updateProcessCollection(dto: UpdateProcessCollectionDto) {
+    async updateProcessCollection(id: string, dto: UpdateProcessCollectionDto) {
         const strategy = this.strategyFactory.createUpdateStrategy();
-        return strategy.execute(dto);
+        return strategy.execute(id, dto);
     }
 }

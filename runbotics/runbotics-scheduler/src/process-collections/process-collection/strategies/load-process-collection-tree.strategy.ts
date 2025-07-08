@@ -1,4 +1,3 @@
-// load-tree.strategy.ts
 import { CollectionStrategy } from './base.strategy';
 import { TreeRepository } from 'typeorm';
 import { ProcessCollection } from '../process-collection.entity';
