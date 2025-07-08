@@ -29,7 +29,7 @@ export class ProcessCollection {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ nullable: true })
     description: string;
 
     @CreateDateColumn({ type: 'timestamp', transformer: dateTransformer })
