@@ -38,7 +38,7 @@ export class AddProcessCollectionsV21751616630093 implements MigrationInterface 
                                  (
                                      "id"          uuid              NOT NULL DEFAULT uuid_generate_v4(),
                                      "name"        character varying NOT NULL,
-                                     "description" character varying NOT NULL,
+                                     "description" character varying,
                                      "created"     TIMESTAMP         NOT NULL DEFAULT now(),
                                      "updated"     TIMESTAMP         NOT NULL DEFAULT now(),
                                      "created_by"  bigint,
