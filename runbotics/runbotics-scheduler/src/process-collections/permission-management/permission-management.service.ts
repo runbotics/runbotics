@@ -3,13 +3,18 @@ import { PermissionOperationType } from './permission-operation-type.enum';
 import { PermissionStrategyFactory } from './permission-management.factory';
 import { PermissionRepository } from './permission-management.repository';
 import { PrivilegeType } from 'runbotics-common';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class PermissionManagementService {
     constructor(private readonly permissionRepository: PermissionRepository) {
     }
 
-    async grant(userId: number, collectionId: string, level: PrivilegeType) {
+    async getPermissionByCollectionId(collectionId: string) {
+        return this.permissionRepository.getAccessByCollectionId(collectionId);
+    }
+    
+    async grant(userId: number, collectionId: string, level: PrivilegeType, entityManager?: EntityManager) {
         const strategy = PermissionStrategyFactory.createStrategy(
             PermissionOperationType.GRANT,
             userId,
@@ -17,20 +22,20 @@ export class PermissionManagementService {
             this.permissionRepository,
             level,
         );
-        await strategy.execute();
+        await strategy.execute(entityManager);
     }
 
-    async revoke(userId: number, collectionId: string) {
+    async revoke(userId: number, collectionId: string, entityManager?: EntityManager) {
         const strategy = PermissionStrategyFactory.createStrategy(
             PermissionOperationType.REVOKE,
             userId,
             collectionId,
             this.permissionRepository,
         );
-        await strategy.execute();
+        await strategy.execute(entityManager);
     }
 
-    async update(userId: number, collectionId: string, level: PrivilegeType) {
+    async update(userId: number, collectionId: string, level: PrivilegeType, entityManager?: EntityManager) {
         const strategy = PermissionStrategyFactory.createStrategy(
             PermissionOperationType.UPDATE,
             userId,
@@ -38,6 +43,6 @@ export class PermissionManagementService {
             this.permissionRepository,
             level,
         );
-        await strategy.execute();
+        await strategy.execute(entityManager);
     }
 }

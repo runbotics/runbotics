@@ -1,6 +1,7 @@
 import { PermissionRepository } from '#/process-collections/permission-management/permission-management.repository';
 import { PrivilegeType } from 'runbotics-common';
 import { PermissionStrategy } from './permission-strategy.interface';
+import { EntityManager } from 'typeorm';
 
 export class GrantPermissionStrategy implements PermissionStrategy {
     constructor(
@@ -11,7 +12,7 @@ export class GrantPermissionStrategy implements PermissionStrategy {
     ) {
     }
 
-    async execute(): Promise<void> {
-        await this.accessRepo.grantAccess(this.userId, this.collectionId, this.level);
+    async execute(entityManager?: EntityManager): Promise<void> {
+        await this.accessRepo.grantAccess(this.userId, this.collectionId, this.level, entityManager);
     }
 }

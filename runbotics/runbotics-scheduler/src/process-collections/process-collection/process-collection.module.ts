@@ -9,11 +9,13 @@ import {
 import {
     ProcessCollectionUserModule,
 } from '#/process-collections/process-collection-user/process-collection-user.module';
+import { PermissionManagementModule } from '#/process-collections/permission-management/permission-management.module';
 
 @Module({
     imports: [TypeOrmModule.forFeature([ProcessCollection]),
         forwardRef(() =>ProcessCollectionLinkModule),
-        ProcessCollectionUserModule],
+        ProcessCollectionUserModule,
+        PermissionManagementModule],
     providers: [ProcessCollectionService],
     controllers: [ProcessCollectionController],
     exports: [ProcessCollectionService],
