@@ -2,10 +2,16 @@ import { CollectionStrategy } from './base.strategy';
 import { TreeRepository } from 'typeorm';
 import { CreateProcessCollectionDto } from '../dto/create-process-collection.dto';
 import { ProcessCollection } from '../process-collection.entity';
+import { PermissionManagementService } from '#/process-collections/permission-management/permission-management.service';
+import { PrivilegeType } from 'runbotics-common';
+import { Logger } from '#/utils/logger';
+import { inspect } from 'util';
 
 export class CreateProcessCollectionStrategy implements CollectionStrategy<ProcessCollection> {
+    private readonly logger = new Logger(CreateProcessCollectionStrategy.name);
     constructor(
         private readonly repo: TreeRepository<ProcessCollection>,
+        private readonly permissionManagementService: PermissionManagementService,
     ) {
     }
 
@@ -23,7 +29,14 @@ export class CreateProcessCollectionStrategy implements CollectionStrategy<Proce
             parent: parent ? parent : root,
             userId,
         });
-
+        
+        if(dto.users && dto.users.length > 0) {
+            this.logger.log(inspect(dto.users, {depth: 6}));
+            for(const user of dto.users) {
+                this.logger.log(`Granting permission for user ${user.id} on collection ${saved.id} with privilege type ${user.privilegeType}`);
+                await this.permissionManagementService.grant(user.id, saved.id, user.privilegeType as PrivilegeType);
+            }
+        }
         return saved as ProcessCollection;
     }
 }

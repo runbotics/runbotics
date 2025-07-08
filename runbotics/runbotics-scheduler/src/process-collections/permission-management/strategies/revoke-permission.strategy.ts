@@ -2,6 +2,7 @@ import { PermissionRepository } from '#/process-collections/permission-managemen
 import {
     PermissionStrategy
 } from '#/process-collections/permission-management/strategies/permission-strategy.interface';
+import { EntityManager } from 'typeorm';
 
 export class RevokePermissionStrategy implements PermissionStrategy {
     constructor(
@@ -9,8 +10,8 @@ export class RevokePermissionStrategy implements PermissionStrategy {
         private readonly collectionId: string,
         private readonly accessRepo: PermissionRepository,
     ) {}
-    // TODO: implement function to revoke permission in whole tree of ProcessCollection, not only removing 1 table entry
-    async execute(): Promise<void> {
-        await this.accessRepo.revokeAccess(this.userId, this.collectionId);
+    
+    async execute(entityManager?: EntityManager): Promise<void> {
+        await this.accessRepo.revokeAccess(this.userId, this.collectionId, entityManager);
     }
 }

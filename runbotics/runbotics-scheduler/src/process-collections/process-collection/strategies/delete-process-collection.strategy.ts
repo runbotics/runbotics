@@ -1,4 +1,3 @@
-// delete-collection.strategy.ts
 import { CollectionStrategy } from './base.strategy';
 import { NotFoundException } from '@nestjs/common';
 import { TreeRepository } from 'typeorm';

@@ -1,4 +1,3 @@
-// strategy-factory.ts
 import { TreeRepository } from 'typeorm';
 import { ProcessCollection } from './process-collection.entity';
 import { ProcessCollectionLinkService } from '../process-collection-link/process-collection-link.service';
@@ -10,17 +9,19 @@ import { UpdateProcessCollectionStrategy } from './strategies/update-process-col
 import {
     GetAllCollectionsStrategy
 } from '#/process-collections/process-collection/strategies/get-all-collections.strategy';
+import { PermissionManagementService } from '#/process-collections/permission-management/permission-management.service';
 
 export class StrategyFactory {
     constructor(
         private readonly repo: TreeRepository<ProcessCollection>,
         private readonly linkService: ProcessCollectionLinkService,
         private readonly userService: ProcessCollectionUserService,
+        private readonly permissionManagementService: PermissionManagementService,
     ) {
     }
 
     createCreateStrategy() {
-        return new CreateProcessCollectionStrategy(this.repo);
+        return new CreateProcessCollectionStrategy(this.repo, this.permissionManagementService);
     }
 
     createDeleteStrategy() {
@@ -32,7 +33,7 @@ export class StrategyFactory {
     }
     
     createUpdateStrategy() {
-        return new UpdateProcessCollectionStrategy(this.repo);
+        return new UpdateProcessCollectionStrategy(this.repo, this.permissionManagementService);
     }
     
     createGetAllCollectionStrategy() {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CreateProcessCollectionStrategy } from './create-process-collection.strategy';
 import { DeleteProcessCollectionStrategy } from './delete-process-collection.strategy';
 import { UpdateProcessCollectionStrategy } from './update-process-collection.strategy';
@@ -7,10 +7,13 @@ import { GetAllCollectionsStrategy } from './get-all-collections.strategy';
 import { TreeRepository } from 'typeorm';
 import { ProcessCollection } from '../process-collection.entity';
 import { NotFoundException } from '@nestjs/common';
+import { PermissionRepository } from '#/process-collections/permission-management/permission-management.repository';
+import { PermissionManagementService } from '#/process-collections/permission-management/permission-management.service';
 
 describe('CreateProcessCollectionStrategy', () => {
     let strategy: CreateProcessCollectionStrategy;
     let mockRepo: Partial<TreeRepository<ProcessCollection>>;
+    let mockPermissionService: PermissionManagementService;
 
     beforeEach(() => {
         mockRepo = {
@@ -18,7 +21,8 @@ describe('CreateProcessCollectionStrategy', () => {
             //@ts-expect-error save is a method of TreeRepository
             save: vi.fn(),
         };
-        strategy = new CreateProcessCollectionStrategy(mockRepo as TreeRepository<ProcessCollection>);
+        mockPermissionService = {} as PermissionManagementService;
+        strategy = new CreateProcessCollectionStrategy(mockRepo as TreeRepository<ProcessCollection>, mockPermissionService);
     });
 
     it('should create collection with ROOT as parent', async () => {
@@ -72,6 +76,7 @@ describe('DeleteProcessCollectionStrategy', () => {
 describe('UpdateProcessCollectionStrategy', () => {
     let strategy: UpdateProcessCollectionStrategy;
     let mockRepo: Partial<TreeRepository<ProcessCollection>>;
+    let mockPermissionService: PermissionManagementService;
 
     beforeEach(() => {
         mockRepo = {
@@ -79,12 +84,13 @@ describe('UpdateProcessCollectionStrategy', () => {
             //@ts-expect-error save is a method of TreeRepository
             save: vi.fn(),
         };
-        strategy = new UpdateProcessCollectionStrategy(mockRepo as TreeRepository<ProcessCollection>);
+        mockPermissionService = {} as PermissionManagementService;
+        strategy = new UpdateProcessCollectionStrategy(mockRepo as TreeRepository<ProcessCollection>, mockPermissionService);
     });
 
     it('should throw if collection not found', async () => {
         (mockRepo.findOne as any).mockResolvedValue(null);
-        await expect(strategy.execute({ id: 'abc', name: 'n', description: 'd' })).rejects.toThrowError();
+        await expect(strategy.execute( 'abc',{ name: 'n', description: 'd' })).rejects.toThrowError();
     });
 
     it('should update and return saved collection', async () => {
@@ -94,7 +100,7 @@ describe('UpdateProcessCollectionStrategy', () => {
         (mockRepo.findOne as any).mockResolvedValue(existing);
         (mockRepo.save as any).mockResolvedValue(updated);
 
-        const result = await strategy.execute({ id: 'abc', name: 'new', description: 'new desc' });
+        const result = await strategy.execute('abc', { name: 'new', description: 'new desc' });
         expect(result).toEqual(updated);
         expect(mockRepo.save).toHaveBeenCalledWith(expect.objectContaining({ name: 'new' }));
     });

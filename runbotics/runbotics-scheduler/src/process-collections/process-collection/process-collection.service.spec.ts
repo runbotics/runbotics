@@ -7,6 +7,7 @@ import { ProcessCollection } from './process-collection.entity';
 import { StrategyFactory } from './process-collection-strategy.factory';
 import { CreateProcessCollectionDto } from './dto/create-process-collection.dto';
 import { UpdateProcessCollectionDto } from './dto/update-process-collection.dto';
+import { PermissionManagementService } from '#/process-collections/permission-management/permission-management.service';
 
 vi.mock('../process-collection-strategy.factory');
 
@@ -16,11 +17,13 @@ describe('ProcessCollectionService', () => {
     let mockLinkService: ProcessCollectionLinkService;
     let mockUserService: ProcessCollectionUserService;
     let mockStrategyFactory: StrategyFactory;
+    let mockPermissionManagementService: PermissionManagementService;
 
     beforeEach(() => {
         mockRepo = {} as unknown as TreeRepository<ProcessCollection>;
         mockLinkService = {} as ProcessCollectionLinkService;
         mockUserService = {} as ProcessCollectionUserService;
+        mockPermissionManagementService = {} as PermissionManagementService;
 
         mockStrategyFactory = {
             createCreateStrategy: vi.fn(),
@@ -31,7 +34,12 @@ describe('ProcessCollectionService', () => {
         } as unknown as StrategyFactory;
 
         // ręczne wstrzyknięcie factory (bo constructor sam tworzy nową instancję)
-        service = new ProcessCollectionService(mockRepo, mockLinkService, mockUserService);
+        service = new ProcessCollectionService(
+            mockRepo,
+            mockLinkService,
+            mockUserService,
+            mockPermissionManagementService,
+        );
         (service as any).strategyFactory = mockStrategyFactory;
     });
 
@@ -74,12 +82,12 @@ describe('ProcessCollectionService', () => {
     });
 
     it('should call UpdateProcessCollectionStrategy with DTO', async () => {
-        const dto: UpdateProcessCollectionDto = { id: 'id', name: 'new name', description: 'desc' };
+        const dto: UpdateProcessCollectionDto = { name: 'new name', description: 'desc' };
         const mockResult = { ...dto } as ProcessCollection;
         const execute = vi.fn().mockResolvedValue(mockResult);
         (mockStrategyFactory.createUpdateStrategy as any).mockReturnValue({ execute });
 
-        const result = await service.updateProcessCollection(dto);
+        const result = await service.updateProcessCollection('id', dto);
 
         expect(execute).toHaveBeenCalledWith(dto);
         expect(result).toEqual(mockResult);
