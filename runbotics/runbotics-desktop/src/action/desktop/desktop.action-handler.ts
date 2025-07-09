@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import { parseString } from 'xml2js';
 import { DesktopAction } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
-import { createWorker } from 'tesseract.js';
+import Tesseract, { createWorker } from 'tesseract.js';
 
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import {
@@ -22,6 +23,8 @@ import {
 } from '@runbotics/nut-js';
 
 import { RunboticsLogger } from '#logger';
+import { pdfToPng } from 'pdf-to-png-converter';
+import {Poppler} from 'node-poppler';
 
 import {
     DesktopActionRequest,
@@ -50,6 +53,7 @@ import { validateInput } from '#utils/zodError';
 import { ServerConfigService } from '#config';
 import { Injectable } from '@nestjs/common';
 import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema } from './desktop.utils';
+import { tmpdir } from 'os';
 
 @Injectable()
 export default class DesktopActionHandler extends StatelessActionHandler {
@@ -199,21 +203,62 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     async readTextFromImage(rawInput: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
         const { imageFullPath, language } = await validateInput(rawInput, readTextFromImageInputSchema);
 
-        let worker: any;
+        let worker: Tesseract.Worker;
+        let tempPngPath: string | null = null;
+
         try {
             this.checkFileExist(imageFullPath);
-            const imageBuffer = fs.readFileSync(imageFullPath);
 
+            let imagePathToUse = imageFullPath;
+            const ext = path.extname(imageFullPath).toLowerCase();
+
+            if (ext === '.pdf') {
+                const outputDir = tmpdir();
+                const outputPrefix = `converted_${uuidv4()}`;
+                const poppler = new Poppler();
+                
+                const options = {
+                    lastPageToConvert: 1,
+                    pngFile: true,
+                };
+                this.logger.log('ssssss');
+                // const respPdfHtml = await poppler.pdfToHtml(imagePathToUse, undefined, { lastPageToConvert: 1});
+                const respPdfTxt = await poppler.pdfToText(imagePathToUse, undefined, { lastPageToConvert: 1,boundingBoxXhtml: true});
+                // this.logger.log('respPdfHtml', respPdfHtml);
+                this.logger.log('respPdfTxt', respPdfTxt); // TODO: check what libraries are not used and delete them from project 
+                
+                const outputBasePath = path.join(outputDir, outputPrefix);
+                const info = await poppler.pdfInfo(imagePathToUse);
+                console.log('info', info);
+                await poppler.pdfToCairo(imagePathToUse, outputBasePath, options);
+                //ocr make pdf
+                tempPngPath = `${outputBasePath}-1.png`;
+
+                if (!fs.existsSync(tempPngPath)) {
+                    throw new Error(`PDF was converted, but resulting PNG not found at: ${tempPngPath}`);
+                }
+
+                console.log('exis', tempPngPath);
+                imagePathToUse = tempPngPath;
+            }
+
+            const imageBuffer = fs.readFileSync(imagePathToUse);
             worker = await createWorker({ langPath: '.\\trained_data' });
             await worker.loadLanguage(language);
             await worker.initialize(language);
-            const { data: { text } } = await worker.recognize(imageBuffer);
+            await worker.setParameters({tessjs_create_hocr: '1'});
+            const { data: { text, hocr } } = await worker.recognize(imageBuffer);
 
+            console.log('hocr', hocr);
             return text;
         } catch (error) {
             throw new Error('An error occurred while reading data from the image. ' + error);
         } finally {
             await worker?.terminate();
+
+            if (tempPngPath && fs.existsSync(tempPngPath)) {
+                fs.unlinkSync(tempPngPath);
+            }
         }
     }
 
