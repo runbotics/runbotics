@@ -14,7 +14,7 @@ import { Logger } from '#/utils/logger';
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LicenseService } from '../license/license.service';
 import { TenantService } from './tenant.service';
-import { SwaggerTags } from '#/utils/swaggerTags';
+import { SwaggerTags } from '#/utils/swagger.utils';
 import { Tenant } from './tenant.entity';
 import { TenantInviteCodeSwaggerDto } from './dto/invite-code.dto';
 import { ApiDefaultAuthResponses } from '#/utils/decorators/swagger/ApiDefaultAuthResponses.decorator';

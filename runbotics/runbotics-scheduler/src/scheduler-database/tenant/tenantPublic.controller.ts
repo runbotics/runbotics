@@ -5,7 +5,7 @@ import { Public } from '#/auth/guards';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { TenantInviteCodeDto, tenantInviteCodeSchema, TenantInviteCodeSwaggerDto } from './dto/invite-code.dto';
 import { ApiBadRequestResponse, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { SwaggerTags } from '#/utils/swaggerTags';
+import { SwaggerTags } from '#/utils/swagger.utils';
 
 @ApiTags(SwaggerTags.TENANT_PUBLIC)
 @Controller('/api/scheduler')

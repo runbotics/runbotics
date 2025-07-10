@@ -27,7 +27,7 @@ import { UUID } from 'crypto';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from '@nestjs/swagger';
 import { ProcessCollection } from './process-collection.entity';
 import { ApiDefaultAuthResponses } from '#/utils/decorators/swagger/ApiDefaultAuthResponses.decorator';
-import { SwaggerTags } from '#/utils/swaggerTags';
+import { SwaggerTags } from '#/utils/swagger.utils';
 
 @ApiTags(SwaggerTags.PROCESS_COLLECTION)
 @ApiDefaultAuthResponses()
