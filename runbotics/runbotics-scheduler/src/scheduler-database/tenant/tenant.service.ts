@@ -187,10 +187,6 @@ export class TenantService {
                     this.inviteCodeRepository.delete([
                         ...codes.map((code) => code.inviteId),
                     ]);
-                    this.logger.log(
-                        'Removed expired invite codes for tenant with id: ',
-                        tenant.id
-                    );
                 }
             });
 
