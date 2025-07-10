@@ -1,17 +1,26 @@
 import {
     BadRequestException,
     Controller,
-    NotFoundException
+    NotFoundException,
 } from '@nestjs/common';
 import { FeatureKey } from 'runbotics-common';
 
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
-import { GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
+import {
+    GetWithTenant,
+    PostWithTenant,
+} from '#/utils/decorators/with-tenant.decorator';
 import { Logger } from '#/utils/logger';
 
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiTags,
+} from '@nestjs/swagger';
 import { LicenseService } from '../license/license.service';
 import { TenantService } from './tenant.service';
 import { SwaggerTags } from '#/utils/swagger.utils';
@@ -24,23 +33,27 @@ import { ApiDefaultAuthResponses } from '#/utils/decorators/swagger/ApiDefaultAu
 @Controller('/api/scheduler')
 export class TenantController {
     private readonly logger = new Logger(TenantController.name);
-    
+
     constructor(
         private readonly tenantService: TenantService,
         private readonly licenseService: LicenseService
     ) {}
-    
+
     @ApiOperation({
         summary: 'Get tenant for the current user',
-        description: 'Returns tenant information for the currently authenticated user based on their tenant ID.'
+        description:
+            'Returns tenant information for the currently authenticated user based on their tenant ID.',
     })
-    @ApiOkResponse({ description: 'Tenant successfully retrieved.', type: Tenant })
-    @ApiNotFoundResponse({ description: 'Tenant not found for the current user.' })
+    @ApiOkResponse({
+        description: 'Tenant successfully retrieved.',
+        type: Tenant,
+    })
+    @ApiNotFoundResponse({
+        description: 'Tenant not found for the current user.',
+    })
     @GetWithTenant('me')
     @FeatureKeys(FeatureKey.TENANT_READ)
-    async getTenantByUser(
-        @UserDecorator() { tenantId }: User,
-    ) {
+    async getTenantByUser(@UserDecorator() { tenantId }: User) {
         const tenant = await this.tenantService.getById(tenantId);
 
         if (!tenant) {
@@ -53,10 +66,16 @@ export class TenantController {
 
     @ApiOperation({
         summary: 'Get active invite code for the current tenant',
-        description: 'Retrieves the currently active invite code assigned to the tenant of the logged-in user.'
+        description:
+            'Retrieves the currently active invite code assigned to the tenant of the logged-in user.',
     })
-    @ApiOkResponse({ description: 'Active invite code retrieved successfully.', type: TenantInviteCodeSwaggerDto })
-    @ApiNotFoundResponse({ description: 'No valid invite code found for the tenant.' })
+    @ApiOkResponse({
+        description: 'Active invite code retrieved successfully.',
+        type: TenantInviteCodeSwaggerDto,
+    })
+    @ApiNotFoundResponse({
+        description: 'No valid invite code found for the tenant.',
+    })
     @GetWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_GET_INVITE_CODE)
     async getActiveInviteCode(@UserDecorator() { tenantId }: User) {
@@ -76,10 +95,16 @@ export class TenantController {
 
     @ApiOperation({
         summary: 'Create a new invite code for the tenant',
-        description: 'Creates a new invite code for the tenant if none currently exists. Fails if a valid code already exists.'
+        description:
+            'Creates a new invite code for the tenant if none currently exists. Fails if a valid code already exists.',
     })
-    @ApiOkResponse({ description: 'Invite code successfully created.', type: TenantInviteCodeSwaggerDto })
-    @ApiBadRequestResponse({ description: 'A valid invite code already exists for this tenant.' })
+    @ApiOkResponse({
+        description: 'Invite code successfully created.',
+        type: TenantInviteCodeSwaggerDto,
+    })
+    @ApiBadRequestResponse({
+        description: 'A valid invite code already exists for this tenant.',
+    })
     @PostWithTenant('invite-code')
     @FeatureKeys(FeatureKey.TENANT_CREATE_INVITE_CODE)
     async createInviteCode(@UserDecorator() { tenantId }: User) {
@@ -93,5 +118,4 @@ export class TenantController {
 
         return this.tenantService.createInviteCodeByTenantId(tenantId);
     }
-
 }

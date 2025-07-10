@@ -399,7 +399,6 @@ export class ProcessCollectionService {
             });
 
         if (!hasCollectionAccess) {
-            console.log('Nie ma collection access');
             throw new ForbiddenException('No access to process collection');
         }
 

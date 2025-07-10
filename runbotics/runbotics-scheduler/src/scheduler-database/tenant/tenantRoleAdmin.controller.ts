@@ -61,8 +61,6 @@ export class TenantRoleAdminController {
 
     constructor(private readonly tenantService: TenantService) {}
 
-    // -------------- ENDPOINTS FOR ADMIN ------------------
-
     @ApiOperation({
         summary: 'Get all tenants',
         description:
