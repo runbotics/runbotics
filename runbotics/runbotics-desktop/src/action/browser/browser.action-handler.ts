@@ -4,7 +4,6 @@ import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { v4 as uuidv4 } from 'uuid';
 import * as firefox from 'selenium-webdriver/firefox';
-import * as chrome from 'selenium-webdriver/chrome';
 import path from 'path';
 
 import { RunboticsLogger } from '#logger';
@@ -106,9 +105,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     }
 
     async openSite(input: BrowserTypes.BrowserOpenActionInput): Promise<BrowserTypes.BrowserOpenActionOutput> {
-        // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
-        //
-        // let driver = await new Builder().forBrowser('chrome').build();
         await this.session.get(input.target);
 
         return {};
