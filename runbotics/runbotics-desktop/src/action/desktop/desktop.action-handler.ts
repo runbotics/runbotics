@@ -3,7 +3,7 @@ import path from 'path';
 import { parseString } from 'xml2js';
 import { DesktopAction } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
-import Tesseract, { createWorker } from 'tesseract.js';
+import Tesseract, { createWorker, PSM } from 'tesseract.js';
 
 import { StatelessActionHandler } from '@runbotics/runbotics-sdk';
 import {
@@ -204,60 +204,86 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         const { imageFullPath, language } = await validateInput(rawInput, readTextFromImageInputSchema);
 
         let worker: Tesseract.Worker;
-        let tempPngPath: string | null = null;
+        const tempPngPaths: string[] = [];
 
         try {
             this.checkFileExist(imageFullPath);
 
-            let imagePathToUse = imageFullPath;
+            const imagePathToUse = imageFullPath;
             const ext = path.extname(imageFullPath).toLowerCase();
+            const fileName = path.basename(imageFullPath.toLocaleLowerCase(),ext);
+            const isPdf = ext === '.pdf';
+            const poppler = new Poppler();
+            let outputBasePath = '';
 
-            if (ext === '.pdf') {
+            if (isPdf) {
                 const outputDir = tmpdir();
                 const outputPrefix = `converted_${uuidv4()}`;
-                const poppler = new Poppler();
-                
-                const options = {
-                    lastPageToConvert: 1,
-                    pngFile: true,
-                };
-                this.logger.log('ssssss');
-                // const respPdfHtml = await poppler.pdfToHtml(imagePathToUse, undefined, { lastPageToConvert: 1});
-                const respPdfTxt = await poppler.pdfToText(imagePathToUse, undefined, { lastPageToConvert: 1,boundingBoxXhtml: true});
-                // this.logger.log('respPdfHtml', respPdfHtml);
-                this.logger.log('respPdfTxt', respPdfTxt); // TODO: check what libraries are not used and delete them from project 
-                
-                const outputBasePath = path.join(outputDir, outputPrefix);
-                const info = await poppler.pdfInfo(imagePathToUse);
-                console.log('info', info);
-                await poppler.pdfToCairo(imagePathToUse, outputBasePath, options);
-                //ocr make pdf
-                tempPngPath = `${outputBasePath}-1.png`;
-
-                if (!fs.existsSync(tempPngPath)) {
-                    throw new Error(`PDF was converted, but resulting PNG not found at: ${tempPngPath}`);
+                outputBasePath = path.join(outputDir, outputPrefix);
+                const info = await poppler.pdfInfo(imagePathToUse, { printAsJson: true });
+                // console.log('INFO',info);
+                if (!(typeof info === 'object' && 'pages' in info)) {
+                    throw new Error('Unable to get pdf pages.');
                 }
 
-                console.log('exis', tempPngPath);
-                imagePathToUse = tempPngPath;
+                const totalPages = parseInt((info as any).pages);
+                const options = {
+                    pngFile: true,
+                    // antialias: 'best' as const,
+
+                };
+                try {
+                    await poppler.pdfToCairo(imagePathToUse, outputBasePath, options);
+                    
+                } catch (error) {
+                    console.log('err', error);
+                }
+                // const respPdfHtml = await poppler.pdfToHtml(imagePathToUse, undefined, { lastPageToConvert: 1});
+                for (let i = 1; i <= totalPages; i++) {
+                    const pngPath = `${outputBasePath}-${i}.png`;
+                    if (!fs.existsSync(pngPath)) {
+                        throw new Error(`PNG file not find for page ${i}: ${pngPath}`);
+                    }
+                    tempPngPaths.push(pngPath);
+                }
+            } else {
+                tempPngPaths.push(imagePathToUse);
             }
 
-            const imageBuffer = fs.readFileSync(imagePathToUse);
             worker = await createWorker({ langPath: '.\\trained_data' });
             await worker.loadLanguage(language);
             await worker.initialize(language);
-            await worker.setParameters({tessjs_create_hocr: '1'});
-            const { data: { text, hocr } } = await worker.recognize(imageBuffer);
+            await worker.setParameters({
+                tessjs_create_hocr: '1',
+                tessedit_pageseg_mode: PSM.SPARSE_TEXT
+            });
 
-            console.log('hocr', hocr);
-            return text;
+            let combinedHOCR = '';
+            //POC-OCR
+            for (const indexOfPngPath in tempPngPaths) {
+                const index = parseInt(indexOfPngPath);
+                const buf = fs.readFileSync(tempPngPaths[index]); 
+                const { data: { hocr } } = await worker.recognize(buf);
+                combinedHOCR += hocr + `\n\n\n\nPAGE${index+1}\n\n\n\n`;
+            }
+
+            const buf = fs.readFileSync(`${outputBasePath}-1.png`);
+
+            const hocrOutputPath = path.join('C:xxx\\tested\\10wybranych', `${fileName}.txt`);
+            const pngCheckupOutputPath = path.join('C:xxx\\tested\\10wybranych', `${fileName}.png`);
+            fs.writeFileSync(hocrOutputPath, combinedHOCR, 'utf-8');
+            fs.writeFileSync(pngCheckupOutputPath, buf, 'utf-8');
+            return combinedHOCR;
+
         } catch (error) {
             throw new Error('An error occurred while reading data from the image. ' + error);
         } finally {
             await worker?.terminate();
 
-            if (tempPngPath && fs.existsSync(tempPngPath)) {
-                fs.unlinkSync(tempPngPath);
+            for (const tempPath of tempPngPaths) {
+                if (fs.existsSync(tempPath)) {
+                    fs.unlinkSync(tempPath);
+                }
             }
         }
     }
