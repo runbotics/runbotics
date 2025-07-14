@@ -10,6 +10,9 @@ import {
     GetAllCollectionsStrategy
 } from '#/process-collections/process-collection/strategies/get-all-collections.strategy';
 import { PermissionManagementService } from '#/process-collections/permission-management/permission-management.service';
+import {
+    SetProcessCollectionPublicStrategy
+} from '#/process-collections/process-collection/strategies/set-public.strategy';
 
 export class StrategyFactory {
     constructor(
@@ -38,5 +41,9 @@ export class StrategyFactory {
     
     createGetAllCollectionStrategy() {
         return new GetAllCollectionsStrategy(this.repo, this.linkService, this.userService);
+    }
+    
+    createSetPublicStrategy() {
+        return new SetProcessCollectionPublicStrategy(this.repo, this.permissionManagementService);
     }
 }
