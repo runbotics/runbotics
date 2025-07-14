@@ -62,6 +62,7 @@ const MarketplaceAddToCartSection: FC<MarketplaceCardProps> = ({ offer }) => {
                             {param.name}
                         </Typography>
                         <Select
+                            MenuProps={{ disableScrollLock: true }}
                             fullWidth
                             value={selectedParameters.find(parameter => parameter.name === param.name)?.selectedOption ?? ''}
                             onChange={(e) => {
