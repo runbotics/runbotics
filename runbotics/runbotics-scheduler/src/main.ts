@@ -35,7 +35,7 @@ async function bootstrap() {
         });
 
         const document = SwaggerModule.createDocument(app, config.build());
-        SwaggerModule.setup('docs', app, document);
+        SwaggerModule.setup('scheduler/docs', app, document);
     } else {
         console.log('Swager is off!');
     }
