@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProcessSummaryNotificationSubscribersEntity } from './process-summary-notification-subscribers.entity';
 import { Repository } from 'typeorm';
@@ -8,7 +8,10 @@ import { MailService } from '#/mail/mail.service';
 import { User } from '../user/user.entity';
 import { ProcessStatisticsResult } from '#/types';
 import { ProcessEntity } from '../process/process.entity';
-
+import { SubscribeDto } from '#/scheduler-database/process_summary_notification_subscribers/dto/subscribe.dto';
+import {
+    UpdateSubscriptionDto
+} from '#/scheduler-database/process_summary_notification_subscribers/dto/update-subscription.dto';
 
 @Injectable()
 export class ProcessSummaryNotificationSubscribersService {
@@ -16,8 +19,9 @@ export class ProcessSummaryNotificationSubscribersService {
         @InjectRepository(ProcessSummaryNotificationSubscribersEntity)
         private readonly repository: Repository<ProcessSummaryNotificationSubscribersEntity>,
         private readonly processStatisticsService: ProcessStatisticsService,
-        private readonly mailService: MailService
-    ){}
+        private readonly mailService: MailService,
+    ) {
+    }
 
     @Cron('0 0 1 * *')
     // @Cron('* * * * *')
@@ -41,7 +45,7 @@ export class ProcessSummaryNotificationSubscribersService {
                 const stats = await this.processStatisticsService.getProcessStatistics(process.id, user);
                 processSummaries.push({
                     name: process.name,
-                    stats
+                    stats,
                 });
             }
 
@@ -49,7 +53,10 @@ export class ProcessSummaryNotificationSubscribersService {
         }
     }
 
-    private async sendAggregatedStatisticsEmail(email: string, summaries: { name: string, stats: ProcessStatisticsResult }[]) {
+    private async sendAggregatedStatisticsEmail(
+        email: string,
+        summaries: { name: string, stats: ProcessStatisticsResult }[],
+    ) {
         const htmlContent = this.generateAggregatedEmailContent(summaries);
         console.log(`Sending aggregated email to ${email}`);
         console.log(`Sending aggregated email with content: ${htmlContent}`);
@@ -76,9 +83,48 @@ export class ProcessSummaryNotificationSubscribersService {
         return `<h1>Process Summary</h1>${content}`;
     }
 
-    async getAllSubscribersWithProcesses(){
+    async getAllSubscribersWithProcesses() {
         return this.repository.find({
-            relations: ['user', 'process']
+            relations: ['user', 'process'],
         });
+    }
+
+    async getAllSubscribersBaseInformation() {
+        return this.repository.find();
+    }
+
+    async getSubscribersByProcess(processId: number) {
+        return this.repository.find({
+            where: { process_id: processId },
+        });
+    }
+
+    async subscribe(data: SubscribeDto) {
+        const result = await this.repository.manager.transaction(async manager => {
+            const user = await manager.findOne(User, { where: { id: data.user_id } });
+            const process = await manager.findOne(ProcessEntity, { where: { id: data.process_id } });
+            if (!user || !process) {
+                throw new Error('User or Process not found');
+            }
+            return manager.save(ProcessSummaryNotificationSubscribersEntity, {
+                user,
+                process,
+                customEmail: data.customEmail ?? '',
+            });
+        });
+        return result;
+    }
+
+    async updateSubscription(id: string, data: UpdateSubscriptionDto) {
+        const subscriber = await this.repository.findOne({ where: { id } });
+        if (!subscriber) {
+            throw new Error('Subscriber not found');
+        }
+        const updatedSubscriber = Object.assign(subscriber, data);
+        return this.repository.save(updatedSubscriber);
+    }
+
+    async unsubscribe(id: string) {
+        return this.repository.delete(id);
     }
 }
