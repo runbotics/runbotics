@@ -45,10 +45,10 @@ const ProcessTileActions: VFC<ProcessTileActionsProps> = ({ process }) => {
     const [isDetailsDialogVisible, setIsDetailsDialogVisible] = useState(false);
     const hasEditProcessAccess = useFeatureKey([FeatureKey.PROCESS_EDIT_INFO]);
     const hasDeleteProcessAccess = useFeatureKey([FeatureKey.PROCESS_DELETE]);
-    const isAdmin = useRole([Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN]);
+    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
     const isProcessOwner = useOwner();
     const hasModifyProcessAccess =
-        isAdmin || isProcessOwner(process.createdBy?.id);
+        isTenantAdmin || isProcessOwner(process.createdBy?.id);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);

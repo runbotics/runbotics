@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import fs from 'fs';
-import { IProcess, IProcessInstance, Role } from 'runbotics-common';
+import { DefaultCollections, IProcess, IProcessInstance, Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 import { BotService } from '#/scheduler-database/bot/bot.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
@@ -93,7 +93,7 @@ export class MailService {
         };
 
         const targetSubscribers =
-            disconnectedBot.collection.name === 'Public' ?
+            disconnectedBot.collection.name === DefaultCollections.PUBLIC || disconnectedBot.collection.name === DefaultCollections.GUEST ?
                 allSubscriptions :
                 allSubscriptions.filter(subscription => disconnectedBot.collection.users.some(user => user.id === subscription.user.id));
 
@@ -119,7 +119,7 @@ export class MailService {
         const filteredSubscriptions = failedProcess.isPublic ?
             allSubscriptions :
             allSubscriptions
-                .filter(sub => hasRole(sub.user, Role.ROLE_ADMIN) || hasRole(sub.user, Role.ROLE_TENANT_ADMIN));
+                .filter(sub => hasRole(sub.user, Role.ROLE_TENANT_ADMIN));
 
         const targetEmails = filteredSubscriptions
             .map(subscription => this.extractTargetEmailFromNotification(subscription))

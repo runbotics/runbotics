@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
-import { DeleteWithTenant, GetWithTenant, PatchWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
+import { DeleteWithTenant, GetWithTenant, PatchWithTenant } from '#/utils/decorators/with-tenant.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { UserCriteria } from './criteria/user.criteria';
 import { User } from './user.entity';
@@ -12,10 +12,11 @@ import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 import { DeleteUserDto, deleteUserSchema } from './dto/delete-user.dto';
 import { ActivateUserDto, activateUserSchema } from './dto/activate-user.dto';
+import { Logger } from '#/utils/logger';
 
 @Controller('/api/scheduler')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @GetWithTenant('users/Page')
     @FeatureKeys(FeatureKey.TENANT_READ_USER)
@@ -44,13 +45,13 @@ export class UserController {
         @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto,
     ) {
         return this.userService.update(
-            {...userDto},
+            { ...userDto },
             userId,
             user
         );
     }
 
-    @PostWithTenant('users/activate/:id')
+    @PatchWithTenant('users/:id/activate')
     @FeatureKeys(FeatureKey.TENANT_EDIT_USER)
     activateUserInTenant(
         @UserDecorator() user: User,
@@ -96,7 +97,7 @@ export class UserController {
         return this.userService.update(userDto, userId, user);
     }
 
-    @Patch('users/activate/:id')
+    @Patch('users/:id/activate')
     @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS, FeatureKey.MANAGE_ALL_TENANTS)
     activateUser(
         @UserDecorator() user: User,

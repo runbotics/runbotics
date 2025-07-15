@@ -16,27 +16,35 @@ interface BasicSelectFieldProps extends WidgetProps {
     params?: AutocompleteRenderInputParams;
     options: {
         info?: string;
+        enumOptions?: {
+            label: string | number,
+            value: string | number,
+        }[];
     };
     customErrors?: string[];
     formContext: {
         selectedElement: BPMNElement;
-    };
+    } | undefined;
 }
 
 const BasicSelectField: FC<BasicSelectFieldProps> = ({
     params = {},
     onChange,
-    formContext: { selectedElement },
+    formContext,
+    value,
+    options: {
+        enumOptions = [],
+    },
     ...props
 }) => {
+    const selectedElement = formContext?.selectedElement;
     const { customValidationErrors } = useSelector(
         (state) => state.process.modeler
     );
-    const currentValue = props.value || '';
     const errors = props.customErrors;
 
     const isFieldDisabled = useMemo(() => {
-        if (customValidationErrors.length > 0) {
+        if (customValidationErrors.length > 0 && selectedElement) {
             const erroredElement = customValidationErrors.find(
                 (error) => error.elementId !== selectedElement.id
             );
@@ -45,38 +53,32 @@ const BasicSelectField: FC<BasicSelectFieldProps> = ({
         return false;
     }, [selectedElement, customValidationErrors]);
 
-    const handleChange = (newValue: string | undefined) => {
-        onChange(newValue || undefined);
-    };
-
-    const choices = useMemo(() => (props.schema.enum ?? [])
-        .filter(choice => {
-            if (typeof choice !== 'string' && typeof choice !== 'number') {
+    const options = useMemo(() => enumOptions
+        .filter(option => {
+            if (typeof option.value !== 'string' && typeof option.value !== 'number') {
                 // eslint-disable-next-line no-console
-                console.warn(`Any non string or number value is not supported as enum key; Got: ${choice} TYPE: ${typeof choice}`);
+                console.warn(`Any non string or number value is not supported as enum key; Got: ${option} TYPE: ${typeof option}`);
                 return false;
             }
 
             return true;
-        })
-        .map(choice => choice.toString()), [props.schema.enum]
+        }), [enumOptions]
     );
-
     return (
         <TooltipTextFieldWrapper>
             <TextField
                 {...params}
-                value={currentValue}
+                value={value}
                 fullWidth
                 variant="outlined"
                 disabled={isFieldDisabled}
                 required={props.required}
                 label={props.label}
                 select
-                onChange={(event) => handleChange(event.target.value)}
+                onChange={(event) => onChange(event.target.value)}
                 error={Boolean(errors) || Boolean(props.rawErrors)}
             >
-                {choices.map(choice => <MenuItem key={choice} value={choice}>{choice}</MenuItem>)}
+                {options.map(option => <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>)}
             </TextField>
             <If condition={Boolean(props.options?.info)}>
                 <InfoButtonTooltip message={props.options?.info} />

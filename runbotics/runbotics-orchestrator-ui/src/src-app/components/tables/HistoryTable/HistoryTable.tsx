@@ -31,6 +31,7 @@ import ResizableDrawer from '../../ResizableDrawer';
 import If from '../../utils/If';
 import Table from '../Table';
 
+// eslint-disable-next-line max-lines-per-function
 const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx, title, rerunEnabled }, ref) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
