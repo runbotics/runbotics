@@ -55,8 +55,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     private async getFirefoxAddress(isHeadless: boolean | undefined) {
         let optionsFF = new firefox.Options()
             .setPreference('xpinstall.signatures.required', false)
-            .setPreference('devtools.console.stdout.content', true)
-            .setBinary(this.serverConfigService.cfgFirefoxBin);
+            .setPreference('devtools.console.stdout.content', true);
 
         if (isHeadless) {
             optionsFF = optionsFF.addArguments('--headless');
