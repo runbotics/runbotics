@@ -4,7 +4,6 @@ import { StatefulActionHandler } from '@runbotics/runbotics-sdk';
 import { Builder, By, until, WebDriver, WebElement } from 'selenium-webdriver';
 import { v4 as uuidv4 } from 'uuid';
 import * as firefox from 'selenium-webdriver/firefox';
-import * as chrome from 'selenium-webdriver/chrome';
 import path from 'path';
 
 import { RunboticsLogger } from '#logger';
@@ -53,23 +52,19 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             .build();
     }
 
-    private async getChromeSession(isHeadless: boolean | undefined) {
-        const chromeOptions = new chrome.Options();
-        chromeOptions.addArguments(
-            '--ignore-ssl-errors=yes',
-            '--ignore-certificate-errors',
-            '--disable-notifications',
-            '--disable-infobars',
-        );
+    private async getFirefoxAddress(isHeadless: boolean | undefined) {
+        let optionsFF = new firefox.Options()
+            .setPreference('xpinstall.signatures.required', false)
+            .setPreference('devtools.console.stdout.content', true);
 
         if (isHeadless) {
-            chromeOptions.addArguments('--headless');
+            optionsFF = optionsFF.addArguments('--headless');
         }
 
         return new Builder()
-            .forBrowser('chrome')
-            .usingServer(this.serverConfigService.chromeAddress)
-            .setChromeOptions(chromeOptions)
+            .forBrowser('firefox')
+            .usingServer(this.serverConfigService.firefoxAddress)
+            .setFirefoxOptions(optionsFF)
             .build();
     }
 
@@ -88,8 +83,8 @@ export default class BrowserActionHandler extends StatefulActionHandler {
         const isWin = process.platform === 'win32';
         this.logger.log('isWin', isWin);
 
-        this.session = await (this.serverConfigService.chromeAddress
-            ? this.getChromeSession(input.headless)
+        this.session = await (this.serverConfigService.firefoxAddress
+            ? this.getFirefoxAddress(input.headless)
             : this.getFirefoxSession(input.headless, isWin));
 
         if (input.target) {
@@ -109,9 +104,6 @@ export default class BrowserActionHandler extends StatefulActionHandler {
     }
 
     async openSite(input: BrowserTypes.BrowserOpenActionInput): Promise<BrowserTypes.BrowserOpenActionOutput> {
-        // process.env['PATH'] = process.env['PATH'] + ':' + process.env['CFG_CHROME_DRIVER'];
-        //
-        // let driver = await new Builder().forBrowser('chrome').build();
         await this.session.get(input.target);
 
         return {};
@@ -295,7 +287,7 @@ export default class BrowserActionHandler extends StatefulActionHandler {
             case BrowserScrollPagePosition.HEIGHT: {
                 const MARGIN_PX = 80;
                 const doScroll = (scrollMode: ScrollBehavior, margin: number) => {
-                    window.scrollBy({ behavior: scrollMode, top: window.innerHeight-margin });
+                    window.scrollBy({ behavior: scrollMode, top: window.innerHeight - margin });
                 };
 
                 await this.session.executeScript(doScroll, scrollMode, MARGIN_PX);

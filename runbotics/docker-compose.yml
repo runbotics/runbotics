@@ -81,12 +81,12 @@ services:
       - RUNBOTICS_LOGGER_FILE_MODE=false
       - RUNBOTICS_EXTENSION_DIR=./extensions
       - RUNBOTICS_PLUGINS_DIR=./plugins
-      - CHROME_ADDRESS=http://chrome:4444
+      - FIREFOX_ADDRESS=http://firefox:4444
     restart: on-failure
     depends_on:
       - runbotics-scheduler
       - runbotics-orchestrator
-      - chrome
+      - firefox
 
 #   runbotics-desktop-guest:
 #     container_name: runbotics-desktop-guest
@@ -101,18 +101,18 @@ services:
 #       - RUNBOTICS_BOT_COLLECTION=691c15ee-0230-49c6-b794-9e33790652d3
 #       - RUNBOTICS_LOGGER=winston
 #       - RUNBOTICS_EXTENSION_DIR=./extensions
-#       - CHROME_ADDRESS=http://chrome-2:4444
+#       - FIREFOX_ADDRESS=http://firefox-2:4444
 #     restart: on-failure
 #     depends_on:
 #       - runbotics-scheduler
 #       - runbotics-orchestrator
-#       - chrome
+#       - firefox-2
 #     extra_hosts:
 #       - 'host.docker.internal:host-gateway'
 
-#   chrome-2:
-#     container_name: chrome-2
-#     image: selenium/standalone-chrome:4.0.0-beta-3-20210426
+#   firefox-2:
+#     container_name: firefox-2
+#     image: selenium/standalone-firefox:140.0-geckodriver-0.36-grid-4.34.0-20250707
 #     ports:
 #       - 7901:7900
 #       - 4445:4444
@@ -123,9 +123,9 @@ services:
 #       JAVA_OPTS=-XX:ActiveProcessorCount: 1
 #      # SE_VNC_VIEW_ONLY: 1
 
-  chrome:
-    container_name: chrome
-    image: selenium/standalone-chrome:132.0.6834.159-chromedriver-132.0.6834.159-grid-4.28.1-20250202
+  firefox:
+    container_name: firefox
+    image: selenium/standalone-firefox:140.0-geckodriver-0.36-grid-4.34.0-20250707
     network_mode: host
 
     shm_size: 2gb

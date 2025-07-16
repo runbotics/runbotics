@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "3.3.0-SNAPSHOT.20",
+    "version": "3.3.0-SNAPSHOT.30",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -26,7 +26,7 @@
         "@azure/msal-node": "^1.15.0",
         "@microsoft/microsoft-graph-client": "^3.0.5",
         "@nestjs/bull": "^0.6.2",
-        "@nestjs/cli": "^9.1.5",
+        "@nestjs/cli": "9.5.0",
         "@nestjs/common": "^9.2.0",
         "@nestjs/config": "^4.0.1",
         "@nestjs/core": "^9.2.0",
@@ -70,7 +70,9 @@
         "bpmn-moddle": "^9.0.1",
         "jwks-rsa": "~3.1.0",
         "generate-password": "~1.7.1",
-        "bcryptjs": "~3.0.2"
+        "bcryptjs": "~3.0.2",
+        "@nestjs/swagger": "6.3.0",
+        "nestjs-zod": "~4.3.1"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",

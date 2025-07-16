@@ -146,16 +146,6 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
                             'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title',
                             { system: selectedAction.system }
                         )}
-                        <Tooltip
-                            title={translate(
-                                'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title',
-                                { system: selectedAction.system }
-                            )}
-                        >
-                            <IconButton size="small" sx={{ cursor: 'default' }}>
-                                <InfoIcon sx={{ width: '20px', height: '20px' }}/>
-                            </IconButton>
-                        </Tooltip>
                     </div>
                 </Alert>
             )}

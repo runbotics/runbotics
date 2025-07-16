@@ -1,7 +1,7 @@
 import {
     Body, Controller, Delete, Get, HttpCode,
     HttpStatus, NotFoundException, Param,
-    ParseIntPipe, Patch, Post, UseInterceptors
+    ParseIntPipe, Patch, Post, Query, UseInterceptors
 } from '@nestjs/common';
 import { FeatureKey } from 'runbotics-common';
 
@@ -15,6 +15,10 @@ import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { GlobalVariableService } from './global-variable.service';
 import { CreateGlobalVariableDto, createGlobalVariableSchema } from './dto/create-global-variable.dto';
 import { UpdateGlobalVariableDto, updateGlobalVariableSchema } from './dto/update-global-variable.dto';
+import { Pageable, Paging } from '#/utils/page/pageable.decorator';
+import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
+import { GlobalVariableCriteria } from './criteria/global-variable.criteria';
+import { GlobalVariable } from './global-variable.entity';
 
 
 @UseInterceptors(TenantInterceptor)
@@ -24,15 +28,18 @@ export class GlobalVariableController {
 
     constructor(
         private readonly globalVariableService: GlobalVariableService,
-    ) {}
+    ) { }
 
-    @Get() // TODO: pagination & filtering
+    @Get()
     @FeatureKeys(FeatureKey.GLOBAL_VARIABLE_READ)
-    getAllGlobalVariables(
+    getAllGlobalVariablesByPage(
+        @Pageable() paging: Paging,
         @UserDecorator() { id, tenantId }: User,
+        @Specifiable(GlobalVariableCriteria) specs: Specs<GlobalVariable>,
     ) {
         this.logger.log('REST request to get all global variables by user with id: ', id);
-        return this.globalVariableService.getAll(tenantId);
+        specs.where = { ...specs.where, tenantId };
+        return this.globalVariableService.getAllByPage(paging, specs);
     }
 
     @Get(':id')
