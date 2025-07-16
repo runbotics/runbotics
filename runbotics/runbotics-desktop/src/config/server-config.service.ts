@@ -117,8 +117,8 @@ export class ServerConfigService {
         return this.getEnvValue('CFG_FIREFOX_BIN');
     }
 
-    get chromeAddress(): string {
-        return this.getEnvValue('CHROME_ADDRESS');
+    get firefoxAddress(): string {
+        return this.getEnvValue('FIREFOX_ADDRESS');
     }
 
     get tempFolderPath(): string {
