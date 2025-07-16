@@ -8,6 +8,7 @@ import { useDispatch } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 
 interface ProcessPageProps {
+    children: React.ReactNode;
     search: string;
     pageSize: number;
     setPageSize: Dispatch<SetStateAction<number>>;

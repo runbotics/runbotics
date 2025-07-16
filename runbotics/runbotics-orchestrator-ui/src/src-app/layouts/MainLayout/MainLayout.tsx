@@ -17,7 +17,11 @@ import NavBar from './NavBar';
 import { usePublicSections } from './NavBar/usePublicSections';
 import TopBar from './TopBar';
 
-const MainLayout: FC = ({ children }) => {
+interface MainLayoutProps {
+    children: React.ReactNode;
+}
+
+const MainLayout: FC<MainLayoutProps> = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
     const [isMenuShrank, setIsMenuShrank] = useState(true);
     const theme = useTheme();
