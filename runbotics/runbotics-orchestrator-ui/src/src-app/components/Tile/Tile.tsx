@@ -24,6 +24,7 @@ const Wrapper = styled(Card)<TileProps>(({ theme, minheight, leftbordercolor }) 
 `);
 
 interface TileProps {
+    children?: React.ReactNode;
     hoverstyles?: boolean;
     minheight?: string;
     leftbordercolor?: string

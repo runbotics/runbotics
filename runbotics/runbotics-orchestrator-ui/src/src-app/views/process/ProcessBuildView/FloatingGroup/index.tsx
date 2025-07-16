@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { StyledFloatingGroup } from './FloatingGroup.styled';
 
 export interface FloatingGroupProps {
+    children: React.ReactNode;
     verticalPosition: 'top' | 'bottom';
     horizontalPosition: 'left' | 'right';
     withSeparator?: boolean;

@@ -9,6 +9,7 @@ export interface ModelerContext {
 export const ModelerContext = React.createContext<ModelerContext>(null);
 
 interface ModelerProviderProps {
+    children: React.ReactNode;
     modeler?: BpmnModelerType;
 }
 

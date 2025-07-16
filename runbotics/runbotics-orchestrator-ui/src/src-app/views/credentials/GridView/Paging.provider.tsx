@@ -3,6 +3,7 @@ import { Dispatch, FC, SetStateAction, createContext } from 'react';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 
 interface PagingProps {
+    children: React.ReactNode;
     page: number;
     pageSize: number;
     search: string;
