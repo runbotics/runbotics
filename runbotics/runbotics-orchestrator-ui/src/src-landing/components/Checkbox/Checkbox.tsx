@@ -14,7 +14,6 @@ export interface CheckboxProps extends Omit<HTMLAttributes<HTMLInputElement>, 'v
 
 const Checkbox: VFC<CheckboxProps> = ({
     className,
-    placeholder,
     name,
     disabled,
     checked,
@@ -32,7 +31,6 @@ const Checkbox: VFC<CheckboxProps> = ({
         <div className={[styles.checkboxWrapper, className].join(' ')}>
             <input
                 className={styles.checkbox}
-                placeholder={placeholder}
                 disabled={disabled}
                 type='checkbox'
                 {...props}

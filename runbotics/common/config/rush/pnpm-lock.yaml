@@ -4533,6 +4533,15 @@ packages:
       '@mui/types': 7.2.14(@types/react@18.3.23)
       '@mui/utils': 5.15.14(@types/react@18.3.23)(react@18.2.0)
       '@types/react': 18.3.23
+      '@babel/runtime': 7.22.11
+      '@emotion/react': 11.10.8(@types/react@18.3.23)(react@18.2.0)
+      '@emotion/styled': 11.11.0(@emotion/react@11.10.8)(@types/react@18.3.23)(react@18.2.0)
+      '@mui/base': 5.0.0-beta.13(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/material': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/system': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react@18.2.0)
+      '@mui/types': 7.2.4(@types/react@18.3.23)
+      '@mui/utils': 5.14.7(react@18.2.0)
+      '@types/react': 18.3.23
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 18.2.0
@@ -4744,9 +4753,16 @@ packages:
       '@emotion/react': 11.10.8(@types/react@18.3.23)(react@18.2.0)
       '@emotion/styled': 11.11.0(@emotion/react@11.10.8)(@types/react@18.3.23)(react@18.2.0)
       '@mui/private-theming': 5.14.7(@types/react@18.3.23)(react@18.2.0)
+      '@babel/runtime': 7.22.11
+      '@emotion/react': 11.10.8(@types/react@18.3.23)(react@18.2.0)
+      '@emotion/styled': 11.11.0(@emotion/react@11.10.8)(@types/react@18.3.23)(react@18.2.0)
+      '@mui/private-theming': 5.14.7(@types/react@18.3.23)(react@18.2.0)
       '@mui/styled-engine': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(react@18.2.0)
       '@mui/types': 7.2.14(@types/react@18.3.23)
       '@mui/utils': 5.15.14(@types/react@18.3.23)(react@18.2.0)
+      '@types/react': 18.3.23
+      '@mui/types': 7.2.4(@types/react@18.3.23)
+      '@mui/utils': 5.14.7(react@18.2.0)
       '@types/react': 18.3.23
       clsx: 2.1.1
       csstype: 3.1.2
@@ -4905,6 +4921,10 @@ packages:
       '@mui/material': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react-dom@18.3.1)(react@18.3.1)
       '@mui/system': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react@18.3.1)
       '@mui/utils': 5.15.14(@types/react@18.3.23)(react@18.3.1)
+      '@babel/runtime': 7.22.11
+      '@mui/material': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/system': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react@18.2.0)
+      '@mui/utils': 5.14.7(react@18.2.0)
       clsx: 1.2.1
       prop-types: 15.8.1
       react: 18.3.1
@@ -5006,6 +5026,12 @@ packages:
       '@mui/system': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react@18.3.1)
       '@mui/utils': 5.15.14(@types/react@18.3.23)(react@18.3.1)
       '@types/react-transition-group': 4.4.10
+      '@emotion/react': 11.10.8(@types/react@18.3.23)(react@18.2.0)
+      '@emotion/styled': 11.11.0(@emotion/react@11.10.8)(@types/react@18.3.23)(react@18.2.0)
+      '@mui/material': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/system': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react@18.2.0)
+      '@mui/utils': 5.14.7(react@18.2.0)
+      '@types/react-transition-group': 4.4.6
       clsx: 1.2.1
       moment: 2.29.4
       prop-types: 15.8.1
@@ -16662,7 +16688,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.11
+      '@babel/runtime': 7.24.5
       html-parse-stringify: 3.0.1
       i18next: 21.10.0
       react: 18.2.0

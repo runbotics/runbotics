@@ -77,7 +77,7 @@ const DefaultGatewaySelect: FC<DefaultGatewaySelectProps> = ({
                 </MenuItem>
                 {filteredGatewayConnections.map(outgoing => (
                     <MenuItem key={'flow-menu-item-' + outgoing.id} value={outgoing.id}>
-                        {outgoing.businessObject.name ? outgoing.businessObject.name : outgoing.id}
+                        {outgoing.businessObject.name ? String(outgoing.businessObject.name) : outgoing.id}
                     </MenuItem>
                 ))}
             </Select>
