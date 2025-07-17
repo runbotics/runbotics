@@ -2,10 +2,9 @@
  * This configuration file provides settings specific to the PNPM package manager.
  * More documentation is available on the Rush website: https://rushjs.io
  */
- {
-    "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/pnpm-config.schema.json",
-
-    /**
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/pnpm-config.schema.json",
+  /**
      * If true, then `rush install` and `rush update` will use the PNPM workspaces feature
      * to perform the install, instead of the old model where Rush generated the symlinks
      * for each projects's node_modules folder.
@@ -17,9 +16,8 @@
      *
      * This option is strongly recommended. The default value is false.
      */
-    "useWorkspaces": true,
-
-    /**
+  "useWorkspaces": true,
+  /**
      * This setting determines how PNPM chooses version numbers during `rush update`.
      * For example, suppose `lib-x@3.0.0` depends on `"lib-y": "^1.2.3"` whose latest major
      * releases are `1.8.9` and `2.3.4`.  The resolution mode `lowest-direct` might choose
@@ -41,9 +39,8 @@
      * Possible values are: `highest`, `time-based`, and `lowest-direct`.
      * The default is `highest`.
      */
-    // "resolutionMode": "time-based",
-
-    /**
+  // "resolutionMode": "time-based",
+  /**
      * This setting determines whether PNPM will automatically install (non-optional)
      * missing peer dependencies instead of reporting an error.  Doing so conveniently
      * avoids the need to specify peer versions in package.json, but in a large monorepo
@@ -60,9 +57,8 @@
 
      * The default value is false.
      */
-    // "autoInstallPeers": false,
-
-    /**
+  // "autoInstallPeers": false,
+  /**
      * If true, then Rush will add the `--strict-peer-dependencies` command-line parameter when
      * invoking PNPM.  This causes `rush update` to fail if there are unsatisfied peer dependencies,
      * which is an invalid state that can cause build failures or incompatible dependency versions.
@@ -74,19 +70,17 @@
      * The default value is false to avoid legacy compatibility issues.
      * It is strongly recommended to set `strictPeerDependencies=true`.
      */
-    // "strictPeerDependencies": true,
-
-    /**
+  // "strictPeerDependencies": true,
+  /**
      * Environment variables that will be provided to PNPM.
      */
-    // "environmentVariables": {
-    //   "NODE_OPTIONS": {
-    //     "value": "--max-old-space-size=4096",
-    //     "override": false
-    //   }
-    // },
-
-    /**
+  // "environmentVariables": {
+  //   "NODE_OPTIONS": {
+  //     "value": "--max-old-space-size=4096",
+  //     "override": false
+  //   }
+  // },
+  /**
      * Specifies the location of the PNPM store.  There are two possible values:
      *
      * - `local` - use the `pnpm-store` folder in the current configured temp folder:
@@ -99,9 +93,8 @@
      *
      * The default value is `local`.
      */
-    // "pnpmStore": "global",
-
-    /**
+  // "pnpmStore": "global",
+  /**
      * If true, then `rush install` will report an error if manual modifications
      * were made to the PNPM shrinkwrap file without running `rush update` afterwards.
      *
@@ -117,9 +110,8 @@
      *
      * The default value is false.
      */
-    // "preventManualShrinkwrapChanges": true,
-
-    /**
+  // "preventManualShrinkwrapChanges": true,
+  /**
      * When a project uses `workspace:` to depend on another Rush project, PNPM normally installs
      * it by creating a symlink under `node_modules`.  This generally works well, but in certain
      * cases such as differing `peerDependencies` versions, symlinking may cause trouble
@@ -139,14 +131,12 @@
      *
      * The default value is false.
      */
-    "alwaysInjectDependenciesFromOtherSubspaces": false,
-
-    /**
+  "alwaysInjectDependenciesFromOtherSubspaces": false,
+  /**
      * Defines the policies to be checked for the `pnpm-lock.yaml` file.
      */
-     "pnpmLockfilePolicies": {
-
-      /**
+  "pnpmLockfilePolicies": {
+    /**
        * This policy will cause "rush update" to report an error if `pnpm-lock.yaml` contains
        * any SHA1 integrity hashes.
        *
@@ -162,27 +152,26 @@
        * (https://github.com/orgs/pnpm/discussions/6194) or an incompletely migrated private registry.
        * The `disallowInsecureSha1` policy prevents this, avoiding potential security/compliance alerts.
        */
-      // "disallowInsecureSha1": {
-      //   /**
-      //    * Enables the "disallowInsecureSha1" policy.  The default value is false.
-      //    */
-      //   "enabled": true,
-      //
-      //   /**
-      //    * In rare cases, a private NPM registry may continue to serve SHA1 hashes for very old
-      //    * package versions, perhaps due to a caching issue or database migration glitch.  To avoid
-      //    * having to disable the "disallowInsecureSha1" policy for the entire monorepo, the problematic
-      //    * package versions can be individually ignored.  The "exemptPackageVersions" key is the
-      //    * package name, and the array value lists exact version numbers to be ignored.
-      //    */
-      //   "exemptPackageVersions": {
-      //     "example1": ["1.0.0"],
-      //     "example2": ["2.0.0", "2.0.1"]
-      //   }
-      // }
-    },
-
-    /**
+    // "disallowInsecureSha1": {
+    //   /**
+    //    * Enables the "disallowInsecureSha1" policy.  The default value is false.
+    //    */
+    //   "enabled": true,
+    //
+    //   /**
+    //    * In rare cases, a private NPM registry may continue to serve SHA1 hashes for very old
+    //    * package versions, perhaps due to a caching issue or database migration glitch.  To avoid
+    //    * having to disable the "disallowInsecureSha1" policy for the entire monorepo, the problematic
+    //    * package versions can be individually ignored.  The "exemptPackageVersions" key is the
+    //    * package name, and the array value lists exact version numbers to be ignored.
+    //    */
+    //   "exemptPackageVersions": {
+    //     "example1": ["1.0.0"],
+    //     "example2": ["2.0.0", "2.0.1"]
+    //   }
+    // }
+  },
+  /**
      * The "globalOverrides" setting provides a simple mechanism for overriding version selections
      * for all dependencies of all projects in the monorepo workspace.  The settings are copied
      * into the `pnpm.overrides` field of the `common/temp/package.json` file that is generated
@@ -194,14 +183,13 @@
      *
      * PNPM documentation: https://pnpm.io/package_json#pnpmoverrides
      */
-    "globalOverrides": {
-      // "example1": "^1.0.0",
-      // "example2": "npm:@company/example2@^1.0.0"
-      "@babel/core": "7.23.2",
-      "@babel/traverse": "7.23.2"
-    },
-
-    /**
+  "globalOverrides": {
+    // "example1": "^1.0.0",
+    // "example2": "npm:@company/example2@^1.0.0"
+    "@babel/core": "7.27.4",
+    "@babel/traverse": "7.27.4"
+  },
+  /**
      * The `globalPeerDependencyRules` setting provides various settings for suppressing validation errors
      * that are reported during installation with `strictPeerDependencies=true`.  The settings are copied
      * into the `pnpm.peerDependencyRules` field of the `common/temp/package.json` file that is generated
@@ -213,13 +201,12 @@
      *
      * https://pnpm.io/package_json#pnpmpeerdependencyrules
      */
-    "globalPeerDependencyRules": {
-      // "ignoreMissing": ["@eslint/*"],
-      // "allowedVersions": { "react": "17" },
-      // "allowAny": ["@babel/*"]
-    },
-
-    /**
+  "globalPeerDependencyRules": {
+    // "ignoreMissing": ["@eslint/*"],
+    // "allowedVersions": { "react": "17" },
+    // "allowAny": ["@babel/*"]
+  },
+  /**
      * The `globalPackageExtension` setting provides a way to patch arbitrary package.json fields
      * for any PNPM dependency of the monorepo.  The settings are copied into the `pnpm.packageExtensions`
      * field of the `common/temp/package.json` file that is generated by Rush during installation.
@@ -232,23 +219,22 @@
      *
      * PNPM documentation: https://pnpm.io/package_json#pnpmpackageextensions
      */
-    "globalPackageExtensions": {
-      // "fork-ts-checker-webpack-plugin": {
-      //   "dependencies": {
-      //     "@babel/core": "1"
-      //   },
-      //   "peerDependencies": {
-      //     "eslint": ">= 6"
-      //   },
-      //   "peerDependenciesMeta": {
-      //     "eslint": {
-      //       "optional": true
-      //     }
-      //   }
-      // }
-    },
-
-    /**
+  "globalPackageExtensions": {
+    // "fork-ts-checker-webpack-plugin": {
+    //   "dependencies": {
+    //     "@babel/core": "1"
+    //   },
+    //   "peerDependencies": {
+    //     "eslint": ">= 6"
+    //   },
+    //   "peerDependenciesMeta": {
+    //     "eslint": {
+    //       "optional": true
+    //     }
+    //   }
+    // }
+  },
+  /**
      * The `globalNeverBuiltDependencies` setting suppresses the `preinstall`, `install`, and `postinstall`
      * lifecycle events for the specified NPM dependencies.  This is useful for scripts with poor practices
      * such as downloading large binaries without retries or attempting to invoke OS tools such as
@@ -259,11 +245,10 @@
      *
      * PNPM documentation: https://pnpm.io/package_json#pnpmneverbuiltdependencies
      */
-    "globalNeverBuiltDependencies": [
-      // "fsevents"
-    ],
-
-    /**
+  "globalNeverBuiltDependencies": [
+    // "fsevents"
+  ],
+  /**
      * The `globalAllowedDeprecatedVersions` setting suppresses installation warnings for package
      * versions that the NPM registry reports as being deprecated.  This is useful if the
      * deprecated package is an indirect dependency of an external package that has not released a fix.
@@ -275,21 +260,18 @@
      * If you are working to eliminate a deprecated version, it's better to specify `allowedDeprecatedVersions`
      * in the package.json file for individual Rush projects.
      */
-    "globalAllowedDeprecatedVersions": {
-      // "request": "*"
-    },
-
-
-    /**
+  "globalAllowedDeprecatedVersions": {
+    // "request": "*"
+  },
+  /**
      * (THIS FIELD IS MACHINE GENERATED)  The "globalPatchedDependencies" field is updated automatically
      * by the `rush-pnpm patch-commit` command.  It is a dictionary, where the key is an NPM package name
      * and exact version, and the value is a relative path to the associated patch file.
      *
      * PNPM documentation: https://pnpm.io/package_json#pnpmpatcheddependencies
      */
-    "globalPatchedDependencies": { },
-
-    /**
+  "globalPatchedDependencies": {},
+  /**
      * (USE AT YOUR OWN RISK)  This is a free-form property bag that will be copied into
      * the `common/temp/package.json` file that is generated by Rush during installation.
      * This provides a way to experiment with new PNPM features.  These settings will override
@@ -301,13 +283,13 @@
      * support every possible PNPM setting, but rather to promote a battle-tested installation
      * strategy that is known to provide a good experience for large teams with lots of projects.
      */
-    "unsupportedPackageJsonSettings": {
-      // "dependencies": {
-      //   "not-a-good-practice": "*"
-      // },
-      // "scripts": {
-      //   "do-something": "echo Also not a good practice"
-      // },
-      // "pnpm": { "futurePnpmFeature": true }
-    }
+  "unsupportedPackageJsonSettings": {
+    // "dependencies": {
+    //   "not-a-good-practice": "*"
+    // },
+    // "scripts": {
+    //   "do-something": "echo Also not a good practice"
+    // },
+    // "pnpm": { "futurePnpmFeature": true }
   }
+}

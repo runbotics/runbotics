@@ -1,20 +1,27 @@
-import { useState, useMemo, FC } from 'react';
+import { useState, useMemo, FC, ReactNode } from 'react';
 
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import i18n from 'i18next';
 
+import { Main, ContentContainer, Content } from './MainLayout.styles';
+
+import NavBar from './NavBar';
+
+import { usePublicSections } from './NavBar/usePublicSections';
+
 import If from '#src-app/components/utils/If';
 import LoadingScreen from '#src-app/components/utils/LoadingScreen';
 import useAsyncEffect from '#src-app/hooks/useAsyncEffect';
 import useAuth from '#src-app/hooks/useAuth';
 
-import { Main, ContentContainer, Content } from './MainLayout.styles';
-import NavBar from './NavBar';
-import { usePublicSections } from './NavBar/usePublicSections';
 
-const MainLayout: FC = ({ children }) => {
+interface MainLayoutProps {
+    children: ReactNode;
+}
+
+const MainLayout: FC = ({ children }: MainLayoutProps) => {
     const [loaded, setLoaded] = useState(false);
     const [isMenuShrank, setIsMenuShrank] = useState(true);
     const theme = useTheme();
@@ -32,8 +39,8 @@ const MainLayout: FC = ({ children }) => {
             );
             return { ...publicSection, items };
         }),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [user, i18n.language]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user, i18n.language]);
 
     const isNavBarVisible = accessedSections[0].items.length > 0;
 
