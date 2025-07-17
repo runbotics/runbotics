@@ -10,6 +10,7 @@ services:
 
   runbotics-postgresql:
     container_name: runbotics-postgresql
+    restart: on-failure
     image: postgres:13.2
     network_mode: host
     volumes:
@@ -18,11 +19,18 @@ services:
       - POSTGRES_USER=runbotics
       - POSTGRES_PASSWORD=
       - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
 
   runbotics-orchestrator:
     container_name: runbotics-orchestrator
+    restart: on-failure
     image: runbotics/runbotics-orchestrator:latest
     network_mode: host
     environment:
@@ -34,10 +42,18 @@ services:
       - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
     depends_on:
       - runbotics-postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/management/health | grep UP || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
 
   runbotics-scheduler:
-    container_name: runbotics-scheduler
-    image: runbotics/runbotics-scheduler:latest
+    container_name: runbotics-scheduler-healthcheck
+    # image: runbotics/runbotics-scheduler:latest
+    restart: on-failure
+    image: scheduler-healthcheck:3.0.0
     network_mode: host
     environment:
       - RUNBOTICS_SCHEDULER_REDIS_HOST=localhost
@@ -65,6 +81,27 @@ services:
     container_name: runbotics-redis
     image: redis:6
     network_mode: host
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG || exit 1"]
+      interval: 60s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+
+  runbotics-nginx:
+    image: nginx:1.25.3
+    deploy:
+        replicas: 1
+        restart_policy:
+            condition: on-failure
+            delay: 10s
+            max_attempts: 5
+    healthcheck:
+      test: ["CMD-SHELL", "service nginx status || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   runbotics-desktop:
     container_name: runbotics-desktop
