@@ -100,9 +100,7 @@ export class MsalService {
             throw new Error('Received invalid email from MS API');
         }
 
-        // Extract langKey from preferredLanguage, fallback to 'en'
-        const lng = data.preferredLanguage?.split('-')[0];
-        const langKey = lng && /pl/i.test(lng) ? 'pl' : 'en';
+        const langKey = this.extractLangKey(data.preferredLanguage);
         return { email, langKey };
     }
 
@@ -146,6 +144,11 @@ export class MsalService {
         const config = this.serverConfigService.microsoftSso;
         const url = new URL('/scheduler/msal/callback', config.callbackUrlBase);
         return url.toString();
+    }
+
+    private extractLangKey(preferredLanguage?: string | null): string {
+        const lng = preferredLanguage?.split('-')[0];
+        return lng && /pl/i.test(lng) ? 'pl' : 'en';
     }
 
     async ssoAuth(loginData: MsalCallbackData): Promise<string> {
