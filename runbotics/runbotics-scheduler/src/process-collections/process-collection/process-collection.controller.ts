@@ -35,6 +35,12 @@ export class ProcessCollectionController {
     ): Promise<ProcessCollection> {
         return this.processCollectionService.createProcessCollection({ tenantId, ...processCollection }, user.id);
     }
+    
+    @FeatureKeys(FeatureKey.PROCESS_COLLECTION_EDIT)
+    @Post(':id/set-public')
+    async setCollectionPublic(@Param('id') id: string): Promise<ProcessCollection> {
+        return this.processCollectionService.setProcessCollectionPublic(id);
+    }
 
     @FeatureKeys(FeatureKey.PROCESS_COLLECTION_DELETE)
     @Delete(':id')

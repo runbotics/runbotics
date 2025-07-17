@@ -44,6 +44,6 @@ export class StrategyFactory {
     }
     
     createSetPublicStrategy() {
-        return new SetProcessCollectionPublicStrategy(this.repo, this.permissionManagementService);
+        return new SetProcessCollectionPublicStrategy(this.repo);
     }
 }

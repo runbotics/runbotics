@@ -19,11 +19,10 @@ export class ProcessCollectionUserService {
     }
 
     async addNewProcessCollectionUser(userId: number, processCollectionUser: AddProcessCollectionUserDto) {
-        this.logger.log(inspect({ userId, processCollectionUser }, { depth: 3 }));
         const newProcessCollectionUser = await this.processCollectionUserRepository.save({
             processCollectionId: processCollectionUser.collectionId,
             privilege_type: processCollectionUser.privilegeType,
-            userId,
+            userId: processCollectionUser.userId ?? userId,
         });
         this.logger.log(inspect(newProcessCollectionUser, { depth: 3 }));
         return newProcessCollectionUser;
