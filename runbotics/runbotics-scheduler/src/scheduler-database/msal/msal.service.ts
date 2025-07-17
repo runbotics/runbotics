@@ -2,12 +2,15 @@ import { ServerConfigService } from '#/config/server-config';
 import { Logger } from '#/utils/logger';
 import { ConfidentialClientApplication, Configuration, LogLevel, ResponseMode } from '@azure/msal-node';
 import { MsalCallbackData, MsalLoginData, MsalLoginResponse, MsalProfileData } from './msal.types';
+import { MsalAuthError } from './msal.error';
 
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 import axios from 'axios';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { isEmailValid } from 'runbotics-common';
+import { AuthService } from '#/auth/auth.service';
+import { MsalLoginError } from 'runbotics-common';
 
 const MSAL_SCOPES = ['openid', 'profile', 'email', 'User.Read'];
 
@@ -28,7 +31,8 @@ export class MsalService {
     private readonly logger = new Logger(MsalService.name);
 
     constructor(
-        private readonly serverConfigService: ServerConfigService
+        private readonly serverConfigService: ServerConfigService,
+        private readonly authService: AuthService
     ) { }
 
     ensureSsoEnabled() {
@@ -70,6 +74,16 @@ export class MsalService {
         });
 
         return { url };
+    }
+
+    async getProfileData(accessToken: string): Promise<MsalProfileData | null> {
+        try {
+            const profileData = await this.fetchProfileData(accessToken);
+            return profileData;
+        } catch (e) {
+            this.logger.error('MSAL profile data fetch failed', e);
+            return null;
+        }
     }
 
     async fetchProfileData(authToken: string): Promise<MsalProfileData> {
@@ -130,11 +144,28 @@ export class MsalService {
 
     private getRedirectUri() {
         const config = this.serverConfigService.microsoftSso;
-        let baseUrl = config.callbackUrlBase;
-        if (!/^https?:\/\//i.test(baseUrl)) {
-            baseUrl = `http://${baseUrl}`;
-        }
-        const url = new URL('/scheduler/msal/callback', baseUrl);
+        const url = new URL('/scheduler/msal/callback', config.callbackUrlBase);
         return url.toString();
+    }
+
+    async ssoAuth(loginData: MsalCallbackData): Promise<string> {
+        const loginResponse = await this.handleLoginCallback(loginData);
+
+        const profileData = await this.getProfileData(loginResponse.accessToken);
+        if (!profileData) {
+            throw new MsalAuthError('Failed to get profile data', MsalLoginError.TOKEN_ISSUE_FILED);
+        }
+        if (!profileData.email) {
+            throw new MsalAuthError('No email in profile data', MsalLoginError.BAD_EMAIL);
+        }
+
+        const authToken = await this.authService.handleMsalSsoAuth({
+            email: profileData.email,
+            langKey: profileData.langKey,
+            msTenantId: loginResponse.tenantId,
+            msObjectId: loginResponse.objectId,
+        });
+
+        return authToken;
     }
 }

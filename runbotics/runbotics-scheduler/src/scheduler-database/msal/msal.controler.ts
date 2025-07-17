@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { MsalService } from './msal.service';
 import { Request, Response } from 'express';
-import { AuthService } from '#/auth/auth.service';
 import { Public } from '#/auth/guards';
 import { MsalLoginError } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
-import { MsalProfileData } from './msal.types';
+import { MsalAuthError } from './msal.error';
 const MSAL_FRONTEND_CALLBACK_URL = '/msal/callback';
 
 @Controller('/scheduler/msal')
@@ -13,7 +12,6 @@ export class MsalController {
     private readonly logger = new Logger(MsalController.name);
 
     constructor(
-        private readonly authService: AuthService,
         private readonly msalService: MsalService
     ) {
     }
@@ -36,30 +34,19 @@ export class MsalController {
     ) {
         this.msalService.ensureSsoEnabled();
         const code = req.body.code;
-        const loginResponse = await this.msalService.handleLoginCallback({ code });
-
-        let profileData: MsalProfileData;
-        try {
-            profileData = await this.msalService.fetchProfileData(loginResponse.accessToken);
-            if (!profileData.email) {
-                return response.status(302).redirect(`${MSAL_FRONTEND_CALLBACK_URL}?error=${encodeURIComponent(MsalLoginError.BAD_EMAIL)}`);
-            }
-        } catch (e) {
-            this.logger.error('MSAL login finalization filed', e);
-            return response.status(302).redirect(`${MSAL_FRONTEND_CALLBACK_URL}?error=${encodeURIComponent(MsalLoginError.TOKEN_ISSUE_FILED)}`);
-        }
 
         let authToken: string;
         try {
-            authToken = await this.authService.handleMsalSsoAuth({
-                email: profileData.email,
-                langKey: profileData.langKey,
-                msTenantId: loginResponse.tenantId,
-                msObjectId: loginResponse.objectId,
-            });
+            authToken = await this.msalService.ssoAuth({ code });
         } catch (e) {
-            this.logger.error('Filed to login MSAL-authenticated user to RB', e);
-            return response.status(302).redirect(`${MSAL_FRONTEND_CALLBACK_URL}?error=${encodeURIComponent(MsalLoginError.MSAL_TOKEN_EXCHANGE_ERROR)}`);
+            this.logger.error('Failed to authenticate MSAL user', e);
+            
+            let errorType = MsalLoginError.MSAL_TOKEN_EXCHANGE_ERROR;
+            if (e instanceof MsalAuthError) {
+                errorType = e.msalErrorType;
+            }
+            
+            return response.status(302).redirect(`${MSAL_FRONTEND_CALLBACK_URL}?error=${encodeURIComponent(errorType)}`);
         }
 
         return response
