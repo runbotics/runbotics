@@ -1,12 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
 import { HealthService } from './health.service';
 import { Logger } from '#/utils/logger';
+import { Public } from '#/auth/guards';
 
 @Controller('api/scheduler/health')
 export class HealthController {
   private readonly logger = new Logger(HealthController.name);
   constructor(private readonly healthService: HealthService) {}
 
+  @Public()
   @Get()
   checkHealth() {
     this.logger.log('Health check status: OK');
