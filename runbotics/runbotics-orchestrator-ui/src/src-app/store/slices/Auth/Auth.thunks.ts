@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
 import { MsalLoginError, UserDto } from 'runbotics-common';
 
@@ -141,16 +142,8 @@ export const loginWithMsalCookie = createAsyncThunk<
     void
 >('auth/loginWithMsalToken', async (_, { rejectWithValue }) => {
     try {
-        const getCookie = (name: string) => {
-            const cookies = document.cookie.split('; ');
-            for (const cookie of cookies) {
-                const [key, ...rest] = cookie.split('=');
-                if (key === name) return rest.join('=');
-            }
-            return undefined;
-        };
-        const idToken = getCookie('msal_token_transfer');
-        document.cookie = 'msal_token_transfer=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        const idToken = Cookies.get('msal_token_transfer');
+        Cookies.remove('msal_token_transfer', { path: '/' });
         if (!idToken) {
             return rejectWithValue(MsalLoginError.BAD_COOKIE);
         }
