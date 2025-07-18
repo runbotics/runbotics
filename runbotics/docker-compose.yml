@@ -1,9 +1,9 @@
 services:
   runbotics-portainer:
     container_name: runbotics-portainer
-    network_mode: host
     image: portainer/portainer-ce:2.20.3-alpine
     restart: always
+    network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
@@ -50,10 +50,9 @@ services:
       start_period: 180s
 
   runbotics-scheduler:
-    container_name: runbotics-scheduler-healthcheck
-    # image: runbotics/runbotics-scheduler:latest
+    container_name: runbotics-scheduler
+    image: runbotics/runbotics-scheduler:latest
     restart: on-failure
-    image: scheduler-healthcheck:3.0.0
     network_mode: host
     environment:
       - RUNBOTICS_SCHEDULER_REDIS_HOST=localhost
@@ -89,6 +88,7 @@ services:
       start_period: 20s
 
   # runbotics-nginx:
+  #   container_name: runbotics-nginx
   #   image: nginx:1.25.3
   #   deploy:
   #       replicas: 1
@@ -106,6 +106,7 @@ services:
   runbotics-desktop:
     container_name: runbotics-desktop
     image: runbotics/runbotics-desktop:latest
+    restart: on-failure
     network_mode: host
     environment:
       - RUNBOTICS_ENTRYPOINT_URL=http://localhost:8080
@@ -119,7 +120,6 @@ services:
       - RUNBOTICS_EXTENSION_DIR=./extensions
       - RUNBOTICS_PLUGINS_DIR=./plugins
       - CHROME_ADDRESS=http://chrome:4444
-    restart: on-failure
     depends_on:
       - runbotics-scheduler
       - runbotics-orchestrator
@@ -128,6 +128,7 @@ services:
 #   runbotics-desktop-guest:
 #     container_name: runbotics-desktop-guest
 #     image: runbotics/runbotics-desktop:latest
+#     restart: on-failure
 #     environment:
 #       - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
 #       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
@@ -139,7 +140,6 @@ services:
 #       - RUNBOTICS_LOGGER=winston
 #       - RUNBOTICS_EXTENSION_DIR=./extensions
 #       - CHROME_ADDRESS=http://chrome-2:4444
-#     restart: on-failure
 #     depends_on:
 #       - runbotics-scheduler
 #       - runbotics-orchestrator
