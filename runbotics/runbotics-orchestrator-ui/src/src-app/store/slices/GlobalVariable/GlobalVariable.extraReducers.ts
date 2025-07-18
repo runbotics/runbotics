@@ -27,7 +27,10 @@ const buildGlobalVariablesExtraReducers = (builder: ActionReducerMapBuilder<Glob
             state.loading = true;
         })
         .addCase(createGlobalVariable.fulfilled, (state, action) => {
-            state.globalVariables = [...state.globalVariables, action.payload];
+            state.globalVariables = {
+                ...state.globalVariables,
+                content: [...state.globalVariables.content, action.payload]
+            };
             state.loading = false;
         })
         .addCase(createGlobalVariable.rejected, (state) => {
@@ -39,7 +42,7 @@ const buildGlobalVariablesExtraReducers = (builder: ActionReducerMapBuilder<Glob
             state.loading = true;
         })
         .addCase(updateGlobalVariable.fulfilled, (state, action) => {
-            state.globalVariables = state.globalVariables
+            state.globalVariables.content = state.globalVariables.content
                 .map(variable => variable.id === action.payload.id
                     ? { ...variable, ...action.payload }
                     : { ...variable }
@@ -52,7 +55,7 @@ const buildGlobalVariablesExtraReducers = (builder: ActionReducerMapBuilder<Glob
 
         // DELETE
         .addCase(deleteGlobalVariable.fulfilled, (state, action) => {
-            state.globalVariables = state.globalVariables.filter((variable) => variable.id !== action.meta.arg.resourceId);
+            state.globalVariables.content = state.globalVariables.content.filter((variable) => variable.id !== action.meta.arg.resourceId);
         });
 };
 

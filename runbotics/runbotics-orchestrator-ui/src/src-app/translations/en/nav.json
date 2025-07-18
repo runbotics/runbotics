@@ -6,5 +6,8 @@
     "Nav.Items.GlobalVariables": "Global variables",
     "Nav.Items.Scheduler": "Scheduler",
     "Nav.Items.History": "History",
+    "Nav.Items.Tenants": "Tenants",
+    "Nav.Items.Users": "Users",
+    "Nav.Items.Monitoring": "Monitoring",
     "Nav.Hide": "Hide"
 }

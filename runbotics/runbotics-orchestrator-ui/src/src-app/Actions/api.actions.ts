@@ -109,7 +109,6 @@ const getApiActions: () => Record<string, IBpmnAction> = () => ({
                     url: undefined,
                     method: 'GET',
                     headers: {
-                        Authorization: '',
                     },
                 },
                 output: {

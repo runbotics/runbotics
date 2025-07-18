@@ -49,7 +49,7 @@ const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
         },
     },
     'powerpoint.insert': {
-        id: 'desktop.powerpoint.insert',
+        id: 'powerpoint.insert',
         label: translate('Process.Details.Modeler.Actions.Powerpoint.Insert.Label'),
         script: 'powerpoint.insert',
         runner: Runner.DESKTOP_SCRIPT,
@@ -72,25 +72,61 @@ const getPowerPointActions: () => Record<string, IBpmnAction> = () => ({
                                 ),
                                 type: 'string',
                             },
+                            index: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.Index',
+                                ),
+                                type: 'string',
+                            },
+                            slideStart: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.SlideStart',
+                                ),
+                                type: 'string',
+                            },
+                            slideEnd: {
+                                title: translate(
+                                    'Process.Details.Modeler.Actions.PowerPoint.CopySlide.SlideEnd',
+                                ),
+                                type: 'string',
+                            },
                         },
                         required: ['filePath'],
-                    },
-                    output: {
-                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
-                        type: 'object',
-                        properties: {},
-                        required: [],
                     },
                 },
             },
             uiSchema: {
-                'ui:order': ['input', 'output'],
+                'ui:order': ['input'],
+                input: {
+                    filePath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.FilePath.Tooltip')
+                        }
+                    },
+                    index: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.Index.Tooltip')
+                        }
+                    },
+                    slideStart: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.SlideStart.Tooltip')
+                        }
+                    },
+                    slideEnd: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.PowerPoint.CopySlide.SlideEnd.Tooltip')
+                        }
+                    }
+                }
             },
             formData: {
                 input: {
                     filePath: undefined,
+                    index: undefined,
+                    slideStart: undefined,
+                    slideEnd: undefined,
                 },
-                output: {},
             },
         },
     },

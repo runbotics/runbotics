@@ -1,4 +1,4 @@
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, ILike, Like, Repository } from 'typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -10,6 +10,9 @@ import { isTenantAdmin } from '#/utils/authority.utils';
 import { GlobalVariable } from './global-variable.entity';
 import { CreateGlobalVariableDto } from './dto/create-global-variable.dto';
 import { UpdateGlobalVariableDto } from './dto/update-global-variable.dto';
+import { Paging } from '#/utils/page/pageable.decorator';
+import { getPage } from '#/utils/page/page';
+import { Specs } from '#/utils/specification/specifiable.decorator';
 
 const relations = ['user', 'creator'];
 
@@ -22,17 +25,21 @@ export class GlobalVariableService {
         private readonly globalVariableRepository: Repository<GlobalVariable>,
         @InjectRepository(ProcessEntity)
         private readonly processRepository: Repository<ProcessEntity>,
-    ) {}
+    ) { }
 
-    getAll(tenantId: string) {
-        const findOptions: FindOptionsWhere<GlobalVariable> = {
-            tenantId,
+    async getAllByPage(paging: Paging, specs: Specs<GlobalVariable>) {
+        const options: FindManyOptions<GlobalVariable> = {
+            ...paging,
+            relations: ['user', 'creator'],
+            ...specs,
         };
 
-        return this.globalVariableRepository
-            .find({ where: findOptions, relations })
-            .then(globalVariables => globalVariables
-                .map(globalVariable => this.formatUserDTO(globalVariable)));
+        const page = await getPage(this.globalVariableRepository, options);
+
+        return {
+            ...page,
+            content: page.content.map(globalVariable => this.formatUserDTO(globalVariable))
+        }
     }
 
     getById(tenantId: string, id: number) {
@@ -124,20 +131,20 @@ export class GlobalVariableService {
     private formatUserDTO(globalVariable: GlobalVariable | null) {
         return globalVariable
             ? {
-                  ...globalVariable,
-                  ...(globalVariable.user && {
-                      user: {
-                          id: globalVariable.user.id,
-                          email: globalVariable.user.email,
-                      },
-                  }),
-                  ...(globalVariable.creator && {
-                      creator: {
-                          id: globalVariable.creator.id,
-                          email: globalVariable.creator.email,
-                      },
-                  }),
-              }
+                ...globalVariable,
+                ...(globalVariable.user && {
+                    user: {
+                        id: globalVariable.user.id,
+                        email: globalVariable.user.email,
+                    },
+                }),
+                ...(globalVariable.creator && {
+                    creator: {
+                        id: globalVariable.creator.id,
+                        email: globalVariable.creator.email,
+                    },
+                }),
+            }
             : null;
     }
 }

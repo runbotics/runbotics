@@ -1,4 +1,4 @@
-import React, { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
 
 import { Card, Grid } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -7,9 +7,11 @@ import { FeatureKey } from 'runbotics-common';
 import If from '#src-app/components/utils/If';
 
 import useFeatureKey from '#src-app/hooks/useFeatureKey';
-import { useDispatch, useSelector } from '#src-app/store';
-import { globalVariableActions, globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
+import useGlobalVariableSearch from '#src-app/hooks/useGlobalVariableSearch';
+import { useSelector } from '#src-app/store';
+import { globalVariableSelector } from '#src-app/store/slices/GlobalVariable';
 import { IGlobalVariable } from '#src-app/types/model/global-variable.model';
+
 
 import DeleteGlobalVariableDialog from './DeleteGlobalVariableDialog';
 import useGlobalVariablesColumns from './useGlobalVariablesColumns';
@@ -18,6 +20,7 @@ import { VariableDetailState } from '../../Variable.types';
 interface TableProps {
     className?: string;
     setVariableDetailState: Dispatch<SetStateAction<VariableDetailState>>;
+    searchValue?: string;
 }
 
 export interface DeleteDialogState {
@@ -30,11 +33,13 @@ const initialDeleteDialogState: DeleteDialogState = {
 };
 
 const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailState }) => {
-    const dispatch = useDispatch();
     const { globalVariables, loading } = useSelector(globalVariableSelector);
     const [deleteDialogState, setDeleteDialogState] = useState<DeleteDialogState>(initialDeleteDialogState);
     const hasDeleteVariableAccess = useFeatureKey([FeatureKey.GLOBAL_VARIABLE_DELETE]);
     const hasEditVariableAccess = useFeatureKey([FeatureKey.GLOBAL_VARIABLE_EDIT]);
+
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
 
     const onEdit = (variable: IGlobalVariable) => {
         setVariableDetailState({ show: true, variable });
@@ -53,13 +58,19 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
         onEdit,
         hasDeleteVariableAccess,
         hasEditVariableAccess,
-        globalVariables,
+        globalVariables
     });
 
-    useEffect(() => {
-        dispatch(globalVariableActions.getGlobalVariables());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    useGlobalVariableSearch(pageSize, page);
+
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handlePageSizeChange = (newPageSize: number) => {
+        setPageSize(newPageSize);
+        setPage(0);
+    };
 
     return (
         <div>
@@ -68,10 +79,17 @@ const Table: FunctionComponent<TableProps> = ({ className, setVariableDetailStat
                     <Grid item xs={12} md={12}>
                         <DataGrid
                             loading={loading}
-                            rows={globalVariables}
+                            rows={globalVariables?.content ?? []}
                             columns={globalVariablesColumns}
                             autoHeight
                             disableSelectionOnClick
+                            paginationMode='server'
+                            page={page}
+                            onPageChange={handlePageChange}
+                            pageSize={pageSize}
+                            onPageSizeChange={handlePageSizeChange}
+                            rowsPerPageOptions={[5, 10, 20, 50]}
+                            rowCount={globalVariables?.totalElements ?? 0}
                             onCellClick={(param) => {
                                 if (param.field !== 'actions') onReadOnlyView(param.row as IGlobalVariable);
                             }}
