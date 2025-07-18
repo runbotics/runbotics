@@ -8,6 +8,7 @@ import { loadRecursive } from '#/process-collections/process-collection/utils/lo
 import {
     updateRecursiveProcessCollection,
 } from '#/process-collections/process-collection/utils/updateRecursiveProcessCollection.util';
+import { ProcessCollectionUser } from '#/process-collections/process-collection-user/process-collection-user.entity';
 
 export class UpdateProcessCollectionStrategy implements CollectionStrategy<ProcessCollection> {
     constructor(
