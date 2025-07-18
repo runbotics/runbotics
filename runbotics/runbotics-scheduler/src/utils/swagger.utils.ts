@@ -3,6 +3,7 @@ export enum SwaggerTags {
     TENANT_USERS = 'tenants - users',
     TENANT_ROLE_ADMIN = 'tenants - admin only',
     TENANT_PUBLIC = 'tenants - public',
+    HEALTH = 'scheduler healthcheck'
 }
 
 export const tenantIdSwaggerObjectDescription = {
