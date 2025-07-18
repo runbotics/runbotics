@@ -152,8 +152,9 @@ services:
       - runbotics-orchestrator
       - chrome
 
-  chrome:
-    image: selenium/standalone-chrome:132.0.6834.159-chromedriver-132.0.6834.159-grid-4.28.1-20250202
+  firefox:
+    container_name: firefox
+    image: selenium/standalone-firefox:140.0-geckodriver-0.36-grid-4.34.0-20250707
     networks:
       - hostnet
 
