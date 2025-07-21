@@ -120,7 +120,6 @@ services:
       - RUNBOTICS_EXTENSION_DIR=./extensions
       - RUNBOTICS_PLUGINS_DIR=./plugins
       - FIREFOX_ADDRESS=http://firefox:4444
-    restart: on-failure
     depends_on:
       - runbotics-scheduler
       - runbotics-orchestrator
