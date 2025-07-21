@@ -22,7 +22,7 @@ export class ProcessCollectionUser {
     @ManyToOne(
         () => ProcessCollection,
         (processCollection) => processCollection.processCollectionPrivileges,
-        { onDelete: 'CASCADE', onUpdate: 'CASCADE' },
+        { onDelete: 'CASCADE', onUpdate: 'CASCADE', cascade: true },
     )
     @JoinColumn({ name: 'processCollectionId' })
     processCollection: ProcessCollection;

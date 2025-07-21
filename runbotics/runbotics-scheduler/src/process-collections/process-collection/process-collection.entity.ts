@@ -93,4 +93,7 @@ export class ProcessCollection {
 
     @TreeParent({ onDelete: 'CASCADE' })
     parent?: ProcessCollection;
+    
+    @Column({ nullable: true })
+    parentId?: string;
 }
