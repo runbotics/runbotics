@@ -52,4 +52,9 @@ export class ProcessCollectionService {
         const strategy = this.strategyFactory.createUpdateStrategy();
         return strategy.execute(id, dto);
     }
+    
+    async setProcessCollectionPublic(processCollectionId: string) {
+        const strategy = this.strategyFactory.createSetPublicStrategy();
+        return strategy.execute(processCollectionId);
+    }
 }

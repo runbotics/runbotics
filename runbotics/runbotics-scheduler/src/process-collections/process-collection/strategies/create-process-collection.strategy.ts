@@ -25,7 +25,7 @@ export class CreateProcessCollectionStrategy implements CollectionStrategy<Proce
             ...dto,
             created_by: userId,
             parentId: dto.parentId,
-            ownerId: (parent?.name === 'ROOT' || !parent) ? userId : parent.owner.id,
+            ownerId: (parent?.name === 'ROOT' || !parent) ? userId : parent.ownerId,
             parent: parent ? parent : root,
             userId,
         });

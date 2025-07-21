@@ -1,65 +1,77 @@
-// import { describe, it, expect, beforeEach, vi } from 'vitest';
-// import { OwnerHandler } from './chain/owner.handler';
-// import { TreeRepository } from 'typeorm';
-// import { ProcessCollection } from '#/process-collections/process-collection/process-collection.entity';
-// import { NotFoundException } from '@nestjs/common';
-// import { AuthRequest } from '#/types';
-//
-// describe('OwnerHandler', () => {
-//     let handler: OwnerHandler;
-//     let repository: Partial<Record<keyof TreeRepository<ProcessCollection>, any>>;
-//
-//     const mockRequest: AuthRequest = {
-//         user: { id: 100 },
-//     } as AuthRequest;
-//
-//     beforeEach(() => {
-//         repository = {
-//             findOne: vi.fn(),
-//         };
-//
-//         handler = new OwnerHandler(repository as TreeRepository<ProcessCollection>);
-//         vi.clearAllMocks();
-//     });
-//
-//     it('should authorize if user is the owner', async () => {
-//         const mockCollection: ProcessCollection = {
-//             id: 1,
-//             createdBy: { id: 100 },
-//         } as any;
-//
-//         repository.findOne.mockResolvedValue(mockCollection);
-//
-//         const result = await handler.handle(mockRequest, 1);
-//
-//         expect(repository.findOne).toHaveBeenCalledWith({
-//             where: { id: 1 },
-//             relations: ['createdBy'],
-//         });
-//         expect(result).toBe(true);
-//     });
-//
-//     it('should call super.handle if user is not the owner', async () => {
-//         const mockCollection: ProcessCollection = {
-//             id: 1,
-//             createdBy: { id: 999 },
-//         } as any;
-//
-//         repository.findOne.mockResolvedValue(mockCollection);
-//
-//         // spy on super.handle
-//         const superHandleSpy = vi.spyOn(Object.getPrototypeOf(OwnerHandler.prototype), 'handle');
-//         superHandleSpy.mockResolvedValue(false);
-//
-//         const result = await handler.handle(mockRequest, 1);
-//
-//         expect(superHandleSpy).toHaveBeenCalledWith(mockRequest);
-//         expect(result).toBe(false);
-//     });
-//
-//     it('should throw NotFoundException if no collection found', async () => {
-//         repository.findOne.mockResolvedValue(null);
-//
-//         await expect(() => handler.handle(mockRequest, 1)).rejects.toThrow(NotFoundException);
-//     });
-// });
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { PermissionCheckService } from './permission-check.service';
+import { TenantAdminHandler } from './chain/tenant-admin.handler';
+import { OwnerHandler } from './chain/owner.handler';
+import { PublicCollectionHandler } from './chain/public-collection.handler';
+import { SharedLinkHandler } from './chain/shared-link.handler';
+import { PermissionTableHandler } from './chain/permission-table.handler';
+
+describe('PermissionCheckService', () => {
+    let service: PermissionCheckService;
+
+    let tenantAdminHandler: TenantAdminHandler;
+    let ownerHandler: OwnerHandler;
+    let publicCollectionHandler: PublicCollectionHandler;
+    let sharedLinkHandler: SharedLinkHandler;
+    let permissionTableHandler: PermissionTableHandler;
+
+    const mockRequest = {
+        user: {
+            id: 1,
+            roles: [],
+        },
+        params: {
+            tenantId: 'tenant-1',
+        },
+    };
+
+    beforeEach(() => {
+        // Mocks for handlers
+        tenantAdminHandler = {
+            setNext: vi.fn().mockReturnThis(),
+            handle: vi.fn(),
+        } as any;
+
+        ownerHandler = {
+            setNext: vi.fn().mockReturnThis(),
+        } as any;
+
+        publicCollectionHandler = {
+            setNext: vi.fn().mockReturnThis(),
+        } as any;
+
+        sharedLinkHandler = {
+            setNext: vi.fn().mockReturnThis(),
+        } as any;
+
+        permissionTableHandler = {
+            setNext: vi.fn().mockReturnThis(),
+        } as any;
+
+        service = new PermissionCheckService(
+            tenantAdminHandler,
+            ownerHandler,
+            publicCollectionHandler,
+            sharedLinkHandler,
+            permissionTableHandler
+        );
+    });
+
+    it('should authorize using first handler that returns true', async () => {
+        (tenantAdminHandler.handle as any).mockResolvedValue(true);
+
+        const result = await service.authorize(mockRequest as any, 'col-123');
+
+        expect(tenantAdminHandler.handle).toHaveBeenCalledWith(mockRequest, 'col-123');
+        expect(result).toBe(true);
+    });
+
+    it('should return false if all handlers return false', async () => {
+        (tenantAdminHandler.handle as any).mockResolvedValue(false);
+
+        const result = await service.authorize(mockRequest as any, 'col-456');
+
+        expect(result).toBe(false);
+    });
+
+});
