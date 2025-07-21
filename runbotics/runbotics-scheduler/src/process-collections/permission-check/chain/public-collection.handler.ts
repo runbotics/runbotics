@@ -28,6 +28,6 @@ export class PublicCollectionHandler extends BaseAuthorizationHandler {
             this.logger.log('Authorized by public collection handler');
             return true;
         }
-        return super.handle(request);
+        return super.handle(request, collectionId);
     }
 }

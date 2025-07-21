@@ -27,7 +27,7 @@ export class ProcessCollectionAuthorizationGuard implements CanActivate {
 
         const collectionId =
             request.params?.[paramKey] ?? request.body?.[paramKey] ?? request.query?.[paramKey];
-
+        
         if (!collectionId) {
             throw new BadRequestException(
                 `Brak parametru kolekcji "${paramKey}" w ścieżce, body lub query`,
