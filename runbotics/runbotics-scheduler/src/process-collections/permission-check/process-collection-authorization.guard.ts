@@ -1,4 +1,3 @@
-// collection-authorization.guard.ts
 import {
     BadRequestException,
     CanActivate,
