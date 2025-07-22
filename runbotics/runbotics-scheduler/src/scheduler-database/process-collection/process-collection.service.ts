@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, EntityManager, Equal, In, IsNull, Repository } from 'typeorm';
+import { Brackets, EntityManager, Equal, FindOptionsRelations, In, IsNull, Repository } from 'typeorm';
 import { User } from '#/scheduler-database/user/user.entity';
 import { ProcessCollection } from './process-collection.entity';
 import { CreateProcessCollectionDto } from './dto/create-process-collection.dto';
@@ -10,10 +10,10 @@ import { UpdateProcessCollectionDto } from './dto/update-process-collection.dto'
 import { UnmappedProcessCollectionDto } from './dto/unmapped-process-collection.dto';
 import { hasFeatureKey } from '#/utils/authority.utils';
 
-const RELATIONS = [
-    'createdBy',
-    'users',
-];
+const RELATIONS: FindOptionsRelations<ProcessCollection> = {
+    createdBy: true,
+    users: true
+};
 
 @Injectable()
 export class ProcessCollectionService {
@@ -164,6 +164,7 @@ export class ProcessCollectionService {
 
     async findAvailableChildrenCollections(parentId: string, tenantId: string, userId: number): Promise<ProcessCollection[]> {
         return this.processCollectionRepository.find({
+            relations: RELATIONS,
             where: [
                 {
                     isPublic: true,
@@ -186,6 +187,7 @@ export class ProcessCollectionService {
 
     async findAvailableRootCollections(tenantId: string, userId: number): Promise<ProcessCollection[]> {
         return this.processCollectionRepository.find({
+            relations: RELATIONS,
             where: [
                 {
                     isPublic: true,
@@ -208,10 +210,12 @@ export class ProcessCollectionService {
 
 
     async findAllChildrenCollections(parentId: string, tenantId: string): Promise<ProcessCollection[]> {
-        return this.processCollectionRepository.createQueryBuilder('pc')
-            .where('pc.parent_id = :parentId', { parentId })
-            .andWhere('pc.tenant_id = :tenantId', { tenantId })
-            .getMany();
+        return this.processCollectionRepository.find({
+                relations: RELATIONS,
+                where: {
+                    parentId, tenantId
+                },
+            });
     }
 
     async findAllRootCollections(tenantId: string): Promise<ProcessCollection[]> {
@@ -270,19 +274,49 @@ export class ProcessCollectionService {
         return ancestorsWithUsers;
     }
 
-    mapToDto(collections: UnmappedProcessCollectionDto[]): ProcessCollectionDto[] {
-        return collections.map(collection => ({
-            id: collection.id,
-            name: collection.name,
-            description: collection.description,
-            created: collection.created,
-            updated: collection.updated,
-            createdBy: { id: Number(collection.created_by), email: collection.email },
-            isPublic: collection.is_public,
-            users: collection.users,
-            parentId: collection.parent_id,
-            tenantId: collection.tenant_id,
-        }));
+    mapToDto(collections: UnmappedProcessCollectionDto[] | ProcessCollection[]): ProcessCollectionDto[] {
+        if (!Array.isArray(collections) || collections.length === 0) {
+            return [];
+        }
+
+        if ('email' in collections[0]) {
+            return (collections as UnmappedProcessCollectionDto[]).map(collection => ({
+                id: collection.id,
+                name: collection.name,
+                description: collection.description,
+                created: collection.created,
+                updated: collection.updated,
+                createdBy: {
+                    id: Number(collection.created_by),
+                    email: collection.email,
+                },
+                isPublic: collection.is_public,
+                users: collection.users ?? [],
+                parent: collection.parent_id ? { id: collection.parent_id } : undefined,
+                tenantId: collection.tenant_id,
+            }));
+        } else {
+            return (collections as ProcessCollection[]).map(collection => ({
+                id: collection.id,
+                name: collection.name,
+                description: collection.description,
+                created: collection.created,
+                updated: collection.updated,
+                createdBy: collection.createdBy
+                    ? {
+                        id: collection.createdBy.id,
+                        email: collection.createdBy.email ?? null,
+                    }
+                    : undefined,
+                isPublic: collection.isPublic,
+                users: collection.users?.map(user => ({
+                    id: user.id,
+                    email: user.email,
+                })) ?? [],
+                parent: collection.parentId ? { id: collection.parentId } : undefined,
+                tenantId: collection.tenantId,
+            }));
+        }
     }
 
     async findAllUserAccessible(tenantId: string, userId: string): Promise<ProcessCollection[]> {
@@ -337,35 +371,50 @@ export class ProcessCollectionService {
         return rootAccessibleCollections;
     }
 
-    async getChildrenCollectionsByRoot(user: User): Promise<ProcessCollection[]> {
+    async getChildrenCollectionsByRoot(user: User): Promise<ProcessCollectionDto[]> {
         const tenantId = user.tenantId;
         const hasUserAllAccess = hasFeatureKey(user, FeatureKey.PROCESS_COLLECTION_ALL_ACCESS);
 
        if (hasUserAllAccess) {
             const rootCollections = await this.findAllRootCollections(tenantId);
-            return rootCollections;
+            const mappedToDtoRootCollections = this.mapToDto(rootCollections);
+            return mappedToDtoRootCollections;
         }
 
         const availableChildren = await this.findAvailableRootCollections(tenantId, user.id);
-        return availableChildren;
+        const mappedToDtoAvailableChildren = this.mapToDto(availableChildren);
+        return mappedToDtoAvailableChildren;
     }
 
-    async getChildrenCollectionsByParent(parentId: string, user: User): Promise<ProcessCollection[]> {
+    async getChildrenCollectionsByParent(parentId: string, user: User): Promise<ProcessCollectionDto[]> {
         const tenantId = user.tenantId;
-        const hasUserAllAccess = hasFeatureKey(user, FeatureKey.PROCESS_COLLECTION_ALL_ACCESS);
+        const hasUserAllAccess = hasFeatureKey(
+            user,
+            FeatureKey.PROCESS_COLLECTION_ALL_ACCESS
+        );
 
         if (hasUserAllAccess) {
             const childrenCollections = parentId
-                ? this.findAllChildrenCollections(parentId, tenantId)
-                : this.findAllRootCollections(tenantId);
-            return childrenCollections;
+                ? await this.findAllChildrenCollections(parentId, tenantId)
+                : await this.findAllRootCollections(tenantId);
+
+            const mappedChildrenCollections =
+                this.mapToDto(childrenCollections);
+            return mappedChildrenCollections;
         }
 
         const childrenAccessibleCollections = parentId
-            ? await this.findAvailableChildrenCollections(parentId, tenantId, user.id)
+            ? await this.findAvailableChildrenCollections(
+                  parentId,
+                  tenantId,
+                  user.id
+              )
             : await this.findAvailableRootCollections(tenantId, user.id);
 
-        return childrenAccessibleCollections;
+        const mappedChildrenAccessibleCollections = this.mapToDto(
+            childrenAccessibleCollections
+        );
+        return mappedChildrenAccessibleCollections;
     }
 
     async getCollectionAllAncestors(collectionId: string, user: User): Promise<ProcessCollectionDto[]> {
@@ -391,7 +440,7 @@ export class ProcessCollectionService {
         const tenantId = user.tenantId;
         const hasUserAllAccess = hasFeatureKey(user, FeatureKey.PROCESS_COLLECTION_ALL_ACCESS);
         const hasCollectionAccess = hasUserAllAccess || (await this.findUserAccessibleById(id, String(user.id), tenantId)).length > 0;
-        const isOwner = hasUserAllAccess || await this.processCollectionRepository.findOneOrFail({ where: { id, createdBy: user, } }).catch(() => false);
+        const isOwner = hasUserAllAccess || await this.processCollectionRepository.findOneOrFail({ where: { id, createdBy: {id: user.id}, } }).catch(() => false);
 
         const toDelete = await this.processCollectionRepository.findOneOrFail({ where: { id, tenantId } })
             .catch(() => {
