@@ -23,12 +23,13 @@ export class ActionBlacklistService {
 
     async findCurrent(): Promise<ActionBlacklist> {
         const entity = await this.repo.find();
-
-        if (entity.length > 0) {
+        
+        if (entity.length > 1) {
             throw new InternalServerErrorException('Multiple ActionBlacklist entries found. Expected only one.');
         }
 
-        if (!entity.length) throw new NotFoundException('ActionBlacklist not found');
+        if (entity.length === 0) throw new NotFoundException('ActionBlacklist not found');
+    
         return entity[0];
     }
 

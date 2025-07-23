@@ -63,7 +63,7 @@ describe('ActionBlacklistService', () => {
 
     it('findCurrent() should return current blacklist', async () => {
         const entity = { id: 'uuid' } as ActionBlacklist;
-        repo.find = vi.fn().mockResolvedValue(entity);
+        repo.find = vi.fn().mockResolvedValue([entity]);
 
         const result = await service.findCurrent();
 
@@ -75,9 +75,8 @@ describe('ActionBlacklistService', () => {
         const id = 'uuid';
         const entity = {
             blacklistAction: [ACTION_GROUP.API, ACTION_GROUP.CSV],
-            environment: 'dev',
         } as Partial<ActionBlacklist>;
-        repo.find = vi.fn().mockResolvedValue({ id, ...entity });
+        repo.findOne = vi.fn().mockResolvedValue({ id, ...entity });
         repo.save = vi.fn().mockResolvedValue({ id, ...entity });
 
         const result = await service.update(id, entity);
