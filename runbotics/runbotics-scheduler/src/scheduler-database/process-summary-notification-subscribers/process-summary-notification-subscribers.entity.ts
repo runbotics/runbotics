@@ -17,10 +17,16 @@ export class ProcessSummaryNotificationSubscribersEntity {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @Column({ type: 'varchar', nullable: false, default: '', length: 256, name: 'custom_email' })
+    @Column({ type: 'varchar', nullable: true, default: '', length: 256, name: 'custom_email' })
     customEmail: string;
 
     @ManyToOne(() => ProcessEntity, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn({ name: 'process_id' })
     process: ProcessEntity;
+
+    @Column()
+    user_id: number;
+
+    @Column()
+    process_id: number;
 }

@@ -27,7 +27,7 @@ import { GuestModule } from '#/scheduler-database/guest/guest.module';
 import { ProcessCollectionModule } from './process-collection/process-collection.module';
 import { EmailTriggerWhitelistItemModule } from './email-trigger-whitelist-item/email-trigger-whitelist-item.module';
 import { LicenseModule } from './license/license.module';
-import { ProcessSummaryNotificationSubscribersModule } from './process_summary_notification_subscribers/process-summary-notification-subscribers.module';
+import { ProcessSummaryNotificationSubscribersModule } from './process-summary-notification-subscribers/process-summary-notification-subscribers.module';
 
 @Module({
     imports: [

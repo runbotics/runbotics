@@ -1,11 +1,11 @@
 import {Module} from '@nestjs/common';
 import {
     ProcessSummaryNotificationSubscribersService
-} from '#/scheduler-database/process_summary_notification_subscribers/process-summary-notification-subscribers.service';
+} from '#/scheduler-database/process-summary-notification-subscribers/process-summary-notification-subscribers.service';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {
     ProcessSummaryNotificationSubscribersEntity
-} from '#/scheduler-database/process_summary_notification_subscribers/process-summary-notification-subscribers.entity';
+} from '#/scheduler-database/process-summary-notification-subscribers/process-summary-notification-subscribers.entity';
 import { ProcessStatisticsService } from '#/utils/process-statistics/process-statistics.service';
 import { MailService } from '#/mail/mail.service';
 import { ProcessInstanceModule } from '../process-instance/process-instance.module';

@@ -6,9 +6,9 @@ export class ProcessSummaryNotificationSubscribers1752047389989 implements Migra
             CREATE TABLE IF NOT EXISTS "process_summary_notification_subscribers" (
                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
                 "created_at" TIMESTAMP NOT NULL DEFAULT now(),
-                "user_id" bigInt NOT NULL,
-                "custom_email" character varying(256) NOT NULL DEFAULT '',
-                "process_id" bigInt NOT NULL,
+                "user_id" BIGINT NOT NULL,
+                "custom_email" character varying(256),
+                "process_id" BIGINT NOT NULL,
                 CONSTRAINT "UQ_custom_email_user_process" UNIQUE ("custom_email", "user_id", "process_id"),
                 CONSTRAINT "PK_notification_process" PRIMARY KEY ("id")
             )

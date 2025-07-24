@@ -8,6 +8,7 @@ import { MailService } from '#/mail/mail.service';
 import { User } from '../user/user.entity';
 import { ProcessStatisticsResult } from '#/types';
 import { ProcessEntity } from '../process/process.entity';
+import { generateAggregatedEmailContent } from '#/mail/templates/process-summary-notification-statistics.template';
 
 
 @Injectable()
@@ -20,7 +21,6 @@ export class ProcessSummaryNotificationSubscribersService {
     ){}
 
     @Cron('0 0 1 * *')
-    // @Cron('* * * * *')
     async aggregateAndSendNotifications() {
         const subscribers = await this.getAllSubscribersWithProcesses();
 
@@ -50,7 +50,7 @@ export class ProcessSummaryNotificationSubscribersService {
     }
 
     private async sendAggregatedStatisticsEmail(email: string, summaries: { name: string, stats: ProcessStatisticsResult }[]) {
-        const htmlContent = this.generateAggregatedEmailContent(summaries);
+        const htmlContent = generateAggregatedEmailContent(summaries);
         console.log(`Sending aggregated email to ${email}`);
         console.log(`Sending aggregated email with content: ${htmlContent}`);
         await this.mailService.sendMail({
@@ -58,22 +58,34 @@ export class ProcessSummaryNotificationSubscribersService {
             subject: 'Process Summary Notification',
             content: htmlContent,
             isHtml: true,
+            attachments: [
+                    {
+                        path: 'src/mail/assets/Logo.png',
+                        filename: 'Logo.png',
+                        cid: 'logo',
+                    },
+                    {
+                        path: 'src/mail/assets/assignment_turned_in.svg',
+                        filename: 'assignment_turned_in.svg',
+                        cid: 'assignment_turned_in',
+                    },
+                    {
+                        path: 'src/mail/assets/assignment_late.svg',
+                        filename: 'assignment_late.svg',
+                        cid: 'assignment_late',
+                    },
+                    {
+                        path: 'src/mail/assets/schedule.svg',
+                        filename: 'schedule.svg',
+                        cid: 'schedule',
+                    },
+                    {
+                        path: 'src/mail/assets/more_time.svg',
+                        filename: 'more_time.svg',
+                        cid: 'more_time',
+                    },
+                ],
         });
-    }
-
-    private generateAggregatedEmailContent(summaries: { name: string, stats: ProcessStatisticsResult }[]) {
-        const content = summaries.map(({ name, stats }) => `
-            <h2>Process: ${name}</h2>
-            <ul>
-                <li>Total Executions: ${stats.totalExecutions}</li>
-                <li>Successful Executions: ${stats.successfulExecutions}</li>
-                <li>Failed Executions: ${stats.failedExecutions}</li>
-                <li>Average Duration (seconds): ${stats.averageDuration}</li>
-                <li>Total Duration (seconds): ${stats.totalDuration}</li>
-            </ul>
-        `).join('');
-
-        return `<h1>Process Summary</h1>${content}`;
     }
 
     async getAllSubscribersWithProcesses(){

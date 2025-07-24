@@ -1,7 +1,7 @@
 import { ProcessInstanceEventService } from '#/scheduler-database/process-instance-event/process-instance-event.service';
 import { ProcessInstanceService } from '#/scheduler-database/process-instance/process-instance.service';
 import { User } from '#/scheduler-database/user/user.entity';
-import {Injectable, OnModuleInit} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {ProcessStatisticsResult} from '#/types';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
