@@ -1,6 +1,5 @@
 import type { VFC } from 'react';
 
-import Link from 'next/link';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';

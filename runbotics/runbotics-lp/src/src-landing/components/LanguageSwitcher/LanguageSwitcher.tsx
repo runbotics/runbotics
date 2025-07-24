@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 import useClickOutsideComponent from '#src-app/hooks/useClickOutsideComponent';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { languages, Language } from '#src-app/translations/translations';
+
 import styles from './LanguageSwitcher.module.scss';
 import { capitalizeFirstLetter } from '../../utils/utils';
-import { languages, Language } from '#src-app/translations/translations';
 
 const LanguageSwitcher: VFC = () => {
     const [toggle, setToggle] = useState(false);
@@ -47,7 +48,7 @@ const LanguageSwitcher: VFC = () => {
                         onClick={() => handleLanguageSwitch(language)}
                         key={language}
                         className={`${styles.option} ${language === activeLocale ? styles.active : ''
-                            }`}
+                        }`}
                     >
                         {capitalizeFirstLetter(
                             translate(`Common.Languages.${language}`)

@@ -2,15 +2,16 @@ import { FC, ReactNode } from 'react';
 
 import Image from 'next/image';
 
-import styles from './HeroBackground.module.scss';
 
-import { HERO_TITLE_ID } from '../HeroSection.utils';
 
 import heroTitleSrc from '#public/images/runBoticsLogo/hero-RunBotics.png';
 import heroHand from '#public/images/shapes/hero_hand.png';
 import heroRobotHand from '#public/images/shapes/hero_robotic_hand.png';
 
 import { HERO_SECTION_ID } from '#src-landing/utils/utils';
+
+import styles from './HeroBackground.module.scss';
+import { HERO_TITLE_ID } from '../HeroSection.utils';
 
 interface HeroBackgroundProps {
     children?: ReactNode;

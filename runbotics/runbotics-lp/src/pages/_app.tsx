@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, Suspense } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import { MsalProvider } from '@azure/msal-react';
 import { CacheProvider, EmotionCache } from '@emotion/react';

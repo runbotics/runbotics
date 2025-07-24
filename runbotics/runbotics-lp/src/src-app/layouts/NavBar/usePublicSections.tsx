@@ -7,9 +7,10 @@ import TuneIcon from '@mui/icons-material/Tune';
 import { Command as CommandIcon } from 'react-feather';
 import { FeatureKey, Role } from 'runbotics-common';
 
+import useTranslations from '#src-app/hooks/useTranslations';
+
 import { Section } from './Navbar.types';
 
-import useTranslations from '#src-app/hooks/useTranslations';
 
 
 export const usePublicSections = (): Section[] => {

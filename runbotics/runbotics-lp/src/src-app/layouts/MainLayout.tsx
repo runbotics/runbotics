@@ -5,15 +5,17 @@ import { useTheme } from '@mui/material/styles';
 
 import i18n from 'i18next';
 
+import If from '#src-app/components/utils/If';
+
+import LoadingScreen from '#src-app/components/utils/LoadingScreen';
+
+import useAsyncEffect from '#src-app/hooks/useAsyncEffect';
+
 import { Main, ContentContainer, Content } from './MainLayout.styles';
 
 import NavBar from './NavBar';
 
 import { usePublicSections } from './NavBar/usePublicSections';
-
-import If from '#src-app/components/utils/If';
-import LoadingScreen from '#src-app/components/utils/LoadingScreen';
-import useAsyncEffect from '#src-app/hooks/useAsyncEffect';
 
 interface MainLayoutProps {
     children: React.ReactNode;

@@ -6,8 +6,9 @@ import CardsGrid from '#src-landing/components/BlogCardsGrid';
 import { PageType } from '#src-landing/components/BlogCardsGrid/CardsGrid';
 import CardsPagination from '#src-landing/components/PostPagination';
 
-import styles from './CardsSection.module.scss';
 import { ClientOnly } from '#src-landing/noSSR';
+
+import styles from './CardsSection.module.scss';
 
 interface CardsSectionPropsBase {
     pageType: PageType;
