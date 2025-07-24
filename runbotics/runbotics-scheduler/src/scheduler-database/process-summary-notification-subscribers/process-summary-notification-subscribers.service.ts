@@ -9,15 +9,17 @@ import { User } from '../user/user.entity';
 import { ProcessStatisticsResult } from '#/types';
 import { ProcessEntity } from '../process/process.entity';
 import { generateAggregatedEmailContent } from '#/mail/templates/process-summary-notification-statistics.template';
+import { Logger } from '#/utils/logger';
 
 
 @Injectable()
 export class ProcessSummaryNotificationSubscribersService {
+    private readonly logger = new Logger(ProcessSummaryNotificationSubscribersService.name);
     constructor(
         @InjectRepository(ProcessSummaryNotificationSubscribersEntity)
         private readonly repository: Repository<ProcessSummaryNotificationSubscribersEntity>,
         private readonly processStatisticsService: ProcessStatisticsService,
-        private readonly mailService: MailService
+        private readonly mailService: MailService,
     ){}
 
     @Cron('0 0 1 * *')
@@ -51,11 +53,10 @@ export class ProcessSummaryNotificationSubscribersService {
 
     private async sendAggregatedStatisticsEmail(email: string, summaries: { name: string, stats: ProcessStatisticsResult }[]) {
         const htmlContent = generateAggregatedEmailContent(summaries);
-        console.log(`Sending aggregated email to ${email}`);
-        console.log(`Sending aggregated email with content: ${htmlContent}`);
+        this.logger.log(`Sending aggregated email to ${email}`);
         await this.mailService.sendMail({
             to: email,
-            subject: 'Process Summary Notification',
+            subject: 'Statystyki procesów',
             content: htmlContent,
             isHtml: true,
             attachments: [

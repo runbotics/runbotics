@@ -27,7 +27,7 @@ export class ProcessStatisticsService {
     public async getProcessStatistics(processId: number, user: User, fromDate?: Date, toDate?: Date): Promise<ProcessStatisticsResult> {
         const { finalFromDate, finalToDate } = this.createDateParams(fromDate, toDate);
         const stats = await this.calculateStatistics(processId, user, finalFromDate, finalToDate);
-        return this.formatStatistics(stats);
+        return this.formatStatistics(stats, finalFromDate, finalToDate);
     }
 
     private createDateParams(fromDate?: Date, toDate?: Date) {
@@ -69,14 +69,16 @@ export class ProcessStatisticsService {
         });
     }
 
-    private formatStatistics(stats: ProcessStatisticsAccumulator): ProcessStatisticsResult {
+    private formatStatistics(stats: ProcessStatisticsAccumulator, fromDate: dayjs.Dayjs, toDate: dayjs.Dayjs): ProcessStatisticsResult {
         const averageDuration = stats.countedExecutions > 0 ? stats.totalDuration / stats.countedExecutions : 0;
         return {
             totalExecutions: stats.totalExecutions,
             successfulExecutions: stats.successfulExecutions,
             failedExecutions: stats.failedExecutions,
             averageDuration: Number((averageDuration / 1000).toFixed(2)),
-            totalDuration: Number((stats.totalDuration / 1000).toFixed(2))
+            totalDuration: Number((stats.totalDuration / 1000).toFixed(2)),
+            fromDate: fromDate.toDate(),
+            toDate: toDate.toDate(),
         };
     }
 }

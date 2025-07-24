@@ -4,4 +4,6 @@ export interface ProcessStatisticsResult {
     failedExecutions: number;
     averageDuration: number;
     totalDuration: number;
+    fromDate: Date;
+    toDate: Date;
 }

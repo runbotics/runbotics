@@ -94,7 +94,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
       <td class="content">
         <h2>Statystyki procesów</h2>
         <p>Cześć,</p>
-        <p>Oto najnowsze statystyki dla śledzonego procesu w okresie: <strong>01.06.2025 - 05.06.2025</strong>.</p>
+        <p>Oto najnowsze statystyki dla śledzonego procesu w okresie: <strong>${summaries[0].stats.fromDate} - ${summaries[0].stats.toDate}</strong>.</p>
 
         ${summaries
           .map(
