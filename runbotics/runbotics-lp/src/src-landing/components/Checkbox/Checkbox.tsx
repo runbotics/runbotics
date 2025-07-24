@@ -10,6 +10,7 @@ export interface CheckboxProps extends Omit<HTMLAttributes<HTMLInputElement>, 'v
     required?: boolean;
     singleLine?: boolean;
     size?: 'large' | 'regular';
+    placeholder?: string;
 }
 
 const Checkbox: VFC<CheckboxProps> = ({

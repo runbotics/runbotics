@@ -1,14 +1,19 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import Image from 'next/image';
+
+import styles from './RPABackground.module.scss';
+
+import { RPA_TITLE_ID } from '../RPASection.utils';
 
 import circuitsBackground from '#public/images/banners/circuits-background.png';
 import { RPA_SECTION_ID } from '#src-landing/utils/utils';
 
-import styles from './RPABackground.module.scss';
-import { RPA_TITLE_ID } from '../RPASection.utils';
+interface RPABackgroundProps {
+    children?: ReactNode;
+}
 
-const RPABackground: FC = ({ children }) => (
+const RPABackground: FC<RPABackgroundProps> = ({ children }) => (
     <section className={styles.root} id={RPA_SECTION_ID} aria-labelledby={RPA_TITLE_ID}>
         <Image
             className={styles.circuitsBackground}
