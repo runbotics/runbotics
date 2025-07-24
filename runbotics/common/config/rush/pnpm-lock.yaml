@@ -256,12 +256,6 @@ importers:
 
   ../../runbotics-orchestrator-ui:
     dependencies:
-      '@azure/msal-browser':
-        specifier: ~4.5.1
-        version: 4.5.1
-      '@azure/msal-react':
-        specifier: ~3.0.5
-        version: 3.0.6(@azure/msal-browser@4.5.1)(react@18.2.0)
       '@contentful/rich-text-react-renderer':
         specifier: ^15.4.0
         version: 15.17.1(react-dom@18.2.0)(react@18.2.0)
@@ -618,8 +612,8 @@ importers:
   ../../runbotics-scheduler:
     dependencies:
       '@azure/msal-node':
-        specifier: ^1.15.0
-        version: 1.18.2
+        specifier: ~3.6.0
+        version: 3.6.3
       '@microsoft/microsoft-graph-client':
         specifier: ^3.0.5
         version: 3.0.6
@@ -707,6 +701,9 @@ importers:
       jwks-rsa:
         specifier: ~3.1.0
         version: 3.1.0
+      jwt-decode:
+        specifier: ~4.0.0
+        version: 4.0.0
       lodash:
         specifier: ^4.17.19
         version: 4.17.21
@@ -940,20 +937,13 @@ packages:
       lru-cache: 10.4.3
     dev: true
 
-  /@azure/msal-browser@4.5.1:
-    resolution: {integrity: sha512-vcva6qA4ytVjg52Ew+RxXGKRuoDMdvNOwT+kECNC36kujYalFQe9B5SNud4WVa/Zk12KFa0bkOHFnjP8cgDv3A==}
-    engines: {node: '>=0.8.0'}
-    dependencies:
-      '@azure/msal-common': 15.2.0
-    dev: false
-
   /@azure/msal-common@13.3.0:
     resolution: {integrity: sha512-/VFWTicjcJbrGp3yQP7A24xU95NiDMe23vxIU1U6qdRPFsprMDNUohMudclnd+WSHE4/McqkZs/nUU3sAKkVjg==}
     engines: {node: '>=0.8.0'}
     dev: false
 
-  /@azure/msal-common@15.2.0:
-    resolution: {integrity: sha512-HiYfGAKthisUYqHG1nImCf/uzcyS31wng3o+CycWLIM9chnYJ9Lk6jZ30Y6YiYYpTQ9+z/FGUpiKKekd3Arc0A==}
+  /@azure/msal-common@15.8.1:
+    resolution: {integrity: sha512-ltIlFK5VxeJ5BurE25OsJIfcx1Q3H/IZg2LjV9d4vmH+5t4c1UCyRQ/HgKLgXuCZShs7qfc/TC95GYZfsUsJUQ==}
     engines: {node: '>=0.8.0'}
     dev: false
 
@@ -966,15 +956,13 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /@azure/msal-react@3.0.6(@azure/msal-browser@4.5.1)(react@18.2.0):
-    resolution: {integrity: sha512-UioBknkXgg22JGl0H4fUKF9m8ngvVEvGsmYW2I9lR4dGB9NsRxv5DMwBIWHR4akp/2BFTAPy/LjujrzkFehoLQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      '@azure/msal-browser': ^4.7.0
-      react: ^16.8.0 || ^17 || ^18
+  /@azure/msal-node@3.6.3:
+    resolution: {integrity: sha512-95wjsKGyUcAd5tFmQBo5Ug/kOj+hFh/8FsXuxluEvdfbgg6xCimhSP9qnyq6+xIg78/jREkBD1/BSqd7NIDDYQ==}
+    engines: {node: '>=16'}
     dependencies:
-      '@azure/msal-browser': 4.5.1
-      react: 18.2.0
+      '@azure/msal-common': 15.8.1
+      jsonwebtoken: 9.0.2
+      uuid: 8.3.2
     dev: false
 
   /@babel/code-frame@7.22.13:

@@ -29,5 +29,9 @@
     "Login.Error.5xx": "Wystąpił nieoczekiwany problem z serwerem. Gdyby problem się powtarzał skontaktuj się z nami poprzez formularz na stronie głownej",
     "Login.Error.UserNotActivated": "Użytkownik nie został jeszcze aktywowany. Poproś administratora o aktywację",
     "Login.Error.UnexpectedError": "Wystąpił nieoczekiwany bład - skontaktuj się z nami poprzez formularz na stronie głownej",
-    "Login.Error.MicrosoftPopupError": "Wystąpił błąd logowania z użyciem konta Microsoft - skontaktuj się z nami poprzez formularz na stronie głownej"
+    "Login.Error.MicrosoftPopupError": "Wystąpił błąd logowania z użyciem konta Microsoft - skontaktuj się z nami poprzez formularz na stronie głownej",
+    "Login.Error.Msal.BadEmail": "Twoje konto Microsoft nie ma powiązanego prawidłowego adresu e-mail.",
+    "Login.Error.Msal.BadCookie": "Nieprawidłowa sesja logowania Microsoft. Spróbuj ponownie.",
+    "Login.Error.Msal.TokenExchangeError": "Wystąpił problem podczas logowania przez Microsoft.",
+    "Login.Error.Msal.TokenIssueFiled": "Wystąpił problem podczas logowania do aplikacji przez Microsoft."
 }
