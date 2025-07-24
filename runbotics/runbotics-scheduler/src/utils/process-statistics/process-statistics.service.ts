@@ -77,8 +77,8 @@ export class ProcessStatisticsService {
             failedExecutions: stats.failedExecutions,
             averageDuration: Number((averageDuration / 1000).toFixed(2)),
             totalDuration: Number((stats.totalDuration / 1000).toFixed(2)),
-            fromDate: fromDate.toDate(),
-            toDate: toDate.toDate(),
+            fromDate: dayjs(fromDate).format('DD.MM.YYYY'),
+            toDate: dayjs(toDate).format('DD.MM.YYYY'),
         };
     }
 }
