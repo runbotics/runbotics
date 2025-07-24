@@ -30,7 +30,7 @@ const ReferencesSection: VFC = () => {
     const calculateLogosPerView = useCallback(() => {
         if (containerRef.current) {
             const containerWidth = containerRef.current.clientWidth;
-            setIsScrollView(containerWidth / (REFERENCES_DATA.length * LOGO_WIDTH) < 1)
+            setIsScrollView(containerWidth / (REFERENCES_DATA.length * LOGO_WIDTH) < 1);
             setLogosPerView(containerWidth / LOGO_WIDTH);
         }
     }, []);

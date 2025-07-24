@@ -2,13 +2,14 @@ import { FC, ReactNode } from 'react';
 
 import Image from 'next/image';
 
-import styles from './IntegrationBackground.module.scss';
 
-import { INTEGRATIONS_TITLE_ID } from '../IntegrationSection.utils';
 
 import arrowRightSrc from '#public/images/shapes/arrows-right-bottom-rounded-transparent-light.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { INTEGRATION_SECTION_ID } from '#src-landing/utils/utils';
+
+import styles from './IntegrationBackground.module.scss';
+import { INTEGRATIONS_TITLE_ID } from '../IntegrationSection.utils';
 
 interface IntegrationBackgroundProps {
     children?: ReactNode;

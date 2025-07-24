@@ -69,7 +69,7 @@ const ReferencesContent: FC<Reference> = ({ quotes, authorName, authorTitle, aut
             </div>
             
         </article>
-    ) 
+    ); 
 };
 
 export default ReferencesContent;

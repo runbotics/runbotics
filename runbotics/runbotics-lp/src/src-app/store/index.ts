@@ -4,9 +4,10 @@ import type { Action } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch as useReduxDispatch, useSelector as useReduxSelector } from 'react-redux';
 import type { ThunkAction } from 'redux-thunk';
 
+import { ENABLE_REDUX_DEV_TOOLS } from '#src-app/utils/constants';
+
 import rootReducer from './rootReducer';
 
-import { ENABLE_REDUX_DEV_TOOLS } from '#src-app/utils/constants';
 
 const customizedMiddleware = getDefaultMiddleware({
     serializableCheck: false

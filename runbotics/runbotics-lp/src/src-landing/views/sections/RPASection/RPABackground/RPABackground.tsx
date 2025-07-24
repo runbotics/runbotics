@@ -2,12 +2,14 @@ import { FC, ReactNode } from 'react';
 
 import Image from 'next/image';
 
+import circuitsBackground from '#public/images/banners/circuits-background.png';
+
+import { RPA_SECTION_ID } from '#src-landing/utils/utils';
+
 import styles from './RPABackground.module.scss';
 
 import { RPA_TITLE_ID } from '../RPASection.utils';
 
-import circuitsBackground from '#public/images/banners/circuits-background.png';
-import { RPA_SECTION_ID } from '#src-landing/utils/utils';
 
 interface RPABackgroundProps {
     children?: ReactNode;

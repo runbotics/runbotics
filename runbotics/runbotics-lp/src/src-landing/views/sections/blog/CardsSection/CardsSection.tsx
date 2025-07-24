@@ -6,8 +6,9 @@ import CardsGrid from '#src-landing/components/BlogCardsGrid';
 import { PageType } from '#src-landing/components/BlogCardsGrid/CardsGrid';
 import CardsPagination from '#src-landing/components/PostPagination';
 
-import styles from './CardsSection.module.scss';
 import { ClientOnly } from '#src-landing/noSSR';
+
+import styles from './CardsSection.module.scss';
 
 interface CardsSectionPropsBase {
     pageType: PageType;
@@ -59,12 +60,12 @@ const CardsSection: FC<CardsSectionPropsType> = ({
         <div className={pageType === 'marketplace' ? styles.root : styles.justifiedRoot}>
             {searchBar}
             <ClientOnly>
-            {notFoundInfo ?
-                <If condition={isNotFoundVisible} else={notFoundInfo}>
-                    {cardsGrid}
-                </If> :
-                cardsGrid
-            }
+                {notFoundInfo ?
+                    <If condition={isNotFoundVisible} else={notFoundInfo}>
+                        {cardsGrid}
+                    </If> :
+                    cardsGrid
+                }
             </ClientOnly>
         </div>
     );
