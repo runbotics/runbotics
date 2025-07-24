@@ -1,15 +1,20 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 
 import Image from 'next/image';
+
+import styles from './PartnerBackground.module.scss';
+
+import { PARTNER_TITLE_ID } from '../PartnerSection.utils';
 
 import partnerBackground from '#public/images/banners/partner-background.png';
 import partnerArrows from '#public/images/shapes/partner-arrows.png';
 import { PARTNER_SECTION_ID } from '#src-landing/utils/utils';
 
-import styles from './PartnerBackground.module.scss';
-import { PARTNER_TITLE_ID } from '../PartnerSection.utils';
+interface PartnerBackgroundProps {
+    children?: ReactNode;
+}
 
-const PartnerBackground: FC = ({ children }) => (
+const PartnerBackground: FC<PartnerBackgroundProps> = ({ children }) => (
     <section className={styles.root} id={PARTNER_SECTION_ID} aria-labelledby={PARTNER_TITLE_ID}>
         <div className={styles.contentBackground}>
             {children}

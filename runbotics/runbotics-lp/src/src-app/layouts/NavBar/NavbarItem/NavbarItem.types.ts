@@ -7,4 +7,5 @@ export interface NavbarItemProps {
     open?: boolean;
     title: string;
     mobile?: boolean;
+    children?: React.ReactNode;
 }

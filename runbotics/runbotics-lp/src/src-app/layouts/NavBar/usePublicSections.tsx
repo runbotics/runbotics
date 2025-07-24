@@ -7,9 +7,10 @@ import TuneIcon from '@mui/icons-material/Tune';
 import { Command as CommandIcon } from 'react-feather';
 import { FeatureKey, Role } from 'runbotics-common';
 
+import { Section } from './Navbar.types';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { Section } from './Navbar.types';
 
 export const usePublicSections = (): Section[] => {
     const { translate } = useTranslations();
@@ -21,47 +22,47 @@ export const usePublicSections = (): Section[] => {
             items: [
                 {
                     title: translate('Nav.Items.Processes'),
-                    icon: CallSplitIcon,
+                    icon: <CallSplitIcon />,
                     href: '/app/processes/collections',
                     featureKeys: [FeatureKey.PROCESS_LIST_READ],
                 },
                 {
                     title: translate('Nav.Items.Bots'),
-                    icon: ExtensionOutlinedIcon,
+                    icon: <ExtensionOutlinedIcon/>,
                     href: '/app/bots',
                     authorities: [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN],
                     featureKeys: [FeatureKey.BOT_READ],
                 },
                 {
                     title: translate('Nav.Items.Credentials'),
-                    icon: LockOutlinedIcon,
+                    icon: <LockOutlinedIcon/>,
                     href: '/app/credentials/collections',
                     featureKeys: [FeatureKey.CREDENTIALS_PAGE_READ],
                 },
                 {
                     title: translate('Nav.Items.Actions'),
-                    icon: CommandIcon,
+                    icon: <CommandIcon/>,
                     href: '/app/actions',
                     authorities: [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN],
                     featureKeys: [FeatureKey.EXTERNAL_ACTION_EDIT],
                 },
                 {
                     title: translate('Nav.Items.GlobalVariables'),
-                    icon: TuneIcon,
+                    icon: <TuneIcon/>,
                     href: '/app/variables',
                     authorities: [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN],
                     featureKeys: [FeatureKey.GLOBAL_VARIABLE_READ],
                 },
                 {
                     title: translate('Nav.Items.Scheduler'),
-                    icon: ScheduleIcon,
+                    icon: <ScheduleIcon/>,
                     href: '/app/scheduler',
                     authorities: [Role.ROLE_ADMIN, Role.ROLE_TENANT_ADMIN],
                     featureKeys: [FeatureKey.SCHEDULER_PAGE_READ],
                 },
                 {
                     title: translate('Nav.Items.History'),
-                    icon: HistoryIcon,
+                    icon: <HistoryIcon/>,
                     href: '/app/history',
                     authorities: [Role.ROLE_TENANT_ADMIN],
                     featureKeys: [FeatureKey.HISTORY_READ],

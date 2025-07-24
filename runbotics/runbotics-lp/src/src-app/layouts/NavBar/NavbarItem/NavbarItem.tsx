@@ -5,11 +5,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Collapse, ListItemButton } from '@mui/material';
 import RouterLink from 'next/link';
 
-
-import If from '#src-app/components/utils/If';
-
 import { StyledListItem, StyledListItemText, StyledListItemIcon, getLinkButtonSx } from './NavbarItem.styles';
 import { NavbarItemProps } from './NavbarItem.types';
+
+import If from '#src-app/components/utils/If';
 
 
 const NavbarItem: FC<NavbarItemProps> = ({

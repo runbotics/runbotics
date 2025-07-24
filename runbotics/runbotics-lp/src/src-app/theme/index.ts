@@ -10,7 +10,6 @@ import { typography } from './typography';
 import { zIndex } from './zIndex';
 import { ThemeType } from '../utils/constants';
 
-
 interface ThemeConfig {
     responsiveFontSizes?: boolean;
     theme?: ThemeType;
