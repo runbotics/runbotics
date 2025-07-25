@@ -1,4 +1,11 @@
-import { IProcessInstance, NotificationProcess, ProcessCredential, ProcessCredentialDto, ProcessDto } from 'runbotics-common';
+import {
+    ACTION_GROUP,
+    IProcessInstance,
+    NotificationProcess,
+    ProcessCredential,
+    ProcessCredentialDto,
+    ProcessDto,
+} from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
 import { Options, Variable } from '#src-app/hooks/useOptions';
@@ -11,11 +18,13 @@ export interface CommandStackInfo {
     commandStackSize: number;
     commandStackIdx: number;
 }
+
 type ElementId = string;
+
 export enum ModelerErrorType {
     FORM_ERROR = 'FORM_ERROR',
     CONNECTION_ERROR = 'CONNECTION_ERROR',
-    CANVAS_ERROR = 'CANVAS_ERROR'
+    CANVAS_ERROR = 'CANVAS_ERROR',
 }
 
 export interface ModelerError {
@@ -39,6 +48,7 @@ export interface ModelerState {
     commandStack: CommandStackInfo;
     imported: boolean;
     activeDrag: boolean;
+    blacklistedActions: ACTION_GROUP[] | null;
 }
 
 export interface ProcessState {
@@ -56,7 +66,7 @@ export interface ProcessState {
         byId: Record<string, ProcessDto>;
         ids: string[];
         page: Page<ProcessDto> | null;
-        listDisplayMode: ProcessListDisplayMode
+        listDisplayMode: ProcessListDisplayMode;
     };
 }
 

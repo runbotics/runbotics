@@ -29,3 +29,4 @@ export * from './api/credential.model';
 export * from './api/credential-collection.model';
 export * from './api/credential-template.model';
 export * from './api/license.model';
+export * from './api/action-blacklist.model';

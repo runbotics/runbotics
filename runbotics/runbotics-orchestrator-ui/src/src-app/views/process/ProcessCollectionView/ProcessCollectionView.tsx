@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
@@ -10,6 +10,7 @@ import useProcessCollection from '#src-app/hooks/useProcessCollection';
 import useProcessInstanceMapSocket from '#src-app/hooks/useProcessInstanceMapSocket';
 
 import { useDispatch } from '#src-app/store';
+import { processActions } from '#src-app/store/slices/Process';
 import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 
 import InternalPage from '../../../components/pages/InternalPage';
@@ -23,18 +24,29 @@ import ProcessList from '../ProcessBrowseView/ProcessList';
 export const ProcessCollectionView = () => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
-    const { active: { isLoading, childrenCollections } } = useSelector(processCollectionSelector);
+    const {
+        active: { isLoading, childrenCollections },
+    } = useSelector(processCollectionSelector);
 
     const { currentCollectionId, breadcrumbs } = useProcessCollection();
     const [sectionHeight, setSectionHeight] = useState({ minHeight: '120px' });
 
     useProcessInstanceMapSocket();
 
-    useEffect(() =>
-        () => {
+    useEffect(() => {
+        dispatch(processActions.getBlacklistedActions())
+            .unwrap()
+            .then((result) => {
+                dispatch(
+                    processActions.setProcessBlacklistActions(
+                        result.actionGroups
+                    )
+                );
+            });
+        return () => {
             dispatch(processInstanceActions.resetAllActiveProcessInstances());
-        }
-    , []);
+        };
+    }, []);
 
     useEffect(() => {
         setTimeout(() => {
@@ -55,10 +67,12 @@ export const ProcessCollectionView = () => {
     };
 
     return (
-        <InternalPage title={translate('Process.Collection.Navigation.Collections.Label')}>
+        <InternalPage
+            title={translate('Process.Collection.Navigation.Collections.Label')}
+        >
             <Header />
             <Box pt={2} sx={boxStyle}>
-                <If condition={!isLoading} else={<LoadingBox />} >
+                <If condition={!isLoading} else={<LoadingBox />}>
                     <ProcessCollectionPath
                         breadcrumbs={breadcrumbs}
                         currentCollectionId={currentCollectionId}
@@ -66,7 +80,7 @@ export const ProcessCollectionView = () => {
                     <ProcessCollectionList />
                 </If>
             </Box>
-            <ProcessList/>
+            <ProcessList />
         </InternalPage>
     );
 };

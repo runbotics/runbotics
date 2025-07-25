@@ -27,7 +27,8 @@ export const initialModelerState: ModelerState = {
     },
     passedInVariables: [],
     imported: false,
-    activeDrag: false
+    activeDrag: false,
+    blacklistedActions: null,
 };
 
 export const initialState: ProcessState = {
