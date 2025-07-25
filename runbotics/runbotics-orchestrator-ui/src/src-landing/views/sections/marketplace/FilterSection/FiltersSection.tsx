@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { FilterQueryParamsEnum, getPageUrl, Industry, Tag } from '#contentful/common';
+import { FilterQueryParamsEnum, getPageUrl, Industry } from '#contentful/common';
 import MinusIcon from '#public/images/icons/minus.svg';
 import PlusIcon from '#public/images/icons/plus.svg';
 import useTranslations from '#src-app/hooks/useTranslations';

@@ -19,11 +19,9 @@ export const REFERENCES_DATA: Reference[] = [
     }
 ];
 
-export const calculateTotalPages = (totalItems: number, itemsPerPage: number) => {
-    return Math.ceil(totalItems / itemsPerPage);
-};
+export const calculateTotalPages = (totalItems: number, itemsPerPage: number) => Math.ceil(totalItems / itemsPerPage);
 
 export const calculateTotalDots = (totalItems: number, logosPerView: number) => {
     if (logosPerView < 1) return totalItems;
     return Math.max(1, calculateTotalPages(totalItems, logosPerView));
-} 
+}; 

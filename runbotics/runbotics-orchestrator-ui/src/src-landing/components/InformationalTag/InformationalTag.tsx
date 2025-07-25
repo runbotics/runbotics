@@ -8,12 +8,10 @@ export interface InformationalTagProps {
     outlined?: boolean;
 }
 
-const InformationalTag: FC<InformationalTagProps> = ({text, size = 'medium', outlined}) => {
-    return (
-        <div className={`${styles.tag} ${size}`}>
-            {text}
-        </div>
-    )
-}
+const InformationalTag: FC<InformationalTagProps> = ({text, size = 'medium', outlined}) => (
+    <div className={`${styles.tag} ${size}`}>
+        {text}
+    </div>
+);
 
 export default InformationalTag;

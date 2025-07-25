@@ -49,7 +49,7 @@ export default async function handler(req, res) {
                 if(!_.isEqual(blogContentful[lang], cache)) {
                     // eslint-disable-next-line no-await-in-loop
                     await recreateBlogCache();
-                    return  res.status(200).json({message: 'Blog cache refreshed'})
+                    return  res.status(200).json({message: 'Blog cache refreshed'});
                 }
             }
             break;
