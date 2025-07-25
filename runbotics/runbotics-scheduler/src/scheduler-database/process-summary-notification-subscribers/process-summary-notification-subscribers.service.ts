@@ -22,6 +22,7 @@ export class ProcessSummaryNotificationSubscribersService {
         private readonly mailService: MailService,
     ){}
 
+    // executes every 1st of a month
     @Cron('0 0 1 * *')
     async aggregateAndSendNotifications() {
         const subscribers = await this.getAllSubscribersWithProcesses();
