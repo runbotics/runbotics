@@ -23,7 +23,7 @@ export type SendMailInput = {
     bcc?: string;
     subject: string;
     content: string;
-    attachment?: string;
+    attachments?: { filename: string; path: string; cid?: string }[];
     isHtml: boolean;
 };
 
@@ -63,17 +63,14 @@ export class MailService {
             sendMailOptions['bcc'] = bcc;
         }
 
-        const attachment = input.attachment;
-        if (attachment) {
-            const fileName = attachment.substring(attachment.lastIndexOf('\\') + 1);
-            sendMailOptions['attachments'] = [
-                {
-                    filename: fileName,
-                    content: fs.readFileSync(attachment),
-                },
-            ];
+        if (input.attachments && input.attachments.length > 0) {
+            sendMailOptions['attachments'] = input.attachments.map((attachment) => ({
+                filename: attachment.filename,
+                path: attachment.path,
+                cid: attachment.cid,
+            }));
         }
-
+        
         await this.mailerService.sendMail(sendMailOptions)
             .catch(error => {
                 this.logger.error(`Failed to send the mail with error: ${error.message}`);
