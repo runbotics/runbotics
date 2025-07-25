@@ -1,6 +1,6 @@
 {
     "name": "runbotics-orchestrator-ui",
-    "version": "3.3.0-SNAPSHOT.32",
+    "version": "3.3.0-SNAPSHOT.33",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -152,7 +152,8 @@
         "vite-tsconfig-paths": "~5.1.4",
         "@testing-library/react": "~16.3.0",
         "dotenv": "~16.5.0",
-        "vite": "~6.3.5"
+        "vite": "~6.3.5",
+        "@testing-library/jest-dom": "~6.6.3"
     },
     "resolutions": {
         "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
