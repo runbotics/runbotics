@@ -13,7 +13,7 @@ describe('Label component – null check functions', () => {
     let isProcessInstanceFinishedSpy: vi.Mock;
 
     beforeEach(() => {
-        vi.restoreAllMocks(); // Resetuje wszystkie mocki przed każdym testem
+        vi.restoreAllMocks();
         isProcessInstanceFinishedSpy = vi.spyOn(
             RunboticsCommon,
             'isProcessInstanceFinished'
