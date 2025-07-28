@@ -57,8 +57,8 @@ export class ProcessCollectionController {
     @ApiOperation({ summary: 'Set a process collection as public' })
     @ApiParam({ name: 'id', required: true, description: 'Collection ID to set as public' })
     @ApiResponse({ status: 200, description: 'Collection visibility updated', type: ProcessCollection })
-    async setCollectionPublic(@Param('id') id: string): Promise<ProcessCollection> {
-        return this.processCollectionService.setProcessCollectionPublic(id);
+    async setCollectionPublic(@Param('id') id: string, @Query('isPublic') isPublic?: boolean): Promise<ProcessCollection> {
+        return this.processCollectionService.setProcessCollectionPublic(id, isPublic);
     }
 
     @FeatureKeys(FeatureKey.PROCESS_COLLECTION_DELETE)

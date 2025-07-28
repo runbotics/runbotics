@@ -29,14 +29,14 @@ export class ProcessCollectionAuthorizationGuard implements CanActivate {
         
         if (!collectionId) {
             throw new BadRequestException(
-                `Brak parametru kolekcji "${paramKey}" w ścieżce, body lub query`,
+                `No param key in request params, body or query: ${paramKey}`,
             );
         }
 
         const allowed = await this.permissionCheckService.authorize(request, collectionId);
 
         if (!allowed) {
-            throw new ForbiddenException('Brak uprawnień do wybranej kolekcji');
+            throw new ForbiddenException('You do not have permission to access this process collection');
         }
         return true;
     }
