@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { userReferenceSchema } from './user.dto';
+import { createZodDto } from 'nestjs-zod';
 
 export const createProcessCollectionSchema = z.object({
     name: z.string().trim().min(1).max(255),
@@ -10,4 +11,5 @@ export const createProcessCollectionSchema = z.object({
     tenantId: z.string().optional(),
 });
 
+export class CreateProcessCollectionZodDto extends createZodDto(createProcessCollectionSchema) {}
 export type CreateProcessCollectionDto = z.infer<typeof createProcessCollectionSchema>;

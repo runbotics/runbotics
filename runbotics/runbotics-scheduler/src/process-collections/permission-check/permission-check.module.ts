@@ -8,6 +8,9 @@ import { PermissionTableHandler } from './chain/permission-table.handler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProcessCollectionUser } from '#/process-collections/process-collection-user/process-collection-user.entity';
 import { ProcessCollection } from '#/process-collections/process-collection/process-collection.entity';
+import {
+    ProcessCollectionAuthorizationGuard
+} from '#/process-collections/permission-check/process-collection-authorization.guard';
 
 @Module({
     imports: [TypeOrmModule.forFeature([ProcessCollectionUser, ProcessCollection])],
@@ -18,8 +21,9 @@ import { ProcessCollection } from '#/process-collections/process-collection/proc
         PublicCollectionHandler,
         SharedLinkHandler,
         PermissionTableHandler,
+        ProcessCollectionAuthorizationGuard,
     ],
-    exports: [PermissionCheckService],
+    exports: [PermissionCheckService, ProcessCollectionAuthorizationGuard],
 })
 export class PermissionCheckModule {
 }

@@ -26,6 +26,6 @@ export class PermissionTableHandler extends BaseAuthorizationHandler {
             this.logger.log(`Authorized by permission table handler for ${request.user.id}`);
             return true;
         }
-        return super.handle(request);
+        return super.handle(request, collectionId);
     }
 }

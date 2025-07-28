@@ -26,6 +26,6 @@ export class TenantAdminHandler extends BaseAuthorizationHandler {
             this.logger.log(`Authorized by tenant admin handler for ${request.user.id}`);
             return true;
         }
-        return super.handle(request);
+        return super.handle(request, collectionId);
     }
 }

@@ -8,7 +8,8 @@ import { Logger } from '#/utils/logger';
 
 @Injectable()
 export class OwnerHandler extends BaseAuthorizationHandler {
-    private readonly logger = new Logger(OwnerHandler.name)
+    private readonly logger = new Logger(OwnerHandler.name);
+
     constructor(
         @InjectRepository(ProcessCollection)
         private readonly processCollectionRepository: TreeRepository<ProcessCollection>) {
@@ -16,16 +17,20 @@ export class OwnerHandler extends BaseAuthorizationHandler {
     }
 
     async handle(request: AuthRequest, collectionId: string): Promise<boolean> {
-        const processCollection = await this.processCollectionRepository.findOne({ where: { id: collectionId }, relations: ['createdBy']});
+        const processCollection = await this.processCollectionRepository.findOne({
+            where: { id: collectionId },
+            relations: ['owner'],
+        });
+        this.logger.log(`Checking owner handler for user ${request.user.id} on collection ${collectionId} and found collection owner ${processCollection?.ownerId}`);
         if (!processCollection) {
             throw new NotFoundException('No process collection found');
         }
-        
-        if (processCollection.ownerId === request.user.id) {
+
+        if (Number(processCollection.ownerId) === Number(request.user.id)) {
             this.logger.log(`Authorized by owner handler for ${request.user.id}`);
             return true;
         }
-
-        return super.handle(request);
+        
+        return super.handle(request, collectionId);
     }
 }
