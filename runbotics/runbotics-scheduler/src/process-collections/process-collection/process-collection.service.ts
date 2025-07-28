@@ -53,7 +53,7 @@ export class ProcessCollectionService {
         return strategy.execute(id, dto);
     }
     
-    async setProcessCollectionPublic(processCollectionId: string, isPublic?: boolean) {
+    async setProcessCollectionPublic(processCollectionId: string, isPublic: boolean) {
         const strategy = this.strategyFactory.createSetPublicStrategy();
         return strategy.execute(processCollectionId, isPublic);
     }

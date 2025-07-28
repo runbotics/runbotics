@@ -13,7 +13,7 @@ export class SetProcessCollectionPublicStrategy implements CollectionStrategy<Pr
     ) {
     }
 
-    async execute(id: string, isPublic?: boolean): Promise<ProcessCollection> {
+    async execute(id: string, isPublic: boolean): Promise<ProcessCollection> {
         return this.repo.manager.transaction(async manager => {
             const treeRepository = manager.getTreeRepository(ProcessCollection);
             const existing = await manager.findOne(
@@ -41,7 +41,7 @@ export class SetProcessCollectionPublicStrategy implements CollectionStrategy<Pr
                 manager,
                 existing.parentId,
                 PrivilegeType.READ,
-                !!isPublic,
+                isPublic,
             );
             return saved;
         });

@@ -50,14 +50,18 @@ export class ProcessCollectionController {
     ): Promise<ProcessCollection> {
         return this.processCollectionService.createProcessCollection({ tenantId, ...processCollection }, user.id);
     }
-    
+
     @CollectionAuthorize('id')
     @FeatureKeys(FeatureKey.PROCESS_COLLECTION_EDIT)
     @Post(':id/set-public')
     @ApiOperation({ summary: 'Set a process collection as public' })
     @ApiParam({ name: 'id', required: true, description: 'Collection ID to set as public' })
     @ApiResponse({ status: 200, description: 'Collection visibility updated', type: ProcessCollection })
-    async setCollectionPublic(@Param('id') id: string, @Query('isPublic') isPublic?: boolean): Promise<ProcessCollection> {
+    async setCollectionPublic(
+        @Param('id') id: string,
+        // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+        @Query('isPublic') isPublic: boolean = false,
+    ): Promise<ProcessCollection> {
         return this.processCollectionService.setProcessCollectionPublic(id, isPublic);
     }
 
@@ -79,7 +83,6 @@ export class ProcessCollectionController {
     async getProcessCollectionTree(@Param('id') id: string): Promise<ProcessCollection | ProcessCollection[]> {
         return this.processCollectionService.getProcessCollectionTree(id);
     }
-
 
     @CollectionAuthorize('id')
     @FeatureKeys(FeatureKey.PROCESS_COLLECTION_EDIT)
