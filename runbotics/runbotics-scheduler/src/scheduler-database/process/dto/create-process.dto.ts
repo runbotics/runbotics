@@ -6,6 +6,7 @@ import { botSystemReferenceSchema } from '#/scheduler-database/bot-system/dto/bo
 import { botCollectionReferenceSchema } from '#/scheduler-database/bot-collection/dto/bot-collection-reference';
 import { BotSystemType, ProcessOutputType } from 'runbotics-common';
 import { processCollectionReferenceSchema } from '#/scheduler-database/process-collection/dto/process-collection-reference';
+import { createZodDto } from 'nestjs-zod';
 
 export const createProcessSchema = z.object({
     name: z.string().trim().min(1).max(255),
@@ -29,4 +30,5 @@ export const createProcessSchema = z.object({
     tags: z.array(tagReferenceSchema),
 });
 
+export class CreateProcessSwaggerDto extends createZodDto(createProcessSchema) {}
 export type CreateProcessDto = z.infer<typeof createProcessSchema>;
