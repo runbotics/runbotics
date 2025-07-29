@@ -56,7 +56,7 @@ const LoginPage: FC = () => {
     }, []);
 
     const handleLoginWithMicrosoft = () => {
-        router.push('/scheduler/msal/begin');
+        window.location.href = '/scheduler/msal/begin';
         return Promise.resolve();
     };
 
