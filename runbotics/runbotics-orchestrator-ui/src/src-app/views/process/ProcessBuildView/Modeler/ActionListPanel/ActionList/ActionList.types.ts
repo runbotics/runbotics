@@ -1,6 +1,5 @@
 import {
     ACTION_GROUP,
-    ApiAction,
     BrowserAction,
     GeneralAction,
     VariableAction,

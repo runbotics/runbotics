@@ -28,6 +28,7 @@ import { ProcessCollectionModule } from './process-collection/process-collection
 import { EmailTriggerWhitelistItemModule } from './email-trigger-whitelist-item/email-trigger-whitelist-item.module';
 import { LicenseModule } from './license/license.module';
 import { ProcessSummaryNotificationSubscribersModule } from './process-summary-notification-subscribers/process-summary-notification-subscribers.module';
+import { ActionBlacklistModule } from '#/scheduler-database/action-blacklist/action-blacklist.module';
 
 @Module({
     imports: [
@@ -59,6 +60,7 @@ import { ProcessSummaryNotificationSubscribersModule } from './process-summary-n
         ProcessCollectionModule,
         EmailTriggerWhitelistItemModule,
         LicenseModule,
+        ActionBlacklistModule,
         ProcessSummaryNotificationSubscribersModule
     ],
     exports: [

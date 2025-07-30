@@ -47,12 +47,10 @@ const Results: FC<ResultsProps> = ({ className, ...rest }) => {
     const [currentPage, setCurrentPage] = useState(pageFromUrl ? parseInt(pageFromUrl, 10) : 0);
     const [limit, setLimit] = useState(pageSizeFromUrl ? parseInt(pageSizeFromUrl, 10) : DefaultPageSize.TABLE);
     const [collectionState, setCollectionState] = useState(collectionFromUrl);
-    const mappedBotCollections = useMemo(() => {
-        return botCollections?.reduce((acc, collection) => ({
-            ...acc,
-            [collection.id]: collection.name,
-        }), {});
-    }, [botCollections]);
+    const mappedBotCollections = useMemo(() => botCollections?.reduce((acc, collection) => ({
+        ...acc,
+        [collection.id]: collection.name,
+    }), {}), [botCollections]);
 
     const [open, setOpen] = useState(false);
     const [botToDelete, setBotToDelete] = useState<IBot>(null);
