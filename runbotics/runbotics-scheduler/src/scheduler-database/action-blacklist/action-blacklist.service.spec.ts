@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { ActionBlacklistService } from '#/scheduler-database/action-blacklist/action-blacklist.service';
 import { ActionBlacklist } from '#/scheduler-database/action-blacklist/action-blacklist.entity';
 import { ACTION_GROUP } from 'runbotics-common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 
 function mockRepository() {
     return {
@@ -61,14 +62,40 @@ describe('ActionBlacklistService', () => {
         expect(result).toEqual(entities);
     });
 
-    it('findCurrent() should return current blacklist', async () => {
-        const entity = { id: 'uuid' } as ActionBlacklist;
-        repo.find = vi.fn().mockResolvedValue([entity]);
+    it('findAll() should return all entities but empty array', async () => {
+        const entities = [] as ActionBlacklist[];
+        repo.find = vi.fn().mockResolvedValue(entities);
+
+        const result = await service.findAll();
+
+        expect(repo.find).toHaveBeenCalled();
+        expect(result).toEqual(entities);
+    });
+
+    it('should return the only ActionBlacklist entity if exactly one exists', async () => {
+        const fakeEntity: ActionBlacklist = { id: '1' } as ActionBlacklist;
+        repo.find = vi.fn().mockResolvedValue([fakeEntity]);
 
         const result = await service.findCurrent();
 
-        expect(repo.find).toHaveBeenCalledWith();
-        expect(result).toEqual(entity);
+        expect(result).toBe(fakeEntity);
+        expect(repo.find).toHaveBeenCalledOnce();
+    });
+
+    it('should throw InternalServerErrorException if multiple entries exist', async () => {
+        const fakeEntities: ActionBlacklist[] = [
+            { id: '1' } as ActionBlacklist,
+            { id: '2' } as ActionBlacklist,
+        ];
+        repo.find = vi.fn().mockResolvedValue(fakeEntities);
+
+        await expect(() => service.findCurrent()).rejects.toThrow(InternalServerErrorException);
+    });
+
+    it('should throw NotFoundException if no entries exist', async () => {
+        repo.find = vi.fn().mockResolvedValue([]);
+
+        await expect(() => service.findCurrent()).rejects.toThrow(NotFoundException);
     });
 
     it('update() should persist entity', async () => {

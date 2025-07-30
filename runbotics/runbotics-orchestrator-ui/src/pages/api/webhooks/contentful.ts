@@ -1,7 +1,8 @@
 import _ from 'lodash';
 
 import {
-    getBlogMainCache, recreateBlogCache,
+    getBlogMainCache,
+    recreateBlogCache,
     transformContentfulResponse as transformBlogContentfulResponse,
 } from '#contentful/blog-main';
 import {
@@ -30,13 +31,16 @@ export default async function handler(req, res) {
         case ContentTypeId.MARKETPLACE_OFFER:
         case ContentTypeId.MARKETPLACE_TAG:
         case ContentTypeId.MARKETPLACE_INDUSTRY:
-            const marketplaceContentful = await transformMarketplaceContentfulResponse();
-            for(const lang of languages) {
+            const marketplaceContentful =
+                await transformMarketplaceContentfulResponse();
+            for (const lang of languages) {
                 const cache = getMarketplaceMainCache(lang);
-                if(!_.isEqual(marketplaceContentful[lang], cache)) {
+                if (!_.isEqual(marketplaceContentful[lang], cache)) {
                     // eslint-disable-next-line no-await-in-loop
                     await recreateMarketplaceCache();
-                    return res.status(200).json({ message: 'Marketplace cache refreshed'});
+                    return res
+                        .status(200)
+                        .json({ message: 'Marketplace cache refreshed' });
                 }
             }
             break;
@@ -46,14 +50,16 @@ export default async function handler(req, res) {
             const blogContentful = await transformBlogContentfulResponse();
             for (const lang of Object.values(languages)) {
                 const cache = getBlogMainCache(lang);
-                if(!_.isEqual(blogContentful[lang], cache)) {
+                if (!_.isEqual(blogContentful[lang], cache)) {
                     // eslint-disable-next-line no-await-in-loop
                     await recreateBlogCache();
-                    return  res.status(200).json({message: 'Blog cache refreshed'});
+                    return res
+                        .status(200)
+                        .json({ message: 'Blog cache refreshed' });
                 }
             }
             break;
-        default: 
+        default:
             return res.status(304).json({ message: 'Cache not modified' });
     }
     return res.status(304).json({ message: 'Cache not modified' });
