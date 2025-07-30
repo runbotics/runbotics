@@ -24,9 +24,9 @@ export class ProcessSummaryNotificationSubscribersEntity {
     @JoinColumn({ name: 'process_id' })
     process: ProcessEntity;
 
-    @Column()
-    user_id: number;
+    @Column({name: 'user_id'})
+    userId: number;
 
-    @Column()
-    process_id: number;
+    @Column({name: 'process_id'})
+    processId: number;
 }

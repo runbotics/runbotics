@@ -18,6 +18,7 @@ import { processCollectionReducer as processCollection } from './slices/ProcessC
 import { processInstanceReducer as processInstance } from './slices/ProcessInstance';
 import { processInstanceEventReducer as processInstanceEvent } from './slices/ProcessInstanceEvent';
 import { processOutputReducer as processOutput } from './slices/ProcessOutput';
+import { processSubscriptionStatisticsReducer as processSubscriptionStatistics } from './slices/ProcessSubscriptionStatisctics';
 import { scheduleProcessReducer as scheduleProcess } from './slices/ScheduleProcess';
 import { schedulerReducer as scheduler } from './slices/Scheduler';
 import { tenantsReducer as tenants } from './slices/Tenants';
@@ -48,6 +49,7 @@ const rootReducer = combineReducers({
     credentials,
     credentialCollections,
     credentialTemplates,
+    processSubscriptionStatistics,
 });
 
 export default rootReducer;

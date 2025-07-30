@@ -30,6 +30,8 @@ import { processActions, processSelector } from '#src-app/store/slices/Process';
 
 import { processOutputActions } from '#src-app/store/slices/ProcessOutput';
 
+import { ProcessSubscriptionStatisticsActions, subscribersSelector } from '#src-app/store/slices/ProcessSubscriptionStatisctics';
+
 import AddEmailSubscriptionComponent from './AddEmailSubscriptionComponent';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
@@ -56,6 +58,8 @@ const ProcessConfigureView: VFC = () => {
     const { id } = useRouter().query;
     const processId = Number(id);
 
+    const processNotificationSubscribers = useSelector(subscribersSelector);
+
     const [processOutputType, setProcessOutputType] = useState<ProcessOutput>(
         process?.output
     );
@@ -69,9 +73,14 @@ const ProcessConfigureView: VFC = () => {
 
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
+    const [openSubscription, setOpenSubscription] = useState(false);
 
     const notificationTableColumns = useProcessNotificationColumns({
         onDelete: handleDeleteSubscription,
+    });
+
+    const processSubscriptionsColumns = useProcessNotificationColumns({
+        onDelete: handleUnsubscribe,
     });
 
     const hasAddMailPermission = useRole([Role.ROLE_TENANT_ADMIN]);
@@ -87,7 +96,19 @@ const ProcessConfigureView: VFC = () => {
             ),
         [processSubscriptions]
     );
-    
+
+    const processSubscriptionsTableRows = useMemo(
+        () => 
+            processNotificationSubscribers.map<NotificationRow>(
+                (sub) => ({
+                    id: sub.id,
+                    [NotificationTableFields.EMAIL]: sub.customEmail || sub.userEmail,
+                    [NotificationTableFields.SUBSCRIBED_AT]: sub.createdAt,
+                })
+            ),
+        [processNotificationSubscribers]
+    );
+
     const handleGetProcessSubscribers = async () => {
         await dispatch(
             processActions.getProcessSubscriptionInfo({ resourceId: processId })
@@ -99,6 +120,7 @@ const ProcessConfigureView: VFC = () => {
         dispatch(botSystemsActions.getAll());
         dispatch(processOutputActions.getAll());
         handleGetProcessSubscribers();
+        dispatch(ProcessSubscriptionStatisticsActions.fetchSubscribersByProcessId(processId));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
@@ -208,6 +230,29 @@ const ProcessConfigureView: VFC = () => {
         await handleGetProcessSubscribers();
     };
 
+    const handleProcessSubscriptionChange = async (subscriptionState: boolean) => {
+        subscriptionState ? await dispatch(
+            ProcessSubscriptionStatisticsActions.createSubscriber({processId: processId, email: '', userId: user.id})
+        ) : 
+            await dispatch(ProcessSubscriptionStatisticsActions.deleteSubscriber(
+                processNotificationSubscribers.find(
+                    (sub) => Number(sub.userId) === user.id && !sub.customEmail
+                ).id
+            ));
+        await dispatch(ProcessSubscriptionStatisticsActions.fetchSubscribersByProcessId(processId));
+    };
+
+    const handleCustomEmailSubscriptionStatistics = async (customEmail: string) => {
+        await dispatch(
+            ProcessSubscriptionStatisticsActions.createSubscriber({
+                processId: processId,
+                email: customEmail,
+                userId: user.id,
+            })
+        );
+        await dispatch(ProcessSubscriptionStatisticsActions.fetchSubscribersByProcessId(processId));
+    };
+
     async function handleDeleteSubscription(
         subscriptionInfo: NotificationRow
     ) {
@@ -217,6 +262,13 @@ const ProcessConfigureView: VFC = () => {
             })
         );
         await handleGetProcessSubscribers();
+    }
+
+    async function handleUnsubscribe(subscription: NotificationRow) {
+        await dispatch(
+            ProcessSubscriptionStatisticsActions.deleteSubscriber(subscription.id)
+        );
+        await dispatch(ProcessSubscriptionStatisticsActions.fetchSubscribersByProcessId(processId));
     }
 
     return (
@@ -274,16 +326,27 @@ const ProcessConfigureView: VFC = () => {
                             />
                         </StyledPaper>
                     </Box>
+                    <Box>
+                        <StyledPaper>
+                            <NotificationSwitchComponent
+                                onClick={() => setOpenSubscription(true)}
+                                isSubscribed={processNotificationSubscribers.some((sub) => Number(sub.userId) === user.id && !sub.customEmail)}
+                                onSubscriptionChange={handleProcessSubscriptionChange}
+                                label={translate('Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Label')}
+                                tooltip={translate('Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Tooltip')}
+                            />
+                        </StyledPaper>
+                    </Box>
                 </SettingsContainer>
                 <CredentialsContainer>
                     <StyledPaper>
-                        <ProcessCredentials/>
+                        <ProcessCredentials />
                     </StyledPaper>
                 </CredentialsContainer>
             </PageContainer>
             <Dialog
                 open={open}
-                onClose={() => setOpen(false)} 
+                onClose={() => setOpen(false)}
                 maxWidth={false}
             >
                 <NotificationTableComponent
@@ -294,6 +357,21 @@ const ProcessConfigureView: VFC = () => {
                 />
                 <If condition={hasAddMailPermission}>
                     <AddEmailSubscriptionComponent onEmailAdd={handleCustomEmailSubscription} />
+                </If>
+            </Dialog>
+            <Dialog
+                open={openSubscription}
+                onClose={() => setOpenSubscription(false)}
+                maxWidth={false}
+            >
+                <NotificationTableComponent
+                    notificationTableColumns={processSubscriptionsColumns}
+                    subscribersList={processSubscriptionsTableRows ?? []}
+                    onClose={() => setOpenSubscription(false)}
+                    loading={loading}
+                />
+                <If condition={hasAddMailPermission}>
+                    <AddEmailSubscriptionComponent onEmailAdd={handleCustomEmailSubscriptionStatistics} />
                 </If>
             </Dialog>
         </ContainerWrapper>
