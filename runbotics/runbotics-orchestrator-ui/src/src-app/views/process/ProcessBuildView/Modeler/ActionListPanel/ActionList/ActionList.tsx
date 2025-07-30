@@ -10,7 +10,13 @@ import {
 
 import clsx from 'clsx';
 
-import { ACTION_GROUP, AllActionIds, BotSystemType, FeatureKey, Role } from 'runbotics-common';
+import {
+    ACTION_GROUP,
+    AllActionIds,
+    BotSystemType,
+    FeatureKey,
+    Role,
+} from 'runbotics-common';
 
 import HighlightText from '#src-app/components/HighlightText';
 import If from '#src-app/components/utils/If';
@@ -28,7 +34,6 @@ import { classes } from '../ActionListPanel.styles';
 import ListGroup, { Item } from '../ListGroup';
 import { groupActions } from '../useGroupsReducer';
 
-
 interface ListItemProps {
     item: Item;
     disabled?: boolean;
@@ -43,6 +48,9 @@ const ActionList: FC<ActionListProps> = ({
 }) => {
     const isGuest = useRole([Role.ROLE_GUEST]);
     const { process } = useSelector((state) => state.process.draft);
+    const blacklistedActions = useSelector(
+        (state) => state.process.modeler.blacklistedActions
+    );
     const { translate } = useTranslations();
     const hasAdvancedActionsAccess = useFeatureKey([
         FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED,
@@ -71,14 +79,24 @@ const ActionList: FC<ActionListProps> = ({
         </ListItemButton>
     );
 
-    const getTranslationMessage = () => isGuest
-        ? translate('Process.Details.Modeler.ActionListPanel.NotAvailableForGuests')
-        : translate('Process.Details.Modeler.ActionListPanel.NotAvailable');
+    const filteredGroups =
+        (blacklistedActions?.length ?? 0) > 0
+            ? groups.filter(
+                (group) =>
+                    !blacklistedActions.includes(group.key as ACTION_GROUP)
+            )
+            : groups;
+    const getTranslationMessage = () =>
+        isGuest
+            ? translate(
+                'Process.Details.Modeler.ActionListPanel.NotAvailableForGuests'
+            )
+            : translate('Process.Details.Modeler.ActionListPanel.NotAvailable');
 
     return (
         <List className={clsx(classes.list)}>
             <If
-                condition={Boolean(groups.length)}
+                condition={Boolean(filteredGroups.length)}
                 else={
                     <Typography color="gray" align="center" sx={{ pt: 1 }}>
                         {translate(
@@ -87,14 +105,16 @@ const ActionList: FC<ActionListProps> = ({
                     </Typography>
                 }
             >
-                {groups.map(({ key, label, items }) => {
+                {filteredGroups.map(({ key, label, items }) => {
                     const isGroupDisabled =
                         !hasAdvancedActionsAccess &&
                         ADVANCED_ACTION_GROUP_IDS.includes(key as ACTION_GROUP);
                     return (
                         <Tooltip
                             key={key}
-                            title={isGroupDisabled ? getTranslationMessage() : ''}
+                            title={
+                                isGroupDisabled ? getTranslationMessage() : ''
+                            }
                         >
                             <div>
                                 <ListGroup
@@ -110,7 +130,8 @@ const ActionList: FC<ActionListProps> = ({
                                 >
                                     <List component="div" disablePadding>
                                         {items.map((item: Item) => {
-                                            const itemId = item.id as AllActionIds;
+                                            const itemId =
+                                                item.id as AllActionIds;
 
                                             const isActionIncompatible =
                                                 item.system &&
@@ -118,9 +139,9 @@ const ActionList: FC<ActionListProps> = ({
                                             const isActionDisabled =
                                                 !hasAdvancedActionsAccess &&
                                                 (isGroupDisabled ||
-                                                     ADVANCED_ACTION_IDS.includes(
-                                                         itemId
-                                                     ));
+                                                    ADVANCED_ACTION_IDS.includes(
+                                                        itemId
+                                                    ));
 
                                             let title = '';
 
