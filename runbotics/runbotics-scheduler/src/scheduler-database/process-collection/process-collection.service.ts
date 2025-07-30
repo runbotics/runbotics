@@ -7,7 +7,7 @@ import { CreateProcessCollectionDto } from './dto/create-process-collection.dto'
 import { ProcessCollectionDto } from './dto/process-collection.dto';
 import { FeatureKey } from 'runbotics-common';
 import { UpdateProcessCollectionDto } from './dto/update-process-collection.dto';
-import { UnmappedProcessCollectionDto } from './dto/unmapped-process-collection.dto';
+import { ProcessCollectionWithUsersDto } from './dto/process-collection-with-users.dto';
 import { hasFeatureKey } from '#/utils/authority.utils';
 
 const RELATIONS: FindOptionsRelations<ProcessCollection> = {
@@ -239,7 +239,7 @@ export class ProcessCollectionService {
             .getMany();
     }
 
-    async findAllAncestors(collectionId: string, tenantId: string): Promise<UnmappedProcessCollectionDto[]> {
+    async findAllAncestors(collectionId: string, tenantId: string): Promise<ProcessCollectionWithUsersDto[]> {
         const query =`
             WITH RECURSIVE bread_crumbs AS (
                 SELECT pc.*, 1 AS lvl FROM process_collection pc
@@ -274,8 +274,8 @@ export class ProcessCollectionService {
         return ancestorsWithUsers;
     }
 
-    mapUnmappedProcessCollectionsToDto(
-        collections: UnmappedProcessCollectionDto[]
+    mapProcessCollectionsWithUsersToDto(
+        collections: ProcessCollectionWithUsersDto[]
     ): ProcessCollectionDto[] {
         if (!Array.isArray(collections) || collections.length === 0) {
             return [];
@@ -431,7 +431,7 @@ export class ProcessCollectionService {
         const tenantId = user.tenantId;
         const hasUserAllAccess = hasFeatureKey(user, FeatureKey.PROCESS_COLLECTION_ALL_ACCESS);
         const ancestors = await this.findAllAncestors(collectionId, tenantId);
-        const mappedAncestors = this.mapUnmappedProcessCollectionsToDto(ancestors);
+        const mappedAncestors = this.mapProcessCollectionsWithUsersToDto(ancestors);
 
         if (hasUserAllAccess) {
             return mappedAncestors;
