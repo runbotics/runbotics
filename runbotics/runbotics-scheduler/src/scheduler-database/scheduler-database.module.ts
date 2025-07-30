@@ -59,7 +59,7 @@ import { ProcessSummaryNotificationSubscribersModule } from './process-summary-n
         ProcessCollectionModule,
         EmailTriggerWhitelistItemModule,
         LicenseModule,
-        ProcessSummaryNotificationSubscribersModule
+        ProcessSummaryNotificationSubscribersModule,
     ],
     exports: [
         DatabaseModule,

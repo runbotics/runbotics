@@ -40,6 +40,8 @@
     "Process.Edit.Form.Fields.IsTriggerable.Label": "Process Triggerable",
     "Process.Edit.Form.Fields.IsSubscribed.Tooltip": "Process notification settings",
     "Process.Edit.Form.Fields.IsSubscribed.Label": "Notify about failure",
+    "Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Tooltip": "Statistics subscribtion settings",
+    "Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Label": "Subscribe to statistics",
     "Process.Edit.Form.Fields.Placeholder.TagSearch": "Search for tag",
     "Process.Edit.Form.Fields.Error.Required": "Field is required",
     "Process.Edit.Form.Fields.SearchTag.TagNotFound": "No results",

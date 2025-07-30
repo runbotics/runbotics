@@ -1,5 +1,4 @@
 import { Body, Controller, Param } from '@nestjs/common';
-import { ProcessSummaryNotificationSubscribersService } from './process-summary-notification-subscribers.service';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
@@ -7,12 +6,12 @@ import {
     SubscribeDto,
     subscribeProcessNotificationsDto,
     SubscribeSwaggerDto,
-} from '#/scheduler-database/process_summary_notification_subscribers/dto/subscribe.dto';
+} from './dto/subscribe.dto';
 import {
     UpdateSubscriptionDto,
     updatesubscriptionProcessNotificationsDto,
     UpdateSubscriptionSwaggerDto,
-} from '#/scheduler-database/process_summary_notification_subscribers/dto/update-subscription.dto';
+} from './dto/update-subscription.dto';
 import {
     DeleteWithTenant,
     GetWithTenant,
@@ -21,10 +20,11 @@ import {
 } from '#/utils/decorators/with-tenant.decorator';
 
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ProcessSummaryNotificationSubscribersService } from './process-summary-notification-subscribers.service';
 
 @ApiTags('Process Summary Notification Subscribers')
 @FeatureKeys(FeatureKey.PROCESS_CONFIGURE_VIEW)
-@Controller('api/scheduler')
+@Controller('/api/scheduler')
 export class ProcessSummaryNotificationSubscribersController {
     constructor(
         private readonly processNotificationSubscribersService: ProcessSummaryNotificationSubscribersService,

@@ -36,6 +36,8 @@
     "Process.Edit.Form.Fields.IsTriggerable.Label": "Proces triggerowalny",
     "Process.Edit.Form.Fields.IsSubscribed.Tooltip": "Ustawienia powiadomień procesu",
     "Process.Edit.Form.Fields.IsSubscribed.Label": "Powiadom o niepowodzeniu",
+    "Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Label": "Subskrybuj statystyki",
+    "Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Tooltip": "Ustawienia subskrypcji statystyk",
     "Process.Edit.Form.Fields.Placeholder.TagSearch": "Szukaj tagów",
     "Process.Edit.Form.Fields.Error.Required": "Pole jest wymagane",
     "Process.Edit.Form.Fields.SearchTag.TagNotFound": "Brak wyników",

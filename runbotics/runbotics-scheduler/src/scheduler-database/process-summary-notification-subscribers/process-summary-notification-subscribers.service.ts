@@ -10,6 +10,8 @@ import { ProcessStatisticsResult } from '#/types';
 import { ProcessEntity } from '../process/process.entity';
 import { generateAggregatedEmailContent } from '#/mail/templates/process-summary-notification-statistics.template';
 import { Logger } from '#/utils/logger';
+import { SubscribeDto } from './dto/subscribe.dto';
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 
 
 @Injectable()
@@ -94,5 +96,56 @@ export class ProcessSummaryNotificationSubscribersService {
         return this.repository.find({
             relations: ['user', 'process']
         });
+    }
+
+    async getAllSubscribersBaseInformation() {
+            return this.repository.find();
+        }
+    
+    async getSubscribersByProcess(processId: number) {
+        return this.repository.find({
+            where: { processId },
+            relations: ['user']
+        }).then(subscriber => subscriber.map(this.formatToDTO));
+    }
+
+    async subscribe(data: SubscribeDto) {
+        const result = await this.repository.manager.transaction(async manager => {
+            const user = await manager.findOne(User, { where: { id: data.userId } });
+            const process = await manager.findOne(ProcessEntity, { where: { id: data.processId } });
+            if (!user || !process) {
+                throw new Error('User or Process not found');
+            }
+            return manager.save(ProcessSummaryNotificationSubscribersEntity, {
+                user,
+                process,
+                customEmail: data.customEmail ?? '',
+            });
+        });
+        return result;
+    }
+
+    async updateSubscription(id: string, data: UpdateSubscriptionDto) {
+        const subscriber = await this.repository.findOne({ where: { id } });
+        if (!subscriber) {
+            throw new Error('Subscriber not found');
+        }
+        const updatedSubscriber = Object.assign(subscriber, data);
+        return this.repository.save(updatedSubscriber);
+    }
+
+    async unsubscribe(id: string) {
+        return this.repository.delete(id);
+    }
+
+    private formatToDTO(entity) {
+        return {
+            id: entity.id,
+            createdAt: entity.createdAt,
+            userId: entity.userId,
+            processId: entity.processId,
+            customEmail: entity.customEmail,
+            userEmail: entity.user.email,
+        };
     }
 }
