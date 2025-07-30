@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProcessSummaryNotificationSubscribersEntity } from './process-summary-notification-subscribers.entity';
 import { Repository } from 'typeorm';
@@ -113,8 +113,11 @@ export class ProcessSummaryNotificationSubscribersService {
         const result = await this.repository.manager.transaction(async manager => {
             const user = await manager.findOne(User, { where: { id: data.userId } });
             const process = await manager.findOne(ProcessEntity, { where: { id: data.processId } });
-            if (!user || !process) {
-                throw new Error('User or Process not found');
+            if(!user) {
+                throw new NotFoundException('User not found');
+            }
+            if (!process) {
+                throw new NotFoundException('Process not found');
             }
             return manager.save(ProcessSummaryNotificationSubscribersEntity, {
                 user,
@@ -128,7 +131,7 @@ export class ProcessSummaryNotificationSubscribersService {
     async updateSubscription(id: string, data: UpdateSubscriptionDto) {
         const subscriber = await this.repository.findOne({ where: { id } });
         if (!subscriber) {
-            throw new Error('Subscriber not found');
+            throw new NotFoundException('Subscriber not found');
         }
         const updatedSubscriber = Object.assign(subscriber, data);
         return this.repository.save(updatedSubscriber);
