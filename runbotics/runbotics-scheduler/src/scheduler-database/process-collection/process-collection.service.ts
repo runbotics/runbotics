@@ -7,7 +7,7 @@ import { CreateProcessCollectionDto } from './dto/create-process-collection.dto'
 import { ProcessCollectionDto } from './dto/process-collection.dto';
 import { FeatureKey } from 'runbotics-common';
 import { UpdateProcessCollectionDto } from './dto/update-process-collection.dto';
-import { UnmappedProcessCollectionDto, UnmappedProcessCollectionSchema } from './dto/unmapped-process-collection.dto';
+import { UnmappedProcessCollectionDto } from './dto/unmapped-process-collection.dto';
 import { hasFeatureKey } from '#/utils/authority.utils';
 
 const RELATIONS: FindOptionsRelations<ProcessCollection> = {
