@@ -394,13 +394,11 @@ export class ProcessCollectionService {
 
        if (hasUserAllAccess) {
             const rootCollections = await this.findAllRootCollections(tenantId);
-            const mappedToDtoRootCollections = this.mapProcessCollectionsToDto(rootCollections);
-            return mappedToDtoRootCollections;
+            return this.mapProcessCollectionsToDto(rootCollections);
         }
 
         const availableChildren = await this.findAvailableRootCollections(tenantId, user.id);
-        const mappedToDtoAvailableChildren = this.mapProcessCollectionsToDto(availableChildren);
-        return mappedToDtoAvailableChildren;
+        return this.mapProcessCollectionsToDto(availableChildren);
     }
 
     async getChildrenCollectionsByParent(parentId: string, user: User): Promise<ProcessCollectionDto[]> {
@@ -415,9 +413,7 @@ export class ProcessCollectionService {
                 ? await this.findAllChildrenCollections(parentId, tenantId)
                 : await this.findAllRootCollections(tenantId);
 
-            const mappedChildrenCollections =
-                this.mapProcessCollectionsToDto(childrenCollections);
-            return mappedChildrenCollections;
+            return this.mapProcessCollectionsToDto(childrenCollections);
         }
 
         const childrenAccessibleCollections = parentId
@@ -428,10 +424,7 @@ export class ProcessCollectionService {
               )
             : await this.findAvailableRootCollections(tenantId, user.id);
 
-        const mappedChildrenAccessibleCollections = this.mapProcessCollectionsToDto(
-            childrenAccessibleCollections
-        );
-        return mappedChildrenAccessibleCollections;
+        return this.mapProcessCollectionsToDto(childrenAccessibleCollections);
     }
 
     async getCollectionAllAncestors(collectionId: string, user: User): Promise<ProcessCollectionDto[]> {
