@@ -55,7 +55,6 @@ const CardsSection: FC<CardsSectionPropsType> = ({
             <CardsPagination page={page} basePageUrl={pageType} />
         </If>
     </>;
-
     return (
         <div className={pageType === 'marketplace' ? styles.root : styles.justifiedRoot}>
             {searchBar}
