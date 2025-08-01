@@ -24,7 +24,8 @@ export class ProcessSummaryNotificationSubscribersService {
         private readonly mailService: MailService,
     ){}
 
-    @Cron(process.env.PROCESS_SUMMARY_CRON || '0 0 1 * *')
+    // executes every day at 15:00
+    @Cron('0 15 * * *')
     async aggregateAndSendNotifications() {
         const subscribers = await this.getAllSubscribersWithProcesses();
 

@@ -9,7 +9,7 @@
     "main": "./dist/src/main.js",
     "scripts": {
         "prebuild": "rimraf dist",
-        "build": "nest build",
+        "build": "nest build && npm run copy-assets",
         "start": "node dist/src/main",
         "start:dev": "cross-env NODE_ENV=development nest start --watch",
         "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
@@ -20,7 +20,8 @@
         "test:cov": "vitest run --coverage",
         "test:debug": "vitest --inspect-brk --threads false",
         "typeorm": "rm -rf ./dist && rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./dist/src/ormconfig.js",
-        "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create"
+        "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create",
+        "copy-assets": "cp -r src/mail/assets dist/src/mail/assets"
     },
     "dependencies": {
         "@azure/msal-node": "~3.6.0",
@@ -73,7 +74,8 @@
         "bcryptjs": "~3.0.2",
         "@nestjs/swagger": "6.3.0",
         "nestjs-zod": "~4.3.1",
-        "jwt-decode": "~4.0.0"
+        "jwt-decode": "~4.0.0",
+        "@nestjs/serve-static": "~5.0.3"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",
