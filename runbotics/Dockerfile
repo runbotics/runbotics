@@ -26,6 +26,8 @@ RUN $rush deploy \
 
 FROM node:18-alpine AS runner
 
+RUN apk add --no-cache curl
+
 ENV NODE_ENV production
 
 WORKDIR /usr/src/app/runbotics-orchestrator-ui
@@ -40,3 +42,6 @@ WORKDIR /usr/src/app/runbotics-orchestrator-ui/runbotics-orchestrator-ui
 EXPOSE 3000
 
 CMD ["node_modules/next/dist/bin/next", "start"]
+
+HEALTHCHECK --interval=30s --timeout=60s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:3000/api/health || exit 1

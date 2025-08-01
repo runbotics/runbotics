@@ -1,18 +1,24 @@
+# Use this docker-compose if you want to locally start in swarm mode
+# deploy configuration works only in swarm mode
+# in swarm mode container_name is not supported
+# to run this in swarm mode run from runbotics repo
+# `docker stack deploy -c docker-compose.dev.yml <your swarm service name>`
+
 services:
   runbotics-portainer:
-    container_name: runbotics-portainer
     image: portainer/portainer-ce:2.20.3-alpine
     restart: always
-    network_mode: host
+    networks:
+      - hostnet
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
 
   runbotics-postgresql:
-    container_name: runbotics-postgresql
     restart: on-failure
     image: postgres:13.2
-    network_mode: host
+    networks:
+      - hostnet
     volumes:
       - runbotics:/var/lib/postgresql/data/
     environment:
@@ -29,10 +35,17 @@ services:
     # remove the "127.0.0.1:" prefix
 
   runbotics-orchestrator:
-    container_name: runbotics-orchestrator
     restart: on-failure
     image: runbotics/runbotics-orchestrator:latest
-    network_mode: host
+    networks:
+      - hostnet
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        monitor: 10s
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/runbotics
@@ -50,10 +63,17 @@ services:
       start_period: 180s
 
   runbotics-scheduler:
-    container_name: runbotics-scheduler
     image: runbotics/runbotics-scheduler:latest
     restart: on-failure
-    network_mode: host
+    networks:
+      - hostnet
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        monitor: 10s
     environment:
       - RUNBOTICS_SCHEDULER_REDIS_HOST=localhost
       - RUNBOTICS_SCHEDULER_REDIS_PORT=6379
@@ -77,9 +97,9 @@ services:
       - runbotics-postgresql
 
   runbotics-redis:
-    container_name: runbotics-redis
     image: redis:6
-    network_mode: host
+    networks:
+      - hostnet
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG || exit 1"]
       interval: 60s
@@ -87,27 +107,34 @@ services:
       retries: 5
       start_period: 20s
 
-  # runbotics-nginx:
-  #   container_name: runbotics-nginx
-  #   image: nginx:1.25.3
-  #   deploy:
-  #       replicas: 1
-  #       restart_policy:
-  #           condition: on-failure
-  #           delay: 10s
-  #           max_attempts: 5
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "service nginx status || exit 1"]
-  #     interval: 60s
-  #     timeout: 5s
-  #     retries: 5
-  #     start_period: 30s
+  runbotics-nginx:
+    image: nginx:1.25.3
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        monitor: 10s
+    healthcheck:
+      test: ["CMD-SHELL", "service nginx status || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   runbotics-desktop:
-    container_name: runbotics-desktop
     image: runbotics/runbotics-desktop:latest
     restart: on-failure
-    network_mode: host
+    networks:
+      - hostnet
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        monitor: 10s
     environment:
       - RUNBOTICS_ENTRYPOINT_URL=http://localhost:8080
       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://localhost:4000
@@ -119,52 +146,17 @@ services:
       - RUNBOTICS_LOGGER_FILE_MODE=false
       - RUNBOTICS_EXTENSION_DIR=./extensions
       - RUNBOTICS_PLUGINS_DIR=./plugins
-      - FIREFOX_ADDRESS=http://firefox:4444
+      - CHROME_ADDRESS=http://chrome:4444
     depends_on:
       - runbotics-scheduler
       - runbotics-orchestrator
-      - firefox
-
-#   runbotics-desktop-guest:
-#     container_name: runbotics-desktop-guest
-#     image: runbotics/runbotics-desktop:latest
-#     restart: on-failure
-#     environment:
-#       - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
-#       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
-#       - RUNBOTICS_INSTALLATION_ID=bot_guest
-#       - RUNBOTICS_USERNAME=runbotics
-#       - RUNBOTICS_PASSWORD=RunBotics123
-#       - RUNBOTICS_LOGGER_FILE_MODE=false
-#       - RUNBOTICS_BOT_COLLECTION=691c15ee-0230-49c6-b794-9e33790652d3
-#       - RUNBOTICS_LOGGER=winston
-#       - RUNBOTICS_EXTENSION_DIR=./extensions
-#       - FIREFOX_ADDRESS=http://firefox-2:4444
-#     restart: on-failure
-#     depends_on:
-#       - runbotics-scheduler
-#       - runbotics-orchestrator
-#       - firefox-2
-#     extra_hosts:
-#       - 'host.docker.internal:host-gateway'
-
-#   firefox-2:
-#     container_name: firefox-2
-#     image: selenium/standalone-firefox:140.0-geckodriver-0.36-grid-4.34.0-20250707
-#     ports:
-#       - 7901:7900
-#       - 4445:4444
-#     shm_size: 2gb
-#     environment:
-#       SE_NODE_OVERRIDE_MAX_SESSIONS: 'true'
-#       SE_NODE_MAX_SESSIONS: 1
-#       JAVA_OPTS=-XX:ActiveProcessorCount: 1
-#      # SE_VNC_VIEW_ONLY: 1
+      - chrome
 
   firefox:
     container_name: firefox
     image: selenium/standalone-firefox:140.0-geckodriver-0.36-grid-4.34.0-20250707
-    network_mode: host
+    networks:
+      - hostnet
 
     shm_size: 2gb
     environment:
@@ -172,6 +164,11 @@ services:
       SE_NODE_MAX_SESSIONS: 1
       JAVA_OPTS=-XX:ActiveProcessorCount: 1
       # SE_VNC_VIEW_ONLY: 1
+
+networks:
+  hostnet:
+    external: true
+    name: host
 
 volumes:
   runbotics:
