@@ -27,6 +27,8 @@ import { GuestModule } from '#/scheduler-database/guest/guest.module';
 import { ProcessCollectionModule } from './process-collection/process-collection.module';
 import { EmailTriggerWhitelistItemModule } from './email-trigger-whitelist-item/email-trigger-whitelist-item.module';
 import { LicenseModule } from './license/license.module';
+import { ProcessSummaryNotificationSubscribersModule } from './process-summary-notification-subscribers/process-summary-notification-subscribers.module';
+import { ActionBlacklistModule } from '#/scheduler-database/action-blacklist/action-blacklist.module';
 
 @Module({
     imports: [
@@ -58,6 +60,8 @@ import { LicenseModule } from './license/license.module';
         ProcessCollectionModule,
         EmailTriggerWhitelistItemModule,
         LicenseModule,
+        ActionBlacklistModule,
+        ProcessSummaryNotificationSubscribersModule
     ],
     exports: [
         DatabaseModule,

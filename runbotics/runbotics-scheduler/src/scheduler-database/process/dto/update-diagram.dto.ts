@@ -1,3 +1,4 @@
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const updateDiagramSchema = z.object({
@@ -6,4 +7,5 @@ export const updateDiagramSchema = z.object({
     executionInfo: z.string().nullable(),
 });
 
+export class UpdateDiagramSwaggerDto extends createZodDto(updateDiagramSchema) {}
 export type UpdateDiagramDto = z.infer<typeof updateDiagramSchema>;

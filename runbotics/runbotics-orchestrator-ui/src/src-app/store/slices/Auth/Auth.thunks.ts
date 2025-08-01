@@ -1,12 +1,9 @@
-import { AuthenticationResult } from '@azure/msal-browser';
-import { IMsalContext } from '@azure/msal-react';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
-import { UserDto } from 'runbotics-common';
+import { MsalLoginError, UserDto } from 'runbotics-common';
 
 import Axios from '#src-app/utils/axios';
-
-import { loginRequest } from '#src-app/utils/msal';
 
 import { AuthState } from './Auth.state';
 
@@ -47,45 +44,6 @@ export const login = createAsyncThunk<AuthState['user'], { email: string; passwo
         }
     }
 );
-
-export const microsoftLoginPopup = createAsyncThunk<
-    AuthenticationResult['idToken'],
-    IMsalContext['instance']
->('auth/microsoftLoginPopup', async (mslInstance, { rejectWithValue }) => {
-    try {
-        const { idToken } = await mslInstance.loginPopup(loginRequest);
-        return idToken;
-    } catch (error) {
-        return rejectWithValue(error.message);
-    }
-});
-
-export const microsoftLogin = createAsyncThunk<
-    AuthState['user'],
-    {
-        idToken: AuthenticationResult['idToken'],
-        langKey: string;
-    }
->('auth/microsoftLogin', async ({ idToken, langKey }, { rejectWithValue }) => {
-    try {
-        const { accessToken } = (await Axios.post<{ accessToken: string }>(
-            '/api/scheduler/auth/microsoft',
-            {
-                langKey,
-                idToken,
-            }
-        )).data;
-
-        setAccessToken(accessToken);
-
-        const responseUser = await Axios.get<UserDto>('/api/account');
-        const user = responseUser.data;
-
-        return { ...user, authoritiesById: user?.roles };
-    } catch (error) {
-        return rejectWithValue(error.message);
-    }
-});
 
 export const createGuestAccount = createAsyncThunk<UserDto, { langKey: string }>(
     'auth/createGuestAccount',
@@ -178,3 +136,22 @@ export const register = createAsyncThunk(
         }
     }
 );
+
+export const loginWithMsalCookie = createAsyncThunk<
+    AuthState['user'],
+    void
+>('auth/loginWithMsalToken', async (_, { rejectWithValue }) => {
+    try {
+        const idToken = Cookies.get('msal_token_transfer');
+        Cookies.remove('msal_token_transfer', { path: '/' });
+        if (!idToken) {
+            return rejectWithValue(MsalLoginError.BAD_COOKIE);
+        }
+        setAccessToken(idToken);
+        const responseUser = await Axios.get<UserDto>('/api/account');
+        const user = responseUser.data;
+        return { ...user, authoritiesById: user?.roles };
+    } catch (error) {
+        return rejectWithValue(error?.message || 'Unknown error');
+    }
+});

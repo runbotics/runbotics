@@ -26,7 +26,7 @@ const Label: FC<LabelProps> = ({
             {children}
         </Wrapper>
         {isWarningDisplayed(warning, children)?
-            <WarningAmberRoundedIcon color="warning"/> : ''}
+            <WarningAmberRoundedIcon color="warning" data-testid="WarningAmberRoundedIcon" /> : ''}
     </LabelGroup>
 );
 

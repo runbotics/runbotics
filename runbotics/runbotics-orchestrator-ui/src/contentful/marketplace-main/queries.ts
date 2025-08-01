@@ -39,7 +39,7 @@ marketplaceOfferCollection(
 export const buildMainPageQuery: QueryBuilder = ({ preview, language }) => `
 query {
     ${marketplaceAllOffersQuery(preview, language)}
-    ${marketplaceAllIndustriesQuery(preview,language)}
+    ${marketplaceAllIndustriesQuery(preview, language)}
     ${marketplaceAllTagsQuery(preview, language)}
 }`;
 

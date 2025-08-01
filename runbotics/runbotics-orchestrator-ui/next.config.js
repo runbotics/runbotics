@@ -36,9 +36,6 @@ module.exports = {
         runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || FALLBACK_RUNBOTICS_ENTRY_URL,
         mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN,
         copilotChatUrl: process.env.COPILOT_CHAT_URL,
-        microsoftAppId: process.env.MICROSOFT_APP_ID,
-        microsoftAppAuthority: process.env.MICROSOFT_APP_AUTHORITY,
-        microsoftAppRedirectUri: process.env.MICROSOFT_APP_REDIRECT_URI,
         isSsoEnabled: process.env.IS_SSO_ENABLED,
     },
 
