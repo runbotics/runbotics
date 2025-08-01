@@ -22,7 +22,7 @@ export const getSubscribersByProcessId = ApiTenantResource.get<ProcessNotificati
     (processId: number) => `${PROCESS_SUBSCRIPTION_STATISTICS_PATH}/processes/${processId}`
 );
 
-export const postSubscriber = ApiTenantResource.post<ProcessNotificationSubscriber, { email: string; processId: number }>(
+export const postSubscriber = ApiTenantResource.post<ProcessNotificationSubscriber, { customEmail: string; processId: number }>(
     'statistics/createSubscriber',
     PROCESS_SUBSCRIPTION_STATISTICS_PATH
 );
@@ -90,7 +90,7 @@ export const fetchSubscribersByProcessId = createAsyncThunk<
 
 export const createSubscriber = createAsyncThunk<
     ProcessNotificationSubscriber,
-    { email: string; processId: number, userId: number },
+    { customEmail: string; processId: number, userId: number },
     { state: RootState; rejectValue: string; dispatch: AppDispatch }
 >(
     'statistics/createSubscriber',
