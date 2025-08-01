@@ -62,33 +62,6 @@ export class ProcessSummaryNotificationSubscribersService {
             subject: 'Statystyki procesów',
             content: htmlContent,
             isHtml: true,
-            // attachments: [
-            //         {
-            //             path: 'src/mail/assets/Logo.png',
-            //             filename: 'Logo.png',
-            //             cid: 'logo',
-            //         },
-            //         {
-            //             path: 'src/mail/assets/assignment_turned_in.svg',
-            //             filename: 'assignment_turned_in.svg',
-            //             cid: 'assignment_turned_in',
-            //         },
-            //         {
-            //             path: 'src/mail/assets/assignment_late.svg',
-            //             filename: 'assignment_late.svg',
-            //             cid: 'assignment_late',
-            //         },
-            //         {
-            //             path: 'src/mail/assets/schedule.svg',
-            //             filename: 'schedule.svg',
-            //             cid: 'schedule',
-            //         },
-            //         {
-            //             path: 'src/mail/assets/more_time.svg',
-            //             filename: 'more_time.svg',
-            //             cid: 'more_time',
-            //         },
-            //     ],
         });
     }
 
