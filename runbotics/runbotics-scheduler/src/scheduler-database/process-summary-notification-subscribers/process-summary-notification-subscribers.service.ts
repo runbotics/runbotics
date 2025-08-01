@@ -12,6 +12,7 @@ import { generateAggregatedEmailContent } from '#/mail/templates/process-summary
 import { Logger } from '#/utils/logger';
 import { SubscribeDto } from './dto/subscribe.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import path from 'path';
 
 
 @Injectable()
@@ -24,8 +25,8 @@ export class ProcessSummaryNotificationSubscribersService {
         private readonly mailService: MailService,
     ){}
 
-    // executes every 1st of a month
-    @Cron('0 0 1 * *')
+    // executes every day at 15:00
+    @Cron('0 15 * * *')
     async aggregateAndSendNotifications() {
         const subscribers = await this.getAllSubscribersWithProcesses();
 
@@ -55,6 +56,7 @@ export class ProcessSummaryNotificationSubscribersService {
     }
 
     private async sendAggregatedStatisticsEmail(email: string, summaries: { name: string, stats: ProcessStatisticsResult }[]) {
+
         const htmlContent = generateAggregatedEmailContent(summaries);
         this.logger.log(`Sending aggregated email to ${email}`);
         await this.mailService.sendMail({
@@ -62,33 +64,6 @@ export class ProcessSummaryNotificationSubscribersService {
             subject: 'Statystyki procesów',
             content: htmlContent,
             isHtml: true,
-            attachments: [
-                    {
-                        path: 'src/mail/assets/Logo.png',
-                        filename: 'Logo.png',
-                        cid: 'logo',
-                    },
-                    {
-                        path: 'src/mail/assets/assignment_turned_in.svg',
-                        filename: 'assignment_turned_in.svg',
-                        cid: 'assignment_turned_in',
-                    },
-                    {
-                        path: 'src/mail/assets/assignment_late.svg',
-                        filename: 'assignment_late.svg',
-                        cid: 'assignment_late',
-                    },
-                    {
-                        path: 'src/mail/assets/schedule.svg',
-                        filename: 'schedule.svg',
-                        cid: 'schedule',
-                    },
-                    {
-                        path: 'src/mail/assets/more_time.svg',
-                        filename: 'more_time.svg',
-                        cid: 'more_time',
-                    },
-                ],
         });
     }
 

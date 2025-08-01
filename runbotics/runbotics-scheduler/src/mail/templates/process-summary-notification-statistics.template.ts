@@ -2,6 +2,7 @@ import { ProcessStatisticsResult } from '#/types';
 import { generateEmailHeader } from './components/email-header.template';
 import { processSummaryStyles } from './styles/process-summary-notification-statistics.styles';
 
+const assetsUrl = `${process.env.RUNBOTICS_ENTRYPOINT_URL}/assets`;
 export const generateAggregatedEmailContent = (summaries: { name: string; stats: ProcessStatisticsResult }[]): string => {
   return `
 <!DOCTYPE html>
@@ -31,7 +32,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                     <div class="stats-row" style="display: flex; flex-wrap: wrap; margin-bottom: 10px;">
                         <div class="stat" style="display: flex; align-items: center; margin: 10px 0;">
                             <div style="background-color: #fff; border-radius:50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                <img src="cid:assignment_turned_in" alt="Completed Tasks" style="width: 24px; height: 24px;">
+                                <img src="${assetsUrl}/assignment_turned_in.svg" alt="Completed Tasks" style="width: 24px; height: 24px;">
                             </div>
                         <div>
                             <div>Wykonane zadania</div>
@@ -40,7 +41,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                         </div>
                         <div class="stat" style="display: flex; align-items: center; margin: 10px 0;">
                             <div style="background-color: #fff; border-radius:50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                <img src="cid:assignment_late" alt="Failed Tasks" style="width: 24px; height: 24px;">
+                                <img src="${assetsUrl}/assignment_late.svg" alt="Failed Tasks" style="width: 24px; height: 24px;">
                             </div>
                         <div>
                             <div>Niewykonane zadania</div>
@@ -49,7 +50,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                         </div>
                         <div class="stat" style="display: flex; align-items: center; margin: 10px 0;">
                             <div style="background-color: #fff; border-radius:50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                <img src="cid:schedule" alt="Average Duration" style="width: 24px; height: 24px;">
+                                <img src="${assetsUrl}/schedule.svg" alt="Average Duration" style="width: 24px; height: 24px;">
                             </div>
                         <div>
                             <div>Średni czas wykonania</div>
@@ -58,7 +59,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                         </div>
                         <div class="stat" style="display: flex; align-items: center; margin: 10px 0;">
                             <div style="background-color: #fff; border-radius:50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                <img src="cid:more_time" alt="Total Duration" style="width: 24px; height: 24px;">
+                                <img src="${assetsUrl}/more_time.svg" alt="Total Duration" style="width: 24px; height: 24px;">
                             </div>
                         <div>
                             <div>Łączny czas wykonania</div>
