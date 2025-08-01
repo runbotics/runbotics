@@ -20,6 +20,7 @@
     "Common.No": "Nie",
     "Common.Import": "Importuj",
     "Common.Import.InvalidExtension": "Nie poprawne rozszerzenie (użyj: {{ extensions }})",
+    "Common.Import.Blacklist.Error": "Import nie powiódł się z powodu zablokowanej zawartości",
     "Common.Export": "Exportuj",
     "Common.True": "Prawda",
     "Common.False": "Fałsz",

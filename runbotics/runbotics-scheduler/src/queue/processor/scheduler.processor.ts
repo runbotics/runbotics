@@ -22,6 +22,7 @@ import { QueueService } from '#/queue/queue.service';
 import { BadRequestException } from '@nestjs/common';
 import { QueueMessageService } from '../queue-message.service';
 import { JobId } from 'bull';
+import { BlacklistActionAuthService } from '#/blacklist-actions-auth/blacklist-action-auth.service';
 
 @Processor('scheduler')
 export class SchedulerProcessor {
@@ -35,7 +36,8 @@ export class SchedulerProcessor {
         private readonly botGateway: BotWebSocketGateway,
         private readonly processInstanceSchedulerService: ProcessInstanceSchedulerService,
         private readonly queueService: QueueService,
-        private readonly queueMessageService: QueueMessageService
+        private readonly queueMessageService: QueueMessageService,
+        private readonly blacklistActionAuthService: BlacklistActionAuthService,
     ) {}
 
     @Process({ concurrency: 1 })
@@ -46,13 +48,15 @@ export class SchedulerProcessor {
 
         await this.validateTriggerData(job)
             .catch((err) => Promise.reject(new Error(err)));
+        
+        const isAllowedToRun = await this.blacklistActionAuthService.checkProcessActionsBlacklist(job.data.process.id);
 
         const process = await this.processService.findById(job.data.process.id);
-        if (!isScheduledProcess(job.data)) {
+        if (!isScheduledProcess(job.data) && isAllowedToRun) {
             return this.runProcess(process, job);
         }
         return await this.queueService.handleAttendedProcess(process, job.data.input)
-            .then(() => this.runProcess(process, job))
+            .then(() => isAllowedToRun && this.runProcess(process, job))
             .catch((err) => {
                 this.logger.error(`[Q Process] Process "${process.name}" has scheduled without input variables. ${err.message}`);
                 throw new BadRequestException(err);

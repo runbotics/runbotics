@@ -9,7 +9,7 @@ import {
     Param,
     ParseIntPipe,
     Patch,
-    Post,
+    Post, UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -45,6 +45,8 @@ import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { UpdateExecutionInfoDto, updateExecutionInfoSchema, UpdateExecutionInfoSwaggerDto } from './dto/update-execution-info.dto';
 import { isTenantAdmin } from '#/utils/authority.utils';
+import { BlacklistGuard } from '#/blacklist-actions-auth/blacklist.guard';
+
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { processIdSwaggerObjectDescription, SwaggerTags } from '#/utils/swagger.utils';
 import { ApiDefaultAuthResponses } from '#/utils/decorators/swagger/ApiDefaultAuthResponses.decorator';
@@ -79,6 +81,7 @@ export class ProcessController {
     })
     @Post()
     @FeatureKeys(FeatureKey.PROCESS_ADD)
+    @UseGuards(BlacklistGuard)
     createProcess(
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(createProcessSchema))
@@ -129,6 +132,7 @@ export class ProcessController {
     })
     @Patch(':id')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
+    @UseGuards(BlacklistGuard)
     async update(
         @Param('id', new ParseIntPipe()) id: number,
         @UserDecorator() user: User,
@@ -165,6 +169,7 @@ export class ProcessController {
     })
     @Patch(':id/diagram')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_STRUCTURE)
+    @UseGuards(BlacklistGuard)
     async setDiagram(
         @Param('id', new ParseIntPipe()) id: number,
         @UserDecorator() user: User,
@@ -200,6 +205,7 @@ export class ProcessController {
     })
     @Patch(':id/execution-info')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
+    @UseGuards(BlacklistGuard)
     async setExecutionInfo(
         @Param('id', new ParseIntPipe()) id: number,
         @UserDecorator() user: User,

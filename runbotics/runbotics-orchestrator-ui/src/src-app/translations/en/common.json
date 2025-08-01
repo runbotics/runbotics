@@ -20,6 +20,7 @@
     "Common.No": "No",
     "Common.Import": "Import",
     "Common.Import.InvalidExtension": "Incorrect file extension (use: {{ extensions }})",
+    "Common.Import.Blacklist.Error": "Import failed due to blacklisted content",
     "Common.Export": "Export",
     "Common.True": "True",
     "Common.False": "False",

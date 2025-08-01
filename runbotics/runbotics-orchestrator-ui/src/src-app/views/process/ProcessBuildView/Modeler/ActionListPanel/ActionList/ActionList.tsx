@@ -48,7 +48,7 @@ const ActionList: FC<ActionListProps> = ({
 }) => {
     const isGuest = useRole([Role.ROLE_GUEST]);
     const { process } = useSelector((state) => state.process.draft);
-    const blacklistedActions = useSelector(
+    const { actionGroups, actionIds } = useSelector(
         (state) => state.process.modeler.blacklistedActions
     );
     const { translate } = useTranslations();
@@ -80,10 +80,9 @@ const ActionList: FC<ActionListProps> = ({
     );
 
     const filteredGroups =
-        (blacklistedActions?.length ?? 0) > 0
+        (actionGroups?.length ?? 0) > 0
             ? groups.filter(
-                (group) =>
-                    !blacklistedActions.includes(group.key as ACTION_GROUP)
+                (group) => !actionGroups.includes(group.key as ACTION_GROUP)
             )
             : groups;
     const getTranslationMessage = () =>
@@ -137,11 +136,12 @@ const ActionList: FC<ActionListProps> = ({
                                                 item.system &&
                                                 actionSystemCheck(item.system);
                                             const isActionDisabled =
-                                                !hasAdvancedActionsAccess &&
-                                                (isGroupDisabled ||
-                                                    ADVANCED_ACTION_IDS.includes(
-                                                        itemId
-                                                    ));
+                                                (!hasAdvancedActionsAccess &&
+                                                    (isGroupDisabled ||
+                                                        ADVANCED_ACTION_IDS.includes(
+                                                            itemId
+                                                        ))) ||
+                                                actionIds?.includes(itemId);
 
                                             let title = '';
 

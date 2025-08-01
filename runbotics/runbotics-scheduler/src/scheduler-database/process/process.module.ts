@@ -11,6 +11,7 @@ import { TagModule } from '../tags/tag.module';
 import { ProcessCredentialModule } from '../process-credential/process-credential.module';
 import { ProcessCollectionModule } from '../process-collection/process-collection.module';
 import { ProcessCollection } from '../process-collection/process-collection.entity';
+import { BlacklistActionAuthModule } from '#/blacklist-actions-auth/blacklist-action-auth.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { ProcessCollection } from '../process-collection/process-collection.enti
         forwardRef(() => UserModule),
         TagModule,
         forwardRef(() => ProcessCredentialModule),
+        BlacklistActionAuthModule,
     ],
     exports: [ProcessService],
     providers: [ProcessService, ProcessCrudService],
