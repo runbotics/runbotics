@@ -6,6 +6,7 @@ import { scheduleBase } from '../assets/schedule-icon';
 import { generateEmailHeader } from './components/email-header.template';
 import { processSummaryStyles } from './styles/process-summary-notification-statistics.styles';
 
+const assetsUrl = `${process.env.RUNBOTICS_ENTRYPOINT_URL}/assets`;
 export const generateAggregatedEmailContent = (summaries: { name: string; stats: ProcessStatisticsResult }[]): string => {
   return `
 <!DOCTYPE html>
