@@ -144,7 +144,6 @@ export class BlacklistActionAuthService {
     }
 
     private async validateProcessActionsByBlacklist(definition: Definitions): Promise<boolean> {
-        this.logger.log('Checking process actions against blacklist');
         const blacklistRepo = this.dataSource.getRepository(ActionBlacklist);
 
         const blacklist = (await blacklistRepo.find({ take: 1 })).at(0);
@@ -164,12 +163,6 @@ export class BlacklistActionAuthService {
         blacklistedActions = Array.from(new Set(blacklistedActions));
 
         const isBlacklisted = validBodies.some(body => blacklistedActions.includes(body as AllActionIds));
-        console.log(validBodies, blacklistedActions);
-        if (isBlacklisted) {
-            this.logger.warn(`Process contains blacklisted actions: ${validBodies.join(', ')}`);
-        } else {
-            this.logger.log('Process passed the blacklist check');
-        }
         
         return isBlacklisted;
     }
@@ -187,13 +180,11 @@ export class BlacklistActionAuthService {
 
     async checkProcessActionsBlacklist(processId: number): Promise<boolean> {
         try {
-            this.logger.log(`Checking process ${processId} actions against blacklist`);
             const processRepo = this.dataSource.getRepository(ProcessEntity);
 
             const process = await processRepo.findOneBy({ id: processId });
             
             if (!process) {
-                this.logger.warn(`No Process or Blacklist found for ID ${processId}`);
                 return false;
             }
             const converted = await this.moddle.fromXML(process.definition);

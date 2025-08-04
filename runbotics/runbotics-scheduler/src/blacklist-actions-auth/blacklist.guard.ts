@@ -35,10 +35,8 @@ export class BlacklistGuard implements CanActivate {
         let isBlacklisted = false;
 
         if (body && this.checkBodyType(body)) {
-            console.log('Checking process actions blacklist by definition');
             isBlacklisted = await this.blacklistAuthService.checkProcessActionsBlacklistByDefinition(body.definition);
         }
-        console.log('Checking process actions blacklist by process ID');
         isBlacklisted = processId !== -1 && await this.blacklistAuthService.checkProcessActionsBlacklist(processId);
         
         return !isBlacklisted;
