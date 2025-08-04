@@ -6,7 +6,7 @@ import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { QueueService } from '#/queue/queue.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { expect, vi } from 'vitest';
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
@@ -30,6 +30,8 @@ import { WsBotJwtGuard } from '#/auth/guards';
 import { CanActivate } from '@nestjs/common';
 import { SchedulerService } from '#/queue/scheduler/scheduler.service';
 import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
+import { BlacklistActionAuthService } from '#/blacklist-actions-auth/blacklist-action-auth.service';
+import { DataSource } from 'typeorm';
 
 const PROCESS_ID = 2137;
 const JOB_ID = 7312;
@@ -97,6 +99,7 @@ describe('SchedulerProcessor', () => {
     let processInstanceSchedulerService: ProcessInstanceSchedulerService;
     let queueService: QueueService;
     let queueMessageService: QueueMessageService;
+    let blacklistAuthService: BlacklistActionAuthService;
 
     beforeEach(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -111,6 +114,13 @@ describe('SchedulerProcessor', () => {
                 QueueService,
                 QueueMessageService,
                 BotSchedulerService,
+                { 
+                    provide: BlacklistActionAuthService,
+                    useValue: {
+                        isActionBlacklisted: vi.fn().mockResolvedValue(true),
+                        checkProcessActionsBlacklist: vi.fn().mockResolvedValue(true),
+                    },
+                },
                 {
                     provide: ServerConfigService,
                     useValue: {},
@@ -136,6 +146,12 @@ describe('SchedulerProcessor', () => {
                 {
                     provide: getQueueToken('scheduler'),
                     useValue: {},
+                },
+                {
+                    provide: DataSource,
+                    useValue: {
+                        getRepository: vi.fn(),
+                    },
                 },
             ],
         })
@@ -184,6 +200,7 @@ describe('SchedulerProcessor', () => {
         processInstanceSchedulerService = moduleRef.get(ProcessInstanceSchedulerService);
         queueService = moduleRef.get(QueueService);
         queueMessageService = moduleRef.get(QueueMessageService);
+        blacklistAuthService = moduleRef.get(BlacklistActionAuthService);
     });
 
     it('should be defined', () => {
