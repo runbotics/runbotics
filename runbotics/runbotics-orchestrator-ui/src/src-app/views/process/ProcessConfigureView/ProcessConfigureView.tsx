@@ -232,7 +232,7 @@ const ProcessConfigureView: VFC = () => {
 
     const handleProcessSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState ? await dispatch(
-            ProcessSubscriptionStatisticsActions.createSubscriber({processId: processId, customEmail: '', userId: user.id})
+            ProcessSubscriptionStatisticsActions.createSubscriber({processId: processId, userId: user.id})
         ) : 
             await dispatch(ProcessSubscriptionStatisticsActions.deleteSubscriber(
                 processNotificationSubscribers.find(
