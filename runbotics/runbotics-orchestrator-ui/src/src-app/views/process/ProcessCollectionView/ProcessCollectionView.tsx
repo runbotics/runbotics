@@ -33,20 +33,9 @@ export const ProcessCollectionView = () => {
 
     useProcessInstanceMapSocket();
 
-    useEffect(() => {
-        dispatch(processActions.getBlacklistedActions())
-            .unwrap()
-            .then((result) => {
-                dispatch(
-                    processActions.setProcessBlacklistActions(
-                        result.actionGroups
-                    )
-                );
-            });
-        return () => {
+    useEffect(() => () => {
             dispatch(processInstanceActions.resetAllActiveProcessInstances());
-        };
-    }, []);
+        }, []);
 
     useEffect(() => {
         setTimeout(() => {
