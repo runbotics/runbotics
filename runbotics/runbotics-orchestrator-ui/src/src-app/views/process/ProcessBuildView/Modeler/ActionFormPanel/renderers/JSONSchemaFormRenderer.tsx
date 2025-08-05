@@ -128,7 +128,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
         const observer = new MutationObserver(() => {
             const button = formRef.querySelector(
                 '*#mainActionGrid button:has(svg[data-testid="AddIcon"])'
-            ) as HTMLElement; // TEST ZEBY SPRAWDZIC CZY JAK COS KTOS ZMIENI TO DZIAŁA 4 SURE
+            ) as HTMLElement;
 
             if (button) {
                 setAddButton(button);
