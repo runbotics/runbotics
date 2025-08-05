@@ -81,4 +81,12 @@ export class Tenant {
         { cascade: true },
     )
     emailTriggerWhitelist: EmailTriggerWhitelistItem[];
+
+    @ApiProperty({ type: 'boolean', default: true })
+    @Column({ type: 'boolean', nullable: false, default: true })
+    active: boolean;
+
+    @ApiProperty({ type: 'string', format: 'date-time', nullable: true })
+    @Column({ type: 'timestamp', nullable: true })
+    subscriptionEnd: Date | null;
 }
