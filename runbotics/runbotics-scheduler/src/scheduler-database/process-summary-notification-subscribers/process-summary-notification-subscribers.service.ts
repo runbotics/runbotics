@@ -31,7 +31,7 @@ export class ProcessSummaryNotificationSubscribersService {
         const emailToProcessesMap: Record<string, { process: ProcessEntity, user: User }[]> = {};
 
         for (const subscriber of subscribers) {
-            const email = subscriber.customEmail || subscriber.user.email;
+            const email = subscriber.customEmail?.toLocaleLowerCase() || subscriber.user.email.toLocaleLowerCase();
             if (!emailToProcessesMap[email]) {
                 emailToProcessesMap[email] = [];
             }
