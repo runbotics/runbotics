@@ -10,7 +10,6 @@ import useProcessCollection from '#src-app/hooks/useProcessCollection';
 import useProcessInstanceMapSocket from '#src-app/hooks/useProcessInstanceMapSocket';
 
 import { useDispatch } from '#src-app/store';
-import { processActions } from '#src-app/store/slices/Process';
 import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 
 import InternalPage from '../../../components/pages/InternalPage';
@@ -34,8 +33,8 @@ export const ProcessCollectionView = () => {
     useProcessInstanceMapSocket();
 
     useEffect(() => () => {
-            dispatch(processInstanceActions.resetAllActiveProcessInstances());
-        }, []);
+        dispatch(processInstanceActions.resetAllActiveProcessInstances());
+    }, []);
 
     useEffect(() => {
         setTimeout(() => {
