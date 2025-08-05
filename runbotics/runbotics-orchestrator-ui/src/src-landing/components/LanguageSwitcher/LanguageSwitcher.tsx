@@ -50,6 +50,7 @@ const LanguageSwitcher: VFC = () => {
             <button
                 onClick={() => setToggle((prevState) => !prevState)}
                 className={styles.languageButton}
+                data-testId="language-switcher-header-button"
             />
             <div className={toggle ? styles.content : styles.hide}>
                 {languages.map((language) => (
@@ -59,6 +60,8 @@ const LanguageSwitcher: VFC = () => {
                         className={`${styles.option} ${
                             language === activeLocale ? styles.active : ''
                         }`}
+                        data-testId={`language-switcher-language-${language}`}
+
                     >
                         {capitalizeFirstLetter(
                             translate(`Common.Languages.${language}`)

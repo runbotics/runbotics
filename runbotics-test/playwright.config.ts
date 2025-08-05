@@ -19,6 +19,7 @@ export default defineConfig({
 	],
 	use: {
 		baseURL: 'https://runbotics-dev.clouddc.eu', // USE TO TEST DEV DIRECTLY
+		//baseURL: 'http://localhost:3000', // USE TO TEST LOCAL DIRECTLY
 
 		trace: 'on-first-retry',
 
