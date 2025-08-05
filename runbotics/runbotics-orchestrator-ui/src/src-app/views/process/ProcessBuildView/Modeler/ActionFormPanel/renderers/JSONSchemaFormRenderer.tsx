@@ -71,8 +71,8 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     const debouncedForm = useDebounce<FormState>(formState, DEBOUNCE_TIME);
     const { selectedElement } = useSelector(state => state.process.modeler);
 
-    const [formRef, setFormRef] = useState<HTMLElement | undefined>(undefined);
-    const [addButton, setAddButton] = useState<HTMLElement | undefined>(undefined);
+    const [formRef, setFormRef] = useState<HTMLDivElement | undefined>(undefined);
+    const [addButton, setAddButton] = useState<HTMLButtonElement | undefined>(undefined);
 
     const handleSubmit = (e: any, nativeEvent?: FormEvent<HTMLFormElement>) => {
         setEditMode(false);
@@ -128,7 +128,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
         const observer = new MutationObserver(() => {
             const button = formRef.querySelector(
                 '*#mainActionGrid button:has(svg[data-testid="AddIcon"])'
-            ) as HTMLElement;
+            ) as HTMLButtonElement;
 
             if (button) {
                 setAddButton(button);
@@ -141,11 +141,13 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
         return () => {
             observer.disconnect();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [formRef, i18n.language]);
+    }, [formRef]);
 
     useLayoutEffect(() => {
         if (!addButton) return;
+        if (addButton.childNodes.length < 2) {
+            return;
+        }
         addButton.childNodes[1].textContent = translate(
             'Process.Details.Modeler.Widgets.FieldTemplate.Action.AddItem'
         );
