@@ -12,7 +12,6 @@ import { generateAggregatedEmailContent } from '#/mail/templates/process-summary
 import { Logger } from '#/utils/logger';
 import { SubscribeDto } from './dto/subscribe.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import path from 'path';
 
 
 @Injectable()
