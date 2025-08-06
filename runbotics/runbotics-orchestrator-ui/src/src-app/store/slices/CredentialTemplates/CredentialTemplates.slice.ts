@@ -6,7 +6,7 @@ import * as credentialTemplatesThunks from './CredentialTemplates.thunks';
 import { RootState } from '../../index';
 
 const initialState: CredentialTemplatesState = {
-    credentialTemplates: null,
+    credentialTemplates: [],
     loading: false
 };
 
