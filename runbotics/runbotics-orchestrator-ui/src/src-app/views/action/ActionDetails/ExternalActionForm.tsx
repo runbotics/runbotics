@@ -1,14 +1,18 @@
 import { ChangeEvent, FC, useEffect } from 'react';
 
-import { TextField } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 
 import { ActionCredentialType } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { useSelector } from '#src-app/store';
+import { credentialTemplatesSelector } from '#src-app/store/slices/CredentialTemplates';
 import { IAction } from '#src-app/types/model/action.model';
 
 import { isStringValueEmpty } from '#src-app/utils/isStringValueEmpty';
+
+import { TemplateDropdown } from '#src-app/views/credentials/Credential/CreateGeneralInfo/TemplateDropdown';
 
 import { ExternalActionFormValidationState, isCredentialTypeValid, isScriptNameValid } from '../action.utils';
 
@@ -21,6 +25,7 @@ interface ExternalActionFormProps {
 }
 
 export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraft, formValidationState, setFormValidationState }) => {
+    const { credentialTemplates } = useSelector(credentialTemplatesSelector);
     const { translate } = useTranslations();
 
     const handleScriptChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,9 +43,10 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
     };
 
     const handleCredentialTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const name = credentialTemplates.find(template => template.id === e.target.value)?.name;
         setDraft(prev => ({
             ...prev,
-            credentialType: e.target.value
+            credentialType: name
         }));
     };
 
@@ -81,14 +87,11 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
     }, [draft.label, draft.script, draft.credentialType]);
 
     return (
-        <>
+        <Stack spacing={2} sx={{margin: theme => `${theme.spacing(1)} 0`}}>
             <TextField
                 fullWidth
                 label={translate('Action.Details.Script')}
                 name="script"
-                sx={{
-                    margin: theme => `${theme.spacing(1)} 0`
-                }}
                 value={draft.script}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleScriptChange(e)}
                 autoComplete="off"
@@ -99,26 +102,17 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
                 label={translate('Action.Details.Label')}
                 name="label"
                 required
-                sx={{
-                    margin: theme => `${theme.spacing(1)} 0`
-                }}
                 value={draft.label}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleLabelChange(e)}
                 autoComplete="off"
                 {...labelInputErrorProperties}
             />
-            <TextField
-                fullWidth
-                label={translate('Action.Details.CredentialType')}
-                name="credentialType"
-                sx={{
-                    margin: theme => `${theme.spacing(1)} 0 ${theme.spacing(5)} 0`
-                }}
-                value={draft.credentialType}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => handleCredentialTypeChange(e)}
-                autoComplete="off"
-                {...credentialTypeInputErrorProperties}
+            <TemplateDropdown
+                selectedValue={credentialTemplates.find(template => template.name === draft.credentialType)?.id || ''}
+                handleChange={handleCredentialTypeChange}
+                error={credentialTypeInputErrorProperties.error}
+                helperText={credentialTypeInputErrorProperties.helperText}
             />
-        </>
+        </Stack>
     );
 };
