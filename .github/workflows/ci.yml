@@ -19,6 +19,7 @@ jobs:
       scheduler: ${{ steps.filter.outputs.scheduler }}
       bot: ${{ steps.filter.outputs.bot }}
       api: ${{ steps.filter.outputs.api }}
+      lp: ${{ steps.filter.outputs.lp }}
 
     steps:
       - name: Checkout
@@ -28,6 +29,7 @@ jobs:
         uses: dorny/paths-filter@v2
         id: filter
         with:
+          base: ${{ github.event.repository.default_branch || github.event.before || 'develop' }}
           filters: |
             ui:
               - 'runbotics/runbotics-orchestrator-ui/**'
@@ -41,6 +43,9 @@ jobs:
               - 'runbotics/runbotics-sdk/**'
             api:
               - 'runbotics-orchestrator/**'
+            lp:
+              - 'runbotics/runbotics-lp/**'
+              - 'runbotics/runbotics-common/**'
 
 
 
@@ -294,3 +299,75 @@ jobs:
       - name: Build
         run: |
           gradle build -x test -x integrationTest -x compileTestJava
+
+
+
+  build-lp:
+    needs: changes-detection
+    if: |
+      github.ref == 'refs/heads/develop'
+      || github.ref == 'refs/heads/master'
+      || needs.changes-detection.outputs.lp == 'true'
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./runbotics/runbotics-lp
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache Rush
+        id: cache-rush
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-rush
+        with:
+          path: ~/.rush
+          key: ${{ runner.os }}-lp-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lp-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/rush.json') }}
+            ${{ runner.os }}-lp-${{ env.CACHE_NAME }}-
+
+      - name: Cache pnpm
+        id: cache-pnpm
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-pnpm
+        with:
+          path: runbotics/common/temp/pnpm-store
+          key: |
+            ${{ runner.os }}-lp-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-lp-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}
+            ${{ runner.os }}-lp-${{ env.CACHE_NAME }}-
+
+      - name: Cache Next.js
+        id: cache-next
+        uses: actions/cache@v3
+        env:
+          CACHE_NAME: cache-next
+        with:
+          path: runbotics/runbotics-lp/.next/cache
+          key: |
+            ${{ runner.os }}-lp-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}-${{ hashFiles('runbotics/runbotics-lp/**.[jt]s', 'runbotics/runbotics-lp/**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-lp-${{ env.CACHE_NAME }}-${{ hashFiles('runbotics/common/config/rush/pnpm-lock.yaml') }}-
+
+      - name: Install Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Update .npmrc
+        shell: bash
+        run: |
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+
+      - name: Install dependencies
+        run: $RUSH install -t .
+
+      - name: Build
+        run: $RUSH rebuild -t . --verbose
