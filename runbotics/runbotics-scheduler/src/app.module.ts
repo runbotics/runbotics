@@ -10,6 +10,7 @@ import { WebsocketModule } from './websocket/websocket.module';
 import { SchedulerDatabaseModule } from './scheduler-database/scheduler-database.module';
 import { MsalModule } from './scheduler-database/msal/msal.module';
 import { HealthModule } from './health/health.module';
+import { ActiveTenantGuard } from '#/global-guards/active-tenant.guard';
 
 @Module({
     imports: [
@@ -24,7 +25,7 @@ import { HealthModule } from './health/health.module';
         PrometheusModule.register(),
     ],
     providers: [
-        StorageService, Logger
+        StorageService, Logger, ActiveTenantGuard
     ],
 })
 export class AppModule { }
