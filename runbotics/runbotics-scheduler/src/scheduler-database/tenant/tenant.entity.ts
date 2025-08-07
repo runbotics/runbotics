@@ -18,6 +18,7 @@ import { Credential } from '../credential/credential.entity';
 import { User } from '../user/user.entity';
 import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { dateTransformer } from '#/database/database.utils';
 
 @Entity()
 export class Tenant {
@@ -87,6 +88,10 @@ export class Tenant {
     active: boolean;
 
     @ApiProperty({ type: 'string', format: 'date-time', nullable: true })
-    @Column({ type: 'timestamp', nullable: true })
-    subscriptionEnd: Date | null;
+    @Column({
+        type: 'timestamp without time zone',
+        transformer: dateTransformer,
+        nullable: true,
+    })
+    subscriptionEnd: string | null;
 }
