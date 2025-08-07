@@ -1,6 +1,8 @@
 package com.runbotics.security;
 
+import com.runbotics.domain.Tenant;
 import com.runbotics.domain.User;
+import com.runbotics.repository.TenantRepository;
 import com.runbotics.repository.UserRepository;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,6 +52,10 @@ public class DomainUserDetailsService implements UserDetailsService {
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(String email, User user) {
         if (!user.isActivated()) {
             throw new UserNotActivatedException("User " + email + " was not activated");
+        }
+        Tenant tenant = user.getTenant();
+        if (!tenant.isActive()) {
+            throw new TenantNotActivatedException("Tenant for user " + email + " is not activated");
         }
         List<GrantedAuthority> grantedAuthorities = user
             .getAuthorities()
