@@ -32,6 +32,11 @@ export class ActiveTenantGuard implements CanActivate {
             select: ['id', 'active'],
         });
         
-        return tenant.active ?? true;
+        if(!tenant.active) {
+            this.logger.warn(`Tenant with ID ${tenantId} is inactive.`);
+            return false;
+        }
+        
+        return true;
     }
 }
