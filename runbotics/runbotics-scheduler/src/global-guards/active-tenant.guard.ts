@@ -21,7 +21,7 @@ export class ActiveTenantGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const req: AuthRequest = context.switchToHttp().getRequest();
         const tenantId = req.params.tenantId;
-        const pathRegex = /^\/api\/scheduler\/tenants\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
+        const pathRegex = /\/api\/scheduler\/tenants\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
 
         if (!tenantId || typeof tenantId !== 'string' || !pathRegex.test(req.url)) {
             return true;
