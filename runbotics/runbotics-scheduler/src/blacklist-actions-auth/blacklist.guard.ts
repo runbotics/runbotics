@@ -34,8 +34,8 @@ export class BlacklistGuard implements CanActivate {
         const body = request.body;
 
         if (body && this.checkBodyType(body)) {
-            return this.blacklistAuthService.checkProcessActionsBlacklistByDefinition(body.definition);
+            return !(await this.blacklistAuthService.checkProcessActionsBlacklistByDefinition(body.definition));
         }
-        return processId !== -1 && await this.blacklistAuthService.checkProcessActionsBlacklist(processId);
+        return !(processId !== -1 && (await this.blacklistAuthService.checkProcessActionsBlacklist(processId)));
     }
 }
