@@ -68,7 +68,7 @@ export class ProcessController {
         summary: 'Create a new process',
         description: `Creates a new process in the system for the current tenant. 
             The user must have permission to add processes. 
-            Tag list cannot exceed 15 items.`,
+            Tag list cannot exceed 15 items. The process is validated against the blacklist of actions.`,
     })
     @ApiBody({
         type: CreateProcessSwaggerDto,
@@ -115,7 +115,8 @@ export class ProcessController {
         return this.processCrudService.createGuestProcess(user);
     }
 
-    @ApiOperation({ summary: 'Updates the information of a process' })
+    @ApiOperation({ summary: 'Updates the information of a process',
+    description: 'The updated process is validated against the blacklist of actions.'})
     @ApiParam(processIdSwaggerObjectDescription)
     @ApiBody({
         type: UpdateProcessSwaggerDto,
@@ -148,7 +149,8 @@ export class ProcessController {
     @ApiOperation({
         summary: 'Update a process diagram',
         description:
-            'Updates the diagram definition, execution info, and global variables of a specific process by its ID.',
+            'Updates the diagram definition, execution info, and global variables of a specific process by its ID. ' +
+            'The updated process is validated against the blacklist of actions',
     })
     @ApiParam(processIdSwaggerObjectDescription)
     @ApiBody({
@@ -189,7 +191,8 @@ export class ProcessController {
     @ApiOperation({
         summary: 'Update execution info of a process',
         description:
-            'Updates only the `executionInfo` field of a specific process identified by its numeric ID.',
+            'Updates only the `executionInfo` field of a specific process identified by its numeric ID.' +
+            'The updated process is validated against the blacklist of actions',
     })
     @ApiParam(processIdSwaggerObjectDescription)
     @ApiBody({
