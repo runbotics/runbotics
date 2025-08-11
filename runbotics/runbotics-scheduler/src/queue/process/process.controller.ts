@@ -1,5 +1,4 @@
-import { Body, Controller, HttpException, HttpStatus, Param, Post, Request, UsePipes } from '@nestjs/common';
-import { AuthRequest } from '#/types';
+import { Body, Controller, HttpException, HttpStatus, Param, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { QueueService } from '../queue.service';
 import { SchemaValidationPipe } from '../../utils/pipes/schema.validation.pipe';
 import { startProcessSchema } from '#/utils/pipes';
@@ -11,6 +10,7 @@ import { GuestService } from '#/scheduler-database/guest/guest.service';
 import { checkMessageProperty, checkStatusProperty } from '#/utils/error-message.utils';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
+import { BlacklistGuard } from '#/blacklist-actions-auth/blacklist.guard';
 
 @Controller('scheduler/processes')
 export class ProcessController {
@@ -20,11 +20,13 @@ export class ProcessController {
         private readonly queueService: QueueService,
         private readonly processGuestService: ProcessGuestService,
         private readonly guestService: GuestService,
-    ) { }
+    ) {
+    }
 
     @FeatureKeys(FeatureKey.PROCESS_START)
     @Post(':processId/start')
     @UsePipes(new SchemaValidationPipe(startProcessSchema))
+    @UseGuards(BlacklistGuard)
     async startProcess(
         @Param('processId') processId: number,
         @Body() input: ProcessInput,
@@ -46,7 +48,7 @@ export class ProcessController {
                 input,
                 user,
                 trigger: { name: TriggerEvent.MANUAL },
-                triggerData: { userEmail: user.email }
+                triggerData: { userEmail: user.email },
             });
 
             this.logger.log(`<= Process ${processId} successfully started`);
@@ -60,7 +62,7 @@ export class ProcessController {
         } catch (err: unknown) {
             this.logger.error(`<= Process ${processId} failed to start`);
 
-            if(isUserGuest) {
+            if (isUserGuest) {
                 await this.guestService.setExecutionsCount(userId, initialExecutionsCount);
                 this.logger.log(`Restored user's executions-count to ${initialExecutionsCount}`);
             }

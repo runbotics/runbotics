@@ -9,7 +9,8 @@ import {
     Param,
     ParseIntPipe,
     Patch,
-    Post,
+    Post, 
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -45,6 +46,8 @@ import { Pageable, Paging } from '#/utils/page/pageable.decorator';
 import { Specifiable, Specs } from '#/utils/specification/specifiable.decorator';
 import { UpdateExecutionInfoDto, updateExecutionInfoSchema, UpdateExecutionInfoSwaggerDto } from './dto/update-execution-info.dto';
 import { isTenantAdmin } from '#/utils/authority.utils';
+import { BlacklistGuard } from '#/blacklist-actions-auth/blacklist.guard';
+
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { processIdSwaggerObjectDescription, SwaggerTags } from '#/utils/swagger.utils';
 import { ApiDefaultAuthResponses } from '#/utils/decorators/swagger/ApiDefaultAuthResponses.decorator';
@@ -65,7 +68,7 @@ export class ProcessController {
         summary: 'Create a new process',
         description: `Creates a new process in the system for the current tenant. 
             The user must have permission to add processes. 
-            Tag list cannot exceed 15 items.`,
+            Tag list cannot exceed 15 items. The process is validated against the blacklist of actions.`,
     })
     @ApiBody({
         type: CreateProcessSwaggerDto,
@@ -79,6 +82,7 @@ export class ProcessController {
     })
     @Post()
     @FeatureKeys(FeatureKey.PROCESS_ADD)
+    @UseGuards(BlacklistGuard)
     createProcess(
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(createProcessSchema))
@@ -111,7 +115,8 @@ export class ProcessController {
         return this.processCrudService.createGuestProcess(user);
     }
 
-    @ApiOperation({ summary: 'Updates the information of a process' })
+    @ApiOperation({ summary: 'Updates the information of a process',
+    description: 'The updated process is validated against the blacklist of actions.'})
     @ApiParam(processIdSwaggerObjectDescription)
     @ApiBody({
         type: UpdateProcessSwaggerDto,
@@ -129,6 +134,7 @@ export class ProcessController {
     })
     @Patch(':id')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
+    @UseGuards(BlacklistGuard)
     async update(
         @Param('id', new ParseIntPipe()) id: number,
         @UserDecorator() user: User,
@@ -143,7 +149,8 @@ export class ProcessController {
     @ApiOperation({
         summary: 'Update a process diagram',
         description:
-            'Updates the diagram definition, execution info, and global variables of a specific process by its ID.',
+            'Updates the diagram definition, execution info, and global variables of a specific process by its ID. ' +
+            'The updated process is validated against the blacklist of actions',
     })
     @ApiParam(processIdSwaggerObjectDescription)
     @ApiBody({
@@ -165,6 +172,7 @@ export class ProcessController {
     })
     @Patch(':id/diagram')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_STRUCTURE)
+    @UseGuards(BlacklistGuard)
     async setDiagram(
         @Param('id', new ParseIntPipe()) id: number,
         @UserDecorator() user: User,
@@ -183,7 +191,8 @@ export class ProcessController {
     @ApiOperation({
         summary: 'Update execution info of a process',
         description:
-            'Updates only the `executionInfo` field of a specific process identified by its numeric ID.',
+            'Updates only the `executionInfo` field of a specific process identified by its numeric ID.' +
+            'The updated process is validated against the blacklist of actions',
     })
     @ApiParam(processIdSwaggerObjectDescription)
     @ApiBody({
@@ -200,6 +209,7 @@ export class ProcessController {
     })
     @Patch(':id/execution-info')
     @FeatureKeys(FeatureKey.PROCESS_EDIT_INFO)
+    @UseGuards(BlacklistGuard)
     async setExecutionInfo(
         @Param('id', new ParseIntPipe()) id: number,
         @UserDecorator() user: User,

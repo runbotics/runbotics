@@ -28,7 +28,10 @@ export const initialModelerState: ModelerState = {
     passedInVariables: [],
     imported: false,
     activeDrag: false,
-    blacklistedActions: null,
+    blacklistedActions: {
+        actionIds: [],
+        actionGroups: [],
+    },
 };
 
 export const initialState: ProcessState = {
@@ -46,7 +49,7 @@ export const initialState: ProcessState = {
         byId: {},
         ids: [],
         page: null,
-        listDisplayMode: ProcessListDisplayMode.GRID
+        listDisplayMode: ProcessListDisplayMode.GRID,
     },
 };
 

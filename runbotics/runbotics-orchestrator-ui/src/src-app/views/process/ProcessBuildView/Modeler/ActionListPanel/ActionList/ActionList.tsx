@@ -48,7 +48,7 @@ const ActionList: FC<ActionListProps> = ({
 }) => {
     const isGuest = useRole([Role.ROLE_GUEST]);
     const { process } = useSelector((state) => state.process.draft);
-    const blacklistedActions = useSelector(
+    const { actionGroups, actionIds } = useSelector(
         (state) => state.process.modeler.blacklistedActions
     );
     const { translate } = useTranslations();
@@ -78,12 +78,10 @@ const ActionList: FC<ActionListProps> = ({
             </ListItemText>
         </ListItemButton>
     );
-
     const filteredGroups =
-        (blacklistedActions?.length ?? 0) > 0
+        (actionGroups?.length ?? 0) > 0
             ? groups.filter(
-                (group) =>
-                    !blacklistedActions.includes(group.key as ACTION_GROUP)
+                (group) => !actionGroups.includes(group.key as ACTION_GROUP)
             )
             : groups;
     const getTranslationMessage = () =>
@@ -129,58 +127,67 @@ const ActionList: FC<ActionListProps> = ({
                                     disabled={isGroupDisabled}
                                 >
                                     <List component="div" disablePadding>
-                                        {items.map((item: Item) => {
-                                            const itemId =
-                                                item.id as AllActionIds;
+                                        {items
+                                            .filter(
+                                                (item) =>
+                                                    !actionIds.includes(item.id as unknown as AllActionIds)
+                                            )
+                                            .map((item: Item) => {
+                                                const itemId =
+                                                    item.id as AllActionIds;
 
-                                            const isActionIncompatible =
-                                                item.system &&
-                                                actionSystemCheck(item.system);
-                                            const isActionDisabled =
-                                                !hasAdvancedActionsAccess &&
-                                                (isGroupDisabled ||
-                                                    ADVANCED_ACTION_IDS.includes(
-                                                        itemId
-                                                    ));
+                                                const isActionIncompatible =
+                                                    item.system &&
+                                                    actionSystemCheck(
+                                                        item.system
+                                                    );
+                                                const isActionDisabled =
+                                                    (!hasAdvancedActionsAccess &&
+                                                        (isGroupDisabled ||
+                                                            ADVANCED_ACTION_IDS.includes(
+                                                                itemId
+                                                            ))) ||
+                                                    actionIds?.includes(itemId);
 
-                                            let title = '';
+                                                let title = '';
 
-                                            if (
-                                                isActionIncompatible &&
-                                                !isActionDisabled
-                                            ) {
-                                                title = translate(
-                                                    'Action.List.Item.Disabled.Tooltip',
-                                                    {
-                                                        system: item.system,
-                                                    }
+                                                if (
+                                                    isActionIncompatible &&
+                                                    !isActionDisabled
+                                                ) {
+                                                    title = translate(
+                                                        'Action.List.Item.Disabled.Tooltip',
+                                                        {
+                                                            system: item.system,
+                                                        }
+                                                    );
+                                                }
+
+                                                if (
+                                                    isActionDisabled &&
+                                                    !isGroupDisabled
+                                                ) {
+                                                    title =
+                                                        getTranslationMessage();
+                                                }
+
+                                                return (
+                                                    <Tooltip
+                                                        key={item.id}
+                                                        title={title}
+                                                    >
+                                                        <div>
+                                                            <ListItem
+                                                                item={item}
+                                                                disabled={
+                                                                    isActionIncompatible ||
+                                                                    isActionDisabled
+                                                                }
+                                                            />
+                                                        </div>
+                                                    </Tooltip>
                                                 );
-                                            }
-
-                                            if (
-                                                isActionDisabled &&
-                                                !isGroupDisabled
-                                            ) {
-                                                title = getTranslationMessage();
-                                            }
-
-                                            return (
-                                                <Tooltip
-                                                    key={item.id}
-                                                    title={title}
-                                                >
-                                                    <div>
-                                                        <ListItem
-                                                            item={item}
-                                                            disabled={
-                                                                isActionIncompatible ||
-                                                                isActionDisabled
-                                                            }
-                                                        />
-                                                    </div>
-                                                </Tooltip>
-                                            );
-                                        })}
+                                            })}
                                     </List>
                                 </ListGroup>
                             </div>

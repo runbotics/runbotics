@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { ACTION_GROUP, IProcess } from 'runbotics-common';
+import { ActionBlacklist, IProcess } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
 import { Options, Variable } from '#src-app/hooks/useOptions';
@@ -105,7 +105,11 @@ export const setCommandStack = (
     state.modeler.commandStack = action.payload;
 };
 
-const handleSetError = (stateKey: string, state: ProcessState, action: PayloadAction<ModelerError>) => {
+const handleSetError = (
+    stateKey: string,
+    state: ProcessState,
+    action: PayloadAction<ModelerError>
+) => {
     const errorIndex = state.modeler[stateKey].findIndex(
         (error) => error.elementId === action.payload.elementId
     );
@@ -132,10 +136,14 @@ export const resetDraft = (state: ProcessState) => {
     state.draft = initialState.draft;
 };
 
-export const removeDraftProcessSchedule = (state: ProcessState, action: PayloadAction<number>) => {
+export const removeDraftProcessSchedule = (
+    state: ProcessState,
+    action: PayloadAction<number>
+) => {
     if (state.draft.process?.schedules) {
-        state.draft.process.schedules = state.draft.process.schedules
-            .filter(schedule => schedule.id !== action.payload);
+        state.draft.process.schedules = state.draft.process.schedules.filter(
+            (schedule) => schedule.id !== action.payload
+        );
     }
 };
 
@@ -146,7 +154,11 @@ export const setImported = (
     state.modeler.imported = action.payload;
 };
 
-const handleRemoveError = (stateKey: string, state: ProcessState, action: PayloadAction<string>) => {
+const handleRemoveError = (
+    stateKey: string,
+    state: ProcessState,
+    action: PayloadAction<string>
+) => {
     state.modeler[stateKey] = state.modeler[stateKey].filter(
         (error) => error.elementId !== action.payload
     );
@@ -172,25 +184,46 @@ export const clearErrors = (state: ProcessState) => {
 };
 
 export const clearModelerState = (state: ProcessState) => {
-    state.modeler = { ...initialModelerState, imported: state.modeler.imported };
+    state.modeler = {
+        ...initialModelerState,
+        imported: state.modeler.imported,
+    };
 };
 
-export const setOptions = (state: ProcessState, action: PayloadAction<Options>) => {
+export const setOptions = (
+    state: ProcessState,
+    action: PayloadAction<Options>
+) => {
     state.modeler.options = action.payload;
 };
 
-export const setVariables = (state: ProcessState, action: PayloadAction<Variable[]>) => {
+export const setVariables = (
+    state: ProcessState,
+    action: PayloadAction<Variable[]>
+) => {
     state.modeler.variables = action.payload;
 };
 
-export const setActiveDrag = (state: ProcessState, action: PayloadAction<boolean>) => {
+export const setActiveDrag = (
+    state: ProcessState,
+    action: PayloadAction<boolean>
+) => {
     state.modeler.activeDrag = action.payload;
 };
 
-export const setProcessListDisplayMode = (state: ProcessState, action: PayloadAction<ProcessListDisplayMode>) => {
+export const setProcessListDisplayMode = (
+    state: ProcessState,
+    action: PayloadAction<ProcessListDisplayMode>
+) => {
     state.all.listDisplayMode = action.payload;
 };
 
-export const setProcessBlacklistActions = (state: ProcessState, action: PayloadAction<ACTION_GROUP[]>) => {
-    state.modeler.blacklistedActions = action.payload;
+export const setProcessBlacklistActions = (
+    state: ProcessState,
+    action: PayloadAction<Omit<ActionBlacklist, 'id'>>
+) => {
+    state.modeler.blacklistedActions = {
+        actionIds: action.payload.actionIds ?? [],
+        actionGroups: action.payload.actionGroups ?? [],
+    };
 };
