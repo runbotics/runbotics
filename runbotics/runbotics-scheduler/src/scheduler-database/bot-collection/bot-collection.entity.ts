@@ -7,6 +7,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    Unique,
     UpdateDateColumn,
 } from 'typeorm';
 import { IBotCollection } from 'runbotics-common';
@@ -15,11 +16,12 @@ import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Entity({ name: 'bot_collection' })
+@Unique(['name', 'tenantId'])
 export class BotCollection implements IBotCollection {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ unique: true, type: 'varchar', length: 255 })
+    @Column({ type: 'varchar', length: 255 })
     name: string;
 
     @Column({ type: 'text', nullable: true })

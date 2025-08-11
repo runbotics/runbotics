@@ -1,7 +1,7 @@
 import { userReferenceSchema } from '#/scheduler-database/user/dto/user-reference';
 import { z } from 'zod';
 
-export const UnmappedProcessCollectionSchema = z.object({
+export const ProcessCollectionWithUsersSchema = z.object({
     id: z.string(),
     name: z.string(),
     description: z.string().optional(),
@@ -15,4 +15,4 @@ export const UnmappedProcessCollectionSchema = z.object({
     users: z.array(userReferenceSchema).optional(),
 });
 
-export type UnmappedProcessCollectionDto = z.infer<typeof UnmappedProcessCollectionSchema>;
+export type ProcessCollectionWithUsersDto = z.infer<typeof ProcessCollectionWithUsersSchema>;

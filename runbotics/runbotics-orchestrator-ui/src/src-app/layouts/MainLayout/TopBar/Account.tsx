@@ -5,13 +5,9 @@ import { useTheme } from '@mui/material/styles';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { FeatureKey, Role } from 'runbotics-common';
 import styled from 'styled-components';
 
-import If from '#src-app/components/utils/If';
 import useAuth from '#src-app/hooks/useAuth';
-import useFeatureKey from '#src-app/hooks/useFeatureKey';
-import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { logout } from '#src-app/store/slices/Auth/Auth.thunks';
@@ -47,11 +43,6 @@ const Root = styled.div(({ theme }) => ({
     },
 }));
 
-const MenuLink = styled(RouterLink)(({ theme }) => `
-    text-decoration: none;
-    color: ${theme.palette.text.primary};
-`);
-
 const Account: FC = () => {
     const ref = useRef<HTMLDivElement>(null);
     const auth = useAuth();
@@ -60,12 +51,9 @@ const Account: FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [isOpen, setOpen] = useState(false);
     const dispatch = useDispatch();
-    const hasAdminAccess = useRole([Role.ROLE_ADMIN]);
-    const hasUsersPageAccess = useFeatureKey([FeatureKey.TENANT_READ_USER, FeatureKey.MANAGE_INACTIVE_USERS], { oneOf: true });
 
     const { pathname } = useRouter();
 
-    const usersHref = `/app/users${hasAdminAccess ? '/pending' : ''}`;
 
     const handleOpen = (): void => {
         setOpen(true);
@@ -134,25 +122,6 @@ const Account: FC = () => {
                 open={isOpen}
                 onBlur={handleClose}
             >
-                <If condition={hasUsersPageAccess}>
-                    <MenuLink href={usersHref}>
-                        <MenuItem>
-                            {translate('Account.Users')}
-                        </MenuItem>
-                    </MenuLink>
-                </If>
-                <If condition={hasAdminAccess}>
-                    <MenuLink href='/app/tenants'>
-                        <MenuItem>
-                            {translate('Account.Tenants')}
-                        </MenuItem>
-                    </MenuLink>
-                    <MenuLink href='/monitoring/grafana'>
-                        <MenuItem>
-                            {translate('Account.Monitoring')}
-                        </MenuItem>
-                    </MenuLink>
-                </If>
                 <MenuItem onClick={handleLogout}>{translate('Account.Logout')}</MenuItem>
             </Menu>
         </Root>

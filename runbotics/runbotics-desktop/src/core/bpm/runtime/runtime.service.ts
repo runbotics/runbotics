@@ -53,10 +53,11 @@ import {
 } from './runtime.types';
 import { BpmnEngineEventBus } from './bpmn-engine.event-bus';
 import { LoopHandlerService } from '../loop-handler';
-import { schedulerAxios, ServerConfigService } from '#config';
+import { ServerConfigService } from '#config';
 import { StorageService } from '#config';
 import LoopSubProcess from '#core/bpm/LoopSubProcessBehaviour';
 import { PLUGIN_PREFIX } from '../desktop-runner/desktop-runner.utils';
+import { RequestService } from '#core/auth/request.service';
 
 @Injectable()
 export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
@@ -74,6 +75,7 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         private readonly loopHandlerService: LoopHandlerService,
         private readonly serverConfigService: ServerConfigService,
         private readonly storageService: StorageService,
+        private readonly requestService: RequestService
     ) { }
 
     onApplicationBootstrap() {
@@ -558,20 +560,22 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
                 ) => {
                     const desktopTask: DesktopTask = executionContext.content;
                     const script = desktopTask.input.script;
-                    desktopTask.input = (await FieldResolver.resolveFields(
-                        desktopTask.input
-                    )) as DesktopTask['input'];
                     const executionId = input.content.executionId;
+
                     const runboticsExecutionEnvironment: RunBoticsExecutionEnvironment =
                         executionContext.environment;
-
                     if (runboticsExecutionEnvironment.runbotic?.disabled) {
                         this.logger.warn(
+
                             `[${processInstanceId}] [${executionId}] [${script}] Desktop script is skipped`
                         );
                         callback(null, { disabled: true });
                         return;
                     }
+
+                    desktopTask.input = (await FieldResolver.resolveFields(
+                        desktopTask.input
+                    )) as DesktopTask['input'];
 
                     const credentialType =
                         runboticsExecutionEnvironment.runbotic?.credentialType ??
@@ -640,6 +644,8 @@ export class RuntimeService implements OnApplicationBootstrap, OnModuleDestroy {
         if (!script.startsWith(PLUGIN_PREFIX)) {
             return licenseInfo;
         }
+
+        const schedulerAxios = await this.requestService.getSchedulerAxios();
 
         try {
             const tenantId = this.storageService.getValue('tenantId');

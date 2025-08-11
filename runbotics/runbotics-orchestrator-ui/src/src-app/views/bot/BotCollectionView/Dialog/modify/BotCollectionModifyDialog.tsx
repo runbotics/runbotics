@@ -20,7 +20,8 @@ interface ModifyBotCollectionDialogProps {
     collection: BotCollectionDto;
 }
 
-const REJECT_REQUEST_TYPE = 'botCollection/createCollection/rejected';
+const REJECT_REQUEST_TYPE = 'botCollection/createOne/rejected';
+const REJECT_UPDATE_REQUEST_TYPE = 'botCollection/updateCollection/rejected';
 
 // eslint-disable-next-line max-lines-per-function
 const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collection, onClose, open, pageParams }) => {
@@ -43,7 +44,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
 
     const shareableUsers = useMemo(() => ({
         loading: tenantActivated.loading,
-        all: tenantActivated.all.filter(user => user.email !== currentUser.email)
+        all: tenantActivated.all.filter(user => user.email !== currentUser.email && hasFeatureKeyAccess(user, [FeatureKey.BOT_COLLECTION_READ]))
     }), [tenantActivated, currentUser.email]);
 
     const isOwner = !collection || currentUser.email === collection?.createdByUser?.email || hasFeatureKeyAccess(currentUser, [FeatureKey.BOT_COLLECTION_ALL_ACCESS]);
@@ -77,7 +78,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
         const body = createCollectionEntityToSend();
         const { type, payload } = await updateCollection(body);
 
-        if (type === REJECT_REQUEST_TYPE) {
+        if ([REJECT_REQUEST_TYPE, REJECT_UPDATE_REQUEST_TYPE].includes(type)) {
             setError(payload);
         } else {
             setError(null);
@@ -180,7 +181,7 @@ const BotCollectionModifyDialog: FC<ModifyBotCollectionDialogProps> = ({ collect
 
                     <Typography sx={{ visibility: `${error ? 'visibily' : 'hidden'}` }} color="red" variant="body2">
                         {/* @ts-ignore */}
-                        {translate(`Bot.Collection.Dialog.Modify.Form.ErrorMessage.${error}`)}
+                        {error?.message}
                     </Typography>
                 </Form>
             </Content>

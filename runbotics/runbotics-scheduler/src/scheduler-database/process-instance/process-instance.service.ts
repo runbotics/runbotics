@@ -1,32 +1,40 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProcessInstance } from './process-instance.entity';
 import {
     EntityManager,
     FindManyOptions,
     FindOptionsRelations,
+    FindOptionsWhere,
     IsNull,
     MoreThan,
     Repository,
 } from 'typeorm';
-import { IBot, ProcessInstanceStatus, Tenant } from 'runbotics-common';
+import { FeatureKey, IBot, ProcessInstanceStatus, Tenant } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 import { CreateProcessInstanceDto } from './dto/create-process-instance.dto';
 import { User } from '#/scheduler-database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage, Page } from '#/utils/page/page';
-import { isTenantAdmin } from '#/utils/authority.utils';
+import { hasFeatureKey, isTenantAdmin } from '#/utils/authority.utils';
 import { ProcessService } from '../process/process.service';
+import { ProcessEntity } from '../process/process.entity';
 
 type MappedProcessInstance = ProcessInstance & { hasSubprocesses: boolean };
 
 const RELATIONS: FindOptionsRelations<ProcessInstance> = {
     bot: true,
-    process: true,
+    process: {
+        processCollection: {
+            users: true,
+            createdBy: true,
+        },
+    },
     user: true,
     trigger: true,
 };
+
 
 @Injectable()
 export class ProcessInstanceService {
@@ -35,14 +43,14 @@ export class ProcessInstanceService {
     constructor(
         @InjectRepository(ProcessInstance)
         private readonly processInstanceRepository: Repository<ProcessInstance>,
-        private readonly processService: ProcessService,
+        private readonly processService: ProcessService
     ) {}
 
     withEntityManager(em: EntityManager): ProcessInstanceService {
         return new ProcessInstanceService(
             em.getRepository(ProcessInstance),
             this.processService.withEntityManager(em)
-        )
+        );
     }
 
     async create(processInstanceDto: CreateProcessInstanceDto) {
@@ -84,29 +92,93 @@ export class ProcessInstanceService {
         specs: Specs<ProcessInstance>,
         paging: Paging,
         processId: string,
+        botId: string
     ): Promise<Page<ProcessInstance>> {
         const options: FindManyOptions<ProcessInstance> = {
             ...paging,
             ...specs,
         };
 
+        const conditionByUser: FindOptionsWhere<ProcessInstance> = {
+            process: {
+                tenantId: user.tenantId,
+                processCollection: {
+                    users: {
+                        id: user.id,
+                    },
+                },
+            },
+        };
+
+        const conditionIsPublic: FindOptionsWhere<ProcessInstance> = {
+            process: {
+                tenantId: user.tenantId,
+                processCollection: {
+                    isPublic: true,
+                },
+            },
+        };
+
+        const conditionByCreator: FindOptionsWhere<ProcessInstance> = {
+            process: {
+                tenantId: user.tenantId,
+                processCollection: {
+                    createdBy: {
+                        id: user.id,
+                    },
+                },
+            },
+        };
+
+        const conditionIsProcessPublic: FindOptionsWhere<ProcessInstance> = {
+            process: {
+                tenantId: user.tenantId,
+                isPublic: true,
+            },
+        };
+
+        const isProcessIdGiven = specs.where.processId !== undefined;
+
+        if (
+            !isProcessIdGiven &&
+            specs.where.botId === undefined &&
+            !isTenantAdmin(user)
+        ) {
+            throw new BadRequestException(
+                'Either processId or botId must be provided'
+            );
+        }
+
         if (
             !isTenantAdmin(user) &&
-            (
-                specs.where.processId === undefined ||
-                !await this.processService.hasAccess(user, +processId)
-            )
+            isProcessIdGiven &&
+            !(await this.processService.hasAccess(user, +processId))
         ) {
             throw new ForbiddenException('No access to whole page');
         }
 
+        const hasAllAccess = hasFeatureKey(
+            user,
+            FeatureKey.PROCESS_COLLECTION_ALL_ACCESS
+        );
+
         options.relations = RELATIONS;
-        options.where = {
-            ...options.where,
-            process: {
-                tenantId: user.tenantId,
-            },
-        };
+
+        if (!botId || hasAllAccess) {
+            options.where = {
+                ...options.where,
+                process: {
+                    tenantId: user.tenantId,
+                },
+            };
+        } else if (botId) {
+            options.where = [
+                { ...options.where, ...conditionByUser },
+                { ...options.where, ...conditionByCreator },
+                { ...options.where, ...conditionIsPublic },
+                { ...options.where, ...conditionIsProcessPublic },
+            ];
+        }
 
         const processInstancePage = await getPage(
             this.processInstanceRepository,
@@ -145,6 +217,16 @@ export class ProcessInstanceService {
         )) as MappedProcessInstance;
 
         return mappedProcessInstance;
+    }
+
+    findAllByProcessId(id: ProcessEntity['id'], user: User) {
+        return this.processInstanceRepository.find({
+            where: {
+                processId: id,
+                process: { tenantId: user.tenantId },
+            },
+            relations: RELATIONS,
+        });
     }
 
     async getSubprocesses(

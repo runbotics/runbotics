@@ -1,8 +1,9 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { IProcess } from 'runbotics-common';
+import { ACTION_GROUP, IProcess } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
 import { Options, Variable } from '#src-app/hooks/useOptions';
+import { ProcessListDisplayMode } from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
 import { BPMNElement } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import { initialModelerState, initialState } from './Process.slice';
@@ -184,4 +185,12 @@ export const setVariables = (state: ProcessState, action: PayloadAction<Variable
 
 export const setActiveDrag = (state: ProcessState, action: PayloadAction<boolean>) => {
     state.modeler.activeDrag = action.payload;
+};
+
+export const setProcessListDisplayMode = (state: ProcessState, action: PayloadAction<ProcessListDisplayMode>) => {
+    state.all.listDisplayMode = action.payload;
+};
+
+export const setProcessBlacklistActions = (state: ProcessState, action: PayloadAction<ACTION_GROUP[]>) => {
+    state.modeler.blacklistedActions = action.payload;
 };

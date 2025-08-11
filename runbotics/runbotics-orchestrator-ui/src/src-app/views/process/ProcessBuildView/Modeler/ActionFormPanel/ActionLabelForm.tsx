@@ -3,7 +3,6 @@ import React, { useEffect, useState, VFC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
-import InfoIcon from '@mui/icons-material/Info';
 
 import {
     Alert,
@@ -11,7 +10,6 @@ import {
     Stack,
     TextField,
     Typography,
-    Tooltip,
 } from '@mui/material';
 import i18n from 'i18next';
 
@@ -146,16 +144,6 @@ const ActionLabelForm: VFC<Props> = ({ onSubmit }) => {
                             'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Title',
                             { system: selectedAction.system }
                         )}
-                        <Tooltip
-                            title={translate(
-                                'Process.Details.Modeler.ActionPanel.Form.ActionSystem.Tooltip.Title',
-                                { system: selectedAction.system }
-                            )}
-                        >
-                            <IconButton size="small" sx={{ cursor: 'default' }}>
-                                <InfoIcon sx={{ width: '20px', height: '20px' }}/>
-                            </IconButton>
-                        </Tooltip>
                     </div>
                 </Alert>
             )}

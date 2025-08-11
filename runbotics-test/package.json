@@ -1,0 +1,24 @@
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "setup": "playwright install",
+    "show-report": "playwright show-report",
+    "test:ui": "playwright test --ui",
+    "start-proxy": "cd runbotics-dev-proxy && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.21"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0"
+  }
+}

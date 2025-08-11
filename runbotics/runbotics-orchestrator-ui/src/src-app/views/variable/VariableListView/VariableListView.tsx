@@ -1,10 +1,9 @@
 import React, { FunctionComponent, useState } from 'react';
 
-import { Box } from '@mui/material';
-
+import { Box, TextField } from '@mui/material';
 
 import InternalPage from '#src-app/components/pages/InternalPage';
-
+import useGlobalVariableSearch from '#src-app/hooks/useGlobalVariableSearch';
 import useTranslations from '#src-app/hooks/useTranslations';
 
 import Header from './Header';
@@ -19,11 +18,19 @@ const initialVariableDetailState: VariableDetailState = { show: false };
 const VariableListView: FunctionComponent = () => {
     const [variableDetailState, setVariableDetailState] = useState<VariableDetailState>(initialVariableDetailState);
     const { translate } = useTranslations();
+    const { handleSearch, search } = useGlobalVariableSearch();
 
     return (
         <>
             <InternalPage title={translate('Variables.Meta.Title')}>
                 <Header onVariableCreate={() => setVariableDetailState({ show: true })} />
+                <Box display='flex' justifyContent='flex-end' mt={2}>
+                    <TextField 
+                        label={'Search'}
+                        onChange={handleSearch}
+                        value={search}
+                    />
+                </Box>
                 <Box mt={3}>
                     <Table setVariableDetailState={setVariableDetailState} />
                 </Box>

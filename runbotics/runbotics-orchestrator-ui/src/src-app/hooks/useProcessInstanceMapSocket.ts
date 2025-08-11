@@ -22,7 +22,7 @@ const useProcessInstanceMapSocket = () => {
         socket.on(WsMessage.PROCESS, (processInstance: IProcessInstance) => {
             const processId = processInstance?.process?.id;
             const isAdminOrOwner =
-                user.roles.some(role => role === Role.ROLE_ADMIN || role === Role.ROLE_TENANT_ADMIN) ||
+                user.roles.includes(Role.ROLE_TENANT_ADMIN) ||
                 processInstance.user.id === user.id;
             const canUpdateProcessInstance =
                 !allActiveMap[processId] ||

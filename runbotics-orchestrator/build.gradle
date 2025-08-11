@@ -27,7 +27,7 @@ plugins {
 group = "com.runbotics"
 
 
-version = "3.2.1"
+version = "3.3.0"
 
 description = ""
 
@@ -84,17 +84,6 @@ defaultTasks "bootRun"
 
 springBoot {
     mainClassName = "com.runbotics.RunboticsApp"
-}
-
-task setVersion {
-    doLast {
-        group = 'Versioning'
-        description = "Sets the version to the specified parameter -PnewVersion=\'x.x.x\'"
-        if(project.hasProperty('newVersion')) {
-            String s=buildFile.getText().replaceFirst(/version = \".+\"/, "version = \"" + newVersion + "\"")
-            buildFile.setText(s)
-        }
-    }
 }
 
 test {

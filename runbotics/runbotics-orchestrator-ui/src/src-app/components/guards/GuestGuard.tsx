@@ -11,6 +11,7 @@ import { authActions } from '#src-app/store/slices/Auth';
 import { Language } from '#src-app/translations/translations';
 import BlankPage from '#src-app/utils/BlankPage';
 
+
 // eslint-disable-next-line react/display-name
 export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
     const { isAuthenticated, isInitialized, user } = useAuth();
@@ -24,7 +25,11 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
     }, [router.locale]);
 
     if (isBrowser && isInitialized && isAuthenticated) {
-        if (!user.roles.includes(Role.ROLE_GUEST)) {
+        if (user.roles.includes(Role.ROLE_ADMIN)) {
+            router.replace('/app/tenants', null, { locale: user.langKey });
+        }
+
+        if (![Role.ROLE_GUEST, Role.ROLE_ADMIN].some(role => user.roles.includes(role))) {
             router.replace('/app/processes/collections', null, { locale: user.langKey });
         }
 

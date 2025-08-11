@@ -1,21 +1,20 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Connection } from 'typeorm';
-import jwt, { JwtHeader, JwtPayload, Secret, SigningKeyCallback } from 'jsonwebtoken';
-import jwksClient, { JwksClient } from 'jwks-rsa';
-import { WsException } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
 import { ServerConfigService } from '#/config/server-config';
+import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
+import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
 import { BotService } from '#/scheduler-database/bot/bot.service';
-import { BotSystemService } from '#/scheduler-database/bot-system/bot-system.service';
-import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
+import { User } from '#/scheduler-database/user/user.entity';
 import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
-import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
-import { MicrosoftSSOUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import dayjs from 'dayjs';
-import { User } from '#/scheduler-database/user/user.entity';
+import jwt from 'jsonwebtoken';
+import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
+import { Socket } from 'socket.io';
+import { Connection } from 'typeorm';
+import { MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -25,7 +24,6 @@ interface ValidatorBotWsProps {
 @Injectable()
 export class AuthService {
     private readonly logger = new Logger(AuthService.name);
-    private jwksClient: JwksClient;
 
     constructor(
         private readonly userService: UserService,
@@ -35,9 +33,6 @@ export class AuthService {
         private readonly serverConfigService: ServerConfigService,
         private readonly connection: Connection,
     ) {
-        this.jwksClient = jwksClient({
-            jwksUri: this.serverConfigService.microsoftAuth.discoveryKeysUri,
-        });
     }
 
     validatePayload(payload: JWTPayload) {
@@ -49,6 +44,16 @@ export class AuthService {
         let jwtPayload;
         try {
             jwtPayload = jwt.verify(token, secret) as JWTPayload;
+        } catch (e: unknown) {
+            return Promise.reject(e);
+        }
+        return this.validatePayload(jwtPayload);
+    }
+
+    parseToken(token: string) {
+        let jwtPayload;
+        try {
+            jwtPayload = jwt.decode(token) as JWTPayload;
         } catch (e: unknown) {
             return Promise.reject(e);
         }
@@ -77,45 +82,30 @@ export class AuthService {
 
         return user;
     }
-
-    validateMicrosoftAccessToken(idToken: string) {
-        return new Promise<JwtPayload | string>((resolve, reject) => {
-            jwt.verify(
-                idToken,
-                this.getSigningKey.bind(this),
-                {
-                    algorithms: ['RS256'],
-                    complete: false,
-                },
-                (err, decoded) => {
-                    if (err) {
-                        console.error(err);
-                        reject(new UnauthorizedException('Invalid token'));
-                    } else {
-                        resolve(decoded);
-                    }
-                }
-            );
-        });
-    }
-
-    async handleMicrosoftSSOUserAuth(msUserAuthDto: MicrosoftSSOUserDto) {
-        const user = await this.userService.findByEmail(msUserAuthDto.email);
-        if (!user) {
-            return this.registerMicrosoftSSOUser(msUserAuthDto);
+    
+    async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
+        const user = await this.userService.findByEmail(userDto.email);
+        if (user) {
+            if (
+                user.microsoftTenantId !== userDto.msTenantId ||
+                user.microsoftUserId !== userDto.msObjectId
+            ) {
+                throw new UnauthorizedException('Tenant ID or Microsoft User ID does not match');
+            }
+            return this.signInMicrosoftSSOUser(user);
         }
-        return this.signInMicrosoftSSOUser(user);
+        return this.registerMicrosoftSSOUser(userDto);
     }
-
+    
     private signInMicrosoftSSOUser({ email, authorities }: User) {
         const roles = authorities.map((authority) => authority.name);
 
         return this.signNewIdToken(email, roles);
     }
 
-    private async registerMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
+    private async registerMicrosoftSSOUser(msUserAuthDto: MsalSsoUserDto) {
         const { email, authorities } =
-            await this.userService.createMicrosoftSSOUser(msUserAuthDto);
+            await this.userService.createMsalSsoUser(msUserAuthDto);
         const roles = authorities.map((authority) => authority.name);
 
         return this.signNewIdToken(email, roles);
@@ -130,16 +120,6 @@ export class AuthService {
         return jwt.sign(payload, secret, {
             algorithm: 'HS512',
             expiresIn: '1d',
-        });
-    }
-
-    private getSigningKey(header: JwtHeader, callback: SigningKeyCallback) {
-        this.jwksClient.getSigningKey(header.kid, (err, key) => {
-            if (err) {
-                return callback(err, null);
-            }
-            const signingKey = key.getPublicKey();
-            callback(null, signingKey);
         });
     }
 
@@ -206,7 +186,7 @@ export class AuthService {
 
         this.validateParameterFromBot(token, 'empty token', client);
 
-        const user = await this.validateToken(token)
+        const user = await (isGuard ? this.parseToken.bind(this) : this.validateToken.bind(this))(token)
             .catch((error) => {
                 client.disconnect();
                 this.logger.error('token validation error', error);

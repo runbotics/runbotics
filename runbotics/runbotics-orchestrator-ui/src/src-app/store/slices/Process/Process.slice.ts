@@ -4,6 +4,8 @@ import { defaultProcessValue } from 'runbotics-common';
 import { RootState } from '#src-app/store';
 import LoadingType from '#src-app/types/loading';
 
+import { ProcessListDisplayMode } from '#src-app/views/process/ProcessBrowseView/ProcessList/ProcessList.utils';
+
 import buildProcessExtraReducers from './Process.extraReducers';
 import * as reducers from './Process.reducers';
 import { ModelerState, ProcessState } from './Process.state';
@@ -25,7 +27,8 @@ export const initialModelerState: ModelerState = {
     },
     passedInVariables: [],
     imported: false,
-    activeDrag: false
+    activeDrag: false,
+    blacklistedActions: null,
 };
 
 export const initialState: ProcessState = {
@@ -43,6 +46,7 @@ export const initialState: ProcessState = {
         byId: {},
         ids: [],
         page: null,
+        listDisplayMode: ProcessListDisplayMode.GRID
     },
 };
 
