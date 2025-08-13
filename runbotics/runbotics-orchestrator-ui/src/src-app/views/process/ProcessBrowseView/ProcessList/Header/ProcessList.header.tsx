@@ -54,6 +54,7 @@ const ProcessListHeader: VFC<ProcessListHeaderProps> = ({
             <Box display="flex" alignItems="center" flexGrow="1" justifyContent="flex-end" gap="1rem">
                 <If condition={displayMode === ProcessListDisplayMode.GRID}>
                     <TextField
+                        inputProps={{'data-testid': 'process-search-field'}}
                         id="outlined-search"
                         label={translate('Bot.Collection.Header.Search.Label')}
                         onChange={onSearchChange}

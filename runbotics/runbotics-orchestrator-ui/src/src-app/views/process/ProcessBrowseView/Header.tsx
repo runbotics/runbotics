@@ -83,6 +83,7 @@ const Header: FC<HeaderProps> = ({ className, ...rest }) => {
                 key={ProcessesTabs.COLLECTIONS}
                 value={ProcessesTabs.COLLECTIONS}
                 label={translate('Process.Collection.Navigation.Collections.Label')}
+                data-testid='procesTabs-tab-collections'
             />
             <Tab
                 key={ProcessesTabs.PROCESSES}

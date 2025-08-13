@@ -1,31 +1,49 @@
-import { test, expect } from '@playwright/test';
-import loginToRunbotics from 'helpers';
-import { readFileSync } from 'node:fs';
-import path from "node:path"
+import { test, expect } from "@playwright/test";
+import { LoginPage } from "../pages/loginPage";
+import { ProcessesCollectionsPage } from "../pages/processesCollectionsPage";
+import { loadAuthData } from "../utils/auth.utils";
 
-const authFile = path.join(__dirname, '../.auth/user.json');
-const authData = JSON.parse(readFileSync(authFile, 'utf-8'));
-const login = authData.tenant_admin?.login;
+const authData = loadAuthData();
+const email = authData.tenant_admin?.email;
 const password = authData.tenant_admin?.password;
 
-if (!login || !password) throw new Error(`Either login or password are not provided for tenant_admin field`)
+if (!email || !password)
+    throw new Error(
+        `Either email or password are not provided for tenant_admin field`
+    );
 
-test('tenant-admin can see the Add Item button translation in process edit view', async ({ page }) => {
-	const TEST_PROCESS_NAME ='PW-TEST-RPA-2246';
+test("tenant-admin can see the Add Item button translation in process edit view", async ({
+    page,
+}) => {
+    const TEST_PROCESS_NAME = "PW-TEST-RPA-2246";
 
-	await loginToRunbotics(page, authData.tenant_admin);
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login({
+        email: authData.tenant_admin.email,
+        password: authData.tenant_admin.password,
+    });
+    await loginPage.waitForLoginSuccess();
 
-	await page.goto(`/app/processes?pageSize=12&search=${encodeURIComponent(TEST_PROCESS_NAME)}`);
-	await page.waitForLoadState("load");
+    const processesCollectionsPage = new ProcessesCollectionsPage(page);
+    await processesCollectionsPage.switchLanguage("en");
+    const processesPage = await processesCollectionsPage.goToProcessesPage();
+    await processesPage.searchForProcess(TEST_PROCESS_NAME);
+    await processesPage.selectProcess(TEST_PROCESS_NAME);
 
-	await page.getByText(TEST_PROCESS_NAME).click();
-	
-	await page.locator('g:nth-child(5) > .djs-element > .djs-hit').click();
-	
-	await page.locator('*#mainActionGrid button:has(svg[data-testid="AddIcon"])').waitFor();
+    // TODO: Add ProcessBuilderPage and change the rest of the test that it uses it
+    // https://all41.atlassian.net/browse/RPA-2424
 
-	await page.getByTestId('language-switcher-header-button').click()
-	await page.getByTestId('language-switcher-language-pl').click()
-	const buttonLabel = await page.getByRole('button', { name: 'Dodaj pozycję' }).textContent();
-	expect(buttonLabel).toContain('Dodaj');
+    await page.locator("g:nth-child(5) > .djs-element > .djs-hit").click();
+
+    await page
+        .locator('*#mainActionGrid button:has(svg[data-testid="AddIcon"])')
+        .waitFor();
+
+    await page.getByTestId("language-switcher-header-button").click();
+    await page.getByTestId("language-switcher-language-pl").click();
+    const buttonLabel = await page
+        .getByRole("button", { name: "Dodaj pozycję" })
+        .textContent();
+    expect(buttonLabel).toContain("Dodaj");
 });
