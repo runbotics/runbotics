@@ -1,10 +1,10 @@
 import type { VFC } from 'react';
 
 
+import styles from './LoginLink.module.scss';
+
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
-
-import styles from './LoginLink.module.scss';
 
 interface Props {
     className?: string;
@@ -12,10 +12,9 @@ interface Props {
 
 const LoginLink: VFC<Props> = ({ className }) => {
     const { translate } = useTranslations();
-    const baseUrl = process.env.RUNBOTICS_URL || 'http://localhost:3000';
 
     return (
-        <a className={`${styles.link} ${className}`} href={`${baseUrl}/login`}>
+        <a className={`${styles.link} ${className}`} href="/ui/login">
             <Typography
                 variant="h6"
                 color="accent"
