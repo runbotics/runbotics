@@ -29,6 +29,7 @@ const FeedbackView = () => {
     useEffect(() => {
         switchLanguage(locale as Language);
         push(asPath, null, { locale });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [locale]);
 
     return (

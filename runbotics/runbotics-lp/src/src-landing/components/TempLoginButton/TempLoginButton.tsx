@@ -2,10 +2,10 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
-import styles from './TempLoginButton.module.scss';
-
 import { useLocalizedUrl } from '#src-app/hooks/useLocalization';
 import Typography from '#src-landing/components/Typography';
+
+import styles from './TempLoginButton.module.scss';
 
 const TempLoginButton: FC = () => {
     const { getLocalizedUrl } = useLocalizedUrl();

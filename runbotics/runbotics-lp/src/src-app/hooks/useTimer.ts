@@ -36,6 +36,7 @@ export const useTimer = (initialRemainingTime: number, callback?: () => void) =>
         }, 1000);
 
         return () => clearInterval(interval.current);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return calculate();

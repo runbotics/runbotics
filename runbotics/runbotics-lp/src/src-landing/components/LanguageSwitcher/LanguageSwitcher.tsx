@@ -34,6 +34,7 @@ const LanguageSwitcher: VFC = () => {
             switchLanguage(activeLocale as Language);
             setPrevLocale(activeLocale);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeLocale, switchLanguage]);
 
     return (
