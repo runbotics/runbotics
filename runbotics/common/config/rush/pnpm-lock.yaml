@@ -310,6 +310,9 @@ importers:
       i18next:
         specifier: ^21.8.14
         version: 21.10.0
+      jwt-decode:
+        specifier: ^2.2.0
+        version: 2.2.0
       lodash:
         specifier: ^4.17.19
         version: 4.17.21
