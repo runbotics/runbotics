@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { join } from 'path';
 import { getRepositoryPath, spawn } from 'src/utils';
 import { RunCommandOptions, Package } from './types';
-import { API_RELATIVE_PATH, BOT_RELATIVE_PATH, SCHEDULER_RELATIVE_PATH, UI_RELATIVE_PATH } from './utils';
+import { API_RELATIVE_PATH, BOT_RELATIVE_PATH, SCHEDULER_RELATIVE_PATH, UI_RELATIVE_PATH, LP_RELATIVE_PATH } from './utils';
 
 const getMonorepoParams = (options?: RunCommandOptions) => {
     if (options?.production) {
@@ -44,9 +44,17 @@ const run = async (packageArg: Package, options?: RunCommandOptions) => {
             log('runbotics-scheduler');
             await startMonorepoPackage(join(rbRootDir, SCHEDULER_RELATIVE_PATH), options);
             break;
-        default:
+        case 'lp':
+            log('runbotics-lp');
+            await startMonorepoPackage(join(rbRootDir, LP_RELATIVE_PATH), options);
+            break;
+        case 'ui':
             log('runbotics-orchestrator-ui');
             await startMonorepoPackage(join(rbRootDir, UI_RELATIVE_PATH), options);
+            break;
+        default:
+            console.log(chalk.red(`Error: Unknown package '${packageArg}'. Valid packages are: api, bot, scheduler, lp, ui`));
+            process.exit(1);
     }
 };
 
