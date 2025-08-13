@@ -10,7 +10,7 @@ import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
 import 'moment/locale/pl';
-import { withGuestGuard } from '#src-app/components/guards/GuestGuard';
+import { withLoggedInRedirectGuard } from '#src-app/components/guards/LoggedInRedirectGuard';
 import { CartProvider } from '#src-app/contexts/CartContext';
 import { SettingsProvider } from '#src-app/contexts/SettingsContext';
 import MainLayout from '#src-app/layouts/MainLayout';
@@ -48,12 +48,17 @@ function App(props: AppProps) {
     } = props;
     let Layout: FC<{ children: ReactNode | ReactNode[] }> = React.Fragment;
 
+    const currentLocale = router.locale || 'en';
+    if (i18n.language !== currentLocale) {
+        i18n.changeLanguage(currentLocale);
+        moment.locale(currentLocale); 
+    }
+
     if (router.pathname.startsWith('/app/')) {
         Layout = MainLayout;
     }
 
-    // Apply GuestGuard to the Component
-    const GuardedComponent = withGuestGuard(Component);
+    const GuardedComponent = withLoggedInRedirectGuard(Component);
 
     return (
 

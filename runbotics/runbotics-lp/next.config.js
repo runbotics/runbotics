@@ -8,47 +8,19 @@ const UI_HOST = IS_PROXYING_ENABLED ? PROXY_HOST : `http://127.0.0.1:3000`
 
 const FALLBACK_RUNBOTICS_ENTRY_URL = IS_PROXYING_ENABLED ? PROXY_HOST : 'http://127.0.0.1:4000'
 
-const assetPrefix = 'lp'
-const commonRewrites = [
-    {
-        source: `/${assetPrefix}/_next/:path+`,
-        destination: '/_next/:path+',
-    },
-]
+const assetPrefix = 'lp-assets'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true,
     assetPrefix: `/${assetPrefix}`,
 
     rewrites: async () => ({
-        beforeFiles: process.env.NODE_ENV === 'development'
-            ? [
-                ...commonRewrites,
-                {
-                    source: '/ui/:path*',
-                    destination: `${UI_HOST}/ui/:path*`,
-                },
-                {
-                    source: '/api/plugins/:path*',
-                    destination: '/api/plugins/:path*',
-                },
-                {
-                    source: '/api/scheduler/:path*',
-                    destination: `${SCHEDULER_HOST}/api/scheduler/:path*`,
-                },
-                {
-                    source: '/api/:path*',
-                    destination: `${API_HOST}/api/:path*`,
-                },
-                {
-                    source: '/scheduler/:path*',
-                    destination: `${SCHEDULER_HOST}/scheduler/:path*`,
-                },
-            ]
-            : [
-                ...commonRewrites,
-            ],
+        beforeFiles: [
+            {
+                source: `/${assetPrefix}/_next/:path+`,
+                destination: '/_next/:path+',
+            },
+        ],
     }),
 
     webpack: (config) => {
