@@ -39,6 +39,7 @@ interface ListItemProps {
     disabled?: boolean;
 }
 
+// eslint-disable-next-line max-lines-per-function
 const ActionList: FC<ActionListProps> = ({
     groups,
     openGroupsState,

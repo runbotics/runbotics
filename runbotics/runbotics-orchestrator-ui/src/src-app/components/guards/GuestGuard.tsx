@@ -23,6 +23,7 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
 
     useEffect(() => {
         switchLanguage(router.locale as Language);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.locale]);
 
     if (isBrowser && isInitialized && isAuthenticated) {

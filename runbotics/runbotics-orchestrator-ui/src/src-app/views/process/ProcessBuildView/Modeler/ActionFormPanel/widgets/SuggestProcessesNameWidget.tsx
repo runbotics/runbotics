@@ -83,6 +83,7 @@ const ProcessNameSuggestionWidget: FC<WidgetProps> = (props) => {
         selectedProcess && selectedProcess.disabled
             ? setCustomError(translate('Process.Details.Modeler.Actions.General.StartProcess.Error.IncompatibleProcessSystem'))
             : setCustomError('');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options, value]);
 
     return (

@@ -85,6 +85,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
             dispatch(guestsActions.getRemainingSessionTime());
             dispatch(guestsActions.getCurrentGuest());
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleLogout = async () => {

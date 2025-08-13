@@ -11,6 +11,7 @@ function useClickOutsideComponent(ref: MutableRefObject<any>, handler: Function)
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ref]);
 }
 

@@ -42,6 +42,7 @@ const ProcessPageProvider: FC<ProcessPageProps> = ({
 
     useEffect(() => {
         setPage(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [collectionId]);
 
     useUpdateEffect(() => {

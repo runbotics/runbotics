@@ -245,6 +245,7 @@ export class BpmnConnectionFactory {
     private commandStack: any;
     private modeling: any;
 
+    // eslint-disable-next-line max-params
     constructor(bpmnFactory: any, elementFactory: any, commandStack: any, modeling: any) {
         this.bpmnFactory = bpmnFactory;
         this.elementFactory = elementFactory;

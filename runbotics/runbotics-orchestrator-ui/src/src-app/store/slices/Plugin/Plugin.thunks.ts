@@ -43,6 +43,7 @@ export const loadPlugins = createAsyncThunk<
                         })
                     )
                 ).catch((e) => {
+                    // eslint-disable-next-line no-console
                     console.error(e);
                 });
 
@@ -56,6 +57,7 @@ export const loadPlugins = createAsyncThunk<
             throw error;
         }
 
+        // eslint-disable-next-line no-console
         console.warn(error.response.data.error);
         return rejectWithValue(error.response.data.error);
     }

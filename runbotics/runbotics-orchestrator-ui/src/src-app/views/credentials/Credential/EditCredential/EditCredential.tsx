@@ -41,6 +41,7 @@ const EditCredential = () => {
             .catch(() => {
                 router.replace('/404');
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [credentialId, credentialCollections]);
 
     return (

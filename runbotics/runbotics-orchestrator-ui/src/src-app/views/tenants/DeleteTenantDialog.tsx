@@ -60,6 +60,7 @@ const DeleteTenantDialog: VFC<DeleteTenantDialogProps> = ({
 
     useEffect(() => {
         open && setTenantId(tenant.id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
     return (

@@ -65,6 +65,7 @@ const PrivacyPolicyView: FC = () => {
             </Box>
             {policyMessageStructure[key].subsection && renderSubsections(policyMessageStructure[key].subsection)}
         </Box>
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     )), [translate]);
 
     return (

@@ -251,6 +251,7 @@ const useOptions = () => {
         }));
 
         return [...vars, ...defaultVars];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedElement]);
 
     useEffect(() => {
@@ -258,6 +259,7 @@ const useOptions = () => {
             dispatch(processActions.setOptions(options));
             dispatch(processActions.setVariables(variables));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options]);
 
     return {

@@ -24,7 +24,9 @@ const CredentialWidget: FC<WidgetProps> = (props) => {
     const alreadySelectedCredential = useMemo(() =>
         allProcessAssigned.find((cred) =>
             cred?.credential?.id === props?.value
-        )?.credential, [allProcessAssigned]
+        )?.credential, 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allProcessAssigned]
     );
 
     useEffect(() => {

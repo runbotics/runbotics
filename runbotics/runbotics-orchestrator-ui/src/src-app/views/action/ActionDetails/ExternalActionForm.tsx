@@ -78,6 +78,7 @@ export const ExternalActionForm: FC<ExternalActionFormProps> = ({ draft, setDraf
             label: !isStringValueEmpty(label),
             credentialType: isStringValueEmpty(credentialType) || isCredentialTypeValid(credentialType),
         }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [draft.label, draft.script, draft.credentialType]);
 
     return (

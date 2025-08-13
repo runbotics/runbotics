@@ -46,6 +46,7 @@ export const ProcessCollectionView = () => {
         return () => {
             dispatch(processInstanceActions.resetAllActiveProcessInstances());
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
