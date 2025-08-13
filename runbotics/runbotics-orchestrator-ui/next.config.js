@@ -1,13 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    basePath: '/ui',
-    assetPrefix: '/ui',
+    assetPrefix: '/ui-assets',
 
     async rewrites() {
         return {
             beforeFiles: [
                 {
-                    source: '/ui/_next/:path+',
+                    source: '/ui-assets/_next/:path+',
                     destination: '/_next/:path+',
                 },
             ],
