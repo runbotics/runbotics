@@ -1,11 +1,15 @@
 import { Typography, Box } from '@mui/material';
 import { differenceInDays, parseISO } from 'date-fns';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { authSelector } from '#src-app/store/slices/Auth';
 
-import { RedText } from './SubscriptionWarning.style';
+const RedText = styled.span`
+    color: ${({ theme }) => theme.palette.error.main};
+    font-weight: bold;
+`;
 
 const SubscriptionWarning = () => {
     const { translate } = useTranslations();
@@ -16,7 +20,7 @@ const SubscriptionWarning = () => {
     }
 
     const subscriptionEnd = parseISO(user.tenant.subscriptionEnd);
-    const now = Date.now();
+    const now = new Date();
     const diffDays = differenceInDays(subscriptionEnd, now);
 
     if (diffDays >= 14) {
