@@ -1,7 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class FixSubscriptionEndColumnName1755156248264 implements MigrationInterface {
-    name = 'FixSubscriptionEndColumnName1755156248264';
     
     public async up(queryRunner: QueryRunner): Promise<void> {
         const result = await queryRunner.query(`
