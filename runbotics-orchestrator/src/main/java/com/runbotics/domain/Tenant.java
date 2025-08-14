@@ -40,6 +40,9 @@ public class Tenant implements Serializable {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
+    @Column(name = "subscription_end")
+    private ZonedDateTime subscriptionEnd;
+
     public UUID getId() {
         return this.id;
     }
@@ -96,6 +99,14 @@ public class Tenant implements Serializable {
         this.active = active;
     }
 
+    public ZonedDateTime getSubscriptionEnd() {
+        return subscriptionEnd;
+    }
+
+    public void setSubscriptionEnd(ZonedDateTime subscriptionEnd) {
+        this.subscriptionEnd = subscriptionEnd;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -122,7 +133,8 @@ public class Tenant implements Serializable {
                 (created != null ? "created=" + created + "," : "") +
                 (updated != null ? "updated=" + updated + "," : "") +
                 (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + "," : "") +
-                ("active=" + active) +
+                ("active=" + active + ",") +
+                (subscriptionEnd != null ? "subscriptionEnd=" + subscriptionEnd : "") +
                 "}"
         );
     }

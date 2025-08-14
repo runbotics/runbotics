@@ -8,7 +8,8 @@ const viewLicensesTranslations: typeof englishViewLicensesTranslations = {
     'Tenant.Plugins.View.Expiration.Date': 'Data wygaśnięcia: ',
     'Tenant.Plugins.View.Expiration.Date.Expired': 'Przedawniony',
     'Tenant.Plugins.View.Expiration.Date.Expiring.Soon': 'Wygasa wkrótce',
-    'Tenant.Plugins.View.Expiration.Date.Active': 'Aktywny'
+    'Tenant.Plugins.View.Expiration.Date.Active': 'Aktywny',
+    'Tenant.Plugins.License.ExpireIn': 'Dostęp wygasa za {{days}} dni',
 };
 
 export default viewLicensesTranslations;

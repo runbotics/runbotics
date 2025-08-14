@@ -18,6 +18,9 @@ public class TenantDTO {
     private ZonedDateTime updated;
 
     private String lastModifiedBy;
+
+    private ZonedDateTime subscriptionEnd;
+
     public TenantDTO() {}
 
     public TenantDTO(Tenant tenant) {
@@ -26,6 +29,7 @@ public class TenantDTO {
         this.createdBy = new UserDTO(tenant.getCreatedBy());
         this.created = tenant.getCreated();
         this.updated = tenant.getUpdated();
+        this.subscriptionEnd = tenant.getSubscriptionEnd();
     }
 
     public UUID getId() {
@@ -76,6 +80,14 @@ public class TenantDTO {
         this.lastModifiedBy = lastModifiedBy;
     }
 
+    public ZonedDateTime getSubscriptionEnd() {
+        return subscriptionEnd;
+    }
+
+    public void setSubscriptionEnd(ZonedDateTime subscriptionEnd) {
+        this.subscriptionEnd = subscriptionEnd;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -95,7 +107,8 @@ public class TenantDTO {
             ", createdById=" + createdBy +
             ", created=" + created +
             ", updated=" + updated +
-            ", lastModifiedBy" + lastModifiedBy +
+            ", lastModifiedBy=" + lastModifiedBy +
+            ", subscriptionEnd=" + subscriptionEnd +
             "}";
     }
 }

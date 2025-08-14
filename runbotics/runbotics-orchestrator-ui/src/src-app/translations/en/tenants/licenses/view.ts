@@ -7,6 +7,7 @@ const viewLicensesTranslations = {
     'Tenant.Plugins.View.Expiration.Date.Expired': 'Expired',
     'Tenant.Plugins.View.Expiration.Date.Expiring.Soon': 'Expiring soon',
     'Tenant.Plugins.View.Expiration.Date.Active': 'Active',
+    'Tenant.Plugins.License.ExpireIn': 'Access expires in {{days}} days',
 };
 
 export default viewLicensesTranslations;
