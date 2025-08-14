@@ -24,6 +24,7 @@ import LanguageSwitcher from '#src-landing/components/LanguageSwitcher';
 import Account from './Account';
 import CountdownTimer from './CountdownTimer';
 import HowToRun from './HowToRun';
+import SubscriptionWarning from './SubscriptionWarning';
 
 const PREFIX = 'TopBar';
 
@@ -139,6 +140,9 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                         />
                     </Typography>
                     <Divider className={classes.divider} orientation="vertical" flexItem />
+                </If>
+                <If condition={!isGuest}>
+                    <SubscriptionWarning />
                 </If>
                 <LanguageSwitcher />
                 {isTenantAdmin && <HowToRun />}
