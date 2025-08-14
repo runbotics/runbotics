@@ -8,6 +8,7 @@ import { Logger } from './utils/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import { SwaggerTags } from './utils/swagger.utils';
+import { ActiveTenantGuard } from '#/global-guards/active-tenant.guard';
 
 setDefaultResultOrder('ipv4first');
 patchNestJsSwagger();
@@ -40,6 +41,8 @@ async function bootstrap() {
     } else {
         logger.log('Swagger is disabled');
     }
+    
+    app.useGlobalGuards(app.get(ActiveTenantGuard));
 
     await app.listen(4000);
 }
