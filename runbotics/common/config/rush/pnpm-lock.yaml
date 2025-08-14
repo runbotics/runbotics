@@ -7,6 +7,7 @@ settings:
 overrides:
   '@babel/core': 7.23.2
   '@babel/traverse': 7.23.2
+  form-data: 4.0.0
 
 importers:
 
@@ -10639,15 +10640,6 @@ packages:
       typescript: 4.9.5
       webpack: 5.82.1(@swc/core@1.7.26)
 
-  /form-data@2.3.3:
-    resolution: {integrity: sha512-1lLKB2Mu3aGP1Q/2eCOx0fNbRMe7XdwktwOruhfqqd0rIJWwN4Dh+E3hrPSlDCXnSR7UtZ1N38rVXm+6+MEhJQ==}
-    engines: {node: '>= 0.12'}
-    dependencies:
-      asynckit: 0.4.0
-      combined-stream: 1.0.8
-      mime-types: 2.1.35
-    dev: false
-
   /form-data@4.0.0:
     resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}
     engines: {node: '>= 6'}
@@ -16436,7 +16428,7 @@ packages:
       combined-stream: 1.0.8
       extend: 3.0.2
       forever-agent: 0.6.1
-      form-data: 2.3.3
+      form-data: 4.0.0
       har-validator: 5.1.5
       http-signature: 1.2.0
       is-typedarray: 1.0.0

@@ -9,6 +9,10 @@ import { hasRole } from '#/utils/authority.utils';
 import { Role } from 'runbotics-common';
 import { UserService } from '../user/user.service';
 import { MailService } from '#/mail/mail.service';
+import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
+import { ScheduleProcessService } from '#/scheduler-database/schedule-process/schedule-process.service';
+import { SchedulerService } from '#/queue/scheduler/scheduler.service';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @Injectable()
 export class TenantSubscriptionValidationService {
@@ -18,8 +22,26 @@ export class TenantSubscriptionValidationService {
         @InjectDataSource()
         private readonly dataSource: DataSource,
         private readonly userService: UserService,
-        private readonly mailService: MailService,
+        private readonly mailService: MailService,     private readonly scheduleProcessService: SchedulerService,
     ) {}
+    
+    private async checkTenantScheduledProcesses(tenantId: string, manager: EntityManager) {
+        const processes = await manager.delete(ScheduleProcess, {
+            where: { 
+                user: {
+                    tenantId,
+                }
+            }
+        });
+        const users = await manager.find(User, { where: {tenantId}});
+        for(const user of users) {
+            const userJobProcesses = await this.scheduleProcessService.getScheduledJobs(user);
+            for (const job of userJobProcesses) {
+                    await this.scheduleProcessService.deleteJobFromQueue(String(job.id), user);
+            }
+        }
+        this.logger.log(`Deleted ${processes.affected} scheduled processes for tenant ${tenantId}.`);
+    }
 
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
     async validateTenants() {
@@ -38,6 +60,7 @@ export class TenantSubscriptionValidationService {
                 }
 
                 if (endDate.isBefore(now) && tenant.active) {
+                    await this.checkTenantScheduledProcesses(tenant.id, manager);
                     await this.deactivateExpiredTenant(manager, tenant);
                 }
             }
