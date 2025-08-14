@@ -3,7 +3,9 @@ export enum SwaggerTags {
     TENANT_USERS = 'tenants - users',
     TENANT_ROLE_ADMIN = 'tenants - admin only',
     TENANT_PUBLIC = 'tenants - public',
-    PROCESS = 'process'
+    PROCESS = 'process',
+    HEALTH = 'scheduler healthcheck',
+    BLACKLIST_AUTH = 'Scheduler - Blacklist Action Auth',
 }
 
 export const tenantIdSwaggerObjectDescription = {

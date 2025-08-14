@@ -25,6 +25,7 @@ import { QueueMessageService } from './queue-message.service';
 import { ScheduleProcessModule } from '#/scheduler-database/schedule-process/schedule-process.module';
 import { SecretModule } from '#/scheduler-database/secret/secret.module';
 import { SchedulerDatabaseModule } from '#/scheduler-database/scheduler-database.module';
+import { BlacklistActionAuthModule } from '#/blacklist-actions-auth/blacklist-action-auth.module';
 
 @Module({
     imports: [
@@ -53,6 +54,7 @@ import { SchedulerDatabaseModule } from '#/scheduler-database/scheduler-database
             }),
         }),
         forwardRef(() => ScheduleProcessModule),
+        BlacklistActionAuthModule,
     ],
     controllers: [
         SchedulerController, ProcessController, ProcessInstanceController, BotController, TriggerController,

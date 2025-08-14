@@ -1,5 +1,6 @@
 package com.runbotics.web.rest.errors;
 
+import com.runbotics.security.TenantNotActivatedException;
 import com.runbotics.security.UserNotActivatedException;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,17 @@ public class AuthCustomException {
         UserNotActivatedException ex,
         HttpServletResponse response
     ) {
-        ForbiddenAlertException exception = new ForbiddenAlertException(ex.getMessage(), null, "403");
+        ForbiddenAlertException exception = new ForbiddenAlertException(ex.getMessage(), null, "user_not_activated");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception);
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = TenantNotActivatedException.class)
+    public ResponseEntity<ForbiddenAlertException> handleTenantExceptions(
+        TenantNotActivatedException ex,
+        HttpServletResponse response
+    ) {
+        ForbiddenAlertException exception = new ForbiddenAlertException(ex.getMessage(), null, "tenant_not_activated");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception);
     }
 }

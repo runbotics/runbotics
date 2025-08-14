@@ -8,6 +8,7 @@ import { ActionBlacklistService } from '#/scheduler-database/action-blacklist/ac
     imports: [TypeOrmModule.forFeature([ActionBlacklist])],
     controllers: [ActionBlacklistController],
     providers: [ActionBlacklistService],
+    exports: [ActionBlacklistService],
 })
 export class ActionBlacklistModule {
 }

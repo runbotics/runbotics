@@ -1,4 +1,8 @@
 import { ProcessStatisticsResult } from '#/types';
+import { assignmentLateBase } from '../assets/assignmentLate-icon';
+import { assignmentTurnedInBase } from '../assets/assignmentTurnedIn-icon';
+import { moreTimeBase } from '../assets/moreTime-icon';
+import { scheduleBase } from '../assets/schedule-icon';
 import { generateEmailHeader } from './components/email-header.template';
 import { processSummaryStyles } from './styles/process-summary-notification-statistics.styles';
 
@@ -31,7 +35,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                     <div class="stats-row" style="display: flex; flex-wrap: wrap; margin-bottom: 10px;">
                         <div class="stat" style="display: flex; align-items: center; margin: 10px 0;">
                             <div style="background-color: #fff; border-radius:50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                <img src="cid:assignment_turned_in" alt="Completed Tasks" style="width: 24px; height: 24px;">
+                                <img src="${assignmentTurnedInBase}" alt="Completed Tasks" style="width: 24px; height: 24px;">
                             </div>
                         <div>
                             <div>Wykonane zadania</div>
@@ -40,7 +44,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                         </div>
                         <div class="stat" style="display: flex; align-items: center; margin: 10px 0;">
                             <div style="background-color: #fff; border-radius:50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                <img src="cid:assignment_late" alt="Failed Tasks" style="width: 24px; height: 24px;">
+                                <img src="${assignmentLateBase}" alt="Failed Tasks" style="width: 24px; height: 24px;">
                             </div>
                         <div>
                             <div>Niewykonane zadania</div>
@@ -49,7 +53,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                         </div>
                         <div class="stat" style="display: flex; align-items: center; margin: 10px 0;">
                             <div style="background-color: #fff; border-radius:50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                <img src="cid:schedule" alt="Average Duration" style="width: 24px; height: 24px;">
+                                <img src="${scheduleBase}" alt="Average Duration" style="width: 24px; height: 24px;">
                             </div>
                         <div>
                             <div>Średni czas wykonania</div>
@@ -58,7 +62,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                         </div>
                         <div class="stat" style="display: flex; align-items: center; margin: 10px 0;">
                             <div style="background-color: #fff; border-radius:50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                                <img src="cid:more_time" alt="Total Duration" style="width: 24px; height: 24px;">
+                                <img src="${moreTimeBase}" alt="Total Duration" style="width: 24px; height: 24px;">
                             </div>
                         <div>
                             <div>Łączny czas wykonania</div>

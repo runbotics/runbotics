@@ -19,9 +19,10 @@ import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { QueueService } from '#/queue/queue.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { QueueMessageService } from '../queue-message.service';
 import { JobId } from 'bull';
+import { BlacklistActionAuthService } from '#/blacklist-actions-auth/blacklist-action-auth.service';
 
 @Processor('scheduler')
 export class SchedulerProcessor {
@@ -35,8 +36,10 @@ export class SchedulerProcessor {
         private readonly botGateway: BotWebSocketGateway,
         private readonly processInstanceSchedulerService: ProcessInstanceSchedulerService,
         private readonly queueService: QueueService,
-        private readonly queueMessageService: QueueMessageService
-    ) {}
+        private readonly queueMessageService: QueueMessageService,
+        private readonly blacklistActionAuthService: BlacklistActionAuthService,
+    ) {
+    }
 
     @Process({ concurrency: 1 })
     async process(job: Job) {
@@ -47,16 +50,24 @@ export class SchedulerProcessor {
         await this.validateTriggerData(job)
             .catch((err) => Promise.reject(new Error(err)));
 
+        const isAllowedToRun = await this.blacklistActionAuthService.checkProcessActionsBlacklist(job.data.process.id);
+
         const process = await this.processService.findById(job.data.process.id);
-        if (!isScheduledProcess(job.data)) {
+        if (!isScheduledProcess(job.data) && isAllowedToRun) {
             return this.runProcess(process, job);
         }
-        return await this.queueService.handleAttendedProcess(process, job.data.input)
+        const result = isAllowedToRun ? await this.queueService.handleAttendedProcess(process, job.data.input)
             .then(() => this.runProcess(process, job))
             .catch((err) => {
                 this.logger.error(`[Q Process] Process "${process.name}" has scheduled without input variables. ${err.message}`);
                 throw new BadRequestException(err);
-            });
+            }) : false;
+
+        if (!result) {
+            this.logger.error(`[Q Process] Process "${process.name}" is blacklisted`);
+            throw new ForbiddenException();
+        }
+        return result;
     }
 
     @OnQueueActive()
@@ -64,7 +75,7 @@ export class SchedulerProcessor {
         this.logger.log(`[Q Active] Job ${job.id} is active`);
 
         const process = await this.processService.findById(
-            Number(job.data.process.id)
+            Number(job.data.process.id),
         );
         const tenantRoom = process.tenantId;
         const jobWithProcessAndActive = job;
@@ -72,7 +83,7 @@ export class SchedulerProcessor {
         this.uiGateway.emitTenant(
             tenantRoom,
             WsMessage.ADD_WAITING_SCHEDULE,
-            jobWithProcessAndActive
+            jobWithProcessAndActive,
         );
 
         const active = await this.queueService.getActiveJobs();
@@ -94,14 +105,14 @@ export class SchedulerProcessor {
                         processId,
                         jobId,
                         orchestratorProcessInstanceId,
-                    }
+                    },
                 );
                 return this.queueMessageService.sendQueueMessage(QueueEventType.ACTIVE, job);
             }
             this.uiGateway.emitClient(
                 clientId,
                 WsMessage.JOB_WAITING,
-                { processId, queuePosition, jobId }
+                { processId, queuePosition, jobId },
             );
             return this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
         }));
@@ -134,7 +145,7 @@ export class SchedulerProcessor {
                 queuePosition,
                 jobId,
                 orchestratorProcessInstanceId,
-            }
+            },
         );
         await this.queueMessageService.sendQueueMessage(QueueEventType.UPDATE, job, queuePosition);
     }
@@ -156,7 +167,7 @@ export class SchedulerProcessor {
     async onFailed(job: Job, error: Error) {
         this.logger.error(
             `[Q Fail] Job "${job.data.process.name}" failed`,
-            error
+            error,
         );
 
         this.queueService.clearQueueTimer(job.id);
@@ -202,7 +213,7 @@ export class SchedulerProcessor {
         if (job.data) {
             this.logger.error(
                 `[Q Error] Job '${job.data.process.name}' crashed`,
-                err
+                err,
             );
         }
 
@@ -218,21 +229,21 @@ export class SchedulerProcessor {
     private async checkBotAvailability(
         collection: IBotCollection,
         system: IBotSystem,
-        job: Job
+        job: Job,
     ): Promise<IBot> {
         let retry = MAX_RETRY_BOT_AVAILABILITY;
         while (--retry) {
             const availableBots: IBot[] =
                 await this.botService.findAvailableCollection(
                     collection,
-                    system
+                    system,
                 );
 
             const availableBot = this.findConnectedBot(availableBots);
 
             if (availableBot) {
                 this.logger.log(
-                    `[Q Process] Bot ${availableBot.id} is available`
+                    `[Q Process] Bot ${availableBot.id} is available`,
                 );
                 return Promise.resolve(availableBot);
             }
@@ -241,7 +252,7 @@ export class SchedulerProcessor {
                 const errorMessage = 'All bots are disconnected';
                 await this.processInstanceSchedulerService.saveFailedProcessInstance(
                     job,
-                    errorMessage
+                    errorMessage,
                 );
 
                 return Promise.reject(errorMessage);
@@ -251,7 +262,7 @@ export class SchedulerProcessor {
             this.logger.warn(
                 `[Q Process] ${errorMessage}, waiting... (${
                     MAX_RETRY_BOT_AVAILABILITY - retry
-                }/${MAX_RETRY_BOT_AVAILABILITY})`
+                }/${MAX_RETRY_BOT_AVAILABILITY})`,
             );
 
             await sleep(SECOND);
@@ -260,7 +271,7 @@ export class SchedulerProcessor {
         const errorMessage = 'Timeout: all bots are busy';
         await this.processInstanceSchedulerService.saveFailedProcessInstance(
             job,
-            errorMessage
+            errorMessage,
         );
         return Promise.reject(errorMessage);
     }
@@ -268,13 +279,13 @@ export class SchedulerProcessor {
     private async runProcess(process: IProcess, job: Job) {
         this.logger.log(
             `[Q Process] Starting process "${process.name}" | JobID: `,
-            job.id
+            job.id,
         );
 
         const bot = await this.checkBotAvailability(
             process.botCollection,
             process.system,
-            job
+            job,
         ).catch((err) => Promise.reject(new Error(err)));
 
         this.logger.log(`Starting process ${process.name} on bot ${bot.id}`);
@@ -286,7 +297,7 @@ export class SchedulerProcessor {
 
         this.logger.log(
             `[Q Process] Process "${process.name}" freed the queue | JobID: `,
-            job.id
+            job.id,
         );
         return orchestratorProcessInstanceId;
     }
@@ -295,7 +306,7 @@ export class SchedulerProcessor {
         if (!Object.keys(job.data.triggerData).length) {
             await this.processInstanceSchedulerService.saveFailedProcessInstance(
                 job,
-                'User email not specified'
+                'User email not specified',
             );
             return Promise.reject();
         }

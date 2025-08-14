@@ -14,7 +14,6 @@ import Header from './Header';
 import ProcessList from './ProcessList';
 import useTranslations from '../../../hooks/useTranslations';
 
-
 const ProcessBrowseView: VFC = () => {
     const dispatch = useDispatch();
     const { translate } = useTranslations();
@@ -24,11 +23,6 @@ const ProcessBrowseView: VFC = () => {
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
         dispatch(botSystemsActions.getAll());
-        dispatch(processActions.getBlacklistedActions())
-            .unwrap()
-            .then((result) => {
-                dispatch(processActions.setProcessBlacklistActions(result.actionGroups));
-            });
         return () => {
             dispatch(processInstanceActions.resetAllActiveProcessInstances());
         };
@@ -36,7 +30,9 @@ const ProcessBrowseView: VFC = () => {
     }, []);
 
     return (
-        <InternalPage title={translate('Process.Collection.Navigation.Processes.Label')}>
+        <InternalPage
+            title={translate('Process.Collection.Navigation.Processes.Label')}
+        >
             <Header />
             <Box mt={6}>
                 <ProcessList />

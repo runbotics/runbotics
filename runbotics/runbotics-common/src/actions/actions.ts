@@ -102,7 +102,7 @@ export enum ApiAction {
     DOWNLOAD_FILE = 'api.downloadFile',
 }
 
-export declare enum JavascriptAction {
+export enum JavascriptAction {
     JAVASCRIPT_RUN = 'javascript.run',
     TYPESCRIPT_RUN = 'typescript.run',
 }
@@ -346,7 +346,7 @@ export enum ConflictFile {
     THROW_ERROR = 'Throw Error'
 }
 
-export enum SqlAction { 
+export enum SqlAction {
     CONNECT = 'sql.connect',
     QUERY = 'sql.query',
     CLOSE = 'sql.close',
