@@ -10,7 +10,6 @@ import { Role } from 'runbotics-common';
 import { UserService } from '../user/user.service';
 import { MailService } from '#/mail/mail.service';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
-import { ScheduleProcessService } from '#/scheduler-database/schedule-process/schedule-process.service';
 import { SchedulerService } from '#/queue/scheduler/scheduler.service';
 import { User } from '#/scheduler-database/user/user.entity';
 
@@ -26,21 +25,30 @@ export class TenantSubscriptionValidationService {
     ) {}
     
     private async checkTenantScheduledProcesses(tenantId: string, manager: EntityManager) {
-        const processes = await manager.delete(ScheduleProcess, {
-            where: { 
+        const processes = await manager.find(ScheduleProcess, {
+            where: {
                 user: {
                     tenantId,
-                }
-            }
+                },
+            },
         });
-        const users = await manager.find(User, { where: {tenantId}});
-        for(const user of users) {
-            const userJobProcesses = await this.scheduleProcessService.getScheduledJobs(user);
-            for (const job of userJobProcesses) {
-                    await this.scheduleProcessService.deleteJobFromQueue(String(job.id), user);
+        
+        if(processes.length > 0){ 
+            for(const process of processes) {
+                const newProcess = structuredClone(process);
+                newProcess.active = false;
+                await manager.save(ScheduleProcess, newProcess);
             }
         }
-        this.logger.log(`Deleted ${processes.affected} scheduled processes for tenant ${tenantId}.`);
+        
+        const users = await manager.find(User, { where: { tenantId }  });
+        for (const user of users) {
+            const userJobProcesses = await this.scheduleProcessService.getScheduledJobs(user);
+            for (const job of userJobProcesses) {
+                await this.scheduleProcessService.deleteJobFromQueue(String(job.id), user);
+            }
+        }
+        this.logger.log(`Deleted ${processes.length} scheduled processes for tenant ${tenantId}.`);
     }
 
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)

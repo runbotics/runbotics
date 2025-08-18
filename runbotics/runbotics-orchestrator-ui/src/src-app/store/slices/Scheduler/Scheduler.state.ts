@@ -46,4 +46,5 @@ export interface ScheduledJob {
     process: IProcess;
     tz: string | null;
     user: UserDto;
+    active: boolean;
 }

@@ -3,7 +3,8 @@ import englishScheduledProcessTranslations from '#src-app/translations/en/schedu
 const scheduledProcessTranslations: typeof englishScheduledProcessTranslations = {
     'Scheduler.ScheduledProcess.Table.Header.ScheduleId': 'ID Harmonogramu',
     'Scheduler.ScheduledProcess.Table.Header.Creator': 'Twórca',
-    'Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable': 'Uruchom {{ cron }}'
+    'Scheduler.ScheduledProcess.Table.Rows.Cron.HumanReadable': 'Uruchom {{ cron }}',
+    'Scheduler.ScheduledProcess.Table.Header.Active': 'Aktywny',
 };
 
 export default scheduledProcessTranslations;
