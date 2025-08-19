@@ -89,6 +89,7 @@ export class Tenant {
 
     @ApiProperty({ type: 'string', format: 'date-time', nullable: true })
     @Column({
+        name: 'subscription_end',
         type: 'timestamp without time zone',
         transformer: dateTransformer,
         nullable: true,

@@ -2,6 +2,8 @@ import { createSlice, Dictionary } from '@reduxjs/toolkit';
 
 import { UserDto } from 'runbotics-common';
 
+import { RootState } from '#src-app/store';
+
 import extraAuthReducers from './Auth.extraReducers';
 import * as authThunks from './Auth.thunks';
 
@@ -26,7 +28,10 @@ const slice = createSlice({
 
 export const authReducer = slice.reducer;
 
+export const authSelector = (state: RootState) => state.auth;
+
 export const authActions = {
     ...slice.actions,
     ...authThunks,
 };
+

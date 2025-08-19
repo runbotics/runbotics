@@ -19,6 +19,7 @@
         "noFallthroughCasesInSwitch": false,
         "esModuleInterop": true,
         "strict": true,
+        "resolveJsonModule": true,
         "types": [
             "vitest/globals"
         ],
