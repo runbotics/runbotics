@@ -10,4 +10,4 @@ WORKDIR /usr/src/app/runbotics-lp
 
 EXPOSE 3001
 
-CMD node ../create-links.js create && node_modules/next/dist/bin/next start
+CMD node ../create-links.js create && node_modules/next/dist/bin/next start -p 3001

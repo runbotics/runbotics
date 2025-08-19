@@ -43,7 +43,8 @@
     "@mui/x-date-pickers": "~5.0.7",
     "@mui/x-tree-view": "~6.17.0",
     "nodemailer": "^6.6.0",
-    "jwt-decode": "^2.2.0"
+    "jwt-decode": "^2.2.0",
+    "moment": "^2.27.0"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -52,7 +53,6 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "13.5.11",
-    "moment": "^2.27.0",
     "@types/lodash": "^4.14.158",
     "@types/react-redux": "^7.1.9",
     "eslint-config-prettier": "~8.6.0",
@@ -67,6 +67,8 @@
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"
   },
   "files": [
+    ".next",
+    "next.config.js",
     "public"
   ]
 }
