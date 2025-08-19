@@ -155,7 +155,7 @@ export class BlacklistActionAuthService {
         const validBodies = this.extractValidActionsFromProcessDefinition(definition);
         let blacklistedActions = blacklist.actionIds ?? [];
 
-        for (const group of blacklist.actionGroups) {
+        for (const group of (blacklist.actionGroups ?? [])) {
             const groupActions = this.actionByGroup[group];
             blacklistedActions.push(...groupActions as AllActionIds[]);
         }
@@ -163,7 +163,6 @@ export class BlacklistActionAuthService {
         blacklistedActions = Array.from(new Set(blacklistedActions));
 
         const isBlacklisted = validBodies.some(body => blacklistedActions.includes(body as AllActionIds));
-        
         return isBlacklisted;
     }
 

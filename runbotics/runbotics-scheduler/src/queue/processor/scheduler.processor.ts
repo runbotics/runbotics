@@ -19,7 +19,7 @@ import { UiGateway } from '#/websocket/ui/ui.gateway';
 import { ProcessInstanceSchedulerService } from '../process-instance/process-instance.scheduler.service';
 import { BotWebSocketGateway } from '#/websocket/bot/bot.gateway';
 import { QueueService } from '#/queue/queue.service';
-import { BadRequestException, ForbiddenException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { QueueMessageService } from '../queue-message.service';
 import { JobId } from 'bull';
 import { BlacklistActionAuthService } from '#/blacklist-actions-auth/blacklist-action-auth.service';
@@ -50,23 +50,28 @@ export class SchedulerProcessor {
         await this.validateTriggerData(job)
             .catch((err) => Promise.reject(new Error(err)));
 
-        const isAllowedToRun = await this.blacklistActionAuthService.checkProcessActionsBlacklist(job.data.process.id);
-
         const process = await this.processService.findById(job.data.process.id);
-        if (!isScheduledProcess(job.data) && isAllowedToRun) {
+
+        //reverse value of check, because it returns if the process is blacklisted, so is allowed when is not blacklisted
+        const isAllowedToRun = !(await this.blacklistActionAuthService.checkProcessActionsBlacklist(process.id ?? job.data.process.id));
+
+        if(!isAllowedToRun) {
+            this.logger.error(`[Q Process] Process "${process.name}" contains blacklisted actions and cannot be run.`);
+            await this.processInstanceSchedulerService.saveFailedProcessInstance(
+                job,
+                'Process contains blacklisted actions',
+            );
+            throw new BadRequestException(`Process ${process.id} contains blacklisted actions and cannot be run.`);
+        }
+        if (!isScheduledProcess(job.data)) {
             return this.runProcess(process, job);
         }
-        const result = isAllowedToRun ? await this.queueService.handleAttendedProcess(process, job.data.input)
+        const result = await this.queueService.handleAttendedProcess(process, job.data.input)
             .then(() => this.runProcess(process, job))
             .catch((err) => {
                 this.logger.error(`[Q Process] Process "${process.name}" has scheduled without input variables. ${err.message}`);
                 throw new BadRequestException(err);
-            }) : false;
-
-        if (!result) {
-            this.logger.error(`[Q Process] Process "${process.name}" is blacklisted`);
-            throw new ForbiddenException();
-        }
+            });
         return result;
     }
 

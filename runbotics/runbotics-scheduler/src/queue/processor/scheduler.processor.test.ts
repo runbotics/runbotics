@@ -118,7 +118,7 @@ describe('SchedulerProcessor', () => {
                     provide: BlacklistActionAuthService,
                     useValue: {
                         isActionBlacklisted: vi.fn().mockResolvedValue(true),
-                        checkProcessActionsBlacklist: vi.fn().mockResolvedValue(true),
+                        checkProcessActionsBlacklist: vi.fn().mockResolvedValue(false),
                     },
                 },
                 {
