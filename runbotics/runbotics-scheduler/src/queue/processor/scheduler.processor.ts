@@ -56,12 +56,12 @@ export class SchedulerProcessor {
         const isAllowedToRun = !(await this.blacklistActionAuthService.checkProcessActionsBlacklist(process.id ?? job.data.process.id));
 
         if(!isAllowedToRun) {
-            this.logger.error(`[Q Process] Process "${process.name}" is blacklisted and cannot be run.`);
+            this.logger.error(`[Q Process] Process "${process.name}" contains blacklisted actions and cannot be run.`);
             await this.processInstanceSchedulerService.saveFailedProcessInstance(
                 job,
-                'Process is blacklisted',
+                'Process contains blacklisted actions',
             );
-            throw new BadRequestException(`Process ${process.id} is blacklisted`);
+            throw new BadRequestException(`Process ${process.id} contains blacklisted actions and cannot be run.`);
         }
         if (!isScheduledProcess(job.data)) {
             return this.runProcess(process, job);
