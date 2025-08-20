@@ -28,7 +28,6 @@ jobs:
         uses: dorny/paths-filter@v2
         id: filter
         with:
-          base: ${{ github.event.repository.default_branch || 'develop' }}
           filters: |
             ui:
               - 'runbotics/runbotics-orchestrator-ui/package.json'
