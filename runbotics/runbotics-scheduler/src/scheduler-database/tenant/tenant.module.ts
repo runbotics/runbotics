@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tenant } from './tenant.entity';
 import { TenantService } from './tenant.service';
@@ -8,21 +8,27 @@ import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email
 import { LicenseModule } from '../license/license.module';
 import { TenantRoleAdminController } from './tenantRoleAdmin.controller';
 import { TenantPublicController } from './tenantPublic.controller';
+import { TenantSubscriptionValidationService } from './tenant-subscription-validation.service';
+import { MailModule } from '#/mail/mail.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Tenant, TenantInviteCode, EmailTriggerWhitelistItem]),
-        LicenseModule,
+    imports:[
+        TypeOrmModule.forFeature([Tenant, TenantInviteCode, EmailTriggerWhitelistItem]), 
+        LicenseModule, 
+        MailModule, 
+        forwardRef(() => UserModule),
     ],
     providers: [
-        TenantService,
+        TenantService, 
+        TenantSubscriptionValidationService
     ],
     controllers: [
-        TenantController,
-        TenantRoleAdminController,
-        TenantPublicController,
+        TenantController, 
+        TenantRoleAdminController, 
+        TenantPublicController
     ],
-    exports: [TenantService],
+    exports: [TenantService]
 })
 export class TenantModule {
 }
