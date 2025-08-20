@@ -155,9 +155,8 @@ For development, start each component manually:
 
 The orchestrator can be run in different ways depending on your development needs:
 
-1. **Using rb CLI:** `rb api`
+1. **Using rb CLI:** `rb api` compile & run directly from source
 2. **Docker container:** Use the docker-compose setup above (**recommended for most development scenarios**)
-3. **Local development:** Run directly from source for debugging
 
 ## Windows Development Notes
 
@@ -178,15 +177,3 @@ function r() {
 ## Service URLs
 
 Once all services are running, you can access the page via proxy on http://localhost:7777
-
-## Summary
-
-RunBotics is a comprehensive automation platform requiring multiple components to work together. The typical development workflow involves:
-
-1. **Start the database services:** `docker-compose up -d`
-2. **Start the backend services:** `rb scheduler` and `rb api` (only if orchestrator not running via docker)
-3. **Start the frontend services:** `rb ui` and `rb lp`
-4. **Start the proxy:** `rb proxy`
-5. **Start bot(s) when needed:** `rb bot` (only run when required)
-
-Each component can be started and stopped independently for focused development. The `rb` CLI commands simplify service management.
