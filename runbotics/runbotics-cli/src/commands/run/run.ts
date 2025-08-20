@@ -57,8 +57,7 @@ const run = async (packageArg: Package, options?: RunCommandOptions) => {
             await startMonorepoPackage(join(rbRootDir, PROXY_RELATIVE_PATH), options);
             break;
         default:
-            console.log(chalk.red(`Error: Unknown package '${packageArg}'. Valid packages are: api, bot, scheduler, lp, ui, proxy`));
-            process.exit(1);
+            throw new Error(`Unknown package '${packageArg}'. Valid packages are: api, bot, scheduler, lp, ui, proxy`);
     }
 };
 
