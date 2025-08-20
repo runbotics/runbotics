@@ -48,7 +48,6 @@ app.use((req, res, next) => {
 });
 
 const createProxy = (target, pathFilter, onError, wsEnabled = true) => {
-    console.log({ target, pathFilter, ws: wsEnabled })
     const config = {
         target: target,
         changeOrigin: true,
