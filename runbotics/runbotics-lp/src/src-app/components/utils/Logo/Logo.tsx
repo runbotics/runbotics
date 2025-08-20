@@ -18,7 +18,7 @@ const Logo: FC<LogoProps> = (props) => {
         : '/images/runBoticsLogo/logo-black-simp.svg';
 
     const logoSource = props.simple
-        ? '/images/runBoticsLogo/logo-rectangle-white.svg'
+        ? '/images/runBoticsLogo/logo-white-simp.svg'
         : customLogoSource;
     
     const height = props.height ?? LOGO_HEIGHT;
