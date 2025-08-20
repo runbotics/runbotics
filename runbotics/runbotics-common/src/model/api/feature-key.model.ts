@@ -238,6 +238,9 @@ export enum FeatureKey {
 
     // Allows to delete tags
     TAG_DELETE = 'TAG_DELETE',
+
+    // Allows to access AI assistant
+    AI_ASSISTANT_ACCESS = 'AI_ASSISTANT_ACCESS',
 }
 
 export interface IFeatureKey {
