@@ -1,13 +1,3 @@
-const PROXY_HOST = `http://localhost:8888`
-const IS_PROXYING_ENABLED = ['on', '1', 'yes'].includes(process.env.DEV_PROXY_ENABLED?.toLowerCase())
-
-// Service hosts configuration
-const API_HOST = IS_PROXYING_ENABLED ? PROXY_HOST : `http://127.0.0.1:8080`
-const SCHEDULER_HOST = IS_PROXYING_ENABLED ? PROXY_HOST : `http://127.0.0.1:4000`
-const UI_HOST = IS_PROXYING_ENABLED ? PROXY_HOST : `http://127.0.0.1:3000`
-
-const FALLBACK_RUNBOTICS_ENTRY_URL = IS_PROXYING_ENABLED ? PROXY_HOST : 'http://127.0.0.1:4000'
-
 const assetPrefix = 'lp-assets'
 
 /** @type {import('next').NextConfig} */
@@ -29,7 +19,7 @@ const nextConfig = {
     },
 
     publicRuntimeConfig: {
-        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || FALLBACK_RUNBOTICS_ENTRY_URL,
+        runboticsEntrypointUrl: process.env.RUNBOTICS_ENTRYPOINT_URL || 'http://127.0.0.1:4000',
         mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN,
         copilotChatUrl: process.env.COPILOT_CHAT_URL,
         isSsoEnabled: process.env.IS_SSO_ENABLED,
