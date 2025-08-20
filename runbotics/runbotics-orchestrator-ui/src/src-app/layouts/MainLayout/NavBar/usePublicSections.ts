@@ -104,9 +104,9 @@ export const usePublicSections = (): Section[] => {
                 {
                     title: translate('Nav.Items.AiAssistant'),
                     icon: SmartToyIcon,
-                    href: '/app/monitoring/grafana',
-                    authorities: [Role.ROLE_USER],
-                    featureKeys: [FeatureKey.PROCESS_ADD],
+                    href: '/app/AI-assistant',
+                    authorities: [Role.ROLE_USER], // todo: change it to the 'new' ROLE_USER when it appears
+                    featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
                 },
             ],
         },
