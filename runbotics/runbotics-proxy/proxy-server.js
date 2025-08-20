@@ -1,15 +1,24 @@
+require('dotenv').config();
+
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
+const parseBool = (value) => {
+    return 'true' === value.toString().toLowerCase();
+}
+
 const PORT = process.env.PROXY_PORT || 7777;
-const IS_PROXY_ENABLED = ['on', '1', 'yes'].includes(process.env.DEV_PROXY_ENABLED?.toLowerCase());
-const PROXY_HOST = 'http://localhost:8888';
+const IS_UI_PROXY_ENABLED = parseBool('RB_UI_PROXY_ENABLED');
+const IS_LP_PROXY_ENABLED = parseBool('RB_LP_PROXY_ENABLED');
+const IS_PROXY_ENABLED = IS_UI_PROXY_ENABLED || IS_LP_PROXY_ENABLED;
+const REMOTE_DEV_HOST = process.env.RB_DEV_HOST || 'https://runbotics-dev.clouddc.eu';
+
 
 const hosts = {
-    api: IS_PROXY_ENABLED ? PROXY_HOST : 'http://127.0.0.1:8080',
-    scheduler: IS_PROXY_ENABLED ? PROXY_HOST : 'http://127.0.0.1:4000',
-    ui: IS_PROXY_ENABLED ? PROXY_HOST : 'http://127.0.0.1:3000',
-    landingPage: 'http://localhost:3001'
+    api: IS_PROXY_ENABLED ? REMOTE_DEV_HOST : 'http://127.0.0.1:8080',
+    scheduler: IS_PROXY_ENABLED ? REMOTE_DEV_HOST : 'http://127.0.0.1:4000',
+    ui: IS_UI_PROXY_ENABLED ? REMOTE_DEV_HOST : 'http://127.0.0.1:3000',
+    landingPage: IS_LP_PROXY_ENABLED ? REMOTE_DEV_HOST : 'http://localhost:3001'
 };
 
 const routes = [
@@ -46,7 +55,7 @@ const createProxy = (target, pathFilter, onError, wsEnabled = true) => {
         ws: wsEnabled,
         pathFilter,
         on: {
-            proxyReq: (proxyReq, req) => console.log(`🔄 PROXY: ${req.method} ${req.url} → ${target}${req.url}`),
+            proxyReq: (_proxyReq, req) => console.log(`🔄 PROXY: ${req.method} ${req.url} → ${target}${req.url}`),
             proxyRes: (proxyRes, req) => console.log(`✅ PROXY RESPONSE: ${req.method} ${req.url} → ${target}${req.url} [${proxyRes.statusCode}]`),
             error: (err, req, res) => {
                 console.error(`❌ PROXY ERROR for ${req.method} ${req.url} → ${target}${req.url}:`, err.message);
@@ -72,14 +81,16 @@ app.use(createProxy(hosts.landingPage, [], (err, req, res) => {
             target: hosts.landingPage
         });
     }
-}, false)); // Disable WebSocket for fallback
+    // Disable WebSocket for fallback
+    // Otherwise this proxy implementation will try to run ws proxy multiple times
+}, false));
 
 const server = app.listen(PORT, () => {
     console.log(`🚀 Reverse proxy server running on http://localhost:${PORT}`);
     console.log(`📋 Configuration:`);
     console.log(routes)
-    console.log(`   - Is proxy to remote server enabled: ${IS_PROXY_ENABLED}`);
-    console.log(`\n💡 Set DEV_PROXY_ENABLED=on to enable proxy mode`);
+    console.log(`   - Is proxy to remote server enabled: ${IS_PROXY_ENABLED}; UI: ${IS_UI_PROXY_ENABLED} LP: ${IS_LP_PROXY_ENABLED}`);
+    console.log(`\n💡 Set RB_LP_PROXY_ENABLED or RB_LP_PROXY_ENABLED to enable proxy mode`);
 });
 
 server.setMaxListeners(9999);
