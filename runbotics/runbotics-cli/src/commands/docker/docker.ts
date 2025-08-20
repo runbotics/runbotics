@@ -17,7 +17,8 @@ const docker = async (operation: Operation) => {
             await spawn('docker-compose', ['down'], { cwd: configFilePath, shell: true, stdio: 'inherit' });
             break;
         default:
-            throw new Error(`Unknown docker operation '${operation}'. Valid operations are: up, pull, down`);
+            await spawn('docker-compose', ['pull'], { cwd: configFilePath, shell: true, stdio: 'inherit' });
+            await spawn('docker-compose', ['up', '-d'], { cwd: configFilePath, shell: true, stdio: 'inherit' });
     }
 };
 
