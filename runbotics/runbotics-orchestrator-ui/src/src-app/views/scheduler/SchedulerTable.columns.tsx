@@ -13,8 +13,6 @@ import {
 } from '#src-app/store/slices/Scheduler/Scheduler.state';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-
-import ActiveScheduleSwitch from './ActiveScheduleSwitch';
 import DeleteScheduleButton from './DeleteScheduleButton';
 import DeleteWaitingJobButton from './DeleteWaitingJobButton';
 import TerminateProcessButton from './TerminateProcessButton';
