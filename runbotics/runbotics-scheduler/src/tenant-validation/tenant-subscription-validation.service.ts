@@ -7,11 +7,11 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import dayjs from 'dayjs';
 import { hasRole } from '#/utils/authority.utils';
 import { Role } from 'runbotics-common';
-import { UserService } from '../user/user.service';
 import { MailService } from '#/mail/mail.service';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 import { SchedulerService } from '#/queue/scheduler/scheduler.service';
 import { User } from '#/scheduler-database/user/user.entity';
+import { UserService } from '#/scheduler-database/user/user.service';
 
 @Injectable()
 export class TenantSubscriptionValidationService {
@@ -21,9 +21,10 @@ export class TenantSubscriptionValidationService {
         @InjectDataSource()
         private readonly dataSource: DataSource,
         private readonly userService: UserService,
-        private readonly mailService: MailService,     private readonly scheduleProcessService: SchedulerService,
+        private readonly mailService: MailService,
+        private readonly scheduleProcessService: SchedulerService,
     ) {}
-    
+
     private async checkTenantScheduledProcesses(tenantId: string, manager: EntityManager) {
         const processes = await manager.find(ScheduleProcess, {
             where: {
@@ -62,7 +63,7 @@ export class TenantSubscriptionValidationService {
             this.logger.log('Starting tenant subscription validation...');
             const tenants = await manager.find(Tenant);
 
-            for (const tenant of tenants) {
+            for (const tenant of tenants) {                
                 if (!tenant.subscriptionEnd) continue;
 
                 const now = dayjs();
