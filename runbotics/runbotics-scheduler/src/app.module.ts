@@ -11,6 +11,7 @@ import { SchedulerDatabaseModule } from './scheduler-database/scheduler-database
 import { MsalModule } from './scheduler-database/msal/msal.module';
 import { HealthModule } from './health/health.module';
 import { ActiveTenantGuard } from '#/global-guards/active-tenant.guard';
+import { UserTenantActiveGuard } from '#/global-guards/user-tenant-active.guard';
 
 @Module({
     imports: [
@@ -25,7 +26,7 @@ import { ActiveTenantGuard } from '#/global-guards/active-tenant.guard';
         PrometheusModule.register(),
     ],
     providers: [
-        StorageService, Logger, ActiveTenantGuard
+        StorageService, Logger, ActiveTenantGuard, UserTenantActiveGuard
     ],
 })
 export class AppModule { }
