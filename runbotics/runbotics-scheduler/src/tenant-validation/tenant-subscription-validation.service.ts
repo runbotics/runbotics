@@ -63,7 +63,7 @@ export class TenantSubscriptionValidationService {
             this.logger.log('Starting tenant subscription validation...');
             const tenants = await manager.find(Tenant);
 
-            for (const tenant of tenants) {                
+            for (const tenant of tenants) {
                 if (!tenant.subscriptionEnd) continue;
 
                 const now = dayjs();

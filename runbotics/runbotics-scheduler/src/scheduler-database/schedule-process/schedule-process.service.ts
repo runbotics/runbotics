@@ -23,8 +23,7 @@ export class ScheduleProcessService {
         private readonly processService: ProcessService,
         @Inject(forwardRef(() => QueueService))
         private readonly queueService: QueueService,
-    ) {
-    }
+    ) {}
 
     getAll() {
         return this.scheduleProcessRepository.find({ relations });
@@ -120,7 +119,6 @@ export class ScheduleProcessService {
     }
 
     async setScheduleActive(id: number, active: string, user: User) {
-        this.logger.log(`Setting schedule process with id: ${id} to active: ${active}`);
         const scheduleProcess = await this.scheduleProcessRepository.findOneOrFail({
             where: { id },
             relations: { process: true },

@@ -9,7 +9,9 @@ import {
     HttpCode,
     Get,
     NotFoundException,
-    UseInterceptors, Patch, Query,
+    UseInterceptors, 
+    Patch,
+    Query,
 } from '@nestjs/common';
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
