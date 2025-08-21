@@ -16,6 +16,7 @@ import { DeleteUserDto } from '#/scheduler-database/user/dto/delete-user.dto';
 import { hasRole } from '#/utils/authority.utils';
 import { NotificationBot } from '#/scheduler-database/notification-bot/notification-bot.entity';
 import { NotificationProcess } from '#/scheduler-database/notification-process/notification-process.entity';
+import { subscriptionExpirationNotificationTemplate } from './templates/subscription-expiration-notification.template';
 
 export type SendMailInput = {
     to?: string;
@@ -40,7 +41,7 @@ export class MailService {
         private readonly processService: ProcessService,
         private readonly notificationProcessService: NotificationProcessService,
         private readonly notificationBotService: NotificationBotService,
-        private readonly serverConfigService: ServerConfigService
+        private readonly serverConfigService: ServerConfigService,
     ) { }
 
     public async sendMail(input: SendMailInput) {
@@ -172,6 +173,18 @@ export class MailService {
                 isHtml: false,
             });
         }
+    }
+
+    public async sendSubscriptionExpirationNotification(user: User, diffDays: number, mailToLink: string) {
+        const emailContent = subscriptionExpirationNotificationTemplate(mailToLink, diffDays);
+        const subject = 'RunBotics - Subskrypcja';
+
+        await this.sendMail({
+            to: user.email,
+            subject,
+            content: emailContent,
+            isHtml: true,
+        });
     }
 
     private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {
