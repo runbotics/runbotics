@@ -45,16 +45,16 @@ export const useActiveProcessColumns = (): Column<IProcessInstance>[] => {
         {
             Header: translate('Scheduler.ActiveProcess.Table.Header.Step'),
             accessor: ({ step }) =>
-                step
-                    ? // @ts-ignore
-                    translate(
-                        `Process.Details.Modeler.Actions.${capitalizeFirstLetter(
-                            {
-                                text: step,
-                                delimiter: '.',
-                                join: '.',
-                            }
-                        )}.Label`
+                step ? 
+                    // @ts-expect-error 
+                    // eslint-disable-next-line 
+                    translate(`Process.Details.Modeler.Actions.${capitalizeFirstLetter(
+                        {
+                            text: step,
+                            delimiter: '.',
+                            join: '.',
+                        }
+                    )}.Label`
                     )
                     : '',
         },
