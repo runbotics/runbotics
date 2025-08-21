@@ -102,10 +102,10 @@ export const usePublicSections = (): Section[] => {
                     featureKeys: [FeatureKey.MANAGE_INACTIVE_USERS],
                 },
                 {
-                    title: translate('Nav.Items.AiAssistant'),
+                    title: translate('Nav.Items.AIAssistant'),
                     icon: SmartToyIcon,
                     href: '/app/AI-assistant',
-                    authorities: [Role.ROLE_USER], // todo: change it to the 'new' ROLE_USER when it appears
+                    authorities: [Role.ROLE_USER], // todo: change Role.ROLE_USER to the 'new' ROLE_USER when it appears
                     featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
                 },
             ],

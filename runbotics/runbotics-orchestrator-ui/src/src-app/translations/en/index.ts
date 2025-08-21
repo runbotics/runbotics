@@ -5,7 +5,7 @@ import marketplaceTranslations from '#src-landing/translations/en/marketplace';
 
 import accountTranslations from './account.json';
 import actionTranslations from './action.json';
-import AIAssistantTranslations from './AIAssistant.json';
+import aiAssistantTranslations from './AIAssistant.json';
 import botTranslations from './bot.json';
 import collectionTranslations from './collections';
 import commonTranslations from './common.json';
@@ -50,6 +50,6 @@ const translationResources = {
     ...credenitalsTranslations,
     ...feedbackTranslations,
     ...marketplaceTranslations,
-    ...AIAssistantTranslations,
+    ...aiAssistantTranslations,
 };
 export default translationResources;
