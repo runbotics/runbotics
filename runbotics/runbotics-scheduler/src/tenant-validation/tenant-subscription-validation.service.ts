@@ -32,28 +32,34 @@ export class TenantSubscriptionValidationService {
                 },
             },
         });
-        
-        if(processes.length > 0){ 
-            for(const process of processes) {
+
+        if (processes.length > 0) {
+            for (const process of processes) {
                 const newProcess = structuredClone(process);
                 newProcess.active = false;
                 await manager.save(ScheduleProcess, newProcess);
             }
         }
-        
-        const users = await manager.find(User, { where: { tenantId }  });
+
+        const users = await manager.find(User, { where: { tenantId } });
         for (const user of users) {
-            const userJobProcesses = await this.scheduleProcessService.getScheduledJobs(user);
-            for (const job of userJobProcesses) {
-                await this.scheduleProcessService.deleteJobFromQueue(String(job.id), user);
+            const scheduledJobs = await this.scheduleProcessService.getScheduledJobs(user);
+            const waitingJobs = await this.scheduleProcessService.getWaitingJobs(user);
+            for (const job of waitingJobs) {
+                this.logger.log(`Deleting job ${job.id} for user ${user.email} in tenant ${tenantId}`);
+                await this.scheduleProcessService.deleteJobFromQueue(job.id, user);
+            }
+            for (const job of scheduledJobs) {
+                this.logger.log(`Deleting job ${job.id} for user ${user.email} in tenant ${tenantId}`);
+                await this.scheduleProcessService.deleteRepeatableJob(job.id, user);
             }
         }
-        this.logger.log(`Deleted ${processes.length} scheduled processes for tenant ${tenantId}.`);
     }
 
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
     async validateTenants() {
         await this.dataSource.transaction(async manager => {
+            this.logger.log('Starting tenant subscription validation...');
             const tenants = await manager.find(Tenant);
 
             for (const tenant of tenants) {

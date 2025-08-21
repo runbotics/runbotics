@@ -13,8 +13,8 @@ import {
 } from '#src-app/store/slices/Scheduler/Scheduler.state';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
-import Checkbox from '#src-landing/components/Checkbox';
 
+import ActiveScheduleSwitch from './ActiveScheduleSwitch';
 import DeleteScheduleButton from './DeleteScheduleButton';
 import DeleteWaitingJobButton from './DeleteWaitingJobButton';
 import TerminateProcessButton from './TerminateProcessButton';
@@ -173,13 +173,6 @@ export const useScheduledProcessColumns = (): Column<ScheduledJob>[] => {
                 'Scheduler.ScheduledProcess.Table.Header.Creator'
             ),
             accessor: ({ user }) => user?.email,
-        },
-        {
-            Header: translate('Scheduler.ScheduledProcess.Table.Header.Active'),
-            accessor: ({ active }) => active,
-            Cell: ({ row }) => (
-                <Checkbox checked={row.original.active} label={''} />
-            ),
         },
         {
             Header: ' ',
