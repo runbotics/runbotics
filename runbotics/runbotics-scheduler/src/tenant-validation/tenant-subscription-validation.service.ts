@@ -7,8 +7,11 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import dayjs from 'dayjs';
 import { hasRole } from '#/utils/authority.utils';
 import { Role } from 'runbotics-common';
-import { UserService } from '../user/user.service';
 import { MailService } from '#/mail/mail.service';
+import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
+import { SchedulerService } from '#/queue/scheduler/scheduler.service';
+import { User } from '#/scheduler-database/user/user.entity';
+import { UserService } from '#/scheduler-database/user/user.service';
 
 @Injectable()
 export class TenantSubscriptionValidationService {
@@ -19,11 +22,45 @@ export class TenantSubscriptionValidationService {
         private readonly dataSource: DataSource,
         private readonly userService: UserService,
         private readonly mailService: MailService,
+        private readonly scheduleProcessService: SchedulerService,
     ) {}
+
+    private async checkTenantScheduledProcesses(tenantId: string, manager: EntityManager) {
+        const processes = await manager.find(ScheduleProcess, {
+            where: {
+                user: {
+                    tenantId,
+                },
+            },
+        });
+
+        if (processes.length > 0) {
+            for (const process of processes) {
+                const newProcess = structuredClone(process);
+                newProcess.active = false;
+                await manager.save(ScheduleProcess, newProcess);
+            }
+        }
+
+        const users = await manager.find(User, { where: { tenantId } });
+        for (const user of users) {
+            const scheduledJobs = await this.scheduleProcessService.getScheduledJobs(user);
+            const waitingJobs = await this.scheduleProcessService.getWaitingJobs(user);
+            for (const job of waitingJobs) {
+                this.logger.log(`Deleting job ${job.id} for user ${user.email} in tenant ${tenantId}`);
+                await this.scheduleProcessService.deleteJobFromQueue(job.id, user);
+            }
+            for (const job of scheduledJobs) {
+                this.logger.log(`Deleting job ${job.id} for user ${user.email} in tenant ${tenantId}`);
+                await this.scheduleProcessService.deleteRepeatableJob(job.id, user);
+            }
+        }
+    }
 
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
     async validateTenants() {
         await this.dataSource.transaction(async manager => {
+            this.logger.log('Starting tenant subscription validation...');
             const tenants = await manager.find(Tenant);
 
             for (const tenant of tenants) {
@@ -38,6 +75,7 @@ export class TenantSubscriptionValidationService {
                 }
 
                 if (endDate.isBefore(now) && tenant.active) {
+                    await this.checkTenantScheduledProcesses(tenant.id, manager);
                     await this.deactivateExpiredTenant(manager, tenant);
                 }
             }

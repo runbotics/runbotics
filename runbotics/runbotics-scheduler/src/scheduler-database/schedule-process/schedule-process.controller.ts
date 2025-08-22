@@ -9,7 +9,9 @@ import {
     HttpCode,
     Get,
     NotFoundException,
-    UseInterceptors,
+    UseInterceptors, 
+    Patch,
+    Query,
 } from '@nestjs/common';
 import { Logger } from '#/utils/logger';
 import { FeatureKeys } from '#/auth/featureKey.decorator';
@@ -77,5 +79,15 @@ export class ScheduleProcessController {
     ) {
         this.logger.log('REST request to delete schedule process with id: ', id);
         await this.scheduleProcessService.delete(id, tenantId);
+    }
+    
+    @Patch(':id')
+    @FeatureKeys(FeatureKey.SCHEDULE_ADD)
+    async updateScheduleProcess(
+        @Param('id', ParseIntPipe) id: number,
+        @Query('active') active: string,
+        @UserDecorator() user: User,
+    ) {
+        return this.scheduleProcessService.setScheduleActive(id, active, user); 
     }
 }
