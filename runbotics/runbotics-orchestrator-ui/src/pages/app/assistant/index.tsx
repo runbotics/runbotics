@@ -5,5 +5,5 @@ import AIAssistantView from '#src-app/views/AIAssistantView/AIAssistantView';
 
 export default withAuthGuard({
     Component: AIAssistantView,
-    featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
+    featureKeys: [FeatureKey.PROCESS_READ],
 });

@@ -6,12 +6,15 @@ import Page from '#src-app/components/pages/Page';
 
 export const StyledPage = styled(Page)(
     ({ theme }) => `
-    min-height: 100%;
-    padding-top: ${theme.spacing(3)};
-    padding-bottom: ${theme.spacing(3)};
+    height: 100%;
     background-color: ${theme.palette.background.default};
+    overflow: hidden;
 `
 );
+
+export const StyledIFrame = styled('iframe')`
+    border: 0;
+`;
 
 export const StyledContainer = styled(Container)`
     @media (min-width: 1920px) {
