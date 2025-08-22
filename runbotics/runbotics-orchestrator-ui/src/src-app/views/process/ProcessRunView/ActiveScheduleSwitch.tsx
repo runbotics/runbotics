@@ -1,4 +1,4 @@
-import { ChangeEvent, VFC } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 
 import { Switch } from '@mui/material';
 
@@ -18,7 +18,7 @@ export interface ActiveScheduleSwitchProps {
     processId?: string;
 }
 
-const ActiveScheduleSwitch: VFC<ActiveScheduleSwitchProps> = ({
+const ActiveScheduleSwitch: FC<ActiveScheduleSwitchProps> = ({
     checked,
     scheduleId,
     processName,
@@ -26,9 +26,20 @@ const ActiveScheduleSwitch: VFC<ActiveScheduleSwitchProps> = ({
 }) => {
     const dispatch = useDispatch();
     const { enqueueSnackbar } = useSnackbar();
+    const [disabled, setDisabled] = useState(false);
+
+    useEffect(() => {
+        if (disabled) {
+            setTimeout(() => {
+                setDisabled(false);
+            }, 300);
+        }
+    }, [disabled]);
+    
     const onChange = async (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         event.stopPropagation();
+        setDisabled(true);
         await dispatch(
             scheduleProcessActions.updateActiveFlagScheduledProcess({
                 resourceId: scheduleId,
@@ -67,7 +78,7 @@ const ActiveScheduleSwitch: VFC<ActiveScheduleSwitchProps> = ({
             })
         );
     };
-    return <Switch onChange={onChange} checked={checked} />;
+    return <Switch onChange={onChange} checked={checked} disabled={disabled} />;
 };
 
 export default ActiveScheduleSwitch;

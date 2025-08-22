@@ -144,7 +144,7 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
     );
 
     const isNotRunableSchedule = (schedule: IScheduleProcess) =>
-        !schedule.inputVariables && process.isAttended;
+        !schedule.inputVariables && process.isAttended && !schedule.active;
 
     return (
         <StyledContainer
