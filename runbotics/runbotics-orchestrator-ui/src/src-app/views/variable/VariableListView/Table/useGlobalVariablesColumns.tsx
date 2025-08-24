@@ -107,6 +107,9 @@ const useGlobalVariablesColumns = ({
                         onClick={handleEditClick}
                         showInMenu={hasEditVariableAccess}
                         key="edit"
+                        placeholder=""
+                        onPointerEnterCapture={() => {}}
+                        onPointerLeaveCapture={() => {}}
                     />,
                     <GridActionsCellItem
                         label={translate('Variables.ListView.Table.Actions.Delete')}
@@ -114,6 +117,9 @@ const useGlobalVariablesColumns = ({
                         onClick={handleDeleteClick}
                         showInMenu={hasDeleteVariableAccess}
                         key="delete"
+                        placeholder=""
+                        onPointerEnterCapture={() => {}}
+                        onPointerLeaveCapture={() => {}}
                     />,
                 ];
                 return (isTenantAdmin || isGlobalVariableOwner(creator.id)) ? gridActions : [];

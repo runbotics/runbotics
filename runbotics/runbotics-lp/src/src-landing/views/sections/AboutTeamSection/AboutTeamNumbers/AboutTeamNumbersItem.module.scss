@@ -1,0 +1,32 @@
+@import '#src-landing/scss/main';
+
+.number {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 80px;
+    max-width: 30%;
+    padding-left: $padding-1;
+    border-left: 4px solid $palette-white;
+}
+
+.numberText {
+    margin-top: 12px;
+    font-weight: $font-weight-medium;
+}
+
+@media screen and (max-width: $breakpoint-xs) {
+    .number {
+        max-width: 80%;
+        height: 60px;
+        margin-top: $margin-4;
+    }
+
+    .number h3 {
+        font-size: $font-size-h4;
+    }
+
+    .numberText {
+        font-size: $font-size-body4;
+    }
+}

@@ -51,6 +51,10 @@ const useBotNotificationColumns = ({
                         icon={<DeleteIcon />}
                         onClick={handleDeleteClick}
                         key="delete"
+                        showInMenu={false}
+                        placeholder=""
+                        onPointerEnterCapture={() => {}}
+                        onPointerLeaveCapture={() => {}}
                     />,
                 ];
             },

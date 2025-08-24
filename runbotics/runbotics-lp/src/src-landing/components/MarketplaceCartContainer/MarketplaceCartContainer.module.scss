@@ -1,0 +1,17 @@
+
+.root {
+  div {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    .Mui-Table-root {
+      .MuiTableHead {
+        border: none;
+        background: transparent;
+      }
+    }
+    .MuiTableCell-root {
+      background: transparent;
+    }
+  }
+}

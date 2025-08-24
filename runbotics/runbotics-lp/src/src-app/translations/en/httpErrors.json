@@ -1,0 +1,32 @@
+{
+    "Error404.Meta.Title": "404: Not found",
+    "Error404.View.Title": "The page you’re looking for is not here",
+    "Error404.View.Message": "Sometimes pages get lost. You can go to the homepage and continue from there and/or let our IT specialists know about the problem. We will try to fix it as soon as possible and find the missing page.",
+
+    "Error400.Meta.Title": "400: Bad request",
+    "Error400.View.Title": "Our server couldn't process the request.",
+    "Error400.View.Message": " This error might be caused by your browser or device settings. First, refresh the page using CTRL + F5 as the error might be temporary. If the problem persists, ensure the URL is correct and check your internet connection. You can also restart your device to clear memory and cached data, then check if the page works. Another step is to clear your browser's cookies. If these steps don't help, please contact us.",
+    
+    "Error403.Meta.Title": "403: Forbidden",
+    "Error403.View.Title": "You don't have permission to access this resource",
+    "Error403.View.Message": "First, make sure the URL is entered correctly and try refreshing the page. If the problem persists, clear your browser's cache and enable cookies. Sometimes, browser extensions and add-ons can cause this error. If these steps didn't solve the problem, write to our Administrator and try again later.",
+    
+    "Error502.Meta.Title": "502: Bad gateway",
+    "Error502.View.Title": "Bad gateway",
+    "Error502.View.Message": "Unexpected error ocurred. First, try refreshing the page. If that doesn't help, clear your browser's cache. Still having problems? Check if your firewall settings are blocking the site. If the problem persists, we apologize, the issue is likely on our end. In this case, contact our network Administrator and report the error.",
+    
+    "Error500.Meta.Title": "500: Unexpected error",
+    "Error500.View.Title": "Unexpected error",
+    "Error500.View.Message": "First, try refreshing the page. If that doesn't help, clear your browser's cache. If the error continues to occur, we apologize, the issue is likely on our end. In this case, you can contact our network Administrator and report the error.",
+    
+    "Error.Unknown": "An unknown error occurred",
+    "Error.Unknown.View.Message": "An unexpected error occurred. Please try again or contact support.",
+
+    "Error.View.BackToHome": "Back to home",
+
+    "CustomError.Meta.Title": "Error",
+    
+    "Error.InviteCode.View.Title": "Invitation code is not valid or has expired.",
+    "Error.InviteCode.View.Message": "This Access Code in not valid. The session connected to this access code may have expired or been cancelled. Please check if you have a more recent invite links to use, or reach out to you host or their organizaction directly to request a new one."
+
+}
