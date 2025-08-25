@@ -4,12 +4,12 @@ const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const parseBool = (value) => {
-    return 'true' === value.toString().toLowerCase();
+    return 'true' === value?.toString()?.toLowerCase();
 }
 
 const PORT = process.env.PROXY_PORT || 7777;
-const IS_UI_PROXY_ENABLED = parseBool('RB_UI_PROXY_ENABLED');
-const IS_LP_PROXY_ENABLED = parseBool('RB_LP_PROXY_ENABLED');
+const IS_UI_PROXY_ENABLED = parseBool(process.env.RB_UI_PROXY_ENABLED);
+const IS_LP_PROXY_ENABLED = parseBool(process.env.RB_LP_PROXY_ENABLED);
 const IS_ASSISTANT_PROXY_ENABLED = parseBool(process.env.RB_ASSISTANT_PROXY_ENABLED);
 const IS_PROXY_ENABLED = IS_UI_PROXY_ENABLED || IS_LP_PROXY_ENABLED;
 const REMOTE_DEV_HOST = process.env.RB_DEV_HOST || 'https://runbotics-dev.clouddc.eu';
