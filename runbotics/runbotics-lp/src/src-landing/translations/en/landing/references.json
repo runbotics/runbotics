@@ -1,0 +1,11 @@
+{
+    "Landing.References.Title": "Trusted us",
+    "Landing.References.Button": "Case study",
+    "Landing.References.Photo": "Photo",
+    "Landing.References.Logo": "Client logo",
+    "Landing.References.Quote.Mark": "Quotation mark icon",
+    "Landing.References.AVK.Quote.1": "Bot reads the data from the file, verifies the VAT number on the taxpayer whitelist, verifies the EU VAT number on the VIES website, and enters the results into the data file. Numbers are verified automatically, on average twice a month. ",
+    "Landing.References.AVK.Quote.2": "Benefits: Saves time, eliminates human error, relieves the burden on employees and freeing up their potential for more creative tasks, scalability.",
+    "Landing.References.Raiffeisen.Quote.1": "The solution automates the synchronization of HR and payroll data between BeeOffice and R2Płatnik systems in the migration of work time requests - overtime, schedules for shift work and vacation limits. Each month, the bot relieves the burden on employees by performing about 350 requests and 50+ leave limits on a company-wide basis",
+    "Landing.References.Raiffeisen.Quote.2": "Benefits: Elimination of errors, saving time, relieving the burden on employees, ability to migrate data at any time and continuous monitoring of the migration process."
+}

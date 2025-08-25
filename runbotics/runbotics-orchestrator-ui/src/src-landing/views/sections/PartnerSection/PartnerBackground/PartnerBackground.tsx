@@ -9,7 +9,11 @@ import { PARTNER_SECTION_ID } from '#src-landing/utils/utils';
 import styles from './PartnerBackground.module.scss';
 import { PARTNER_TITLE_ID } from '../PartnerSection.utils';
 
-const PartnerBackground: FC = ({ children }) => (
+interface PartnerBackgroundProps {
+    children: React.ReactNode;
+}
+
+const PartnerBackground: FC<PartnerBackgroundProps> = ({ children }) => (
     <section className={styles.root} id={PARTNER_SECTION_ID} aria-labelledby={PARTNER_TITLE_ID}>
         <div className={styles.contentBackground}>
             {children}

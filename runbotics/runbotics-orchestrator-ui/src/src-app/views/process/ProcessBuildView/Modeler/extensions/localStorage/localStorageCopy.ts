@@ -54,6 +54,7 @@ function createReviver(moddle) {
     };
 };
 
+// eslint-disable-next-line max-params
 function localStorageCopy(
     keyboard, eventBus,
     moddle, clipboard

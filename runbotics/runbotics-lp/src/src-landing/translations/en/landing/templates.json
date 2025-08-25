@@ -1,0 +1,15 @@
+{
+    "Landing.Templates.Title.Part1": "Base of",
+    "Landing.Templates.Title.Part2": "ready-made templates and processes",
+    "Landing.Templates.SearchBar.Placeholder": "search for template", 
+    "Landing.Templates.SearchBar.ImgSearch": "search", 
+    "Landing.Templates.CategoriesBar.Category.None": "None",
+    "Landing.Templates.CategoriesBar.Category.All": "All",
+    "Landing.Templates.CategoriesBar.Category.One": "Category One",
+    "Landing.Templates.CategoriesBar.Category.Two": "Category Two",
+    "Landing.Templates.CategoriesBar.Category.Three": "Category Three",
+    "Landing.Templates.CategoriesBar.Category.Four": "Category Four",
+    "Landing.Templates.CategoriesBar.Category.Five": "Category Five",
+    "Landing.Templates.TemplatesGrid.TemplateTile.Category": "Categories:",
+    "Landing.Templates.TemplatesGrid.TemplateTile.Integrations": "Systems integration:"
+}

@@ -83,6 +83,7 @@ const CredentialsGridView = () => {
         } else {
             replaceQueryParams({ collectionId, page, pageSize, searchValue });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allByPage]);
 
     useEffect(() => {
@@ -103,6 +104,7 @@ const CredentialsGridView = () => {
         Promise.allSettled([fetchAllCollections, fetchCredentials]).then(() => {
             setIsLoading(false);
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, pageSize, debouncedValue]);
 
     const handleEditDialogOpen = (id: string) => {

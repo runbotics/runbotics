@@ -1,0 +1,21 @@
+@import "#src-landing/scss/main";
+
+.video{
+    display: flex;
+
+    justify-content: center;
+
+    margin-block: 10px;
+
+    width: 100%;
+    height: 100%;
+}
+
+.embed{
+    width: 80%;
+
+    aspect-ratio: 16/9;
+
+    border: none;
+    border-radius: 10px;
+}

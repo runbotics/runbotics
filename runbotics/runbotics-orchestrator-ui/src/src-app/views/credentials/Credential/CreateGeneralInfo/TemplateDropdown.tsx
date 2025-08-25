@@ -25,6 +25,7 @@ export const TemplateDropdown: FC<TemplateDropdownProps> = ({ selectedValue, han
 
     useEffect(() => {
         dispatch(credentialTemplatesActions.fetchAllTemplates());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const templatesToChoose = credentialTemplates

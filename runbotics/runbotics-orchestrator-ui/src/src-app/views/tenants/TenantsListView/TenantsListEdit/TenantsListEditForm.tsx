@@ -45,6 +45,7 @@ const TenantsListEditForm: FC<TenantsListEditFormProps> = ({
             wasTenantNameChanged,
             wasWhitelistChanged,
         }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tenant]);
 
     return (

@@ -1,0 +1,101 @@
+@import "#src-landing/scss/main.scss";
+
+$ARROWS_HEIGHT: 500px;
+$PC_CONTENT_PADDING: $padding-6 + $padding-2 + $padding-1 + $padding-2 + $padding-6;
+$MOBILE_CONTENT_PADDING: $padding-2 + $padding-2 + $padding-2 + $padding-2;
+
+@mixin addBackgroundImage($url, $width, $backgroundPosition, $right: auto, $left: auto) {
+    position: absolute;
+    inset: 0 $right auto $left;
+    width: $width;
+    height: 100%;
+    content: '';
+    background-image: url($url);
+    background-repeat: no-repeat;
+    background-position: $backgroundPosition;
+    mix-blend-mode: soft-light;
+}
+
+@mixin translateHorizontally($translatePosition) {
+    transform: translateX($translatePosition);
+}
+
+.root {
+    position: relative;
+    overflow: hidden;
+    background-color: $palette-background-tertiary;
+}
+
+.circuitsBackground {
+    position: absolute;
+    filter: blur(3px);
+    opacity: 0.25;
+}
+
+.wrapper {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    min-height: $ARROWS_HEIGHT;
+    padding-top: $padding-14;
+    padding-bottom: $padding-14;
+}
+
+.rightColumn {
+    position: relative;
+    width: 50%;
+    color: $text-color-light;
+    padding-inline: $PC_CONTENT_PADDING;
+
+    &::before {
+        @include addBackgroundImage(
+            $url: '/images/shapes/RPA-arrows-long.svg',
+            $width: 80vw,
+            $backgroundPosition: right,
+            $left: 0
+        );
+        @include translateHorizontally(calc(-100% + $PC_CONTENT_PADDING - $padding-2));
+    }
+
+    &::after {
+        @include addBackgroundImage(
+            $url: '/images/shapes/RPA-arrows-short.svg',
+            $width: 60vw,
+            $backgroundPosition: left,
+            $right: 0
+        );
+        @include translateHorizontally(calc(100% - $PC_CONTENT_PADDING - $padding-2));
+    }
+}
+
+@media (max-width: $breakpoint-lg) {
+    .rightColumn {
+        width: 70%;
+    }
+}
+
+@media (max-width: $breakpoint-md) {
+    .rightColumn {
+        padding: $MOBILE_CONTENT_PADDING;
+
+        &::before {
+            @include translateHorizontally(calc(-100% + $MOBILE_CONTENT_PADDING - $padding-2));
+        }
+
+        &::after {
+            @include translateHorizontally(calc(100% - $MOBILE_CONTENT_PADDING));
+        }
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .rightColumn {
+        width: 100%;
+        padding-inline: $padding-0;
+
+        &::before, &::after {
+            display: none;
+        }
+    }
+}

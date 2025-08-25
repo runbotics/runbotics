@@ -73,6 +73,7 @@ export const ProcessCredentialsAddDialog: FunctionComponent<ProcessCredentialsAd
                 pageParams: { templateName, processId }
             }));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
 
     return (

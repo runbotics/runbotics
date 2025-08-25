@@ -26,6 +26,7 @@ export interface Item {
 }
 
 export interface ListGroupProps {
+    children: React.ReactNode;
     label: string;
     open: boolean;
     disabled: boolean;

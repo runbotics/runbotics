@@ -1,0 +1,228 @@
+@import '#src-landing/scss/main.scss';
+
+$EXIT_BUTTON_DIMM: 25px;
+
+.root {
+    @include font-face-roboto;
+    display: grid;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    width: $BLOG_FILTERS_WIDTH;
+    height: fit-content;
+    gap: 16px;
+    padding: 10px;
+
+    background-color: $palette-background-secondary;
+    border-radius: 14px;
+    border: 1px solid $palette-background-secondary-dark;
+}
+
+.root > div {
+    width: 100%;
+}
+
+.filtersHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+.clearLink {
+    @include font-face-base;
+    color: $palette-accent-primary;
+    font-size: $font-size-body3;
+    line-height: $line-height-base;
+    font-weight: $font-weight-semi-bold;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid transparent;
+    white-space: nowrap;
+    transition: $landing-link-transition;
+
+    &:hover {
+        border-bottom-color: $palette-accent-primary;
+    }
+}
+
+.categoriesSectionWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 5px;
+}
+
+.expandSectionButton {
+    display: flex;
+
+    width: fit-content;
+
+    gap: 5px;
+    padding: 4px 8px;
+
+    align-items: center;
+
+    font-size: $font-size-body3;
+
+    border: none;
+    border-radius: 10px;
+    background-color: $palette-background-secondary;
+    transition: background-color 300ms;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $palette-background-secondary-dark;
+    }
+}
+
+.expandSectionButton[data-hide='true'] {
+    display: none;
+}
+
+.expandSectionButton img {
+    filter: $black-to-accent-filter;
+}
+
+.expandSectionButton span {
+    font-weight: 600;
+}
+
+.filterSectionWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.applyFilter {
+    display: none;
+}
+
+.exitBtn{
+    display: none;
+}
+
+
+
+@media (max-width: $breakpoint-md) {
+    .root {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: $breakpoint-sm) and (min-width: calc($breakpoint-xs + 1px)) {
+    .root {
+        grid-row: unset;
+        width: 100%;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filtersHeader {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .searchForm {
+        grid-column: 2;
+    }
+
+    .filterSectionWrapper[data-type='category'] {
+        grid-column: 1;
+    }
+
+    .filterSectionWrapper[data-type='date'] {
+        align-items: center;
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .root {
+        display: grid;
+        grid-template-rows: 60px repeat(4, 0.1fr);
+
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        padding-left: 25px;
+
+        justify-items: center;
+
+        isolation: isolate;
+        z-index: $header-z-index;
+        overflow-y: scroll;
+        border-radius: 0;
+    }
+
+    .applyFilter {
+        display: block;
+
+        width: 212px;
+        height: 32px;
+
+        border-radius: 16px;
+        border: none;
+        background-color: $palette-accent-primary;
+    }
+
+    .hideFilters {
+        display: none;
+    }
+
+    .wrapper{
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .exitBtn{
+        display: flex;
+
+        position: relative;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 15px;
+
+        background-color: transparent;
+        border: none;
+        content: '';
+        user-select: none;
+        transition: background-color ease-in-out 100ms;
+
+        > span{
+            display: block;
+
+            position: absolute;
+
+            width: 3px;
+            height: 85%;
+
+            border-radius: 5px;
+            background-color: black;
+            content: '';
+        }
+
+        :active{
+            background-color: rgba($palette-gray,0.6);
+        }
+
+        :first-child{
+            transform: rotate(45deg);
+        }
+        :last-child{
+            transform: rotate(-45deg);
+        }
+
+    }
+
+}
