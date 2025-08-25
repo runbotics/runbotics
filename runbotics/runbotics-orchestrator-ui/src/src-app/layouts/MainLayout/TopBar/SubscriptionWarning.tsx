@@ -17,9 +17,9 @@ const SubscriptionWarning = () => {
 
     const subscriptionEnd = parseISO(user.tenant.subscriptionEnd);
     const now = Date.now();
-    const diffDays = differenceInDays(subscriptionEnd, now);
+    const diffDays = differenceInDays(subscriptionEnd, now) + 1;
 
-    if (diffDays >= 14) {
+    if (diffDays > 14) {
         return null;
     }
 

@@ -37,6 +37,10 @@ export const lightTheme: ThemeOptions = {
         infoIcon: {
             default: blueGrey[600],
         },
+        error: {
+            main: '#863034',
+            light: '#fdeded'
+        },
         button: {
             danger: blueGrey[700],
         },
