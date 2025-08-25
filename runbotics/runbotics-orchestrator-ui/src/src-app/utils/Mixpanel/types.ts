@@ -56,7 +56,7 @@ type Primitives = string | number | boolean;
 export enum USER_TYPE {
     TENANT_ADMIN = 'tenant_admin',
     ADMIN = 'admin',
-    USER = 'user',
+    RPA_USER = 'rpa_user',
     GUEST = 'guest',
     EXTERNAL_USER = 'external_user',
     UNKNOWN = 'unknown',
