@@ -70,7 +70,7 @@ export const withAuthGuard = ({
             && hasRoleAccess(user, userRoles ? userRoles : [])
         ) { return <Component {...props} />; }
 
-        router.replace('/');
+        window.location.href = '/';
     }
 
     return <LoadingScreen />;
