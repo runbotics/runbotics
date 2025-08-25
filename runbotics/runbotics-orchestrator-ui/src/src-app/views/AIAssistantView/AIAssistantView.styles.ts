@@ -14,6 +14,8 @@ export const StyledPage = styled(Page)(
 
 export const StyledIFrame = styled('iframe')`
     border: 0;
+    height: 100%;
+    width: 100%;
 `;
 
 export const StyledContainer = styled(Container)`
