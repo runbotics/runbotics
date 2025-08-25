@@ -7,6 +7,7 @@ import Page from '#src-app/components/pages/Page';
 export const StyledPage = styled(Page)(
     ({ theme }) => `
     height: 100%;
+    width: 100%;
     background-color: ${theme.palette.background.default};
     overflow: hidden;
 `
