@@ -63,7 +63,7 @@ import { BlacklistActionAuthModule } from '#/blacklist-actions-auth/blacklist-ac
         SchedulerService, SchedulerProcessor, ProcessSchedulerService, ProcessFileService, ProcessInputService,
         ProcessInstanceSchedulerService, BotSchedulerService, QueueService, ProcessGuestService, QueueMessageService,
     ],
-    exports: [ QueueService, ProcessFileService, ProcessGuestService ],
+    exports: [ QueueService, ProcessFileService, ProcessGuestService, SchedulerService ],
 })
 export class QueueModule {
 }

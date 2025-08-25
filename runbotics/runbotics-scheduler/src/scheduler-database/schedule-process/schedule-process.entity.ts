@@ -15,6 +15,9 @@ export class ScheduleProcess {
 
     @Column({ name: 'process_id' })
     processId: number;
+    
+    @Column({ type: 'boolean', default: true})
+    active: boolean;
 
     @ManyToOne(() => ProcessEntity, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'process_id', referencedColumnName: 'id' })

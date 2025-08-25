@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { SecretModule } from '#/scheduler-database/secret/secret.module';
 import { ProcessContextModule } from '#/scheduler-database/process-context/process-context.module';
 import { ProcessContextSecretModule } from '#/scheduler-database/process-context-secret/process-context-secret.module';
@@ -30,6 +30,7 @@ import { LicenseModule } from './license/license.module';
 import { ProcessSummaryNotificationSubscribersModule } from './process-summary-notification-subscribers/process-summary-notification-subscribers.module';
 import { ActionBlacklistModule } from '#/scheduler-database/action-blacklist/action-blacklist.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { QueueModule } from '#/queue/queue.module';
 
 @Module({
     imports: [
@@ -63,7 +64,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         EmailTriggerWhitelistItemModule,
         LicenseModule,
         ActionBlacklistModule,
-        ProcessSummaryNotificationSubscribersModule
+        ProcessSummaryNotificationSubscribersModule,
     ],
     exports: [
         DatabaseModule,

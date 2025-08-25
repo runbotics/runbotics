@@ -1,7 +1,7 @@
 import { ProcessService } from '#/scheduler-database/process/process.service';
 import { InjectQueue } from '@nestjs/bull';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { JobInformation, JobStatus, Queue } from 'bull';
+import { JobId, JobInformation, JobStatus, Queue } from 'bull';
 import { Job } from '#/utils/process';
 import { Logger } from '#/utils/logger';
 
@@ -26,7 +26,8 @@ export class SchedulerService {
         private readonly processService: ProcessService,
         private readonly scheduleProcessService: ScheduleProcessService,
         private readonly uiGateway: UiGateway,
-    ) {}
+    ) {
+    }
 
     async addAdditionalInfoToScheduledJobs(scheduledJobs: JobInformation[]) {
         return Promise.all(
@@ -38,7 +39,7 @@ export class SchedulerService {
                     ...scheduledJob,
                     ...scheduleProcess,
                 };
-            })
+            }),
         );
     }
 
@@ -46,20 +47,23 @@ export class SchedulerService {
         this.logger.log('Getting scheduled jobs');
         const scheduledJobs = await this.processQueue.getRepeatableJobs();
         const extendedScheduledJobs = await this.addAdditionalInfoToScheduledJobs(
-            scheduledJobs
+            scheduledJobs,
         );
         const filteredExtendedScheduledJobs = extendedScheduledJobs
             .filter((job) => job.process?.tenantId === user.tenantId);
 
         this.logger.log(
-            `Successfully got ${filteredExtendedScheduledJobs.length} scheduled job(s)`
+            `Successfully got ${filteredExtendedScheduledJobs.length} scheduled job(s)`,
         );
         return filteredExtendedScheduledJobs;
     }
 
-    async deleteJobFromQueue(id: string, user: User) {
+    async deleteJobFromQueue(id: JobId, user: User) {
         this.logger.log(`Deleting waiting job with id: ${id}`);
         const job = await this.processQueue.getJob(id);
+        if (!job) {
+            throw new NotFoundException(`Job with id: ${id} does not exist.`);
+        }
         if (job.data.process.tenantId === user.tenantId) {
             throw new ForbiddenException();
         }
@@ -68,6 +72,20 @@ export class SchedulerService {
         this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_WAITING_SCHEDULE, job);
         await job?.remove();
         this.logger.log(`QueueJob with id: ${id} successfully deleted`);
+    }
+
+    async deleteRepeatableJob(id: JobId, user: User) {
+        this.logger.log(`Deleting repeatable job with id: ${id}`);
+        const jobInformation = await this.processQueue.getRepeatableJobs();
+        
+        const job = jobInformation.find(job => job.id === id);
+        
+        if(!job) {
+            throw new NotFoundException(`Job with id: ${id} does not exist.`);
+        }
+        this.uiGateway.emitTenant(user.tenantId, WsMessage.REMOVE_SCHEDULE_PROCESS, job);
+        await this.processQueue.removeRepeatableByKey(job.key);
+        this.logger.log(`QueueJob with id: ${job.id} successfully deleted`);
     }
 
     private async updateProcessForScheduledJob(jobs: Job[]) {
@@ -101,7 +119,6 @@ export class SchedulerService {
         const jobs = [...waitingJobsWithProcesses, ...newActive];
         const filteredJobs = jobs
             .filter(job => job.data.process.tenantId === user.tenantId);
-
 
         this.logger.log(`Successfully got ${filteredJobs.length} waiting job(s)`);
         return filteredJobs;
