@@ -1,0 +1,84 @@
+@import '#src-landing/scss/main';
+
+.h4 {
+    margin-top: 32px;
+    margin-bottom: 20px;
+}
+
+.h2 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.hr {
+    margin: 40px 0;
+    border-color: $palette-background-secondary;
+}
+
+.td {
+    text-align: center;
+}
+
+.ol, .ul {
+    margin: 20px 40px;
+
+    & p, h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+    }
+
+    li::marker {
+        @include font-face-roboto;
+    }
+
+    li:has(.p)::marker {
+        font-size: $font-size-body3;
+        line-height: $line-height-base;
+        font-weight: $font-weight-regular;
+    }
+
+    li:has(.h2)::marker {
+        font-size: $font-size-h2;
+        line-height: $line-height-h2;
+        font-weight: $font-weight-medium;
+    }
+
+    li:has(.h4)::marker {
+        font-size: $font-size-h4;
+        line-height: $line-height-h4;
+        font-weight: $font-weight-bold;
+    }
+}
+
+.ul {
+    li::marker {
+        color: $palette-accent-primary;
+    }
+}
+
+blockquote:has(.p) {
+    background-color: $palette-background-secondary;
+    border-radius: 10px;
+
+    .p {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+}
+
+.imageWrapper {
+    position: relative;
+
+    width: 80%;
+
+    margin-inline: auto;
+    border-radius: 10px;
+}
+
+.image {
+    padding: 20px;
+}

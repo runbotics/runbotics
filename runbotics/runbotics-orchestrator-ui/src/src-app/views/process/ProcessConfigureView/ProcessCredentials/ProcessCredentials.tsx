@@ -96,11 +96,13 @@ const ProcessCredentials = () => {
             const actionSortedColumns = sortByColumns(actionCredentials, rowCount);
             setColumns(actionSortedColumns);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [windowWidth, actionCredentials]);
 
     useEffect(() => {
         dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
         dispatch(credentialTemplatesActions.fetchAllTemplates());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

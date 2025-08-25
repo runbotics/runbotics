@@ -25,6 +25,7 @@ const BrowserTargetWidget: FC<BrowserTargetWidgetProps> = (props) => {
 
     useEffect(() => {
         defaultTarget && setFormState((prevState) => ({...prevState, prefix: defaultTarget}));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const PREFIX_OPTIONS = {
@@ -64,6 +65,7 @@ const BrowserTargetWidget: FC<BrowserTargetWidgetProps> = (props) => {
             const value = prefix === 'None' ? props.value : props.value.replace(prefix, '');
             setFormState({ prefix: prefix, value: value});
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const onChangeWrapper = (prefix: string, value: string) => {

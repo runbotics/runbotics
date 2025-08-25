@@ -66,6 +66,7 @@ const ProcessQueueDetails = () => {
             default:
                 return null;
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [jobsMap]);
 
     return (

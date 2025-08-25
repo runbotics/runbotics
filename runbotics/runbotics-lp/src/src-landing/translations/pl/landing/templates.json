@@ -1,0 +1,15 @@
+{
+    "Landing.Templates.Title.Part1": "Baza gotowych",
+    "Landing.Templates.Title.Part2": "szablonów i procesów",
+    "Landing.Templates.SearchBar.Placeholder": "szukaj szablonu",
+    "Landing.Templates.SearchBar.ImgSearch": "szukaj",
+    "Landing.Templates.CategoriesBar.Category.None": "Brak",
+    "Landing.Templates.CategoriesBar.Category.All": "Wszystko",
+    "Landing.Templates.CategoriesBar.Category.One": "Kategoria 1",
+    "Landing.Templates.CategoriesBar.Category.Two": "Kategoria 2",
+    "Landing.Templates.CategoriesBar.Category.Three": "Kategoria 3",
+    "Landing.Templates.CategoriesBar.Category.Four": "Kategoria 4",
+    "Landing.Templates.CategoriesBar.Category.Five": "Kategoria 5",
+    "Landing.Templates.TemplatesGrid.TemplateTile.Category": "Kategorie:",
+    "Landing.Templates.TemplatesGrid.TemplateTile.Integrations": "Integracje systemów:"
+}

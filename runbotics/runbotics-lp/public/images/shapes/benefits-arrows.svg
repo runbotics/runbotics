@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="414" height="70" viewBox="0 0 414 70">
+  <g id="Group_148" data-name="Group 148" transform="translate(-374 -0.689)" opacity="0.46" style="mix-blend-mode: normal;isolation: isolate">
+    <rect id="Rectangle_78" data-name="Rectangle 78" width="144" height="70" transform="translate(443 0.689)" fill="#f9b934"/>
+    <path id="Rectangle_79" data-name="Rectangle 79" d="M0,0H0A70,70,0,0,1,70,70v0a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0V0A0,0,0,0,1,0,0Z" transform="translate(444 70.689) rotate(180)" fill="#f9b934"/>
+    <path id="Polygon_1" data-name="Polygon 1" d="M35,0,70,29H0Z" transform="translate(615 0.689) rotate(90)" fill="#f9b934"/>
+    <path id="Subtraction_1" data-name="Subtraction 1" d="M36.936,0H0L29.064,35,0,70H36.936L66,35,36.936,0Z" transform="translate(609 0.689)" fill="#f9b934"/>
+    <path id="Subtraction_2" data-name="Subtraction 2" d="M36.936,0H0L29.064,35,0,70H36.936L66,35,36.936,0Z" transform="translate(664 0.689)" fill="#f9b934"/>
+    <path id="Subtraction_3" data-name="Subtraction 3" d="M36.936,0H0L29.064,35,0,70H36.936L66,35,36.936,0Z" transform="translate(722 0.689)" fill="#f9b934"/>
+  </g>
+</svg>

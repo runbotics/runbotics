@@ -62,6 +62,7 @@ const useTenantSearch = ({
                     { variant: 'error' }
                 );
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue, pageSize, page, refreshTrigger]);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

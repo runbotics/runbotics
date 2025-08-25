@@ -44,7 +44,7 @@ const LoginPage: FC = () => {
     const isSsoEnabled = publicRuntimeConfig.isSsoEnabled === 'true';
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const router = useRouter();
+    const _router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
     const onGuestLogin = useGuestLogin();
     const { enqueueSnackbar } = useSnackbar();

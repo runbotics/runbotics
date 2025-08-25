@@ -1,10 +1,10 @@
-import { ReactNode } from 'react';
+import { ReactNode, ComponentType } from 'react';
 
 import { FeatureKey, Role } from 'runbotics-common';
 
 export interface Item {
     href?: string;
-    icon?: ReactNode;
+    icon?: ComponentType<any> | ReactNode;
     info?: ReactNode;
     items?: Item[];
     title: string;

@@ -1,0 +1,135 @@
+@import "#src-landing/scss/main.scss";
+
+.root {
+  composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: $padding-12 $padding-10;
+}
+
+.title {
+  @include font-face-base;
+  color: $text-color-light;
+  font-weight: $font-weight-bold;
+}
+
+.fontDark {
+  color: $text-color-dark;
+  overflow-wrap: initial;
+}
+
+.logosGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: $padding-10;
+  padding-top: $padding-8;
+  padding-bottom: $padding-8;
+}
+
+.logosGrid div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: $padding-4;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition: all 250ms ease;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.sapLogo {
+  background-image: url("/images/logos/sap-logo-light.svg");
+  &:hover {
+    background-image: url("/images/logos/sap-logo.svg");
+  }
+}
+
+.beeofficeLogo {
+  background-image: url("/images/logos/beeoffice-logo-light.svg");
+  &:hover {
+    background-image: url("/images/logos/beeoffice-logo.svg");
+  }
+}
+
+.sharepointLogo {
+  background-image: url("/images/logos/sharepoint-logo-light.svg");
+  &:hover {
+    background-image: url("/images/logos/sharepoint-logo.svg");
+  }
+}
+
+.excelLogo {
+  background-image: url("/images/logos/excel-logo-light.svg");
+  &:hover {
+    background-image: url("/images/logos/excel-logo.svg");
+  }
+}
+  
+.jiraLogo {
+  background-image: url("/images/logos/jira-logo-light.svg");
+  &:hover {
+    background-image: url("/images/logos/jira-logo.svg");
+  }
+}
+
+.googlesheetsLogo {
+  background-image: url("/images/logos/googlesheets-logo-light.svg");
+  &:hover {
+    background-image: url("/images/logos/googlesheets-logo.svg");
+  }
+}
+  
+.asanaLogo {
+  background-image: url("/images/logos/asana-logo-light.svg");
+  &:hover {
+    background-image: url("/images/logos/asana-logo.svg");
+  }
+}
+  
+.powerpointLogo {
+  background-image: url("/images/logos/powerpoint-logo-light.svg");
+  &:hover {
+    background-image: url("/images/logos/powerpoint-logo.svg");
+  }
+}
+
+@media only screen and (max-width: $breakpoint-md){
+  .logosGrid {
+    grid-column-gap: $padding-5;
+    padding-top: $padding-6;
+    padding-bottom: $padding-6;
+  }
+
+  .root {
+    padding-left: $padding-6;
+    padding-right: $padding-6;
+    padding-bottom: $padding-6;
+  }
+}
+
+@media only screen and (max-width: $breakpoint-sm){
+  .logosGrid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: $padding-6;
+  }
+}
+
+@media only screen and (max-width: $breakpoint-xs){
+  .logosGrid {
+    grid-gap: $padding-4;
+    padding-top: $padding-4;
+  }
+  
+  .root {
+    padding-left: $padding-3;
+    padding-right: $padding-3;
+    padding-bottom: $padding-3;
+  }
+}

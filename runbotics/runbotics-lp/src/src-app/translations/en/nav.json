@@ -1,0 +1,10 @@
+{
+    "Nav.Items.Processes": "Processes",
+    "Nav.Items.Bots": "Bots",
+    "Nav.Items.Credentials": "Credential Manager",
+    "Nav.Items.Actions": "Actions",
+    "Nav.Items.GlobalVariables": "Global variables",
+    "Nav.Items.Scheduler": "Scheduler",
+    "Nav.Items.History": "History",
+    "Nav.Hide": "Hide"
+}

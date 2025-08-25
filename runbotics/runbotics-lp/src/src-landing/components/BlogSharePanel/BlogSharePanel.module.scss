@@ -1,0 +1,138 @@
+@import '#src-landing/scss/main';
+
+.wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    align-self: center;
+    align-items: center;
+    width: 100%;
+
+    margin-top: $margin-5;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 100px;
+    padding: 20px;
+    gap: 16px;
+
+    border-radius: 20px;
+    background-color: $palette-background-secondary;
+}
+
+.panelTitle {
+    text-align: center;
+}
+
+.linkList {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: clamp(15px, 3vw, 40px);
+
+    list-style: none;
+}
+
+@mixin link-styles {
+    @include font-face-base;
+    font-size: $font-size-h5;
+    line-height: $line-height-base;
+    font-weight: $font-weight-semi-bold;
+
+    color: $palette-accent-primary;
+}
+
+.copyButton {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px;
+    width: 100%;
+
+    border-radius: 10px;
+    border: none;
+    color: $palette-accent-primary;
+    background-color: transparent;
+    transition: background-color 300ms ease;
+    white-space: nowrap;
+    @include link-styles;
+
+    &:hover {
+        background-color: $palette-background-secondary-dark;
+        cursor: pointer;
+    }
+}
+
+.copyButton svg {
+    min-width: 24px;
+    max-width: 24px;
+    min-height: 24px;
+    max-height: 24px;
+    fill: $palette-accent-primary;
+}
+
+.copyButton p {
+    font-weight: 600;
+}
+
+.link {
+    @include link-styles;
+    border-bottom: 3px solid transparent;
+    text-decoration: none;
+    transition: $landing-link-transition;
+
+    &:hover {
+        border-bottom-color: $palette-accent-primary;
+    }
+}
+
+.copyTooltipContainer {
+    position: relative;
+}
+
+.copyTooltip {
+    @include font-face-base;
+    position: absolute;
+    display: none;
+    padding: 5px 12px;
+    left: 50%;
+    transform: translate(-50%, -150%);
+    background-color: $palette-background-tertiary;
+    opacity: 50%;
+    border-radius: 4px;
+    color: $text-color-light;
+}
+
+.copyTooltipVisible {
+    display: inline;
+}
+
+.divider {
+    height: 40px;
+    border-left: 3px solid $palette-background-secondary-dark;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .wrapper {
+        flex-direction: column;
+        width: min(100%, 200px + 40vw);
+        gap: 20px;
+    }
+
+    .linkList {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 30px;
+
+        li {
+            text-align: center;
+        }
+    }
+
+    .copyTooltipContainer {
+        grid-column: span 2;
+    }
+
+    .divider {
+        display: none;
+    }
+}

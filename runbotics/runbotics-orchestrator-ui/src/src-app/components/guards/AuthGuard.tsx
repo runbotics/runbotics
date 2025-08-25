@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
 import { setAccessToken } from '#src-app/store/slices/Auth/Auth.thunks';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
+import { redirectToWebsiteRoot } from '#src-app/utils/navigation';
 
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
@@ -40,7 +41,7 @@ export const withAuthGuard = ({
 
     if (!isAuthenticated) {
         setAccessToken(null);
-        router.replace('/');
+        redirectToWebsiteRoot(router.locale);
         return <LoadingScreen />;
     }
 
@@ -57,7 +58,7 @@ export const withAuthGuard = ({
                     .catch(() => {
                         dispatch(authActions.logout())
                             .then(() => {
-                                router.replace('/');
+                                redirectToWebsiteRoot(user.langKey);
                             });
                     });
             }

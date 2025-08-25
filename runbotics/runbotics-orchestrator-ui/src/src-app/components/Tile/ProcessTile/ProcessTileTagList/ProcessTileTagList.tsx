@@ -57,8 +57,10 @@ const ProcessTileTagList: FC<ProcessTileTagListProps> = ({
         return () => {
             window.removeEventListener('resize', () => checkTagsWidth(tagsWidthSum));
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useLayoutEffect(() => { checkTagsWidth(tagsWidth); }, [tagsWidth]);
 
     const handleTagBoxResize = (e: MouseEvent<HTMLDivElement>) => {

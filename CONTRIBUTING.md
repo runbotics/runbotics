@@ -17,7 +17,7 @@ In order to run locally RunBotics you need to fulfill the following requirements
 - `Java 11`
 - `@microsoft/rush`
 
-For more info see [runbotics](https://github.com/runbotics/runbotics/blob/master/runbotics/README.md) package details.
+For more info see [runbotics](https://github.com/runbotics/runbotics/blob/master/DEVELOPMENT_SETUP.md) package details.
 
 ### Packages
 

@@ -1,0 +1,40 @@
+@import '#src-landing/scss/main';
+
+.link {
+    position: relative;;
+    display: flex;
+    align-items: center;
+
+
+    width: 100%;
+    max-width: 360px;
+
+    text-decoration: none;
+    border-radius: 30px;
+    padding: $padding-1;
+    color: $palette-black;
+    background-color: $palette-background-accent;
+    transition: background-color 0.4s;
+    box-shadow: $box-shadow-primary;
+
+    &:hover {
+        background-color: $palette-background-accent-dark;
+    }
+}
+
+.title {
+    text-align: center;
+    width: 100%;
+}
+
+.iconWrapper {
+    padding: 4px;
+    border-radius: 50%;
+    background-color: $palette-white;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .link {
+        display: flex;
+    }
+}

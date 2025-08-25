@@ -123,6 +123,9 @@ const useBotListViewColumns = ({
                         icon={<DeleteIcon />}
                         showInMenu={true}
                         key="delete"
+                        placeholder=""
+                        onPointerEnterCapture={() => {}}
+                        onPointerLeaveCapture={() => {}}
                     />,
                 ];
             },

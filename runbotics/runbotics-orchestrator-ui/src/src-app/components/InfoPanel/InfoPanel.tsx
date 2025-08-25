@@ -29,6 +29,7 @@ const InfoPanel: VFC<InfoPanelProps> = ({
 
     useEffect(() => () => {
         dispatch(processInstanceEventActions.resetAll());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
