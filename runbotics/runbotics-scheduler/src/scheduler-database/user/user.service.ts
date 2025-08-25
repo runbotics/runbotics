@@ -58,7 +58,7 @@ export class UserService {
             .createQueryBuilder()
             .insert()
             .into('jhi_user_authority')
-            .values({ user_id: id, authority_name: Role.ROLE_USER })
+            .values({ user_id: id, authority_name: Role.ROLE_RPA_USER })
             .execute();
 
         return this.userRepository.findOneOrFail({
@@ -292,7 +292,7 @@ export class UserService {
         if (!roles) return;
 
         const TENANT_ALLOWED_ROLES = [
-            Role.ROLE_USER,
+            Role.ROLE_RPA_USER,
             Role.ROLE_TENANT_ADMIN,
             Role.ROLE_EXTERNAL_USER,
         ];
