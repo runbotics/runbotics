@@ -6,6 +6,7 @@ export enum Role {
     ROLE_RPA_USER = 'ROLE_RPA_USER',
     ROLE_EXTERNAL_USER = 'ROLE_EXTERNAL_USER',
     ROLE_GUEST = 'ROLE_GUEST',
+    ROLE_USER = 'ROLE_USER',
 }
 
 export interface IAuthority {

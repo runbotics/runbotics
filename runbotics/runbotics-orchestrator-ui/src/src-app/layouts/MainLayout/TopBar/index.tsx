@@ -1,6 +1,13 @@
 import { useEffect, type FC } from 'react';
 
-import { AppBar, Box, Divider, Hidden, Toolbar, Typography } from '@mui/material';
+import {
+    AppBar,
+    Box,
+    Divider,
+    Hidden,
+    Toolbar,
+    Typography,
+} from '@mui/material';
 import clsx from 'clsx';
 import RouterLink from 'next/link';
 import { useSnackbar } from 'notistack';
@@ -14,7 +21,11 @@ import useAuth from '#src-app/hooks/useAuth';
 import useRole from '#src-app/hooks/useRole';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { logout } from '#src-app/store/slices/Auth/Auth.thunks';
-import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
+import {
+    EXECUTION_LIMIT,
+    guestsActions,
+    guestsSelector,
+} from '#src-app/store/slices/Guests';
 import { HEADER_HEIGHT } from '#src-app/utils/constants';
 
 import environment from '#src-app/utils/environment';
@@ -76,10 +87,13 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
     const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
     const isAdmin = useRole([Role.ROLE_ADMIN]);
     const isGuest = user?.roles.includes(Role.ROLE_GUEST);
+    const isOnlyUser = user?.roles.every((role) => role === Role.ROLE_USER);
+
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const { remainingSessionTime, executionsCount } = useSelector(guestsSelector);
+    const { remainingSessionTime, executionsCount } =
+        useSelector(guestsSelector);
 
     useEffect(() => {
         if (isGuest) {
@@ -110,17 +124,25 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                             <Logo white />
                         </RouterLink>
                     </If>
+                    <If condition={isOnlyUser}>
+                        <RouterLink href="/app/assistant">
+                            <Logo white />
+                        </RouterLink>
+                    </If>
                     <If condition={isGuest}>
                         <Logo white />
                     </If>
-                    <If condition={!isGuest && !isAdmin}>
+                    <If condition={!isGuest && !isAdmin && !isOnlyUser}>
                         <RouterLink href="/app/processes/collections">
                             <Logo white />
                         </RouterLink>
                     </If>
                 </Hidden>
                 <If condition={isTenantAdmin || isAdmin}>
-                    <Typography variant="h5" sx={{ fontSize: '0.8rem', opacity: '0.5' }}>
+                    <Typography
+                        variant="h5"
+                        sx={{ fontSize: '0.8rem', opacity: '0.5' }}
+                    >
                         {environment.version}
                     </Typography>
                 </If>
@@ -128,10 +150,15 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                 <If condition={isGuest}>
                     <Typography className={classes.status} variant="h5">
                         {translate('Demo.Process.Ran.Pt1')}&nbsp;
-                        <span>{`${executionsCount}/${EXECUTION_LIMIT}`}</span>&nbsp;
+                        <span>{`${executionsCount}/${EXECUTION_LIMIT}`}</span>
+                        &nbsp;
                         {translate('Demo.Process.Ran.Pt2')}
                     </Typography>
-                    <Divider className={classes.divider} orientation="vertical" flexItem />
+                    <Divider
+                        className={classes.divider}
+                        orientation="vertical"
+                        flexItem
+                    />
                     <Typography className={classes.status} variant="h5">
                         {translate('Demo.Session.Timer')}&nbsp;
                         <CountdownTimer
@@ -139,7 +166,11 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                             callback={handleLogout}
                         />
                     </Typography>
-                    <Divider className={classes.divider} orientation="vertical" flexItem />
+                    <Divider
+                        className={classes.divider}
+                        orientation="vertical"
+                        flexItem
+                    />
                 </If>
                 <If condition={!isGuest}>
                     <SubscriptionWarning />
