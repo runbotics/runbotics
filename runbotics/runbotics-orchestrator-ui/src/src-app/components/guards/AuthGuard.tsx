@@ -36,8 +36,8 @@ export const withAuthGuard = ({
     const dispatch = useDispatch();
     const isBrowser = typeof window !== 'undefined';
     
-    const hasValidToken = isBrowser && window.localStorage.getItem('access_token');
-    const isAuthenticated = isInitialized && isBrowser && isAuthed && hasValidToken;
+    const hasToken = isBrowser && window.localStorage.getItem('access_token');
+    const isAuthenticated = isInitialized && isBrowser && isAuthed && hasToken;
 
     if (!isAuthenticated) {
         setAccessToken(null);
