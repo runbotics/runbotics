@@ -6,7 +6,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import TuneIcon from '@mui/icons-material/Tune';
 import { Command as CommandIcon } from 'react-feather';
 import { FeatureKey, Role } from 'runbotics-common';
@@ -103,8 +103,8 @@ export const usePublicSections = (): Section[] => {
                 },
                 {
                     title: translate('Nav.Items.AIAssistant'),
-                    icon: SmartToyIcon,
-                    href: '/app/AI-assistant',
+                    icon: SmartToyOutlinedIcon,
+                    href: '/app/assistant',
                     authorities: [Role.ROLE_USER], // todo: change Role.ROLE_USER to the 'new' ROLE_USER when it appears
                     featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
                 },

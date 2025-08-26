@@ -1,10 +1,9 @@
 import React, { VFC } from 'react';
 
-import { Typography } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { StyledPage } from './AIAssistantView.styles';
+import { StyledIFrame, StyledPage } from './AIAssistantView.styles';
 
 const AIAssistantView: VFC = () => {
     const { translate } = useTranslations();
@@ -13,7 +12,7 @@ const AIAssistantView: VFC = () => {
 
     return (
         <StyledPage title={pageTitle}>
-            <Typography>{translate('AIAssistant.InProgress')}</Typography>
+            <StyledIFrame src='/ai-assistant'/>
         </StyledPage>
     );
 };
