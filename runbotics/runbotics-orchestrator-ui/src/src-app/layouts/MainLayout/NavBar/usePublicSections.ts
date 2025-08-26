@@ -104,7 +104,7 @@ export const usePublicSections = (): Section[] => {
                 {
                     title: translate('Nav.Items.AIAssistant'),
                     icon: SmartToyIcon,
-                    href: '/app/AI-assistant',
+                    href: '/app/assistant',
                     authorities: [Role.ROLE_RPA_USER], // todo: change Role.ROLE_RPA_USER to the 'new' ROLE_USER when it appears
                     featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
                 },
