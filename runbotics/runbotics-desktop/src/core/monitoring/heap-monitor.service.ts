@@ -34,11 +34,14 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
     private readonly logger = new RunboticsLogger(HeapMonitorService.name);
     private monitoringIntervalHandle: ReturnType<typeof setInterval> | null = null;
     private readonly DEFAULT_MONITORING_INTERVAL_MS = 60000;
-    private readonly BYTES_TO_MB = 1024 * 1024;
+    private readonly DEFAULT_HEAP_DUMP_THRESHOLD_BYTES = 2 * 1024 * 1024 * 1024;
+    private readonly DEFAULT_HEAP_DUMP_INTERVAL_MS = 300000;
+    private lastHeapDumpTime = 0;
 
     onApplicationBootstrap() {
         this.logger.log('Heap monitoring service started');
         this.logInitialStats();
+        this.logHeapDumpConfiguration();
         
         if (os.platform() === 'win32') {
             this.startPeriodicMonitoring();
@@ -55,6 +58,20 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
     private logInitialStats(): void {
         this.logger.log('=== Initial Heap & Memory Statistics ===');
         this.logCurrentHeapStats();
+    }
+
+    private logHeapDumpConfiguration(): void {
+        const heapDumpEnabled = process.env.RUNBOTICS_ENABLE_HEAP_DUMPS;
+        const heapDumpPath = process.env.RUNBOTICS_HEAP_DUMP_PATH;
+        
+        if (heapDumpEnabled && heapDumpEnabled.toLowerCase() === 'true') {
+            const thresholdBytes = this.getHeapDumpThreshold();
+            const intervalMs = this.getHeapDumpInterval();
+            this.logger.log(`Automatic heap dumps ENABLED - Threshold: ${(thresholdBytes / (1024 * 1024 * 1024)).toFixed(2)} GB (${thresholdBytes} bytes), Min interval: ${intervalMs / 1000} seconds`);
+            this.logger.log(`Heap dump directory: ${heapDumpPath || path.join(process.cwd(), 'heap-dumps')}`);
+        } else {
+            this.logger.log('Automatic heap dumps DISABLED. Set RUNBOTICS_ENABLE_HEAP_DUMPS=true to enable.');
+        }
     }
 
     private startPeriodicMonitoring(): void {
@@ -80,6 +97,22 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
             return parseInt(envInterval);
         }
         return this.DEFAULT_MONITORING_INTERVAL_MS;
+    }
+
+    private getHeapDumpThreshold(): number {
+        const envThreshold = process.env.RUNBOTICS_HEAP_DUMP_THRESHOLD_BYTES;
+        if (envThreshold && !isNaN(parseInt(envThreshold))) {
+            return parseInt(envThreshold);
+        }
+        return this.DEFAULT_HEAP_DUMP_THRESHOLD_BYTES;
+    }
+
+    private getHeapDumpInterval(): number {
+        const envInterval = process.env.RUNBOTICS_HEAP_DUMP_INTERVAL_MS;
+        if (envInterval && !isNaN(parseInt(envInterval))) {
+            return parseInt(envInterval);
+        }
+        return this.DEFAULT_HEAP_DUMP_INTERVAL_MS;
     }
 
     private logCurrentHeapStats(): void {
@@ -118,7 +151,15 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
 
             this.logger.log(`Heap Space Statistics: ${JSON.stringify(formattedSpaceStats, null, 2)}`);
 
+            const allSpacesSummary = heapSpaceStats.map(space => ({
+                spaceName: space.space_name,
+                spaceSize: this.formatBytes(space.space_size)
+            }));
+            this.logger.log(`All Heap Spaces Summary: ${JSON.stringify(allSpacesSummary, null, 2)}`);
+
             this.logMemoryStats();
+
+            this.checkAndCreatePeriodicHeapDump(heapStats);
 
             const usagePercent = (heapStats.used_heap_size / heapStats.heap_size_limit) * 100;
             if (usagePercent > 80) {
@@ -133,7 +174,7 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
     }
 
     private formatBytes(bytes: number): string {
-        const mb = bytes / this.BYTES_TO_MB;
+        const mb = bytes / (1024 * 1024);
         return `${mb.toFixed(2)} MB (${bytes.toLocaleString()} bytes)`;
     }
 
@@ -175,6 +216,32 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
         }
     }
 
+    private checkAndCreatePeriodicHeapDump(heapStats: HeapStats): void {
+        const heapDumpEnabled = process.env.RUNBOTICS_ENABLE_HEAP_DUMPS;
+        if (!heapDumpEnabled || heapDumpEnabled.toLowerCase() !== 'true') {
+            return;
+        }
+
+        const currentTime = Date.now();
+        const heapThresholdBytes = this.getHeapDumpThreshold();
+        const heapDumpInterval = this.getHeapDumpInterval();
+        const heapUsageGB = heapStats.used_heap_size / (1024 * 1024 * 1024);
+        
+        if (heapStats.used_heap_size > heapThresholdBytes && 
+            (currentTime - this.lastHeapDumpTime) > heapDumpInterval) {
+            
+            this.logger.warn(`Heap usage (${heapUsageGB.toFixed(2)} GB) exceeds threshold (${(heapThresholdBytes / (1024 * 1024 * 1024)).toFixed(2)} GB). Creating heap dump...`);
+            
+            try {
+                const dumpPath = this.createHeapDumpWithSuffix('auto-high-usage');
+                this.lastHeapDumpTime = currentTime;
+                this.logger.log(`Automatic heap dump created: ${dumpPath}`);
+            } catch (error) {
+                this.logger.error('Failed to create automatic heap dump', error);
+            }
+        }
+    }
+
     public logHeapStatsNow(): void {
         this.logger.log('=== Manual Heap & Memory Statistics Trigger ===');
         this.logCurrentHeapStats();
@@ -186,6 +253,21 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
 
     public getCurrentMemoryStats(): MemoryStats {
         return this.getMemoryStats();
+    }
+
+    public checkHeapDumpCondition(): boolean {
+        const heapStats = this.getCurrentHeapStats();
+        const heapThresholdBytes = this.getHeapDumpThreshold();
+        const heapUsageGB = heapStats.used_heap_size / (1024 * 1024 * 1024);
+        const enabled = process.env.RUNBOTICS_ENABLE_HEAP_DUMPS?.toLowerCase() === 'true';
+        
+        this.logger.log(`Heap dump check - Enabled: ${enabled}, Usage: ${heapUsageGB.toFixed(2)} GB, Threshold: ${(heapThresholdBytes / (1024 * 1024 * 1024)).toFixed(2)} GB`);
+        
+        if (enabled && heapStats.used_heap_size > heapThresholdBytes) {
+            this.checkAndCreatePeriodicHeapDump(heapStats);
+            return true;
+        }
+        return false;
     }
 
     public forceGarbageCollectionAndLog(): void {
@@ -218,7 +300,7 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
             v8.writeHeapSnapshot(fullPath);
             
             const stats = fs.statSync(fullPath);
-            const fileSizeMB = (stats.size / this.BYTES_TO_MB).toFixed(2);
+            const fileSizeMB = (stats.size / (1024 * 1024)).toFixed(2);
             
             this.logger.log('=== Heap Dump Created Successfully ===');
             this.logger.log(`File: ${fullPath}`);
@@ -248,7 +330,7 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
             v8.writeHeapSnapshot(fullPath);
             
             const stats = fs.statSync(fullPath);
-            const fileSizeMB = (stats.size / this.BYTES_TO_MB).toFixed(2);
+            const fileSizeMB = (stats.size / (1024 * 1024)).toFixed(2);
             
             this.logger.log('=== Heap Dump Created Successfully ===');
             this.logger.log(`File: ${fullPath}`);
