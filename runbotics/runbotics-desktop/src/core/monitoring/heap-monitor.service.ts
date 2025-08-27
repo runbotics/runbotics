@@ -143,7 +143,7 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
             this.logger.log(`Heap Statistics: ${JSON.stringify(formattedStats, null, 2)}`);
 
             const formattedSpaceStats = heapSpaceStats
-                .filter(space => space.space_size > 1024 * 1024 * 1024)
+                .filter(space => space.space_used_size > 1024 * 1024 * 1024) // Show only meaningful spaces
                 .map(space => ({
                     spaceName: space.space_name,
                     spaceSize: this.formatBytes(space.space_size),
@@ -155,12 +155,6 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
                 }));
 
             this.logger.log(`Heap Space Statistics: ${JSON.stringify(formattedSpaceStats, null, 2)}`);
-
-            const allSpacesSummary = heapSpaceStats.map(space => ({
-                spaceName: space.space_name,
-                spaceSize: this.formatBytes(space.space_size)
-            }));
-            this.logger.log(`All Heap Spaces Summary: ${JSON.stringify(allSpacesSummary, null, 2)}`);
 
             this.logMemoryStats();
 
