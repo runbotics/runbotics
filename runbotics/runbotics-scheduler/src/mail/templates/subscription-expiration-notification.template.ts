@@ -22,7 +22,7 @@ export const subscriptionExpirationNotificationTemplate = (emails: string, diffD
         ${generateEmailHeader()}
         <tr>
         <td class="content">
-            <h2>Twoja subskrypcja ${diffDays<=0 ? 'wygasła' : 'dobiega końca'}</h2>
+            <h2>Twoja subskrypcja ${ diffDays <= 0 ? 'wygasła' : 'dobiega końca' }</h2>
             <p>Cześć,</p>
             <p>Pragniemy poinformować, że Twoja subskrypcja <strong>RunBotics</strong>
                 ${
