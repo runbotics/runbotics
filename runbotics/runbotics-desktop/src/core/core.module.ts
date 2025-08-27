@@ -7,6 +7,7 @@ import { ActionModule } from '#action';
 import { RuntimeSubscriptionsService } from './websocket/bpmn/runtime-subscriptions.service';
 import { LoopHandlerService } from './bpm/loop-handler';
 import { AuthModule } from './auth/auth.module';
+import { HeapMonitorService } from './monitoring/heap-monitor.service';
 
 
 @Module({
@@ -20,10 +21,12 @@ import { AuthModule } from './auth/auth.module';
         DesktopRunnerService,
         RuntimeSubscriptionsService,
         LoopHandlerService,
+        HeapMonitorService,
     ],
     exports: [
         RuntimeService,
         DesktopRunnerService,
+        HeapMonitorService,
     ],
 })
 export class CoreModule {}
