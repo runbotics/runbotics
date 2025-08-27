@@ -70,7 +70,7 @@ export const withAuthGuard = ({
             && hasRoleAccess(user, userRoles ? userRoles : [])
         ) { return <Component {...props} />; }
 
-        window.location.href = '/';
+        redirectToWebsiteRoot(router.locale);
     }
 
     return <LoadingScreen />;
