@@ -1,0 +1,50 @@
+@import '#src-landing/scss/main.scss';
+
+.root {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
+    width: 100%;
+    
+    gap: 1rem;
+
+    @include font-face-roboto;
+}
+
+.formContainer {
+    display: flex;
+    
+    width: 100%;
+    justify-content: space-between;
+}
+
+.formSection {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    
+    gap: 12px;
+}
+
+.inputSection {
+    display: flex;
+    flex-direction: column;
+    
+    gap: 8px;
+}
+
+.formInput {
+    max-width: 400px;
+    
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.noticeWrapper {
+    display: flex;
+    flex-direction: column;
+    
+    gap: 8px;
+}
+

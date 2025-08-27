@@ -10,6 +10,7 @@ import { useDispatch } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
 import { Language } from '#src-app/translations/translations';
 import BlankPage from '#src-app/utils/BlankPage';
+import { redirectToWebsiteRoot } from '#src-app/utils/navigation';
 
 
 // eslint-disable-next-line react/display-name
@@ -22,6 +23,7 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
 
     useEffect(() => {
         switchLanguage(router.locale as Language);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [router.locale]);
     
     if (isBrowser && isInitialized && isAuthenticated) {
@@ -44,14 +46,12 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
                 locale: user.langKey,
             });
         }
-
-        if (
-            user.roles.includes(Role.ROLE_GUEST) &&
-            router.query.guest !== 'true'
-        ) {
-            dispatch(authActions.logout()).then(() => {
-                router.replace('/', null, { locale: user.langKey });
-            });
+        
+        if (user.roles.includes(Role.ROLE_GUEST) && router.query.guest !== 'true') {
+            dispatch(authActions.logout())
+                .then(() => {
+                    redirectToWebsiteRoot(user.langKey);
+                });
         }
     }
 

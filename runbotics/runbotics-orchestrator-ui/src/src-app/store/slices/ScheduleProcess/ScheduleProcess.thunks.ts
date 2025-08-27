@@ -11,3 +11,7 @@ export const getSchedulesByProcess = ApiTenantResource
 
 export const removeScheduledProcess = ApiTenantResource
     .delete<void>('scheduleProcess/removeScheduledProcess', SCHEDULE_PROCESS_PATH);
+
+export const updateActiveFlagScheduledProcess = ApiTenantResource
+    .patch<void>('scheduleProcess/setScheduleActive', `${SCHEDULE_PROCESS_PATH}`)
+

@@ -30,6 +30,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { ActionsGroupsProperties } from './useActionsGroups.types';
 
+// eslint-disable-next-line max-lines-per-function
 const useInternalActionsGroups = (): Record<
     string,
     ActionsGroupsProperties

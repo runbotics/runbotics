@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import { FormControl, FormHelperText, List, ListItem, Typography } from '@mui/material';
 import { FieldTemplateProps } from '@rjsf/core';
-import i18n from 'i18next';
 
 import { checkIfKeyExists, translate } from '#src-app/hooks/useTranslations';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
@@ -60,7 +59,8 @@ const FieldTemplate = ({
 
             setErrors(localRawErrors);
         }
-    }, [rawDescription, rawErrors, i18n.language]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rawDescription, rawErrors]);
 
     return (
         <AdditionalPropertiesField

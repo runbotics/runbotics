@@ -46,6 +46,7 @@ export const EmailTriggerWhitelistInput = ({
 
     useEffect(() => {
         setError(input !== '' && !isInputValid(input));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [input]);
 
     return (

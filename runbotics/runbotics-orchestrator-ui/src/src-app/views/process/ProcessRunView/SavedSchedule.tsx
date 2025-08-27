@@ -1,12 +1,24 @@
 import React, { FC } from 'react';
 
 import {
-    Avatar, Box, Card, CardContent, Container, IconButton, SvgIcon, Tooltip, Typography
+    Avatar,
+    Box,
+    Card,
+    CardContent,
+    Container,
+    IconButton,
+    SvgIcon,
+    Tooltip,
+    Typography,
 } from '@mui/material';
 import clsx from 'clsx';
 import cronstrue from 'cronstrue/i18n';
 import i18n from 'i18next';
-import { Trash as TrashIcon, Calendar as CalendarIcon, List as ListIcon } from 'react-feather';
+import {
+    Calendar as CalendarIcon,
+    List as ListIcon,
+    Trash as TrashIcon,
+} from 'react-feather';
 import { FeatureKey, ProcessDto } from 'runbotics-common';
 import styled from 'styled-components';
 
@@ -15,13 +27,14 @@ import useFeatureKey from '#src-app/hooks/useFeatureKey';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
-
 import { processActions } from '#src-app/store/slices/Process';
-import { scheduleProcessActions, scheduleProcessSelector } from '#src-app/store/slices/ScheduleProcess';
+import {
+    scheduleProcessActions,
+    scheduleProcessSelector,
+} from '#src-app/store/slices/ScheduleProcess';
 import { IScheduleProcess } from '#src-app/types/model/schedule-process.model';
 
-
-
+import ActiveScheduleSwitch from './ActiveScheduleSwitch';
 
 const PREFIX = 'SavedSchedule';
 
@@ -87,30 +100,40 @@ interface SavedScheduleProps {
 const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
     const dispatch = useDispatch();
     const processId = process.id;
-    const {
-        schedules,
-    } = useSelector(scheduleProcessSelector);
+    const { schedules } = useSelector(scheduleProcessSelector);
     const { translate } = useTranslations();
     const hasDeleteScheduleAccess = useFeatureKey([FeatureKey.SCHEDULE_DELETE]);
 
     const handleDelete = async (id: number) => {
-        await dispatch(scheduleProcessActions.removeScheduledProcess({ resourceId: id }));
-        await dispatch(scheduleProcessActions.getSchedulesByProcess({
-            resourceId: processId
-        }));
+        await dispatch(
+            scheduleProcessActions.removeScheduledProcess({ resourceId: id })
+        );
+        await dispatch(
+            scheduleProcessActions.getSchedulesByProcess({
+                resourceId: processId,
+            })
+        );
         dispatch(processActions.removeDraftProcessSchedule(id));
     };
 
-    const humanReadableCron = (cronExpression: string) => translate('Process.Schedule.Cron.HumanReadable', {
-        cron: cronstrue
-            .toString(cronExpression, { locale: i18n.language }).toLowerCase(),
-    });
+    const humanReadableCron = (cronExpression: string) =>
+        translate('Process.Schedule.Cron.HumanReadable', {
+            cron: cronstrue
+                .toString(cronExpression, { locale: i18n.language })
+                .toLowerCase(),
+        });
 
     const attendedInfo = (schedule: IScheduleProcess) => (
         <div className={classes.attendedIcon}>
             <If condition={Boolean(schedule.inputVariables)}>
                 <Tooltip title={<pre>{schedule.inputVariables}</pre>}>
-                    <Avatar classes={{ root: clsx(classes.avatar, { 'disabled': isNotRunableSchedule(schedule) }) }}>
+                    <Avatar
+                        classes={{
+                            root: clsx(classes.avatar, {
+                                disabled: isNotRunableSchedule(schedule),
+                            }),
+                        }}
+                    >
                         <SvgIcon fontSize="small">
                             <ListIcon />
                         </SvgIcon>
@@ -120,19 +143,36 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
         </div>
     );
 
-    const isNotRunableSchedule = (schedule: IScheduleProcess) => !schedule.inputVariables && process.isAttended;
+    const isNotRunableSchedule = (schedule: IScheduleProcess) =>
+        !schedule.inputVariables && process.isAttended && !schedule.active;
 
     return (
-        <StyledContainer maxWidth={false} sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <StyledContainer
+            maxWidth={false}
+            sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+        >
             <Typography variant="h4" gutterBottom>
                 {translate('Process.Schedule.Title')}
             </Typography>
             <Box display="flex" flexDirection="column" gap="0.5rem">
                 {schedules.map((schedule) => (
                     <Card key={schedule.id} className={classes.card}>
-                        <CardContent classes={{ root: clsx(classes.cardContent, { 'disabled': isNotRunableSchedule(schedule) }) }}>
+                        <CardContent
+                            classes={{
+                                root: clsx(classes.cardContent, {
+                                    disabled: isNotRunableSchedule(schedule),
+                                }),
+                            }}
+                        >
                             <Box display="flex" alignItems="center">
-                                <Avatar classes={{ root: clsx(classes.avatar, { 'disabled': isNotRunableSchedule(schedule) }) }}>
+                                <Avatar
+                                    classes={{
+                                        root: clsx(classes.avatar, {
+                                            disabled:
+                                                isNotRunableSchedule(schedule),
+                                        }),
+                                    }}
+                                >
                                     <SvgIcon fontSize="small">
                                         <CalendarIcon />
                                     </SvgIcon>
@@ -144,9 +184,18 @@ const SavedSchedule: FC<SavedScheduleProps> = ({ process }) => {
                                 >
                                     {humanReadableCron(schedule.cron)}
                                 </Typography>
+                                <ActiveScheduleSwitch
+                                    checked={schedule.active}
+                                    scheduleId={String(schedule.id)}
+                                    processId={String(process.id)}
+                                    processName={process.name}
+                                />
                             </Box>
                             <If condition={hasDeleteScheduleAccess}>
-                                <IconButton className={classes.deleteButton} onClick={() => handleDelete(schedule.id)}>
+                                <IconButton
+                                    className={classes.deleteButton}
+                                    onClick={() => handleDelete(schedule.id)}
+                                >
                                     <SvgIcon fontSize="small" color="secondary">
                                         <TrashIcon />
                                     </SvgIcon>

@@ -306,6 +306,14 @@
         {
             "packageName": "@runbotics/runbotics-sdk",
             "projectFolder": "runbotics-sdk"
+        },
+        {
+            "packageName": "runbotics-lp",
+            "projectFolder": "runbotics-lp"
+        },
+        {
+            "packageName": "runbotics-proxy",
+            "projectFolder": "runbotics-proxy"
         }
         // {
         //   /**

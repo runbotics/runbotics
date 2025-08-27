@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="35.122" viewBox="0 0 36 35.122">
+  <g id="hourglass_top_black_24dp" transform="translate(0.491)">
+    <g id="Group_181" data-name="Group 181" transform="translate(-0.491)">
+      <rect id="Rectangle_133" data-name="Rectangle 133" width="36" height="35.122" fill="none"/>
+    </g>
+    <g id="Group_182" data-name="Group 182" transform="translate(8.753 2.937)">
+      <path id="Path_315" data-name="Path 315" d="M6,2l.015,8.812,5.86,5.875-5.86,5.89L6,31.375H23.625V22.562L17.75,16.687l5.875-5.86V2ZM20.687,23.3v5.141H8.937V23.3l5.875-5.875Z" transform="translate(-6 -2)" fill="#f7b80c"/>
+    </g>
+  </g>
+</svg>

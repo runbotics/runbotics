@@ -22,6 +22,7 @@ const useCustomValidation = () => {
             }));
         }
         return isValid;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedElement]);
 
     return { validator };

@@ -1,0 +1,37 @@
+@import '#src-landing/scss/main.scss';
+
+$MAX-CONTENT-WIDTH: 520px;
+
+.root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: $MAX-CONTENT-WIDTH;
+    gap: $margin-5;
+    isolation: isolate;
+}
+
+.title {
+    padding-top: $padding-3;
+}
+
+.content {
+    p {
+        font-weight: $font-weight-medium;
+    }
+
+    p:nth-child(2) {
+        margin-top: $margin-2;
+    }
+}
+
+.arrows {
+    width: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .arrows {
+        object-fit: contain;
+    }
+}

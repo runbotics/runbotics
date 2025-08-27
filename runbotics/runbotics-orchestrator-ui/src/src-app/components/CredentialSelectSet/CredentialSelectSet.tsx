@@ -36,6 +36,7 @@ const CredentialSelectSet: FunctionComponent<CredentialSelectSetProps> = ({
 
     useEffect(() => {
         credentialFilteredByName && handleCredentialChange(credentialFilteredByName);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [credentialFilteredByName]);
 
     return (

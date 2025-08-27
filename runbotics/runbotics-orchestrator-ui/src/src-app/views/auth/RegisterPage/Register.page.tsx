@@ -117,6 +117,7 @@ const RegisterPage: FC = () => {
                     router.push(`/${error.statusCode}`);
                 }
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inviteCodeURL]);
 
     useEffect(() => {

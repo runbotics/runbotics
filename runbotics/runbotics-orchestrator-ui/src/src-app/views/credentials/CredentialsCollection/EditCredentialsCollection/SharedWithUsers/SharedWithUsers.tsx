@@ -51,10 +51,12 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
                 currentUserId: currentUser.id,
             })
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [all]);
 
     useEffect(() => {
         dispatch(usersActions.getAllUsersInTenant());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -63,6 +65,7 @@ export const SharedWithUsers: FC<SharedWithUsersProps> = ({ credentialsCollectio
             accessType: selectedUsers.length > 0 ? AccessType.GROUP : AccessType.PRIVATE,
             sharedWith: selectedUsers
         }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedUsers]);
 
     const handleAddUser = (email: string) => {

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/deploy-scenario.schema.json",
+  "deploymentProjectNames": ["runbotics-lp"],
+  "linkCreation": "script",
+  "folderToCopy": "runbotics-build-configuration/runbotics-lp",
+  "projectSettings": [
+    {
+      "projectName": "runbotics-lp",
+      "additionalProjectsToInclude": [],
+      "additionalDependenciesToInclude": []
+    }
+  ]
+}
