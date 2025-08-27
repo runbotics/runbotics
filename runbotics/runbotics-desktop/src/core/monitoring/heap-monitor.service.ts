@@ -22,6 +22,13 @@ interface HeapStats {
     external_memory: number;
 }
 
+interface MemoryStats {
+    totalMemory: number;
+    freeMemory: number;
+    usedMemory: number;
+    usagePercent: number;
+}
+
 @Injectable()
 export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestroy {
     private readonly logger = new RunboticsLogger(HeapMonitorService.name);
@@ -31,9 +38,8 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
 
     onApplicationBootstrap() {
         this.logger.log('Heap monitoring service started');
-        this.logInitialHeapStats();
+        this.logInitialStats();
         
-        // Only start periodic monitoring on Windows
         if (os.platform() === 'win32') {
             this.startPeriodicMonitoring();
         } else {
@@ -46,14 +52,14 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
         this.logger.log('Heap monitoring service stopped');
     }
 
-    private logInitialHeapStats(): void {
-        this.logger.log('=== Initial Heap Statistics ===');
+    private logInitialStats(): void {
+        this.logger.log('=== Initial Heap & Memory Statistics ===');
         this.logCurrentHeapStats();
     }
 
     private startPeriodicMonitoring(): void {
         const intervalMs = this.getMonitoringInterval();
-        this.logger.log(`Starting periodic heap monitoring every ${intervalMs / 1000} seconds`);
+        this.logger.log(`Starting periodic heap and memory monitoring every ${intervalMs / 1000} seconds`);
         
         this.monitoringIntervalHandle = setInterval(() => {
             this.logCurrentHeapStats();
@@ -98,17 +104,21 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
 
             this.logger.log(`Heap Statistics: ${JSON.stringify(formattedStats, null, 2)}`);
 
-            const formattedSpaceStats = heapSpaceStats.map(space => ({
-                spaceName: space.space_name,
-                spaceSize: this.formatBytes(space.space_size),
-                spaceUsedSize: this.formatBytes(space.space_used_size),
-                spaceAvailableSize: this.formatBytes(space.space_available_size),
-                physicalSpaceSize: this.formatBytes(space.physical_space_size),
-                usagePercent: space.space_size > 0 ? 
-                    ((space.space_used_size / space.space_size) * 100).toFixed(2) : '0.00'
-            }));
+            const formattedSpaceStats = heapSpaceStats
+                .filter(space => space.space_size > 1024 * 1024 * 1024)
+                .map(space => ({
+                    spaceName: space.space_name,
+                    spaceSize: this.formatBytes(space.space_size),
+                    spaceUsedSize: this.formatBytes(space.space_used_size),
+                    spaceAvailableSize: this.formatBytes(space.space_available_size),
+                    physicalSpaceSize: this.formatBytes(space.physical_space_size),
+                    usagePercent: space.space_size > 0 ? 
+                        ((space.space_used_size / space.space_size) * 100).toFixed(2) : '0.00'
+                }));
 
             this.logger.log(`Heap Space Statistics: ${JSON.stringify(formattedSpaceStats, null, 2)}`);
+
+            this.logMemoryStats();
 
             const usagePercent = (heapStats.used_heap_size / heapStats.heap_size_limit) * 100;
             if (usagePercent > 80) {
@@ -127,13 +137,55 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
         return `${mb.toFixed(2)} MB (${bytes.toLocaleString()} bytes)`;
     }
 
+    private getMemoryStats(): MemoryStats {
+        const totalMemory = os.totalmem();
+        const freeMemory = os.freemem();
+        const usedMemory = totalMemory - freeMemory;
+        const usagePercent = (usedMemory / totalMemory) * 100;
+
+        return {
+            totalMemory,
+            freeMemory,
+            usedMemory,
+            usagePercent
+        };
+    }
+
+    private logMemoryStats(): void {
+        try {
+            const memStats = this.getMemoryStats();
+            
+            const formattedMemStats = {
+                totalMemory: this.formatBytes(memStats.totalMemory),
+                usedMemory: this.formatBytes(memStats.usedMemory),
+                freeMemory: this.formatBytes(memStats.freeMemory),
+                usagePercent: memStats.usagePercent.toFixed(2)
+            };
+
+            this.logger.log(`System Memory Statistics: ${JSON.stringify(formattedMemStats, null, 2)}`);
+
+            if (memStats.usagePercent > 85) {
+                this.logger.warn(`High system memory usage detected: ${memStats.usagePercent.toFixed(2)}%`);
+            } else if (memStats.usagePercent > 95) {
+                this.logger.error(`Critical system memory usage detected: ${memStats.usagePercent.toFixed(2)}%`);
+            }
+
+        } catch (error) {
+            this.logger.error('Failed to retrieve memory statistics', error);
+        }
+    }
+
     public logHeapStatsNow(): void {
-        this.logger.log('=== Manual Heap Statistics Trigger ===');
+        this.logger.log('=== Manual Heap & Memory Statistics Trigger ===');
         this.logCurrentHeapStats();
     }
 
     public getCurrentHeapStats(): HeapStats {
         return v8.getHeapStatistics() as HeapStats;
+    }
+
+    public getCurrentMemoryStats(): MemoryStats {
+        return this.getMemoryStats();
     }
 
     public forceGarbageCollectionAndLog(): void {
