@@ -35,11 +35,14 @@ export const withAuthGuard = ({
     const router = useRouter();
     const dispatch = useDispatch();
     const isBrowser = typeof window !== 'undefined';
-    const isAuthenticated = isInitialized && isBrowser && isAuthed;
+    
+    const hasToken = isBrowser && window.localStorage.getItem('access_token');
+    const isAuthenticated = isInitialized && isBrowser && isAuthed && hasToken;
 
     if (!isAuthenticated) {
         setAccessToken(null);
         redirectToWebsiteRoot(router.locale);
+        return <LoadingScreen />;
     }
 
     if (isAuthenticated) {
@@ -67,7 +70,7 @@ export const withAuthGuard = ({
             && hasRoleAccess(user, userRoles ? userRoles : [])
         ) { return <Component {...props} />; }
 
-        router.replace('/404');
+        redirectToWebsiteRoot(router.locale);
     }
 
     return <LoadingScreen />;
