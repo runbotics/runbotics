@@ -3,6 +3,7 @@ import { RunboticsLogger } from '#logger';
 import * as v8 from 'v8';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 
 interface HeapStats {
     total_heap_size: number;
@@ -31,7 +32,13 @@ export class HeapMonitorService implements OnApplicationBootstrap, OnModuleDestr
     onApplicationBootstrap() {
         this.logger.log('Heap monitoring service started');
         this.logInitialHeapStats();
-        this.startPeriodicMonitoring();
+        
+        // Only start periodic monitoring on Windows
+        if (os.platform() === 'win32') {
+            this.startPeriodicMonitoring();
+        } else {
+            this.logger.log('Periodic heap monitoring is disabled on non-Windows platforms');
+        }
     }
 
     onModuleDestroy() {
