@@ -90,9 +90,9 @@ export class TenantSubscriptionValidationService {
             let mailToLink = '';
 
             const isTenantAdmin = hasRole(user, Role.ROLE_TENANT_ADMIN);
-            const isUser = hasRole(user, Role.ROLE_USER);
+            const isRpaUser = hasRole(user, Role.ROLE_RPA_USER);
 
-            if (isUser) {
+            if (isRpaUser) {
                 const tenantAdmins = await this.userService.findAllByTenantIdAndRole(tenant.id, Role.ROLE_TENANT_ADMIN);
                 recipients = tenantAdmins.map(admin => admin.email);
                 mailToLink = `mailto:${recipients.join(',')}`;
