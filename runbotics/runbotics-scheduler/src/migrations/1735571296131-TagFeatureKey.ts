@@ -15,7 +15,7 @@ export class TagFeatureKey1735571296131 implements MigrationInterface {
 
 
         const newUserAuthority = await queryRunner.manager.getRepository(Authority)
-            .findOneByOrFail({ name: Role.ROLE_RPA_USER })
+            .findOneByOrFail({ name: Role.ROLE_USER })
             .then(authority => {
                 authority.featureKeys = [
                     ...authority.featureKeys,
@@ -65,7 +65,7 @@ export class TagFeatureKey1735571296131 implements MigrationInterface {
 
         const userAuthority = await queryRunner.manager
             .getRepository(Authority)
-            .findOneByOrFail({ name: Role.ROLE_RPA_USER })
+            .findOneByOrFail({ name: Role.ROLE_USER })
             .then((authority) => {
                 authority.featureKeys = authority.featureKeys.filter(
                     (fk) => !featureKeysToDelete.includes(fk.name)
@@ -78,7 +78,7 @@ export class TagFeatureKey1735571296131 implements MigrationInterface {
 
         const tenantAdminAuthority = await queryRunner.manager
             .getRepository(Authority)
-            .findOneByOrFail({ name: Role.ROLE_RPA_USER })
+            .findOneByOrFail({ name: Role.ROLE_USER })
             .then((authority) => {
                 authority.featureKeys = authority.featureKeys.filter(
                     (fk) => !featureKeysToDelete.includes(fk.name)
@@ -91,7 +91,7 @@ export class TagFeatureKey1735571296131 implements MigrationInterface {
 
         const adminAuthority = await queryRunner.manager
             .getRepository(Authority)
-            .findOneByOrFail({ name: Role.ROLE_RPA_USER })
+            .findOneByOrFail({ name: Role.ROLE_USER })
             .then((authority) => {
                 authority.featureKeys = authority.featureKeys.filter(
                     (fk) => !featureKeysToDelete.includes(fk.name)

@@ -12,13 +12,11 @@ import clsx from 'clsx';
 import RouterLink from 'next/link';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
-import { Role } from 'runbotics-common';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
 import Logo from '#src-app/components/utils/Logo/Logo';
-import useAuth from '#src-app/hooks/useAuth';
-import useRole from '#src-app/hooks/useRole';
+import useAccountRoles from '#src-app/hooks/useAccountRoles';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { logout } from '#src-app/store/slices/Auth/Auth.thunks';
 import {
@@ -83,11 +81,9 @@ interface TopBarProps {
 }
 
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
-    const { user } = useAuth();
-    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
-    const isAdmin = useRole([Role.ROLE_ADMIN]);
-    const isGuest = user?.roles.includes(Role.ROLE_GUEST);
-    const isJustUser = user?.roles.every((role) => role === Role.ROLE_USER);
+
+    const { isTenantAdmin, isAdmin, isGuest, isOnlyRoleUser } =
+        useAccountRoles();
 
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -125,7 +121,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                             <Logo white />
                         </RouterLink>
                     </If>
-                    <If condition={isJustUser}>
+                    <If condition={isOnlyRoleUser}>
                         <RouterLink href="/app/assistant">
                             <Logo white />
                         </RouterLink>
@@ -133,7 +129,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     <If condition={isGuest}>
                         <Logo white />
                     </If>
-                    <If condition={!isGuest && !isAdmin && !isJustUser}>
+                    <If condition={!isGuest && !isAdmin && !isOnlyRoleUser}>
                         <RouterLink href="/app/processes/collections">
                             <Logo white />
                         </RouterLink>

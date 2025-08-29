@@ -33,7 +33,7 @@ export class CredentialsFeatureKey1723195979632 implements MigrationInterface {
 
         const newAuthorityUser = await queryRunner.manager
             .getRepository(Authority)
-            .findOneByOrFail({ name: Role.ROLE_RPA_USER })
+            .findOneByOrFail({ name: Role.ROLE_USER })
             .then(authority => {
                 authority.featureKeys = [...authority.featureKeys, { name: FeatureKeyEnum.CREDENTIALS_PAGE_READ }];
 

@@ -21,7 +21,7 @@ export class ActionFeatureKey1725274222207 implements MigrationInterface {
             await queryRunner.manager.save(Authority, updatedTenantAdmin);
 
         const updatedUser = await queryRunner.manager.getRepository(Authority)
-            .findOneByOrFail({ name: Role.ROLE_RPA_USER })
+            .findOneByOrFail({ name: Role.ROLE_USER })
             .then(authority => {
                 authority.featureKeys = [
                     ...authority.featureKeys,
@@ -52,7 +52,7 @@ export class ActionFeatureKey1725274222207 implements MigrationInterface {
         await queryRunner.manager.save(Authority, updatedTenantAdmin);
 
         const updatedUser = await queryRunner.manager.getRepository(Authority)
-            .findOneByOrFail({ name: Role.ROLE_RPA_USER })
+            .findOneByOrFail({ name: Role.ROLE_USER })
             .then(authority => ({
                 ...authority,
                 featureKeys: authority.featureKeys

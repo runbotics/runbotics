@@ -34,10 +34,7 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
 
         if (isJustUser) {
             router.replace('/app/assistant', null, { locale: user.langKey });
-        }
-
-        if (
-            !isJustUser &&
+        } else if (
             ![Role.ROLE_GUEST, Role.ROLE_ADMIN].some((role) =>
                 user.roles.includes(role)
             )
@@ -47,11 +44,13 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
             });
         }
         
-        if (user.roles.includes(Role.ROLE_GUEST) && router.query.guest !== 'true') {
-            dispatch(authActions.logout())
-                .then(() => {
-                    redirectToWebsiteRoot(user.langKey);
-                });
+        if (
+            user.roles.includes(Role.ROLE_GUEST) &&
+            router.query.guest !== 'true'
+        ) {
+            dispatch(authActions.logout()).then(() => {
+                redirectToWebsiteRoot(user.langKey);
+            });
         }
     }
 
