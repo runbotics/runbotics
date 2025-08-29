@@ -17,7 +17,7 @@ jobs:
           sparse-checkout: |
             runbotics-test
             .github
-
+# TODO Change secrets.RUNBOTICS_USER to secrets.RUNBOTICS_RPA_USER
       - name: Create user.json file
         working-directory: ./runbotics-test
         run: |
