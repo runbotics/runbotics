@@ -111,7 +111,7 @@ export class AuthService {
         return this.signNewIdToken(email, roles);
     }
 
-    private signNewIdToken(email: string, roles = [Role.ROLE_USER]) {
+    private signNewIdToken(email: string, roles = [Role.ROLE_RPA_USER]) {
         const secret = this.serverConfigService.secret;
         const payload = {
             sub: email,
