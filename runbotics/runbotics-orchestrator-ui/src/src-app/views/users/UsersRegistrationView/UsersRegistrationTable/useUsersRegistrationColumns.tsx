@@ -1,7 +1,7 @@
 import { MenuItem } from '@mui/material';
 import { GridColDef, GridValidRowModel, GridValueFormatterParams } from '@mui/x-data-grid';
 
-import { getTenantAllowedRoles } from 'runbotics-common';
+import { getRolesAllowedInTenant } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
@@ -14,7 +14,7 @@ import { UserField, getAllUserRoles, formatUserRoles } from '../../UsersBrowseVi
 const useUsersRegistrationColumns = (handleSelectRoleChange, handleSelectTenantChange, isForAdmin): GridColDef[] => {
     const { translate } = useTranslations();
 
-    const roles = isForAdmin ? getAllUserRoles() : getTenantAllowedRoles();
+    const roles = isForAdmin ? getAllUserRoles() : getRolesAllowedInTenant();
     const formattedRoles = formatUserRoles(roles);
     const { all: allTenants } = useSelector(tenantsSelector);
 
