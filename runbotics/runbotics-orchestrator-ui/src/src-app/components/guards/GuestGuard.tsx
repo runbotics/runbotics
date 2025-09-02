@@ -46,14 +46,12 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
                 locale: user.langKey,
             });
         }
-
-        if (
-            user.roles.includes(Role.ROLE_GUEST) &&
-            router.query.guest !== 'true'
-        ) {
-            dispatch(authActions.logout()).then(() => {
-                router.replace('/', null, { locale: user.langKey });
-            });
+        
+        if (user.roles.includes(Role.ROLE_GUEST) && router.query.guest !== 'true') {
+            dispatch(authActions.logout())
+                .then(() => {
+                    redirectToWebsiteRoot(user.langKey);
+                });
         }
     }
     
