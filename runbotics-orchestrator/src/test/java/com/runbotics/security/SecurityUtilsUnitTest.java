@@ -68,7 +68,7 @@ class SecurityUtilsUnitTest {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.RPA_USER));
-        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("user", "user", authorities)); // ZMIEN AUTH TOKEN
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("user", "user", authorities));
         SecurityContextHolder.setContext(securityContext);
 
         assertThat(SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.RPA_USER)).isTrue();
