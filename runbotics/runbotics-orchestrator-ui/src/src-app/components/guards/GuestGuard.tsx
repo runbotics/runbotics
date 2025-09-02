@@ -27,17 +27,17 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
     }, [router.locale]);
     
     if (isBrowser && isInitialized && isAuthenticated) {
-        const isOnlyUser = user.roles.every((role) => role === Role.ROLE_USER);
+        const isJustUser = user.roles.every((role) => role === Role.ROLE_USER);
         if (user.roles.includes(Role.ROLE_ADMIN)) {
             router.replace('/app/tenants', null, { locale: user.langKey });
         }
 
-        if (isOnlyUser) {
+        if (isJustUser) {
             router.replace('/app/assistant', null, { locale: user.langKey });
         }
 
         if (
-            !isOnlyUser &&
+            !isJustUser &&
             ![Role.ROLE_GUEST, Role.ROLE_ADMIN].some((role) =>
                 user.roles.includes(role)
             )

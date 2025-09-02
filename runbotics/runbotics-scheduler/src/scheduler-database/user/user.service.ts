@@ -10,7 +10,7 @@ import { BadRequestException, ConflictException, ForbiddenException, Injectable,
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
-import { BasicUserDto, FeatureKey, PartialUserDto, Role, UserDto } from 'runbotics-common';
+import { BasicUserDto, FeatureKey, getTenantAllowedRoles, PartialUserDto, Role, UserDto } from 'runbotics-common';
 import { DataSource, FindManyOptions, In, Not, Repository } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
 import { Tenant } from '../tenant/tenant.entity';
@@ -291,11 +291,7 @@ export class UserService {
     private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
 
-        const ROLES_ALLOWED_IN_TENANT = [
-            Role.ROLE_RPA_USER,
-            Role.ROLE_TENANT_ADMIN,
-            Role.ROLE_EXTERNAL_USER,
-        ];
+        const ROLES_ALLOWED_IN_TENANT = getTenantAllowedRoles();
 
         if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !ROLES_ALLOWED_IN_TENANT.includes(roles[0])) {
             throw new BadRequestException('Wrong role');

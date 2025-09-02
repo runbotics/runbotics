@@ -87,7 +87,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
     const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
     const isAdmin = useRole([Role.ROLE_ADMIN]);
     const isGuest = user?.roles.includes(Role.ROLE_GUEST);
-    const isOnlyUser = user?.roles.every((role) => role === Role.ROLE_USER);
+    const isJustUser = user?.roles.every((role) => role === Role.ROLE_USER);
 
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
@@ -125,7 +125,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                             <Logo white />
                         </RouterLink>
                     </If>
-                    <If condition={isOnlyUser}>
+                    <If condition={isJustUser}>
                         <RouterLink href="/app/assistant">
                             <Logo white />
                         </RouterLink>
@@ -133,7 +133,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     <If condition={isGuest}>
                         <Logo white />
                     </If>
-                    <If condition={!isGuest && !isAdmin && !isOnlyUser}>
+                    <If condition={!isGuest && !isAdmin && !isJustUser}>
                         <RouterLink href="/app/processes/collections">
                             <Logo white />
                         </RouterLink>
