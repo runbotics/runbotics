@@ -291,13 +291,13 @@ export class UserService {
     private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
 
-        const TENANT_ALLOWED_ROLES = [
+        const ROLES_ALLOWED_IN_TENANT = [
             Role.ROLE_RPA_USER,
             Role.ROLE_TENANT_ADMIN,
             Role.ROLE_EXTERNAL_USER,
         ];
 
-        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !TENANT_ALLOWED_ROLES.includes(roles[0])) {
+        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !ROLES_ALLOWED_IN_TENANT.includes(roles[0])) {
             throw new BadRequestException('Wrong role');
         }
     }
