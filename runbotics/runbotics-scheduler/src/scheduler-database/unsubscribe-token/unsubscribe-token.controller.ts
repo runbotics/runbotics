@@ -42,16 +42,4 @@ export class UnsubscribeTokenController {
         };
     }
 
-    @Public()
-    @Get('validate')
-    async validateToken(@Query('token') token: string) {
-        if (!token) {
-            throw new NotFoundException('Token is required');
-        }
-        const unsubscribeToken = await this.unsubscribeTokenService.findByToken(token);
-        if (!unsubscribeToken) {
-            throw new NotFoundException('Invalid or expired token');
-        }
-        return { valid: true };
-    }
 }
