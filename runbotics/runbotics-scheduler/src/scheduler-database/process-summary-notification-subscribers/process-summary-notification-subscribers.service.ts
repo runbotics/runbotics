@@ -58,7 +58,7 @@ export class ProcessSummaryNotificationSubscribersService {
     private async sendAggregatedStatisticsEmail(email: string, summaries: { name: string, stats: ProcessStatisticsResult }[]) {
         const unsubscribeToken = await this.unsubscribeTokenService.findByEmail(email);
         const unsubscribeUrl = unsubscribeToken
-        ? `${'http://localhost:7777'}/unsubscribe?token=${unsubscribeToken.token}`
+        ? `${process.env.RUNBOTICS_ENTRYPOINT_URL}/api/scheduler/unsubscribe?token=${unsubscribeToken.token}`
         : '';
         const htmlContent = generateAggregatedEmailContent(summaries, unsubscribeUrl);
         this.logger.log(`Sending aggregated email to ${email}`);

@@ -13,8 +13,8 @@ export class UnsubscribeTokenController {
 
     @Public()
     @Get()
+    @Redirect()
     async unsubscribe(@Query('token') token: string) {
-        console.log('Unsubscribe request received with token:', token);
         if (!token) {
             throw new NotFoundException('Token is required');
         }
@@ -27,9 +27,25 @@ export class UnsubscribeTokenController {
         await this.subscribersService.unsubscribeAllByEmail(unsubscribeToken.email);
         await this.unsubscribeTokenService.deleteByEmail(unsubscribeToken.email);
 
+        const url = new URL(`${process.env.RUNBOTICS_ENTRYPOINT_URL}/ui/unsubscribed`);
+        url.searchParams.set('token', token);
+
         return {
-            url: process.env.UNSUBSCRIBE_SUCCESS_URL || 'https://twoja-aplikacja.com/unsubscribed',
+            url: url.toString(),
             statusCode: 302
         };
+    }
+
+    @Public()
+    @Get('validate')
+    async validateToken(@Query('token') token: string) {
+        if (!token) {
+            throw new NotFoundException('Token is required');
+        }
+        const unsubscribeToken = await this.unsubscribeTokenService.findByToken(token);
+        if (!unsubscribeToken) {
+            throw new NotFoundException('Invalid or expired token');
+        }
+        return { valid: true };
     }
 }
