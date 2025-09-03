@@ -15,20 +15,26 @@ export class UnsubscribeTokenController {
     @Get()
     @Redirect()
     async unsubscribe(@Query('token') token: string) {
+        let status = 'success';
+
         if (!token) {
-            throw new NotFoundException('Token is required');
+            status = 'missing_token';
+        } else {
+            const unsubscribeToken = await this.unsubscribeTokenService.findByToken(token);
+            if (!unsubscribeToken) {
+                status = 'invalid_token';
+            } else {
+                try {
+                    await this.subscribersService.unsubscribeAllByEmail(unsubscribeToken.email);
+                    await this.unsubscribeTokenService.deleteByEmail(unsubscribeToken.email);
+                } catch {
+                    status = 'error';
+                }
+            }
         }
-
-        const unsubscribeToken = await this.unsubscribeTokenService.findByToken(token);
-        if (!unsubscribeToken) {
-            throw new NotFoundException('Invalid or expired token');
-        }
-
-        await this.subscribersService.unsubscribeAllByEmail(unsubscribeToken.email);
-        await this.unsubscribeTokenService.deleteByEmail(unsubscribeToken.email);
 
         const url = new URL(`${process.env.RUNBOTICS_ENTRYPOINT_URL}/ui/unsubscribed`);
-        url.searchParams.set('token', token);
+        url.searchParams.set('status', status);
 
         return {
             url: url.toString(),

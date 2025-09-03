@@ -16,11 +16,9 @@ export class UnsubscribeTokenService {
     ) { }
 
     async create(email: string): Promise<UnsubscribeToken> {
-        this.logger.log(`Creating unsubscribe token for email: ${email}`);
         const token = this.generateUnsubscribeToken();
         const unsubscribeToken = this.unsubscribeTokenRepository.create({ email, token });
         const saved = await this.unsubscribeTokenRepository.save(unsubscribeToken);
-        this.logger.log(`Saved token: ${JSON.stringify(saved)}`);
         return saved;
     }
 
