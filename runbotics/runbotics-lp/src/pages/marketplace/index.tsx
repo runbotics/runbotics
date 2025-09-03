@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { FC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
@@ -17,7 +17,6 @@ import {
 } from '#contentful/common';
 
 import { getMarketplaceMainCache } from '#contentful/marketplace-main';
-import MarketplaceBg from '#public/images/banners/marketplace-banner.png';
 
 import { Language } from '#src-app/translations/translations';
 import { MetadataTags } from '#src-landing/components/Matadata/Metadata';
@@ -30,7 +29,7 @@ interface Props {
     page: Page;
 }
 
-const MarketplacePage: VFC<Props> = ({ offers, industries, tags, page }) => (
+const MarketplacePage: FC<Props> = ({ offers, industries, tags, page }) => (
     <MarketplaceView
         offers={offers}
         industries={industries}
@@ -54,7 +53,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query, loc
     const metadata: MetadataTags = {
         title: 'RunBotics | Marketplace',
         description: 'RunBotics - Marketplace',
-        image: MarketplaceBg.src,
     };
 
     const offers = cache?.offers;

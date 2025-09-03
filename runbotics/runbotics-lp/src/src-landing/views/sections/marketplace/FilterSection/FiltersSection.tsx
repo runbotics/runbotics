@@ -1,10 +1,14 @@
-import { useEffect, useState, VFC } from 'react';
+import { FC, useState } from 'react';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { FilterQueryParamsEnum, getPageUrl, Industry } from '#contentful/common';
+import {
+    FilterQueryParamsEnum,
+    getPageUrl,
+    Industry,
+} from '#contentful/common';
 import MinusIcon from '#public/images/icons/minus.svg';
 import PlusIcon from '#public/images/icons/plus.svg';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -19,14 +23,13 @@ interface Props {
     industries: Industry[];
 }
 
-const FiltersSection: VFC<Props> = ({
+const FiltersSection: FC<Props> = ({
     isFilterDisplayed,
     handleFilterDisplayed,
     industries,
 }) => {
     const { translate } = useTranslations();
-    const { query, push } = useRouter();
-    const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
+    const { query, push, asPath } = useRouter();
     const [isIndustriesSectionExpanded, setIsIndustriesSectionExpanded] =
         useState(false);
 
@@ -34,59 +37,43 @@ const FiltersSection: VFC<Props> = ({
         ? query.search[0]
         : query.search;
 
-    useEffect(() => {
-        if (query.industry) {
-            setSelectedIndustries(
-                Array.isArray(query.industry)
-                    ? query.industry
-                    : [query.industry],
-            );
-        } else {
-            setSelectedIndustries([]);
-        }
-    }, [query]);
+    // eslint-disable-next-line no-nested-ternary
+    const selectedIndustries = Array.isArray(query.industry)
+        ? query.industry
+        : query.industry
+            ? [query.industry]
+            : [];
 
     const handleIndustryCheckboxChange = (slug: string) => {
-        if (selectedIndustries.includes(slug)) {
-            setSelectedIndustries((prevState) =>
-                prevState.filter((industry) => industry !== slug),
-            );
-        } else {
-            setSelectedIndustries((prevState) => [...prevState, slug]);
-        }
-    };
+        const newSelected = selectedIndustries.includes(slug)
+            ? selectedIndustries.filter((i) => i !== slug)
+            : [...selectedIndustries, slug];
 
-    const pushFilters = () => {
         const searchParams = new URLSearchParams();
-
-        selectedIndustries.forEach((industry) =>
-            searchParams.append(FilterQueryParamsEnum.Industry, industry),
+        newSelected.forEach((industry) =>
+            searchParams.append(FilterQueryParamsEnum.Industry, industry)
         );
-        
+
         if (searchParam) {
             searchParams.append(FilterQueryParamsEnum.Search, searchParam);
         }
 
         const newUrl = getPageUrl('marketplace', searchParams);
 
-        push(newUrl);
+        if (asPath !== newUrl) {
+            push(newUrl);
+        }
     };
 
-    useEffect(() => {
-        pushFilters();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        searchParam,
-        selectedIndustries.length,
-    ]);
-
     const industriesCheckboxes = industries
-        ?.filter(industry => industry.title && industry.slug)
+        ?.filter((industry) => industry.title && industry.slug)
         .map((industry, index) => (
             <Checkbox
                 key={industry.slug}
                 className={
-                    index < 5 || isIndustriesSectionExpanded ? '' : styles.hidden
+                    index < 5 || isIndustriesSectionExpanded
+                        ? ''
+                        : styles.hidden
                 }
                 checked={selectedIndustries.includes(industry.slug)}
                 onChange={() => handleIndustryCheckboxChange(industry.slug)}
@@ -116,7 +103,10 @@ const FiltersSection: VFC<Props> = ({
                         {translate('Marketplace.Filters.ClearAll')}
                     </Link>
                 </div>
-                <div className={styles.filterSectionWrapper} data-type="industry">
+                <div
+                    className={styles.filterSectionWrapper}
+                    data-type="industry"
+                >
                     <Typography variant="h6">
                         {translate('Marketplace.Filters.Industry')}
                     </Typography>
@@ -128,16 +118,24 @@ const FiltersSection: VFC<Props> = ({
                         type="button"
                         data-hide={industries?.length <= 5}
                         onClick={() => {
-                            setIsIndustriesSectionExpanded((prevState) => !prevState);
+                            setIsIndustriesSectionExpanded((prev) => !prev);
                         }}
                     >
                         <Image
-                            src={isIndustriesSectionExpanded ? MinusIcon : PlusIcon}
+                            src={
+                                isIndustriesSectionExpanded
+                                    ? MinusIcon
+                                    : PlusIcon
+                            }
                             alt={isIndustriesSectionExpanded ? 'minus' : 'plus'}
                             width={14}
                             height={14}
                         />
-                        <Typography variant="body4" element="span" color="accent">
+                        <Typography
+                            variant="body4"
+                            element="span"
+                            color="accent"
+                        >
                             {isIndustriesSectionExpanded
                                 ? translate('Marketplace.Filters.Less')
                                 : translate('Marketplace.Filters.More')}
