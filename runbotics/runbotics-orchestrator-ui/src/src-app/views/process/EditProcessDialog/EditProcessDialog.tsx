@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import { useSnackbar } from 'notistack';
@@ -8,7 +8,9 @@ import CustomDialog from '#src-app/components/CustomDialog';
 import Loader from '#src-app/components/Loader';
 import If from '#src-app/components/utils/If';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
-import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import useTranslations, {
+    checkIfKeyExists,
+} from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 
 import { processActions } from '#src-app/store/slices/Process';
@@ -17,29 +19,54 @@ import LoadingType from '#src-app/types/loading';
 import { capitalizeFirstLetter } from '#src-app/utils/text';
 
 import AccessOptions from './AccessOptions';
-import { EditProcessDialogProps, FormValidationState } from './EditProcessDialog.types';
-import { initialFormValidationState, inputErrorMessages, InputErrorType } from './EditProcessDialog.utils';
+import {
+    EditProcessDialogProps,
+    FormValidationState,
+} from './EditProcessDialog.types';
+import {
+    initialFormValidationState,
+    inputErrorMessages,
+    InputErrorType,
+} from './EditProcessDialog.utils';
 import { GeneralOptions } from './GeneralOptions/GeneralOptions';
 import { Content, Form } from '../../utils/FormDialog.styles';
 
 const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
-    process, onAdd, onClose, open,
+    process,
+    onAdd,
+    onClose,
+    open,
 }) => {
-    const [formValidationState, setFormValidationState] = useState<FormValidationState>(initialFormValidationState);
+    const [formValidationState, setFormValidationState] =
+        useState<FormValidationState>(initialFormValidationState);
     const [inputErrorType, setInputErrorType] = useState<InputErrorType>(null);
-    const [processFormState, setProcessFormState] = useState<ProcessDto>({ ...process });
+    const [processFormState, setProcessFormState] = useState<ProcessDto>({
+        ...process,
+    });
     const [isNameDirty, setIsNameDirty] = useState<boolean>(false);
-    const { loading: isStoreLoading } = useSelector((state) => state.process.all);
-    const { loading: processLoadingState } = useSelector((state) => state.process.draft);
-    const [isLoading, setIsLoading] = useState(isStoreLoading || processLoadingState === LoadingType.PENDING);
+    const { loading: isStoreLoading } = useSelector(
+        (state) => state.process.all
+    );
+    const { loading: processLoadingState } = useSelector(
+        (state) => state.process.draft
+    );
+    const [isLoading, setIsLoading] = useState(
+        isStoreLoading || processLoadingState === LoadingType.PENDING
+    );
 
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const { user: currentUser } = useSelector((state) => state.auth);
 
-    const isOwner = !process || currentUser.email === process?.createdBy.email || hasFeatureKeyAccess(currentUser, [FeatureKey.PROCESS_COLLECTION_ALL_ACCESS]);
+    const isOwner =
+        !process ||
+        currentUser.email === process?.createdBy.email ||
+        hasFeatureKeyAccess(currentUser, [
+            FeatureKey.PROCESS_COLLECTION_ALL_ACCESS,
+        ]);
 
-    const checkIsFormValid = () => Object.values(formValidationState).every(Boolean);
+    const checkIsFormValid = () =>
+        Object.values(formValidationState).every(Boolean);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -51,9 +78,15 @@ const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
         if (processFormState.name) {
             setIsNameDirty(true);
         }
-        if (isNameDirty && (!processFormState.name || !processFormState.name.trim())) {
+        if (
+            isNameDirty &&
+            (!processFormState.name || !processFormState.name.trim())
+        ) {
             setInputErrorType(InputErrorType.REQUIRED);
-            setFormValidationState((prevState) => ({ ...prevState, name: false }));
+            setFormValidationState((prevState) => ({
+                ...prevState,
+                name: false,
+            }));
             return;
         }
         setFormValidationState((prevState) => ({ ...prevState, name: true }));
@@ -61,46 +94,50 @@ const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processFormState.name]);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setIsLoading(true);
         try {
             if (!checkIsFormValid()) {
-                enqueueSnackbar(inputErrorMessages[inputErrorType], { variant: 'error' });
+                enqueueSnackbar(inputErrorMessages[inputErrorType], {
+                    variant: 'error',
+                });
                 return;
             }
             if (!process.id) {
                 const processInfo: ProcessDto = { ...processFormState };
-                dispatch(
-                    processActions.createProcess({ payload: processInfo })
-                )
-                    .unwrap()
-                    .then((res) => {
-                        onAdd(res);
-                        dispatch(processActions.fetchProcessById(res.id));
-                    });
+                const newProcess = await dispatch(
+                    processActions.createProcess({
+                        payload: { ...processInfo },
+                    })
+                ).unwrap();
+
+                onAdd(newProcess);
+                await dispatch(processActions.fetchProcessById(newProcess.id));
                 return;
             }
             if (processFormState.processCollection?.id === null) {
-                const { processCollection: _processCollection, ...rest } = processFormState;
+                const { processCollection: _processCollection, ...rest } =
+                    processFormState;
                 onAdd(rest);
             }
             onAdd(processFormState);
             setIsLoading(false);
             onClose();
         } catch (error) {
-            const message = error?.message ?? translate('Process.Add.Form.Error.General');
-            const translationKey = `Process.Add.Form.Error.${capitalizeFirstLetter({ text: error.message, delimiter: ' ' })}`;
+            const message =
+                error?.message ?? translate('Process.Add.Form.Error.General');
+            const translationKey = `Process.Add.Form.Error.${capitalizeFirstLetter(
+                { text: error.message, delimiter: ' ' }
+            )}`;
             checkIfKeyExists(translationKey)
-                ? enqueueSnackbar(
-                    translate(translationKey), {
-                        variant: 'error'
-                    }
-                )
-                : enqueueSnackbar(
-                    message, {
-                        variant: 'error'
-                    }
-                );
+                ? enqueueSnackbar(translate(translationKey), {
+                    variant: 'error',
+                })
+                : enqueueSnackbar(message, {
+                    variant: 'error',
+                });
+            setIsLoading(false);
+            onClose();
         }
     };
 
@@ -108,7 +145,11 @@ const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
         <CustomDialog
             isOpen={open}
             onClose={onClose}
-            title={process.id ? translate('Process.Edit.Title') : translate('Process.Add.Title')}
+            title={
+                process.id
+                    ? translate('Process.Edit.Title')
+                    : translate('Process.Add.Title')
+            }
             confirmButtonOptions={{
                 label: translate('Common.Save'),
                 onClick: handleSubmit,
@@ -121,11 +162,14 @@ const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
             }}
         >
             <Content sx={{ overflowX: 'hidden' }}>
-                <If condition={!isLoading} else={
-                    <Box sx={{ width: '500px'}}>
-                        <Loader/>
-                    </Box>
-                }>
+                <If
+                    condition={!isLoading}
+                    else={
+                        <Box sx={{ width: '500px' }}>
+                            <Loader />
+                        </Box>
+                    }
+                >
                     <Form $gap={0}>
                         <GeneralOptions
                             processData={processFormState}
