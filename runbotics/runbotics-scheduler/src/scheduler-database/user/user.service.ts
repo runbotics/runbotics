@@ -58,7 +58,7 @@ export class UserService {
             .createQueryBuilder()
             .insert()
             .into('jhi_user_authority')
-            .values({ user_id: id, authority_name: Role.ROLE_USER })
+            .values({ user_id: id, authority_name: Role.ROLE_RPA_USER })
             .execute();
 
         return this.userRepository.findOneOrFail({

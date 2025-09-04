@@ -19,7 +19,9 @@ const SearchBar: VFC<Props> = ({ onClick, className, initialValue }) => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            onClick(search);
+            if (search !== (initialValue ?? '')) {
+                onClick(search);
+            }
         }, 400);
 
         return () => clearTimeout(timeout);
