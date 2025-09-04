@@ -38,8 +38,8 @@ export enum UserField {
     LAST_MODIFIED_DATE = 'lastModifiedDate',
 };
 
-export const getAllUserRoles = (): Role[] => Object.values(Role);
+export const getAllUserRoles = (): Role[] => Object.values(Role).filter(role => role !== Role.ROLE_USER); // Todo: remove filter from final form  
 
-export const getTenantAllowedRoles = () => [Role.ROLE_USER, Role.ROLE_EXTERNAL_USER, Role.ROLE_TENANT_ADMIN];
+export const getTenantAllowedRoles = () => [Role.ROLE_RPA_USER, Role.ROLE_EXTERNAL_USER, Role.ROLE_TENANT_ADMIN];
 
 export const formatUserRoles = (roles: Role[]) => roles.map((role) => role.match(/^ROLE_(.*)/)[1]);

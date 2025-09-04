@@ -58,7 +58,7 @@ export class UserService {
             .createQueryBuilder()
             .insert()
             .into('jhi_user_authority')
-            .values({ user_id: id, authority_name: Role.ROLE_USER })
+            .values({ user_id: id, authority_name: Role.ROLE_RPA_USER })
             .execute();
 
         return this.userRepository.findOneOrFail({
@@ -291,13 +291,13 @@ export class UserService {
     private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
 
-        const TENANT_ALLOWED_ROLES = [
-            Role.ROLE_USER,
+        const ROLES_ALLOWED_IN_TENANT = [
+            Role.ROLE_RPA_USER,
             Role.ROLE_TENANT_ADMIN,
             Role.ROLE_EXTERNAL_USER,
         ];
 
-        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !TENANT_ALLOWED_ROLES.includes(roles[0])) {
+        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !ROLES_ALLOWED_IN_TENANT.includes(roles[0])) {
             throw new BadRequestException('Wrong role');
         }
     }
