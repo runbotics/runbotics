@@ -24,15 +24,15 @@ jobs:
           mkdir -p .auth
           echo '{
           "tenant_admin": {
-            "login": "${{ secrets.RUNBOTICS_USER_TENANT_ADMIN }}",
+            "email": "${{ secrets.RUNBOTICS_USER_TENANT_ADMIN }}",
             "password": "${{ secrets.RUNBOTICS_PASSWORD_TENANT_ADMIN }}"
           },
           "admin": {
-            "login": "${{ secrets.RUNBOTICS_USER_ADMIN }}",
+            "email": "${{ secrets.RUNBOTICS_USER_ADMIN }}",
             "password": "${{ secrets.RUNBOTICS_PASSWORD_ADMIN }}"
           },
           "user":{
-            "login": "${{ secrets.RUNBOTICS_USER }}",
+            "email": "${{ secrets.RUNBOTICS_USER }}",
             "password": "${{ secrets.RUNBOTICS_PASSWORD }}"
           }}' > .auth/user.json
 
