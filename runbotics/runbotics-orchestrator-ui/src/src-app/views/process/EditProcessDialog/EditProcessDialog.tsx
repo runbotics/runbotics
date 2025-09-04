@@ -31,6 +31,7 @@ import {
 import { GeneralOptions } from './GeneralOptions/GeneralOptions';
 import { Content, Form } from '../../utils/FormDialog.styles';
 
+// eslint-disable-next-line max-lines-per-function
 const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
     process,
     onAdd,
@@ -121,8 +122,6 @@ const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
                 onAdd(rest);
             }
             onAdd(processFormState);
-            setIsLoading(false);
-            onClose();
         } catch (error) {
             const message =
                 error?.message ?? translate('Process.Add.Form.Error.General');
@@ -136,6 +135,7 @@ const EditProcessDialog: FunctionComponent<EditProcessDialogProps> = ({
                 : enqueueSnackbar(message, {
                     variant: 'error',
                 });
+        } finally {
             setIsLoading(false);
             onClose();
         }
