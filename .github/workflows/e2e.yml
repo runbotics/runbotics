@@ -17,7 +17,6 @@ jobs:
           sparse-checkout: |
             runbotics-test
             .github
-# TODO Change secrets.RUNBOTICS_USER to secrets.RUNBOTICS_RPA_USER
       - name: Create user.json file
         working-directory: ./runbotics-test
         run: |
@@ -31,9 +30,9 @@ jobs:
             "email": "${{ secrets.RUNBOTICS_USER_ADMIN }}",
             "password": "${{ secrets.RUNBOTICS_PASSWORD_ADMIN }}"
           },
-          "user":{
-            "email": "${{ secrets.RUNBOTICS_USER }}",
-            "password": "${{ secrets.RUNBOTICS_PASSWORD }}"
+          "rpa_user":{
+            "email": "${{ secrets.RUNBOTICS_RPA_USER }}",
+            "password": "${{ secrets.RUNBOTICS_PASSWORD_RPA_USER }}"
           }}' > .auth/user.json
 
       - name: Install node
