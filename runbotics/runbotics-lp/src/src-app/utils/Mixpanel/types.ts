@@ -56,8 +56,9 @@ type Primitives = string | number | boolean;
 export enum USER_TYPE {
     TENANT_ADMIN = 'tenant_admin',
     ADMIN = 'admin',
-    RPA_USER = 'rpa_user', // Todo: add USER when added again 
+    RPA_USER = 'rpa_user',
     GUEST = 'guest',
+    USER = 'user',
     EXTERNAL_USER = 'external_user',
     UNKNOWN = 'unknown',
 }

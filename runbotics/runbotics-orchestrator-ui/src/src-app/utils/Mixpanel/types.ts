@@ -57,6 +57,7 @@ export enum USER_TYPE {
     TENANT_ADMIN = 'tenant_admin',
     ADMIN = 'admin',
     RPA_USER = 'rpa_user',
+    USER = 'user',
     GUEST = 'guest',
     EXTERNAL_USER = 'external_user',
     UNKNOWN = 'unknown',

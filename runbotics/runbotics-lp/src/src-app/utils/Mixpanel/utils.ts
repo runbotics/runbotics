@@ -86,6 +86,7 @@ export const identifyUserType = (userAuthorities: string[]): USER_TYPE => {
     else if (userAuthorities.includes(Role.ROLE_RPA_USER)) return USER_TYPE.RPA_USER;
     else if (userAuthorities.includes(Role.ROLE_GUEST)) return USER_TYPE.GUEST;
     else if (userAuthorities.includes(Role.ROLE_EXTERNAL_USER)) return USER_TYPE.EXTERNAL_USER;
+    else if (userAuthorities.includes(Role.ROLE_USER)) return USER_TYPE.USER;
     return USER_TYPE.UNKNOWN;
 };
 

@@ -13,6 +13,8 @@ public final class AuthoritiesConstants {
 
     public static final String EXTERNAL_USER = "ROLE_EXTERNAL_USER";
 
+    public static final String USER = "ROLE_USER";
+
     public static final String GUEST = "ROLE_GUEST";
 
     public static final String ANONYMOUS = "ROLE_ANONYMOUS";
