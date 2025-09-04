@@ -50,6 +50,7 @@ export const hasRoles = (user: UserDto) => {
             isAdmin: false,
             isGuest: false,
             isOnlyRoleUser: false,
+            isOnlyRoleRpaUser: false,
         };
     }
 
@@ -57,7 +58,14 @@ export const hasRoles = (user: UserDto) => {
     const isAdmin = hasRoleAccess(user, [Role.ROLE_ADMIN]);
     const isGuest = hasRoleAccess(user, [Role.ROLE_GUEST]);
     const isOnlyRoleUser = hasOnlyRole(user, Role.ROLE_USER);
-    return { isTenantAdmin, isAdmin, isGuest, isOnlyRoleUser };
+    const isOnlyRoleRpaUser = hasOnlyRole(user, Role.ROLE_RPA_USER);
+    return {
+        isTenantAdmin,
+        isAdmin,
+        isGuest,
+        isOnlyRoleUser,
+        isOnlyRoleRpaUser,
+    };
 };
 
 export const hasFeatureKeyAccess = (user: UserDto, featureKeys: FeatureKey[], options?: AccessUtility) => {

@@ -82,7 +82,7 @@ interface TopBarProps {
 
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
 
-    const { isTenantAdmin, isAdmin, isGuest, isOnlyRoleUser } =
+    const { isTenantAdmin, isAdmin, isGuest, isOnlyRoleUser, isOnlyRoleRpaUser } =
         useAccountRoles();
 
     const { enqueueSnackbar } = useSnackbar();
@@ -129,7 +129,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     <If condition={isGuest}>
                         <Logo white />
                     </If>
-                    <If condition={!isGuest && !isAdmin && !isOnlyRoleUser}>
+                    <If condition={isOnlyRoleRpaUser}>
                         <RouterLink href="/app/processes/collections">
                             <Logo white />
                         </RouterLink>

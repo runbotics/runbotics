@@ -16,7 +16,7 @@ import { hasRoles } from '../utils/Secured';
 // eslint-disable-next-line react/display-name
 export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
     const { isAuthenticated, isInitialized, user } = useAuth();
-    const { isAdmin, isGuest, isOnlyRoleUser } = useMemo(() => hasRoles(user), [user]);
+    const { isAdmin, isGuest, isOnlyRoleUser, isTenantAdmin, isOnlyRoleRpaUser } = useMemo(() => hasRoles(user), [user]);
     const router = useRouter();
     const dispatch = useDispatch();
     const isBrowser = typeof window !== 'undefined';
@@ -34,7 +34,7 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
 
         if (isOnlyRoleUser) {
             router.replace('/app/assistant', null, { locale: user.langKey });
-        } else if (!isGuest && !isAdmin) {
+        } else if (isTenantAdmin || isOnlyRoleRpaUser) {
             router.replace('/app/processes/collections', null, {
                 locale: user.langKey,
             });
