@@ -1,4 +1,4 @@
-import { FC, VFC, useEffect } from 'react';
+import { FC, VFC, useEffect, useMemo } from 'react';
 
 import { useRouter } from 'next/router';
 
@@ -16,7 +16,7 @@ import { hasRoles } from '../utils/Secured';
 // eslint-disable-next-line react/display-name
 export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
     const { isAuthenticated, isInitialized, user } = useAuth();
-    const { isAdmin, isGuest, isOnlyRoleUser } = hasRoles(user);
+    const { isAdmin, isGuest, isOnlyRoleUser } = useMemo(() => hasRoles(user), [user]);
     const router = useRouter();
     const dispatch = useDispatch();
     const isBrowser = typeof window !== 'undefined';
