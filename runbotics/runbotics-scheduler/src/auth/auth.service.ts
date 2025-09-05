@@ -7,7 +7,7 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
@@ -15,6 +15,8 @@ import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
 import { Socket } from 'socket.io';
 import { Connection } from 'typeorm';
 import { MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
+import bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -32,6 +34,7 @@ export class AuthService {
         private readonly botCollectionService: BotCollectionService,
         private readonly serverConfigService: ServerConfigService,
         private readonly connection: Connection,
+        private readonly jwtService: JwtService,
     ) {
     }
 
@@ -82,7 +85,7 @@ export class AuthService {
 
         return user;
     }
-    
+
     async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
         const user = await this.userService.findByEmail(userDto.email);
         if (user) {
@@ -96,7 +99,7 @@ export class AuthService {
         }
         return this.registerMicrosoftSSOUser(userDto);
     }
-    
+
     private signInMicrosoftSSOUser({ email, authorities }: User) {
         const roles = authorities.map((authority) => authority.name);
 
@@ -148,7 +151,7 @@ export class AuthService {
             const [
                 requiredMajor,
                 requiredMinor,
-                requiredPatch
+                requiredPatch,
             ] = await this.extractSemanticVersion(this.serverConfigService.requiredBotVersion);
 
             const [major, minor, patch] = await this.extractSemanticVersion(botVersion);
@@ -174,7 +177,7 @@ export class AuthService {
     }
 
     async validateBotWebsocketConnection({ client, isGuard }: ValidatorBotWsProps) {
-        return this.validateBotConnection({client, isGuard})
+        return this.validateBotConnection({ client, isGuard })
             .catch((error) => {
                 this.logger.error('Bot connection error', error);
                 return null;
@@ -248,7 +251,7 @@ export class AuthService {
     }
 
     private registerNewBot({
-        installationId, system, user, collection, version
+        installationId, system, user, collection, version,
     }: RegisterNewBotParams) {
         const bot = new BotEntity();
         bot.installationId = installationId;
@@ -287,7 +290,10 @@ export class AuthService {
         await queryRunner.startTransaction();
         try {
             const bot = await queryRunner.manager
-                .findOne(BotEntity, { where: { installationId: installationId }, relations: ['user', 'system', 'collection']});
+                .findOne(
+                    BotEntity,
+                    { where: { installationId: installationId }, relations: ['user', 'system', 'collection'] },
+                );
 
             bot.status = BotStatus.DISCONNECTED;
 
@@ -295,7 +301,7 @@ export class AuthService {
                 .createQueryBuilder()
                 .update(BotEntity)
                 .set({
-                   ...bot,
+                    ...bot,
                 })
                 .where('id = :id', { id: bot.id })
                 .execute();
@@ -310,6 +316,25 @@ export class AuthService {
         } finally {
             await queryRunner.release();
         }
+    }
+
+    async authenticate(email: string, password: string, rememberMe: boolean) {
+        const user = await this.userService.findByEmailForAuth(email);
+        if (!user) {
+            throw new NotFoundException(`User with email ${email} not found`);
+        }
+        const passwordAuth = await bcrypt.compare(password, user.passwordHash);
+        if (!passwordAuth) {
+            throw new UnauthorizedException();
+        }
+        const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
+        return {
+            idToken: await this.jwtService.signAsync(payload, {
+                expiresIn: rememberMe ? '30d' : '1d',
+                algorithm: 'HS512',
+                noTimestamp: true,
+            }),
+        };
     }
 }
 

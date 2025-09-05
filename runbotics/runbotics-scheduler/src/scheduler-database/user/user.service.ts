@@ -6,7 +6,13 @@ import { getPage } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import postgresError from '#/utils/postgresError';
 import { Specs } from '#/utils/specification/specifiable.decorator';
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
@@ -32,7 +38,8 @@ export class UserService {
         private readonly tenantService: TenantService,
         private readonly mailService: MailService,
         private readonly dataSource: DataSource,
-    ) { }
+    ) {
+    }
 
     async createMsalSsoUser(msalSsoUserDto: MsalSsoUserDto) {
         const user = new User();
@@ -108,8 +115,8 @@ export class UserService {
             tenantId,
             email: In(emails),
             authorities: {
-                name: Not(Role.ROLE_TENANT_ADMIN)
-            }
+                name: Not(Role.ROLE_TENANT_ADMIN),
+            },
         });
     }
 
@@ -132,7 +139,7 @@ export class UserService {
     }
 
     findByEmail(email: string) {
-        return this.userRepository.findOne({ where: { email } });
+        return this.userRepository.findOne({ where: { email }, relations: { authorities: true } });
     }
 
     async activate(activateDto: ActivateUserDto, id: number, executor: User) {
@@ -299,7 +306,7 @@ export class UserService {
     }
 
     private getTenantRelation(
-        tenantId: string | null
+        tenantId: string | null,
     ): Promise<{ tenant: Tenant } | null> {
         return this.tenantService
             .getById(tenantId)
@@ -327,6 +334,14 @@ export class UserService {
                 tenantId,
             },
             relations: ['authorities'],
+        });
+    }
+
+    async findByEmailForAuth(email: string) {
+        return this.userRepository.findOne({
+            where: { email },
+            select: { id: true, email: true, passwordHash: true, authorities: true },
+            relations: { authorities: true },
         });
     }
 }
