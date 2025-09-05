@@ -104,7 +104,7 @@ export const usePublicSections = (): Section[] => {
                 {
                     title: translate('Nav.Items.AIAssistant'),
                     icon: SmartToyOutlinedIcon,
-                    href: '/app/assistant',
+                    href: '/app/ai-assistant',
                     authorities: [Role.ROLE_USER],
                     featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
                 },

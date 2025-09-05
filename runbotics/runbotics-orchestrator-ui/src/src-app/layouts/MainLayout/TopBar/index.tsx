@@ -122,7 +122,7 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                         </RouterLink>
                     </If>
                     <If condition={isOnlyRoleUser}>
-                        <RouterLink href="/app/assistant">
+                        <RouterLink href="/app/ai-assistant">
                             <Logo white />
                         </RouterLink>
                     </If>

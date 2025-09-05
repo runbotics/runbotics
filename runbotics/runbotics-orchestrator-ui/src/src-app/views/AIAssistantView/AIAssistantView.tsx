@@ -25,7 +25,7 @@ const AIAssistantView: VFC = () => {
 
     return (
         <StyledPage title={pageTitle}>
-            <StyledIFrame src='/ai-assistant'/>
+            <StyledIFrame src='/assistant'/>
         </StyledPage>
     );
 };
