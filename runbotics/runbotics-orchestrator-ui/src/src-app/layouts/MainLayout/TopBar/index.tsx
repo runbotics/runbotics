@@ -129,20 +129,21 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                     <If condition={isGuest}>
                         <Logo white />
                     </If>
-                    <If condition={isOnlyRoleRpaUser}>
+                    <If condition={isOnlyRoleRpaUser || isTenantAdmin}>
                         <RouterLink href="/app/processes/collections">
                             <Logo white />
                         </RouterLink>
+
+                    </If>
+                    <If condition={isTenantAdmin || isAdmin}>
+                        <Typography
+                            variant="h5"
+                            sx={{ fontSize: '0.8rem', opacity: '0.5' }}
+                        >
+                            {environment.version}
+                        </Typography>
                     </If>
                 </Hidden>
-                <If condition={isTenantAdmin || isAdmin}>
-                    <Typography
-                        variant="h5"
-                        sx={{ fontSize: '0.8rem', opacity: '0.5' }}
-                    >
-                        {environment.version}
-                    </Typography>
-                </If>
                 <Box ml={2} flexGrow={1} />
                 <If condition={isGuest}>
                     <Typography className={classes.status} variant="h5">
