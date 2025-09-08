@@ -1,11 +1,14 @@
-import { Controller, Get, NotFoundException, Query, Redirect } from '@nestjs/common';
+import { Controller, Get, Query, Redirect } from '@nestjs/common';
 import { UnsubscribeTokenService } from './unsubscribe-token.service';
 import { ProcessSummaryNotificationSubscribersService } from '../process-summary-notification-subscribers/process-summary-notification-subscribers.service';
 import { Public } from '#/auth/guards';
+import {Logger} from "#/utils/logger";
 
 
 @Controller('api/scheduler/unsubscribe')
 export class UnsubscribeTokenController {
+    private readonly logger = new Logger(UnsubscribeTokenService.name);
+    
     constructor(
         private readonly unsubscribeTokenService: UnsubscribeTokenService,
         private readonly subscribersService: ProcessSummaryNotificationSubscribersService,
@@ -15,31 +18,23 @@ export class UnsubscribeTokenController {
     @Get()
     @Redirect()
     async unsubscribe(@Query('token') token: string) {
-        let status = 'success';
-
         if (!token) {
-            status = 'missing_token';
-        } else {
-            const unsubscribeToken = await this.unsubscribeTokenService.findByToken(token);
-            if (!unsubscribeToken) {
-                status = 'invalid_token';
-            } else {
-                try {
-                    await this.subscribersService.unsubscribeAllByEmail(unsubscribeToken.email);
-                    await this.unsubscribeTokenService.deleteByEmail(unsubscribeToken.email);
-                } catch {
-                    status = 'error';
-                }
-            }
+            return { url: `${process.env.RUNBOTICS_ENTRYPOINT_URL}/ui/unsubscribed?status=missing_token` };
         }
 
-        const url = new URL(`${process.env.RUNBOTICS_ENTRYPOINT_URL}/ui/unsubscribed`);
-        url.searchParams.set('status', status);
+        const unsubscribeToken = await this.unsubscribeTokenService.findByToken(token);
+        if (!unsubscribeToken) {
+            return { url: `${process.env.RUNBOTICS_ENTRYPOINT_URL}/ui/unsubscribed?status=invalid_token` };
+        }
 
-        return {
-            url: url.toString(),
-            statusCode: 302
-        };
+        try {
+            await this.subscribersService.unsubscribeAllByEmail(unsubscribeToken.email);
+            await this.unsubscribeTokenService.deleteByEmail(unsubscribeToken.email);
+            return { url: `${process.env.RUNBOTICS_ENTRYPOINT_URL}/ui/unsubscribed?status=success` };
+        } catch (error) {
+            this.logger.error('Unsubscribe error:', error);
+            return { url: `${process.env.RUNBOTICS_ENTRYPOINT_URL}/ui/unsubscribed?status=error` };
+        }
     }
 
 }

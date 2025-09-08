@@ -6,7 +6,7 @@ export class AddUnsubscribeTokenTable1756302528666 implements MigrationInterface
         await queryRunner.query(`
             CREATE TABLE "unsubscribe_token" (
                 "id" SERIAL NOT NULL PRIMARY KEY,
-                "email" varchar(255) NOT NULL,
+                "email" varchar(255) NOT NULL UNIQUE,
                 "token" varchar(64) NOT NULL UNIQUE
             )
         `);

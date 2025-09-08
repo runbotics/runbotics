@@ -12,7 +12,7 @@ export class UnsubscribeToken {
   id: number;
 
   @ApiProperty({ type: 'string', maxLength: 255, example: 'user@example.com' })
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255, nullable: false, unique: true })
   email: string;
 
   @ApiProperty({ type: 'string', maxLength: 64, example: 'a3f7b1c9e7d4f2...' })

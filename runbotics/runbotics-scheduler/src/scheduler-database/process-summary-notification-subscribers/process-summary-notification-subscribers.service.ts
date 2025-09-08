@@ -84,7 +84,10 @@ export class ProcessSummaryNotificationSubscribersService {
         for (const subscriber of subscribers) {
             await this.repository.delete(subscriber.id);
         }
-        await this.unsubscribeTokenService.deleteTokenIfNoSubscriptions(email, this.repository);
+        const deleted = await this.unsubscribeTokenService.deleteTokenIfNoSubscriptions(email, this.repository);
+        if (!deleted) {
+            this.logger.warn(`Token for ${email} was not deleted despite no subscriptions`);
+        }
     }
 
     async getAllSubscribersWithProcesses(){

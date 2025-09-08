@@ -18,8 +18,7 @@ export class UnsubscribeTokenService {
     async create(email: string): Promise<UnsubscribeToken> {
         const token = this.generateUnsubscribeToken();
         const unsubscribeToken = this.unsubscribeTokenRepository.create({ email, token });
-        const saved = await this.unsubscribeTokenRepository.save(unsubscribeToken);
-        return saved;
+        return await this.unsubscribeTokenRepository.save(unsubscribeToken);
     }
 
     async findByEmail(email: string): Promise<UnsubscribeToken | undefined> {
@@ -50,7 +49,7 @@ export class UnsubscribeTokenService {
         return this.unsubscribeTokenRepository.findOne({ where: { token } });
     }
     
-    generateUnsubscribeToken(): string {
+    private generateUnsubscribeToken(): string {
         return randomBytes(32).toString('hex');
     }
 }

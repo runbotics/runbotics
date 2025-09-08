@@ -1,39 +1,16 @@
 import React from 'react';
 
-import { Box, Button, Typography, useMediaQuery, styled } from '@mui/material';
+import { Box, Button, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Container } from '@mui/system';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-
-import Page from '#src-app/components/pages/Page';
 import Logo from '#src-app/components/utils/Logo';
 import BackgroundLogo from '#src-app/views/errors/BackgroundLogo';
 
-const PREFIX = 'UnsubscribedView';
-
-const classes = {
-    root: `${PREFIX}-root`,
-};
-
-const StyledPage = styled(Page)(({ theme }) => ({
-    [`&.${classes.root}`]: {
-        backgroundColor: theme.palette.background.white,
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: theme.spacing(3),
-        paddingTop: 80,
-        paddingBottom: 80,
-        position: 'relative',
-        overflow: 'hidden',
-        zIndex: 1,
-        isolation: 'isolate',
-    },
-}));
+import { StyledPage, classes } from './UnsubscribedView.styles';
 
 const UnsubscribedPage: React.FC = () => {
     const theme = useTheme();
