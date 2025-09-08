@@ -3,6 +3,7 @@ import { Locator, Page } from "@playwright/test";
 export class AppPage {
     readonly page: Page;
     readonly languageSwitcher: Locator;
+    private readonly LANGUAGE_SWITCH_TIMEOUT = 10000;
 
     constructor(page: Page) {
         this.page = page;
@@ -18,11 +19,11 @@ export class AppPage {
             .click();
 
         if (language === "pl") {
-            await this.page.waitForURL("**/pl/**", { timeout: 10000 });
+            await this.page.waitForURL("**/pl/**", { timeout: this.LANGUAGE_SWITCH_TIMEOUT });
         } else {
             await this.page.waitForURL(
                 (url) => !url.pathname.includes("/pl/"),
-                { timeout: 10000 }
+                { timeout: this.LANGUAGE_SWITCH_TIMEOUT }
             );
         }
 
