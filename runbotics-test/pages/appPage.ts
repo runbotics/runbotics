@@ -16,5 +16,16 @@ export class AppPage {
         await this.page
             .getByTestId(`language-switcher-language-${language}`)
             .click();
+
+        if (language === "pl") {
+            await this.page.waitForURL("**/pl/**", { timeout: 10000 });
+        } else {
+            await this.page.waitForURL(
+                (url) => !url.pathname.includes("/pl/"),
+                { timeout: 10000 }
+            );
+        }
+
+        await this.page.waitForLoadState("networkidle");
     }
 }
