@@ -14,16 +14,26 @@ export default class XmlActionHandler extends StatelessActionHandler {
     private readonly logger = new RunboticsLogger(XmlActionHandler.name);
 
     async xmlToJson(input: XmlToJsonInput) {
-        const parser = new XMLParser();
-        const json = parser.parse(input.xml);
-        const jsonString = JSON.stringify(json, null, 2);
-        return jsonString;
+        try {
+            const parser = new XMLParser();
+            const json = parser.parse(input.xml);
+            const jsonString = JSON.stringify(json, null, 2);
+            return jsonString;
+        } catch (error) {
+            this.logger.error('Failed to parse XML to JSON', error);
+            throw new Error('Invalid XML format');
+        }
     }
 
     async jsonToXml(input: JsonToXmlInput) {
-        const builder = new XMLBuilder();
-        const xml = builder.build(input.json);
-        return xml;
+        try {
+            const builder = new XMLBuilder();
+            const xml = builder.build(input.json);
+            return xml;
+        } catch (error) {
+            this.logger.error('Failed to build XML from JSON', error);
+            throw new Error('Invalid JSON format');
+        }
     }
 
     run(request: XmlActionRequest) {
