@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import Logo from '#src-app/components/utils/Logo';
 import BackgroundLogo from '#src-app/views/errors/BackgroundLogo';
 
-import { StyledPage, classes } from './UnsubscribedView.styles';
+import { StyledPage, classes } from '../../../src-app/styles/unsubscribed/UnsubscribedView.styles';
 
 const UnsubscribedPage: React.FC = () => {
     const theme = useTheme();
