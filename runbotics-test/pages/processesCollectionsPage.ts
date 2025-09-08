@@ -5,16 +5,16 @@ import { ProcessesPage } from "./processesPage";
 export class ProcessesCollectionsPage extends AppPage {
     readonly processesNavButton: Locator;
     readonly collectionsNavButton: Locator;
-    readonly processesNavButtonTestId = "procesTabs-tab-processes";
-    readonly collectionsNavButtonTestId = "procesTabs-tab-collections";
+    readonly ProcessesNavButtonTestId = "procesTabs-tab-processes";
+    readonly CollectionsNavButtonTestId = "procesTabs-tab-collections";
 
     constructor(page: Page) {
         super(page);
         this.processesNavButton = page.getByTestId(
-            this.processesNavButtonTestId
+            this.ProcessesNavButtonTestId
         );
         this.collectionsNavButton = page.getByTestId(
-            this.collectionsNavButtonTestId
+            this.CollectionsNavButtonTestId
         );
     }
 
@@ -22,7 +22,7 @@ export class ProcessesCollectionsPage extends AppPage {
         await this.processesNavButton.click();
 
         await this.page.waitForSelector(
-            `[data-testid=${this.processesNavButtonTestId}][aria-selected="true"]`
+            `[data-testid=${this.ProcessesNavButtonTestId}][aria-selected="true"]`
         );
 
         await this.page.waitForLoadState("load");
