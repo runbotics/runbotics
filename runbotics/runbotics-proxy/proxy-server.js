@@ -33,8 +33,8 @@ const routes = [
     { path: '/login', target: hosts.ui, pathFilter: ['/login/**', '!/pl/login/**'] },
     { path: '/pl/register', target: hosts.ui, pathFilter: '/pl/register/**' },
     { path: '/register', target: hosts.ui, pathFilter: ['/register/**', '!/pl/register/**'] },
-    { path: '/unsubscribed', target: hosts.ui, pathFilter: ['/unsubscribed/**', '!/pl/unsubscribed/**'] },
-    { path: '/pl/unsubscribed', target: hosts.ui, pathFilter: '/pl/unsubscribed/**' },
+    { path: '/ui', target: hosts.ui, pathFilter: ['/ui/**', '!/pl/ui/**'] },
+    { path: '/pl/ui', target: hosts.ui, pathFilter: '/pl/ui/**' },
 
     { path: '/api/scheduler', target: hosts.scheduler, pathFilter: '/api/scheduler/**' },
     { path: '/api', target: hosts.api, pathFilter: ['/api/**', '!/api/scheduler/**'] },
