@@ -1,0 +1,72 @@
+@import '#src-landing/scss/main.scss';
+
+$INFO-MAX-WIDTH: 800px;
+
+.root {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: $margin-16;
+}
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    gap: $margin-5;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: 24px auto;
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: $margin-9;
+    grid-column-gap: $margin-5;
+}
+
+.gridItemText {
+    font-weight: $font-weight-semi-bold;
+    color: $text-color-dark;
+    word-break: break-all;
+}
+
+@media (max-width: $breakpoint-md) {
+    $ICON-COLUMN-WIDTH: 16px;
+
+    .root {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: $padding-8;
+        max-width: $INFO-MAX-WIDTH;
+    }
+
+    .summary,
+    .infoGrid {
+        width: 100%;
+        grid-template-columns: $ICON-COLUMN-WIDTH 1fr;
+        gap: $padding-8;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: $padding-6;
+    }
+
+    .summary {
+        gap: $padding-2;
+    }
+
+    .summary,
+    .infoGrid {
+        width: unset;
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .infoGrid {
+        gap: $padding-2;
+    }
+}

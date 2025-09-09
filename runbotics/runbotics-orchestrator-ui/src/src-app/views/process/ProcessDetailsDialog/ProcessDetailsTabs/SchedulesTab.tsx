@@ -40,6 +40,7 @@ export const SchedulesTab = ({ value, process }: DetailsInfoTabProps) => {
                 resourceId: processId,
             })
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

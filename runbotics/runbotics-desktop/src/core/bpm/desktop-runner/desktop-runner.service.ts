@@ -57,6 +57,7 @@ import {
 } from './desktop-runner.utils';
 import { ImageActionHandler } from '#action/image';
 import { SqlActionHandler } from '#action/sql/sql.action-handler';
+import XmlActionHandler from '#action/xml';
 
 
 @Injectable()
@@ -98,7 +99,8 @@ export class DesktopRunnerService implements OnModuleInit {
         private readonly imageActionHandler: ImageActionHandler,
         private readonly folderActionHandler: FolderActionHandler,
         private readonly zipActionHandler: ZipActionHandler,
-        private readonly sqlActionHandler: SqlActionHandler
+        private readonly sqlActionHandler: SqlActionHandler,
+        private readonly xmlActionHandler: XmlActionHandler,
     ) {
         this.internalHandlersMap
             .set('api', apiRequestHandler)
@@ -125,7 +127,8 @@ export class DesktopRunnerService implements OnModuleInit {
             .set('image', imageActionHandler)
             .set('folder', folderActionHandler)
             .set('zip', zipActionHandler)
-            .set('sql', sqlActionHandler);
+            .set('sql', sqlActionHandler)
+            .set('xml', xmlActionHandler);
     }
 
     async onModuleInit() {

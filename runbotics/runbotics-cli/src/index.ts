@@ -19,7 +19,7 @@ program
 
 program
     .description('Runs selected package in development mode')
-    .addArgument(new Argument('<package>', 'name of the package').choices(['ui', 'api', 'scheduler', 'bot']))
+    .addArgument(new Argument('<package>', 'name of the package').choices(['ui', 'api', 'scheduler', 'bot', 'lp', 'proxy']))
     .option('-p, --production', 'runs package in production mode')
     .option('-d, --debug', 'runs package in debug mode')
     .action(run);

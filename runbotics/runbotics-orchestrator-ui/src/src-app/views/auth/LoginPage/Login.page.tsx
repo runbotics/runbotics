@@ -11,7 +11,6 @@ import {
 import { unwrapResult } from '@reduxjs/toolkit';
 import getConfig from 'next/config';
 import RouterLink from 'next/link';
-import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
 
@@ -44,7 +43,6 @@ const LoginPage: FC = () => {
     const isSsoEnabled = publicRuntimeConfig.isSsoEnabled === 'true';
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
     const onGuestLogin = useGuestLogin();
     const { enqueueSnackbar } = useSnackbar();

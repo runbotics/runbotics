@@ -34,6 +34,8 @@ import { ScheduleProcessService } from '#/scheduler-database/schedule-process/sc
 import { QueueMessageService } from './queue-message.service';
 import { randomUUID } from 'crypto';
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
+import { SchedulerService } from './scheduler/scheduler.service';
+import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 
 @Injectable()
 export class QueueService implements OnModuleInit {
@@ -48,7 +50,7 @@ export class QueueService implements OnModuleInit {
         private readonly botSchedulerService: BotSchedulerService,
         private readonly uiGateway: UiGateway,
         private readonly serverConfigService: ServerConfigService,
-        private readonly queueMessageService: QueueMessageService
+        private readonly queueMessageService: QueueMessageService,
     ) { }
 
     async onModuleInit() {
@@ -74,6 +76,25 @@ export class QueueService implements OnModuleInit {
                 this.logger.log(`Process: "${scheduledProcess.process.name}":${scheduledProcess.process.id} successfully scheduled | scheduleID: ${scheduledProcess.id}`);
             })
             .catch(err => this.logger.error(`Failed to add new scheduled job for process: ${scheduledProcess.process.name}`, err));
+    }
+    
+    async deleteScheduledJobBySchedule(scheduledProcess: ScheduleProcess) {
+        this.logger.log(`Deleting scheduled job for process: ${scheduledProcess.process.name}`);
+
+        const job = await this.processQueue.getRepeatableJobs()
+            .then(jobs => jobs.find(job => job.id === scheduledProcess.id.toString()));
+
+        if (!job) {
+            this.logger.warn(`No job with id: ${scheduledProcess.id} found`);
+            return;
+        }
+
+        await this.deleteQueueJobsBySchedule(scheduledProcess.id);
+        await this.processQueue.removeRepeatableByKey(job.key);
+
+        const tenantRoom = scheduledProcess.process.tenantId;
+        this.uiGateway.emitTenant(tenantRoom, WsMessage.REMOVE_SCHEDULE_PROCESS, job);
+        this.logger.log(`Scheduled job for process: ${scheduledProcess.process.name} successfully deleted`);
     }
 
     async createInstantJob(params: StartProcessRequest) {
@@ -196,7 +217,7 @@ export class QueueService implements OnModuleInit {
         const orchestratorProcessInstanceId = randomUUID();
         await Promise.all(
             scheduledProcesses
-                .map(process => this.createScheduledJob({
+                .map(process => process.active && this.createScheduledJob({
                     ...process,
                     orchestratorProcessInstanceId,
                     trigger: { name: TriggerEvent.SCHEDULER },

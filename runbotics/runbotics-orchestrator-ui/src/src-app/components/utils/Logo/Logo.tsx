@@ -2,6 +2,9 @@ import type { FC } from 'react';
 
 import Image from 'next/image';
 
+import logoBlackSrc from '#public/images/runBoticsLogo/logo-black-simp.svg';
+import logoWhiteSrc from '#public/images/runBoticsLogo/logo-white-simp.svg';
+
 interface LogoProps {
     height?: number;
     white?: boolean;
@@ -14,11 +17,11 @@ const ALT_TEXT = 'Runbotics logo';
 
 const Logo: FC<LogoProps> = (props) => {
     const customLogoSource = props.white
-        ? '/images/runBoticsLogo/logo-white-simp.svg'
-        : '/images/runBoticsLogo/logo-black-simp.svg';
+        ? logoWhiteSrc
+        : logoBlackSrc;
 
     const logoSource = props.simple
-        ? '/images/runBoticsLogo/logo-rectangle-white.svg'
+        ? logoWhiteSrc
         : customLogoSource;
     
     const height = props.height ?? LOGO_HEIGHT;

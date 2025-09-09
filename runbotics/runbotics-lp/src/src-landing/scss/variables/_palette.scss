@@ -1,0 +1,45 @@
+$accent-secondary-opacity: 0.32;
+$gradient-secondary-opacity: 0.2;
+
+$palette-gray: #707070;
+$palette-light-gray: #C7C7C7;
+$palette-black: #000000;
+$palette-white: #ffffff;
+$blog-background-mask: #fbb040;
+
+$palette-accent-primary: #f7b80c;
+$palette-accent-secondary: rgba(
+    $palette-accent-primary,
+    $accent-secondary-opacity
+);
+
+$palette-background-primary: $palette-white;
+$palette-background-secondary: #f8f7ff;
+$palette-background-secondary-dark: #eae8fa;
+$palette-background-tertiary: $palette-black;
+$palette-background-disabled: #f5f5f5;
+$palette-background-accent: #f7b80c;
+$palette-background-accent-dark: #cf9b0b;
+$palette-background-accent-light: #FCE8B1;
+
+
+$gradient-direction: to right;
+$gradient-color-secondary: rgba(
+    $palette-background-primary,
+    $gradient-secondary-opacity
+);
+$palette-background-gradient: linear-gradient(
+    $gradient-direction,
+    $palette-background-primary 8%,
+    $gradient-color-secondary
+);
+
+$box-shadow-primary: rgba(0, 0, 0, 0.15) 0 1px 10px 0;
+$box-shadow-primary-hover: rgba(0, 0, 0, 0.15) 0 5px 10px 0;
+$box-shadow-centered: rgba(0, 0, 0, 0.15) 0px 2px 10px 0px;
+$box-shadow-container: rgba(0, 0, 0, 0.2) 0px 6px 16px ;
+
+$black-to-accent-filter: invert(68%) sepia(76%) saturate(565%)
+    hue-rotate(356deg) brightness(100%) contrast(94%);
+$black-to-white-filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(203deg)
+    brightness(102%) contrast(105%);

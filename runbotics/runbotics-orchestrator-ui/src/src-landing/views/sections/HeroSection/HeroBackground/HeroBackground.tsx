@@ -11,7 +11,11 @@ import { HERO_SECTION_ID } from '#src-landing/utils/utils';
 import styles from './HeroBackground.module.scss';
 import { HERO_TITLE_ID } from '../HeroSection.utils';
 
-const HeroBackground: FC = ({ children }) => (
+interface HeroBackgroundProps {
+    children: React.ReactNode;
+}
+
+const HeroBackground: FC<HeroBackgroundProps> = ({ children }) => (
     <section className={styles.root} id={HERO_SECTION_ID} aria-labelledby={HERO_TITLE_ID}>
         <div className={styles.heroHandWrapper}>
             <Image src={heroHand} className={styles.heroHand} alt="" />

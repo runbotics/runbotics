@@ -8,7 +8,11 @@ import { OPEN_SOURCE_SECTION_ID } from '#src-landing/utils/utils';
 import styles from './OpenSourceBackground.module.scss';
 import { OPEN_SOURCE_TITLE_ID } from '../OpenSourceSection.utils';
 
-const OpenSourceBackground: FC = ({ children }) => (
+interface OpenSourceBackgroundProps {
+    children: React.ReactNode;
+}
+
+const OpenSourceBackground: FC<OpenSourceBackgroundProps> = ({ children }) => (
     <section className={styles.root} id={OPEN_SOURCE_SECTION_ID} aria-labelledby={OPEN_SOURCE_TITLE_ID}>
         <Image className={styles.backgroundBanner} src={openSourceBackground} alt="" fill quality={15}/>
         {children}

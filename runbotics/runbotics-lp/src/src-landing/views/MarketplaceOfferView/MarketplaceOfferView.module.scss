@@ -1,0 +1,44 @@
+@import '#src-landing/scss/main';
+@import '#src-landing/components/Typography/Typography.module.scss';
+
+.offerWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    max-width: $MAX_SECTION_CONTENT_WIDTH;
+
+    margin: 0 auto;
+    padding: $x-content-padding;
+    padding-top: calc($x-content-padding + $HEADER_HEIGHT);
+}
+
+@mixin link-styles {
+    color: $palette-accent-primary;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    transition: $landing-link-transition;
+
+    &:hover {
+        border-bottom-color: $palette-accent-primary;
+    }
+}
+
+.contentArticle {
+    max-width: $MAX_BLOG_CONTENT_WIDTH;
+
+    padding-top: $padding-5;
+    padding-bottom: 64px;
+
+    p > a {
+        @include link-styles;
+    }
+}
+
+.detailsWrapper {
+    display: flex;
+    width: 100%;
+    
+    justify-content: space-between;
+}

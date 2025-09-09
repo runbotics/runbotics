@@ -27,6 +27,7 @@ export const CredentialsTab = ({ value, process }: DetailsInfoTabProps) => {
                 resourceId: String(processId),
             })
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

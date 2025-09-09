@@ -1,0 +1,17 @@
+@import '#src-landing/scss/main.scss';
+
+.root {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    justify-content: center;
+    align-items: center;
+    width: 160px;
+    height: 48px;
+    margin: 30px;
+    border-radius: 10px;
+    color: $palette-accent-primary;
+    text-decoration: none;
+    background-color: #000;
+}

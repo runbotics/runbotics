@@ -117,6 +117,7 @@ const RegisterPage: FC = () => {
                     router.push(`/${error.statusCode}`);
                 }
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inviteCodeURL]);
 
     useEffect(() => {
@@ -154,7 +155,7 @@ const RegisterPage: FC = () => {
                 recordSuccessfulAuthentication({
                     trackLabel: TRACK_LABEL.SUCCESSFUL_REGISTRATION,
                     identifyBy: values?.email,
-                    userType: USER_TYPE.USER,
+                    userType: USER_TYPE.RPA_USER,
                     sourcePage: SOURCE_PAGE.REGISTER,
                     email: values?.email,
                 });
@@ -179,7 +180,7 @@ const RegisterPage: FC = () => {
                     recordFailedRegistration({
                         trackLabel: TRACK_LABEL.UNSUCCESSFUL_REGISTRATION,
                         identifyBy: values.email,
-                        userType: USER_TYPE.USER,
+                        userType: USER_TYPE.RPA_USER,
                         sourcePage: SOURCE_PAGE.REGISTER,
                         reason: ERROR_REASON.UNEXPECTED_ERROR,
                     });
@@ -197,7 +198,7 @@ const RegisterPage: FC = () => {
                 recordFailedRegistration({
                     trackLabel: TRACK_LABEL.UNSUCCESSFUL_REGISTRATION,
                     identifyBy: values.email,
-                    userType: USER_TYPE.USER,
+                    userType: USER_TYPE.RPA_USER,
                     sourcePage: SOURCE_PAGE.REGISTER,
                     reason: translate(errorKey, { lng: 'en' }),
                 });

@@ -7,4 +7,5 @@ export interface IScheduleProcess {
     process?: IProcess | null;
     user?: User;
     inputVariables?: string;
+    active?: boolean;
 }

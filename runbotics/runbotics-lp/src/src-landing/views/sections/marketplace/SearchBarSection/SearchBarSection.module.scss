@@ -1,0 +1,19 @@
+@import '#src-landing/scss/main.scss';
+
+$EXIT_BUTTON_DIMM: 25px;
+
+.root {
+    @include font-face-roboto;
+
+    width: 100%;
+    height: fit-content;
+    padding: 10px;
+
+    margin: 28px;
+    border-radius: 40px;
+    border: 1px solid $palette-background-secondary-dark;
+}
+
+.root > div {
+    width: 100%;
+}

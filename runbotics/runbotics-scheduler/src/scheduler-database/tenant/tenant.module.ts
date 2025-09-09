@@ -8,12 +8,21 @@ import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email
 import { LicenseModule } from '../license/license.module';
 import { TenantRoleAdminController } from './tenantRoleAdmin.controller';
 import { TenantPublicController } from './tenantPublic.controller';
-import { TenantSubscriptionValidationService } from './tenant-subscription-validation.service';
 
 @Module({
-    imports:[TypeOrmModule.forFeature([Tenant, TenantInviteCode, EmailTriggerWhitelistItem]), LicenseModule],
-    providers: [TenantService, TenantSubscriptionValidationService],
-    controllers: [TenantController, TenantRoleAdminController, TenantPublicController],
-    exports: [TenantService]
+    imports: [
+        TypeOrmModule.forFeature([Tenant, TenantInviteCode, EmailTriggerWhitelistItem]),
+        LicenseModule,
+    ],
+    providers: [
+        TenantService,
+    ],
+    controllers: [
+        TenantController,
+        TenantRoleAdminController,
+        TenantPublicController,
+    ],
+    exports: [TenantService],
 })
-export class TenantModule {}
+export class TenantModule {
+}

@@ -6,6 +6,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import TuneIcon from '@mui/icons-material/Tune';
 import { Command as CommandIcon } from 'react-feather';
 import { FeatureKey, Role } from 'runbotics-common';
@@ -88,7 +89,10 @@ export const usePublicSections = (): Section[] => {
                     icon: PersonOutlineIcon,
                     href: '/app/users',
                     authorities: [Role.ROLE_TENANT_ADMIN],
-                    featureKeys: [FeatureKey.TENANT_READ_USER, FeatureKey.TENANT_EDIT_USER],
+                    featureKeys: [
+                        FeatureKey.TENANT_READ_USER,
+                        FeatureKey.TENANT_EDIT_USER,
+                    ],
                 },
                 {
                     title: translate('Nav.Items.Monitoring'),
@@ -96,6 +100,13 @@ export const usePublicSections = (): Section[] => {
                     href: '/app/monitoring/grafana',
                     authorities: [Role.ROLE_ADMIN],
                     featureKeys: [FeatureKey.MANAGE_INACTIVE_USERS],
+                },
+                {
+                    title: translate('Nav.Items.AIAssistant'),
+                    icon: SmartToyOutlinedIcon,
+                    href: '/app/ai-assistant',
+                    authorities: [Role.ROLE_USER],
+                    featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
                 },
             ],
         },

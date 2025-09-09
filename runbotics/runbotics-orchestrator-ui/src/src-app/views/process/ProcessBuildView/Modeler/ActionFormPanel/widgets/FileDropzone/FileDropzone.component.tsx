@@ -51,6 +51,7 @@ const FileDropzoneWidget: FC<WidgetProps> = (props) => {
                 { variant: 'warning' }
             );
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fileRejections]);
 
     const files = acceptedFiles.map((file) => (

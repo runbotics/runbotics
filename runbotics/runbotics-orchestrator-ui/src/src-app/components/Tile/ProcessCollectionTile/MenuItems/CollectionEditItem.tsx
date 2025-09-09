@@ -7,7 +7,7 @@ import ProcessCollectionModifyDialog from '#src-app/views/process/ProcessCollect
 import { CollectionEditItemProps } from './MenuItems.types';
 import { translate } from '../../../../hooks/useTranslations';
 
-export const CollectionEditItem: FC<CollectionEditItemProps> = ({ collection, onClose }) => {
+export const CollectionEditItem: FC<CollectionEditItemProps> = ({ collection, onClose: _onClose }) => {
     const [showDialog, setShowDialog] = useState<boolean>(false);
 
     const toggleShowDialog = () => {
