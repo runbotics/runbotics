@@ -9,14 +9,9 @@ export class UserHasBeenActivated1738100152257 implements MigrationInterface {
             `ALTER TABLE "jhi_user" ADD "has_been_activated" boolean NOT NULL DEFAULT false`
         );
 
-        const userRepository = queryRunner.manager.getRepository(User);
-        const users = await userRepository.find();
-        const updatedUsers = users.map((user) => ({
-            ...user,
-            hasBeenActivated: true,
-        }));
-
-        await userRepository.save(updatedUsers);
+        await queryRunner.query(
+            'UPDATE "jhi_user" SET has_been_activated=true'
+        );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
