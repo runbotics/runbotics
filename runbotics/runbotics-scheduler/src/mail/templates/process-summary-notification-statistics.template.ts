@@ -1,9 +1,11 @@
 import { ProcessStatisticsResult } from '#/types';
+import environment from '#/utils/environment';
 import { assignmentLateBase } from '../assets/assignmentLate-icon';
 import { assignmentTurnedInBase } from '../assets/assignmentTurnedIn-icon';
 import { moreTimeBase } from '../assets/moreTime-icon';
 import { scheduleBase } from '../assets/schedule-icon';
 import { generateEmailHeader } from './components/email-header.template';
+import { mainStyles } from './styles/main-template.styles';
 import { processSummaryStyles } from './styles/process-summary-notification-statistics.styles';
 
 export const generateAggregatedEmailContent = (summaries: { name: string; stats: ProcessStatisticsResult }[]): string => {
@@ -15,6 +17,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Statystyki Procesów</title>
   <style>
+    ${mainStyles}
     ${processSummaryStyles}
   </style>
 </head>
@@ -82,7 +85,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
     <tr>
       <td class="footer">
         <p>Nie chcesz otrzymywać takich wiadomości? <a href="#" style="color: #fbb040;">Kliknij tutaj</a>.</p>
-        <p>2025 &copy; RunBotics</p>
+        <p>2025 &copy; ${environment.runboticsEnv} v${environment.version}</p>
       </td>
     </tr>
   </table>

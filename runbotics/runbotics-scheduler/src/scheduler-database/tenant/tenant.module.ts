@@ -10,9 +10,19 @@ import { TenantRoleAdminController } from './tenantRoleAdmin.controller';
 import { TenantPublicController } from './tenantPublic.controller';
 
 @Module({
-    imports:[TypeOrmModule.forFeature([Tenant, TenantInviteCode, EmailTriggerWhitelistItem]), LicenseModule],
-    providers: [TenantService],
-    controllers: [TenantController, TenantRoleAdminController, TenantPublicController],
-    exports: [TenantService]
+    imports: [
+        TypeOrmModule.forFeature([Tenant, TenantInviteCode, EmailTriggerWhitelistItem]),
+        LicenseModule,
+    ],
+    providers: [
+        TenantService,
+    ],
+    controllers: [
+        TenantController,
+        TenantRoleAdminController,
+        TenantPublicController,
+    ],
+    exports: [TenantService],
 })
-export class TenantModule {}
+export class TenantModule {
+}

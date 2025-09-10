@@ -1,0 +1,20 @@
+@import "#src-landing/scss/main.scss";
+
+$ARROW_ICON_WIDTH: 300px;
+
+.root {
+  position: relative;
+  width: 100%;
+  background-color: $palette-accent-primary;
+}
+
+.arrowIconWrapper {
+  position: absolute;
+  width: $ARROW_ICON_WIDTH;
+}
+
+.arrowIcon {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
+}

@@ -44,7 +44,7 @@ const LoginPage: FC = () => {
     const isSsoEnabled = publicRuntimeConfig.isSsoEnabled === 'true';
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const router = useRouter();
+    const _router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
     const onGuestLogin = useGuestLogin();
     const { enqueueSnackbar } = useSnackbar();
@@ -94,7 +94,7 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                if (error.status === 403) {
+                if (error.status === 403 && error.data?.errorKey === 'user_not_activated') {
                     recordFailedLogin({
                         identifyBy: values.email,
                         trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
@@ -107,7 +107,19 @@ const LoginPage: FC = () => {
                     });
                     return;
                 }
-
+                if (error.status === 403 && error.data?.errorKey === 'tenant_not_activated') {
+                    recordFailedLogin({
+                        identifyBy: values.email,
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                        sourcePage: SOURCE_PAGE.LOGIN,
+                        reason: error.data.title
+                    });
+                    enqueueSnackbar(translate('Login.Error.TenantNotActivated'), {
+                        variant: 'error',
+                        autoHideDuration: 10000
+                    });
+                    return;
+                }
                 const status = error.status>= 401 && error.status < 500 ? '4xx' : '5xx';
                 const errorKey = `Login.Error.${status}`;
 

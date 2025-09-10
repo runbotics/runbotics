@@ -1,0 +1,30 @@
+{
+    "Action.DeleteAction.Dialog.Title": "Delete action {{ script }}",
+    "Action.DeleteAction.Dialog.ConfirmationMessage": "Are you sure you want to delete action: {{ actionName }}",
+
+    "Action.List.Header.Title": "Actions",
+    "Action.List.Header.AddAction": "Add action",
+    "Action.List.Results.Id": "id",
+    "Action.List.Results.Label": "label",
+    "Action.List.Results.Script": "script",
+    "Action.List.Results.Actions": "Actions",
+    "Action.List.Item.Disabled.Tooltip": "Runs on bots with {{ system }} system only",
+
+    "Action.Details.Script": "Script",
+    "Action.Details.Label": "Label",
+    "Action.Details.CredentialType": "Credential Type",
+    "Action.Details.Form": "Form",
+    "Action.Details.Form.Script.Error": "Required. Must start with external.",
+    "Action.Details.Form.Label.Error": "Required",
+    "Action.Details.Form.CredentialType.Error": "Input must be valid acceptable credential type, e.g.: {{ types }}",
+    "Action.Details.Form.Validation.Error": "Invalid form values",
+    "Action.Details.ExternalScript.Error": "External script needs to start with external.",
+    "Action.Details.Dialog.SaveAction": "Save action: {{ script }}",
+    "Action.Details.Dialog.LiveView": "LIVE VIEW",
+
+    "Process.BuildView.Modeler.Widgets.VariableNameIsTaken": "Variable name is already taken",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.AssignTheOutputToVariable": "Assign the output to variable",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.IsARequiredProperty": "Is a required property",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.ShouldMatchPattern": "Illegal characters were used",
+    "Process.BuildView.Modeler.Widgets.FieldTemplate.ShouldMatchFormatVariableName": "Provided invalid format, please use ${ } or #{ }"
+}

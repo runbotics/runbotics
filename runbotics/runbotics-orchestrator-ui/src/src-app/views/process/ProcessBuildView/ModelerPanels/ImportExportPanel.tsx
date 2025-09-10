@@ -9,6 +9,8 @@ import Secured from '#src-app/components/utils/Secured';
 import useProcessImport from '#src-app/hooks/useProcessImport';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import axiosApi from '#src-app/utils/axios';
+
 import {
     FirstActionButton,
     ImportInput,
@@ -22,6 +24,7 @@ interface ImportExportPanelProps {
     onImport: (definition: string, additionalInfo: AdditionalInfo) => void;
     onExport: () => void;
 }
+
 const ACCEPTED_FILE_EXTENSIONS = ['rbex', 'bpmn', 'xml'];
 
 const ImportExportPanel: FC<ImportExportPanelProps> = ({
@@ -52,7 +55,20 @@ const ImportExportPanel: FC<ImportExportPanelProps> = ({
         const rawDefinition = await file.text();
         const { definition, ...additionalInfo } =
             extractImportInfo(rawDefinition);
-
+        const isImportBlacklisted = await axiosApi.post(
+            '/api/scheduler/blacklist-action-auth/check',
+            { definition }
+        );
+        
+        if (isImportBlacklisted.data) {
+            enqueueSnackbar(
+                translate('Common.Import.Blacklist.Error'),
+                {
+                    variant: 'error',
+                }
+            );
+            return;
+        }
         onImport(definition, {
             ...additionalInfo,
         });

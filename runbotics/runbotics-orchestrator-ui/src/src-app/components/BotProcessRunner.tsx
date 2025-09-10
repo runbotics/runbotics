@@ -309,12 +309,14 @@ const BotProcessRunner: FC<BotProcessRunnerProps> = ({
             default:
                 break;
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [jobsMap]);
 
     const rerunInput = useMemo(() => {
         if (!isJsonValid(rerunProcessInstance?.input)) return null;
 
         return JSON.parse(rerunProcessInstance?.input);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rerunProcessInstance?.id]);
 
     const getTooltipTitle = () => {

@@ -1,0 +1,34 @@
+@import "#src-landing/scss/main.scss";
+
+$ARROWS_MIN_HEIGHT: 400px;
+
+.root {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    isolation: isolate;
+}
+
+.contentBackground {
+    background-color: $palette-background-tertiary;
+}
+
+.arrowWrapper {
+    position: relative;
+    width: 100%;
+    min-height: $ARROWS_MIN_HEIGHT;
+    max-height: $ARROWS_MIN_HEIGHT;
+}
+
+.arrowBackground {
+    position: absolute;
+    object-fit: cover;
+}
+
+.arrows {
+    position: absolute;
+    opacity: 0.56;
+    object-fit: cover;
+}

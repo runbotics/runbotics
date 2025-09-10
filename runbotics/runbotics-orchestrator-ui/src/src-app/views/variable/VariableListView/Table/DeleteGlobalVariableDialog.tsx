@@ -47,7 +47,7 @@ const DeleteGlobalVariableDialog:
             { variant: 'success' },
         );
 
-        const errorSnackbar = () => enqueueSnackbar(
+        const _errorSnackbar = () => enqueueSnackbar(
             <span>
                 {translateHTML(
                     'Variables.ListView.Action.Delete.Message.Error',

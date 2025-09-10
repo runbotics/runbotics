@@ -1,5 +1,5 @@
 import {
-    ACTION_GROUP,
+    ActionBlacklist,
     IProcessInstance,
     NotificationProcess,
     ProcessCredential,
@@ -48,7 +48,7 @@ export interface ModelerState {
     commandStack: CommandStackInfo;
     imported: boolean;
     activeDrag: boolean;
-    blacklistedActions: ACTION_GROUP[] | null;
+    blacklistedActions: Omit<ActionBlacklist, 'id'>;
 }
 
 export interface ProcessState {

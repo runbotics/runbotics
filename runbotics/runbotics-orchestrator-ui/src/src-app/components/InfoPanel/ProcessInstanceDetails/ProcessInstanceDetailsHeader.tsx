@@ -59,7 +59,7 @@ const ProcessInstanceDetailsHeader: VFC<Props> = ({ processInstance }) => {
             switch (process.output.type) {
                 case ProcessOutputType.TEXT:
                     return <TextOutputWrapper>
-                        <Typography variant='body2'>{processOutputValue}</Typography>
+                        <Typography variant='body2'>{String(processOutputValue)}</Typography>
                     </TextOutputWrapper>;
                 case ProcessOutputType.HTML:
                     if (typeof processOutputValue !== 'string') {

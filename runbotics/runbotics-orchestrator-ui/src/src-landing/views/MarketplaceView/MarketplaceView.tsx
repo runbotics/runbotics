@@ -23,7 +23,7 @@ interface MarketplaceViewProps {
     page: Page;
 }
 
-const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, tags, page }) => {
+const MarketplaceView: FC<MarketplaceViewProps> = ({ offers, industries, page }) => {
     
     const [isFilterDisplayed, setFilterDisplayed] = useState(false);
 

@@ -37,6 +37,12 @@ public class Tenant implements Serializable {
     @JsonIgnore
     private String lastModifiedBy;
 
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
+
+    @Column(name = "subscription_end")
+    private ZonedDateTime subscriptionEnd;
+
     public UUID getId() {
         return this.id;
     }
@@ -85,6 +91,22 @@ public class Tenant implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public ZonedDateTime getSubscriptionEnd() {
+        return subscriptionEnd;
+    }
+
+    public void setSubscriptionEnd(ZonedDateTime subscriptionEnd) {
+        this.subscriptionEnd = subscriptionEnd;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -105,13 +127,15 @@ public class Tenant implements Serializable {
     public String toString() {
         return (
             "Tenant{" +
-            (id != null ? "id=" + id + "," : "") +
-            (name != null ? "id=" + name + "," : "") +
-            (createdBy != null ? "id=" + createdBy.getId() + "," : "") +
-            (created != null ? "id=" + created + "," : "") +
-            (updated != null ? "id=" + updated + "," : "") +
-            (lastModifiedBy != null ? "id=" + lastModifiedBy + "," : "") +
-            "}"
+                (id != null ? "id=" + id + "," : "") +
+                (name != null ? "name=" + name + "," : "") +
+                (createdBy != null ? "createdBy=" + createdBy.getId() + "," : "") +
+                (created != null ? "created=" + created + "," : "") +
+                (updated != null ? "updated=" + updated + "," : "") +
+                (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + "," : "") +
+                ("active=" + active + ",") +
+                (subscriptionEnd != null ? "subscriptionEnd=" + subscriptionEnd : "") +
+                "}"
         );
     }
 }

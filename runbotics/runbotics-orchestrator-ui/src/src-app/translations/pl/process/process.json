@@ -568,6 +568,7 @@
     "Process.Details.Modeler.Widgets.Editor.AutoSave.Label": "Autozapis",
     "Process.Details.Modeler.Widgets.Editor.AutoSave.NotImplemented": "Akcja automatycznego zapisywania nie została jeszcze zaimplementowana",
     "Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem": "Usuń pozycję",
+    "Process.Details.Modeler.Widgets.FieldTemplate.Action.AddItem": "Dodaj pozycję",
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Key": "Klucz",
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value": "Wartość",
     "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Upuść plik tutaj lub kliknij, aby wybrać plik (maksimum 4mb)",

@@ -1,0 +1,57 @@
+@import './variables/_common.scss';
+@import './variables/_palette.scss';
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+
+    &::before,
+    &::after {
+        box-sizing: border-box;
+    }
+}
+
+html {
+    height: 100%;
+    scroll-padding: $HEADER_HEIGHT;
+
+    &:body {
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        height: 100%;
+    }
+}
+
+picture,
+video,
+svg,
+canvas {
+    display: block;
+    max-width: 100%;
+}
+
+img {
+    display: block;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+    isolation: isolate;
+}

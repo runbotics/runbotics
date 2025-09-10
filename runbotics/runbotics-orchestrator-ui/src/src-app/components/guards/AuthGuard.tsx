@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { authActions } from '#src-app/store/slices/Auth';
 import { setAccessToken } from '#src-app/store/slices/Auth/Auth.thunks';
 import { processActions, processSelector } from '#src-app/store/slices/Process';
+import { redirectToWebsiteRoot } from '#src-app/utils/navigation';
 
 import useAuth from '../../hooks/useAuth';
 import LoadingScreen from '../utils/LoadingScreen';
@@ -34,11 +35,14 @@ export const withAuthGuard = ({
     const router = useRouter();
     const dispatch = useDispatch();
     const isBrowser = typeof window !== 'undefined';
-    const isAuthenticated = isInitialized && isBrowser && isAuthed;
+    
+    const hasToken = isBrowser && window.localStorage.getItem('access_token');
+    const isAuthenticated = isInitialized && isBrowser && isAuthed && hasToken;
 
     if (!isAuthenticated) {
         setAccessToken(null);
-        router.replace('/');
+        redirectToWebsiteRoot(router.locale);
+        return <LoadingScreen />;
     }
 
     if (isAuthenticated) {
@@ -54,7 +58,7 @@ export const withAuthGuard = ({
                     .catch(() => {
                         dispatch(authActions.logout())
                             .then(() => {
-                                router.replace('/');
+                                redirectToWebsiteRoot(user.langKey);
                             });
                     });
             }
@@ -66,7 +70,7 @@ export const withAuthGuard = ({
             && hasRoleAccess(user, userRoles ? userRoles : [])
         ) { return <Component {...props} />; }
 
-        router.replace('/404');
+        redirectToWebsiteRoot(router.locale);
     }
 
     return <LoadingScreen />;

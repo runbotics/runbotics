@@ -85,6 +85,7 @@ const TenantsListView: VFC = () => {
 
     useEffect(() => {
         refreshSearch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

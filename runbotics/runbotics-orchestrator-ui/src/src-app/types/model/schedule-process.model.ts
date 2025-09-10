@@ -8,6 +8,7 @@ export interface IScheduleProcess {
     process?: IProcess;
     user?: IUser;
     inputVariables?: string;
+    active?: boolean;
 }
 
 export const defaultValue: Readonly<IScheduleProcess> = {};

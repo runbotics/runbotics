@@ -234,6 +234,7 @@ const ProcessTile: FC<ProcessTileProps> = ({ process }) => {
             default:
                 break;
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [jobsMap]);
 
     return (

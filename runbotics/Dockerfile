@@ -44,4 +44,4 @@ EXPOSE 3000
 CMD ["node_modules/next/dist/bin/next", "start"]
 
 HEALTHCHECK --interval=30s --timeout=60s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:3000/api/health || exit 1
+    CMD curl -f http://localhost:3000/api/ui-health || exit 1

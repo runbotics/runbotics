@@ -312,4 +312,25 @@ export class UserService {
                 throw new BadRequestException('Wrong tenant id');
             });
     }
+
+    public findAllByTenantIdAndRole(tenantId: string, role: Role) {
+        return this.userRepository.find({
+            where: {
+                tenantId,
+                authorities: {
+                    name: role,
+                },
+            },
+            relations: ['authorities'],
+        });
+    }
+
+    public findAllByTenantId(tenantId: string) {
+        return this.userRepository.find({
+            where: {
+                tenantId,
+            },
+            relations: ['authorities'],
+        });
+    }
 }

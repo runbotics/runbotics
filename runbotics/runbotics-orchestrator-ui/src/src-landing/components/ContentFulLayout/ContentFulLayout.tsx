@@ -6,6 +6,7 @@ import styles from './ContentFulLayout.module.scss';
 import ContentFulHeadImage from '../ContentFulHeadImage';
 
 export interface Props {
+    children: React.ReactNode;
     baseImage?: string;
     headImageClass?: HeadImage;
 }

@@ -68,7 +68,7 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         const [prevLanguage, setPrevLanguage] = useState<string>(null);
         const { loadedPlugins } = useSelector((state) => state.plugin);
         const { draft: { credentials: processCredentials } } = useSelector(processSelector);
-        const coveredCredentialTypes: ActionCredentialType[] = processCredentials.map(pc => pc?.credential?.template?.name);
+        const _coveredCredentialTypes: ActionCredentialType[] = processCredentials.map(pc => pc?.credential?.template?.name);
         const { modelerListener, validateUnknownElement } = useModelerListener({
             setCurrentTab,
         });

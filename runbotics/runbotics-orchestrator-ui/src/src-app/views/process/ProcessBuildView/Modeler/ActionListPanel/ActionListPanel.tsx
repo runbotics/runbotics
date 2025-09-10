@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable consistent-return */
-import React, { FC, memo, useMemo, useState } from 'react';
+import React, { FC, memo, useEffect, useMemo, useState } from 'react';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { Badge, Tab, Tabs, IconButton, Box, Drawer } from '@mui/material';
+import { Badge, Box, Drawer, IconButton, Tab, Tabs } from '@mui/material';
 import clsx from 'clsx';
 import _ from 'lodash';
 
@@ -17,22 +17,14 @@ import { useModelerContext } from '#src-app/hooks/useModelerContext';
 import { useTemplatesGroups } from '#src-app/hooks/useTemplatesGroups';
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { useSelector } from '#src-app/store';
+import { useDispatch, useSelector } from '#src-app/store';
 
+import { processActions } from '#src-app/store/slices/Process';
 import i18n from '#src-app/translations/i18n';
 
 import ActionList from './ActionList/ActionList';
-import {
-    classes,
-    Root,
-    ActionPanelToggler
-} from './ActionListPanel.styles';
-import {
-    ActionListPanelProps,
-    Filters as GroupFilters,
-    GroupProperties,
-    ListPanelTab
-} from './ActionListPanel.types';
+import { ActionPanelToggler, classes, Root } from './ActionListPanel.styles';
+import { ActionListPanelProps, Filters as GroupFilters, GroupProperties, ListPanelTab } from './ActionListPanel.types';
 import ActionSearch from './ActionSearch';
 import FilterModal from './FilterModal';
 import { Item } from './ListGroup';
@@ -40,10 +32,7 @@ import useGroupReducer, { groupActions } from './useGroupsReducer';
 import internalBpmnActions from '../../../../../Actions';
 import { IBpmnAction, Runner } from '../../../../../Actions/types';
 import { internalTemplates } from '../../../../../Templates';
-import {
-    ActionToBPMNElement,
-    TaskType
-} from '../ActionFormPanel/ActionToBPMNElement';
+import { ActionToBPMNElement, TaskType } from '../ActionFormPanel/ActionToBPMNElement';
 import CustomLoopHandler from '../ActionFormPanel/handlers/CustomLoopHandler';
 import CustomTemplateHandler from '../ActionFormPanel/handlers/CustomTemplateHandler';
 import { TemplatesSchema } from '../templates/Template.types';
@@ -51,11 +40,12 @@ import { TemplatesSchema } from '../templates/Template.types';
 const filterModalInitialState: GroupFilters = {
     groupNames: [],
     actionName: null,
-    currentTab: ListPanelTab.ACTIONS
+    currentTab: ListPanelTab.ACTIONS,
 };
 
 // eslint-disable-next-line max-lines-per-function
-const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
+const ActionListPanel: FC<ActionListPanelProps> = memo((props) => {
+    const dispatch = useDispatch();
     const { modeler } = useModelerContext();
     const [filters, setFilters] = useState<GroupFilters>(
         filterModalInitialState
@@ -64,24 +54,45 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
     const [filterModalEl, setFilterModalEl] =
         useState<HTMLButtonElement | null>(null);
 
-    const { byId, external } = useSelector(state => state.action.bpmnActions);
+    const { byId, external } = useSelector((state) => state.action.bpmnActions);
     const {
         pluginBpmnActions,
         pluginBpmnActionsMap,
         pluginActionsGroupLabelMap,
-    } = useSelector(state => state.plugin);
+    } = useSelector((state) => state.plugin);
     const internalActionsGroups = useInternalActionsGroups();
     const templatesGroups = useTemplatesGroups();
     const { translate } = useTranslations();
-    const hasActionListAccess = useFeatureKey([
-        FeatureKey.PROCESS_ACTIONS_LIST,
-        FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED,
-    ], { oneOf: true });
-    const hasTemplateListAccess = useFeatureKey([FeatureKey.PROCESS_TEMPLATES_LIST]);
+    const hasActionListAccess = useFeatureKey(
+        [
+            FeatureKey.PROCESS_ACTIONS_LIST,
+            FeatureKey.PROCESS_ACTIONS_LIST_ADVANCED,
+        ],
+        { oneOf: true }
+    );
+    const hasTemplateListAccess = useFeatureKey([
+        FeatureKey.PROCESS_TEMPLATES_LIST,
+    ]);
+    const [isBlacklistLoaded, setIsBlacklistLoaded] = useState(false);
+
+    useEffect(() => {
+        dispatch(processActions.getBlacklistedActions())
+            .unwrap()
+            .then((result) => {
+                dispatch(
+                    processActions.setProcessBlacklistActions({
+                        actionIds: result.actionIds,
+                        actionGroups: result.actionGroups,
+                    })
+                );
+                setIsBlacklistLoaded(true);
+            })
+            .catch((e) => setIsBlacklistLoaded(true));
+    }, []);
 
     const actionGroups: GroupProperties[] = useMemo(() => {
         const externalActionsGroup = external.map(
-            externalId => byId[externalId]
+            (externalId) => byId[externalId]
         );
         const builtinActionsGroups: Record<
             string,
@@ -102,7 +113,9 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
             completeActionsGroups = {
                 ...completeActionsGroups,
                 [actionGroupName]: {
-                    label: actionGroupContent?.label ?? pluginActionsGroupLabelMap.get(pluginKey)(translate),
+                    label:
+                        actionGroupContent?.label ??
+                        pluginActionsGroupLabelMap.get(pluginKey)(translate),
                     items: actionGroupContent
                         ? [
                             ...actionGroupContent.items,
@@ -121,13 +134,13 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                 key,
                 items,
                 label,
-                isTemplate
+                isTemplate,
             }));
 
         // prettier-ignore
         return [
             ...getGroupList(completeActionsGroups, false),
-            ...getGroupList(templatesGroups, true)
+            ...getGroupList(templatesGroups, true),
         ];
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [external, i18n.language, templatesGroups, pluginBpmnActionsMap]);
@@ -188,24 +201,24 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
             value.length ? groupActions.openAll() : groupActions.closeAll()
         );
 
-        setFilters(filters => ({
+        setFilters((filters) => ({
             ...filters,
-            actionName: value || null
+            actionName: value || null,
         }));
     };
 
     const handleDrawerAction = () => {
-        setOpenDrawer(prevState => !prevState);
+        setOpenDrawer((prevState) => !prevState);
     };
 
     const onTabChange = (
         _event: React.SyntheticEvent,
         newValue: ListPanelTab
     ) => {
-        setFilters(filters => ({
+        setFilters((filters) => ({
             ...filters,
             groupNames: [],
-            currentTab: newValue
+            currentTab: newValue,
         }));
     };
 
@@ -217,13 +230,12 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                     (filters.currentTab === ListPanelTab.TEMPLATES)
             ),
         [actionGroups, filters]
-    )
-        .sort((groupA, groupB) => groupA.label.localeCompare(groupB.label));
+    ).sort((groupA, groupB) => groupA.label.localeCompare(groupB.label));
 
     const filteredGroups: GroupProperties[] = useMemo(
         () =>
             currentTabGroups
-                .map(group => {
+                .map((group) => {
                     const { label, items } = group;
                     const { groupNames, actionName } = filters;
 
@@ -245,7 +257,9 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                     // eslint-disable-next-line array-callback-return
                     if (!filteredItems.length) return;
 
-                    const sortedItems = filteredItems.sort((a, b) => a.label.localeCompare(b.label));
+                    const sortedItems = filteredItems.sort((a, b) =>
+                        a.label.localeCompare(b.label)
+                    );
 
                     return { ...group, items: sortedItems };
                 })
@@ -257,21 +271,23 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
     const tabs = [
         {
             name: ListPanelTab.ACTIONS,
-            label: translate('Process.Details.Modeler.ActionListPanel.Tabs.Actions.Label'),
+            label: translate(
+                'Process.Details.Modeler.ActionListPanel.Tabs.Actions.Label'
+            ),
             accessible: hasActionListAccess,
-        }, {
+        },
+        {
             name: ListPanelTab.TEMPLATES,
-            label: translate('Process.Details.Modeler.ActionListPanel.Tabs.Templates.Label'),
+            label: translate(
+                'Process.Details.Modeler.ActionListPanel.Tabs.Templates.Label'
+            ),
             accessible: hasTemplateListAccess,
-        }
-    ].filter(tab => tab.accessible);
+        },
+    ].filter((tab) => tab.accessible);
 
     return (
         <Root open={openDrawer}>
-            <ActionPanelToggler
-                onClick={handleDrawerAction}
-                open={openDrawer}
-            >
+            <ActionPanelToggler onClick={handleDrawerAction} open={openDrawer}>
                 <IconButton>
                     <ChevronRightIcon
                         fontSize="medium"
@@ -285,7 +301,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                 open={openDrawer}
                 className={classes.drawer}
                 classes={{
-                    paper: clsx(classes.drawerPaper)
+                    paper: clsx(classes.drawerPaper),
                 }}
             >
                 <Box
@@ -302,7 +318,7 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                             onChange={onTabChange}
                             variant="fullWidth"
                         >
-                            {tabs.map(tab => (
+                            {tabs.map((tab) => (
                                 <Tab
                                     key={tab.name}
                                     label={tab.label}
@@ -322,10 +338,14 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                             badgeContent={filters.groupNames.length}
                             color="primary"
                             overlap="circular"
-                            variant="dot">
+                            variant="dot"
+                        >
                             <IconButton
-                                onClick={e => setFilterModalEl(e.currentTarget)}
-                                className={classes.filterButton}>
+                                onClick={(e) =>
+                                    setFilterModalEl(e.currentTarget)
+                                }
+                                className={classes.filterButton}
+                            >
                                 <FilterAltOutlinedIcon />
                             </IconButton>
                         </Badge>
@@ -337,13 +357,15 @@ const ActionListPanel: FC<ActionListPanelProps> = memo(props => {
                         setFilters={setFilters}
                         filterOptions={currentTabGroups}
                     />
-                    <ActionList
-                        groups={filteredGroups}
-                        dispatchGroups={dispatchGroups}
-                        handleItemClick={handleItemClick}
-                        openGroupsState={openGroupsState}
-                        filters={filters}
-                    />
+                    <If condition={isBlacklistLoaded}>
+                        <ActionList
+                            groups={filteredGroups}
+                            dispatchGroups={dispatchGroups}
+                            handleItemClick={handleItemClick}
+                            openGroupsState={openGroupsState}
+                            filters={filters}
+                        />
+                    </If>
                 </Box>
             </Drawer>
         </Root>

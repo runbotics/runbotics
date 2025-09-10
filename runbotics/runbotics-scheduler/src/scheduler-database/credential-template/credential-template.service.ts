@@ -1,7 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { CredentialTemplate } from './credential-template.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ActionBlacklistService } from '../action-blacklist/action-blacklist.service';
 
 const relations = ['attributes'];
 
@@ -12,6 +13,7 @@ export class CredentialTemplateService {
   constructor(
     @InjectRepository(CredentialTemplate)
     private readonly templateRepo: Repository<CredentialTemplate>,
+    private readonly actionBlackListService: ActionBlacklistService,
   ) { }
 
   async findOneById(id: string): Promise<CredentialTemplate> {
@@ -25,7 +27,15 @@ export class CredentialTemplateService {
   }
 
   async findAll(): Promise<CredentialTemplate[]> {
-    const templates = await this.templateRepo.find({ relations });
+    const blacklistEntity = await this.actionBlackListService.findCurrent();
+    const blacklistGroups = blacklistEntity.actionGroups || [];
+
+    const templates = await this.templateRepo.find({ 
+      relations, 
+      where: {
+        name: Not(In(blacklistGroups)),
+      } 
+    });
 
     if (templates.length === 0) {
       throw new NotFoundException('Could not find any templates');

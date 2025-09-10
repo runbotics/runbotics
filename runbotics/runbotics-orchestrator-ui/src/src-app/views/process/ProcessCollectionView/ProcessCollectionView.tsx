@@ -38,14 +38,13 @@ export const ProcessCollectionView = () => {
             .unwrap()
             .then((result) => {
                 dispatch(
-                    processActions.setProcessBlacklistActions(
-                        result.actionGroups
-                    )
+                    processActions.setProcessBlacklistActions(result)
                 );
             });
         return () => {
             dispatch(processInstanceActions.resetAllActiveProcessInstances());
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

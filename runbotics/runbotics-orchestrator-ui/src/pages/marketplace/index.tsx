@@ -1,4 +1,4 @@
-import { VFC } from 'react';
+import { FC } from 'react';
 
 import { GetServerSideProps } from 'next';
 
@@ -30,7 +30,7 @@ interface Props {
     page: Page;
 }
 
-const MarketplacePage: VFC<Props> = ({ offers, industries, tags, page }) => (
+const MarketplacePage: FC<Props> = ({ offers, industries, tags, page }) => (
     <MarketplaceView
         offers={offers}
         industries={industries}

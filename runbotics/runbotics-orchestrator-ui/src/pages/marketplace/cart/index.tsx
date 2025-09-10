@@ -8,18 +8,18 @@ import MarketplaceCartView from '#src-landing/views/MarketplaceCartView/Marketpl
 
 const MarketplaceCart: VFC = () => <MarketplaceCartView />;
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = () => {
     const metadata: MetadataTags = {
         title: 'RunBotics | Marketplace',
         description: 'RunBotics - Marketplace',
         image: MarketplaceBg.src,
     };
 
-    return {
+    return Promise.resolve({
         props: {
             metadata,
         }
-    };
+    });
 
 };
 

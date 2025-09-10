@@ -1,0 +1,62 @@
+@import '#src-landing/scss/main.scss';
+
+.root {
+    position: relative;
+    width: 70%;
+    margin-top: $margin-8;
+    margin-bottom: $margin-8;
+}
+
+.searchBar {
+    @include font-face-base;
+    z-index: 1;
+    width: 100%;
+    padding: $padding-1 $padding-2;
+    font-weight: $font-weight-semi-bold;
+    font-size: $font-size-h6;
+    color: $text-placeholder-color;
+    outline: none;
+    border: 3px solid rgb($text-color-gray, 0.2);
+    border-radius: $margin-5;
+    border-width: 3px;
+    border-style: solid;
+    background-color: rgb($text-color-gray, 0.05);
+    background-image: url('#public/images/icons/search-light.svg');
+    transition: $landing-link-transition;
+
+    &:focus {
+        border-color: $palette-accent-primary;
+        color: $palette-accent-primary;
+    }
+
+    &::placeholder {
+        color: $text-placeholder-color;
+        transition: color 200ms ease;
+    }
+
+    &:focus::placeholder {
+        color: $palette-accent-primary;
+    }
+}
+
+.searchIcon {
+    position: absolute;
+    right: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    padding-right: $padding-2;
+
+    img {
+        width: $margin-4;
+        height: $margin-4;
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        width: 100%;
+        margin-inline: $margin-0 $margin-0;
+    }
+}

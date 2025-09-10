@@ -8,11 +8,14 @@ import { Logger } from './utils/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import { SwaggerTags } from './utils/swagger.utils';
+import { ActiveTenantGuard } from '#/global-guards/active-tenant.guard';
+import { UserTenantActiveGuard } from '#/global-guards/user-tenant-active.guard';
 
 setDefaultResultOrder('ipv4first');
 patchNestJsSwagger();
 
 async function bootstrap() {
+    const logger = new Logger(bootstrap.name);
     const app = await NestFactory.create(AppModule, {
         logger: new Logger(),
         cors: true,
@@ -23,8 +26,8 @@ async function bootstrap() {
     app.use(json({ limit: '4mb' }));
     app.use(urlencoded({ extended: true, limit: '4mb' }));
 
-    if (['1', 'yes', 'on'].includes(process.env.RUNBOTICS_IS_SWAGGER_ENABLE)) {
-        console.log('Swager is on!');
+    if (process.env.RUNBOTICS_IS_SWAGGER_ENABLED === 'true') {
+        logger.log('Swagger is enabled on url: /scheduler/docs ');
         let config = new DocumentBuilder()
             .setTitle('Runbotics docs')
             .setDescription('The Runbotics API documentation')
@@ -37,8 +40,11 @@ async function bootstrap() {
         const document = SwaggerModule.createDocument(app, config.build());
         SwaggerModule.setup('scheduler/docs', app, document);
     } else {
-        console.log('Swager is off!');
+        logger.log('Swagger is disabled');
     }
+    app.useGlobalGuards(app.get(UserTenantActiveGuard));
+    app.useGlobalGuards(app.get(ActiveTenantGuard));
+
 
     await app.listen(4000);
 }
