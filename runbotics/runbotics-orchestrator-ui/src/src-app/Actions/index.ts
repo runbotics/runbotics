@@ -25,6 +25,7 @@ import { IBpmnAction } from './types';
 import getVariablesActions from './variables.actions';
 import getVisualBasicActions from './visualBasic.actions';
 import getWindowsActions from './windows.actions';
+import getXmlActions from './xml.actions';
 import getZipActions from './zip.actions';
 
 const getInternalBpmnActions: () => Readonly<Record<string, IBpmnAction>> = () => ({
@@ -55,6 +56,7 @@ const getInternalBpmnActions: () => Readonly<Record<string, IBpmnAction>> = () =
     ...getZipActions(),
     ...getWindowsActions(),
     ...getSQLActions(),
+    ...getXmlActions(),
 });
 
 const internalBpmnActions: Readonly<Record<string, IBpmnAction>> = {

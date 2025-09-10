@@ -12,6 +12,7 @@ import { generateAggregatedEmailContent } from '#/mail/templates/process-summary
 import { Logger } from '#/utils/logger';
 import { SubscribeDto } from './dto/subscribe.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { UnsubscribeTokenService } from '../unsubscribe-token/unsubscribe-token.service';
 
 
 @Injectable()
@@ -22,6 +23,7 @@ export class ProcessSummaryNotificationSubscribersService {
         private readonly repository: Repository<ProcessSummaryNotificationSubscribersEntity>,
         private readonly processStatisticsService: ProcessStatisticsService,
         private readonly mailService: MailService,
+        private readonly unsubscribeTokenService: UnsubscribeTokenService,
     ){}
 
     @Cron(process.env.PROCESS_SUMMARY_CRON || '0 0 1 * *')
@@ -54,8 +56,11 @@ export class ProcessSummaryNotificationSubscribersService {
     }
 
     private async sendAggregatedStatisticsEmail(email: string, summaries: { name: string, stats: ProcessStatisticsResult }[]) {
-
-        const htmlContent = generateAggregatedEmailContent(summaries);
+        const unsubscribeToken = await this.unsubscribeTokenService.findByEmail(email);
+        const unsubscribeUrl = unsubscribeToken
+        ? `${process.env.RUNBOTICS_ENTRYPOINT_URL}/api/scheduler/unsubscribe?token=${unsubscribeToken.token}`
+        : '';
+        const htmlContent = generateAggregatedEmailContent(summaries, unsubscribeUrl);
         this.logger.log(`Sending aggregated email to ${email}`);
         await this.mailService.sendMail({
             to: email,
@@ -63,6 +68,26 @@ export class ProcessSummaryNotificationSubscribersService {
             content: htmlContent,
             isHtml: true,
         });
+    }
+
+    async unsubscribeAllByEmail(email: string) {
+        const subscribers = await this.repository.find({
+            where: [
+                { customEmail: email },
+                { user: { email } }
+            ],
+            relations: ['user']
+        }); 
+        if (subscribers.length === 0) {
+            throw new NotFoundException('No subscriptions found for this email');
+        }
+        for (const subscriber of subscribers) {
+            await this.repository.delete(subscriber.id);
+        }
+        const deleted = await this.unsubscribeTokenService.deleteTokenIfNoSubscriptions(email, this.repository);
+        if (!deleted) {
+            this.logger.warn(`Token for ${email} was not deleted despite no subscriptions`);
+        }
     }
 
     async getAllSubscribersWithProcesses(){
@@ -92,10 +117,17 @@ export class ProcessSummaryNotificationSubscribersService {
             if (!process) {
                 throw new NotFoundException('Process not found');
             }
+
+            const email = (data.customEmail ? data.customEmail : user.email).toLowerCase();
+            const existingToken = await this.unsubscribeTokenService.findByEmail(email);
+            if (!existingToken) {
+                await this.unsubscribeTokenService.create(email);
+            }
+
             return manager.save(ProcessSummaryNotificationSubscribersEntity, {
                 user,
                 process,
-                customEmail: data.customEmail ?? '',
+                customEmail: data.customEmail ? data.customEmail.toLowerCase() : '',
             });
         });
         return result;
@@ -111,7 +143,18 @@ export class ProcessSummaryNotificationSubscribersService {
     }
 
     async unsubscribe(id: string) {
-        return this.repository.delete(id);
+        const subscriber = await this.repository.findOne({ where: { id }, relations: ['user'] });
+        if (!subscriber) {
+            throw new NotFoundException('Subscriber not found');
+        }
+
+        const email = subscriber.customEmail?.toLowerCase() || subscriber.user.email.toLowerCase();
+
+        await this.repository.delete(id);
+
+        await this.unsubscribeTokenService.deleteTokenIfNoSubscriptions(email, this.repository);
+
+        return { success: true };
     }
 
     private formatToDTO(entity) {

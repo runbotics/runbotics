@@ -13,6 +13,7 @@ import {
 } from '#/scheduler-database/process-summary-notification-subscribers/process-summary-notification-subscribers.controller';
 import { ProcessSummaryNotificationSubscribersService } from './process-summary-notification-subscribers.service';
 import { ProcessSummaryNotificationSubscribersEntity } from './process-summary-notification-subscribers.entity';
+import { UnsubscribeTokenModule } from '../unsubscribe-token/unsubscribe-token.module';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { ProcessSummaryNotificationSubscribersEntity } from './process-summary-n
         ProcessModule,
         NotificationProcessModule,
         NotificationBotModule,
+        UnsubscribeTokenModule
     ],
     providers: [
         ProcessSummaryNotificationSubscribersService,

@@ -660,5 +660,9 @@
     "Process.Modeler.VariablesPanel.Tag.Variable": "Zmienna",
     "Process.Modeler.VariablesPanel.Tag.ActionOutput": "Wynik akcji",
     "Process.Modeler.VariablesPanel.Copy.Message.Success": "Skopiowano zmienną",
-    "Process.Modeler.VariablesPanel.Empty.Message": "W tym procesie jeszcze nie użyto żadnej zmiennej"
+    "Process.Modeler.VariablesPanel.Empty.Message": "W tym procesie jeszcze nie użyto żadnej zmiennej",
+    "Process.Details.Modeler.Actions.Xml.XmlToJson.Label": "Konwertuj XML na JSON",
+    "Process.Details.Modeler.Actions.Xml.XmlToJson.Xml": "Dane wejściowe XML",
+    "Process.Details.Modeler.Actions.Xml.JsonToXml.Label": "Konwertuj JSON na XML",
+    "Process.Details.Modeler.Actions.Xml.JsonToXml.Json": "Dane wejściowe JSON"
 }

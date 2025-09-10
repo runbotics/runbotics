@@ -163,7 +163,7 @@ export class MsalService {
         }
 
         const authToken = await this.authService.handleMsalSsoAuth({
-            email: profileData.email,
+            email: profileData.email.toLowerCase().trim(),
             langKey: profileData.langKey,
             msTenantId: loginResponse.tenantId,
             msObjectId: loginResponse.objectId,
