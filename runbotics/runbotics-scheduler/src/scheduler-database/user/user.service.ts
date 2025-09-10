@@ -34,6 +34,13 @@ export class UserService {
         private readonly dataSource: DataSource,
     ) { }
 
+    async addMsalSSOCredentialsToUser(user: User, msalSsoUserDto: MsalSsoUserDto) {
+        user.microsoftTenantId = msalSsoUserDto.msTenantId;
+        user.microsoftUserId = msalSsoUserDto.msObjectId;
+
+        return await this.userRepository.save(user);
+    }
+
     async createMsalSsoUser(msalSsoUserDto: MsalSsoUserDto) {
         const user = new User();
         const randomPassword = generate({
@@ -58,7 +65,7 @@ export class UserService {
             .createQueryBuilder()
             .insert()
             .into('jhi_user_authority')
-            .values({ user_id: id, authority_name: Role.ROLE_RPA_USER })
+            .values({ user_id: id, authority_name: Role.ROLE_USER })
             .execute();
 
         return this.userRepository.findOneOrFail({

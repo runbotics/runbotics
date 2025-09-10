@@ -85,16 +85,33 @@ export class AuthService {
     
     async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
         const user = await this.userService.findByEmail(userDto.email);
-        if (user) {
-            if (
-                user.microsoftTenantId !== userDto.msTenantId ||
-                user.microsoftUserId !== userDto.msObjectId
-            ) {
-                throw new UnauthorizedException('Tenant ID or Microsoft User ID does not match');
-            }
-            return this.signInMicrosoftSSOUser(user);
+
+        if (!user) {
+            return this.registerMicrosoftSSOUser(userDto);
         }
-        return this.registerMicrosoftSSOUser(userDto);
+
+        const isFirstMsalLogin = !user.microsoftTenantId && !user.microsoftUserId;
+
+        if (!isFirstMsalLogin) {
+            this.validateMicrosoftCredentials(user, userDto);
+        }
+
+        const updatedUser = isFirstMsalLogin
+            ? await this.userService.addMsalSSOCredentialsToUser(user, userDto)
+            : user;
+
+        return this.signInMicrosoftSSOUser(updatedUser);
+    }
+
+    private validateMicrosoftCredentials(user: User, userDto: MsalSsoUserDto) {
+        if (
+            user.microsoftTenantId !== userDto.msTenantId ||
+            user.microsoftUserId !== userDto.msObjectId
+        ) {
+            throw new UnauthorizedException(
+                'Tenant ID or Microsoft User ID does not match'
+            );
+        }
     }
     
     private signInMicrosoftSSOUser({ email, authorities }: User) {
@@ -111,7 +128,7 @@ export class AuthService {
         return this.signNewIdToken(email, roles);
     }
 
-    private signNewIdToken(email: string, roles = [Role.ROLE_RPA_USER]) {
+    private signNewIdToken(email: string, roles = [Role.ROLE_USER]) {
         const secret = this.serverConfigService.secret;
         const payload = {
             sub: email,
