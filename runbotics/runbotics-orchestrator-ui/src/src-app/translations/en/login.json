@@ -34,5 +34,6 @@
     "Login.Error.Msal.BadEmail": "Your Microsoft account does not have valid email address associated with it.",
     "Login.Error.Msal.BadCookie": "Invalid Microsoft login session. Please try again.",
     "Login.Error.Msal.TokenExchangeError": "There was a problem exchanging the Microsoft token.",
-    "Login.Error.Msal.TokenIssueFiled": "There was a problem with logging you in to the application."
+    "Login.Error.Msal.TokenIssueFiled": "There was a problem with logging you in to the application.",
+    "Login.Error.TooManyRequests": "Too many login attempts. Please try again later."
 }

@@ -118,6 +118,20 @@ const LoginPage: FC = () => {
                     });
                     return;
                 }
+                if( error.status === 429 ) {
+                    console.log(error);
+                    recordFailedLogin({
+                        identifyBy: values.email,
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                        sourcePage: SOURCE_PAGE.LOGIN,
+                        reason: error.data.title
+                    });
+                    enqueueSnackbar(translate('Login.Error.TooManyRequests'), {
+                        variant: 'error',
+                        autoHideDuration: 10000
+                    });
+                    return;
+                }
                 const status = error.status>= 401 && error.status < 500 ? '4xx' : '5xx';
                 const errorKey = `Login.Error.${status}`;
 
