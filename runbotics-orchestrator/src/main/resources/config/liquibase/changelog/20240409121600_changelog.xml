@@ -3,7 +3,7 @@
     <changeSet author="jarockis" id="20240409121600-1">
         <sql>
             UPDATE jhi_user
-            SET password_hash = '$2y$10$w9UaGt/hmubP3Iy8lQdy0uFS6HIGCQSDVD.nJWwxa/mhzJ9Rg5CT.'
+            SET password_hash = '$2y$10$BK24cOZqgVu9d136huwwzuir.Gfa2xhNvGa4lrKgPCoA.pLYH.JaG'
             WHERE id = 3
         </sql>
     </changeSet>

@@ -7,9 +7,15 @@ const useLoginValidationSchema = () => {
 
     return Yup.object().shape({
         email: Yup.string()
+            .email(translate('Register.Form.Validation.Email.Valid'))
             .max(255)
             .required(translate('Login.Form.Email.Required')),
         password: Yup.string()
+            .min(14)
+            .matches(/[0-9]/, translate('Register.Form.Validation.Password.Digit'))
+            .matches(/[a-z]/, translate('Register.Form.Validation.Password.LowerCase'))
+            .matches(/[A-Z]/, translate('Register.Form.Validation.Password.UpperCase'))
+            .matches(/[\!\@\#\$\%\^\&\*]/, translate('Register.Form.Validation.Password.SpecialCharacter'))
             .max(255)
             .required(translate('Login.Form.Password.Required')),
     });

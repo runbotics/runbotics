@@ -10,6 +10,9 @@
 
 The `runbotics-desktop` package based on [Nest.js](https://nestjs.com) is responsible for process execution and passing logs to the `runbotics-scheduler`.
 
+## Environment variables setup
+To make sure the bot has proper credentials you need to adjust credentials for bot user (`RUNBOTICS_USER` and `RUNBOTICS_PASSWORD` in .env).
+
 ## Running the app
 
 ```bash

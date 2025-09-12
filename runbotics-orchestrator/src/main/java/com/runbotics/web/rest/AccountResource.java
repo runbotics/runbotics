@@ -62,13 +62,7 @@ public class AccountResource {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
-            throw new InvalidPasswordException();
-        }
-        User user = userService.registerUser(
-            managedUserVM, managedUserVM.getPassword(), managedUserVM.getInviteCode()
-        );
-        //        mailService.sendActivationEmail(user);
+        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.getInviteCode());
     }
 
     /**
@@ -124,10 +118,10 @@ public class AccountResource {
         String userEmail = SecurityUtils
             .getCurrentUserEmail()
             .orElseThrow(() -> new AccountResourceException("Current user email not found"));
-       Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
-       if (existingUser.isPresent() && (!existingUser.get().getEmail().equalsIgnoreCase(userEmail))) {
-           throw new EmailAlreadyUsedException();
-       }
+        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
+        if (existingUser.isPresent() && (!existingUser.get().getEmail().equalsIgnoreCase(userEmail))) {
+            throw new EmailAlreadyUsedException();
+        }
         Optional<User> user = userRepository.findOneByEmail(userEmail);
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
@@ -163,7 +157,7 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/change-password")
     public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
-        if (isPasswordLengthInvalid(passwordChangeDto.getNewPassword())) {
+        if (isPasswordInvalid(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
         userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
@@ -195,7 +189,7 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/reset-password/finish")
     public void finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
-        if (isPasswordLengthInvalid(keyAndPassword.getNewPassword())) {
+        if (isPasswordInvalid(keyAndPassword.getNewPassword())) {
             throw new InvalidPasswordException();
         }
         Optional<User> user = userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
@@ -211,5 +205,17 @@ public class AccountResource {
             password.length() < ManagedUserVM.PASSWORD_MIN_LENGTH ||
             password.length() > ManagedUserVM.PASSWORD_MAX_LENGTH
         );
+    }
+
+    private static boolean isPasswordComplexityInvalid(String password) {
+        boolean hasSpecial = password.matches(".*[!@#$%^&*].*");
+        boolean hasDigit = password.matches(".*\\d.*");
+        boolean hasUppercase = password.matches(".*[A-Z].*");
+
+        return !(hasSpecial && hasDigit && hasUppercase);
+    }
+
+    private static boolean isPasswordInvalid(String password) {
+        return isPasswordLengthInvalid(password) || isPasswordComplexityInvalid(password);
     }
 }
