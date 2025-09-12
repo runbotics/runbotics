@@ -63,7 +63,6 @@ public class AccountResource {
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword(), managedUserVM.getInviteCode());
-        //        mailService.sendActivationEmail(user);
     }
 
     /**
