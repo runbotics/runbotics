@@ -1,6 +1,8 @@
 package com.runbotics.config;
 
 import com.runbotics.security.AuthoritiesConstants;
+import com.runbotics.security.CustomAccessDeniedHandler;
+import com.runbotics.security.CustomAuthenticationEntryPoint;
 import com.runbotics.security.jwt.JWTConfigurer;
 import com.runbotics.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -27,12 +29,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
 
     private final CorsFilter corsFilter;
-    private final SecurityProblemSupport problemSupport;
+    private final RateLimitingFilter rateLimitingFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfiguration(TokenProvider tokenProvider, CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
+    public SecurityConfiguration(
+        TokenProvider tokenProvider,
+        CorsFilter corsFilter,
+        RateLimitingFilter rateLimitingFilter,
+        CustomAccessDeniedHandler customAccessDeniedHandler,
+        CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
-        this.problemSupport = problemSupport;
+        this.rateLimitingFilter = rateLimitingFilter;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     @Bean
@@ -59,9 +70,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .csrf()
             .disable()
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
-                .authenticationEntryPoint(problemSupport)
-                .accessDeniedHandler(problemSupport)
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler)
         .and()
             .headers()
             .contentSecurityPolicy("default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:")

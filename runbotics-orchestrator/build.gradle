@@ -251,6 +251,8 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3'
     implementation 'org.webjars:bootstrap:3.3.7'
     implementation 'org.webjars:jquery:3.1.1-1'
+    // https://mvnrepository.com/artifact/com.bucket4j/bucket4j-core
+    implementation("com.bucket4j:bucket4j-core:8.10.1")
 
     implementation "io.jsonwebtoken:jjwt-api"
     if (!project.hasProperty("gae")) {
