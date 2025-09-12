@@ -15,7 +15,7 @@ export class UsersTenantAdmin1733325722538 implements MigrationInterface {
 
         await queryRunner.query(`
             INSERT INTO "jhi_user" ("id", "email", "password_hash", "first_name", "last_name", "activated", "lang_key", "created_by", "last_modified_by", "tenant_id")
-            VALUES (4, 'tenant-admin@localhost', '$2a$10$HFfD1e.PVrgnqoK7StH25On4w8e49dMLlT5FZ0zTHxGxbMZU6Q/5O', 'TenantAdministrator', 'TenantAdministrator', true, 'en', 'system', 'system', '${DEFAULT_TENANT_ID}')
+            VALUES (4, 'tenant-admin@localhost', '$2y$10$9y1YVrC4vaTzUdZK9QiOXuYeMg8DlIokX.N7wTyZFKruvEkMmpsGW', 'TenantAdministrator', 'TenantAdministrator', true, 'en', 'system', 'system', '${DEFAULT_TENANT_ID}')
         `);
 
         const result = await queryRunner.query(`
