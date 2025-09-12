@@ -53,6 +53,8 @@ const nextConfig = {
         defaultLocale: 'en',
         localeDetection: false,
     },
+    
+    poweredByHeader: false,
 };
 
 module.exports = nextConfig;
