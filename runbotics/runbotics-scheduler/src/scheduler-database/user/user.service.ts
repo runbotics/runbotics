@@ -336,4 +336,12 @@ export class UserService {
             relations: ['authorities'],
         });
     }
+
+    async findByEmailForAuth(email: string) {
+        return this.userRepository.findOne({
+            where: { email },
+            select: { id: true, email: true, passwordHash: true, authorities: true },
+            relations: { authorities: true },
+        });
+    }
 }
