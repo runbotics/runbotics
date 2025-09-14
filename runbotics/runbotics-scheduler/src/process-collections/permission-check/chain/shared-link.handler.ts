@@ -1,0 +1,11 @@
+import { Injectable } from '@nestjs/common';
+import { BaseAuthorizationHandler } from './base-authorization.handler';
+import { AuthRequest } from '#/types';
+
+@Injectable()
+export class SharedLinkHandler extends BaseAuthorizationHandler {
+    //TODO: implement handler after shared link feature is implemented
+    async handle(request: AuthRequest, _collectionId?: string): Promise<boolean> {
+        return super.handle(request, _collectionId);
+    }
+}
