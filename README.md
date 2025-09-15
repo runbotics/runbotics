@@ -1,5 +1,10 @@
 # RunBotics
+<img src="https://github.com/runbotics/runbotics/blob/master/public/runbotics_enterprise_logo.png" alt="drawing" width="400"/>
 
+RunBotics is **no longer maintained** in the open-source model.
+
+If you want to use RunBotics, please contact for **RunBotics Enterprise** with our partner **All for One Poland**. See more at All for One Software House website and <a href="https://softwarehouse.all-for-one.pl/runbotics-enterprise/" target="_blank">get RunBotics Enterprise today</a>!
+ 
 ## Description
 
 RunBotics is a process automation application that allows you to easily create and execute automated workflows using your favourite cloud services along with desktop applications.
