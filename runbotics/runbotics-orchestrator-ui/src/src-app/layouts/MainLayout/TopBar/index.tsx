@@ -28,12 +28,12 @@ import { HEADER_HEIGHT } from '#src-app/utils/constants';
 
 import environment from '#src-app/utils/environment';
 
-import LanguageSwitcher from '#src-landing/components/LanguageSwitcher';
 
 import Account from './Account';
 import CountdownTimer from './CountdownTimer';
 import HowToRun from './HowToRun';
 import SubscriptionWarning from './SubscriptionWarning';
+import LanguageSwitcher from '../../../../src-landing/components/LanguageSwitcher/LanguageSwitcher';
 
 const PREFIX = 'TopBar';
 
