@@ -1,4 +1,3 @@
-# RunBotics
 <img src="https://github.com/runbotics/runbotics/blob/master/public/runbotics_enterprise_logo.png" alt="drawing" width="400"/>
 
 RunBotics is **no longer maintained** in the open-source model.
