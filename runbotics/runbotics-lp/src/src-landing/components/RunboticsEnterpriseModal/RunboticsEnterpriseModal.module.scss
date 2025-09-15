@@ -1,0 +1,100 @@
+@import '#src-landing/scss/main';
+
+
+.modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 5vh;
+    margin: auto;
+    max-width: $MAX_SECTION_CONTENT_WIDTH;
+    padding: $padding-3;
+    border-radius: 20px;
+    background: $palette-white;
+    z-index: $header-z-index;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media (max-width: $breakpoint-md) {
+        border-radius: 20px 20px 0 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $margin-4;
+        bottom: 0;
+    }
+}
+
+.contentRow {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    @media (max-width: $breakpoint-md) {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.logo {
+    height: 60px;
+    margin-right: $padding-2;
+    border-right: 1px solid $palette-background-secondary-dark;
+    @media (max-width: $breakpoint-md) {
+        margin-bottom: $padding-2;
+        border: none;
+    }
+}
+
+.textGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    
+    @media (max-width: $breakpoint-sm) {
+        flex-direction: column;
+        gap: $margin-3;
+    }
+}
+
+.title {
+    @include font-face-base;
+    font-weight: bold;
+}
+
+.text {
+    @include font-face-base;
+}
+
+.buttons {
+    display: flex;
+    gap: $padding-2;
+    justify-content: flex-start;
+
+    button {
+        @include font-face-roboto;
+        padding: 8px 22px;
+        border: 1px solid black;
+        font-weight: 700;
+        background-color: transparent;
+        border-radius: 8px;
+        transition: background 0.2s;
+
+        &:hover {
+            background: $palette-background-secondary-dark;
+        }
+    }
+
+    .primaryButton {
+        background: $blog-background-mask;
+        color: black;
+        border: none;
+        
+        &:hover {
+            background: $palette-background-accent-dark;
+        }
+    }
+    
+    @media (max-width: $breakpoint-md) {
+        gap: $margin-1;
+    }
+}
