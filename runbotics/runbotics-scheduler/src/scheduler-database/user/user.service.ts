@@ -10,7 +10,7 @@ import { BadRequestException, ConflictException, ForbiddenException, Injectable,
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
-import { BasicUserDto, FeatureKey, PartialUserDto, Role, UserDto } from 'runbotics-common';
+import { BasicUserDto, FeatureKey, getRolesAllowedInTenant, PartialUserDto, Role, UserDto } from 'runbotics-common';
 import { DataSource, FindManyOptions, In, Not, Repository } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
 import { Tenant } from '../tenant/tenant.entity';
@@ -33,6 +33,13 @@ export class UserService {
         private readonly mailService: MailService,
         private readonly dataSource: DataSource,
     ) { }
+
+    async addMsalSSOCredentialsToUser(user: User, msalSsoUserDto: MsalSsoUserDto) {
+        user.microsoftTenantId = msalSsoUserDto.msTenantId;
+        user.microsoftUserId = msalSsoUserDto.msObjectId;
+
+        return await this.userRepository.save(user);
+    }
 
     async createMsalSsoUser(msalSsoUserDto: MsalSsoUserDto) {
         const user = new User();
@@ -291,13 +298,9 @@ export class UserService {
     private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
 
-        const TENANT_ALLOWED_ROLES = [
-            Role.ROLE_USER,
-            Role.ROLE_TENANT_ADMIN,
-            Role.ROLE_EXTERNAL_USER,
-        ];
+        const ROLES_ALLOWED_IN_TENANT = getRolesAllowedInTenant();
 
-        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !TENANT_ALLOWED_ROLES.includes(roles[0])) {
+        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !ROLES_ALLOWED_IN_TENANT.includes(roles[0])) {
             throw new BadRequestException('Wrong role');
         }
     }

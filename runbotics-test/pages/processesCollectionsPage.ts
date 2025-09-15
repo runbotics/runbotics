@@ -5,17 +5,27 @@ import { ProcessesPage } from "./processesPage";
 export class ProcessesCollectionsPage extends AppPage {
     readonly processesNavButton: Locator;
     readonly collectionsNavButton: Locator;
+    readonly ProcessesNavButtonTestId = "procesTabs-tab-processes";
+    readonly CollectionsNavButtonTestId = "procesTabs-tab-collections";
 
     constructor(page: Page) {
         super(page);
-        this.processesNavButton = page.getByTestId("procesTabs-tab-processes");
+        this.processesNavButton = page.getByTestId(
+            this.ProcessesNavButtonTestId
+        );
         this.collectionsNavButton = page.getByTestId(
-            "procesTabs-tab-collections"
+            this.CollectionsNavButtonTestId
         );
     }
 
     async goToProcessesPage() {
         await this.processesNavButton.click();
+
+        await this.page.waitForSelector(
+            `[data-testid=${this.ProcessesNavButtonTestId}][aria-selected="true"]`
+        );
+
+        await this.page.waitForLoadState("load");
         return new ProcessesPage(this.page);
     }
 }

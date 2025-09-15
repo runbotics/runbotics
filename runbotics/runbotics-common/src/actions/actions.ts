@@ -23,7 +23,7 @@ export enum ActionRegex {
     DATE_FORMAT = '^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\/[0-9]{2}\/[0-9]{4}))$',
     WINDOWS_ABSOLUTE_PATH = "^[a-zA-Z]:[\\\/|\\\\]",
     LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/",
-    FILE_SUFFIX="/\(\d+\)/",
+    FILE_SUFFIX = "/\(\d+\)/",
 }
 
 export enum ACTION_GROUP {
@@ -352,4 +352,9 @@ export enum SqlAction {
     QUERY = 'sql.query',
     CLOSE = 'sql.close',
     EXEC = 'sql.exec'
+}
+
+export enum XmlAction {
+    XML_TO_JSON = 'xml.xmlToJson',
+    JSON_TO_XML = 'xml.jsonToXml',
 }

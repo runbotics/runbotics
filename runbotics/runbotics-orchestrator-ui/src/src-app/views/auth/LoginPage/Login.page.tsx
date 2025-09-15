@@ -11,7 +11,6 @@ import {
 import { unwrapResult } from '@reduxjs/toolkit';
 import getConfig from 'next/config';
 import RouterLink from 'next/link';
-import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
 
@@ -44,7 +43,6 @@ const LoginPage: FC = () => {
     const isSsoEnabled = publicRuntimeConfig.isSsoEnabled === 'true';
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const _router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
     const onGuestLogin = useGuestLogin();
     const { enqueueSnackbar } = useSnackbar();
@@ -115,6 +113,20 @@ const LoginPage: FC = () => {
                         reason: error.data.title
                     });
                     enqueueSnackbar(translate('Login.Error.TenantNotActivated'), {
+                        variant: 'error',
+                        autoHideDuration: 10000
+                    });
+                    return;
+                }
+                if( error.status === 429 ) {
+                    console.log(error);
+                    recordFailedLogin({
+                        identifyBy: values.email,
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                        sourcePage: SOURCE_PAGE.LOGIN,
+                        reason: error.data.title
+                    });
+                    enqueueSnackbar(translate('Login.Error.TooManyRequests'), {
                         variant: 'error',
                         autoHideDuration: 10000
                     });

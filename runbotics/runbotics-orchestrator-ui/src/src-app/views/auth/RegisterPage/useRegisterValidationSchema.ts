@@ -11,7 +11,7 @@ const useRegisterValidationSchema = () => {
             .max(255)
             .required(translate('Register.Form.Validation.Email.Required')),
         password: Yup.string()
-            .min(12)
+            .min(14)
             .matches(/[0-9]/, translate('Register.Form.Validation.Password.Digit'))
             .matches(/[a-z]/, translate('Register.Form.Validation.Password.LowerCase'))
             .matches(/[A-Z]/, translate('Register.Form.Validation.Password.UpperCase'))
