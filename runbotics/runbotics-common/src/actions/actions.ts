@@ -54,6 +54,7 @@ export enum ACTION_GROUP {
     WINDOWS = 'windows',
     VISUAL_BASIC = 'visualBasic',
     EXTERNAL = 'external',
+    ZIP = 'zip',
 }
 
 export enum VariableAction {

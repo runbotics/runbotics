@@ -28,7 +28,6 @@ group = "com.runbotics"
 
 
 version = "3.5.0-SNAPSHOT.17"
-
 description = ""
 
 sourceCompatibility=11
