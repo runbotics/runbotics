@@ -110,7 +110,7 @@ jobs:
       - name: Update .npmrc
         shell: bash
         run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" >> ../common/config/rush/.npmrc
 
       - name: Install dependencies
         run: $RUSH install -t .
@@ -170,7 +170,7 @@ jobs:
       - name: Update .npmrc
         shell: bash
         run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" >> ../common/config/rush/.npmrc
 
       - name: Install dependencies
         run: $RUSH install -t .
@@ -237,7 +237,7 @@ jobs:
       - name: Update .npmrc
         shell: bash
         run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" >> ../common/config/rush/.npmrc
 
       - name: Install dependencies
         run: ${{ env.RUSH }} install -t .
@@ -363,7 +363,7 @@ jobs:
       - name: Update .npmrc
         shell: bash
         run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" >> ../common/config/rush/.npmrc
 
       - name: Install dependencies
         run: $RUSH install -t .
