@@ -37,6 +37,14 @@ export class UserController {
         return this.userService.findAllActivatedByTenant(tenantId);
     }
 
+    @GetWithTenant('users/by-token')
+    @FeatureKeys(FeatureKey.TENANT_READ)
+    getUser(
+        @UserDecorator() user: User,
+    ) {
+        return this.userService.findById(user.id);
+    }
+
     @PatchWithTenant('users/:id')
     @FeatureKeys(FeatureKey.TENANT_EDIT_USER)
     updateUserInTenant(
@@ -110,8 +118,7 @@ export class UserController {
             user
         );
     }
-
-
+    
     @Delete('users/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @FeatureKeys(FeatureKey.MANAGE_INACTIVE_USERS, FeatureKey.MANAGE_ALL_TENANTS)
