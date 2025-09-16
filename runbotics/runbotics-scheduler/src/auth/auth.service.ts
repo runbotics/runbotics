@@ -7,7 +7,7 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
@@ -337,9 +337,15 @@ export class AuthService {
         if (!user) {
             throw new NotFoundException(`User with email ${email} not found`);
         }
+        if(!user.tenant.active) {
+            throw new UnauthorizedException('Tenant for user is deactivated');
+        }
         const passwordAuth = await bcrypt.compare(password, user.passwordHash);
         if (!passwordAuth) {
             throw new UnauthorizedException();
+        }
+        if(!user.activated) {
+            throw  new ForbiddenException(`User with email ${email} is not activated`);
         }
         const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
         return {

@@ -135,7 +135,7 @@ export class UserService {
     }
 
     findById(id: number) {
-        return this.userRepository.findOne({ where: { id } });
+        return this.userRepository.findOne({ where: { id }, relations: {authorities: true, tenant: true}});
     }
 
     findByEmail(email: string) {
@@ -340,8 +340,8 @@ export class UserService {
     async findByEmailForAuth(email: string) {
         return this.userRepository.findOne({
             where: { email },
-            select: { id: true, email: true, passwordHash: true, authorities: true },
-            relations: { authorities: true },
+            select: { id: true, email: true, passwordHash: true, authorities: true, activated: true },
+            relations: { authorities: true, tenant: true },
         });
     }
 }
