@@ -13,6 +13,8 @@
 # Full reference is available at:
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
+application:
+    url: http://localhost:8080
 
 bot:
   installation:
