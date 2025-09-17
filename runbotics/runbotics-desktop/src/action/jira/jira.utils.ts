@@ -179,13 +179,12 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
 }: GetJiraUserParams) => {
     const { originUrl, username, password, email } = input;
     const { data } = await externalAxios.get<T[]>(
-        `${originUrl}/rest/api/2/user/search`,
+        `${originUrl}/rest/api/3/user/search`,
         {
             params: {
                 maxResults: 10,
                 startAt: 0,
-
-                [isServer ? 'username' : 'query']: email,
+                query: email,
             },
             headers: getBasicAuthHeader({ password, username }),
             maxRedirects: 0,
@@ -202,7 +201,7 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
 
 export const getJiraProject = async ({ password, username, originUrl, project }: GetProjectWorklogInput)=> {
     const { data } = await externalAxios.get<Project>(
-        `${originUrl}/rest/api/2/project/${project}`,
+        `${originUrl}/rest/api/3/project/${project}`,
         {
             headers: getBasicAuthHeader({ password, username }),
             maxRedirects: 0,
@@ -289,7 +288,7 @@ const searchTaskDetails = async <T extends CloudJiraUser>(
 
     const MAX_SEARCH_RESULTS = 100;
     const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
-        `${originUrl}/rest/api/2/search`,
+        `${originUrl}/rest/api/3/search/jql`,
         {
             params: {
                 jql,
@@ -325,7 +324,7 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
         : baseFields;
 
     const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
-        `${originUrl}/rest/api/2/search`,
+        `${originUrl}/rest/api/3/search/jql`,
         {
             params: {
                 jql,
@@ -441,7 +440,7 @@ const searchWorklogsGroupedBy = <T extends CloudJiraUser | ServerJiraUser>({
 }) => {
     const { username, password, originUrl } = input;
     return externalAxios.get<IssueWorklogResponse<T>>(
-        `${originUrl}/rest/api/2/search`,
+        `${originUrl}/rest/api/3/search/jql`,
         {
             headers: getBasicAuthHeader({ username, password }),
             params: {
@@ -496,7 +495,7 @@ export const getIssueWorklogs = <T extends CloudJiraUser | ServerJiraUser>(issue
     }
 
     return externalAxios.get<WorklogResponse<T>>(
-        `${input.originUrl}/rest/api/2/issue/${issueKey}/worklog`,
+        `${input.originUrl}/rest/api/3/issue/${issueKey}/worklog`,
         {
             headers: getBasicAuthHeader({ username: input.username, password: input.password }),
             params: {

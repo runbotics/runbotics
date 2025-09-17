@@ -24,7 +24,6 @@ interface CredentialAttributesListProps {
 const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credential, templateId, isNewCredential, currentCollection }) => {
     const dispatch = useDispatch();
     const { credentialTemplates, loading: templatesLoading } = useSelector(credentialTemplatesSelector);
-    console.log(templateId, credentialTemplates);
     const credentialTemplate = credentialTemplates && credentialTemplates.find(template => template.id === templateId);
     const { user } = useAuth();
     const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
@@ -43,7 +42,6 @@ const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credentia
     }, []);
 
     if (templatesLoading|| !credentialTemplates) return <LoadingScreen/>;
-    console.log(credentialTemplate);
     const templateAttributesCards = credentialTemplate?.attributes?.map((attribute) => (
         <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12} display="flex" alignSelf="stretch">
             <TemplateAttribute credentialId={credential.id} attribute={attribute} isNewCredential={isNewCredential} canEdit={canEdit}/>
