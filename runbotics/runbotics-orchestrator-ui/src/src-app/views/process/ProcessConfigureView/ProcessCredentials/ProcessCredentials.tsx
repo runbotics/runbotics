@@ -129,7 +129,7 @@ const ProcessCredentials = () => {
                 <ActionsContainer $rowCount={rowCount}>
                     {columns.map((column, idx) => (
                         <ActionsColumns key={column.count + String(idx)}>
-                            {column.actionCredentials.map(actionType => {
+                            {column.actionCredentials?.map(actionType => {
                                 const templateId = credentialTemplates?.find(template => template.name === actionType.name).id;
 
                                 return (
