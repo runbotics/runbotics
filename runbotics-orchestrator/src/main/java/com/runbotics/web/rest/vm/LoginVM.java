@@ -16,7 +16,7 @@ public class LoginVM {
     public static final int PASSWORD_MIN_LENGTH = 14;
     public static final int PASSWORD_MAX_LENGTH = 100;
 
-    private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9])$";
+    private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).+$";
     private static final String INVALID_PASSWORD_MESSAGE =
         "Incorrect password. Must include at least 14 characters upper and lower cased, special character and digit.";
 
