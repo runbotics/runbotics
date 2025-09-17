@@ -338,21 +338,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Dispatch deploy core
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.ACTION_DISPATCH }}
-          repository: runbotics/runbotics-deployment
-          event-type: core
-          client-payload: '{}'
+        run: |
+          curl -X POST \
+          -H "Authorization: token ${{ secrets.GIT_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{"ref": "master", "inputs": { "fragment": "core" }}' \
+          "https://git.clouddc.eu/api/v1/repos/RPA/runbotics-deployment/actions/workflows/dev.yml/dispatches"
 
   dispatch-bot:
       needs: [push-bot]
       runs-on: ubuntu-latest
       steps:
         - name: Dispatch deploy bot
-          uses: peter-evans/repository-dispatch@v2
-          with:
-            token: ${{ secrets.ACTION_DISPATCH }}
-            repository: runbotics/runbotics-deployment
-            event-type: bot
-            client-payload: '{}'
+          run: |
+            curl -X POST \
+            -H "Authorization: token ${{ secrets.GIT_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"ref": "master", "inputs": { "fragment": "bot" }}' \
+            "https://git.clouddc.eu/api/v1/repos/RPA/runbotics-deployment/actions/workflows/dev.yml/dispatches"
