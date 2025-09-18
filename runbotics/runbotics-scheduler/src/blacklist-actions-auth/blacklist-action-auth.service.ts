@@ -100,6 +100,7 @@ export class BlacklistActionAuthService {
         [ACTION_GROUP.POWER_POINT]: Object.values(DesktopOfficeAction),
         [ACTION_GROUP.WINDOWS]: Object.values(WindowsAction),
         [ACTION_GROUP.VISUAL_BASIC]: Object.values(VisualBasicAction),
+        [ACTION_GROUP.ZIP]: Object.values(ZipAction),
         [ACTION_GROUP.EXTERNAL]: [],
     };
 

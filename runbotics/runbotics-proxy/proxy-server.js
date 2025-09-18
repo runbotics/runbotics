@@ -91,6 +91,9 @@ app.use(createProxy(hosts.landingPage, [], (err, req, res) => {
     // Otherwise this proxy implementation will try to run ws proxy multiple times
 }, false));
 
+app.disable('x-powered-by');
+app.disable('X-Powered-By');
+
 const server = app.listen(PORT, () => {
     console.log(`🚀 Reverse proxy server running on http://localhost:${PORT}`);
     console.log(`📋 Configuration:`);

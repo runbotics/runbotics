@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "3.5.0-SNAPSHOT.13",
+    "version": "3.5.0-SNAPSHOT.24",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -74,7 +74,8 @@
         "@nestjs/swagger": "6.3.0",
         "nestjs-zod": "~4.3.1",
         "jwt-decode": "~4.0.0",
-        "passport-custom": "~1.1.1"
+        "passport-custom": "~1.1.1",
+        "helmet": "~8.1.0"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",

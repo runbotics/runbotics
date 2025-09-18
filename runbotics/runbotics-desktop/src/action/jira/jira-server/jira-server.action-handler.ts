@@ -22,7 +22,7 @@ import {
     isJiraSingleDay,
     isJiraDatesPeriod,
     sortAscending
-} from '../jira.utils';
+} from './jira-server.utils';
 import { AtlassianCredentials, GetUserWorklogInput, IssueWorklogsParam, SearchIssue, SimpleWorklog, Worklog, WorklogOutput } from '../jira.types';
 import { JiraActionRequest, ServerJiraUser, SimpleServerJiraUser } from './jira-server.types';
 import { formatZodError } from '#utils/zodError';

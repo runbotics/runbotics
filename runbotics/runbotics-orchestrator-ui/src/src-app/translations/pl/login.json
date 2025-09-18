@@ -34,5 +34,6 @@
     "Login.Error.Msal.BadEmail": "Twoje konto Microsoft nie ma powiązanego prawidłowego adresu e-mail.",
     "Login.Error.Msal.BadCookie": "Nieprawidłowa sesja logowania Microsoft. Spróbuj ponownie.",
     "Login.Error.Msal.TokenExchangeError": "Wystąpił problem podczas logowania przez Microsoft.",
-    "Login.Error.Msal.TokenIssueFiled": "Wystąpił problem podczas logowania do aplikacji przez Microsoft."
+    "Login.Error.Msal.TokenIssueFiled": "Wystąpił problem podczas logowania do aplikacji przez Microsoft.",
+    "Login.Error.TooManyRequests": "Zbyt wiele prób logowania. Spróbuj ponownie później."
 }

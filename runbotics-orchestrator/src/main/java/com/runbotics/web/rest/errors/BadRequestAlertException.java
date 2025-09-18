@@ -3,6 +3,8 @@ package com.runbotics.web.rest.errors;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
 
@@ -13,6 +15,7 @@ public class BadRequestAlertException extends AbstractThrowableProblem {
     private final String entityName;
 
     private final String errorKey;
+
 
     public BadRequestAlertException(String defaultMessage, String entityName, String errorKey) {
         this(ErrorConstants.DEFAULT_TYPE, defaultMessage, entityName, errorKey);
