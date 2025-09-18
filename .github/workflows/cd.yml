@@ -354,5 +354,5 @@ jobs:
             curl -X POST \
             -H "Authorization: token ${{ secrets.GIT_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"ref": "master", "inputs": { "fragment": "bot", "trigger_source": "repository_dispatch" }}' \
+            -d '{"ref": "master", "inputs": { "fragment": "bots", "trigger_source": "repository_dispatch" }}' \
             "https://git.clouddc.eu/api/v1/repos/RPA/runbotics-deployment/actions/workflows/dev.yml/dispatches"
