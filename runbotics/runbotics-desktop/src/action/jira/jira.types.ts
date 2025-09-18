@@ -13,7 +13,7 @@ import {
     getBoardSprintsInputSchema,
     getSprintTasksInputSchema,
     getTaskDetailsInputSchema
-} from './jira.utils';
+} from './jira-cloud/jira-cloud.utils';
 import { CloudJiraUser, SimpleCloudJiraUser } from './jira-cloud/jira-cloud.types';
 import { ServerJiraUser, SimpleServerJiraUser } from './jira-server/jira-server.types';
 import { Dayjs } from 'dayjs';

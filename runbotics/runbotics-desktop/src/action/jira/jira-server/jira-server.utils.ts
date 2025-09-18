@@ -24,9 +24,9 @@ import {
     GetSprintTasksInput,
     GetTaskDetailsInput,
     AtlassianCredentials
-} from './jira.types';
-import { CloudJiraUser } from './jira-cloud/jira-cloud.types';
-import { ServerJiraUser } from './jira-server/jira-server.types';
+} from '../jira.types';
+import { CloudJiraUser } from '../jira-cloud/jira-cloud.types';
+import { ServerJiraUser } from './jira-server.types';
 import { externalAxios } from '#config';
 import _ from 'lodash';
 import z from 'zod';
@@ -35,38 +35,38 @@ import { JiraSprintState, JiraTaskStatus } from 'runbotics-common';
 export const isJiraInputBase = (
     data: unknown
 ): data is GetJiraInputBase => data
-&& typeof data === 'object'
-&& 'originUrl' in data && typeof data.originUrl === 'string'
-&& 'username' in data && typeof data.username === 'string'
-&& 'password' in data && typeof data.password === 'string';
+    && typeof data === 'object'
+    && 'originUrl' in data && typeof data.originUrl === 'string'
+    && 'username' in data && typeof data.username === 'string'
+    && 'password' in data && typeof data.password === 'string';
 
 export const isJiraDatesPeriod = (
     data: unknown
 ): data is JiraDatesPeriod => isJiraInputBase(data)
-&& 'startDate' in data && typeof data.startDate === 'string'
-&& 'endDate' in data && typeof data.endDate === 'string';
+    && 'startDate' in data && typeof data.startDate === 'string'
+    && 'endDate' in data && typeof data.endDate === 'string';
 
 export const isJiraSingleDay = (
     data: unknown
 ): data is JiraSingleDay => isJiraInputBase(data)
-&& 'date' in data && typeof data.date === 'string';
+    && 'date' in data && typeof data.date === 'string';
 
 export const isJiraDatesCollection = (
     data: unknown
 ): data is JiraDatesCollection => isJiraInputBase(data)
-&& 'dates' in data && Array.isArray(data.dates) && typeof data.dates[0] === 'string';
+    && 'dates' in data && Array.isArray(data.dates) && typeof data.dates[0] === 'string';
 
 export const isCloudJiraUser = (
     data: unknown
 ): data is CloudJiraUser => data
-&& typeof data === 'object'
-&& 'accountId' in data && typeof data.accountId === 'string';
+    && typeof data === 'object'
+    && 'accountId' in data && typeof data.accountId === 'string';
 
 export const isServerJiraUser = (
     data: unknown
 ): data is ServerJiraUser => data
-&& typeof data === 'object'
-&& 'key' in data && typeof data.key === 'string';
+    && typeof data === 'object'
+    && 'key' in data && typeof data.key === 'string';
 
 const dateValidator = (property: string) => z.string({
     required_error: `${property} property is missing`
@@ -179,12 +179,12 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
 }: GetJiraUserParams) => {
     const { originUrl, username, password, email } = input;
     const { data } = await externalAxios.get<T[]>(
-        `${originUrl}/rest/api/3/user/search`,
+        `${originUrl}/rest/api/2/user/search`,
         {
             params: {
                 maxResults: 10,
                 startAt: 0,
-                query: email,
+                username : email,
             },
             headers: getBasicAuthHeader({ password, username }),
             maxRedirects: 0,
@@ -201,7 +201,7 @@ export const getJiraUser = async <T extends CloudJiraUser | ServerJiraUser>({
 
 export const getJiraProject = async ({ password, username, originUrl, project }: GetProjectWorklogInput)=> {
     const { data } = await externalAxios.get<Project>(
-        `${originUrl}/rest/api/3/project/${project}`,
+        `${originUrl}/rest/api/2/project/${project}`,
         {
             headers: getBasicAuthHeader({ password, username }),
             maxRedirects: 0,
@@ -264,7 +264,7 @@ export const getJiraAllTaskDetails = async <T extends CloudJiraUser>(
 
     const START_AT = 0;
     return await searchTaskDetails<T>(input, jql, START_AT)
-        .then(res => res.total > 0 ? res.issues[0] : null)
+        .then(res => res.total > 0 ? res.issues[0] : null);
 };
 
 const searchTaskDetails = async <T extends CloudJiraUser>(
@@ -288,7 +288,7 @@ const searchTaskDetails = async <T extends CloudJiraUser>(
 
     const MAX_SEARCH_RESULTS = 100;
     const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
-        `${originUrl}/rest/api/3/search/jql`,
+        `${originUrl}/rest/api/2/search`,
         {
             params: {
                 jql,
@@ -324,7 +324,7 @@ const getJiraSprintTasksPage = async <T extends CloudJiraUser>(
         : baseFields;
 
     const { data } =  await externalAxios.get<IssueWorklogResponse<T>>(
-        `${originUrl}/rest/api/3/search/jql`,
+        `${originUrl}/rest/api/2/search`,
         {
             params: {
                 jql,
@@ -404,7 +404,7 @@ export const getIssueWorklogsByParam = async <T extends CloudJiraUser | ServerJi
         dateCondition = `worklogDate in (${mappedDates})`;
     }
 
-    const EPICFIELDS = 'cf[10014]'
+    const EPICFIELDS = 'cf[10014]';
     let jqlSearchParam = '';
 
     if (searchParam.param === 'worklogAuthor') {
@@ -412,7 +412,7 @@ export const getIssueWorklogsByParam = async <T extends CloudJiraUser | ServerJi
     } else if (searchParam.param === 'epic') {
         jqlSearchParam = `${EPICFIELDS}=${searchParam.epic}`;
     } else if (searchParam.param === 'project') {
-        jqlSearchParam = `project=${searchParam.project}`
+        jqlSearchParam = `project=${searchParam.project}`;
     }
 
     const jql = `${dateCondition} AND ${jqlSearchParam}`;
@@ -440,7 +440,7 @@ const searchWorklogsGroupedBy = <T extends CloudJiraUser | ServerJiraUser>({
 }) => {
     const { username, password, originUrl } = input;
     return externalAxios.get<IssueWorklogResponse<T>>(
-        `${originUrl}/rest/api/3/search/jql`,
+        `${originUrl}/rest/api/2/search`,
         {
             headers: getBasicAuthHeader({ username, password }),
             params: {
@@ -495,7 +495,7 @@ export const getIssueWorklogs = <T extends CloudJiraUser | ServerJiraUser>(issue
     }
 
     return externalAxios.get<WorklogResponse<T>>(
-        `${input.originUrl}/rest/api/3/issue/${issueKey}/worklog`,
+        `${input.originUrl}/rest/api/2/issue/${issueKey}/worklog`,
         {
             headers: getBasicAuthHeader({ username: input.username, password: input.password }),
             params: {
@@ -544,8 +544,8 @@ export const isWorklogCreator = <T extends CloudJiraUser | ServerJiraUser>({
     worklog, jiraUser
 }: WorklogIsCreatorParams<T>) =>
         isCloudJiraUser(worklog.author) &&
-        isCloudJiraUser(jiraUser)
+    isCloudJiraUser(jiraUser)
             ? worklog.author.accountId === jiraUser.accountId
             : isServerJiraUser(worklog.author) &&
-                isServerJiraUser(jiraUser) &&
-                worklog.author.key === jiraUser.key;
+        isServerJiraUser(jiraUser) &&
+        worklog.author.key === jiraUser.key;
