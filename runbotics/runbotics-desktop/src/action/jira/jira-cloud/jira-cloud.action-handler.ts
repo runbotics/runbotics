@@ -37,7 +37,7 @@ import {
     getJiraAllBoardSprints,
     getJiraAllSprintTasks,
     getJiraAllTaskDetails
-} from '../jira.utils';
+} from './jira-cloud.utils';
 import {
     GetJiraDatesInput,
     GetBoardSprintsInput,
