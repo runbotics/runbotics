@@ -26,7 +26,8 @@ const actionsGroupsTranslations = {
     'Process.Details.Modeler.ActionsGroup.Image': 'Image',
     'Process.Details.Modeler.ActionsGroup.External': 'External',
     'Process.Details.Modeler.ActionsGroup.Windows': 'Windows',
-    'Process.Details.Modeler.ActionsGroup.Sql': 'SQL'
+    'Process.Details.Modeler.ActionsGroup.Sql': 'SQL',
+    'Process.Details.Modeler.ActionsGroup.Xml': 'XML'
 };
 
 export default actionsGroupsTranslations;

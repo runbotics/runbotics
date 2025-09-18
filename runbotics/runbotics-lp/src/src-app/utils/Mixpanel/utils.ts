@@ -83,9 +83,10 @@ export const recordItemClick = ({ sourcePage, itemName, extraProperties = {} }: 
 export const identifyUserType = (userAuthorities: string[]): USER_TYPE => {
     if(userAuthorities.includes(Role.ROLE_ADMIN)) return USER_TYPE.ADMIN;
     if (userAuthorities.includes(Role.ROLE_TENANT_ADMIN)) return USER_TYPE.TENANT_ADMIN;
-    else if (userAuthorities.includes(Role.ROLE_USER)) return USER_TYPE.USER;
+    else if (userAuthorities.includes(Role.ROLE_RPA_USER)) return USER_TYPE.RPA_USER;
     else if (userAuthorities.includes(Role.ROLE_GUEST)) return USER_TYPE.GUEST;
     else if (userAuthorities.includes(Role.ROLE_EXTERNAL_USER)) return USER_TYPE.EXTERNAL_USER;
+    else if (userAuthorities.includes(Role.ROLE_USER)) return USER_TYPE.USER;
     return USER_TYPE.UNKNOWN;
 };
 

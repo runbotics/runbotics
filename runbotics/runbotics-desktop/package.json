@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "3.4.2",
+    "version": "3.5.0-SNAPSHOT.21",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -69,7 +69,8 @@
         "rxjs": "^7.5.5",
         "pg": "~8.14.1",
         "better-sqlite3": "~11.9.1",
-        "jwt-decode": "~4.0.0"
+        "jwt-decode": "~4.0.0",
+        "fast-xml-parser": "~5.2.5"
     },
     "build": {
         "productName": "RunBotics",

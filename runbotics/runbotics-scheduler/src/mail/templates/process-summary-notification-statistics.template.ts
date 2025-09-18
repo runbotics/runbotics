@@ -8,7 +8,7 @@ import { generateEmailHeader } from './components/email-header.template';
 import { mainStyles } from './styles/main-template.styles';
 import { processSummaryStyles } from './styles/process-summary-notification-statistics.styles';
 
-export const generateAggregatedEmailContent = (summaries: { name: string; stats: ProcessStatisticsResult }[]): string => {
+export const generateAggregatedEmailContent = (summaries: { name: string; stats: ProcessStatisticsResult }[], unsubscribeUrl: string): string => {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -84,7 +84,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
     </tr>
     <tr>
       <td class="footer">
-        <p>Nie chcesz otrzymywać takich wiadomości? <a href="#" style="color: #fbb040;">Kliknij tutaj</a>.</p>
+        <p>Nie chcesz otrzymywać takich wiadomości? <a href="${unsubscribeUrl}" style="color: #fbb040;">Kliknij tutaj</a>.</p>
         <p>2025 &copy; ${environment.runboticsEnv} v${environment.version}</p>
       </td>
     </tr>
