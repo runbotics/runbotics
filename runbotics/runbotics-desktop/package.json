@@ -1,6 +1,7 @@
 {
     "name": "runbotics-desktop",
-    "version": "3.5.0-SNAPSHOT.24",
+    "version": "3.5.0-SNAPSHOT.13",
+    "description": "RunBotics Desktop application - Process automation platform",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -74,7 +75,7 @@
     },
     "build": {
         "productName": "RunBotics",
-        "electronVersion": "23.3.13",
+        "electronVersion": "32.3.3",
         "appId": "com.runbotics.runbotics-desktop",
         "asar": true,
         "asarUnpack": [
@@ -107,8 +108,8 @@
         "win": {
             "target": "nsis",
             "icon": "./public/icons/runbotics-512x512.png",
-            "certificateFile": "./cert/selfsigncert.pfx",
-            "certificatePassword": "&#%TysWeL^^J@S46"
+            "cscLink": "./cert/selfsigncert.pfx",
+            "cscKeyPassword": "&#%TysWeL^^J@S46"
         },
         "nsis": {
             "allowToChangeInstallationDirectory": true,
@@ -133,7 +134,8 @@
         "cross-env": "^7.0.3",
         "vitest": "1.6.1",
         "vite": "~5.4.5",
-        "electron-builder": "^24.13.3",
+        "electron-builder": "^26.0.20",
+        "electron": "32.3.3",
         "eslint": "^8.31.0",
         "ts-loader": "^9.4.2",
         "ts-node": "^10.9.1",
@@ -143,7 +145,8 @@
         "@swc/core": "~1.7.26",
         "@types/mime-types": "~2.1.4",
         "@types/pg": "~8.11.13",
-        "@types/better-sqlite3": "~7.6.13"
+        "@types/better-sqlite3": "~7.6.13",
+        "prebuild-install": "~7.1.3"
     },
     "files": [
         "dist",
