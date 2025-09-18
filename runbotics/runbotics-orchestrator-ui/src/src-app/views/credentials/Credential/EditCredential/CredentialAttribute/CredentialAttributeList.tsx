@@ -42,8 +42,7 @@ const CredentialAttributesList: FC<CredentialAttributesListProps> = ({ credentia
     }, []);
 
     if (templatesLoading|| !credentialTemplates) return <LoadingScreen/>;
-
-    const templateAttributesCards = credentialTemplate.attributes.map((attribute) => (
+    const templateAttributesCards = credentialTemplate?.attributes?.map((attribute) => (
         <Grid item key={attribute.id} xl={3} lg={4} md={6} xs={12} display="flex" alignSelf="stretch">
             <TemplateAttribute credentialId={credential.id} attribute={attribute} isNewCredential={isNewCredential} canEdit={canEdit}/>
         </Grid>

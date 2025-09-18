@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import JiraServerActionHandler from './jira-server.action-handler';
 import { SearchIssue, WorklogResponse, GetUserWorklogInput } from '../jira.types';
 import { ServerJiraUser } from './jira-server.types';
-import * as jiraUtils from '../jira.utils';
+import * as jiraUtils from './jira-server.utils';
 import { ServerConfigService } from '#config';
 
 describe('JiraServerActionHandler', () => {
