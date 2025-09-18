@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import JiraCloudActionHandler from './jira-cloud.action-handler';
 import { GetUserWorklogInput, SearchIssue, WorklogResponse } from '../jira.types';
 import { CloudJiraUser } from './jira-cloud.types';
-import * as jiraUtils from '../jira.utils';
+import * as jiraUtils from './jira-cloud.utils';
 import { ServerConfigService } from '#config';
 import { ConfigService } from '@nestjs/config';
 import { ArgumentsService } from '#config/arguments.service';
