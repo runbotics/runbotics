@@ -12,6 +12,7 @@ import { BotModule } from '#/scheduler-database/bot/bot.module';
 import { BotSystemModule } from '#/scheduler-database/bot-system/bot-system.module';
 import { BotCollectionModule } from '#/scheduler-database/bot-collection/bot-collection.module';
 import { UserModule } from '#/scheduler-database/user/user.module';
+import { AuthController } from '#/auth/auth.controller';
 
 const GlobalRoleGuard = {
     provide: APP_GUARD,
@@ -44,6 +45,7 @@ const GlobalFeatureKeyGuard = {
     providers: [
         AuthService, JwtStrategy, GlobalRoleGuard, GlobalFeatureKeyGuard,
     ],
+    controllers: [AuthController],
     exports: [AuthService, PassportModule],
 })
 export class AuthModule { }

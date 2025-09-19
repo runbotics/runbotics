@@ -349,11 +349,15 @@ export class AuthService {
         }
         const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
         return {
-            idToken: await this.jwtService.signAsync(payload, {
+            idToken: this.jwtService.sign(payload, {
                 expiresIn: rememberMe ? '30d' : '1d',
                 algorithm: 'HS512',
                 noTimestamp: true,
             }),
+            user:{
+                ...user,
+                passwordHash: undefined,
+            },
         };
     }
 }
