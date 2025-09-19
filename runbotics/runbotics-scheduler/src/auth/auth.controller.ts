@@ -18,8 +18,7 @@ export class AuthController {
         @Res() res: Response,
     ) {
         const newToken = await this.authService.authenticate(body.username, body.password, body.rememberMe === 'true');
-
         res.setHeader('Authorization', `Bearer ${newToken.idToken}`);
-        res.status(200).json(newToken);
+        res.status(200).json({ idToken: newToken.idToken, user: newToken.user });
     }
 }

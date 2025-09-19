@@ -21,7 +21,7 @@ export const login = createAsyncThunk<AuthState['user'], { email: string; passwo
     'auth/login',
     async (payload, { rejectWithValue }) => {
         try {
-            const response = await Axios.post<{ id_token: string }>(
+            const response = await Axios.post<{ idToken: string, user:UserDto }>(
                 '/api/scheduler/auth/authenticate',
                 {
                     username: payload.email,
@@ -29,11 +29,9 @@ export const login = createAsyncThunk<AuthState['user'], { email: string; passwo
                     rememberMe: true,
                 }
             );
-            const { id_token: idToken } = response.data;
+            const { idToken, user } = response.data;
 
-            setAccessToken(idToken);
-            const responseUser = await Axios.get<UserDto>(`/api/scheduler/users/by-token`);
-            const user = responseUser.data;
+            setAccessToken(idToken)
             return { ...user, authoritiesById: user?.roles };
         } catch (error) {
             if (!error.response) {
