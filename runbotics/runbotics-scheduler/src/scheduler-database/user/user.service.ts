@@ -6,7 +6,13 @@ import { getPage } from '#/utils/page/page';
 import { Paging } from '#/utils/page/pageable.decorator';
 import postgresError from '#/utils/postgresError';
 import { Specs } from '#/utils/specification/specifiable.decorator';
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
@@ -32,7 +38,8 @@ export class UserService {
         private readonly tenantService: TenantService,
         private readonly mailService: MailService,
         private readonly dataSource: DataSource,
-    ) { }
+    ) {
+    }
 
     async addMsalSSOCredentialsToUser(user: User, msalSsoUserDto: MsalSsoUserDto) {
         user.microsoftTenantId = msalSsoUserDto.msTenantId;
@@ -115,8 +122,8 @@ export class UserService {
             tenantId,
             email: In(emails),
             authorities: {
-                name: Not(Role.ROLE_TENANT_ADMIN)
-            }
+                name: Not(Role.ROLE_TENANT_ADMIN),
+            },
         });
     }
 
@@ -135,11 +142,40 @@ export class UserService {
     }
 
     findById(id: number) {
-        return this.userRepository.findOne({ where: { id }, relations: {authorities: true, tenant: true}});
+        return this.userRepository.findOne({ where: { id }, relations: { authorities: true, tenant: true } });
+    }
+
+    async findByEmailForAuth(email: string) {
+        const result = await this.userRepository.findOne({
+            where: { email },
+            relations: { authorities: true, tenant: true },
+        });
+        const password = await this.userRepository.findOne({
+           select: { email:true, id: true, passwordHash: true},
+            where: { id: result.id },
+        });
+        return {
+            ...result, 
+            passwordHash: password.passwordHash,
+            roles: result.authorities.map(authority => {
+                return {
+                    name: authority.name,
+                    roles: authority.featureKeys.map(featureKey => {
+                        return featureKey.name;
+                    }),
+                    
+                };
+            }),
+            featureKeys: result.authorities.map(authority => { return authority.featureKeys.map(featureKey => (featureKey.name)); }).flat(),
+        };
     }
 
     findByEmail(email: string) {
         return this.userRepository.findOne({ where: { email } });
+    }
+
+    findByEmailFromToken(email: string) {
+        return this.userRepository.findOne({ where: { email }, relations: { authorities: true, tenant: true, } });
     }
 
     async activate(activateDto: ActivateUserDto, id: number, executor: User) {
@@ -306,7 +342,7 @@ export class UserService {
     }
 
     private getTenantRelation(
-        tenantId: string | null
+        tenantId: string | null,
     ): Promise<{ tenant: Tenant } | null> {
         return this.tenantService
             .getById(tenantId)
@@ -334,14 +370,6 @@ export class UserService {
                 tenantId,
             },
             relations: ['authorities'],
-        });
-    }
-
-    async findByEmailForAuth(email: string) {
-        return this.userRepository.findOne({
-            where: { email },
-            select: { id: true, email: true, passwordHash: true, authorities: true, activated: true },
-            relations: { authorities: true, tenant: true },
         });
     }
 }
