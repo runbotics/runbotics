@@ -85,7 +85,7 @@ export class AuthService {
 
         return user;
     }
-    
+
     async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
         const user = await this.userService.findByEmail(userDto.email);
 
@@ -112,11 +112,11 @@ export class AuthService {
             user.microsoftUserId !== userDto.msObjectId
         ) {
             throw new UnauthorizedException(
-                'Tenant ID or Microsoft User ID does not match'
+                'Tenant ID or Microsoft User ID does not match',
             );
         }
     }
-    
+
     private signInMicrosoftSSOUser({ email, authorities }: User) {
         const roles = authorities.map((authority) => authority.name);
 
@@ -168,7 +168,7 @@ export class AuthService {
             const [
                 requiredMajor,
                 requiredMinor,
-                requiredPatch
+                requiredPatch,
             ] = await this.extractSemanticVersion(this.serverConfigService.requiredBotVersion);
 
             const [major, minor, patch] = await this.extractSemanticVersion(botVersion);
@@ -194,7 +194,7 @@ export class AuthService {
     }
 
     async validateBotWebsocketConnection({ client, isGuard }: ValidatorBotWsProps) {
-        return this.validateBotConnection({client, isGuard})
+        return this.validateBotConnection({ client, isGuard })
             .catch((error) => {
                 this.logger.error('Bot connection error', error);
                 return null;
@@ -268,7 +268,7 @@ export class AuthService {
     }
 
     private registerNewBot({
-        installationId, system, user, collection, version
+        installationId, system, user, collection, version,
     }: RegisterNewBotParams) {
         const bot = new BotEntity();
         bot.installationId = installationId;
@@ -307,7 +307,10 @@ export class AuthService {
         await queryRunner.startTransaction();
         try {
             const bot = await queryRunner.manager
-                .findOne(BotEntity, { where: { installationId: installationId }, relations: ['user', 'system', 'collection']});
+                .findOne(
+                    BotEntity,
+                    { where: { installationId: installationId }, relations: ['user', 'system', 'collection'] },
+                );
 
             bot.status = BotStatus.DISCONNECTED;
 
@@ -315,7 +318,7 @@ export class AuthService {
                 .createQueryBuilder()
                 .update(BotEntity)
                 .set({
-                   ...bot,
+                    ...bot,
                 })
                 .where('id = :id', { id: bot.id })
                 .execute();
@@ -335,17 +338,26 @@ export class AuthService {
     async authenticate(email: string, password: string, rememberMe: boolean) {
         const user = await this.userService.findByEmailForAuth(email);
         if (!user) {
-            throw new NotFoundException(`User with email ${email} not found`);
+            throw new NotFoundException({
+                message: `User with email ${email} not found`,
+                errorKey: 'user_not_found',
+            });
         }
-        if(!user.tenant.active) {
-            throw new UnauthorizedException('Tenant for user is deactivated');
+        if (!user.tenant.active) {
+            throw new ForbiddenException({
+                message: 'Tenant for user is deactivated',
+                errorKey: 'tenant_not_activated',
+            });
         }
         const passwordAuth = await bcrypt.compare(password, user.passwordHash);
         if (!passwordAuth) {
             throw new UnauthorizedException();
         }
-        if(!user.activated) {
-            throw  new ForbiddenException(`User with email ${email} is not activated`);
+        if (!user.activated) {
+            throw new ForbiddenException({
+                message: `User with email ${email} is not activated`,
+                errorKey: 'user_not_activated',
+            });
         }
         const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
         return {
@@ -354,8 +366,9 @@ export class AuthService {
                 algorithm: 'HS512',
                 noTimestamp: true,
             }),
-            user:{
+            user: {
                 ...user,
+                authorities: undefined,
                 passwordHash: undefined,
             },
         };

@@ -31,7 +31,8 @@ export const login = createAsyncThunk<AuthState['user'], { email: string; passwo
             );
             const { idToken, user } = response.data;
 
-            setAccessToken(idToken)
+            setAccessToken(idToken);
+            // const { data: user } = await Axios.get<UserDto>('/api/account');
             return { ...user, authoritiesById: user?.roles };
         } catch (error) {
             if (!error.response) {
@@ -87,7 +88,7 @@ export const initialize = createAsyncThunk<{
         if (accessToken && isValidToken(accessToken)) {
             setAccessToken(accessToken);
 
-            const response = await Axios.get<UserDto>('/api/account');
+            const response = await Axios.get<UserDto>('/api/scheduler/users/account');
             const user = response.data;
             return {
                 isAuthenticated: true,
@@ -146,7 +147,7 @@ export const loginWithMsalCookie = createAsyncThunk<
             return rejectWithValue(MsalLoginError.BAD_COOKIE);
         }
         setAccessToken(idToken);
-        const responseUser = await Axios.get<UserDto>('/api/account');
+        const responseUser = await Axios.get<UserDto>('/api/scheduler/users/account');
         const user = responseUser.data;
         return { ...user, authoritiesById: user?.roles };
     } catch (error) {
