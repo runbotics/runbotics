@@ -158,13 +158,7 @@ export class UserService {
             ...result, 
             passwordHash: password.passwordHash,
             roles: result.authorities.map(authority => {
-                return {
-                    name: authority.name,
-                    roles: authority.featureKeys.map(featureKey => {
-                        return featureKey.name;
-                    }),
-                    
-                };
+                return authority.name;
             }),
             featureKeys: result.authorities.map(authority => { return authority.featureKeys.map(featureKey => (featureKey.name)); }).flat(),
         };

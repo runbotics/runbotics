@@ -15,7 +15,8 @@ import { ActivateUserDto, activateUserSchema } from './dto/activate-user.dto';
 
 @Controller('/api/scheduler')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) {
+    }
 
     @GetWithTenant('users/Page')
     @FeatureKeys(FeatureKey.TENANT_READ_USER)
@@ -34,6 +35,15 @@ export class UserController {
         @UserDecorator() { tenantId }: User,
     ) {
         return this.userService.findAllActivatedByTenant(tenantId);
+    }
+
+    @Get('users/account')
+    @FeatureKeys(FeatureKey.TENANT_READ_USER)
+    getUserByIdInTenant(
+        @UserDecorator() { email }: User,
+    ) {
+        return this.userService.findByEmailForAuth(email);
+        
     }
 
     @PatchWithTenant('users/:id')
