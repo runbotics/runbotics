@@ -104,6 +104,8 @@ jobs:
           (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json
 
       - name: Build rb-desktop
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
         run: |
           cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
           pnpm electron-builder
