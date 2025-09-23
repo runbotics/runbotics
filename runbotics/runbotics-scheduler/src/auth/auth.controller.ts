@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import { AuthService } from '#/auth/auth.service';
 import { Logger } from '#/utils/logger';
 import { Public } from '#/auth/guards';
+import { AuthDto, authSchema } from '#/auth/dto/auth.dto';
+import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { AuthGuestService } from '#/auth/auth-guest.service';
 
 @Controller('/api/scheduler/auth')
@@ -18,10 +20,10 @@ export class AuthController {
     @Public()
     @Post('authenticate')
     async authenticate(
-        @Body() body: { username: string; password: string, rememberMe?: string },
+        @Body(new ZodValidationPipe(authSchema)) body: AuthDto,
         @Res() res: Response,
     ) {
-        const newToken = await this.authService.authenticate(body.username, body.password, body.rememberMe === 'true');
+        const newToken = await this.authService.authenticate(body.username, body.password, body.rememberMe);
         res.setHeader('Authorization', `Bearer ${newToken.idToken}`);
         res.status(200).json({ idToken: newToken.idToken, user: newToken.user });
     }
