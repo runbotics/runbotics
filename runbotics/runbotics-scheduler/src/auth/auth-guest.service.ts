@@ -8,10 +8,11 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { Authority } from '#/scheduler-database/authority/authority.entity';
 import { randomUUID } from 'crypto';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { Logger } from '#/utils/logger';
 
 @Injectable()
 export class AuthGuestService {
-
+    private readonly logger = new Logger(AuthGuestService.name);
     constructor(
         @InjectDataSource()
         private readonly dataSource: DataSource,
@@ -58,7 +59,7 @@ export class AuthGuestService {
 
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
     async deleteOldGuests() {
-        console.log('Deleting old guests');
+        this.logger.log('Deleting old guests');
         const guests = await this.dataSource.manager.find(Guest, { relations: { user: true } });
         await this.dataSource.manager.delete(User, { id: In(guests.map(guest => guest.user.id)) });
     }
