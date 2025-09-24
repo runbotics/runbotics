@@ -38,7 +38,7 @@ export class UserController {
     }
 
     @Get('users/account')
-    @FeatureKeys(FeatureKey.TENANT_READ_USER)
+    @FeatureKeys(FeatureKey.TENANT_READ_USER, FeatureKey.PROCESS_ADD_GUEST)
     getUserByIdInTenant(
         @UserDecorator() { email }: User,
     ) {

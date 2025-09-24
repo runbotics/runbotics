@@ -88,7 +88,6 @@ const LoginPage: FC = () => {
                     email: user.email,
                     trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
                 });
-                console.log('dupa3');
             })
             .catch((error) => {
                 setStatus({ success: false });
