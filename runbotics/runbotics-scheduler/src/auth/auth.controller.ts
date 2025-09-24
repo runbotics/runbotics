@@ -1,5 +1,5 @@
 import { Body, Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from '#/auth/auth.service';
 import { Logger } from '#/utils/logger';
 import { Public } from '#/auth/guards';
@@ -9,8 +9,10 @@ import { AuthGuestService } from '#/auth/auth-guest.service';
 export class AuthController {
     private readonly logger = new Logger(AuthController.name);
 
-    constructor(private readonly authService: AuthService,
-        private readonly authGuestService: AuthGuestService) {
+    constructor(
+        private readonly authService: AuthService,
+        private readonly authGuestService: AuthGuestService,
+    ) {
     }
 
     @Public()
@@ -23,7 +25,7 @@ export class AuthController {
         res.setHeader('Authorization', `Bearer ${newToken.idToken}`);
         res.status(200).json({ idToken: newToken.idToken, user: newToken.user });
     }
-    
+
     @Public()
     @Post('authenticate/guest')
     async authenticateGuest(
@@ -32,11 +34,14 @@ export class AuthController {
         @Res() res: Response,
     ) {
         this.logger.log('Authenticating guest user');
-        const remoteAddress = req.headers['x-forwarded-for']?.at(0) || req.ip || '';
+        const firstForwardedFor = Array.isArray(req.headers['x-forwarded-for']) ? 
+            req.headers['x-forwarded-for']?.at(0) : 
+            req.headers['x-forwarded-for']?.split(',')?.at(0);
+        const remoteAddress = firstForwardedFor || req.ip || '';
         const verifiedGuests = await this.authGuestService.verifyGuestLimit(remoteAddress.toString());
-        if(!verifiedGuests) {
+        if (!verifiedGuests) {
             this.logger.warn(`Guest limit exceeded for IP: ${remoteAddress}`);
-            return { statusCode: HttpStatus.FORBIDDEN, message: 'Guest limit exceeded' };
+            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Guest limit exceeded' });
         }
         const newGuest = await this.authGuestService.createGuestUser(remoteAddress.toString(), body.langKey);
         const guestJWTData = await this.authService.createGuestToken(newGuest);
