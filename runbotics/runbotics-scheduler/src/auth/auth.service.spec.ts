@@ -1,9 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { WsException } from '@nestjs/websockets';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 // Mockujemy zależności
@@ -64,7 +62,7 @@ describe('AuthService', () => {
             new JwtService({ secret: 'test_secret' }),
         );
     });
-    
+
     it('authenticate: poprawne dane zwracają token', async () => {
         const user = {
             email: 'x@test.com',
@@ -74,13 +72,17 @@ describe('AuthService', () => {
         userServiceMock.findByEmailForAuth.mockResolvedValue(user);
         (bcrypt.compare as any).mockResolvedValue(true);
 
-        const result = await service.authenticate('x@test.com', 'pass', false);
+        const result = await service.authenticate({ username: 'x@test.com', password: 'pass', rememberMe: false });
         expect(result.idToken).toBeDefined();
     });
 
     it('authenticate: brak usera rzuca NotFoundException', async () => {
         userServiceMock.findByEmailForAuth.mockResolvedValue(null);
-        await expect(service.authenticate('ghost@test.com', 'x', false)).rejects.toThrow(NotFoundException);
+        await expect(service.authenticate({
+            username: 'ghost@test.com',
+            password: 'x',
+            rememberMe: false,
+        })).rejects.toThrow(NotFoundException);
     });
 
     it('authenticate: złe hasło rzuca UnauthorizedException', async () => {
@@ -91,6 +93,10 @@ describe('AuthService', () => {
         });
         (bcrypt.compare as any).mockResolvedValue(false);
 
-        await expect(service.authenticate('x@test.com', 'bad', false)).rejects.toThrow(UnauthorizedException);
+        await expect(service.authenticate({
+            username: 'x@test.com',
+            password: 'bad',
+            rememberMe: false,
+        })).rejects.toThrow(UnauthorizedException);
     });
 });

@@ -18,6 +18,7 @@ import { MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.s
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { Guest } from '#/scheduler-database/guest/guest.entity';
+import { AuthDto } from '#/auth/dto/auth.dto';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -336,11 +337,11 @@ export class AuthService {
         }
     }
 
-    async authenticate(email: string, password: string, rememberMe: boolean) {
-        const user = await this.userService.findByEmailForAuth(email);
+    async authenticate({ username, password, rememberMe }: AuthDto) {
+        const user = await this.userService.findByEmailForAuth(username);
         if (!user) {
             throw new NotFoundException({
-                message: `User with email ${email} not found`,
+                message: `User with email ${username} not found`,
                 errorKey: 'user_not_found',
             });
         }
@@ -356,7 +357,7 @@ export class AuthService {
         }
         if (!user.activated) {
             throw new ForbiddenException({
-                message: `User with email ${email} is not activated`,
+                message: `User with email ${username} is not activated`,
                 errorKey: 'user_not_activated',
             });
         }
