@@ -23,7 +23,7 @@ export class AuthController {
         @Body(new ZodValidationPipe(authSchema)) body: AuthDto,
         @Res() res: Response,
     ) {
-        const newToken = await this.authService.authenticate(body.username, body.password, body.rememberMe);
+        const newToken = await this.authService.authenticate(body);
         res.setHeader('Authorization', `Bearer ${newToken.idToken}`);
         res.status(200).json({ idToken: newToken.idToken, user: newToken.user });
     }
