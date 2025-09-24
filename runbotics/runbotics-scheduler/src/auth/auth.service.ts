@@ -17,6 +17,7 @@ import { Connection } from 'typeorm';
 import { MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { Guest } from '#/scheduler-database/guest/guest.entity';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -372,6 +373,23 @@ export class AuthService {
                 passwordHash: undefined,
             },
         };
+    }
+
+    async createGuestToken(guest: Guest) {
+        const user = await this.userService.findByEmailForAuth(guest.user.email);
+        const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
+        return {
+            idToken: this.jwtService.sign(payload, {
+                expiresIn: '1h',
+                algorithm: 'HS512',
+                noTimestamp: true,
+            }),
+            user: {
+                ...user,
+                authorities: undefined,
+                passwordHash: undefined,
+            },
+        }
     }
 }
 
