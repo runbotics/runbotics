@@ -145,11 +145,17 @@ export class UserService {
         return this.userRepository.findOne({ where: { id }, relations: { authorities: true, tenant: true } });
     }
 
-    async findByEmailForAuth(email: string) {
+    async findByEmailForAuth(email: string | null) {
+        if(!email) {
+            throw new BadRequestException('Email is null');
+        }
         const result = await this.userRepository.findOne({
             where: { email },
             relations: { authorities: true, tenant: true },
         });
+        if(!result) {
+            throw new NotFoundException(`User with email ${email} not found`);
+        }
         const password = await this.userRepository.findOne({
            select: { email:true, id: true, passwordHash: true},
             where: { id: result.id },

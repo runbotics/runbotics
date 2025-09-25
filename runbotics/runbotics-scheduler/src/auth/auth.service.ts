@@ -377,7 +377,19 @@ export class AuthService {
     }
 
     async createGuestToken(guest: Guest) {
+        if(!guest.user) {
+            throw new NotFoundException({
+                message: 'Guest has no associated user',
+                errorKey: 'guest_user_not_found',
+            });
+        }
         const user = await this.userService.findByEmailForAuth(guest.user.email);
+        if(!user) {
+            throw new NotFoundException({
+                message: `User with email ${guest.user.email} not found`,
+                errorKey: 'user_not_found',
+            });
+        }
         const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
         return {
             idToken: this.jwtService.sign(payload, {
@@ -390,7 +402,7 @@ export class AuthService {
                 authorities: undefined,
                 passwordHash: undefined,
             },
-        }
+        };
     }
 }
 
