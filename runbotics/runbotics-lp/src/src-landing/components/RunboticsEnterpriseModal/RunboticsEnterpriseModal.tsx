@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+
+import { translate } from '#src-app/hooks/useTranslations';
+
 import styles from './RunboticsEnterpriseModal.module.scss';
 
 const RunboticsEnterpriseModal: React.FC = () => {
@@ -16,18 +19,16 @@ const RunboticsEnterpriseModal: React.FC = () => {
                 />
                 <div className={styles.textGroup}>
                     <span className={styles.title}>
-                        Runbotics nie jest już utrzymywany w modelu open-source.
+                        {translate('Enterprise.Title')}
                     </span>
                     <span className={styles.text}>
-                        Jeśli chcesz korzystać z Runbotics, to skontaktuj się z
-                        naszym partnerem All for One Poland po Runbotics
-                        Enterprise.
+                        {translate('Enterprise.Description')}
                     </span>
                 </div>
             </div>
             <div className={styles.buttons}>
                 <button type="button" onClick={() => setOpen(false)}>
-                    Rozumiem
+                    {translate('Enterprise.Button.Dismiss')}
                 </button>
                 <button
                     type="button"
@@ -39,7 +40,7 @@ const RunboticsEnterpriseModal: React.FC = () => {
                     }
                     className={styles.primaryButton}
                 >
-                    Przejdź do Runbotics Enterprise
+                    {translate('Enterprise.Button.Cta')}
                 </button>
             </div>
         </div>

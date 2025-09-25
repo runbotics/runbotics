@@ -5,10 +5,10 @@
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 5vh;
+    bottom: 1rem;
     margin: auto;
     max-width: $MAX_SECTION_CONTENT_WIDTH;
-    padding: $padding-3;
+    padding: $padding-2;
     border-radius: 20px;
     background: $palette-white;
     z-index: $header-z-index;
@@ -29,6 +29,7 @@
     display: flex;
     align-items: center;
     flex-direction: row;
+
     @media (max-width: $breakpoint-md) {
         flex-direction: column;
         align-items: flex-start;
@@ -36,9 +37,10 @@
 }
 
 .logo {
-    height: 60px;
+    height: 3.75rem;
     margin-right: $padding-2;
     border-right: 1px solid $palette-background-secondary-dark;
+
     @media (max-width: $breakpoint-md) {
         margin-bottom: $padding-2;
         border: none;
@@ -49,7 +51,8 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    
+    padding: $padding-2;
+
     @media (max-width: $breakpoint-sm) {
         flex-direction: column;
         gap: $margin-3;
@@ -88,12 +91,12 @@
         background: $blog-background-mask;
         color: black;
         border: none;
-        
+
         &:hover {
             background: $palette-background-accent-dark;
         }
     }
-    
+
     @media (max-width: $breakpoint-md) {
         gap: $margin-1;
     }
