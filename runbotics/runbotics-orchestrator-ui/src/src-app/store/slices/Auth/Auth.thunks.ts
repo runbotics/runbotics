@@ -22,6 +22,7 @@ export const login = createAsyncThunk<
     { email: string; password: string }
 >('auth/login', async (payload, { rejectWithValue }) => {
     try {
+        
         const response = await Axios.post<{ idToken: string; user: UserDto }>(
             '/api/scheduler/auth/authenticate',
             {
@@ -33,7 +34,7 @@ export const login = createAsyncThunk<
         const { idToken, user } = response.data;
 
         setAccessToken(idToken);
-        // const { data: user } = await Axios.get<UserDto>('/api/account');
+        
         return { ...user, authoritiesById: user?.roles };
     } catch (error) {
         if (!error.response) {
