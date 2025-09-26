@@ -22,3 +22,12 @@ test("tenant-admin can login", async ({ page }) => {
 
     expect(await page.title()).toMatch(/RunBotics/i);
 });
+
+test('guest can login', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.loginGuest();
+    await loginPage.waitForLoginSuccess();
+
+    expect(await page.title()).toMatch(/Process Details/i);
+});
