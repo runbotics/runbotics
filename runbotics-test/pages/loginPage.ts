@@ -28,6 +28,10 @@ export class LoginPage {
     async loginGuest() {
         await this.loginGuestButton.click();
     }
+    
+    async waitForLoginGuestSuccess() {
+        await this.page.waitForURL("**/app/processes/**");
+    }
 
     async waitForLoginSuccess() {
         await this.page.waitForURL("**/app/processes/collections**");

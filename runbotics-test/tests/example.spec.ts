@@ -27,7 +27,7 @@ test('guest can login', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.loginGuest();
-    await loginPage.waitForLoginSuccess();
+    await loginPage.waitForLoginGuestSuccess();
 
     expect(await page.title()).toMatch(/Process Details/i);
 });
