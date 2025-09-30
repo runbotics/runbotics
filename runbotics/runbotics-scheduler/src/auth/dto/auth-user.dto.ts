@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { BasicTenantDtoSchema } from '#/scheduler-database/tenant/dto/tenant.dto';
+import { createZodDto } from 'nestjs-zod';
 
 const RolesSchema = z.array(z.string());
 
@@ -23,4 +24,5 @@ export const AuthUserDtoSchema = z.object({
     featureKeys: FeatureKeysSchema,
 });
 
+export class AuthClassUserDto extends createZodDto(AuthUserDtoSchema) {}
 export type AuthUserDto = z.infer<typeof AuthUserDtoSchema>;

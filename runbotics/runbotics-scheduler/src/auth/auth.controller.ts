@@ -3,9 +3,11 @@ import { Request, Response } from 'express';
 import { AuthService } from '#/auth/auth.service';
 import { Logger } from '#/utils/logger';
 import { Public } from '#/auth/guards';
-import { AuthDto, authSchema } from '#/auth/dto/auth.dto';
+import { AuthClassDto, AuthDto, authSchema } from '#/auth/dto/auth.dto';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { AuthGuestService } from '#/auth/auth-guest.service';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { AuthClassUserDto } from '#/auth/dto/auth-user.dto';
 
 @Controller('api')
 export class AuthController {
@@ -18,7 +20,17 @@ export class AuthController {
     }
 
     @Public()
-    @Post('authenticate')
+    @Post('authenticate')    
+    @ApiOperation({ summary: 'Authenticate user with credentials' })
+    @ApiBody({ type: AuthClassDto })
+    @ApiResponse({ status: 200, description: 'User authenticated successfully', schema: {
+            type: 'object',
+            properties: {
+                idToken: { type: 'string', example: 'eyJhbGciOiJIUzI1...' },
+                user: { type: 'object' }
+            }
+        }})
+    @ApiResponse({ status: 400, description: 'Invalid credentials or request body' })
     async authenticate(
         @Body(new ZodValidationPipe(authSchema)) body: AuthDto,
         @Res() res: Response,
@@ -30,6 +42,22 @@ export class AuthController {
 
     @Public()
     @Post('authenticate/guest')
+    @ApiOperation({ summary: 'Authenticate as guest user' })
+    @ApiBody({ schema: {
+            type: 'object',
+            properties: {
+                langKey: { type: 'string', example: 'en' }
+            },
+            required: ['langKey']
+        }})
+    @ApiResponse({ status: 200, description: 'Guest user authenticated successfully', schema: {
+            type: 'object',
+            properties: {
+                idToken: { type: 'string', example: 'eyJhbGciOiJIUzI1...' },
+                user: { type: 'object' } 
+            }
+        }})
+    @ApiResponse({ status: 403, description: 'Guest limit exceeded' })
     async authenticateGuest(
         @Body() body: { langKey: string },
         @Req() req: Request,

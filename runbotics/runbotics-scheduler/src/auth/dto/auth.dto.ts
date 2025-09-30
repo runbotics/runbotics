@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { createZodDto } from 'nestjs-zod';
 
 export const authSchema = z.object({
     username: z.string().trim().min(1).max(100),
@@ -9,4 +10,5 @@ export const authSchema = z.object({
     rememberMe: z.boolean().optional(),
 });
 
+export class AuthClassDto extends createZodDto(authSchema) {}
 export type AuthDto = z.infer<typeof authSchema>;
