@@ -22,8 +22,11 @@ export class FeatureKeyGuard extends JwtAuthGuard {
 
         const request = context.switchToHttp().getRequest<AuthRequest>();
         const user = request.user;
-        const userKeys = user.authorities.flatMap((auth) => auth.featureKeys).map((featureKey) => featureKey.name);
-
-        return featureKeys.every((key) => userKeys.includes(key));
+        const userKeys = new Set([
+            ...user.authorities.flatMap((auth) => auth.featureKeys).map((featureKey) => featureKey.name),
+            ...user.userFeatureKeys.map((featureKey) => featureKey.name)
+        ]);
+    
+        return featureKeys.every((key) => userKeys.has(key));
     }
 }

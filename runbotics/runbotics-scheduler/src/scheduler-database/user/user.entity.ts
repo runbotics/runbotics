@@ -214,7 +214,7 @@ export class User {
     description: 'User-specific feature keys.',
     })
     @ManyToMany(() => FeatureKey, {
-        eager: false,
+        eager: true,
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
     })

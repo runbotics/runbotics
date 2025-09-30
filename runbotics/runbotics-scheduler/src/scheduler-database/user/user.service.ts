@@ -297,9 +297,16 @@ export class UserService {
                 id: user.tenant.id,
                 name: user.tenant.name,
             },
-            featureKeys: user.authorities
-                .flatMap((auth) => auth.featureKeys)
-                .map((featureKey) => featureKey.name),
+            featureKeys: Array.from(
+                new Set([
+                    ...user.authorities
+                        .flatMap((auth) => auth.featureKeys)
+                        .map((featureKey) => featureKey.name),
+                    ...user.userFeatureKeys.map(
+                        (featureKey) => featureKey.name
+                    ),
+                ])
+            ),
             roles: user.authorities.map((auth) => auth.name),
         };
     }
