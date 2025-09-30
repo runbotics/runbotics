@@ -64,7 +64,7 @@ export class AuthService implements OnApplicationBootstrap {
         this.logger.log('=> Authenticating with server: ' + this.serverConfigService.entrypointUrl);
 
         const response = await this.authAxios.post(
-            '/api/scheduler/auth/authenticate',
+            '/api/authenticate',
             {
                 username: this.serverConfigService.credentials.username,
                 password: this.serverConfigService.credentials.password,

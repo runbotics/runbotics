@@ -7,7 +7,7 @@ import { AuthDto, authSchema } from '#/auth/dto/auth.dto';
 import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 import { AuthGuestService } from '#/auth/auth-guest.service';
 
-@Controller('/api/scheduler/auth')
+@Controller('api')
 export class AuthController {
     private readonly logger = new Logger(AuthController.name);
 

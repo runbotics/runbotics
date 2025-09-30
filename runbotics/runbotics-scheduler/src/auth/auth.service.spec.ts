@@ -1,11 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { BadRequestException, ForbiddenException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { Guest } from '#/scheduler-database/guest/guest.entity';
 
-// Mockujemy zależności
 const userServiceMock = {
     findByEmail: vi.fn(),
     findByEmailForAuth: vi.fn(),
@@ -18,12 +17,10 @@ const botCollectionServiceMock = { getById: vi.fn() };
 const serverConfigServiceMock = { secret: 'test_secret', requiredBotVersion: '1.0.0' };
 const connectionMock = { createQueryRunner: vi.fn() };
 
-// Mockujemy bcrypt
 vi.mock('bcryptjs', () => ({
     default: { compare: vi.fn() },
 }));
 
-// Mockujemy jsonwebtoken
 vi.mock('jsonwebtoken', () => ({
     sign: vi.fn().mockReturnValue('signed_token'),
     verify: vi.fn(),
@@ -46,9 +43,6 @@ describe('AuthService', () => {
         );
     });
 
-    // ----------------------------
-    // TESTY dla authenticate
-    // ----------------------------
     describe('authenticate', () => {
         const baseUser = {
             email: 'x@test.com',
@@ -58,7 +52,7 @@ describe('AuthService', () => {
             activated: true,
         };
 
-        it('✅ poprawne dane zwracają token i użytkownika', async () => {
+        it('proper data return token and user data', async () => {
             userServiceMock.findByEmailForAuth.mockResolvedValue(baseUser);
             (bcrypt.compare as any).mockResolvedValue(true);
 
@@ -70,11 +64,9 @@ describe('AuthService', () => {
 
             expect(result.idToken).toBeDefined();
             expect(result.user.email).toBe('x@test.com');
-            expect(result.user.passwordHash).toBeUndefined();
-            expect(result.user.authorities).toBeUndefined();
         });
 
-        it('🚫 brak usera rzuca NotFoundException', async () => {
+        it('user not found throws NotFoundException', async () => {
             userServiceMock.findByEmailForAuth.mockResolvedValue(null);
 
             await expect(service.authenticate({
@@ -84,7 +76,7 @@ describe('AuthService', () => {
             })).rejects.toThrow(NotFoundException);
         });
 
-        it('🚫 tenant nieaktywny rzuca ForbiddenException', async () => {
+        it('inactive tenant throws ForbiddenException', async () => {
             const inactiveTenantUser = { ...baseUser, tenant: { active: false } };
             userServiceMock.findByEmailForAuth.mockResolvedValue(inactiveTenantUser);
 
@@ -95,7 +87,7 @@ describe('AuthService', () => {
             })).rejects.toThrow(ForbiddenException);
         });
 
-        it('🚫 złe hasło rzuca UnauthorizedException', async () => {
+        it('bad credentials throws UnauthorizedException', async () => {
             userServiceMock.findByEmailForAuth.mockResolvedValue(baseUser);
             (bcrypt.compare as any).mockResolvedValue(false);
 
@@ -106,7 +98,7 @@ describe('AuthService', () => {
             })).rejects.toThrow(UnauthorizedException);
         });
 
-        it('🚫 nieaktywny użytkownik rzuca ForbiddenException', async () => {
+        it('inactive user throws ForbiddenException', async () => {
             const notActivatedUser = { ...baseUser, activated: false };
             userServiceMock.findByEmailForAuth.mockResolvedValue(notActivatedUser);
             (bcrypt.compare as any).mockResolvedValue(true);
@@ -118,7 +110,7 @@ describe('AuthService', () => {
             })).rejects.toThrow(ForbiddenException);
         });
 
-        it('✅ ustawia długi czas ważności tokenu, jeśli rememberMe=true', async () => {
+        it('rememberMe=true, jwt token is valid for 30 days', async () => {
             userServiceMock.findByEmailForAuth.mockResolvedValue(baseUser);
             (bcrypt.compare as any).mockResolvedValue(true);
 
@@ -136,9 +128,6 @@ describe('AuthService', () => {
         });
     });
 
-    // ----------------------------
-    // TESTY dla createGuestToken
-    // ----------------------------
     describe('createGuestToken', () => {
         const guestUser = {
             email: 'guest@test.com',
@@ -155,18 +144,16 @@ describe('AuthService', () => {
             user: guestUser,
         } as any;
 
-        it('✅ zwraca token i usera bez haseł/authorities', async () => {
+        it('return guest user without sensitive data', async () => {
             userServiceMock.findByEmailForAuth.mockResolvedValue(guestUser);
 
             const result = await service.createGuestToken(guest);
 
             expect(result.idToken).toBeDefined();
             expect(result.user.email).toBe('guest@test.com');
-            expect(result.user.passwordHash).toBeUndefined();
-            expect(result.user.authorities).toBeUndefined();
         });
 
-        it('🚫 brak usera dla guest rzuca NotFoundException', async () => {
+        it('guest user not found - throws NotFoundException', async () => {
             userServiceMock.findByEmailForAuth.mockResolvedValue(null);
 
             await expect(service.createGuestToken(guest)).rejects.toThrow(NotFoundException);

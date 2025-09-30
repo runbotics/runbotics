@@ -22,9 +22,8 @@ export const login = createAsyncThunk<
     { email: string; password: string }
 >('auth/login', async (payload, { rejectWithValue }) => {
     try {
-        
         const response = await Axios.post<{ idToken: string; user: UserDto }>(
-            '/api/scheduler/auth/authenticate',
+            '/api/authenticate',
             {
                 username: payload.email,
                 password: payload.password,
@@ -34,7 +33,7 @@ export const login = createAsyncThunk<
         const { idToken, user } = response.data;
 
         setAccessToken(idToken);
-        
+
         return { ...user, authoritiesById: user?.roles };
     } catch (error) {
         if (!error.response) {
@@ -51,16 +50,16 @@ export const createGuestAccount = createAsyncThunk<
 >('auth/createGuestAccount', async ({ langKey }, { rejectWithValue }) => {
     try {
         const response = await Axios.post<{ idToken: string; user: UserDto }>(
-            '/api/scheduler/auth/authenticate/guest',
+            '/api/authenticate/guest',
             { langKey }
         );
-        const token = response.data.idToken;
+        const { idToken, user } = response.data;
 
-        setAccessToken(token);
-        
+        setAccessToken(idToken);
+
         return {
-            ...response.data.user,
-            authoritiesById: response.data.user?.roles,
+            ...user,
+            authoritiesById: user?.roles,
         };
     } catch (error) {
         if (!error.response) {
@@ -96,7 +95,7 @@ export const initialize = createAsyncThunk<{
             setAccessToken(accessToken);
 
             const response = await Axios.get<UserDto>(
-                '/api/scheduler/users/account'
+                '/api/account'
             );
             const user = response.data;
             return {
@@ -162,7 +161,7 @@ export const loginWithMsalCookie = createAsyncThunk<AuthState['user'], void>(
             }
             setAccessToken(idToken);
             const responseUser = await Axios.get<UserDto>(
-                '/api/scheduler/users/account'
+                '/api/account'
             );
             const user = responseUser.data;
             return { ...user, authoritiesById: user?.roles };

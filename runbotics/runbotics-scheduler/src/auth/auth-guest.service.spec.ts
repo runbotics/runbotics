@@ -1,10 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthGuestService } from './auth-guest.service';
 import bcrypt from 'bcryptjs';
 import { DataSource, In } from 'typeorm';
 import { Guest } from '#/scheduler-database/guest/guest.entity';
 import { User } from '#/scheduler-database/user/user.entity';
-import { Authority } from '#/scheduler-database/authority/authority.entity';
 import { Role } from 'runbotics-common';
 import { Logger } from '#/utils/logger';
 
@@ -36,11 +35,8 @@ describe('AuthGuestService', () => {
         service = new AuthGuestService(dataSourceMock as unknown as DataSource);
     });
 
-    // -----------------------------
-    // verifyGuestLimit
-    // -----------------------------
     describe('verifyGuestLimit', () => {
-        it('powinno zwrócić true, gdy nie ma pasujących gości', async () => {
+        it('should return true if no guest found', async () => {
             dataSourceMock.manager.find.mockResolvedValue([
                 { ipHash: 'hash1' },
                 { ipHash: 'hash2' },
@@ -52,7 +48,7 @@ describe('AuthGuestService', () => {
             expect(dataSourceMock.manager.find).toHaveBeenCalledWith(Guest);
         });
 
-        it('powinno zwrócić false, gdy istnieje gość z takim ip', async () => {
+        it('should return false if guest user found by hashed ip', async () => {
             dataSourceMock.manager.find.mockResolvedValue([
                 { ipHash: 'hash1' },
             ]);
@@ -62,18 +58,15 @@ describe('AuthGuestService', () => {
             expect(result).toBe(false);
         });
 
-        it('powinno obsłużyć wyjątek z bazy danych', async () => {
+        it('should serve db error', async () => {
             dataSourceMock.manager.find.mockRejectedValue(new Error('DB error'));
 
             await expect(service.verifyGuestLimit('127.0.0.1')).rejects.toThrow('DB error');
         });
     });
 
-    // -----------------------------
-    // createGuestUser
-    // -----------------------------
     describe('createGuestUser', () => {
-        it('powinno utworzyć użytkownika gościa i zwrócić Guest', async () => {
+        it('should create guest user and return it', async () => {
             const mockAuthority = { name: Role.ROLE_GUEST };
             const mockSavedUser = { id: 123, email: 'guest@test.com' };
             const mockGuest: Guest = { ipHash: 'hashed_ip', user: mockSavedUser as User, executionsCount: 0 };
@@ -96,18 +89,15 @@ describe('AuthGuestService', () => {
             expect(dataSourceMock.manager.transaction).toHaveBeenCalled();
         });
 
-        it('powinno rzucić wyjątek, gdy transakcja się nie powiedzie', async () => {
+        it('should throw error if transaction of db manager fail', async () => {
             dataSourceMock.manager.transaction.mockRejectedValue(new Error('Transaction failed'));
 
             await expect(service.createGuestUser('127.0.0.1', 'en')).rejects.toThrow('Transaction failed');
         });
     });
 
-    // -----------------------------
-    // deleteOldGuests
-    // -----------------------------
     describe('deleteOldGuests', () => {
-        it('powinno usunąć starych gości i powiązanych użytkowników', async () => {
+        it('should delete all guest users from db', async () => {
             const guests = [
                 { user: { id: 'u1' } },
                 { user: { id: 'u2' } },
@@ -121,7 +111,7 @@ describe('AuthGuestService', () => {
             expect(dataSourceMock.manager.delete).toHaveBeenCalledWith(User, { id: In(['u1', 'u2']) });
         });
 
-        it('powinno poradzić sobie z sytuacją, gdy nie ma gości do usunięcia', async () => {
+        it('empty guest list doesn\'t throw error, just affect 0 rows', async () => {
             dataSourceMock.manager.find.mockResolvedValue([]);
             dataSourceMock.manager.delete.mockResolvedValue({ affected: 0 });
 
@@ -130,7 +120,7 @@ describe('AuthGuestService', () => {
             expect(dataSourceMock.manager.delete).toHaveBeenCalledWith(User, { id: In([]) });
         });
 
-        it('powinno obsłużyć wyjątek przy usuwaniu', async () => {
+        it('error should be thrown if error occured', async () => {
             dataSourceMock.manager.find.mockResolvedValue([{ user: { id: 'u1' } }]);
             dataSourceMock.manager.delete.mockRejectedValue(new Error('Delete failed'));
 

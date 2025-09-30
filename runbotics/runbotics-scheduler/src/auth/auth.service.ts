@@ -19,6 +19,7 @@ import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { Guest } from '#/scheduler-database/guest/guest.entity';
 import { AuthDto } from '#/auth/dto/auth.dto';
+import { AuthUserDtoSchema } from '#/auth/dto/auth-user.dto';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -368,11 +369,7 @@ export class AuthService {
                 algorithm: 'HS512',
                 noTimestamp: true,
             }),
-            user: {
-                ...user,
-                authorities: undefined,
-                passwordHash: undefined,
-            },
+            user: AuthUserDtoSchema.parse(user),
         };
     }
 
@@ -397,11 +394,7 @@ export class AuthService {
                 algorithm: 'HS512',
                 noTimestamp: true,
             }),
-            user: {
-                ...user,
-                authorities: undefined,
-                passwordHash: undefined,
-            },
+            user: AuthUserDtoSchema.parse(user),
         };
     }
 }

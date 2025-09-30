@@ -37,15 +37,6 @@ export class UserController {
         return this.userService.findAllActivatedByTenant(tenantId);
     }
 
-    @Get('users/account')
-    @FeatureKeys(FeatureKey.TENANT_READ_USER, FeatureKey.PROCESS_ADD_GUEST)
-    getUserByIdInTenant(
-        @UserDecorator() { email }: User,
-    ) {
-        return this.userService.findByEmailForAuth(email);
-        
-    }
-
     @PatchWithTenant('users/:id')
     @FeatureKeys(FeatureKey.TENANT_EDIT_USER)
     updateUserInTenant(
