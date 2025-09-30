@@ -106,15 +106,14 @@
             "target": "deb"
         },
         "win": {
-            "target": "nsis",
+            "target": [
+                "zip",
+                "portable"
+            ],
             "icon": "./public/icons/runbotics-512x512.png",
-            "cscLink": "./cert/selfsigncert.pfx",
-            "cscKeyPassword": "&#%TysWeL^^J@S46"
-        },
-        "nsis": {
-            "allowToChangeInstallationDirectory": true,
-            "oneClick": false,
-            "runAfterFinish": false
+            "verifyUpdateCodeSignature": false,
+            "forceCodeSigning": false,
+            "signAndEditExecutable": false
         }
     },
     "devDependencies": {

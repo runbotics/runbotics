@@ -97,12 +97,6 @@ jobs:
             cd ../common/deploy/runbotics-desktop/ &&
             ./electron-install.sh
 
-      - name: Set default sign to false
-        run: |
-          cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
-          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json; `
-          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json
-
       - name: Build rb-desktop
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
