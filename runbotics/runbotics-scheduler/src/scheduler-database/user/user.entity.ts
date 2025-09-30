@@ -12,9 +12,10 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
-import { IAuthority, Role } from 'runbotics-common';
+import { IAuthority, IFeatureKey, Role } from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { FeatureKey } from '../feature-key/feature-key.entity';
 
 @Entity({ name: 'jhi_user' })
 @Unique(['microsoftTenantId', 'microsoftUserId'])
@@ -207,4 +208,20 @@ export class User {
         },
     })
     authorities: IAuthority[];
+
+    @ApiProperty({
+    type: [FeatureKey],
+    description: 'User-specific feature keys.',
+    })
+    @ManyToMany(() => FeatureKey, {
+        eager: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+    })
+    @JoinTable({
+        name: 'user_feature_key',
+        joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'feature_key', referencedColumnName: 'name' },
+    })
+    userFeatureKeys: IFeatureKey[];
 }
