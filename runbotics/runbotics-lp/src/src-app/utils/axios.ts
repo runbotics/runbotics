@@ -28,7 +28,7 @@ axiosInstance.interceptors.response.use(
 const axiosApi = axios.create();
 
 axiosApi.interceptors.response.use((res) => res, (err) => {
-    if (err.request.status === 401 && !err.request.responseURL.includes('/api/scheduler/auth/authenticate')) {
+    if (err.request.status === 401 && !err.request.responseURL.includes('/api/authenticate')) {
         // setAccessToken(null);
         delete axiosApi.defaults.headers.common.Authorization;
         window.location.reload();
