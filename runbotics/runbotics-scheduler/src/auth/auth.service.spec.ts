@@ -45,10 +45,26 @@ describe('AuthService', () => {
 
     describe('authenticate', () => {
         const baseUser = {
+            id: 1,
+            firstName: 'John',
+            lastName: 'Doe',
+            imageUrl: 'https://example.com/avatar.png',
+            langKey: 'en',
+            hasBeenActivated: true,
+            createdBy: 'system',
+            createdDate: new Date().toISOString(),
+            lastModifiedDate: new Date().toISOString(),
+            lastModifiedBy: 'system',
+            tenant: {
+                id: 'tenant-1',
+                name: 'Default Tenant',
+                active: true,
+            },
+            roles: ['ROLE_USER'],
+            featureKeys: [],
             email: 'x@test.com',
             passwordHash: 'hashed',
             authorities: [{ name: 'ROLE_USER' }],
-            tenant: { active: true },
             activated: true,
         };
 
@@ -133,8 +149,23 @@ describe('AuthService', () => {
             email: 'guest@test.com',
             passwordHash: 'hashed',
             authorities: [{ name: 'ROLE_GUEST' }],
-            tenant: { active: true },
-            activated: true,
+            activated: true,id: 1,
+            firstName: 'John',
+            lastName: 'Doe',
+            imageUrl: 'https://example.com/avatar.png',
+            langKey: 'en',
+            hasBeenActivated: true,
+            createdBy: 'system',
+            createdDate: new Date().toISOString(),
+            lastModifiedDate: new Date().toISOString(),
+            lastModifiedBy: 'system',
+            tenant: {
+                id: 'tenant-1',
+                name: 'Default Tenant',
+                active: true,
+            },
+            roles: ['ROLE_USER'],
+            featureKeys: [],
         };
 
         const guest: Guest = {
