@@ -1,20 +1,18 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UserService } from '#/scheduler-database/user/user.service';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { User } from '#/scheduler-database/user/user.entity';
 import { AuthUserDtoSchema } from '#/auth/dto/auth-user.dto';
-import { FeatureKeys } from '#/auth/featureKey.decorator';
-import { FeatureKey } from 'runbotics-common';
+import { JwtAuthGuard } from '#/auth/guards';
 
 @Controller('api')
-export class UserController {
+export class UserAccountController {
     constructor(
         private readonly userService: UserService,
-    ) {
-    }
+    ) { }
 
     @Get('account')
-    @FeatureKeys(FeatureKey.TENANT_READ_USER, FeatureKey.PROCESS_ADD_GUEST)
+    @UseGuards(JwtAuthGuard)
     async getAccount(@UserDecorator() { email }: User) {
         return AuthUserDtoSchema.parse(await this.userService.findByEmailForAuth(email));
     }
