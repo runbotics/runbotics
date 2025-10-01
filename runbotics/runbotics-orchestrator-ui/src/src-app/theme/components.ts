@@ -21,13 +21,6 @@ export const components: Components = {
             },
         },
     },
-    MuiChip: {
-        styleOverrides: {
-            root: {
-                backgroundColor: 'rgba(0,0,0,0.075)',
-            },
-        },
-    },
     MuiTooltip: {
         styleOverrides: {
             tooltip: {

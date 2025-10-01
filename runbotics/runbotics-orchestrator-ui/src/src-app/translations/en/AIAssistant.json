@@ -1,4 +1,11 @@
 {
-    "AIAssistant.Title": "AI Assistant",
-    "AIAssistant.InProgress": "AI Assistant is during development"
+    "AIAssistant.Title": "AI assistants",
+    "AIAssistant.Stats.Models": "AI Assistant Models",
+    "AIAssistant.Filter.All": "All",
+    "AIAssistant.Loading": "Loading assistants...",
+    "AIAssistant.Error.Title": "Unable to Load Assistants",
+    "AIAssistant.Error.Description": "Something went wrong while fetching the AI Assistant list. Please refresh the page or try again later.",
+    "AIAssistant.Error.RetryButton": "Try again",
+    "AIAssistant.Empty.Title": "No assistants found",
+    "AIAssistant.Empty.Description": "We couldn't find any AI assistants matching your search. Try adjusting your keywords or filters."
 }

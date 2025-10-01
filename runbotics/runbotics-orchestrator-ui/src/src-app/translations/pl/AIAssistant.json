@@ -1,4 +1,11 @@
 {
-    "AIAssistant.Title": "Asystent AI",
-    "AIAssistant.InProgress": "Asystent AI jest w trakcie procesu developmentu"
+    "AIAssistant.Title": "Asystentci AI",
+    "AIAssistant.Stats.Models": "Modele Asystenta AI",
+    "AIAssistant.Filter.All": "Wszystkie",
+    "AIAssistant.Loading": "Ładowanie asystentów...",
+    "AIAssistant.Error.Title": "Nie udało się załadować asystentów",
+    "AIAssistant.Error.Description": "Wystąpił błąd podczas pobierania listy asystentów AI. Odśwież stronę lub spróbuj ponownie później.",
+    "AIAssistant.Error.RetryButton": "Spróbuj ponownie",
+    "AIAssistant.Empty.Title": "Nie znaleziono asystentów",
+    "AIAssistant.Empty.Description": "Nie znaleźliśmy żadnych asystentów AI pasujących do Twojego wyszukiwania. Spróbuj zmienić słowa kluczowe lub filtry."
 }
