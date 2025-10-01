@@ -110,8 +110,10 @@ jobs:
         with:
           certificate: '${{ secrets.CERT_BASE64 }}'
           password: '${{ secrets.CERT_PASSWORD }}'
-          folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
-          recursive: true
+          files: |
+            ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/RunBotics*.exe
+            ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/win-unpacked/RunBotics.exe
+            ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/win-unpacked/driver/windows/geckodriver-v0.29.1-win64/geckodriver.exe
 
       - name: Upload bot artifact
         id: upload-bot-executable-artifact
