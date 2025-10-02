@@ -28,8 +28,6 @@ public class LocaleConfiguration implements WebMvcConfigurer {
         localeChangeInterceptor.setParamName("language");
         registry.addInterceptor(localeChangeInterceptor);
         registry.addInterceptor(accountInterceptor).excludePathPatterns(
-            "/api/authenticate/guest",
-            "/api/authenticate",
             "/api/register"
         );
     }
