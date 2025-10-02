@@ -1,9 +1,10 @@
 {
-    "AIAssistant.Title": "AI assistants",
+    "AIAssistant.Title": "AI Assistants",
     "AIAssistant.Stats.Models": "AI Assistant Models",
+    "AIAssistant.Search.Label": "Search assistants",
     "AIAssistant.Filter.All": "All",
     "AIAssistant.Loading": "Loading assistants...",
-    "AIAssistant.Error.Title": "Unable to Load Assistants",
+    "AIAssistant.Error.Title": "Unable to load assistants",
     "AIAssistant.Error.Description": "Something went wrong while fetching the AI Assistant list. Please refresh the page or try again later.",
     "AIAssistant.Error.RetryButton": "Try again",
     "AIAssistant.Empty.Title": "No assistants found",

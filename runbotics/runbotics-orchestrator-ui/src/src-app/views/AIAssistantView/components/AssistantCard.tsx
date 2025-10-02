@@ -26,7 +26,7 @@ export const AssistantCard: React.FC<AssistantCardProps> = ({
     const router = useRouter();
     
     const handleClick = () => {
-        router.push(`/app/ai-assistant${assistant.url}`);
+        router.push(`/app/ai-assistants${assistant.url}`);
     };
 
     return (
@@ -47,8 +47,8 @@ export const AssistantCard: React.FC<AssistantCardProps> = ({
 
                     <Box pt={1}>
                         <Stack direction="row" spacing={1} flexWrap="wrap">
-                            {assistant.categories.map((cat) => (
-                                <CategoryChip key={cat} label={cat} size="small" />
+                            {assistant.categories.map((category) => (
+                                <CategoryChip key={category} label={category} size="small" />
                             ))}
                         </Stack>
                     </Box>

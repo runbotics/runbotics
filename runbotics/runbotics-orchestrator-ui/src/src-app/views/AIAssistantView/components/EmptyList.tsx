@@ -4,12 +4,12 @@ import SearchOffIcon from '@mui/icons-material/SearchOff';
 
 import { StateDisplay } from './StateDisplay';
 
-interface EmptyStateProps {
+interface EmptyListProps {
     title: string;
     description: string;
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({ title, description }) => (
+export const EmptyList: React.FC<EmptyListProps> = ({ title, description }) => (
     <StateDisplay
         icon={<SearchOffIcon />}
         title={title}

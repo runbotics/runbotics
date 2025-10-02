@@ -1,6 +1,7 @@
 {
-    "AIAssistant.Title": "Asystentci AI",
+    "AIAssistant.Title": "Asystenci AI",
     "AIAssistant.Stats.Models": "Modele Asystenta AI",
+    "AIAssistant.Search.Label": "Szukaj asystentów",
     "AIAssistant.Filter.All": "Wszystkie",
     "AIAssistant.Loading": "Ładowanie asystentów...",
     "AIAssistant.Error.Title": "Nie udało się załadować asystentów",

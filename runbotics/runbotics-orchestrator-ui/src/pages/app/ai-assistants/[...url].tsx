@@ -14,7 +14,7 @@ const AIAssistantDetailsPage = ({ assistantUrl }: AIAssistantDetailsPageProps) =
 );
 
 export const getServerSideProps: GetServerSideProps = (context) => {
-    const originalUrl = context.resolvedUrl.replace('/app/ai-assistant', '');
+    const originalUrl = context.resolvedUrl.replace('/app/ai-assistants', '');
     const cleanUrl = originalUrl.startsWith('/') ? originalUrl.slice(1) : originalUrl;
     
     return Promise.resolve({

@@ -4,16 +4,16 @@ import { TextField, Typography, Box } from '@mui/material';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 
-import { SearchContainer } from './SearchAndStats.styles';
+import { SearchContainer } from './SearchAndCount.styles';
 
-interface SearchAndStatsProps {
+interface SearchAndCountProps {
     searchQuery: string;
     onSearchChange: (query: string) => void;
     totalCount: number;
     searchLabel: string;
 }
 
-export const SearchAndStats: React.FC<SearchAndStatsProps> = ({
+export const SearchAndCount: React.FC<SearchAndCountProps> = ({
     searchQuery,
     onSearchChange,
     totalCount,
