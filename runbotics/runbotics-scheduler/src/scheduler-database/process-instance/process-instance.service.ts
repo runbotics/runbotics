@@ -17,9 +17,10 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
 import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage, Page } from '#/utils/page/page';
-import { hasFeatureKey, isTenantAdmin } from '#/utils/authority.utils';
+import {  isTenantAdmin } from '#/utils/authority.utils';
 import { ProcessService } from '../process/process.service';
 import { ProcessEntity } from '../process/process.entity';
+import { hasFeatureKey } from '#/utils/user.utils';
 
 type MappedProcessInstance = ProcessInstance & { hasSubprocesses: boolean };
 
