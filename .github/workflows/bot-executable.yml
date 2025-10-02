@@ -138,7 +138,7 @@ jobs:
 
       - name: Upload patch notes
         id: upload-patch-notes-artifact
-        uses: actions/upload-artifact@v4.0.0
+        uses: christopherhx/gitea-upload-artifact@v4
         if: ${{ ! startsWith(github.ref, 'refs/heads/feature/') && ! startsWith(github.ref, 'refs/heads/bugfix/') }}
         with:
           name: patch-notes-${{ env.PACKAGE_VERSION }}
