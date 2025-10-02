@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const {createProxyMiddleware} = require('http-proxy-middleware');
 
 const parseBool = (value) => {
     return 'true' === value?.toString()?.toLowerCase();
@@ -24,24 +24,28 @@ const hosts = {
 };
 
 const routes = [
-    { path: '/lp-assets', target: hosts.landingPage, pathFilter: '/lp-assets/**' },
-    { path: '/ui-assets', target: hosts.ui, pathFilter: '/ui-assets/**' },
+    {path: '/lp-assets', target: hosts.landingPage, pathFilter: '/lp-assets/**'},
+    {path: '/ui-assets', target: hosts.ui, pathFilter: '/ui-assets/**'},
 
-    { path: '/pl/app', target: hosts.ui, pathFilter: '/pl/app/**' },
-    { path: '/pl/login', target: hosts.ui, pathFilter: '/pl/login/**' },
-    { path: '/app', target: hosts.ui, pathFilter: ['/app/**', '!/pl/app/**'] },
-    { path: '/login', target: hosts.ui, pathFilter: ['/login/**', '!/pl/login/**'] },
-    { path: '/pl/register', target: hosts.ui, pathFilter: '/pl/register/**' },
-    { path: '/register', target: hosts.ui, pathFilter: ['/register/**', '!/pl/register/**'] },
-    { path: '/ui', target: hosts.ui, pathFilter: ['/ui/**', '!/pl/ui/**'] },
-    { path: '/pl/ui', target: hosts.ui, pathFilter: '/pl/ui/**' },
+    {path: '/pl/app', target: hosts.ui, pathFilter: '/pl/app/**'},
+    {path: '/pl/login', target: hosts.ui, pathFilter: '/pl/login/**'},
+    {path: '/app', target: hosts.ui, pathFilter: ['/app/**', '!/pl/app/**']},
+    {path: '/login', target: hosts.ui, pathFilter: ['/login/**', '!/pl/login/**']},
+    {path: '/pl/register', target: hosts.ui, pathFilter: '/pl/register/**'},
+    {path: '/register', target: hosts.ui, pathFilter: ['/register/**', '!/pl/register/**']},
+    {path: '/ui', target: hosts.ui, pathFilter: ['/ui/**', '!/pl/ui/**']},
+    {path: '/pl/ui', target: hosts.ui, pathFilter: '/pl/ui/**'},
 
-    { path: '/api/scheduler', target: hosts.scheduler, pathFilter: '/api/scheduler/**' },
-    { path: '/api', target: hosts.api, pathFilter: ['/api/**', '!/api/scheduler/**'] },
+    {path: '/api/account', target: hosts.scheduler, pathFilter: '/api/account'},
+    {path: '/api/authenticate', target: hosts.scheduler, pathFilter: '/api/authenticate'},
+    {path: '/api/authenticate/guest', target: hosts.scheduler, pathFilter: '/api/authenticate/guest'},
 
-    { path: '/assistant', target: hosts.assistant, pathFilter: '/assistant/**' },
-    { path: '/scheduler', target: hosts.scheduler, pathFilter: ['/scheduler/**'] },
-    { path: '/', target: hosts.landingPage, ws: false, }
+    {path: '/api/scheduler', target: hosts.scheduler, pathFilter: '/api/scheduler/**'},
+    {path: '/api', target: hosts.api, pathFilter: ['/api/**', '!/api/account', '!/api/authenticate', '!/api/authenticate/guest','!/api/scheduler/**']},
+
+    {path: '/assistant', target: hosts.assistant, pathFilter: '/assistant/**'},
+    {path: '/scheduler', target: hosts.scheduler, pathFilter: ['/scheduler/**']},
+    {path: '/', target: hosts.landingPage, ws: false,}
 ];
 
 const app = express();

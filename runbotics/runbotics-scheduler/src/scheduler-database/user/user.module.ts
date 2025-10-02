@@ -6,11 +6,12 @@ import { UserController } from './user.controller';
 import { Authority } from '../authority/authority.entity';
 import { TenantModule } from '../tenant/tenant.module';
 import { MailModule } from '#/mail/mail.module';
+import { UserAccountController } from '#/scheduler-database/user/user-account.controller';
 
 
 @Module({
     imports: [TypeOrmModule.forFeature([User, Authority]), TenantModule, MailModule],
-    controllers: [UserController],
+    controllers: [UserController, UserAccountController],
     providers: [UserService],
     exports: [UserService]
 })
