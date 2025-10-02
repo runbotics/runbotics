@@ -117,7 +117,7 @@ jobs:
 
       - name: Upload bot artifact
         id: upload-bot-executable-artifact
-        uses: actions/upload-artifact@v4.0.0
+        uses: christopherhx/gitea-upload-artifact@v4
         if: ${{ ! startsWith(github.ref, 'refs/heads/feature/') && ! startsWith(github.ref, 'refs/heads/bugfix/') }}
         with:
           name: RunBotics-${{ env.PACKAGE_VERSION }}
