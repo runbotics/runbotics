@@ -11,25 +11,20 @@ interface UseAIAssistantSearchProps {
 }
 
 export const useAIAssistantSearch = ({ 
-    pageSize = 16 
+    pageSize = AI_ASSISTANT_CONSTANTS.DEFAULT_PAGE_SIZE 
 }: UseAIAssistantSearchProps) => {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [page, setPage] = useState<number>(1);
-    const [hasInitiallyFetched, setHasInitiallyFetched] = useState<boolean>(false);
 
     const dispatch = useDispatch();
     const { user } = useAuth();
     const userLang = user?.langKey || 'pl';
-    const { all } = useSelector(aiAssistantsSelector);
-    const { assistants, loading, error } = all;
+    const { assistants, loading, error } = useSelector(aiAssistantsSelector);
 
     useEffect(() => {
-        if (!hasInitiallyFetched && !loading) {
-            dispatch(aiAssistantsActions.fetchAIAssistants());
-            setHasInitiallyFetched(true);
-        }
-    }, [hasInitiallyFetched, loading, dispatch]);
+        dispatch(aiAssistantsActions.fetchAIAssistants());
+    }, []);
 
     const categories = useMemo(() => {
         const categoriesSet: Set<string> = new Set(
@@ -55,7 +50,7 @@ export const useAIAssistantSearch = ({
         }
         
         return assistants.filter(a => 
-            (a.categories || []).some(cat => selectedCategories.includes(cat))
+            (a.categories || []).some(category => selectedCategories.includes(category))
         );
     }, [assistants, selectedCategories, searchQuery, userLang]);
 
@@ -94,7 +89,6 @@ export const useAIAssistantSearch = ({
     };
 
     const handleRetry = () => {
-        setHasInitiallyFetched(false);
         dispatch(aiAssistantsActions.fetchAIAssistants());
     };
 

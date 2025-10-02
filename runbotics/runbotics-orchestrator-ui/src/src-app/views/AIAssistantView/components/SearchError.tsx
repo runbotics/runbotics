@@ -6,13 +6,13 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { StateDisplay } from './StateDisplay';
 
-interface ErrorStateProps {
+interface SearchErrorProps {
     title: string;
     description: string;
     onRetry?: () => void;
 }
 
-export const ErrorState: React.FC<ErrorStateProps> = ({ 
+export const SearchError: React.FC<SearchErrorProps> = ({ 
     title, 
     description, 
     onRetry 

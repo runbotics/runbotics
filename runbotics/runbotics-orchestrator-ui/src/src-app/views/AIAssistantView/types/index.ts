@@ -22,6 +22,8 @@ export interface AIAssistantsResponse {
 
 export const AI_ASSISTANT_CONSTANTS = {
     ALL_CATEGORIES_KEY: 'ALL_CATEGORIES',
+    DEFAULT_PAGE_SIZE: 16,
+    DEFAULT_TENANT_ID: 'b7f9092f-5973-c781-08db-4d6e48f78e98',
 } as const;
 
 export const getLocalizedText = (text: LocalizedText, lang: string = 'pl'): string => {

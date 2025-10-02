@@ -23,22 +23,22 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
             direction="row"
             spacing={1}
         >
-            {categories.map((cat) => {
-                const isSelected = cat === AI_ASSISTANT_CONSTANTS.ALL_CATEGORIES_KEY 
+            {categories.map((category) => {
+                const isSelected = category === AI_ASSISTANT_CONSTANTS.ALL_CATEGORIES_KEY 
                     ? selectedCategories.length === 0 
-                    : selectedCategories.includes(cat);
+                    : selectedCategories.includes(category);
                     
-                const displayLabel = cat === AI_ASSISTANT_CONSTANTS.ALL_CATEGORIES_KEY 
+                const displayLabel = category === AI_ASSISTANT_CONSTANTS.ALL_CATEGORIES_KEY 
                     ? translate('AIAssistant.Filter.All')
-                    : cat;
+                    : category;
                     
                 return (
                     <FilterChip
-                        key={cat}
+                        key={category}
                         label={displayLabel}
                         clickable
-                        onClick={() => onCategoryClick(cat)}
-                        color={isSelected ? 'primary' : 'default'}
+                        onClick={() => onCategoryClick(category)}
+                        color={isSelected ? 'secondary' : 'default'}
                         variant='filled'
                         size="medium"
                     />
