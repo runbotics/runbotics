@@ -15,6 +15,7 @@ import useQuery from '#src-app/hooks/useQuery';
 import { useReplaceQueryParams } from '#src-app/hooks/useReplaceQueryParams';
 import useTranslations from '#src-app/hooks/useTranslations';
 
+import { botActions } from '#src-app/store/slices/Bot';
 import { processInstanceEventActions } from '#src-app/store/slices/ProcessInstanceEvent';
 
 
@@ -69,6 +70,15 @@ const HistoryTable = forwardRef<any, HistoryTableProps>(({ botId, processId, sx,
 
     useEffect(() => {
         replaceQueryParams({ page, pageSize, tab, id, instanceId });
+
+        if (botId) {
+            dispatch(botActions.getById({ resourceId: botId}))
+                .then(unwrapResult)
+                .catch(() => {
+                    router.replace('/404');
+                });
+            return;
+        }
 
         if (instanceId) {
             dispatch(processInstanceActions.getProcessInstancePageWithSpecificInstance({
