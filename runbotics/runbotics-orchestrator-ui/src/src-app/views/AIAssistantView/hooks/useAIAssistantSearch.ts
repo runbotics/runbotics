@@ -28,20 +28,20 @@ export const useAIAssistantSearch = ({
 
     const categories = useMemo(() => {
         const categoriesSet: Set<string> = new Set(
-            assistants.flatMap(a => (a.categories ?? []).map(String))
+            assistants.flatMap(assistant => (assistant.categories ?? []).map(String))
         );
         const sortedCategories = Array.from(categoriesSet).sort();
         return [AI_ASSISTANT_CONSTANTS.ALL_CATEGORIES_KEY, ...sortedCategories];
     }, [assistants]);
 
     const filteredAssistants = useMemo(() => {
-        const q = searchQuery.trim().toLowerCase();
+        const searchTerm = searchQuery.trim().toLowerCase();
         
-        if (q.length > 0) {
-            return assistants.filter(a => {
-                const name = getLocalizedText(a.name || { pl: '', en: '' }, userLang);
-                const description = getLocalizedText(a.description || { pl: '', en: '' }, userLang);
-                return name.toLowerCase().includes(q) || description.toLowerCase().includes(q);
+        if (searchTerm.length > 0) {
+            return assistants.filter(assistant => {
+                const name = getLocalizedText(assistant.name || { pl: '', en: '' }, userLang);
+                const description = getLocalizedText(assistant.description || { pl: '', en: '' }, userLang);
+                return name.toLowerCase().includes(searchTerm) || description.toLowerCase().includes(searchTerm);
             });
         }
         
@@ -49,8 +49,8 @@ export const useAIAssistantSearch = ({
             return assistants;
         }
         
-        return assistants.filter(a => 
-            (a.categories || []).some(category => selectedCategories.includes(category))
+        return assistants.filter(assistant => 
+            (assistant.categories || []).some(category => selectedCategories.includes(category))
         );
     }, [assistants, selectedCategories, searchQuery, userLang]);
 
@@ -68,7 +68,7 @@ export const useAIAssistantSearch = ({
         } else {
             setSelectedCategories(prev => {
                 if (prev.includes(category)) {
-                    return prev.filter(c => c !== category);
+                    return prev.filter(currentCategory => currentCategory !== category);
                 }
                 return [...prev, category];
             });
