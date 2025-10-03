@@ -210,8 +210,8 @@ export class User {
     authorities: IAuthority[];
 
     @ApiProperty({
-    type: [FeatureKey],
-    description: 'User-specific feature keys.',
+        type: [FeatureKey],
+        description: 'User-specific feature keys.',
     })
     @ManyToMany(() => FeatureKey, {
         eager: true,
