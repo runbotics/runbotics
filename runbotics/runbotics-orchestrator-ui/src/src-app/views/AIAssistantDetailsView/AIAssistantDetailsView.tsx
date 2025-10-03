@@ -15,7 +15,7 @@ const AIAssistantDetailsView: VFC<AIAssistantDetailsViewProps> = ({ assistantUrl
 
     return (
         <StyledPage title={pageTitle}>
-            <StyledIFrame src={`/assistant/${assistantUrl}`} />
+            <StyledIFrame src={`/assistants/${assistantUrl}`} />
         </StyledPage>
     );
 };
