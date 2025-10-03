@@ -167,7 +167,7 @@ export class UserService {
             roles: result.authorities.map(authority => {
                 return authority.name;
             }),
-            featureKeys: result.authorities.map(authority => { return authority.featureKeys.map(featureKey => (featureKey.name)); }).flat(),
+            featureKeys: getAllFeatureKeysAssignedToUser(result.authorities, result.userFeatureKeys),
         };
     }
 
