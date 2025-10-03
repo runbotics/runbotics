@@ -87,6 +87,15 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "user_feature_key",
+        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "feature_key", referencedColumnName = "name") }
+    )
+    @BatchSize(size = 20)
+    private Set<FeatureKey> userFeatureKeys = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "tenant_id", nullable = false)
     @JsonIgnoreProperties(value = { "createdBy" }, allowSetters = true)
@@ -200,6 +209,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.authorities = authorities;
     }
 
+    public Set<FeatureKey> getUserFeatureKeys() {
+        return userFeatureKeys;
+    }
+
+    public void setUserFeatureKeys(Set<FeatureKey> userFeatureKeys) {
+        this.userFeatureKeys = userFeatureKeys;
+    }
     public Tenant getTenant() {
         return tenant;
     }
