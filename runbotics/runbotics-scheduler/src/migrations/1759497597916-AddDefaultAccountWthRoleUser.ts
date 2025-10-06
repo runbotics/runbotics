@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddingRpaUserToBasicAccounts1759491544949
+export class AddDefaultAccountWthRoleUser1759497597916
     implements MigrationInterface
 {
     public async up(queryRunner: QueryRunner): Promise<void> {
@@ -20,10 +20,10 @@ export class AddingRpaUserToBasicAccounts1759491544949
                     last_modified_date
                 ) VALUES (
                     5,
-                    'rpa-user@localhost',
+                    'user@localhost',
                     '$2a$10$0vnKkp5IFbeEG3s.8GEzv.jZwq7hzHbfj3cFFNmHbdqwIc/ai2tn6',
-                    'RpaUser',
-                    'RpaUser',
+                    'User',
+                    'User',
                     true,
                     'en',
                     'b7f9092f-5973-c781-08db-4d6e48f78e98',
@@ -34,7 +34,7 @@ export class AddingRpaUserToBasicAccounts1759491544949
                 )
             `);
         await queryRunner.query(`
-                INSERT INTO "jhi_user_authority" (user_id, authority_name) VALUES (5, 'ROLE_RPA_USER')
+                INSERT INTO "jhi_user_authority" (user_id, authority_name) VALUES (5, 'ROLE_USER')
             `);
     }
 
