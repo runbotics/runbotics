@@ -33,7 +33,7 @@ export const withGuestGuard = (Component: FC | VFC) => (props: any) => {
         }
 
         if (isOnlyRoleUser) {
-            router.replace('/app/ai-assistant', null, { locale: user.langKey });
+            router.replace('/app/ai-assistants', null, { locale: user.langKey });
         } else if (isTenantAdmin || isOnlyRoleRpaUser) {
             router.replace('/app/processes/collections', null, {
                 locale: user.langKey,

@@ -8,7 +8,7 @@ import { ProcessCollectionDto } from './dto/process-collection.dto';
 import { FeatureKey } from 'runbotics-common';
 import { UpdateProcessCollectionDto } from './dto/update-process-collection.dto';
 import { ProcessCollectionWithUsersDto } from './dto/process-collection-with-users.dto';
-import { hasFeatureKey } from '#/utils/authority.utils';
+import { hasFeatureKey } from '#/utils/user.utils';
 
 const RELATIONS: FindOptionsRelations<ProcessCollection> = {
     createdBy: true,

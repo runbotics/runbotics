@@ -12,11 +12,11 @@ import { FeatureKeys } from '#/auth/featureKey.decorator';
 import { FeatureKey } from 'runbotics-common';
 import { DeleteUserDto, deleteUserSchema } from './dto/delete-user.dto';
 import { ActivateUserDto, activateUserSchema } from './dto/activate-user.dto';
-import { Logger } from '#/utils/logger';
 
 @Controller('/api/scheduler')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+    constructor(private readonly userService: UserService) {
+    }
 
     @GetWithTenant('users/Page')
     @FeatureKeys(FeatureKey.TENANT_READ_USER)
@@ -47,7 +47,7 @@ export class UserController {
         return this.userService.update(
             { ...userDto },
             userId,
-            user
+            user,
         );
     }
 
@@ -61,7 +61,7 @@ export class UserController {
         return this.userService.activate(
             userDto,
             userId,
-            user
+            user,
         );
     }
 
@@ -92,7 +92,7 @@ export class UserController {
     updateUser(
         @UserDecorator() user: User,
         @Param('id', ParseIntPipe) userId: User['id'],
-        @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto
+        @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto,
     ) {
         return this.userService.update(userDto, userId, user);
     }
@@ -107,10 +107,9 @@ export class UserController {
         return this.userService.activate(
             userDto,
             userId,
-            user
+            user,
         );
     }
-
 
     @Delete('users/:id')
     @HttpCode(HttpStatus.NO_CONTENT)

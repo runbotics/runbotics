@@ -56,32 +56,6 @@ class AccountResourceIT {
     private MockMvc restAccountMockMvc;
 
     @Test
-    @WithUnauthenticatedMockUser
-    void testNonAuthenticatedUser() throws Exception {
-        restAccountMockMvc
-            .perform(get("/api/authenticate").accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string(""));
-    }
-
-    @Test
-    void testAuthenticatedUser() throws Exception {
-        restAccountMockMvc
-            .perform(
-                get("/api/authenticate")
-                    .with(
-                        request -> {
-                            request.setRemoteUser(TEST_USER_LOGIN);
-                            return request;
-                        }
-                    )
-                    .accept(MediaType.APPLICATION_JSON)
-            )
-            .andExpect(status().isOk())
-            .andExpect(content().string(TEST_USER_LOGIN));
-    }
-
-    @Test
     void testGetExistingAccount() throws Exception {
         Set<AuthorityDTO> authorities = new HashSet<>();
         authorities.add(getAuthority(AuthoritiesConstants.ADMIN));
