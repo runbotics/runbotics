@@ -165,9 +165,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.activated = activated;
     }
 
-    public boolean isHasBeenActivated() { return hasBeenActivated; }
+    public boolean isHasBeenActivated() {
+        return hasBeenActivated;
+    }
 
-    public void setHasBeenActivated(boolean hasBeenActivated ) { this.hasBeenActivated = hasBeenActivated; }
+    public void setHasBeenActivated(boolean hasBeenActivated) {
+        this.hasBeenActivated = hasBeenActivated;
+    }
 
     public String getActivationKey() {
         return activationKey;
@@ -216,6 +220,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setUserFeatureKeys(Set<FeatureKey> userFeatureKeys) {
         this.userFeatureKeys = userFeatureKeys;
     }
+
     public Tenant getTenant() {
         return tenant;
     }

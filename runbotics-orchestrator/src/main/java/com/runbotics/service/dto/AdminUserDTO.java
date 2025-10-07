@@ -67,17 +67,15 @@ public class AdminUserDTO {
         this.roles = user.getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet());
         Set<String> allFeatureKeys = new HashSet<>();
 
-        user.getAuthorities()
+        user
+            .getAuthorities()
             .stream()
             .flatMap(authority -> authority.getFeatureKeys().stream())
             .map(featureKey -> featureKey.getName())
             .forEach(allFeatureKeys::add);
 
         if (user.getUserFeatureKeys() != null) {
-            user.getUserFeatureKeys()
-                .stream()
-                .map(featureKey -> featureKey.getName())
-                .forEach(allFeatureKeys::add);
+            user.getUserFeatureKeys().stream().map(featureKey -> featureKey.getName()).forEach(allFeatureKeys::add);
         }
 
         this.featureKeys = allFeatureKeys;
