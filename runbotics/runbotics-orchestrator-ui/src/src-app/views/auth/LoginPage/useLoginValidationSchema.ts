@@ -1,29 +1,25 @@
 import * as Yup from 'yup';
 
+import useTranslations from '#src-app/hooks/useTranslations';
 
-const digitMessage = 'Password must contain at least 1 digit';
-const lowerCaseMessage = 'Password must contain at least 1 lowercase letter';
-const upperCaseMessage = 'Password must contain at least 1 uppercase letter';
-const specialCharacterMessage = 'Password must contain at least 1 special character';
-const passwordRequiredMessage = 'Password is required';
+const useLoginValidationSchema = () => {
+    const { translate } = useTranslations();
 
-const emailValidMessage = 'Must be valid email';
-const emailRequiredMessage = 'Email is required';
-
-const useLoginValidationSchema = () => Yup.object().shape({
-    email: Yup.string()
-        .email(emailValidMessage)
-        .max(255)
-        .required(emailRequiredMessage),
-    password: Yup.string()
-        .min(14)
-        .matches(/[0-9]/, digitMessage)
-        .matches(/[a-z]/, lowerCaseMessage)
-        .matches(/[A-Z]/, upperCaseMessage)
-        .matches(/[\!\@\#\$\%\^\&\*]/, specialCharacterMessage)
-        .max(255)
-        .required(passwordRequiredMessage),
-});
+    return Yup.object().shape({
+        email: Yup.string()
+            .email(translate('Register.Form.Validation.Email.Valid'))
+            .max(255, translate('Register.Form.Validation.Email.MaxLength', { max: 255 }))
+            .required(translate('Login.Form.Email.Required')),
+        password: Yup.string()
+            .min(14, translate('Register.Form.Validation.Password.MinLength', { min: 14 }))
+            .matches(/[0-9]/, translate('Register.Form.Validation.Password.Digit'))
+            .matches(/[a-z]/, translate('Register.Form.Validation.Password.LowerCase'))
+            .matches(/[A-Z]/, translate('Register.Form.Validation.Password.UpperCase'))
+            .matches(/[\!\@\#\$\%\^\&\*]/, translate('Register.Form.Validation.Password.SpecialCharacter'))
+            .max(255, translate('Register.Form.Validation.Password.MaxLength', { max: 255 }))
+            .required(translate('Login.Form.Password.Required')),
+    });
+};
 
 export type UseLoginValidationSchema = ReturnType<typeof useLoginValidationSchema>
 
