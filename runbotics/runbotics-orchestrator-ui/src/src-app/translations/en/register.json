@@ -13,7 +13,7 @@
     "Register.Form.Validation.Password.Match": "Passwords must match",
     "Register.Form.Validation.PasswordConfirmation.Required": "Password confirmation is required",
     "Register.Form.Validation.Password.MinLength": "Password must be at least {{ min }} characters long",
-    "Register.Form.Validation.Password.MaxLength": "Password must be at least {{ max }} characters long",
+    "Register.Form.Validation.Password.MaxLength": "Password must be at most {{ max }} characters long",
     "Register.Registration.Error": "During registration error occurred",
     "Register.Form.Fields.Email.Label": "Email",
     "Register.Form.Fields.Password.Label": "Password",
