@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { getMigrations } from './database/database.utils';
 
 export default new DataSource({
     type: 'postgres',
@@ -11,6 +12,6 @@ export default new DataSource({
     logNotifications: true,
     logging: true,
     entities: ['dist/src/**/*.entity.js'],
-    migrations: ['dist/src/migrations/*.js'],
+    migrations: getMigrations(),
     migrationsTableName: 'rb_migrations.migration',
 });
