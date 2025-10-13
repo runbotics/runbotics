@@ -241,6 +241,12 @@ export enum FeatureKey {
 
     // Allows to access AI assistant
     AI_ASSISTANT_ACCESS = 'AI_ASSISTANT_ACCESS',
+
+    // Allows to access Contracts AI assistant
+    AI_ASSISTANTS_CONTRACTS_ASSISTANT = 'AI_ASSISTANTS_CONTRACTS_ASSISTANT',
+
+    // Allows to access Company Guide AI assistant
+    AI_ASSISTANTS_COMPANY_GUIDE = 'AI_ASSISTANTS_COMPANY_GUIDE',
 }
 
 export interface IFeatureKey {
