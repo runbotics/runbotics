@@ -11,14 +11,14 @@ import { TokenData } from './auth.types';
 export class AuthService implements OnApplicationBootstrap {
     private readonly logger = new RunboticsLogger(AuthService.name);
     private reauthenticateIntervalHandle: ReturnType<typeof setInterval> | null = null;
-    private readonly authOrchestratorAxios = Axios.create({ maxRedirects: 0 });
+    private readonly authAxios = Axios.create({ maxRedirects: 0 });
     private tokenData: TokenData | null = null;
 
     constructor(
         private readonly serverConfigService: ServerConfigService,
         private readonly storageService: StorageService,
-    ) { 
-        this.authOrchestratorAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
+    ) {
+        this.authAxios.defaults.baseURL = this.serverConfigService.entrypointUrl;
     }
 
     onApplicationBootstrap() {
@@ -63,7 +63,7 @@ export class AuthService implements OnApplicationBootstrap {
     private async authenticate(): Promise<TokenData> {
         this.logger.log('=> Authenticating with server: ' + this.serverConfigService.entrypointUrl);
 
-        const response = await this.authOrchestratorAxios.post(
+        const response = await this.authAxios.post(
             '/api/authenticate',
             {
                 username: this.serverConfigService.credentials.username,
@@ -75,26 +75,18 @@ export class AuthService implements OnApplicationBootstrap {
             },
         )
             .catch((error) => {
-                this.logger.error('<= Error authenticating with server: ' + this.serverConfigService.entrypointUrl, error);
+                this.logger.error(
+                    '<= Error authenticating with server: ' + this.serverConfigService.entrypointUrl,
+                    error,
+                );
                 throw error;
             });
 
-        const token: string = response.data['id_token'];
-
+        const token: string = response.data['idToken'];
+        const user: { tenant: { id: string } } = response.data['user'];
         const decodedToken = jwtDecode(token);
-        const authUser = await this.authOrchestratorAxios.get<{ tenant: { id: string } }>('/api/account', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then(res => res.data)
-            .catch((error) => {
-                this.logger.error('<= Error getting user from server: ' + this.serverConfigService.entrypointSchedulerUrl, error);
-                throw error;
-            });
-
         this.storageService.setValue('token', token);
-        this.storageService.setValue('tenantId', authUser.tenant.id);
+        this.storageService.setValue('tenantId', user.tenant.id);
 
         const installationId = await this.getInstallationId();
 
@@ -114,7 +106,7 @@ export class AuthService implements OnApplicationBootstrap {
         const tokenData: TokenData = {
             expiresAt: decodedToken.exp ?? 0,
             token: token,
-            tenantId: authUser.tenant.id,
+            tenantId: user.tenant.id,
             installationId: installationId,
         };
 

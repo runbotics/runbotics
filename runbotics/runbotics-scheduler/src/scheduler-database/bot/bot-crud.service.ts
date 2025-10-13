@@ -4,7 +4,6 @@ import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import { BotEntity } from './bot.entity';
 import {
     IBot,
-    FeatureKey,
 } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';
 import { Specs } from '#/utils/specification/specifiable.decorator';
@@ -13,7 +12,6 @@ import { getPage } from '#/utils/page/page';
 import { BotCollectionService } from '#/scheduler-database/bot-collection/bot-collection.service';
 import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
 import { UserService } from '../user/user.service';
-import { hasFeatureKey } from '#/utils/authority.utils';
 
 const relations = ['user', 'system', 'collection', 'collection.users'];
 

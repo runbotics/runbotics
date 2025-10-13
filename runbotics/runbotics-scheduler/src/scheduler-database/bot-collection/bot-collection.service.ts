@@ -12,7 +12,8 @@ import { Paging } from '#/utils/page/pageable.decorator';
 import { getPage } from '#/utils/page/page';
 import { DefaultCollections } from 'runbotics-common';
 import { UserService } from '../user/user.service';
-import { hasFeatureKey, isTenantAdmin } from '#/utils/authority.utils';
+import { isTenantAdmin } from '#/utils/authority.utils';
+import { hasFeatureKey } from '#/utils/user.utils';
 
 const RELATIONS: FindOptionsRelations<BotCollection> = {
     createdByUser: true,
