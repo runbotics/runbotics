@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MailService } from './mail.service';
-import { Logger } from '#/utils/logger';
 import { DefaultCollections, ProcessInstanceStatus } from 'runbotics-common';
 import { CredentialOperationType } from '#/scheduler-database/credential/credential.utils';
 import { User } from '#/scheduler-database/user/user.entity';
@@ -12,7 +11,7 @@ vi.mock('#/scheduler-database/process/process.service');
 vi.mock('#/scheduler-database/notification-process/notification-process.service');
 vi.mock('#/scheduler-database/notification-bot/notification-bot.service');
 vi.mock('#/config/server-config');
-vi.mock('./I18n.service');
+vi.mock('./i18n.service');
 vi.mock('#/utils/logger');
 vi.mock('#/utils/authority.utils', () => ({
     hasRole: vi.fn().mockReturnValue(true),
