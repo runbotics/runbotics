@@ -19,7 +19,7 @@ import { NotificationProcess } from '#/scheduler-database/notification-process/n
 import { subscriptionExpirationNotificationTemplate } from './templates/i18n/subscription-expiration-notification.template';
 import { generateAggregatedEmailContent } from './templates/i18n/process-summary-notification-statistics.template';
 import { DataSource } from 'typeorm';
-import { I18nService } from './I18n.service';
+import { I18nService } from './i18n.service';
 
 export type SendMailInput = {
     to?: string;
