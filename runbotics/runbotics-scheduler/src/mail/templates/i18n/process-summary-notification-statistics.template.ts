@@ -1,21 +1,27 @@
+import { I18nService } from '#/mail/I18n.service';
 import { ProcessStatisticsResult } from '#/types';
 import environment from '#/utils/environment';
-import { assignmentLateBase } from '../assets/assignmentLate-icon';
-import { assignmentTurnedInBase } from '../assets/assignmentTurnedIn-icon';
-import { moreTimeBase } from '../assets/moreTime-icon';
-import { scheduleBase } from '../assets/schedule-icon';
-import { generateEmailHeader } from './components/email-header.template';
-import { mainStyles } from './styles/main-template.styles';
-import { processSummaryStyles } from './styles/process-summary-notification-statistics.styles';
+import { assignmentLateBase } from '../../assets/assignmentLate-icon';
+import { assignmentTurnedInBase } from '../../assets/assignmentTurnedIn-icon';
+import { moreTimeBase } from '../../assets/moreTime-icon';
+import { scheduleBase } from '../../assets/schedule-icon';
+import { generateEmailHeader } from '../components/email-header.template';
+import { mainStyles } from '../styles/main-template.styles';
+import { processSummaryStyles } from '../styles/process-summary-notification-statistics.styles';
 
-export const generateAggregatedEmailContent = (summaries: { name: string; stats: ProcessStatisticsResult }[], unsubscribeUrl: string): string => {
+export const generateAggregatedEmailContent = (
+  summaries: { name: string; stats: ProcessStatisticsResult }[],
+  unsubscribeUrl: string,
+  i18n: I18nService,
+  lang = 'en'
+): string => {
   return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${lang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Statystyki Procesów</title>
+  <title>${i18n.translate('mail.processSummary.subject', lang)}</title>
   <style>
     ${mainStyles}
     ${processSummaryStyles}
@@ -26,9 +32,9 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
     ${generateEmailHeader()}
     <tr>
       <td class="content">
-        <h2>Statystyki procesów</h2>
-        <p>Cześć,</p>
-        <p>Oto najnowsze statystyki dla śledzonego procesu w okresie: <strong>${summaries[0].stats.fromDate} - ${summaries[0].stats.toDate}</strong>.</p>
+        <h2>${i18n.translate('mail.processSummary.subject', lang)}</h2>
+        <p>${i18n.translate('mail.processSummary.greeting', lang)},</p>
+        <p>${i18n.translate('mail.processSummary.intro', lang, { fromDate: summaries[0].stats.fromDate, toDate: summaries[0].stats.toDate })}</p>
 
         ${summaries
           .map(
@@ -41,7 +47,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                                 <img src="${assignmentTurnedInBase}" alt="Completed Tasks" style="width: 24px; height: 24px;">
                             </div>
                         <div>
-                            <div>Wykonane zadania</div>
+                            <div>${i18n.translate('mail.processSummary.completedTasks', lang)}</div>
                             <div style="font-size: 16px; font-weight: bold;">${stats.successfulExecutions}</div>
                         </div>
                         </div>
@@ -50,7 +56,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                                 <img src="${assignmentLateBase}" alt="Failed Tasks" style="width: 24px; height: 24px;">
                             </div>
                         <div>
-                            <div>Niewykonane zadania</div>
+                            <div>${i18n.translate('mail.processSummary.failedTasks', lang)}</div>
                             <div style="font-size: 16px; font-weight: bold;">${stats.failedExecutions}</div>
                         </div>
                         </div>
@@ -59,7 +65,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                                 <img src="${scheduleBase}" alt="Average Duration" style="width: 24px; height: 24px;">
                             </div>
                         <div>
-                            <div>Średni czas wykonania</div>
+                            <div>${i18n.translate('mail.processSummary.averageDuration', lang)}</div>
                             <div style="font-size: 16px; font-weight: bold;">${stats.averageDuration}s</div>
                         </div>
                         </div>
@@ -68,7 +74,7 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
                                 <img src="${moreTimeBase}" alt="Total Duration" style="width: 24px; height: 24px;">
                             </div>
                         <div>
-                            <div>Łączny czas wykonania</div>
+                            <div>${i18n.translate('mail.processSummary.totalDuration', lang)}</div>
                             <div style="font-size: 16px; font-weight: bold;">${stats.totalDuration}s</div>
                         </div>
                     </div>
@@ -77,15 +83,15 @@ export const generateAggregatedEmailContent = (summaries: { name: string; stats:
           `
           )
           .join('')}
-        <p>Jeśli chcesz zobaczyć więcej szczegółów, <a href="#" style="color: #fbb040;">zaloguj się do panelu statystyk procesu</a>.</p>
-        <p>Dziękujemy za zaufanie!</p>
-        <p><strong>Zespół RunBotics</strong></p>
+        <p>${i18n.translate('mail.processSummary.moreDetails', lang)} <a href="#" style="color: #fbb040;">${i18n.translate('mail.processSummary.moreDetailsLink', lang)}</a>.</p>
+        <p>${i18n.translate('mail.processSummary.thankYou', lang)}</p>
+        <p><strong>${i18n.translate('mail.processSummary.signature', lang)}</strong></p>
       </td>
     </tr>
     <tr>
       <td class="footer">
-        <p>Nie chcesz otrzymywać takich wiadomości? <a href="${unsubscribeUrl}" style="color: #fbb040;">Kliknij tutaj</a>.</p>
-        <p>2025 &copy; ${environment.runboticsEnv} v${environment.version}</p>
+        <p>${i18n.translate('mail.processSummary.unsubscribeMessage', lang)} <a href="${unsubscribeUrl}" style="color: #fbb040;">${i18n.translate('mail.processSummary.unsubscribeLink', lang)}</a>.</p>
+        <p>${i18n.translate('mail.processSummary.copyright', lang, { year: '2025', env: environment.runboticsEnv, version: environment.version })}</p>
       </td>
     </tr>
   </table>
