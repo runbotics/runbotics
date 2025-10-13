@@ -25,6 +25,7 @@ import { ActivateUserDto } from './dto/activate-user.dto';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
+import { getAllFeatureKeysAssignedToUser, hasFeatureKey } from '#/utils/user.utils';
 
 @Injectable()
 export class UserService {
@@ -166,7 +167,7 @@ export class UserService {
             roles: result.authorities.map(authority => {
                 return authority.name;
             }),
-            featureKeys: result.authorities.map(authority => { return authority.featureKeys.map(featureKey => (featureKey.name)); }).flat(),
+            featureKeys: getAllFeatureKeysAssignedToUser(result.authorities, result.userFeatureKeys),
         };
     }
 
@@ -264,14 +265,6 @@ export class UserService {
         this.mailService.sendUserDeclineReasonMail(userToDelete, userDto);
     }
 
-    hasFeatureKey(user: User, featureKey: FeatureKey) {
-        const userKeys = user.authorities
-            .flatMap((auth) => auth.featureKeys)
-            .map((featureKey) => featureKey.name);
-
-        return userKeys.includes(featureKey);
-    }
-
     mapToBasicUserDto(user: User): BasicUserDto {
         return {
             id: user.id,
@@ -297,9 +290,7 @@ export class UserService {
                 id: user.tenant.id,
                 name: user.tenant.name,
             },
-            featureKeys: user.authorities
-                .flatMap((auth) => auth.featureKeys)
-                .map((featureKey) => featureKey.name),
+            featureKeys: getAllFeatureKeysAssignedToUser(user.authorities, user.userFeatureKeys),
             roles: user.authorities.map((auth) => auth.name),
         };
     }
@@ -336,7 +327,7 @@ export class UserService {
 
         const ROLES_ALLOWED_IN_TENANT = getRolesAllowedInTenant();
 
-        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !ROLES_ALLOWED_IN_TENANT.includes(roles[0])) {
+        if (!hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !ROLES_ALLOWED_IN_TENANT.includes(roles[0])) {
             throw new BadRequestException('Wrong role');
         }
     }

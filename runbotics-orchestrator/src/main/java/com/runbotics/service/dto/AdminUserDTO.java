@@ -3,6 +3,7 @@ package com.runbotics.service.dto;
 import com.runbotics.config.Constants;
 import com.runbotics.domain.User;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -64,12 +65,20 @@ public class AdminUserDTO {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.roles = user.getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toSet());
-        this.featureKeys =
-            user
-                .getAuthorities()
-                .stream()
-                .flatMap(authority -> authority.getFeatureKeys().stream().map(featureKey -> featureKey.getName()))
-                .collect(Collectors.toSet());
+        Set<String> allFeatureKeys = new HashSet<>();
+
+        user
+            .getAuthorities()
+            .stream()
+            .flatMap(authority -> authority.getFeatureKeys().stream())
+            .map(featureKey -> featureKey.getName())
+            .forEach(allFeatureKeys::add);
+
+        if (user.getUserFeatureKeys() != null) {
+            user.getUserFeatureKeys().stream().map(featureKey -> featureKey.getName()).forEach(allFeatureKeys::add);
+        }
+
+        this.featureKeys = allFeatureKeys;
         this.tenant = new TenantDTO(user.getTenant());
     }
 

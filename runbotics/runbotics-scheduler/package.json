@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "3.5.0-SNAPSHOT.32",
+    "version": "3.5.0-SNAPSHOT.41",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -20,7 +20,9 @@
         "test:cov": "vitest run --coverage",
         "test:debug": "vitest --inspect-brk --threads false",
         "typeorm": "rm -rf ./dist && rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./dist/src/ormconfig.js",
-        "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create"
+        "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create",
+        "mig:run": "rushx typeorm migration:run",
+        "mig:revert": "rushx typeorm migration:revert"
     },
     "dependencies": {
         "@azure/msal-node": "~3.6.0",

@@ -13,6 +13,7 @@ import { ProcessInstance } from './process-instance.entity';
 import { User } from '#/scheduler-database/user/user.entity';
 import { User as UserDecorator } from '#/utils/decorators/user.decorator';
 import { Pageable, Paging } from '#/utils/page/pageable.decorator';
+import { BotCrudService } from '../bot/bot-crud.service';
 
 @UseInterceptors(TenantInterceptor)
 @Controller('api/scheduler/tenants/:tenantId/process-instances')
@@ -20,7 +21,8 @@ export class ProcessInstanceController {
     private readonly logger = new Logger(ProcessInstanceController.name);
 
     constructor(
-        private readonly processInstanceService: ProcessInstanceService
+        private readonly processInstanceService: ProcessInstanceService,
+        private botCrudService: BotCrudService
     ) {}
 
     @Get()
@@ -34,13 +36,17 @@ export class ProcessInstanceController {
 
     @Get('GetPage')
     @FeatureKeys(FeatureKey.PROCESS_INSTANCE_READ)
-    getPage(
+    async getPage(
         @Specifiable(ProcessInstanceCriteria) specs: Specs<ProcessInstance>,
         @Pageable() paging: Paging,
         @UserDecorator() user: User,
         @Query('processId.equals') processId: string,
         @Query('botId.equals') botId: string,
     ) {
+        if (botId) {
+            await this.botCrudService.findOne(user, parseInt(botId));
+        }
+
         return this.processInstanceService.getPage(user, specs, paging, processId, botId);
     }
 

@@ -6,7 +6,6 @@ export const User = createParamDecorator(
     (userProperty: keyof UserEntity | undefined, ctx: ExecutionContext) => {
         const request = ctx.switchToHttp().getRequest<AuthRequest>();
         const user = request.user;
-
         return userProperty ? user?.[userProperty] : user;
     },
 );

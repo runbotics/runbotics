@@ -22,3 +22,20 @@ export const numberTransformer: TypedTransformer<string | number, number> = {
     to: (data: number): number => data,
     from: (data: string | number): number => Number(data),
 };
+
+const productionEnvs = ['Runbotics-QAS', 'Runbotics-DEV', 'Runbotics-PROD'];
+const isProductionEnv = productionEnvs.includes(process.env.RUNBOTICS_ENVIRONMENT);
+
+export const getMigrations = () => {
+    if (isProductionEnv) {
+        return [
+            'dist/src/migrations/*.js',
+        ];
+    }
+    else {
+        return [
+            'dist/src/migrations/*.js',
+            'dist/src/migrations/local/*.js',
+        ];
+    }
+};
