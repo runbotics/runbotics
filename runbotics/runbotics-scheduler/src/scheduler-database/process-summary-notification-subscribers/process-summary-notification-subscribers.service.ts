@@ -6,9 +6,7 @@ import { Cron } from '@nestjs/schedule';
 import { ProcessStatisticsService } from '#/utils/process-statistics/process-statistics.service';
 import { MailService } from '#/mail/mail.service';
 import { User } from '../user/user.entity';
-import { ProcessStatisticsResult } from '#/types';
 import { ProcessEntity } from '../process/process.entity';
-import { generateAggregatedEmailContent } from '#/mail/templates/process-summary-notification-statistics.template';
 import { Logger } from '#/utils/logger';
 import { SubscribeDto } from './dto/subscribe.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
@@ -39,7 +37,6 @@ export class ProcessSummaryNotificationSubscribersService {
             }
             emailToProcessesMap[email].push({ process: subscriber.process, user: subscriber.user });
         }
-
         for (const [email, processesInfo] of Object.entries(emailToProcessesMap)) {
             const processSummaries = [];
 
@@ -50,24 +47,13 @@ export class ProcessSummaryNotificationSubscribersService {
                     stats
                 });
             }
+            const unsubscribeToken = await this.unsubscribeTokenService.findByEmail(email);
+            const unsubscribeUrl = unsubscribeToken
+                ? `${process.env.RUNBOTICS_ENTRYPOINT_URL}/api/scheduler/unsubscribe?token=${unsubscribeToken.token}`
+                : '';
 
-            await this.sendAggregatedStatisticsEmail(email, processSummaries);
+            await this.mailService.sendProcessSummaryNotification(processSummaries, unsubscribeUrl, [email]);
         }
-    }
-
-    private async sendAggregatedStatisticsEmail(email: string, summaries: { name: string, stats: ProcessStatisticsResult }[]) {
-        const unsubscribeToken = await this.unsubscribeTokenService.findByEmail(email);
-        const unsubscribeUrl = unsubscribeToken
-        ? `${process.env.RUNBOTICS_ENTRYPOINT_URL}/api/scheduler/unsubscribe?token=${unsubscribeToken.token}`
-        : '';
-        const htmlContent = generateAggregatedEmailContent(summaries, unsubscribeUrl);
-        this.logger.log(`Sending aggregated email to ${email}`);
-        await this.mailService.sendMail({
-            to: email,
-            subject: 'Statystyki procesów',
-            content: htmlContent,
-            isHtml: true,
-        });
     }
 
     async unsubscribeAllByEmail(email: string) {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
-import fs from 'fs';
 import { DefaultCollections, IProcess, IProcessInstance, Role } from 'runbotics-common';
+import { ProcessStatisticsResult } from '#/types';
 import { Logger } from '#/utils/logger';
 import { BotService } from '#/scheduler-database/bot/bot.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
@@ -16,7 +16,10 @@ import { DeleteUserDto } from '#/scheduler-database/user/dto/delete-user.dto';
 import { hasRole } from '#/utils/authority.utils';
 import { NotificationBot } from '#/scheduler-database/notification-bot/notification-bot.entity';
 import { NotificationProcess } from '#/scheduler-database/notification-process/notification-process.entity';
-import { subscriptionExpirationNotificationTemplate } from './templates/subscription-expiration-notification.template';
+import { subscriptionExpirationNotificationTemplate } from './templates/i18n/subscription-expiration-notification.template';
+import { generateAggregatedEmailContent } from './templates/i18n/process-summary-notification-statistics.template';
+import { DataSource } from 'typeorm';
+import { I18nService } from './I18n.service';
 
 export type SendMailInput = {
     to?: string;
@@ -27,9 +30,6 @@ export type SendMailInput = {
     attachments?: { filename: string; path: string; cid?: string }[];
     isHtml: boolean;
 };
-
-
-const NOTIFICATION_MAIL_SUBJECT = 'RunBotics Healthcheck Notification 🔧';
 
 @Injectable()
 export class MailService {
@@ -42,6 +42,8 @@ export class MailService {
         private readonly notificationProcessService: NotificationProcessService,
         private readonly notificationBotService: NotificationBotService,
         private readonly serverConfigService: ServerConfigService,
+        private readonly i18n: I18nService,
+        private readonly dataSource: DataSource,
     ) { }
 
     public async sendMail(input: SendMailInput) {
@@ -84,12 +86,6 @@ export class MailService {
         const allSubscriptions = await this.notificationBotService
             .getAllByBotId(disconnectedBot.id);
 
-        const sendMailInput: SendMailInput = {
-            subject: NOTIFICATION_MAIL_SUBJECT,
-            content: `Hello,\n\nBot 🤖 (${installationId}) has been disconnected.\nYou can visit us here ${this.serverConfigService.entrypointUrl}\n\nBest regards,\nRunBotics`,
-            isHtml: false,
-        };
-
         const targetSubscribers =
             disconnectedBot.collection.name === DefaultCollections.PUBLIC || disconnectedBot.collection.name === DefaultCollections.GUEST ?
                 allSubscriptions :
@@ -99,7 +95,25 @@ export class MailService {
             .map(subscription => this.extractTargetEmailFromNotification(subscription))
             .filter(email => !!email);
 
-        await this.handleNotificationEmail(sendMailInput, [botAssignedUserEmail, ...targetEmails]);
+        const allEmails = [botAssignedUserEmail, ...targetEmails];
+
+        for (const email of allEmails) {
+            const userLang = await this.getUserLanguage(email);
+            const subject = this.i18n.translate('mail.botDisconnection.subject', userLang);
+            const greeting = this.i18n.translate('mail.botDisconnection.greeting', userLang);
+            const message = this.i18n.translate('mail.botDisconnection.botDisconnectedMessage', userLang, { installationId });
+            const visitLink = this.i18n.translate('mail.botDisconnection.visitLink', userLang);
+            const signature = this.i18n.translate('mail.botDisconnection.signature', userLang);
+            
+            const sendMailInput: SendMailInput = {
+                to: email,
+                subject,
+                content: `${greeting},\n\n${message}\n${visitLink} ${this.serverConfigService.entrypointUrl}\n\n${signature}`,
+                isHtml: false,
+            };
+
+            await this.sendMail(sendMailInput);
+        }
     }
 
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
@@ -107,12 +121,6 @@ export class MailService {
         const processCreatorEmail = failedProcess.createdBy.email;
         const allSubscriptions = await this.notificationProcessService
             .getAllByProcessId(failedProcess.id);
-
-        const sendMailInput: SendMailInput = {
-            subject: NOTIFICATION_MAIL_SUBJECT,
-            content: `Hello,\n\nProcess ⚙️ ${process.name} (${process.id}) has failed with status (${processInstance.status}).\nYou can visit us here ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\nBest regards,\nRunBotics`,
-            isHtml: false,
-        };
 
         const filteredSubscriptions = failedProcess.isPublic ?
             allSubscriptions :
@@ -123,10 +131,30 @@ export class MailService {
             .map(subscription => this.extractTargetEmailFromNotification(subscription))
             .filter(email => !!email);
 
-        await this.handleNotificationEmail(sendMailInput, [processCreatorEmail, ...targetEmails]);
+        const allEmails = [processCreatorEmail, ...targetEmails];
+
+        for (const email of allEmails) {
+            const userLang = await this.getUserLanguage(email);
+            const subject = this.i18n.translate('mail.processFailure.subject', userLang);
+            const greeting = this.i18n.translate('mail.processFailure.greeting', userLang);
+            const message = this.i18n.translate('mail.processFailure.processFailedMessage',  userLang, 
+                { processName: process.name, processId: process.id.toString(), status: processInstance.status } 
+            );
+            const visitLink = this.i18n.translate('mail.processFailure.visitLink', userLang);
+            const signature = this.i18n.translate('mail.processFailure.signature', userLang);
+            
+            const sendMailInput: SendMailInput = {
+                to: email,
+                subject,
+                content: `${greeting},\n\n${message}\n${visitLink} ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\n${signature}`,
+                isHtml: false,
+            };
+
+            await this.sendMail(sendMailInput);
+        }
     }
 
-    public sendCredentialChangeNotificationMail(params: CredentialChangeMailPayload) {
+    public async sendCredentialChangeNotificationMail(params: CredentialChangeMailPayload) {
         const {
             editorEmail,
             collectionCreatorEmail,
@@ -136,39 +164,59 @@ export class MailService {
             operationType,
         } = params;
 
-        const attributeInfo = operationType === CredentialOperationType.CHANGE_ATTRIBUTE
-            ? ` with name <i>${params.attributeName}</i> for` : '';
+        const userLang = await this.getUserLanguage(collectionCreatorEmail);
+        
         const oldNameInfo = CredentialOperationType.EDIT && credentialOldName
-            ? ` (name before change <b>${credentialOldName}</b>)` : '';
+            ? this.i18n.translate('mail.credentialChange.oldNameInfo', userLang, { oldName: credentialOldName }) : '';
 
-        const message = `User with email <b>${editorEmail}</b> ${operationType}${attributeInfo} credential <b>${credentialName}</b>${oldNameInfo} in collection <b>${collectionName}</b>`;
+        const messageKey = operationType === CredentialOperationType.CHANGE_ATTRIBUTE 
+            ? 'mail.credentialChange.messageWithAttribute'
+            : 'mail.credentialChange.messageWithoutAttribute';
+
+        const attributeName = operationType === CredentialOperationType.CHANGE_ATTRIBUTE 
+            ? (params as { attributeName: string }).attributeName 
+            : '';
+
+        const message = this.i18n.translate(messageKey, 
+            userLang,
+            { 
+                editorEmail, 
+                operationType, 
+                credentialName, 
+                collectionName,
+                attributeName,
+                oldNameInfo 
+            } 
+        );
 
         const sendMailInput: SendMailInput = {
             to: collectionCreatorEmail,
-            subject: 'Credential change inside owned collection',
+            subject: this.i18n.translate('mail.credentialChange.subject', userLang),
             content: message,
             isHtml: true,
         };
 
-        this.sendMail(sendMailInput);
+        await this.sendMail(sendMailInput);
     }
 
-    public sendUserDeclineReasonMail(userToDelete: User, userDto: DeleteUserDto) {
+    public async sendUserDeclineReasonMail(userToDelete: User, userDto: DeleteUserDto) {
         if (userDto && 'declineReason' in userDto) {
-            this.sendMail({
+            const userLang = userToDelete.langKey || 'en';
+            await this.sendMail({
                 to: userToDelete.email,
-                subject: 'RunBotics - User Activation',
+                subject: this.i18n.translate('mail.userActivation.subject', userLang),
                 content: userDto.declineReason,
                 isHtml: false,
             });
         }
     }
 
-    public sendUserAcceptMail(userToUpdate: User, message: string) {
+    public async sendUserAcceptMail(userToUpdate: User, message: string) {
         if(message) {
-            this.sendMail({
+            const userLang = userToUpdate.langKey || 'en';
+            await this.sendMail({
                 to: userToUpdate.email,
-                subject: 'RunBotics - User Activation',
+                subject: this.i18n.translate('mail.userActivation.subject', userLang),
                 content: message,
                 isHtml: false,
             });
@@ -176,8 +224,9 @@ export class MailService {
     }
 
     public async sendSubscriptionExpirationNotification(user: User, diffDays: number, mailToLink: string) {
-        const emailContent = subscriptionExpirationNotificationTemplate(mailToLink, diffDays);
-        const subject = 'RunBotics - Subskrypcja';
+        const userLang = user.langKey || 'en';
+        const emailContent = subscriptionExpirationNotificationTemplate(mailToLink, diffDays, this.i18n, userLang);
+        const subject = this.i18n.translate('mail.subscriptionExpiration.subject', userLang);
 
         await this.sendMail({
             to: user.email,
@@ -185,6 +234,23 @@ export class MailService {
             content: emailContent,
             isHtml: true,
         });
+    }
+
+    public async sendProcessSummaryNotification(summaries: { name: string; stats: ProcessStatisticsResult }[], unsubscribeUrl: string, userEmails: string[]) {
+        for (const email of userEmails) {
+            const userLang = await this.getUserLanguage(email);
+            const emailContent = generateAggregatedEmailContent(summaries, unsubscribeUrl, this.i18n, userLang);
+            const subject = this.i18n.translate('mail.processSummary.subject', userLang);
+
+            const sendMailInput: SendMailInput = {
+                to: email,
+                subject,
+                content: emailContent,
+                isHtml: true,
+            };
+
+            await this.sendMail(sendMailInput);
+        }
     }
 
     private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {
@@ -195,5 +261,21 @@ export class MailService {
 
     private extractTargetEmailFromNotification(notification: NotificationBot | NotificationProcess) {
         return notification.customEmail || notification.user?.email || '';
+    }
+
+    private async getUserLanguage(userEmail: string): Promise<string> {
+        try {
+            const user = await this.dataSource
+                .createQueryBuilder()
+                .select(['user.langKey'])
+                .from(User, 'user')
+                .where('user.email = :email', { email: userEmail })
+                .getOne();
+            
+            return user?.langKey || 'en';
+        } catch (error) {
+            this.logger.warn(`Failed to get user language for ${userEmail}, defaulting to 'en'`);
+            return 'en';
+        }
     }
 }
