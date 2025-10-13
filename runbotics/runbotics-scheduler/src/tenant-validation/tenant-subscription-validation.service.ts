@@ -57,7 +57,7 @@ export class TenantSubscriptionValidationService {
         }
     }
 
-    @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+    @Cron(CronExpression.EVERY_MINUTE)
     async validateTenants() {
         await this.dataSource.transaction(async manager => {
             this.logger.log('Starting tenant subscription validation...');
