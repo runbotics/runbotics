@@ -1,4 +1,4 @@
-import { I18nService } from '#/mail/I18n.service';
+import { I18nService } from '#/mail/i18n.service';
 import environment from '#/utils/environment';
 import { generateEmailHeader } from '../components/email-header.template';
 import { mainStyles } from '../styles/main-template.styles';

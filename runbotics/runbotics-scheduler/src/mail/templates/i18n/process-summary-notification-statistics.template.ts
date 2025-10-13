@@ -1,4 +1,4 @@
-import { I18nService } from '#/mail/I18n.service';
+import { I18nService } from '#/mail/i18n.service';
 import { ProcessStatisticsResult } from '#/types';
 import environment from '#/utils/environment';
 import { assignmentLateBase } from '../../assets/assignmentLate-icon';

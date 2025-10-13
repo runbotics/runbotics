@@ -7,7 +7,7 @@ import { BotModule } from '#/scheduler-database/bot/bot.module';
 import { ProcessModule } from '#/scheduler-database/process/process.module';
 import { NotificationProcessModule } from '#/scheduler-database/notification-process/notification-process.module';
 import { NotificationBotModule } from '#/scheduler-database/notification-bot/notification-bot.module';
-import { I18nService } from './I18n.service';
+import { I18nService } from './i18n.service';
 
 @Module({
     imports: [
