@@ -59,7 +59,7 @@ describe('AssistantCard', () => {
         });
     });
     describe('Rendering', () => {
-        test('renders assistant information correctly in English', () => {
+        test('should render assistant information correctly in English', () => {
             const mockAssistant = createMockAIAssistant({
                 name: { pl: 'Asystent Testowy', en: 'Test Assistant' },
                 description: { pl: 'Opis testowy', en: 'Test description' },
@@ -74,7 +74,7 @@ describe('AssistantCard', () => {
             expect(screen.getByText('Testing')).toBeInTheDocument();
         });
 
-        test('renders assistant information correctly in Polish', () => {
+        test('should render assistant information correctly in Polish', () => {
             mockUseTranslations.mockReturnValue({
                 currentLanguage: 'pl',
             });
@@ -94,7 +94,7 @@ describe('AssistantCard', () => {
         });
     });
     describe('Click behavior', () => {
-        test('navigates to assistant URL when user has access', () => {
+        test('should navigate to assistant URL when user has access', () => {
             const mockAssistant = createMockAIAssistant({
                 url: '/test-assistant',
                 featureKey: FeatureKey.AI_ASSISTANT_ACCESS,
@@ -111,7 +111,7 @@ describe('AssistantCard', () => {
             expect(mockEnqueueSnackbar).not.toHaveBeenCalled();
         });
 
-        test('shows error snackbar when user does not have access', () => {
+        test('should show error snackbar when user does not have access', () => {
             const mockAssistant = createMockAIAssistant({
                 featureKey: FeatureKey.AI_ASSISTANT_ACCESS,
             });

@@ -39,7 +39,7 @@ describe('fetchAIAssistants thunk', () => {
     });
 
     describe('Success cases', () => {
-        test('fetches and validates assistants successfully', async () => {
+        test('should fetch and validate assistants', async () => {
             const mockAssistants = [
                 createMockAIAssistant({
                     id: '1',
@@ -68,12 +68,12 @@ describe('fetchAIAssistants thunk', () => {
             expect(result.payload).toHaveLength(2);
         });
 
-        test('filters out invalid assistants during validation', async () => {
+        test('should filter out invalid assistants during validation', async () => {
             const validAssistant = createMockAIAssistant({ id: '1' });
             const invalidAssistant1 = {
                 id: '2',
             };
-            const validAssistant2 = createMockAIAssistant({
+            const invalidAssistant2 = createMockAIAssistant({
                 id: '3',
                 featureKey: 'INVALID_KEY' as any,
             });
@@ -81,9 +81,9 @@ describe('fetchAIAssistants thunk', () => {
             const mockResponse: AIAssistantsResponse = {
                 success: true,
                 data: [
-                    validAssistant,
                     invalidAssistant1,
-                    validAssistant2,
+                    validAssistant,
+                    invalidAssistant2,
                 ] as any,
                 count: 3,
             };
@@ -99,7 +99,7 @@ describe('fetchAIAssistants thunk', () => {
             expect(result.payload[0].id).toBe('1');
         });
 
-        test('handles empty response gracefully', async () => {
+        test('should handle empty response gracefully', async () => {
             const mockResponse: AIAssistantsResponse = {
                 success: true,
                 data: [],
@@ -116,7 +116,7 @@ describe('fetchAIAssistants thunk', () => {
             expect(result.payload).toEqual([]);
         });
 
-        test('handles all invalid assistants', async () => {
+        test('should filter out all invalid assistants', async () => {
             const mockResponse = {
                 success: true,
                 data: [{ id: '1' }, { name: 'Invalid' }, {}],
@@ -135,7 +135,7 @@ describe('fetchAIAssistants thunk', () => {
     });
 
     describe('Validation edge cases', () => {
-        test('handles assistants with partial valid data', async () => {
+        test('should handle assistants with partial valid data', async () => {
             const partiallyValidAssistant = {
                 ...createMockAIAssistant({ id: '1' }),
                 unknownField: 'should be stripped',
@@ -158,7 +158,7 @@ describe('fetchAIAssistants thunk', () => {
             expect(result.payload).toHaveLength(0);
         });
 
-        test('validates featureKey enum values', async () => {
+        test('should filter out assistants with invalid featureKey values', async () => {
             const invalidFeatureKeyAssistant = {
                 ...createMockAIAssistant({ id: '1' }),
                 featureKey: 'INVALID_FEATURE_KEY',

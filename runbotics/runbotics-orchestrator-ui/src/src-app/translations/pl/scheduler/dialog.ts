@@ -2,6 +2,6 @@ import englishSchedulerDialogTranslations from '#src-app/translations/en/schedul
 
 const schedulerDialogTranslations: typeof englishSchedulerDialogTranslations = {
     'Scheduler.Dialog.NoServerToConnection': 'Aplikacja nie może nawiązać połączenia z serwerem',
-    'Scheduler.Dialog.ConnectionRestored': 'Połączenie z serwerem odzyskane. Jeżeli coś poszło nie tak odświerz karte.',
+    'Scheduler.Dialog.ConnectionRestored': 'Połączenie z serwerem odzyskane. Jeżeli coś poszło nie tak odśwież karte.',
 };
 export default schedulerDialogTranslations;

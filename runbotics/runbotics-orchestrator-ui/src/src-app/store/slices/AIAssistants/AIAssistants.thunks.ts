@@ -15,21 +15,18 @@ export const fetchAIAssistants = createAsyncThunk(
             { timeout: 10000 }
         );
         const unvalidatedData = response.data.data;
-        const validationPromises = unvalidatedData.map(
-            async (aiAssistant: any) => {
+        
+        const validatedAssistants = unvalidatedData
+            .map((aiAssistant: any) => {
                 try {
-                    return await AIAssistantSchema.validate(aiAssistant, {
+                    return AIAssistantSchema.validateSync(aiAssistant, {
                         abortEarly: false,
                     });
-                } catch (error) {
+                } catch {
                     return null;
                 }
-            }
-        );
-
-        const validatedAssistants = (
-            await Promise.all(validationPromises)
-        ).filter(Boolean) as AIAssistant[];
+            })
+            .filter(Boolean) as AIAssistant[];
 
         return validatedAssistants;
     }
