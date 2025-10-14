@@ -56,7 +56,7 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
         return false;
     }, [selectedElement, customValidationErrors]);
 
-    const validateVariableName = (value: string) => {
+    const _validateVariableName = (value: string) => {
         const variable = variables.find(({ name }) => name === value);
         return !(
             variable &&
@@ -79,6 +79,7 @@ const BasicTextField: FC<BasicTextFieldProps> = ({
                     'Process.BuildView.Modeler.Widgets.VariableNameIsTaken'
                 ),
             ]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue]);
 
     return (

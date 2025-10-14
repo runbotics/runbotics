@@ -3,6 +3,7 @@ import { reducer as form } from 'redux-form';
 
 import { actionReducer as action } from './slices/Action/index';
 import { activityReducer as activity } from './slices/Activity';
+import { aiAssistantsReducer as aiAssistants } from './slices/AIAssistants';
 import { authReducer as auth } from './slices/Auth/index';
 import { botReducer as bot } from './slices/Bot';
 import { botCollectionReducer as botCollection } from './slices/BotCollections';
@@ -18,6 +19,7 @@ import { processCollectionReducer as processCollection } from './slices/ProcessC
 import { processInstanceReducer as processInstance } from './slices/ProcessInstance';
 import { processInstanceEventReducer as processInstanceEvent } from './slices/ProcessInstanceEvent';
 import { processOutputReducer as processOutput } from './slices/ProcessOutput';
+import { processSubscriptionStatisticsReducer as processSubscriptionStatistics } from './slices/ProcessSubscriptionStatisctics';
 import { scheduleProcessReducer as scheduleProcess } from './slices/ScheduleProcess';
 import { schedulerReducer as scheduler } from './slices/Scheduler';
 import { tenantsReducer as tenants } from './slices/Tenants';
@@ -27,6 +29,7 @@ import httpErrorReducer from './slices/Views/httpErrorSlice';
 const rootReducer = combineReducers({
     action,
     activity,
+    aiAssistants,
     auth,
     bot,
     botCollection,
@@ -48,6 +51,7 @@ const rootReducer = combineReducers({
     credentials,
     credentialCollections,
     credentialTemplates,
+    processSubscriptionStatistics,
 });
 
 export default rootReducer;

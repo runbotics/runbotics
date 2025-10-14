@@ -19,6 +19,7 @@ export const useRequiredCredentialTypes = (): ActionCredentialType[] | null => {
     const requiredCredentialTypes = useMemo(() => process.definition
         ? getRequiredCredentialsTypesInProcess(process.definition, actions)
         : null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [process, externalBpmnActions, pluginBpmnActions]);
 
     return requiredCredentialTypes;

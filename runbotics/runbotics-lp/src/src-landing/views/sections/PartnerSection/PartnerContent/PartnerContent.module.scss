@@ -1,0 +1,71 @@
+@import "#src-landing/scss/main.scss";
+
+$A41LOGO_HEIGHT: 100px;
+
+.content {
+    composes: root from '#src-landing/components/SectionContent/SectionContent.module.scss';
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    row-gap: 140px;
+    padding: $padding-10;
+}
+
+.logo {
+    width: 100%;
+    height: $A41LOGO_HEIGHT;
+    object-fit: contain;
+}
+
+.partnerLayout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: 5px;
+    row-gap: 30px;
+}
+
+.btnSpace {
+    grid-column: 2;
+    grid-row: 1 / 3;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+}
+
+@media (max-width: $breakpoint-md) {
+    .content {
+        row-gap: 70px;
+        padding-left: $padding-6;
+        padding-right: $padding-6;
+        padding-bottom: $padding-6;
+    }
+
+    .partnerLayout {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media (max-width: $breakpoint-sm) {
+    .partnerLayout {
+        grid-template-columns: 1fr;
+    }
+
+    .btnSpace {
+        grid-column: 1;
+        grid-row: 3;
+        justify-self: center;
+    }
+
+}
+
+@media (max-width: $breakpoint-xs) {
+    .content {
+        padding-left: $padding-3;
+        padding-right: $padding-3;
+        padding-bottom: $padding-3;
+    }
+}

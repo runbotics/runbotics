@@ -40,6 +40,8 @@
     "Process.Edit.Form.Fields.IsTriggerable.Label": "Process Triggerable",
     "Process.Edit.Form.Fields.IsSubscribed.Tooltip": "Process notification settings",
     "Process.Edit.Form.Fields.IsSubscribed.Label": "Notify about failure",
+    "Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Tooltip": "Statistics subscribtion settings",
+    "Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Label": "Subscribe to statistics",
     "Process.Edit.Form.Fields.Placeholder.TagSearch": "Search for tag",
     "Process.Edit.Form.Fields.Error.Required": "Field is required",
     "Process.Edit.Form.Fields.SearchTag.TagNotFound": "No results",
@@ -565,6 +567,7 @@
     "Process.Details.Modeler.Widgets.Editor.AutoSave.Label": "Auto save",
     "Process.Details.Modeler.Widgets.Editor.AutoSave.NotImplemented": "Auto save action not yet implemented",
     "Process.Details.Modeler.Widgets.FieldTemplate.Action.RemoveItem": "Remove item",
+    "Process.Details.Modeler.Widgets.FieldTemplate.Action.AddItem": "Add item",
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Key": "Key",
     "Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value": "Value",
     "Process.Details.Modeler.Widgets.FileDropzone.InnerText": "Drop file here or click to select file (max 4mb)",
@@ -650,5 +653,9 @@
     "Process.Modeler.VariablesPanel.Tag.Variable": "Variable",
     "Process.Modeler.VariablesPanel.Tag.ActionOutput": "Action output",
     "Process.Modeler.VariablesPanel.Copy.Message.Success": "Variable copied",
-    "Process.Modeler.VariablesPanel.Empty.Message": "No variables has yet been used in this process"
+    "Process.Modeler.VariablesPanel.Empty.Message": "No variables has yet been used in this process",
+    "Process.Details.Modeler.Actions.Xml.XmlToJson.Label": "Convert XML to JSON",
+    "Process.Details.Modeler.Actions.Xml.XmlToJson.Xml": "XML input",
+    "Process.Details.Modeler.Actions.Xml.JsonToXml.Label": "Convert JSON to XML",
+    "Process.Details.Modeler.Actions.Xml.JsonToXml.Json": "JSON input"
 }

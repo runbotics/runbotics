@@ -36,6 +36,7 @@ const ProcessMainView: FC = () => {
     useEffect(() => () => {
         dispatch(processActions.resetDraft());
         dispatch(processInstanceActions.resetActive());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const processTabs = [

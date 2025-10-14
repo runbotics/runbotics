@@ -3,11 +3,12 @@
     "Nav.Items.Bots": "Bots",
     "Nav.Items.Credentials": "Credential Manager",
     "Nav.Items.Actions": "Actions",
-    "Nav.Items.GlobalVariables": "Global variables",
+    "Nav.Items.GlobalVariables": "Global Variables",
     "Nav.Items.Scheduler": "Scheduler",
     "Nav.Items.History": "History",
     "Nav.Items.Tenants": "Tenants",
     "Nav.Items.Users": "Users",
     "Nav.Items.Monitoring": "Monitoring",
+    "Nav.Items.AIAssistant": "AI Assistants",
     "Nav.Hide": "Hide"
 }

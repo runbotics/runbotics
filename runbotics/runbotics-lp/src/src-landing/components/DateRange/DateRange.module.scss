@@ -1,0 +1,57 @@
+@import "#src-landing/scss/main";
+
+.wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    justify-items: center;
+    max-width: calc($BLOG_FILTERS_WIDTH - 10px);
+
+    gap: 5px;
+}
+
+.wrapper > input {
+    width: calc(($BLOG_FILTERS_WIDTH - 30px)/2);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid $palette-gray;
+    
+    @include font-face-roboto;
+    font-size: $font-size-caption;
+    line-height: 1.25rem;
+    
+    &::-webkit-datetime-edit-fields-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    &::-webkit-calendar-picker-indicator {
+        padding-top: 1px;
+        padding-bottom: 3px;
+        filter: $black-to-accent-filter;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+    accent-color: $palette-background-accent;
+}
+
+.divider {
+    width: 10px;
+    border-bottom: 2px solid $palette-black;
+    border-radius: 2px;
+}
+
+@media (max-width: $breakpoint-sm) {
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .wrapper > input {
+    width: 100%;
+    }
+}

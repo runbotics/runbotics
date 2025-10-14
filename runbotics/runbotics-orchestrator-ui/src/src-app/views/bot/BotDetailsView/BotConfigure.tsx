@@ -47,6 +47,7 @@ const BotConfigure: FC = () => {
 
     useEffect(() => {
         handleGetBotSubscribers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [botId]);
 
     const hasAddMailPermission = useRole([Role.ROLE_TENANT_ADMIN]);

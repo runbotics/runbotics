@@ -44,6 +44,10 @@ export const addScheduledProcess = (state: SchedulerState, action: PayloadAction
     state.scheduledJobs = [...state.scheduledJobs, action.payload];
 };
 
+export const updateScheduledProcess = (state: SchedulerState, action: PayloadAction<Partial<ScheduledJob>>) => {
+    state.scheduledJobs = state.scheduledJobs.map((job) => (job.id === action.payload.id ? {...job, ...action.payload} : job));
+};
+
 export const updateActiveJobStatus = (state : SchedulerState, action: PayloadAction<IProcessInstance>) => {
     state.activeJobs = state.activeJobs.map((process) => (process.id === action.payload.id ? {
         ...process,

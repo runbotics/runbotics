@@ -16,6 +16,7 @@ import { DeleteUserDto } from '#/scheduler-database/user/dto/delete-user.dto';
 import { hasRole } from '#/utils/authority.utils';
 import { NotificationBot } from '#/scheduler-database/notification-bot/notification-bot.entity';
 import { NotificationProcess } from '#/scheduler-database/notification-process/notification-process.entity';
+import { subscriptionExpirationNotificationTemplate } from './templates/subscription-expiration-notification.template';
 
 export type SendMailInput = {
     to?: string;
@@ -23,7 +24,7 @@ export type SendMailInput = {
     bcc?: string;
     subject: string;
     content: string;
-    attachment?: string;
+    attachments?: { filename: string; path: string; cid?: string }[];
     isHtml: boolean;
 };
 
@@ -40,7 +41,7 @@ export class MailService {
         private readonly processService: ProcessService,
         private readonly notificationProcessService: NotificationProcessService,
         private readonly notificationBotService: NotificationBotService,
-        private readonly serverConfigService: ServerConfigService
+        private readonly serverConfigService: ServerConfigService,
     ) { }
 
     public async sendMail(input: SendMailInput) {
@@ -63,17 +64,14 @@ export class MailService {
             sendMailOptions['bcc'] = bcc;
         }
 
-        const attachment = input.attachment;
-        if (attachment) {
-            const fileName = attachment.substring(attachment.lastIndexOf('\\') + 1);
-            sendMailOptions['attachments'] = [
-                {
-                    filename: fileName,
-                    content: fs.readFileSync(attachment),
-                },
-            ];
+        if (input.attachments && input.attachments.length > 0) {
+            sendMailOptions['attachments'] = input.attachments.map((attachment) => ({
+                filename: attachment.filename,
+                path: attachment.path,
+                cid: attachment.cid,
+            }));
         }
-
+        
         await this.mailerService.sendMail(sendMailOptions)
             .catch(error => {
                 this.logger.error(`Failed to send the mail with error: ${error.message}`);
@@ -175,6 +173,18 @@ export class MailService {
                 isHtml: false,
             });
         }
+    }
+
+    public async sendSubscriptionExpirationNotification(user: User, diffDays: number, mailToLink: string) {
+        const emailContent = subscriptionExpirationNotificationTemplate(mailToLink, diffDays);
+        const subject = 'RunBotics - Subskrypcja';
+
+        await this.sendMail({
+            to: user.email,
+            subject,
+            content: emailContent,
+            isHtml: true,
+        });
     }
 
     private async handleNotificationEmail(emailInput: SendMailInput, addresses: string[]) {

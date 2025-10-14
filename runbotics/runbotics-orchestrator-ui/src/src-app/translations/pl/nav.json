@@ -1,13 +1,14 @@
 {
     "Nav.Items.Processes": "Procesy",
     "Nav.Items.Bots": "Boty",
-    "Nav.Items.Credentials": "Menadżer poświadczeń",
+    "Nav.Items.Credentials": "Menadżer Poświadczeń",
     "Nav.Items.Actions": "Akcje",
-    "Nav.Items.GlobalVariables": "Zmienne globalne",
+    "Nav.Items.GlobalVariables": "Zmienne Globalne",
     "Nav.Items.Scheduler": "Harmonogram",
     "Nav.Items.History": "Historia",
     "Nav.Items.Tenants": "Organizacje",
     "Nav.Items.Users": "Użytkownicy",
     "Nav.Items.Monitoring": "Monitoring",
+    "Nav.Items.AIAssistant": "Asystenci AI",
     "Nav.Hide": "Ukryj"
 }

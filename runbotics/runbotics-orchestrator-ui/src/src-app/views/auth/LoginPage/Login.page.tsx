@@ -1,29 +1,25 @@
 /* eslint-disable max-lines-per-function */
 import { FC, useEffect, useState } from 'react';
 
-import { useMsal } from '@azure/msal-react';
-import {
-    Box,
-    Card,
-    Container,
-    Divider,
-    useMediaQuery,
-} from '@mui/material';
+import { Box, Card, Container, Divider, useMediaQuery } from '@mui/material';
 import { unwrapResult } from '@reduxjs/toolkit';
 import getConfig from 'next/config';
 import RouterLink from 'next/link';
-import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
-
 import Logo from '#src-app/components/utils/Logo/Logo';
-import useTranslations, { checkIfKeyExists } from '#src-app/hooks/useTranslations';
+import useTranslations, { checkIfKeyExists, } from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
-import { login, microsoftLoginPopup, microsoftLogin } from '#src-app/store/slices/Auth/Auth.thunks';
-import { SOURCE_PAGE, TRACK_LABEL, ENTERED_PAGE } from '#src-app/utils/Mixpanel/types';
-import { identifyUserType, recordFailedLogin, recordPageEntrance, recordSuccessfulAuthentication } from '#src-app/utils/Mixpanel/utils';
+import { login } from '#src-app/store/slices/Auth/Auth.thunks';
+import { ENTERED_PAGE, SOURCE_PAGE, TRACK_LABEL, } from '#src-app/utils/Mixpanel/types';
+import {
+    identifyUserType,
+    recordFailedLogin,
+    recordPageEntrance,
+    recordSuccessfulAuthentication,
+} from '#src-app/utils/Mixpanel/utils';
 import GuestLoginSection from '#src-app/views/auth/LoginPage/GuestLoginSection';
-import { classes, StyledPage } from '#src-app/views/auth/LoginPage/LoginPage.styles';
+import { classes, StyledPage, } from '#src-app/views/auth/LoginPage/LoginPage.styles';
 import useGuestLogin from '#src-app/views/auth/LoginPage/useGuestLogin';
 import useLoginValidationSchema from '#src-app/views/auth/LoginPage/useLoginValidationSchema';
 import UserLoginSection from '#src-app/views/auth/LoginPage/UserLoginSection';
@@ -45,75 +41,26 @@ const LoginPage: FC = () => {
     const isSsoEnabled = publicRuntimeConfig.isSsoEnabled === 'true';
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const router = useRouter();
     const loginValidationSchema = useLoginValidationSchema();
     const onGuestLogin = useGuestLogin();
     const { enqueueSnackbar } = useSnackbar();
     const [isGuestSubmitting, setGuestSubmitting] = useState(false);
     const isScreenSM = useMediaQuery('(max-width: 768px)');
-    const { instance } = useMsal();
-    const [isSigningIn, setIsSigningIn] = useState(false);
 
     useEffect(() => {
         recordPageEntrance({ enteredPage: ENTERED_PAGE.LOGIN });
     }, []);
 
-    const handleLoginWithMicrosoft = async () => {
-        setIsSigningIn(true);
-        const idToken = await dispatch(
-            microsoftLoginPopup(instance)
-        )
-            .then(unwrapResult)
-            .catch(() => {
-                setIsSigningIn(false);
-                const errorMessage = translate('Login.Error.MicrosoftPopupError');
-
-                enqueueSnackbar(errorMessage, {
-                    variant: 'error',
-                    autoHideDuration: 10000,
-                });
-            });
-
-        idToken && await dispatch(
-            microsoftLogin({
-                idToken,
-                langKey: router.locale,
-            })
-        )
-            .then(unwrapResult)
-            .then((user) => {
-                setIsSigningIn(false);
-                recordSuccessfulAuthentication({
-                    identifyBy: user.email,
-                    userType: identifyUserType(user.roles),
-                    sourcePage: SOURCE_PAGE.LOGIN,
-                    email: user.email,
-                    trackLabel: TRACK_LABEL.SUCCESSFUL_LOGIN,
-                });
-                return user;
-            })
-            .catch(() => {
-                setIsSigningIn(false);
-                const errorMessage = translate('Login.Error.UnexpectedError');
-
-                recordFailedLogin({
-                    trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
-                    sourcePage: SOURCE_PAGE.LOGIN,
-                    reason: errorMessage,
-                });
-                enqueueSnackbar(errorMessage, {
-                    variant: 'error',
-                    autoHideDuration: 10000,
-                });
-            });
+    const handleLoginWithMicrosoft = () => {
+        window.location.href = '/scheduler/msal/begin';
+        return Promise.resolve();
     };
 
     const handleGuestLogin = () => {
         setGuestSubmitting(true);
-        onGuestLogin()
-            .catch(() => {
-                setGuestSubmitting(false);
-            });
+        onGuestLogin().catch(() => {
+            setGuestSubmitting(false);
+        });
     };
 
     const handleFormSubmit = async (
@@ -142,35 +89,72 @@ const LoginPage: FC = () => {
             .catch((error) => {
                 setStatus({ success: false });
                 setSubmitting(false);
-                if (error.status === 403) {
+                if (
+                    error.status === 403 &&
+                    error.data?.errorKey === 'user_not_activated'
+                ) {
                     recordFailedLogin({
                         identifyBy: values.email,
                         trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
                         sourcePage: SOURCE_PAGE.LOGIN,
-                        reason: error.data.title
+                        reason: error.data.title,
                     });
                     enqueueSnackbar(translate('Login.Error.UserNotActivated'), {
                         variant: 'error',
-                        autoHideDuration: 10000
+                        autoHideDuration: 10000,
                     });
                     return;
                 }
-
-                const status = error.status>= 401 && error.status < 500 ? '4xx' : '5xx';
+                if (
+                    error.status === 403 &&
+                    error.data?.errorKey === 'tenant_not_activated'
+                ) {
+                    recordFailedLogin({
+                        identifyBy: values.email,
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                        sourcePage: SOURCE_PAGE.LOGIN,
+                        reason: error.data.title,
+                    });
+                    enqueueSnackbar(
+                        translate('Login.Error.TenantNotActivated'),
+                        {
+                            variant: 'error',
+                            autoHideDuration: 10000,
+                        }
+                    );
+                    return;
+                }
+                if (error.status === 429) {
+                    recordFailedLogin({
+                        identifyBy: values.email,
+                        trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
+                        sourcePage: SOURCE_PAGE.LOGIN,
+                        reason: error.data.title,
+                    });
+                    enqueueSnackbar(translate('Login.Error.TooManyRequests'), {
+                        variant: 'error',
+                        autoHideDuration: 10000,
+                    });
+                    return;
+                }
+                const status =
+                    error.status >= 401 && error.status < 500 ? '4xx' : '5xx';
                 const errorKey = `Login.Error.${status}`;
 
                 if (!checkIfKeyExists(errorKey)) {
-                    const customErrorMessage = `${error.message ? error.message : error.status}: ${translate('Login.Error.UnexpectedError')}`;
+                    const customErrorMessage = `${
+                        error.message ? error.message : error.status
+                    }: ${translate('Login.Error.UnexpectedError')}`;
                     setErrors({ submit: customErrorMessage });
                     enqueueSnackbar(customErrorMessage, {
                         variant: 'error',
-                        autoHideDuration: 10000
+                        autoHideDuration: 10000,
                     });
                     recordFailedLogin({
                         identifyBy: values.email,
                         trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
                         sourcePage: SOURCE_PAGE.LOGIN,
-                        reason: 'unexpected error'
+                        reason: 'unexpected error',
                     });
                     return;
                 }
@@ -182,11 +166,11 @@ const LoginPage: FC = () => {
                     identifyBy: values.email,
                     trackLabel: TRACK_LABEL.UNSUCCESSFUL_LOGIN,
                     sourcePage: SOURCE_PAGE.LOGIN,
-                    reason: customErrorMessage
+                    reason: customErrorMessage,
                 });
                 enqueueSnackbar(customErrorMessage, {
                     variant: 'error',
-                    autoHideDuration: 10000
+                    autoHideDuration: 10000,
                 });
             });
     };
@@ -205,14 +189,18 @@ const LoginPage: FC = () => {
                             initialValues={initialValues}
                             loginValidationSchema={loginValidationSchema}
                             handleFormSubmit={handleFormSubmit}
-                            isSigningIn={isSigningIn}
                             handleLoginWithMicrosoft={handleLoginWithMicrosoft}
                             isSsoEnabled={isSsoEnabled}
                         />
                         <Box mx={isScreenSM ? 4 : 0}>
                             <Divider
-                                orientation={isScreenSM ? 'horizontal' : 'vertical'}
-                                sx={{ borderRightWidth: 2, borderBottomWidth: 2 }}
+                                orientation={
+                                    isScreenSM ? 'horizontal' : 'vertical'
+                                }
+                                sx={{
+                                    borderRightWidth: 2,
+                                    borderBottomWidth: 2,
+                                }}
                             />
                         </Box>
                         <GuestLoginSection

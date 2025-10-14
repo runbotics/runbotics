@@ -1,5 +1,5 @@
 import { IAuthority, Role } from './authority.model';
-import { FeatureKey } from './feature-key.model';
+import { FeatureKey, IFeatureKey } from './feature-key.model';
 import { BasicTenantDto } from './tenant.model';
 
 export interface User {
@@ -21,6 +21,7 @@ export interface User {
     lastModifiedBy: string;
     tenantId: string;
     authorities: IAuthority[];
+    userFeatureKeys: IFeatureKey[];
 }
 
 export type BasicUserDto = Pick<User, 'id' | 'email'>;
@@ -35,6 +36,7 @@ export type UserDto = Omit<
     | 'tenantId'
     | 'passwordHash'
     | 'authorities'
+    | 'userFeatureKeys'
 > & {
     tenant: BasicTenantDto;
     roles: Role[];

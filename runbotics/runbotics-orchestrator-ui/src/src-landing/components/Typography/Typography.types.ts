@@ -25,6 +25,7 @@ export type TypographyVariant =
 type TypographyColor = 'primary' | 'secondary' | 'accent' | 'error' | 'success';
 
 export interface TypographyProps {
+    children?: React.ReactNode;
     element?: TypographyElement;
     variant?: TypographyVariant;
     color?: TypographyColor;

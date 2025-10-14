@@ -23,6 +23,7 @@ const SearchBar: VFC<Props> = ({ onClick, className, initialValue }) => {
         }, 400);
 
         return () => clearTimeout(timeout);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
     useEffect(() => {

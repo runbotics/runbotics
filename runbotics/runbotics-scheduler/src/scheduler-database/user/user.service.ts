@@ -1,24 +1,31 @@
-import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { DataSource, FindManyOptions, In, Not, Repository } from 'typeorm';
-import { BasicUserDto, FeatureKey, PartialUserDto, Role, UserDto } from 'runbotics-common';
-import { Specs } from '#/utils/specification/specifiable.decorator';
-import { Paging } from '#/utils/page/pageable.decorator';
-import { getPage } from '#/utils/page/page';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Authority } from '../authority/authority.entity';
-import { Logger } from '#/utils/logger';
-import { TenantService } from '../tenant/tenant.service';
-import { Tenant } from '../tenant/tenant.entity';
-import { isAdmin, isTenantAdmin } from '#/utils/authority.utils';
-import postgresError from '#/utils/postgresError';
-import { DeleteUserDto } from './dto/delete-user.dto';
+import { MsalSsoUserDto } from '#/auth/auth.service.types';
 import { MailService } from '#/mail/mail.service';
-import { MicrosoftSSOUserDto } from '#/auth/auth.service.types';
+import { isAdmin, isTenantAdmin } from '#/utils/authority.utils';
+import { Logger } from '#/utils/logger';
+import { getPage } from '#/utils/page/page';
+import { Paging } from '#/utils/page/pageable.decorator';
+import postgresError from '#/utils/postgresError';
+import { Specs } from '#/utils/specification/specifiable.decorator';
+import {
+    BadRequestException,
+    ConflictException,
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
+import { BasicUserDto, FeatureKey, getRolesAllowedInTenant, PartialUserDto, Role, UserDto } from 'runbotics-common';
+import { DataSource, FindManyOptions, In, Not, Repository } from 'typeorm';
+import { Authority } from '../authority/authority.entity';
+import { Tenant } from '../tenant/tenant.entity';
+import { TenantService } from '../tenant/tenant.service';
 import { ActivateUserDto } from './dto/activate-user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.entity';
+import { getAllFeatureKeysAssignedToUser, hasFeatureKey } from '#/utils/user.utils';
 
 @Injectable()
 export class UserService {
@@ -32,9 +39,17 @@ export class UserService {
         private readonly tenantService: TenantService,
         private readonly mailService: MailService,
         private readonly dataSource: DataSource,
-    ) { }
+    ) {
+    }
 
-    async createMicrosoftSSOUser(msUserAuthDto: MicrosoftSSOUserDto) {
+    async addMsalSSOCredentialsToUser(user: User, msalSsoUserDto: MsalSsoUserDto) {
+        user.microsoftTenantId = msalSsoUserDto.msTenantId;
+        user.microsoftUserId = msalSsoUserDto.msObjectId;
+
+        return await this.userRepository.save(user);
+    }
+
+    async createMsalSsoUser(msalSsoUserDto: MsalSsoUserDto) {
         const user = new User();
         const randomPassword = generate({
             length: 24,
@@ -42,13 +57,15 @@ export class UserService {
             symbols: true,
         });
         user.passwordHash = bcrypt.hashSync(randomPassword, 10);
-        user.email = msUserAuthDto.email;
-        user.langKey = msUserAuthDto.langKey;
+        user.email = msalSsoUserDto.email;
+        user.langKey = msalSsoUserDto.langKey;
         user.activated = true;
         user.hasBeenActivated = true;
         user.activationKey = generate({ length: 20 });
         user.createdBy = 'system';
         user.lastModifiedBy = 'system';
+        user.microsoftTenantId = msalSsoUserDto.msTenantId;
+        user.microsoftUserId = msalSsoUserDto.msObjectId;
 
         const { id } = await this.userRepository.save(user);
 
@@ -106,8 +123,8 @@ export class UserService {
             tenantId,
             email: In(emails),
             authorities: {
-                name: Not(Role.ROLE_TENANT_ADMIN)
-            }
+                name: Not(Role.ROLE_TENANT_ADMIN),
+            },
         });
     }
 
@@ -126,11 +143,40 @@ export class UserService {
     }
 
     findById(id: number) {
-        return this.userRepository.findOne({ where: { id } });
+        return this.userRepository.findOne({ where: { id }, relations: { authorities: true, tenant: true } });
+    }
+
+    async findByEmailForAuth(email: string | null) {
+        if(!email) {
+            throw new BadRequestException('Email is null');
+        }
+        const result = await this.userRepository.findOne({
+            where: { email },
+            relations: { authorities: true, tenant: true },
+        });
+        if(!result) {
+            throw new NotFoundException(`User with email ${email} not found`);
+        }
+        const password = await this.userRepository.findOne({
+           select: { email:true, id: true, passwordHash: true},
+            where: { id: result.id },
+        });
+        return {
+            ...result, 
+            passwordHash: password.passwordHash,
+            roles: result.authorities.map(authority => {
+                return authority.name;
+            }),
+            featureKeys: getAllFeatureKeysAssignedToUser(result.authorities, result.userFeatureKeys),
+        };
     }
 
     findByEmail(email: string) {
         return this.userRepository.findOne({ where: { email } });
+    }
+
+    findByEmailFromToken(email: string) {
+        return this.userRepository.findOne({ where: { email }, relations: { authorities: true, tenant: true, } });
     }
 
     async activate(activateDto: ActivateUserDto, id: number, executor: User) {
@@ -219,14 +265,6 @@ export class UserService {
         this.mailService.sendUserDeclineReasonMail(userToDelete, userDto);
     }
 
-    hasFeatureKey(user: User, featureKey: FeatureKey) {
-        const userKeys = user.authorities
-            .flatMap((auth) => auth.featureKeys)
-            .map((featureKey) => featureKey.name);
-
-        return userKeys.includes(featureKey);
-    }
-
     mapToBasicUserDto(user: User): BasicUserDto {
         return {
             id: user.id,
@@ -252,9 +290,7 @@ export class UserService {
                 id: user.tenant.id,
                 name: user.tenant.name,
             },
-            featureKeys: user.authorities
-                .flatMap((auth) => auth.featureKeys)
-                .map((featureKey) => featureKey.name),
+            featureKeys: getAllFeatureKeysAssignedToUser(user.authorities, user.userFeatureKeys),
             roles: user.authorities.map((auth) => auth.name),
         };
     }
@@ -289,19 +325,15 @@ export class UserService {
     private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
 
-        const TENANT_ALLOWED_ROLES = [
-            Role.ROLE_USER,
-            Role.ROLE_TENANT_ADMIN,
-            Role.ROLE_EXTERNAL_USER,
-        ];
+        const ROLES_ALLOWED_IN_TENANT = getRolesAllowedInTenant();
 
-        if (!this.hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !TENANT_ALLOWED_ROLES.includes(roles[0])) {
+        if (!hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !ROLES_ALLOWED_IN_TENANT.includes(roles[0])) {
             throw new BadRequestException('Wrong role');
         }
     }
 
     private getTenantRelation(
-        tenantId: string | null
+        tenantId: string | null,
     ): Promise<{ tenant: Tenant } | null> {
         return this.tenantService
             .getById(tenantId)
@@ -309,5 +341,26 @@ export class UserService {
             .catch(() => {
                 throw new BadRequestException('Wrong tenant id');
             });
+    }
+
+    public findAllByTenantIdAndRole(tenantId: string, role: Role) {
+        return this.userRepository.find({
+            where: {
+                tenantId,
+                authorities: {
+                    name: role,
+                },
+            },
+            relations: ['authorities'],
+        });
+    }
+
+    public findAllByTenantId(tenantId: string) {
+        return this.userRepository.find({
+            where: {
+                tenantId,
+            },
+            relations: ['authorities'],
+        });
     }
 }

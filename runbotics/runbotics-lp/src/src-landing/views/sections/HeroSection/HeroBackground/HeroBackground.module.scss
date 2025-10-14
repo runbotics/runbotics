@@ -1,0 +1,157 @@
+@import '#src-landing/scss/main.scss';
+
+$ARROWS_HEIGHT: 176px;
+$BANNER_MIN_HEIGHT: 800px;
+
+.root {
+    background-color: rgba(255, 254, 252, 1);
+    background-image: linear-gradient(360deg, #fffefc 0%, #ffe5c0 15%, #f79d36 65%);
+    margin-bottom: -20vh;
+    height: 120vh;
+    isolation: isolate; 
+    min-height: $BANNER_MIN_HEIGHT;
+}
+
+.heroContent {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: $BANNER_MIN_HEIGHT;
+    height: 100vh;
+}
+
+.heroHandWrapper {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 120vh;
+    inset: 0;
+    margin-right: 0;
+    overflow: hidden;
+    min-height: $BANNER_MIN_HEIGHT;
+}
+
+.heroHand {
+    position: absolute;
+    width: 44vw;
+    max-width: 800px;
+    min-width: 600px;
+    height: auto;
+    right: -5vw;
+    top: 16vw;
+}
+
+.heroRobotHand {
+    position: absolute;
+    left: -5vw;
+    top: 60px;
+    width: 46vw;
+    max-width: 930px;
+    height: auto;
+    transform: rotate(6.230rad);
+}
+
+.heroFooter {
+    position: relative;
+    z-index: -1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    height: $ARROWS_HEIGHT;
+    mix-blend-mode: soft-light;
+}
+
+.heroArrows {
+  width: inherit;
+  height: $ARROWS_HEIGHT;
+  background-image: url('/images/shapes/arrows-right-square.svg');
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: cover;
+}
+
+.heroTitleWrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    max-width: 100%;
+    mix-blend-mode: soft-light;
+    object-position: center;
+}
+
+@media (max-width: 1359px) {
+    .root {
+        margin-bottom: -30vh;
+    }
+}
+
+@media (max-width: $breakpoint-md) {
+    .root {
+        margin-bottom: -22vh;
+    }
+    .heroArrows {
+        display: none;
+    }
+
+    .heroTitleWrapper,
+    .heroTitle {
+        max-width: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .heroFooter {
+        justify-content: center;
+    }
+
+    .heroRobotHand {
+        left: -24vw;
+        top: 7vw;
+        width: 80vw;
+        max-width: 800px;
+        transform: rotate(6.1163rad);
+    }
+
+    .heroHand {
+        right: -20vw;
+        top: 25vw;
+        width: 65vw;
+        min-width: 0;
+        transform: rotate(0rad);
+    }
+}
+
+@media (max-width: $breakpoint-sm) {
+    .root {
+        margin-bottom: -30vw;
+    }
+
+    .heroRobotHand {
+        left: -10vw;
+        top: 15vw;
+        width: 65vw;
+        transform: rotate(6.021rad);
+    }
+
+    .heroHand {
+        right: -18vw;
+        top: 29vw;
+        width: 65vw;
+        transform: rotate(0.087rad);
+    }
+}
+
+@media (max-width: $breakpoint-xs) {
+    .root {
+        margin-bottom: -50vw;
+    }
+}
+
+@media (min-width: $breakpoint-xxl) {
+    .heroArrows {
+        background-position: center;
+    }
+}

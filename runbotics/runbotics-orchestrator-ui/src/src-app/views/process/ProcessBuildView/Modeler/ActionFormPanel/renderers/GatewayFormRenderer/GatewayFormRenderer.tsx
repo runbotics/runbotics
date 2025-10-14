@@ -64,6 +64,7 @@ const GatewayFormRenderer = () => {
 
         setExpressions(createInitExpressions());
         setFilteredGatewayConnections(tempFilteredGateway);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const validateFlows = () => {

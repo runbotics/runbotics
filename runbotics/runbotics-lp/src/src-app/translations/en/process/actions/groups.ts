@@ -1,0 +1,32 @@
+const actionsGroupsTranslations = {
+    'Process.Details.Modeler.ActionsGroup.General': 'General',
+    'Process.Details.Modeler.ActionsGroup.Variables': 'Variables',
+    'Process.Details.Modeler.ActionsGroup.Browser': 'Browser',
+    'Process.Details.Modeler.ActionsGroup.Mail': 'Mail',
+    'Process.Details.Modeler.ActionsGroup.Loop.Loop': 'Loop',
+    'Process.Details.Modeler.ActionsGroup.Api': 'API',
+    'Process.Details.Modeler.ActionsGroup.JavaScript': 'JavaScript',
+    'Process.Details.Modeler.ActionsGroup.Asana': 'Asana',
+    'Process.Details.Modeler.ActionsGroup.Google': 'Google',
+    'Process.Details.Modeler.ActionsGroup.JiraCloud': 'Jira Cloud',
+    'Process.Details.Modeler.ActionsGroup.JiraServer': 'Jira Server',
+    'Process.Details.Modeler.ActionsGroup.File': 'File',
+    'Process.Details.Modeler.ActionsGroup.Folder': 'Folder',
+    'Process.Details.Modeler.ActionsGroup.Zip': 'Zip',
+    'Process.Details.Modeler.ActionsGroup.Csv': 'CSV',
+    'Process.Details.Modeler.ActionsGroup.Excel': 'Excel',
+    'Process.Details.Modeler.ActionsGroup.Powerpoint': 'Power Point',
+    'Process.Details.Modeler.ActionsGroup.CloudExcel': 'Cloud Excel',
+    'Process.Details.Modeler.ActionsGroup.CloudFile': 'Cloud File',
+    'Process.Details.Modeler.ActionsGroup.BeeOffice': 'BeeOffice',
+    'Process.Details.Modeler.ActionsGroup.Sap': 'SAP',
+    'Process.Details.Modeler.ActionsGroup.Application': 'Application',
+    'Process.Details.Modeler.ActionsGroup.VisualBasic': 'Visual Basic',
+    'Process.Details.Modeler.ActionsGroup.Desktop': 'Desktop',
+    'Process.Details.Modeler.ActionsGroup.Image': 'Image',
+    'Process.Details.Modeler.ActionsGroup.External': 'External',
+    'Process.Details.Modeler.ActionsGroup.Windows': 'Windows',
+    'Process.Details.Modeler.ActionsGroup.Sql': 'SQL'
+};
+
+export default actionsGroupsTranslations;

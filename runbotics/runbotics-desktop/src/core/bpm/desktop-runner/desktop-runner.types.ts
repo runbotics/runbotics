@@ -35,7 +35,8 @@ export type InternalHandlerKey =
     | 'image'
     | 'folder'
     | 'zip'
-    | 'sql';
+    | 'sql'
+    | 'xml';
 
 export type InternalHandlersInstancesMap = HandlersInstancesMap<InternalHandlerKey>;
 

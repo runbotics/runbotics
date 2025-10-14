@@ -1,29 +1,39 @@
 import { useEffect, type FC } from 'react';
 
-import { AppBar, Box, Divider, Hidden, Toolbar, Typography } from '@mui/material';
+import {
+    AppBar,
+    Box,
+    Divider,
+    Hidden,
+    Toolbar,
+    Typography,
+} from '@mui/material';
 import clsx from 'clsx';
 import RouterLink from 'next/link';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from 'react-redux';
-import { Role } from 'runbotics-common';
 import styled from 'styled-components';
 
 import If from '#src-app/components/utils/If';
 import Logo from '#src-app/components/utils/Logo/Logo';
-import useAuth from '#src-app/hooks/useAuth';
-import useRole from '#src-app/hooks/useRole';
+import useAccountRoles from '#src-app/hooks/useAccountRoles';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { logout } from '#src-app/store/slices/Auth/Auth.thunks';
-import { EXECUTION_LIMIT, guestsActions, guestsSelector } from '#src-app/store/slices/Guests';
+import {
+    EXECUTION_LIMIT,
+    guestsActions,
+    guestsSelector,
+} from '#src-app/store/slices/Guests';
 import { HEADER_HEIGHT } from '#src-app/utils/constants';
 
 import environment from '#src-app/utils/environment';
 
-import LanguageSwitcher from '#src-landing/components/LanguageSwitcher';
 
 import Account from './Account';
 import CountdownTimer from './CountdownTimer';
 import HowToRun from './HowToRun';
+import SubscriptionWarning from './SubscriptionWarning';
+import LanguageSwitcher from '../../../../src-landing/components/LanguageSwitcher/LanguageSwitcher';
 
 const PREFIX = 'TopBar';
 
@@ -71,20 +81,22 @@ interface TopBarProps {
 }
 
 const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
-    const { user } = useAuth();
-    const isTenantAdmin = useRole([Role.ROLE_TENANT_ADMIN]);
-    const isAdmin = useRole([Role.ROLE_ADMIN]);
-    const isGuest = user?.roles.includes(Role.ROLE_GUEST);
+
+    const { isTenantAdmin, isAdmin, isGuest, isOnlyRoleUser, isOnlyRoleRpaUser } =
+        useAccountRoles();
+
     const { enqueueSnackbar } = useSnackbar();
     const { translate } = useTranslations();
     const dispatch = useDispatch();
-    const { remainingSessionTime, executionsCount } = useSelector(guestsSelector);
+    const { remainingSessionTime, executionsCount } =
+        useSelector(guestsSelector);
 
     useEffect(() => {
         if (isGuest) {
             dispatch(guestsActions.getRemainingSessionTime());
             dispatch(guestsActions.getCurrentGuest());
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleLogout = async () => {
@@ -109,28 +121,42 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                             <Logo white />
                         </RouterLink>
                     </If>
-                    <If condition={isGuest}>
-                        <Logo white />
-                    </If>
-                    <If condition={!isGuest && !isAdmin}>
-                        <RouterLink href="/app/processes/collections">
+                    <If condition={isOnlyRoleUser}>
+                        <RouterLink href="/app/ai-assistants">
                             <Logo white />
                         </RouterLink>
                     </If>
+                    <If condition={isGuest}>
+                        <Logo white />
+                    </If>
+                    <If condition={isOnlyRoleRpaUser || isTenantAdmin}>
+                        <RouterLink href="/app/processes/collections">
+                            <Logo white />
+                        </RouterLink>
+
+                    </If>
+                    <If condition={isTenantAdmin || isAdmin}>
+                        <Typography
+                            variant="h5"
+                            sx={{ fontSize: '0.8rem', opacity: '0.5' }}
+                        >
+                            {environment.version}
+                        </Typography>
+                    </If>
                 </Hidden>
-                <If condition={isTenantAdmin || isAdmin}>
-                    <Typography variant="h5" sx={{ fontSize: '0.8rem', opacity: '0.5' }}>
-                        {environment.version}
-                    </Typography>
-                </If>
                 <Box ml={2} flexGrow={1} />
                 <If condition={isGuest}>
                     <Typography className={classes.status} variant="h5">
                         {translate('Demo.Process.Ran.Pt1')}&nbsp;
-                        <span>{`${executionsCount}/${EXECUTION_LIMIT}`}</span>&nbsp;
+                        <span>{`${executionsCount}/${EXECUTION_LIMIT}`}</span>
+                        &nbsp;
                         {translate('Demo.Process.Ran.Pt2')}
                     </Typography>
-                    <Divider className={classes.divider} orientation="vertical" flexItem />
+                    <Divider
+                        className={classes.divider}
+                        orientation="vertical"
+                        flexItem
+                    />
                     <Typography className={classes.status} variant="h5">
                         {translate('Demo.Session.Timer')}&nbsp;
                         <CountdownTimer
@@ -138,7 +164,14 @@ const TopBar: FC<TopBarProps> = ({ className, ...rest }) => {
                             callback={handleLogout}
                         />
                     </Typography>
-                    <Divider className={classes.divider} orientation="vertical" flexItem />
+                    <Divider
+                        className={classes.divider}
+                        orientation="vertical"
+                        flexItem
+                    />
+                </If>
+                <If condition={!isGuest}>
+                    <SubscriptionWarning />
                 </If>
                 <LanguageSwitcher />
                 {isTenantAdmin && <HowToRun />}

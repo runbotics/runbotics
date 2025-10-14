@@ -6,6 +6,7 @@ import { BotModule } from '#/scheduler-database/bot/bot.module';
 import { BotCollectionModule } from '#/scheduler-database/bot-collection/bot-collection.module';
 import { BotSystemModule } from '#/scheduler-database/bot-system/bot-system.module';
 import { ProcessModule } from '#/scheduler-database/process/process.module';
+import { getMigrations } from './database.utils';
 
 @Module({
     imports: [
@@ -21,7 +22,7 @@ import { ProcessModule } from '#/scheduler-database/process/process.module';
                     database: serverConfigService.dbSettings.database,
                     migrationsRun: true,
                     migrationsTableName: 'rb_migrations.migration',
-                    migrations: ['dist/src/migrations/*.js'],
+                    migrations: getMigrations(),
                     entities: ['dist/src/**/*.entity{.ts,.js}'],
                     synchronize: false,
                 };

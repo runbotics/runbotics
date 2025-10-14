@@ -1,0 +1,13 @@
+.mainWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.disableScroll{
+    overflow: hidden;
+}
+
+.mainWrapper > main {
+    flex-grow: 1;
+}

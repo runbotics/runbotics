@@ -1,6 +1,6 @@
 {
     "name": "runbotics-desktop",
-    "version": "3.3.0-SNAPSHOT.25",
+    "version": "3.5.0-SNAPSHOT.42",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -73,7 +73,8 @@
         "pdf-to-png-converter": "~3.7.0",
         "node-poppler": "~8.0.2",
         "xml2js": "~0.6.2",
-        "@types/xml2js": "~0.4.14"
+        "@types/xml2js": "~0.4.14",
+        "fast-xml-parser": "~5.2.5"
     },
     "build": {
         "productName": "RunBotics",

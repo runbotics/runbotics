@@ -7,6 +7,7 @@ import useProcessInstanceMapSocket from '#src-app/hooks/useProcessInstanceMapSoc
 import { useDispatch } from '#src-app/store';
 import { botCollectionActions } from '#src-app/store/slices/BotCollections';
 import { botSystemsActions } from '#src-app/store/slices/BotSystem';
+import { processActions } from '#src-app/store/slices/Process';
 import { processInstanceActions } from '#src-app/store/slices/ProcessInstance';
 
 import Header from './Header';
@@ -22,7 +23,6 @@ const ProcessBrowseView: VFC = () => {
     useEffect(() => {
         dispatch(botCollectionActions.getAll());
         dispatch(botSystemsActions.getAll());
-
         return () => {
             dispatch(processInstanceActions.resetAllActiveProcessInstances());
         };
@@ -30,7 +30,9 @@ const ProcessBrowseView: VFC = () => {
     }, []);
 
     return (
-        <InternalPage title={translate('Process.Collection.Navigation.Processes.Label')}>
+        <InternalPage
+            title={translate('Process.Collection.Navigation.Processes.Label')}
+        >
             <Header />
             <Box mt={6}>
                 <ProcessList />

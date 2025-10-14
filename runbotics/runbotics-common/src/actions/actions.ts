@@ -23,7 +23,7 @@ export enum ActionRegex {
     DATE_FORMAT = '^(([0-9]{4}-[0-9]{2}-[0-9]{2})|([0-9]{2}\/[0-9]{2}\/[0-9]{4}))$',
     WINDOWS_ABSOLUTE_PATH = "^[a-zA-Z]:[\\\/|\\\\]",
     LINUX_ABOSLUTE_PATH = "^(\\/[^\\/ ]*)+\\/",
-    FILE_SUFFIX="/\(\d+\)/",
+    FILE_SUFFIX = "/\(\d+\)/",
 }
 
 export enum ACTION_GROUP {
@@ -54,6 +54,7 @@ export enum ACTION_GROUP {
     WINDOWS = 'windows',
     VISUAL_BASIC = 'visualBasic',
     EXTERNAL = 'external',
+    ZIP = 'zip',
 }
 
 export enum VariableAction {
@@ -102,7 +103,7 @@ export enum ApiAction {
     DOWNLOAD_FILE = 'api.downloadFile',
 }
 
-export declare enum JavascriptAction {
+export enum JavascriptAction {
     JAVASCRIPT_RUN = 'javascript.run',
     TYPESCRIPT_RUN = 'typescript.run',
 }
@@ -346,9 +347,14 @@ export enum ConflictFile {
     THROW_ERROR = 'Throw Error'
 }
 
-export enum SqlAction { 
+export enum SqlAction {
     CONNECT = 'sql.connect',
     QUERY = 'sql.query',
     CLOSE = 'sql.close',
     EXEC = 'sql.exec'
+}
+
+export enum XmlAction {
+    XML_TO_JSON = 'xml.xmlToJson',
+    JSON_TO_XML = 'xml.jsonToXml',
 }

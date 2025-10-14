@@ -96,11 +96,13 @@ const ProcessCredentials = () => {
             const actionSortedColumns = sortByColumns(actionCredentials, rowCount);
             setColumns(actionSortedColumns);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [windowWidth, actionCredentials]);
 
     useEffect(() => {
         dispatch(processActions.getProcessCredentials({ resourceId: String(processId) }));
         dispatch(credentialTemplatesActions.fetchAllTemplates());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -127,7 +129,7 @@ const ProcessCredentials = () => {
                 <ActionsContainer $rowCount={rowCount}>
                     {columns.map((column, idx) => (
                         <ActionsColumns key={column.count + String(idx)}>
-                            {column.actionCredentials.map(actionType => {
+                            {column.actionCredentials?.map(actionType => {
                                 const templateId = credentialTemplates?.find(template => template.name === actionType.name).id;
 
                                 return (

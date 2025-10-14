@@ -1,12 +1,9 @@
-import { AuthenticationResult } from '@azure/msal-browser';
-import { IMsalContext } from '@azure/msal-react';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
-import { UserDto } from 'runbotics-common';
+import { MsalLoginError, UserDto } from 'runbotics-common';
 
 import Axios from '#src-app/utils/axios';
-
-import { loginRequest } from '#src-app/utils/msal';
 
 import { AuthState } from './Auth.state';
 
@@ -20,92 +17,58 @@ export const setAccessToken = (accessToken: string | null): void => {
     }
 };
 
-export const login = createAsyncThunk<AuthState['user'], { email: string; password: string }>(
-    'auth/login',
-    async (payload, { rejectWithValue }) => {
-        try {
-            const response = await Axios.post<{ id_token: string }>(
-                '/api/authenticate',
-                {
-                    username: payload.email,
-                    password: payload.password,
-                    rememberMe: true,
-                }
-            );
-            const { id_token: idToken } = response.data;
-
-            setAccessToken(idToken);
-            const responseUser = await Axios.get<UserDto>('/api/account');
-            const user = responseUser.data;
-            return { ...user, authoritiesById: user?.roles };
-        } catch (error) {
-            if (!error.response) {
-                throw error;
-            }
-
-            return rejectWithValue(error.response);
-        }
-    }
-);
-
-export const microsoftLoginPopup = createAsyncThunk<
-    AuthenticationResult['idToken'],
-    IMsalContext['instance']
->('auth/microsoftLoginPopup', async (mslInstance, { rejectWithValue }) => {
-    try {
-        const { idToken } = await mslInstance.loginPopup(loginRequest);
-        return idToken;
-    } catch (error) {
-        return rejectWithValue(error.message);
-    }
-});
-
-export const microsoftLogin = createAsyncThunk<
+export const login = createAsyncThunk<
     AuthState['user'],
-    {
-        idToken: AuthenticationResult['idToken'],
-        langKey: string;
-    }
->('auth/microsoftLogin', async ({ idToken, langKey }, { rejectWithValue }) => {
+    { email: string; password: string }
+>('auth/login', async (payload, { rejectWithValue }) => {
     try {
-        const { accessToken } = (await Axios.post<{ accessToken: string }>(
-            '/api/scheduler/auth/microsoft',
+        const response = await Axios.post<{ idToken: string; user: UserDto }>(
+            '/api/authenticate',
             {
-                langKey,
-                idToken,
+                username: payload.email,
+                password: payload.password,
+                rememberMe: true,
             }
-        )).data;
+        );
+        const { idToken, user } = response.data;
 
-        setAccessToken(accessToken);
-
-        const responseUser = await Axios.get<UserDto>('/api/account');
-        const user = responseUser.data;
+        setAccessToken(idToken);
 
         return { ...user, authoritiesById: user?.roles };
     } catch (error) {
-        return rejectWithValue(error.message);
+        if (!error.response) {
+            throw error;
+        }
+
+        return rejectWithValue(error.response);
     }
 });
 
-export const createGuestAccount = createAsyncThunk<UserDto, { langKey: string }>(
-    'auth/createGuestAccount',
-    async ({ langKey }, { rejectWithValue }) => {
-        try {
-            const response = await Axios.post<{ id_token: string }>('/api/authenticate/guest', { langKey });
-            const token = response.data.id_token;
+export const createGuestAccount = createAsyncThunk<
+    UserDto,
+    { langKey: string }
+>('auth/createGuestAccount', async ({ langKey }, { rejectWithValue }) => {
+    try {
+        const response = await Axios.post<{ idToken: string; user: UserDto }>(
+            '/api/authenticate/guest',
+            { langKey }
+        );
+        const { idToken, user } = response.data;
 
-            setAccessToken(token);
-            const { data: responseUser } = await Axios.get<UserDto>('/api/account');
-            return { ...responseUser, authoritiesById: responseUser?.roles };
-        } catch (error) {
-            if (!error.response) {
-                throw error;
-            }
+        setAccessToken(idToken);
 
-            return rejectWithValue(error.response);
+        return {
+            ...user,
+            authoritiesById: user?.roles,
+        };
+    } catch (error) {
+        if (!error.response) {
+            throw error;
         }
+
+        return rejectWithValue(error.response);
     }
-);
+});
 
 export const logout = createAsyncThunk('auth/logout', () => {
     setAccessToken(null);
@@ -131,7 +94,9 @@ export const initialize = createAsyncThunk<{
         if (accessToken && isValidToken(accessToken)) {
             setAccessToken(accessToken);
 
-            const response = await Axios.get<UserDto>('/api/account');
+            const response = await Axios.get<UserDto>(
+                '/api/account'
+            );
             const user = response.data;
             return {
                 isAuthenticated: true,
@@ -153,7 +118,13 @@ export const initialize = createAsyncThunk<{
 export const register = createAsyncThunk(
     'auth/register',
     async (
-        payload: { email: string; name: string; password: string, langKey: string, inviteCode?: string },
+        payload: {
+            email: string;
+            name: string;
+            password: string;
+            langKey: string;
+            inviteCode?: string;
+        },
         { rejectWithValue }
     ) => {
         try {
@@ -162,7 +133,7 @@ export const register = createAsyncThunk(
                 login: payload.email,
                 langKey: payload.langKey,
                 password: payload.password,
-                inviteCode: payload.inviteCode
+                inviteCode: payload.inviteCode,
             });
 
             return response;
@@ -175,6 +146,27 @@ export const register = createAsyncThunk(
                 status: error.response.status,
                 message: error.response.statusText,
             });
+        }
+    }
+);
+
+export const loginWithMsalCookie = createAsyncThunk<AuthState['user'], void>(
+    'auth/loginWithMsalToken',
+    async (_, { rejectWithValue }) => {
+        try {
+            const idToken = Cookies.get('msal_token_transfer');
+            Cookies.remove('msal_token_transfer', { path: '/' });
+            if (!idToken) {
+                return rejectWithValue(MsalLoginError.BAD_COOKIE);
+            }
+            setAccessToken(idToken);
+            const responseUser = await Axios.get<UserDto>(
+                '/api/account'
+            );
+            const user = responseUser.data;
+            return { ...user, authoritiesById: user?.roles };
+        } catch (error) {
+            return rejectWithValue(error?.message || 'Unknown error');
         }
     }
 );

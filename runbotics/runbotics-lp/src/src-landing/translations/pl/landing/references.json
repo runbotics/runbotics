@@ -1,0 +1,11 @@
+{
+    "Landing.References.Title": "Zaufali nam",
+    "Landing.References.Button": "Studium przypadku",
+    "Landing.References.Photo": "Zdjęcie",
+    "Landing.References.Logo": "Logo klienta",
+    "Landing.References.Quote.Mark": "Ikona cudzysłowu",
+    "Landing.References.AVK.Quote.1": "Bot odczytuje dane z pliku, weryfikuje nr VAT na białej liście podatników, weryfikuje nr VAT w UE na stronie VIES oraz wprowadza rezultaty do pliku z danym. Numery weryfikowane są automatycznie, średnio dwa razy w miesiącu.",
+    "Landing.References.AVK.Quote.2": "Korzyści: Oszczędność czasu, wyeliminowanie błędów ludzkich, odciążenie pracowników i uwolnienie ich potencjału na bardziej kreatywne zadania, skalowalność.",
+    "Landing.References.Raiffeisen.Quote.1": "Rozwiązanie automatyzuje synchronizację danych kadrowo-płacowych pomiędzy systemami BeeOffice oraz R2Płatnik w obrzerze migracji wniosków czasu pracy – nadgodzin, harmonogramów dla zmianowego systemu pracy oraz limitów urlopowych. W każdym miesiącu bot odciąża pracowników, wykonując ok 350 wniosków oraz 50+ limitów urlopowych w skali firmy.",
+    "Landing.References.Raiffeisen.Quote.2": "Korzyści: Eliminacja błędów, oszczędność czasu, odciążenie pracowników, możliwość migracji danych w dowolnym czasie oraz ciągłego monitorowania procesu migracji."
+}

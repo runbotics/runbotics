@@ -1,4 +1,4 @@
-import { IProcess, UserDto, ProcessCollection, ProcessDto, BasicUserDto } from 'runbotics-common';
+import { ProcessCollection, ProcessDto, BasicUserDto } from 'runbotics-common';
 
 import { translate } from '#src-app/hooks/useTranslations';
 

@@ -1,3 +1,4 @@
+import { createZodDto } from 'nestjs-zod';
 import { EMAIL_TRIGGER_WHITELIST_PATTERN } from 'runbotics-common';
 import { z } from 'zod';
 
@@ -9,4 +10,5 @@ export const updateTenantSchema = z
         ).optional(),
     });
 
+export class UpdateTenantSwaggerDto extends createZodDto(updateTenantSchema) {}
 export type UpdateTenantDto = z.infer<typeof updateTenantSchema>;

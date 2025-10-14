@@ -9,7 +9,11 @@ import { INTEGRATION_SECTION_ID } from '#src-landing/utils/utils';
 import styles from './IntegrationBackground.module.scss';
 import { INTEGRATIONS_TITLE_ID } from '../IntegrationSection.utils';
 
-const IntegrationBackground: FC = ({ children }) => {
+interface IntegrationBackgroundProps {
+    children: React.ReactNode;
+}
+
+const IntegrationBackground: FC<IntegrationBackgroundProps> = ({ children }) => {
     const { translate } = useTranslations();
 
     return (

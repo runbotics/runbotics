@@ -55,6 +55,7 @@ export const saveProcess = async ({
                 // eslint-disable-next-line no-console
                 console.error('Error occured in ProcessBuildView', error);
                 dispatch(processActions.fetchProcessById(process.id));
+                throw error;
             });
     } catch (error) {
         enqueueSnackbar(translate('Process.MainView.Toast.Save.Failed'), {

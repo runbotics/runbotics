@@ -1,15 +1,16 @@
 services:
   runbotics-portainer:
     container_name: runbotics-portainer
-    network_mode: host
     image: portainer/portainer-ce:2.20.3-alpine
     restart: always
+    network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
 
   runbotics-postgresql:
     container_name: runbotics-postgresql
+    restart: on-failure
     image: postgres:13.2
     network_mode: host
     volumes:
@@ -18,11 +19,18 @@ services:
       - POSTGRES_USER=runbotics
       - POSTGRES_PASSWORD=
       - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
 
   runbotics-orchestrator:
     container_name: runbotics-orchestrator
+    restart: on-failure
     image: runbotics/runbotics-orchestrator:latest
     network_mode: host
     environment:
@@ -34,10 +42,17 @@ services:
       - RUNBOTICS_SECRET=ODQ4ZDBjNTgzYTE3ZjI3ZTE2YzFiNDI4MGY0OTFmMGQ1YjM0ZjEyNzI1ZTBhOTk3Nzg0ZTkxNTk4Y2JmZGQ0ZTA0YjEyM2E1OGI3YTA4ODhiNTkxYjI0MzkzNGU3YTUwOWEzMjZjZDk2YTJkYjIyMzQzMjhhYTEwMTYwYTc0MmI=
     depends_on:
       - runbotics-postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/management/health | grep UP || exit 1"]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
 
   runbotics-scheduler:
     container_name: runbotics-scheduler
     image: runbotics/runbotics-scheduler:latest
+    restart: on-failure
     network_mode: host
     environment:
       - RUNBOTICS_SCHEDULER_REDIS_HOST=localhost
@@ -65,32 +80,55 @@ services:
     container_name: runbotics-redis
     image: redis:6
     network_mode: host
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG || exit 1"]
+      interval: 60s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+
+  # runbotics-nginx:
+  #   container_name: runbotics-nginx
+  #   image: nginx:1.25.3
+  #   deploy:
+  #       replicas: 1
+  #       restart_policy:
+  #           condition: on-failure
+  #           delay: 10s
+  #           max_attempts: 5
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "service nginx status || exit 1"]
+  #     interval: 60s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 30s
 
   runbotics-desktop:
     container_name: runbotics-desktop
     image: runbotics/runbotics-desktop:latest
+    restart: on-failure
     network_mode: host
     environment:
       - RUNBOTICS_ENTRYPOINT_URL=http://localhost:8080
       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://localhost:4000
       - RUNBOTICS_INSTALLATION_ID=admin
       - RUNBOTICS_USERNAME=runbotics@localhost
-      - RUNBOTICS_PASSWORD=runbotics
+      - RUNBOTICS_PASSWORD=
       - RUNBOTICS_HOT_RELOAD=true
       - RUNBOTICS_BOT_COLLECTION=30bdfb61-841b-519b-ce54-1d0e56877f73
       - RUNBOTICS_LOGGER_FILE_MODE=false
       - RUNBOTICS_EXTENSION_DIR=./extensions
       - RUNBOTICS_PLUGINS_DIR=./plugins
-      - CHROME_ADDRESS=http://chrome:4444
-    restart: on-failure
+      - FIREFOX_ADDRESS=http://firefox:4444
     depends_on:
       - runbotics-scheduler
       - runbotics-orchestrator
-      - chrome
+      - firefox
 
 #   runbotics-desktop-guest:
 #     container_name: runbotics-desktop-guest
 #     image: runbotics/runbotics-desktop:latest
+#     restart: on-failure
 #     environment:
 #       - RUNBOTICS_ENTRYPOINT_URL=http://host.docker.internal:8080
 #       - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://host.docker.internal:4000
@@ -101,18 +139,18 @@ services:
 #       - RUNBOTICS_BOT_COLLECTION=691c15ee-0230-49c6-b794-9e33790652d3
 #       - RUNBOTICS_LOGGER=winston
 #       - RUNBOTICS_EXTENSION_DIR=./extensions
-#       - CHROME_ADDRESS=http://chrome-2:4444
+#       - FIREFOX_ADDRESS=http://firefox-2:4444
 #     restart: on-failure
 #     depends_on:
 #       - runbotics-scheduler
 #       - runbotics-orchestrator
-#       - chrome
+#       - firefox-2
 #     extra_hosts:
 #       - 'host.docker.internal:host-gateway'
 
-#   chrome-2:
-#     container_name: chrome-2
-#     image: selenium/standalone-chrome:4.0.0-beta-3-20210426
+#   firefox-2:
+#     container_name: firefox-2
+#     image: selenium/standalone-firefox:140.0-geckodriver-0.36-grid-4.34.0-20250707
 #     ports:
 #       - 7901:7900
 #       - 4445:4444
@@ -123,9 +161,9 @@ services:
 #       JAVA_OPTS=-XX:ActiveProcessorCount: 1
 #      # SE_VNC_VIEW_ONLY: 1
 
-  chrome:
-    container_name: chrome
-    image: selenium/standalone-chrome:132.0.6834.159-chromedriver-132.0.6834.159-grid-4.28.1-20250202
+  firefox:
+    container_name: firefox
+    image: selenium/standalone-firefox:140.0-geckodriver-0.36-grid-4.34.0-20250707
     network_mode: host
 
     shm_size: 2gb

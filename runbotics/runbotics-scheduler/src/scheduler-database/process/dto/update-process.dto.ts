@@ -6,6 +6,7 @@ import { UpdateProcessBotSystemDto } from './update-process-bot-system.dto';
 import { UpdateProcessOutputTypeDto } from './update-process-output-type.dto';
 import { UpdateTriggerableDto } from './update-triggerable.dto';
 import { UpdateExecutionInfoDto } from './update-execution-info.dto';
+import { createZodDto } from 'nestjs-zod';
 
 export const updateProcessSchema = createProcessSchema.omit({
     executionInfo: true,
@@ -15,6 +16,7 @@ export const updateProcessSchema = createProcessSchema.omit({
     output: true,
 });
 
+export class UpdateProcessSwaggerDto extends createZodDto(updateProcessSchema) {}
 export type UpdateProcessDto = z.infer<typeof updateProcessSchema>;
 
 export type PartialUpdateProcessDto =

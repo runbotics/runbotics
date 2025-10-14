@@ -48,6 +48,7 @@ export const GeneralInfoTab = ({ value, process }: DetailsInfoTabProps) => {
             const params = { filter: { equals: { parentId: collectionId } } };
             dispatch(processCollectionActions.getAllWithAncestors(params));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

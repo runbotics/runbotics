@@ -1,0 +1,17 @@
+{
+    "Landing.Header.Button.SkipNav": "Pomiń nawigację",
+    "Landing.Header.Nav.Option.RunBotics": "RunBotics",
+    "Landing.Header.Nav.Option.RPA": "RPA",
+    "Landing.Header.Nav.Option.Pros": "Zalety",
+    "Landing.Header.Nav.Option.ForWho": "Dla kogo?",
+    "Landing.Header.Nav.Option.Resources": "Materiały",
+    "Landing.Header.Nav.Option.Integration": "Integracja",
+    "Landing.Header.Nav.Option.OpenSource": "Open source",
+    "Landing.Header.Nav.Option.Partners": "Partnerzy",
+    "Landing.Header.Nav.Option.References": "Referencje",
+    "Landing.Header.Nav.Option.Team": "Zespół",
+    "Landing.Header.Nav.Option.ContactUs": "Kontakt",
+    "Landing.Header.Nav.Option.Blog": "Blog",
+    "Landing.Header.Button.LogIn": "Wypróbuj",
+    "Landing.Header.Nav.Option.Marketplace": "Marketplace"
+}
