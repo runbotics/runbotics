@@ -1,0 +1,20 @@
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientRegistrationWebhook } from '#/webhook/entities/client-registration-webhook.entity';
+import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
+import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
+import { WebhookIncomingEventLog } from '#/webhook/entities/webhook-incoming-event-log.entity';
+import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
+
+@Module({
+    imports: [TypeOrmModule.forFeature([
+        ClientRegistrationWebhook,
+        WebhookAuthorization,
+        WebhookPayload,
+        WebhookIncomingEventLog, 
+        WebhookProcessTrigger
+    ])],
+    
+})
+export class WebhookModule {
+}

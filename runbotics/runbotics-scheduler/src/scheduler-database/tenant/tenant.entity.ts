@@ -19,6 +19,8 @@ import { User } from '../user/user.entity';
 import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { dateTransformer } from '#/database/database.utils';
+import { ClientRegistrationWebhook } from '#/webhook/entities/client-registration-webhook.entity';
+import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
 
 @Entity()
 export class Tenant {
@@ -95,4 +97,18 @@ export class Tenant {
         nullable: true,
     })
     subscriptionEnd: string | null;
+
+    @Column({
+        name: 'service_token_exp_date',
+        type: 'timestamp without time zone',
+        transformer: dateTransformer,
+        nullable: true,
+    })
+    serviceTokenExpDate: Date | null;
+
+    @OneToMany(() => ClientRegistrationWebhook, webhook => webhook.tenant)
+    clientRegistrationWebhooks: ClientRegistrationWebhook[];
+
+    @OneToMany(() => WebhookProcessTrigger, (trigger) => trigger.tenant)
+    webhookTriggers: WebhookProcessTrigger[];
 }
