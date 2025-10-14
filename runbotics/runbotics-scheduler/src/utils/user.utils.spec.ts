@@ -46,14 +46,14 @@ describe('user.utils', () => {
 
         test('should return feature keys from userFeatureKeys only', () => {
             const userFeatureKeys: IFeatureKey[] = [
-                { name: FeatureKey.AI_ASSISTANT_ACCESS },
+                { name: FeatureKey.AI_ASSISTANTS_ACCESS },
                 { name: FeatureKey.PROCESS_ALL_ACCESS },
             ];
 
             const result = getAllFeatureKeysAssignedToUser([], userFeatureKeys);
 
             expect(result).toEqual([
-                FeatureKey.AI_ASSISTANT_ACCESS,
+                FeatureKey.AI_ASSISTANTS_ACCESS,
                 FeatureKey.PROCESS_ALL_ACCESS,
             ]);
         });
@@ -69,7 +69,7 @@ describe('user.utils', () => {
                 },
             ];
             const userFeatureKeys: IFeatureKey[] = [
-                { name: FeatureKey.AI_ASSISTANT_ACCESS },
+                { name: FeatureKey.AI_ASSISTANTS_ACCESS },
                 { name: FeatureKey.PROCESS_ALL_ACCESS },
             ];
 
@@ -80,7 +80,7 @@ describe('user.utils', () => {
 
             expect(result).toContain(FeatureKey.PROCESS_READ);
             expect(result).toContain(FeatureKey.HISTORY_READ);
-            expect(result).toContain(FeatureKey.AI_ASSISTANT_ACCESS);
+            expect(result).toContain(FeatureKey.AI_ASSISTANTS_ACCESS);
             expect(result).toContain(FeatureKey.PROCESS_ALL_ACCESS);
             expect(result).toHaveLength(4);
         });
@@ -97,7 +97,7 @@ describe('user.utils', () => {
             ];
             const userFeatureKeys: IFeatureKey[] = [
                 { name: FeatureKey.PROCESS_READ },
-                { name: FeatureKey.AI_ASSISTANT_ACCESS },
+                { name: FeatureKey.AI_ASSISTANTS_ACCESS },
             ];
 
             const result = getAllFeatureKeysAssignedToUser(
@@ -108,7 +108,7 @@ describe('user.utils', () => {
             expect(result).toEqual([
                 FeatureKey.PROCESS_READ,
                 FeatureKey.HISTORY_READ,
-                FeatureKey.AI_ASSISTANT_ACCESS,
+                FeatureKey.AI_ASSISTANTS_ACCESS,
             ]);
             expect(result).toHaveLength(3);
         });
@@ -126,12 +126,12 @@ describe('user.utils', () => {
                         ],
                     },
                 ],
-                [{ name: FeatureKey.AI_ASSISTANT_ACCESS }]
+                [{ name: FeatureKey.AI_ASSISTANTS_ACCESS }]
             );
 
             const result = hasFeatureKeys(user, [
                 FeatureKey.PROCESS_READ,
-                FeatureKey.AI_ASSISTANT_ACCESS,
+                FeatureKey.AI_ASSISTANTS_ACCESS,
             ]);
 
             expect(result).toBe(true);
@@ -191,11 +191,11 @@ describe('user.utils', () => {
         test('should return true when user has required key from userFeatureKeys only', () => {
             const user = createTestUser(
                 [],
-                [{ name: FeatureKey.AI_ASSISTANT_ACCESS }]
+                [{ name: FeatureKey.AI_ASSISTANTS_ACCESS }]
             );
 
             const result = hasFeatureKeys(user, [
-                FeatureKey.AI_ASSISTANT_ACCESS,
+                FeatureKey.AI_ASSISTANTS_ACCESS,
             ]);
 
             expect(result).toBe(true);
@@ -225,12 +225,12 @@ describe('user.utils', () => {
                         featureKeys: [{ name: FeatureKey.PROCESS_READ }],
                     },
                 ],
-                [{ name: FeatureKey.AI_ASSISTANT_ACCESS }]
+                [{ name: FeatureKey.AI_ASSISTANTS_ACCESS }]
             );
 
             const result = hasFeatureKeys(user, [
                 FeatureKey.PROCESS_READ,
-                FeatureKey.AI_ASSISTANT_ACCESS,
+                FeatureKey.AI_ASSISTANTS_ACCESS,
                 FeatureKey.HISTORY_READ,
             ]);
 
@@ -258,10 +258,10 @@ describe('user.utils', () => {
         test('should return true when user has the required feature key from userFeatureKeys', () => {
             const user = createTestUser(
                 [],
-                [{ name: FeatureKey.AI_ASSISTANT_ACCESS }]
+                [{ name: FeatureKey.AI_ASSISTANTS_ACCESS }]
             );
 
-            const result = hasFeatureKey(user, FeatureKey.AI_ASSISTANT_ACCESS);
+            const result = hasFeatureKey(user, FeatureKey.AI_ASSISTANTS_ACCESS);
 
             expect(result).toBe(true);
         });
@@ -274,7 +274,7 @@ describe('user.utils', () => {
                         featureKeys: [{ name: FeatureKey.PROCESS_READ }],
                     },
                 ],
-                [{ name: FeatureKey.AI_ASSISTANT_ACCESS }]
+                [{ name: FeatureKey.AI_ASSISTANTS_ACCESS }]
             );
 
             const result = hasFeatureKey(user, FeatureKey.HISTORY_READ);

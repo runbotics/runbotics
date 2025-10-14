@@ -26,5 +26,5 @@ export const getServerSideProps: GetServerSideProps = (context) => {
 
 export default withAuthGuard({
     Component: AIAssistantDetailsPage,
-    featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
+    featureKeys: [FeatureKey.AI_ASSISTANTS_ACCESS],
 });
