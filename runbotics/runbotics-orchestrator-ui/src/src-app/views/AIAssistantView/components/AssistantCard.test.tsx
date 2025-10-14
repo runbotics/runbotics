@@ -49,7 +49,7 @@ describe('AssistantCard', () => {
         });
 
         mockUseAuth.mockReturnValue({
-            user: { featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS] },
+            user: { featureKeys: [FeatureKey.AI_ASSISTANTS_ACCESS] },
         });
 
         mockHasFeatureKeyAccess.mockReturnValue(true);
@@ -97,7 +97,7 @@ describe('AssistantCard', () => {
         test('should navigate to assistant URL when user has access', () => {
             const mockAssistant = createMockAIAssistant({
                 url: '/test-assistant',
-                featureKey: FeatureKey.AI_ASSISTANT_ACCESS,
+                featureKey: FeatureKey.AI_ASSISTANTS_ACCESS,
             });
 
             mockHasFeatureKeyAccess.mockReturnValue(true);
@@ -113,7 +113,7 @@ describe('AssistantCard', () => {
 
         test('should show error snackbar when user does not have access', () => {
             const mockAssistant = createMockAIAssistant({
-                featureKey: FeatureKey.AI_ASSISTANT_ACCESS,
+                featureKey: FeatureKey.AI_ASSISTANTS_ACCESS,
             });
 
             mockHasFeatureKeyAccess.mockReturnValue(false);

@@ -13,7 +13,7 @@ export const createMockAIAssistant = (overrides?: Partial<AIAssistant>): AIAssis
         en: 'Description of test assistant for testing purposes' 
     },
     categories: ['test', 'ai'],
-    featureKey: FeatureKey.AI_ASSISTANT_ACCESS,
+    featureKey: FeatureKey.AI_ASSISTANTS_ACCESS,
     url: '/test-assistant',
     enabled: true,
     icon: undefined,
