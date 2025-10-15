@@ -11,19 +11,19 @@ export class WebhookProcessTrigger {
     id: string;
 
     @Index()
-    @Column({ type: 'uuid' })
-    tenant_id: string;
+    @Column({ type: 'uuid', name:'tenant_id' })
+    tenantId: string;
 
     @Index()
-    @Column({ type: 'uuid' })
-    webhook_id: string;
+    @Column({ type: 'uuid', name: 'webhook_id' })
+    webhookId: string;
 
     @Index()
-    @Column({ type: 'uuid' })
-    process_id: string;
+    @Column({ type: 'uuid', name: 'process_id' })
+    processId: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    created_at: Date;
+    @Column({ type: 'timestamp', name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
 
     // Relations
     @ManyToOne(() => Tenant, (tenant) => tenant.webhookTriggers)
