@@ -2,12 +2,11 @@ import { Logger } from '#/utils/logger';
 import { Injectable } from '@nestjs/common';
 import mailEn from './i18n/en/mail.json';
 import mailPl from './i18n/pl/mail.json';
+import { DEFAULT_LANGUAGE, Language, SupportedLanguage } from 'runbotics-common';
 
 interface TranslationObject {
     [key: string]: string | TranslationObject;
 }
-
-type SupportedLanguage = 'en' | 'pl';
 
 @Injectable()
 export class I18nService {
@@ -17,8 +16,8 @@ export class I18nService {
     constructor() {
         try {
             this.translations = {
-                en: mailEn as TranslationObject,
-                pl: mailPl as TranslationObject,
+                [Language.EN]: mailEn as TranslationObject,
+                [Language.PL]: mailPl as TranslationObject,
             };
             this.logger.log(`I18n loaded, langs: ${Object.keys(this.translations).join(', ')}`);
         } catch (err: unknown) {
@@ -27,41 +26,36 @@ export class I18nService {
         }
     }
 
-    translate(key: string, lang = 'en', vars: Record<string, string> = {}): string {
-        const fallbackLang: SupportedLanguage = 'en';
+    translate(key: string, lang?: SupportedLanguage, vars: Record<string, string> = {}): string {
+        const fallbackLang: SupportedLanguage = DEFAULT_LANGUAGE;
         
-        const isValidLang = (lang: string): lang is SupportedLanguage => {
-            return lang === 'en' || lang === 'pl';
-        };
+        const effectiveLang: SupportedLanguage = (lang && this.translations[lang]) ? lang : fallbackLang;
 
-        const effectiveLang: SupportedLanguage = (lang && isValidLang(lang) && this.translations[lang]) 
-            ? lang 
-            : fallbackLang;
-
-        const value = this.getNestedValue(this.translations[effectiveLang], key) ??
-            this.getNestedValue(this.translations[fallbackLang], key) ??
+        const value = this.getTranslation(this.translations[effectiveLang], key) ??
+            this.getTranslation(this.translations[fallbackLang], key) ??
             key;
 
-        return this.interpolate(value, vars);
+        return this.interpolateVars(value, vars);
     }
 
-    private getNestedValue(obj: TranslationObject, path: string): string | undefined {
+    private getTranslation(obj: TranslationObject, path: string): string | undefined {
         const parts = path.split('.');
         let current: string | TranslationObject | undefined = obj;
-        
+
         for (const part of parts) {
-            if (typeof current === 'object' && current !== null && part in current) {
-                current = current[part];
-            } else {
+            if (current == null) return undefined;
+
+            if (typeof current !== 'object' || !Object.prototype.hasOwnProperty.call(current, part)) {
                 return undefined;
             }
+
+            current = (current as TranslationObject)[part];
         }
-        
+
         return typeof current === 'string' ? current : undefined;
     }
 
-    private interpolate(text: string, vars: Record<string, string>): string {
-        if(typeof text !== 'string') return text;
+    private interpolateVars(text: string, vars: Record<string, string>): string {
         return text.replace(/{{(.*?)}}/g, (_, varName) => vars[varName.trim()] ?? '');
     }
 }

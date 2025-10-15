@@ -20,6 +20,7 @@
             "title": "Twoja subskrypcja {{status}}",
             "expired": "wygasła",
             "expiring": "wygaśnie za {{days}} dni",
+            "expirationInfo": "Pragniemy poinformować, że Twoja subskrypcja <strong>RunBotics</strong> ",
             "renewMessage": "Aby ją przedłużyć, skontaktuj się z Nami:",
             "contactLink": "Skontaktuj się",
             "teamMessage": "Nasz zespół z przyjemnością pomoże w odnowieniu subskrypcji oraz odpowie na wszelkie pytania.",

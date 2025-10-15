@@ -69,7 +69,7 @@ export class TenantSubscriptionValidationService {
                 const now = dayjs();
                 const endDate = dayjs(tenant.subscriptionEnd).endOf('day');
                 const diffDays = endDate.diff(now, 'day');
-                if (tenant.active && [30, 14, 7, -1].includes(diffDays)) {
+                if (tenant.active && [30, 14, 7, 0].includes(diffDays)) {
                     await this.notifyUsersAboutExpiration(tenant, diffDays);
                 }
 

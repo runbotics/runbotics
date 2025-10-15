@@ -1,5 +1,6 @@
 import { I18nService } from '#/mail/i18n.service';
 import environment from '#/utils/environment';
+import { DEFAULT_LANGUAGE, Language } from 'runbotics-common';
 import { generateEmailHeader } from '../components/email-header.template';
 import { mainStyles } from '../styles/main-template.styles';
 import { subscriptionExpirationNotificationStyles } from '../styles/subscription-expiration-notification.styles';
@@ -8,7 +9,7 @@ export const subscriptionExpirationNotificationTemplate = (
   emails: string,
   diffDays: number,
   i18n: I18nService,
-  lang = 'en'
+  lang: Language = DEFAULT_LANGUAGE
 ): string => {
   const statusMessage = diffDays <= 0 
     ? i18n.translate('mail.subscriptionExpiration.expired', lang)
@@ -33,7 +34,7 @@ export const subscriptionExpirationNotificationTemplate = (
         <td class="content">
             <h2>${i18n.translate('mail.subscriptionExpiration.title', lang, { status: statusMessage })}</h2>
             <p>${i18n.translate('mail.subscriptionExpiration.greeting', lang)},</p>
-            <p>Pragniemy poinformować, że Twoja subskrypcja <strong>RunBotics</strong> ${statusMessage}</p>
+            <p>${i18n.translate('mail.subscriptionExpiration.expirationInfo', lang)} ${statusMessage}</p>
             <p>${i18n.translate('mail.subscriptionExpiration.renewMessage', lang)}</p>
             <a href="${emails}" alt="${emails}" style="color: #fbb040; text-decoration: none;" class="linkToMail">${i18n.translate('mail.subscriptionExpiration.contactLink', lang)}</a>
             <p>${i18n.translate('mail.subscriptionExpiration.teamMessage', lang)}</p>
