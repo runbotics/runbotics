@@ -2,12 +2,11 @@ import type { VFC } from 'react';
 
 import getConfig from 'next/config';
 
-import styles from './LoginLink.module.scss';
-
 import { useLocalizedUrl } from '#src-app/hooks/useLocalization';
 import useTranslations from '#src-app/hooks/useTranslations';
 import Typography from '#src-landing/components/Typography';
 
+import styles from './LoginLink.module.scss';
 
 interface Props {
     className?: string;
