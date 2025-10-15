@@ -106,7 +106,7 @@ export const usePublicSections = (): Section[] => {
                     icon: SmartToyOutlinedIcon,
                     href: '/app/ai-assistants',
                     authorities: [Role.ROLE_USER],
-                    featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
+                    featureKeys: [FeatureKey.AI_ASSISTANTS_ACCESS],
                 },
             ],
         },

@@ -29,6 +29,7 @@ import { ProcessOutput } from '#/scheduler-database/process-output/process-outpu
 import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 import { ProcessCollection } from '../process-collection/process-collection.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
 
 @Entity({ name: 'process' })
 export class ProcessEntity {
@@ -183,4 +184,7 @@ export class ProcessEntity {
         inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
     })
     tags: Tag[];
+    
+    @OneToMany(() => WebhookProcessTrigger, trigger => trigger.process)
+    webhookTriggers: WebhookProcessTrigger[];
 }

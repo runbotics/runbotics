@@ -240,7 +240,13 @@ export enum FeatureKey {
     TAG_DELETE = 'TAG_DELETE',
 
     // Allows to access AI assistant
-    AI_ASSISTANT_ACCESS = 'AI_ASSISTANT_ACCESS',
+    AI_ASSISTANTS_ACCESS = 'AI_ASSISTANTS_ACCESS',
+
+    // Allows to access Contracts AI assistant
+    AI_ASSISTANT_CONTRACTS_ASSISTANT = 'AI_ASSISTANT_CONTRACTS_ASSISTANT',
+
+    // Allows to access Company Guide AI assistant
+    AI_ASSISTANT_COMPANY_GUIDE = 'AI_ASSISTANT_COMPANY_GUIDE',
 }
 
 export interface IFeatureKey {
