@@ -1,3 +1,4 @@
+import webhooksTranslations from '#src-app/translations/en/webhooks';
 import blogTranslations from '#src-landing/translations/en/blog';
 import feedbackTranslations from '#src-landing/translations/en/feedback';
 import landingPageTranslations from '#src-landing/translations/en/landing';
@@ -24,7 +25,6 @@ import schedulerTranslations from './scheduler';
 import tenantsTranslations from './tenants';
 import usersTranslations from './users';
 import variablesTranslations from './variables.json';
-import webhooksTranslations from '#src-app/translations/en/webhooks';
 
 const translationResources = {
     ...commonTranslations,
