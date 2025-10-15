@@ -1,6 +1,7 @@
 import { I18nService } from '#/mail/i18n.service';
 import { ProcessStatisticsResult } from '#/types';
 import environment from '#/utils/environment';
+import { DEFAULT_LANGUAGE, Language } from 'runbotics-common';
 import { assignmentLateBase } from '../../assets/assignmentLate-icon';
 import { assignmentTurnedInBase } from '../../assets/assignmentTurnedIn-icon';
 import { moreTimeBase } from '../../assets/moreTime-icon';
@@ -13,7 +14,7 @@ export const generateAggregatedEmailContent = (
   summaries: { name: string; stats: ProcessStatisticsResult }[],
   unsubscribeUrl: string,
   i18n: I18nService,
-  lang = 'en'
+  lang: Language = DEFAULT_LANGUAGE
 ): string => {
   return `
 <!DOCTYPE html>

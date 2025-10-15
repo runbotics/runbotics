@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
-import { DefaultCollections, IProcess, IProcessInstance, Role } from 'runbotics-common';
+import { DefaultCollections, IProcess, IProcessInstance, Language, Role } from 'runbotics-common';
 import { ProcessStatisticsResult } from '#/types';
 import { Logger } from '#/utils/logger';
 import { BotService } from '#/scheduler-database/bot/bot.service';
@@ -98,22 +98,26 @@ export class MailService {
         const allEmails = [botAssignedUserEmail, ...targetEmails];
 
         for (const email of allEmails) {
-            const userLang = await this.getUserLanguage(email);
-            const subject = this.i18n.translate('mail.botDisconnection.subject', userLang);
-            const greeting = this.i18n.translate('mail.botDisconnection.greeting', userLang);
-            const message = this.i18n.translate('mail.botDisconnection.botDisconnectedMessage', userLang, { installationId });
-            const visitLink = this.i18n.translate('mail.botDisconnection.visitLink', userLang);
-            const signature = this.i18n.translate('mail.botDisconnection.signature', userLang);
+            const userLang = await this.getUserLanguage(email) as Language;
+            const sendMailInput = await this.getBotDisconnectionEmail(installationId, email, userLang);
             
-            const sendMailInput: SendMailInput = {
-                to: email,
-                subject,
-                content: `${greeting},\n\n${message}\n${visitLink} ${this.serverConfigService.entrypointUrl}\n\n${signature}`,
-                isHtml: false,
-            };
-
             await this.sendMail(sendMailInput);
         }
+    }
+
+    private async getBotDisconnectionEmail(installationId: string, email: string, userLang: Language): Promise<SendMailInput> {
+        const subject = this.i18n.translate('mail.botDisconnection.subject', userLang);
+        const greeting = this.i18n.translate('mail.botDisconnection.greeting', userLang);
+        const message = this.i18n.translate('mail.botDisconnection.botDisconnectedMessage', userLang, { installationId });
+        const visitLink = this.i18n.translate('mail.botDisconnection.visitLink', userLang);
+        const signature = this.i18n.translate('mail.botDisconnection.signature', userLang);
+        
+        return {
+            to: email,
+            subject,
+            content: `${greeting},\n\n${message}\n${visitLink} ${this.serverConfigService.entrypointUrl}\n\n${signature}`,
+            isHtml: false,
+        };
     }
 
     public async sendProcessFailureNotificationMail(process: IProcess, processInstance: IProcessInstance) {
@@ -134,24 +138,28 @@ export class MailService {
         const allEmails = [processCreatorEmail, ...targetEmails];
 
         for (const email of allEmails) {
-            const userLang = await this.getUserLanguage(email);
-            const subject = this.i18n.translate('mail.processFailure.subject', userLang);
-            const greeting = this.i18n.translate('mail.processFailure.greeting', userLang);
-            const message = this.i18n.translate('mail.processFailure.processFailedMessage',  userLang, 
-                { processName: process.name, processId: process.id.toString(), status: processInstance.status } 
-            );
-            const visitLink = this.i18n.translate('mail.processFailure.visitLink', userLang);
-            const signature = this.i18n.translate('mail.processFailure.signature', userLang);
+            const userLang = await this.getUserLanguage(email) as Language;
+            const sendMailInput = await this.getProcessFailureEmail(process, processInstance, email, userLang);
             
-            const sendMailInput: SendMailInput = {
-                to: email,
-                subject,
-                content: `${greeting},\n\n${message}\n${visitLink} ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\n${signature}`,
-                isHtml: false,
-            };
-
             await this.sendMail(sendMailInput);
         }
+    }
+
+    private async getProcessFailureEmail(process: IProcess, processInstance: IProcessInstance, email: string, userLang: Language): Promise<SendMailInput> {
+        const subject = this.i18n.translate('mail.processFailure.subject', userLang);
+        const greeting = this.i18n.translate('mail.processFailure.greeting', userLang);
+        const message = this.i18n.translate('mail.processFailure.processFailedMessage', userLang, 
+            { processName: process.name, processId: process.id.toString(), status: processInstance.status } 
+        );
+        const visitLink = this.i18n.translate('mail.processFailure.visitLink', userLang);
+        const signature = this.i18n.translate('mail.processFailure.signature', userLang);
+        
+        return {
+            to: email,
+            subject,
+            content: `${greeting},\n\n${message}\n${visitLink} ${this.serverConfigService.entrypointUrl}/app/processes/${process.id}/run?instanceId=${processInstance.id}\n\n${signature}`,
+            isHtml: false,
+        };
     }
 
     public async sendCredentialChangeNotificationMail(params: CredentialChangeMailPayload) {
@@ -164,7 +172,7 @@ export class MailService {
             operationType,
         } = params;
 
-        const userLang = await this.getUserLanguage(collectionCreatorEmail);
+        const userLang = await this.getUserLanguage(collectionCreatorEmail) as Language;
         
         const oldNameInfo = CredentialOperationType.EDIT && credentialOldName
             ? this.i18n.translate('mail.credentialChange.oldNameInfo', userLang, { oldName: credentialOldName }) : '';
@@ -201,7 +209,7 @@ export class MailService {
 
     public async sendUserDeclineReasonMail(userToDelete: User, userDto: DeleteUserDto) {
         if (userDto && 'declineReason' in userDto) {
-            const userLang = userToDelete.langKey || 'en';
+            const userLang = userToDelete.langKey as Language || Language.EN;
             await this.sendMail({
                 to: userToDelete.email,
                 subject: this.i18n.translate('mail.userActivation.subject', userLang),
@@ -213,7 +221,7 @@ export class MailService {
 
     public async sendUserAcceptMail(userToUpdate: User, message: string) {
         if(message) {
-            const userLang = userToUpdate.langKey || 'en';
+            const userLang = userToUpdate.langKey as Language || Language.EN;
             await this.sendMail({
                 to: userToUpdate.email,
                 subject: this.i18n.translate('mail.userActivation.subject', userLang),
@@ -224,7 +232,7 @@ export class MailService {
     }
 
     public async sendSubscriptionExpirationNotification(user: User, diffDays: number, mailToLink: string) {
-        const userLang = user.langKey || 'en';
+        const userLang = user.langKey as Language || Language.EN;
         const emailContent = subscriptionExpirationNotificationTemplate(mailToLink, diffDays, this.i18n, userLang);
         const subject = this.i18n.translate('mail.subscriptionExpiration.subject', userLang);
 
@@ -238,7 +246,7 @@ export class MailService {
 
     public async sendProcessSummaryNotification(summaries: { name: string; stats: ProcessStatisticsResult }[], unsubscribeUrl: string, userEmails: string[]) {
         for (const email of userEmails) {
-            const userLang = await this.getUserLanguage(email);
+            const userLang = await this.getUserLanguage(email) as Language;
             const emailContent = generateAggregatedEmailContent(summaries, unsubscribeUrl, this.i18n, userLang);
             const subject = this.i18n.translate('mail.processSummary.subject', userLang);
 

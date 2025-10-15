@@ -20,6 +20,7 @@
             "title": "Your subscription {{status}}",
             "expired": "has expired",
             "expiring": "will expire in {{days}} days",
+            "expirationInfo": "We would like to inform you that your <strong>RunBotics</strong> subscription",
             "renewMessage": "To renew it, please contact us:",
             "contactLink": "Contact us",
             "teamMessage": "Our team will be happy to help you renew your subscription and answer any questions.",
