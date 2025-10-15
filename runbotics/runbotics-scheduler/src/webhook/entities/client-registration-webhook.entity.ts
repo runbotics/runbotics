@@ -13,35 +13,35 @@ export class ClientRegistrationWebhook {
     name: string;
 
     @Index()
-    @Column({ type: 'uuid' })
-    tenant_id: string;
+    @Column({ type: 'uuid', name: 'tenant_id' })
+    tenantId: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    created_at: Date;
+    @Column({ type: 'timestamp', name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    updated_at: Date;
+    @Column({ type: 'timestamp', name: 'updated_at', default: () => 'CURRENT_TIMESTAMP' })
+    updatedAt: Date;
 
     @Column({ type: 'boolean', default: true })
     active: boolean;
 
-    @Column({ type: 'varchar' })
-    application_URL: string;
+    @Column({ type: 'varchar', name: 'application_URL' })
+    applicationURL: string;
 
     @Index()
-    @Column({ type: 'uuid', nullable: true })
-    authorization_id: string | null;
+    @Column({ type: 'uuid', name: 'authorization_id', nullable: true })
+    authorizationId: string | null;
 
     @Index()
-    @Column({ type: 'uuid', nullable: true })
-    client_registration_auth_id: string | null;
+    @Column({ type: 'uuid', name: 'client_registration_auth_id', nullable: true })
+    clientRegistrationAuthId: string | null;
 
     @Index()
-    @Column({ type: 'uuid', nullable: true })
-    payload_id: string | null;
+    @Column({ type: 'uuid', name: 'payload_id', nullable: true })
+    payloadId: string | null;
 
-    @Column({ type: 'jsonb', nullable: true })
-    registration_payload: unknown;
+    @Column({ type: 'jsonb', name: 'registration_payload', nullable: true })
+    registrationPayload: unknown;
 
     @ManyToOne(() => Tenant, (tenant) => tenant.clientRegistrationWebhooks)
     @JoinColumn({ name: 'tenant_id' })
