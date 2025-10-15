@@ -10,5 +10,6 @@
     "Nav.Items.Users": "Użytkownicy",
     "Nav.Items.Monitoring": "Monitoring",
     "Nav.Items.AIAssistant": "Asystenci AI",
-    "Nav.Hide": "Ukryj"
+    "Nav.Hide": "Ukryj",
+    "Nav.Items.Webhooks": "Webhooks"
 }

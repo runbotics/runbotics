@@ -1,6 +1,6 @@
 export enum FeatureKey {
-     // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
-     PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW',
+    // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
+    PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW',
 
     // CRUD access to every process for admins -> in the future can be extended for starting, stopping, etc.
     PROCESS_ALL_ACCESS = 'PROCESS_ALL_ACCESS',
@@ -247,6 +247,12 @@ export enum FeatureKey {
 
     // Allows to access Company Guide AI assistant
     AI_ASSISTANT_COMPANY_GUIDE = 'AI_ASSISTANT_COMPANY_GUIDE',
+
+    // Allows to access webhook page
+    WEBHOOKS_PAGE_READ = 'WEBHOOKS_PAGE_READ',
+
+    // Allows to send request to webhook endpoint
+    WEBHOOKS_SERVICE_ACCESS = 'WEBHOOKS_SERVICE_ACCESS',
 }
 
 export interface IFeatureKey {
