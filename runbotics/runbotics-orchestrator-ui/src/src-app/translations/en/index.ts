@@ -24,6 +24,7 @@ import schedulerTranslations from './scheduler';
 import tenantsTranslations from './tenants';
 import usersTranslations from './users';
 import variablesTranslations from './variables.json';
+import webhooksTranslations from '#src-app/translations/en/webhooks';
 
 const translationResources = {
     ...commonTranslations,
@@ -51,5 +52,6 @@ const translationResources = {
     ...feedbackTranslations,
     ...marketplaceTranslations,
     ...aiAssistantTranslations,
+    ...webhooksTranslations,
 };
 export default translationResources;
