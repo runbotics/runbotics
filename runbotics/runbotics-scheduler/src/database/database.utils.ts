@@ -25,13 +25,13 @@ export const numberTransformer: TypedTransformer<string | number, number> = {
 
 const isLocalEnv = process.env.RUNBOTICS_ENVIRONMENT === 'Runbotics-local';
 export const getMigrations = () => {
-    const baseMigrations = [
+    const migrations = [
         'dist/src/migrations/*.js',
     ];
 
     if (isLocalEnv) {
-        baseMigrations.push('dist/src/migrations/local/*.js');
+        migrations.push('dist/src/migrations/local/*.js');
     }
 
-    return baseMigrations;
+    return migrations;
 };
