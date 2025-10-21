@@ -5,8 +5,11 @@ import { Button, TextField } from '@mui/material';
 
 import InputAdornment from '@mui/material/InputAdornment';
 
+import Loader from '#src-app/components/Loader';
+import WebhookTable from '#src-app/components/tables/WebhookTable/WebhookTable';
 import { useDispatch, useSelector } from '#src-app/store';
 import { webhookActions } from '#src-app/store/slices/Webhook';
+import { getWebhooks } from '#src-app/store/slices/Webhook/Webhook.thunks';
 import {
     WebhookListActionRow,
     WebhookListContainer,
@@ -14,24 +17,28 @@ import {
 
 const WebhookList: FC = () => {
     const dispatch = useDispatch();
-    const search = useSelector((state) => state.webhook.search);
+    const { search, loading, webhooks } = useSelector((state) => state.webhook);
     const [localSearch, setLocalSearch] = useState(search);
-    
+
+    useEffect(() => {
+        dispatch(getWebhooks());
+    }, []);
+
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             dispatch(webhookActions.setSearch(localSearch));
         }, 300);
         return () => clearTimeout(delayDebounceFn);
     }, [localSearch]);
-    
+
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         setLocalSearch(event.target.value);
     };
-    
+
     const handleDialogOpen = () => {
         dispatch(webhookActions.setIsModalOpen(true));
-    }
-    
+    };
+
     return (
         <WebhookListContainer>
             <WebhookListActionRow>
@@ -50,13 +57,16 @@ const WebhookList: FC = () => {
                     value={localSearch}
                     onChange={handleSearchChange}
                 />
-                <Button 
-                    variant={'contained'} 
-                    onClick={handleDialogOpen}>
+                <Button variant={'contained'} onClick={handleDialogOpen}>
                     {'Register webhook'}
                 </Button>
             </WebhookListActionRow>
-            Work in progress
+            {loading ?
+                <Loader />
+                : 
+                <div>
+                    <WebhookTable />
+                </div>}
         </WebhookListContainer>
     );
 };

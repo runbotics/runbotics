@@ -8,3 +8,8 @@ export const createWebhookEntry = ApiTenantResource.post<ClientRegistrationWebho
     'webhooks/createWebhookEntry',
     '/webhook'
 );
+
+export const getWebhooks = ApiTenantResource.get<IClientRegistrationWebhook[]>(
+    'webhooks/getWebhooks',
+    '/webhook'
+);
