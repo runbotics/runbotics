@@ -1,7 +1,7 @@
 import { WebhookAuthorizationType } from 'runbotics-common';
 
-export interface IWebhookAuthorization {
-    id?: string;
+export interface WebhookAuthorization {
+    id: string;
     type: WebhookAuthorizationType;
     data?: Record<string, any> | null;
 }
@@ -15,99 +15,99 @@ export interface BasicAuthorizationData {
     password: string;
 }
 
-export interface WebhookAuthorization {
+export interface CreateWebhookAuthorizationBase {
     type: WebhookAuthorizationType;
     data?: Record<string, any> | null;
 }
 
-export interface NoneWebhookAuthorizationType extends WebhookAuthorization {
+export interface NoneWebhookAuthorizationType extends CreateWebhookAuthorizationBase {
     type: WebhookAuthorizationType.NONE;
     data?: null;
 }
-export interface JwtWebhookAuthorizationType extends WebhookAuthorization {
+export interface JwtWebhookAuthorizationType extends CreateWebhookAuthorizationBase {
     type: WebhookAuthorizationType.JWT;
     data: JwtAuthorizationData;
 }
-export interface BasicWebhookAuthorizationType extends WebhookAuthorization {
+export interface BasicWebhookAuthorizationType extends CreateWebhookAuthorizationBase {
     type: WebhookAuthorizationType.BASIC;
     data: BasicAuthorizationData;
 }
 
-export type ICreateWebhookAuthorizationRequest =
+export type CreateWebhookAuthorizationRequest =
     | NoneWebhookAuthorizationType
     | JwtWebhookAuthorizationType
     | BasicWebhookAuthorizationType;
 
-export interface IUpdateWebhookAuthorizationRequest {
+export interface UpdateWebhookAuthorizationRequest {
     type?: WebhookAuthorizationType;
     data?: Record<string, any> | null;
 }
 
-export interface IWebhookPayload {
-    id?: string;
+export interface WebhookPayload {
+    id: string;
     webhookIdPath: string;
     payloadDataPath: string;
 }
 
-export interface ICreateWebhookPayloadRequest {
+export interface CreateWebhookPayloadRequest {
     webhookIdPath: string;
     payloadDataPath: string;
 }
 
-export interface IUpdateWebhookPayloadRequest {
+export interface UpdateWebhookPayloadRequest {
     webhookIdPath?: string;
     payloadDataPath?: string;
 }
 
-export interface IClientRegistrationWebhook {
-    id?: string;
+export interface ClientRegistrationWebhook {
+    id: string;
     name: string;
     tenantId: string;
     active: boolean;
     applicationUrl: string;
-    authorization?: IWebhookAuthorization | null;
-    clientAuthorization?: IWebhookAuthorization | null;
-    payload?: IWebhookPayload | null;
-    registrationPayload?: Record<string, any> | null;
-    createdAt?: string;
-    updatedAt?: string;
+    authorization: WebhookAuthorization | null;
+    clientAuthorization: WebhookAuthorization | null;
+    payload: WebhookPayload | null;
+    registrationPayload: Record<string, any> | null;
+    createdAt: string;
+    updatedAt: string;
 }
 
-export interface ICreateClientRegistrationWebhookRequest {
+export interface CreateClientRegistrationWebhookRequest {
     name: string;
     active?: boolean;
     applicationUrl: string;
-    clientAuthorization?: ICreateWebhookAuthorizationRequest;
-    payload?: ICreateWebhookPayloadRequest;
+    clientAuthorization: CreateWebhookAuthorizationRequest;
+    payload: CreateWebhookPayloadRequest;
     registrationPayload?: string | null;
 }
 
-export interface IUpdateClientRegistrationWebhookRequest {
+export interface UpdateClientRegistrationWebhookRequest {
     name?: string;
     tenantId?: string;
     active?: boolean;
     applicationUrl?: string;
-    authorization?: IUpdateWebhookAuthorizationRequest;
-    clientAuthorization?: IUpdateWebhookAuthorizationRequest;
-    payload?: IUpdateWebhookPayloadRequest;
+    authorization?: UpdateWebhookAuthorizationRequest;
+    clientAuthorization?: UpdateWebhookAuthorizationRequest;
+    payload?: UpdateWebhookPayloadRequest;
     registrationPayload?: Record<string, any> | null;
 }
 
-export interface IWebhookProcessTrigger {
-    id?: string;
+export interface WebhookProcessTrigger {
+    id: string;
     tenantId: string;
     webhookId: string;
     processId: number;
-    createdAt?: string;
+    createdAt: string;
 }
 
-export interface ICreateWebhookProcessTriggerRequest {
+export interface CreateWebhookProcessTriggerRequest {
     tenantId: string;
     webhookId: string;
     processId: number;
 }
 
-export interface IUpdateWebhookProcessTriggerRequest {
+export interface UpdateWebhookProcessTriggerRequest {
     tenantId?: string;
     webhookId?: string;
     processId?: number;
@@ -118,8 +118,8 @@ export interface WebhookState {
     error: string | null;
     search: string;
     isModalOpen: boolean;
-    registerWebhook: ICreateClientRegistrationWebhookRequest | null;
-    webhooks: IClientRegistrationWebhook[] | null;
-    triggers: IWebhookProcessTrigger[] | null;
+    registerWebhook: CreateClientRegistrationWebhookRequest | null;
+    webhooks: ClientRegistrationWebhook[] | null;
+    triggers: WebhookProcessTrigger[] | null;
     tokenExpirationDate: string | null;
 }
