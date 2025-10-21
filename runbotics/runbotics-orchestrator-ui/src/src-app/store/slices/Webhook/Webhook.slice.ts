@@ -10,7 +10,8 @@ const initialState: WebhookState = {
     webhooks: null,
     triggers: null,
     tokenExpirationDate: null,
-    registerWebhook: null
+    registerWebhook: null,
+    isModalOpen: false,
 };
 
 export const slice = createSlice({
