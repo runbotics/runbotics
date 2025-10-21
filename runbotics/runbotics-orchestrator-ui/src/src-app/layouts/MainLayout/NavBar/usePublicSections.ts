@@ -1,3 +1,4 @@
+import { WebhookOutlined } from '@mui/icons-material';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
@@ -110,7 +111,7 @@ export const usePublicSections = (): Section[] => {
                 },
                 {
                     title: translate('Nav.Items.Webhooks'),
-                    icon: BadgeOutlinedIcon,
+                    icon: WebhookOutlined,
                     href: '/app/webhooks',
                     featureKeys: [FeatureKey.WEBHOOKS_PAGE_READ],
                 }

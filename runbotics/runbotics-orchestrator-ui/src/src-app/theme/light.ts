@@ -52,6 +52,9 @@ export const lightTheme: ThemeOptions = {
             primary: '#000000',
             secondary: '#000000',
         },
+        grey: {
+            100: '#F5F5F5',
+        }
     },
     shadows: softShadows,
 };
