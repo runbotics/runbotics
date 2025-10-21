@@ -33,7 +33,7 @@ export class ClientRegistrationWebhook {
     authorizationId: string | null;
 
     @Index()
-    @Column({ type: 'uuid', name: 'client_registration_auth_id', nullable: true })
+    @Column({ type: 'uuid', name: 'client_authorization_id', nullable: true })
     clientRegistrationAuthId: string | null;
 
     @Index()
@@ -47,15 +47,23 @@ export class ClientRegistrationWebhook {
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 
-    @OneToOne(() => WebhookAuthorization, (auth) => auth.clientRegistrationWebhook)
+    @OneToOne(
+        () => WebhookAuthorization,
+        (auth) => auth.clientRegistrationWebhook,
+    )
     @JoinColumn({ name: 'authorization_id' })
     authorization: WebhookAuthorization;
 
-    @OneToOne(() => WebhookAuthorization, (auth) => auth.clientRegistrationClientWebhookForClient)
+    @OneToOne(
+        () => WebhookAuthorization, (auth) => auth.clientRegistrationClientWebhookForClient,
+    )
     @JoinColumn({ name: 'client_authorization_id' })
     clientAuthorization: WebhookAuthorization;
 
-    @OneToOne(() => WebhookPayload, (payload) => payload.clientRegistrationWebhook)
+    @OneToOne(
+        () => WebhookPayload,
+        (payload) => payload.clientRegistrationWebhook,
+    )
     @JoinColumn({ name: 'payload_id' })
     payload: WebhookPayload;
 }

@@ -5,6 +5,8 @@ import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.e
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
 import { WebhookIncomingEventLog } from '#/webhook/entities/webhook-incoming-event-log.entity';
 import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
+import { WebhookController } from '#/webhook/webhook.controller';
+import { WebhookService } from '#/webhook/webhook.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([
@@ -14,7 +16,8 @@ import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigge
         WebhookIncomingEventLog, 
         WebhookProcessTrigger
     ])],
-    
+    controllers: [WebhookController],
+    providers: [WebhookService],
 })
 export class WebhookModule {
 }

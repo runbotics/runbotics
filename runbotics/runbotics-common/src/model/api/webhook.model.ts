@@ -1,5 +1,5 @@
 export enum WebhookAuthorizationType {
-    // NONE = 'none',
-    // BASIC = 'basic',
+    NONE = 'none',
+    BASIC = 'basic',
     JWT = 'jwt',
 }
