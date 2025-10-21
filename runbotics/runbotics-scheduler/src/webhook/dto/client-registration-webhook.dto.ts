@@ -23,8 +23,7 @@ export const UpdateClientRegistrationWebhookDtoSchema = z.object({
     tenantId: z.string().uuid().optional(),
     active: z.boolean().optional(),
     applicationUrl: z.string().url('Invalid URL').optional(),
-
-    // Relacje jako obiekty (opcjonalne)
+    
     authorization: UpdateWebhookAuthorizationDtoSchema.optional(),
     clientAuthorization: UpdateWebhookAuthorizationDtoSchema.optional(),
     payload: UpdateWebhookPayloadDtoSchema.optional(),

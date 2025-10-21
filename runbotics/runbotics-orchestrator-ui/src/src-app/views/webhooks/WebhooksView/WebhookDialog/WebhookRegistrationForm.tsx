@@ -9,49 +9,39 @@ import {
     Typography,
 } from '@mui/material';
 import { WebhookAuthorizationType } from 'runbotics-common';
-import * as Yup from 'yup';
 
 import { useDispatch } from '#src-app/store';
 import {
-    ICreateClientRegistrationWebhookRequest,
+    CreateClientRegistrationWebhookRequest,
+    CreateWebhookAuthorizationRequest,
     webhookActions,
 } from '#src-app/store/slices/Webhook';
 import { WebhookContent } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookDialog.styles';
+import {
+    initialFormState,
+    newClientAuthorization,
+} from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookDialog.utils';
 
 export const WebhookRegistrationForm: FC = () => {
     const disptach = useDispatch();
     const [formValues, setFormValues] =
-        useState<ICreateClientRegistrationWebhookRequest>({
-            name: '',
-            applicationUrl: '',
-            clientAuthorization: {
-                type: WebhookAuthorizationType.NONE,
-                data: null,
-            },
-            registrationPayload: '',
-            payload: {
-                webhookIdPath: '',
-                payloadDataPath: '',
-            },
-        });
-    const [errors, setErrors] = useState<Record<string, string>>({});
+        useState<CreateClientRegistrationWebhookRequest>(initialFormState);
+    const [error, setError] = useState<Record<string, string>>({});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'token' || name === 'username' || name === 'password') {
             // @ts-expect-error union types doesn't work well with nested objects checks
-            setFormValues((prev) => {
-                return {
-                    ...prev,
-                    clientAuthorization: {
-                        ...prev.clientAuthorization,
-                        data: {
-                            ...prev.clientAuthorization.data,
-                            [name]: value,
-                        },
+            setFormValues((prev) => ({
+                ...prev,
+                clientAuthorization: {
+                    ...prev.clientAuthorization,
+                    data: {
+                        ...prev.clientAuthorization.data,
+                        [name]: value,
                     },
-                };
-            });
+                },
+            }));
         } else if (name === 'payloadDataPath' || name === 'webhookIdPath') {
             setFormValues((prev) => ({
                 ...prev,
@@ -65,39 +55,16 @@ export const WebhookRegistrationForm: FC = () => {
         }
     };
 
+
+
     const handleAuthChange = (_, newMethod) => {
         if (newMethod) {
-            setErrors({});
-            if (newMethod === WebhookAuthorizationType.NONE) {
-                setFormValues((prev) => ({
-                    ...prev,
-                    clientAuthorization: {
-                        type: WebhookAuthorizationType.NONE,
-                        data: null,
-                    },
-                }));
-            } else if (newMethod === WebhookAuthorizationType.BASIC) {
-                setFormValues((prev) => ({
-                    ...prev,
-                    clientAuthorization: {
-                        type: WebhookAuthorizationType.BASIC,
-                        data: {
-                            username: '',
-                            password: '',
-                        },
-                    },
-                }));
-            } else if (newMethod === WebhookAuthorizationType.JWT) {
-                setFormValues((prev) => ({
-                    ...prev,
-                    clientAuthorization: {
-                        type: WebhookAuthorizationType.JWT,
-                        data: {
-                            token: '',
-                        },
-                    },
-                }));
-            }
+            setError({});
+
+            setFormValues((prevState) => ({
+                ...prevState,
+                clientAuthorization: newClientAuthorization(newMethod),
+            }));
         }
     };
 
@@ -113,8 +80,8 @@ export const WebhookRegistrationForm: FC = () => {
                     name="name"
                     value={formValues.name}
                     onChange={handleChange}
-                    error={Boolean(errors.name)}
-                    helperText={errors.name}
+                    error={Boolean(error.name)}
+                    helperText={error.name}
                     fullWidth
                     onBlur={onBlur}
                 />
@@ -124,8 +91,8 @@ export const WebhookRegistrationForm: FC = () => {
                     name="applicationUrl"
                     value={formValues.applicationUrl}
                     onChange={handleChange}
-                    error={Boolean(errors.applicationUrl)}
-                    helperText={errors.applicationUrl}
+                    error={Boolean(error.applicationUrl)}
+                    helperText={error.applicationUrl}
                     fullWidth
                     onBlur={onBlur}
                 />
@@ -135,8 +102,8 @@ export const WebhookRegistrationForm: FC = () => {
                     name="payloadDataPath"
                     value={formValues.payload.payloadDataPath}
                     onChange={handleChange}
-                    error={Boolean(errors.payloadDataPath)}
-                    helperText={errors.payloadDataPath}
+                    error={Boolean(error.payloadDataPath)}
+                    helperText={error.payloadDataPath}
                     fullWidth
                     onBlur={onBlur}
                 />
@@ -146,8 +113,8 @@ export const WebhookRegistrationForm: FC = () => {
                     name="webhookIdPath"
                     value={formValues.payload.webhookIdPath}
                     onChange={handleChange}
-                    error={Boolean(errors.webhookNamePath)}
-                    helperText={errors.webhookNamePath}
+                    error={Boolean(error.webhookNamePath)}
+                    helperText={error.webhookNamePath}
                     fullWidth
                     onBlur={onBlur}
                 />
@@ -157,8 +124,8 @@ export const WebhookRegistrationForm: FC = () => {
                     name="registrationPayload"
                     value={formValues.registrationPayload}
                     onChange={handleChange}
-                    error={Boolean(errors.registrationPayload)}
-                    helperText={errors.registrationPayload}
+                    error={Boolean(error.registrationPayload)}
+                    helperText={error.registrationPayload}
                     fullWidth
                     multiline
                     minRows={5}
@@ -180,13 +147,13 @@ export const WebhookRegistrationForm: FC = () => {
                         onBlur={onBlur}
                     >
                         <ToggleButton value={WebhookAuthorizationType.NONE}>
-                            NONE
+                            {WebhookAuthorizationType.NONE.toUpperCase()}
                         </ToggleButton>
                         <ToggleButton value={WebhookAuthorizationType.JWT}>
-                            JWT
+                            {WebhookAuthorizationType.JWT.toUpperCase()}
                         </ToggleButton>
                         <ToggleButton value={WebhookAuthorizationType.BASIC}>
-                            BASIC
+                            {WebhookAuthorizationType.BASIC.toUpperCase()}
                         </ToggleButton>
                     </ToggleButtonGroup>
                 </Box>
@@ -198,8 +165,8 @@ export const WebhookRegistrationForm: FC = () => {
                         name="token"
                         value={formValues.clientAuthorization.data.token}
                         onChange={handleChange}
-                        error={Boolean(errors.jwtToken)}
-                        helperText={errors.jwtToken}
+                        error={Boolean(error.jwtToken)}
+                        helperText={error.jwtToken}
                         fullWidth
                         onBlur={onBlur}
                         autoComplete={'off'}
@@ -216,8 +183,8 @@ export const WebhookRegistrationForm: FC = () => {
                             name="username"
                             value={formValues.clientAuthorization.data.username}
                             onChange={handleChange}
-                            error={Boolean(errors.basicUsername)}
-                            helperText={errors.basicUsername}
+                            error={Boolean(error.basicUsername)}
+                            helperText={error.basicUsername}
                             fullWidth
                             onBlur={onBlur}
                             autoComplete={'off'}
@@ -228,8 +195,8 @@ export const WebhookRegistrationForm: FC = () => {
                             type="password"
                             value={formValues.clientAuthorization.data.password}
                             onChange={handleChange}
-                            error={Boolean(errors.basicPassword)}
-                            helperText={errors.basicPassword}
+                            error={Boolean(error.basicPassword)}
+                            helperText={error.basicPassword}
                             fullWidth
                             onBlur={onBlur}
                             autoComplete={'off'}
