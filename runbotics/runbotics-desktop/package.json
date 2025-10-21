@@ -74,7 +74,8 @@
         "node-poppler": "~8.0.2",
         "xml2js": "~0.6.2",
         "@types/xml2js": "~0.4.14",
-        "fast-xml-parser": "~5.2.5"
+        "fast-xml-parser": "~5.2.5",
+        "sharp": "~0.34.4"
     },
     "build": {
         "productName": "RunBotics",

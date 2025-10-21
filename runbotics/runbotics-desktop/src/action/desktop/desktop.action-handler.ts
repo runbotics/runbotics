@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { parseString } from 'xml2js';
 import { DesktopAction } from 'runbotics-common';
 import { v4 as uuidv4 } from 'uuid';
 import Tesseract, { createWorker, PSM } from 'tesseract.js';
@@ -23,7 +22,6 @@ import {
 } from '@runbotics/nut-js';
 
 import { RunboticsLogger } from '#logger';
-import { pdfToPng } from 'pdf-to-png-converter';
 import {Poppler} from 'node-poppler';
 
 import {
@@ -52,7 +50,7 @@ import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 import { validateInput } from '#utils/zodError';
 import { ServerConfigService } from '#config';
 import { Injectable } from '@nestjs/common';
-import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema } from './desktop.utils';
+import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema, preprocessImage } from './desktop.utils';
 import { tmpdir } from 'os';
 
 @Injectable()
@@ -200,28 +198,29 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         }
     }
 
+
     async readTextFromImage(rawInput: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
         const { imageFullPath, language } = await validateInput(rawInput, readTextFromImageInputSchema);
 
         let worker: Tesseract.Worker;
         const tempPngPaths: string[] = [];
+        const preprocessedPaths: string[] = [];
 
         try {
             this.checkFileExist(imageFullPath);
 
             const imagePathToUse = imageFullPath;
             const ext = path.extname(imageFullPath).toLowerCase();
-            const fileName = path.basename(imageFullPath.toLocaleLowerCase(),ext);
+            const fileName = path.basename(imageFullPath.toLocaleLowerCase(), ext);
             const isPdf = ext === '.pdf';
             const poppler = new Poppler();
-            let outputBasePath = '';
 
             if (isPdf) {
                 const outputDir = tmpdir();
                 const outputPrefix = `converted_${uuidv4()}`;
-                outputBasePath = path.join(outputDir, outputPrefix);
+                const outputBasePath = path.join(outputDir, outputPrefix);
                 const info = await poppler.pdfInfo(imagePathToUse, { printAsJson: true });
-                // console.log('INFO',info);
+
                 if (!(typeof info === 'object' && 'pages' in info)) {
                     throw new Error('Unable to get pdf pages.');
                 }
@@ -229,16 +228,15 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 const totalPages = parseInt((info as any).pages);
                 const options = {
                     pngFile: true,
-                    // antialias: 'best' as const,
-
+                    resolutionXYAxis: 550,
                 };
+
                 try {
                     await poppler.pdfToCairo(imagePathToUse, outputBasePath, options);
-                    
                 } catch (error) {
                     console.log('err', error);
                 }
-                // const respPdfHtml = await poppler.pdfToHtml(imagePathToUse, undefined, { lastPageToConvert: 1});
+
                 for (let i = 1; i <= totalPages; i++) {
                     const pngPath = `${outputBasePath}-${i}.png`;
                     if (!fs.existsSync(pngPath)) {
@@ -250,29 +248,36 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 tempPngPaths.push(imagePathToUse);
             }
 
-            worker = await createWorker({ langPath: '.\\trained_data' });
+            worker = await createWorker({ 
+                langPath: '.\\trained_data',
+            });
             await worker.loadLanguage(language);
             await worker.initialize(language);
             await worker.setParameters({
                 tessjs_create_hocr: '1',
-                tessedit_pageseg_mode: PSM.SPARSE_TEXT
+                tessedit_pageseg_mode: PSM.SPARSE_TEXT,
             });
 
             let combinedHOCR = '';
-            //POC-OCR
-            for (const indexOfPngPath in tempPngPaths) {
+
+            const preprocessPromises = tempPngPaths.map(pngPath => preprocessImage(pngPath, this.logger));
+            const preprocessedPathsArray = await Promise.all(preprocessPromises);
+            preprocessedPaths.push(...preprocessedPathsArray);
+
+            for (const indexOfPngPath in preprocessedPaths) {
                 const index = parseInt(indexOfPngPath);
-                const buf = fs.readFileSync(tempPngPaths[index]); 
+            
+                const buf = fs.readFileSync(preprocessedPaths[index]);
                 const { data: { hocr } } = await worker.recognize(buf);
-                combinedHOCR += hocr + `\n\n\n\nPAGE${index+1}\n\n\n\n`;
+                combinedHOCR += hocr + `\n\n\n\nPAGE${index + 1}\n\n\n\n`;
             }
 
-            const buf = fs.readFileSync(`${outputBasePath}-1.png`);
+            const buf = fs.readFileSync(`${preprocessedPaths[0].slice(0, -4)}.png`);
 
             const hocrOutputPath = path.join('C:xxx\\tested\\10wybranych', `${fileName}.txt`);
             const pngCheckupOutputPath = path.join('C:xxx\\tested\\10wybranych', `${fileName}.png`);
             fs.writeFileSync(hocrOutputPath, combinedHOCR, 'utf-8');
-            fs.writeFileSync(pngCheckupOutputPath, buf, 'utf-8');
+            fs.writeFileSync(pngCheckupOutputPath, buf as unknown as string, 'utf-8');
             return combinedHOCR;
 
         } catch (error) {
@@ -283,6 +288,12 @@ export default class DesktopActionHandler extends StatelessActionHandler {
             for (const tempPath of tempPngPaths) {
                 if (fs.existsSync(tempPath)) {
                     fs.unlinkSync(tempPath);
+                }
+            }
+
+            for (const preprocessedPath of preprocessedPaths) {
+                if (fs.existsSync(preprocessedPath) && preprocessedPath !== imageFullPath) {
+                    fs.unlinkSync(preprocessedPath);
                 }
             }
         }
