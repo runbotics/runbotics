@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 
 import { Search } from '@mui/icons-material';
 import { Button, TextField } from '@mui/material';
