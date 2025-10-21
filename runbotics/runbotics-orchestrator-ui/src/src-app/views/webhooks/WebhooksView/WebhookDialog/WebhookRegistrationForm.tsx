@@ -39,6 +39,7 @@ export const WebhookRegistrationForm: FC = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'token' || name === 'username' || name === 'password') {
+            // @ts-expect-error union types doesn't work well with nested objects checks
             setFormValues((prev) => {
                 return {
                     ...prev,
