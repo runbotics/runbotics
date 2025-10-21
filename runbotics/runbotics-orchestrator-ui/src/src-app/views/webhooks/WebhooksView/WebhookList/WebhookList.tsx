@@ -19,7 +19,6 @@ const WebhookList: FC = () => {
     
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
-            // Dispatch search action here
             dispatch(webhookActions.setSearch(localSearch));
         }, 300);
         return () => clearTimeout(delayDebounceFn);

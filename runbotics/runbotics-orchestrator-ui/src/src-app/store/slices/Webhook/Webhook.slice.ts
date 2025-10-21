@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '#src-app/store';
-import { ICreateClientRegistrationWebhookRequest, WebhookState } from '#src-app/store/slices/Webhook/Webhook.state';
+import { CreateClientRegistrationWebhookRequest, WebhookState } from '#src-app/store/slices/Webhook/Webhook.state';
 
 const initialState: WebhookState = {
     loading: false,
@@ -24,7 +24,7 @@ export const slice = createSlice({
         setIsModalOpen(state, action:PayloadAction<boolean>) {
             state.isModalOpen = action.payload;
         },
-        setRegistrationForm(state, action:PayloadAction<ICreateClientRegistrationWebhookRequest>) {
+        setRegistrationForm(state, action:PayloadAction<CreateClientRegistrationWebhookRequest>) {
             state.registerWebhook = action.payload;
         }
     },
