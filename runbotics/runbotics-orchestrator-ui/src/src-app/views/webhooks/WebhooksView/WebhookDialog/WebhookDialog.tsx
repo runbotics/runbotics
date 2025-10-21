@@ -32,7 +32,7 @@ const WebhookDialog: FC<WebhookDialogProps> = ({
 
     return (
         <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'md'}>
-            <DialogTitle position={'left'}>
+            <DialogTitle>
                 {'Register new Webhook'}
             </DialogTitle>
             <WebhookRegistrationForm />
