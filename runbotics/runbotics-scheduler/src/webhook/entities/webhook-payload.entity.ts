@@ -13,10 +13,6 @@ export class WebhookPayload {
     @Column({ nullable: false })
     payloadDataPath: string;
 
-    @OneToOne(() => ClientRegistrationWebhook, (webhook) => webhook.payload, { onDelete: 'CASCADE' })
-    @JoinColumn({name: 'client_registration_webhook_id' })
+    @OneToOne(() => ClientRegistrationWebhook, (webhook) => webhook.payload,    { onDelete: 'CASCADE', cascade: true },)
     clientRegistrationWebhook: ClientRegistrationWebhook;
-
-    @Column({ type: 'uuid', name: 'client_registration_webhook_id', nullable: true })
-    clientRegistrationWebhookId: string;
 }
