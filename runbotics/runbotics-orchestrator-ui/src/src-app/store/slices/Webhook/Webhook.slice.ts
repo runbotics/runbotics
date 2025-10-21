@@ -32,7 +32,7 @@ export const slice = createSlice({
 
 export const webhookReducer = slice.reducer;
 
-export const webhookSelector = (state: RootState) => state.webhooks;
+export const webhookSelector = (state: RootState) => state.webhook;
 
 export const webhookActions = {
     ...slice.actions,
