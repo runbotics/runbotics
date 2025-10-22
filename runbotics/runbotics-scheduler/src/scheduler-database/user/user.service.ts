@@ -400,6 +400,12 @@ export class UserService {
     }
 
     async updateLanguage(userId: number, langKey: string): Promise<User> {
+        const user = await this.userRepository.findOneBy({ id: userId });
+
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
         const supportedLanguages = Object.values(Language);
 
         if (!supportedLanguages.includes(langKey as SupportedLanguage)) {
@@ -407,16 +413,8 @@ export class UserService {
                 `Language '${langKey}' is not supported. Supported languages: ${supportedLanguages.join(', ')}`
             );
         }
-        const updateResult = await this.userRepository.update(userId, {
-            langKey,
-        });
 
-        if (updateResult.affected === 0) {
-            throw new BadRequestException(
-                'User not found or language not updated'
-            );
-        }
-
-        return await this.userRepository.findOne({ where: { id: userId } });
+        user.langKey = langKey;
+        return await this.userRepository.save(user);
     }
 }
