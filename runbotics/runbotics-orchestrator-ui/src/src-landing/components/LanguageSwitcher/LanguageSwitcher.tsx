@@ -1,7 +1,6 @@
 import React, { VFC, useEffect, useState, useRef } from 'react';
 
 import { useRouter } from 'next/router';
-import { PartialUserDto } from 'runbotics-common';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useClickOutsideComponent from '#src-app/hooks/useClickOutsideComponent';
@@ -29,7 +28,7 @@ const LanguageSwitcher: VFC = () => {
 
     const { isSaveDisabled, errors } = useSelector(state => state.process.modeler);
 
-    const updateDatabaseLanguage = async (patchPayload: PartialUserDto) => {
+    const updateDatabaseLanguage = async (patchPayload: { langKey: string }) => {
         await dispatch(usersActions.changeLanguageKey(patchPayload));
     };
 
