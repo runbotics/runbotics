@@ -20,6 +20,16 @@ export const getAllUsersInTenant = ApiTenantResource.get<UserDto[]>(
     'users/getAllInTenant', USERS_PATH
 );
 
+export const changeLanguageKey = createAsyncThunk(
+    'account/changeLanguageKey',
+    async (langKey: {langKey: string}, { rejectWithValue }) => {
+        await axios
+            .patch('/api/account/language', langKey)
+            .then((response) => response.data)
+            .catch((error) => rejectWithValue(error.response.data));
+    }
+);
+
 export const partialUpdate = createAsyncThunk(
     'account/update',
     async (fieldsToUpdate: PartialUserDto, { rejectWithValue }) => {

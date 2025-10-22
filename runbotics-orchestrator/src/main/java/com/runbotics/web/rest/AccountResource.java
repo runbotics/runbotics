@@ -136,20 +136,6 @@ public class AccountResource {
     }
 
     /**
-     * {@code PATCH  /account} : partially update user information (by the user).
-     *
-     * @param userDTO new information provided by the user.
-     */
-    @PatchMapping("/account")
-    public User updateAccount(@RequestBody AccountPartialUpdateDTO userDTO) {
-        User user = userService.getUserWithAuthorities().get();
-
-        userService.partialAccountUpdate(user, userDTO);
-
-        return user;
-    }
-
-    /**
      * {@code POST  /account/change-password} : changes the current user's password.
      *
      * @param passwordChangeDto current and new password.
