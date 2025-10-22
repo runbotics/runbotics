@@ -30,7 +30,7 @@ const LanguageSwitcher: VFC = () => {
     const { isSaveDisabled, errors } = useSelector(state => state.process.modeler);
 
     const updateDatabaseLanguage = async (patchPayload: PartialUserDto) => {
-        await dispatch(usersActions.partialUpdate(patchPayload));
+        await dispatch(usersActions.changeLanguageKey(patchPayload));
     };
 
     const handleLanguageSwitch = (language: Language) => {
