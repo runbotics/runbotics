@@ -10,10 +10,10 @@ import {
 } from '@mui/material';
 import { WebhookAuthorizationType } from 'runbotics-common';
 
+import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import {
     CreateClientRegistrationWebhookRequest,
-    CreateWebhookAuthorizationRequest,
     webhookActions,
 } from '#src-app/store/slices/Webhook';
 import { WebhookContent } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookDialog.styles';
@@ -23,7 +23,8 @@ import {
 } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookDialog.utils';
 
 export const WebhookRegistrationForm: FC = () => {
-    const disptach = useDispatch();
+    const {translate} = useTranslations();
+    const dispatch = useDispatch();
     const [formValues, setFormValues] =
         useState<CreateClientRegistrationWebhookRequest>(initialFormState);
     const [error, setError] = useState<Record<string, string>>({});
@@ -69,14 +70,14 @@ export const WebhookRegistrationForm: FC = () => {
     };
 
     const onBlur = () => {
-        disptach(webhookActions.setRegistrationForm(formValues));
+        dispatch(webhookActions.setRegistrationForm(formValues));
     };
 
     return (
         <DialogContent>
             <WebhookContent>
                 <TextField
-                    label="Name *"
+                    label={translate('Webhooks.Form.Name')}
                     name="name"
                     value={formValues.name}
                     onChange={handleChange}
@@ -87,7 +88,7 @@ export const WebhookRegistrationForm: FC = () => {
                 />
 
                 <TextField
-                    label="Application URL *"
+                    label={translate('Webhooks.Form.ApplicationUrl')}
                     name="applicationUrl"
                     value={formValues.applicationUrl}
                     onChange={handleChange}
@@ -98,7 +99,7 @@ export const WebhookRegistrationForm: FC = () => {
                 />
 
                 <TextField
-                    label="Payload data path *"
+                    label={translate('Webhooks.Form.PayloadDataPath')}
                     name="payloadDataPath"
                     value={formValues.payload.payloadDataPath}
                     onChange={handleChange}
@@ -109,7 +110,7 @@ export const WebhookRegistrationForm: FC = () => {
                 />
 
                 <TextField
-                    label="Webhook ID path *"
+                    label={translate('Webhooks.Form.WebhookIdPath')}
                     name="webhookIdPath"
                     value={formValues.payload.webhookIdPath}
                     onChange={handleChange}
@@ -120,7 +121,7 @@ export const WebhookRegistrationForm: FC = () => {
                 />
 
                 <TextField
-                    label="Registration payload"
+                    label={translate('Webhooks.Form.RegistrationPayload')}
                     name="registrationPayload"
                     value={formValues.registrationPayload}
                     onChange={handleChange}
@@ -136,7 +137,7 @@ export const WebhookRegistrationForm: FC = () => {
                 {/* Authorization Method */}
                 <Box>
                     <Typography variant="subtitle1" mb={1}>
-                        Authorization method
+                        {translate('Webhooks.Form.AuthorizationMethod')}
                     </Typography>
                     <ToggleButtonGroup
                         color="primary"
@@ -161,7 +162,7 @@ export const WebhookRegistrationForm: FC = () => {
                 {formValues.clientAuthorization.type ===
                     WebhookAuthorizationType.JWT && (
                     <TextField
-                        label="JWT Token *"
+                        label={translate('Webhooks.Form.JwtToken')}
                         name="token"
                         value={formValues.clientAuthorization.data.token}
                         onChange={handleChange}
@@ -179,7 +180,7 @@ export const WebhookRegistrationForm: FC = () => {
                     WebhookAuthorizationType.BASIC && (
                     <>
                         <TextField
-                            label="Username *"
+                            label={translate('Webhooks.Form.Username')}
                             name="username"
                             value={formValues.clientAuthorization.data.username}
                             onChange={handleChange}
@@ -190,7 +191,7 @@ export const WebhookRegistrationForm: FC = () => {
                             autoComplete={'off'}
                         />
                         <TextField
-                            label="Password *"
+                            label={translate('Webhooks.Form.Password')}
                             name="password"
                             type="password"
                             value={formValues.clientAuthorization.data.password}

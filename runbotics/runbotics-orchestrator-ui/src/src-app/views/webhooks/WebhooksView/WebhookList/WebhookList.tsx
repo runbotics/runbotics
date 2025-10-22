@@ -6,7 +6,7 @@ import { Button, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import Loader from '#src-app/components/Loader';
-import WebhookTable from '#src-app/components/tables/WebhookTable/WebhookTable';
+import WebhookTable from '#src-app/components/tables/WebhookTable';
 import { useDispatch, useSelector } from '#src-app/store';
 import { webhookActions } from '#src-app/store/slices/Webhook';
 import { getWebhooks } from '#src-app/store/slices/Webhook/Webhook.thunks';
@@ -17,7 +17,7 @@ import {
 
 const WebhookList: FC = () => {
     const dispatch = useDispatch();
-    const { search, loading, webhooks } = useSelector((state) => state.webhook);
+    const { search, loading } = useSelector((state) => state.webhook);
     const [localSearch, setLocalSearch] = useState(search);
 
     useEffect(() => {
@@ -61,12 +61,7 @@ const WebhookList: FC = () => {
                     {'Register webhook'}
                 </Button>
             </WebhookListActionRow>
-            {loading ?
-                <Loader />
-                : 
-                <div>
-                    <WebhookTable />
-                </div>}
+            {loading ? <Loader /> : <WebhookTable />}
         </WebhookListContainer>
     );
 };
