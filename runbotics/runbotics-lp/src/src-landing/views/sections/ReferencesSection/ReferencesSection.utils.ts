@@ -1,6 +1,6 @@
 import avkLogo from '#public/images/logos/avk-logo.png';
-import raiffeisenLogo from '#public/images/logos/raiffeisen-logo.png';
 import lideaLogo from '#public/images/logos/logo_lidea.png';
+import raiffeisenLogo from '#public/images/logos/raiffeisen-logo.png';
 
 import { Reference } from './ReferencesContent/ReferencesContent.types';
 
