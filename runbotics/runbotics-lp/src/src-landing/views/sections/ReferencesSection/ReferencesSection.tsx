@@ -112,6 +112,7 @@ const ReferencesSection: VFC = () => {
                                 <Image 
                                     src={ref.logo}
                                     alt={`${ref.id} logo`}
+                                    width={200} 
                                 />
                             </div>
                         ))}
