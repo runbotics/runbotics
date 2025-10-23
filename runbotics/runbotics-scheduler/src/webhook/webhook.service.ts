@@ -14,6 +14,15 @@ export class WebhookService {
     ) {
     }
 
+    async get(tenantId: string): Promise<ClientRegistrationWebhook[]> {
+        return this.dataSource.manager.find(ClientRegistrationWebhook, {
+            where: { tenantId }, relations: {
+                clientAuthorization: true,
+                payload: true,
+            },
+        });
+    }
+
     async createWebhookEntry(tenantId: string, webhookDto: CreateClientRegistrationWebhookDto) {
         const manager = this.dataSource.manager;
         const transactionResult = await manager.transaction(async (manager) => {

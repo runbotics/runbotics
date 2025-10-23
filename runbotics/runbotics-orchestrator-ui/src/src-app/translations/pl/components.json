@@ -214,5 +214,12 @@
 
     "Component.InviteCodeButton.Generate": "Wygeneruj link zaproszenia",
     "Component.InviteCodeButton.Copy": "Kliknij aby skopiować link zaproszenia",
-    "Component.InviteCodeButton.Copied": "Link skopiowany!"
+    "Component.InviteCodeButton.Copied": "Link skopiowany!",
+    
+    "Component.WebhookTable.Name": "Nazwa",
+    "Component.WebhookTable.ApplicationUrl": "URL aplikacji",
+    "Component.WebhookTable.PayloadDataPath": "Ścieżka parametrów",
+    "Component.WebhookTable.WebhookIdPath": "Ścieżka ID webhooka",
+    "Component.WebhookTable.AuthorizationMethod": "Metoda autoryzacji",
+    "Component.WebhookTable.Actions": "Akcje"
 }
