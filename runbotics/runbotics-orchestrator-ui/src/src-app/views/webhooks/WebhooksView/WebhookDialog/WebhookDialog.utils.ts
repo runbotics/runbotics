@@ -1,52 +1,62 @@
 import { WebhookAuthorizationType } from 'runbotics-common';
 
-import {
-    CreateClientRegistrationWebhookRequest,
-    CreateWebhookAuthorizationRequest,
-} from '#src-app/store/slices/Webhook';
+export interface WebhookRegistrationForm {
+    name: string;
+    applicationUrl: string;
+    type: WebhookAuthorizationType;
+    data?: unknown | null;
+    registrationPayload?: string;
+    webhookIdPath: string;
+    payloadDataPath: string;
+    token: string | null;
+    username: string | null;
+    password: string | null;
+}
 
-export const initialFormState: CreateClientRegistrationWebhookRequest = {
+export const initialFormState: WebhookRegistrationForm = {
     name: '',
     applicationUrl: '',
-    clientAuthorization: {
-        type: WebhookAuthorizationType.NONE,
-        data: null,
-    },
+    type: WebhookAuthorizationType.NONE,
     registrationPayload: '',
-    payload: {
-        webhookIdPath: '',
-        payloadDataPath: '',
-    },
+    webhookIdPath: '',
+    payloadDataPath: '',
+    token: null,
+    username: null,
+    password: null,
 };
 
-export const newClientAuthorization: (newAuthorizationMethod) => CreateWebhookAuthorizationRequest = (
-    newAuthorizationMethod
+export const newClientAuthorization = (
+    newAuthorizationMethod: WebhookAuthorizationType
 ) => {
     switch (newAuthorizationMethod) {
         case WebhookAuthorizationType.NONE:
             return {
                 type: WebhookAuthorizationType.NONE,
-                data: null,
+                token: null,
+                username: null,
+                password: null,
+                
             };
         case WebhookAuthorizationType.JWT:
             return {
                 type: WebhookAuthorizationType.JWT,
-                data: {
-                    token: '',
-                },
+                token: '',
+                username: null,
+                password: null,
             };
         case WebhookAuthorizationType.BASIC:
             return {
                 type: WebhookAuthorizationType.BASIC,
-                data: {
-                    username: '',
-                    password: '',
-                },
+                token: null,
+                username: '',
+                password: '',
             };
         default:
             return {
                 type: WebhookAuthorizationType.NONE,
-                data: null,
+                token: null,
+                username: null,
+                password: null,
             };
     }
 };

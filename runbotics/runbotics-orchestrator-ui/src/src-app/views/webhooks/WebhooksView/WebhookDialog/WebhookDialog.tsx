@@ -3,12 +3,12 @@ import { FC } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
 import { useDispatch, useSelector } from '#src-app/store';
+import { webhookActions } from '#src-app/store/slices/Webhook';
 import {
     createWebhookEntry,
     getWebhooks,
 } from '#src-app/store/slices/Webhook/Webhook.thunks';
 import { WebhookRegistrationForm } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookRegistrationForm';
-import { webhookActions } from '#src-app/store/slices/Webhook';
 
 interface WebhookDialogProps {
     isOpen: boolean;
