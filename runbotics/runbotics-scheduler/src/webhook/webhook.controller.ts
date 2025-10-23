@@ -1,5 +1,5 @@
 import { Body, Controller, Param } from '@nestjs/common';
-import { PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
+import { GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
 import { WebhookService } from '#/webhook/webhook.service';
 import { CreateClientRegistrationWebhookDto } from '#/webhook/dto/client-registration-webhook.dto';
 import { ClientRegistrationWebhook } from '#/webhook/entities/client-registration-webhook.entity';
@@ -9,6 +9,11 @@ export class WebhookController {
     constructor(
         private readonly webhookService: WebhookService,
     ) {
+    }
+    
+    @GetWithTenant('webhook')
+    async getWebhook(@Param('tenantId') tenantId: string) {
+        return this.webhookService.get(tenantId);
     }
 
     @PostWithTenant('webhook')
