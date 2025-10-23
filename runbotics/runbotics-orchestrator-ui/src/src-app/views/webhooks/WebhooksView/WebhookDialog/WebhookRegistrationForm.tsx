@@ -23,14 +23,14 @@ import { WebhookContent } from '#src-app/views/webhooks/WebhooksView/WebhookDial
 import {
     initialFormState,
     newClientAuthorization,
-    WebhookRegistrationForm,
+    WebhookRegistrationFormState,
 } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookDialog.utils';
 
 export const WebhookRegistrationForm: FC = () => {
     const { translate } = useTranslations();
     const dispatch = useDispatch();
     const [formValues, setFormValues] =
-        useState<WebhookRegistrationForm>(initialFormState);
+        useState<WebhookRegistrationFormState>(initialFormState);
     const [error, setError] = useState<Record<string, string>>({});
 
     const handleChange = (e) => {

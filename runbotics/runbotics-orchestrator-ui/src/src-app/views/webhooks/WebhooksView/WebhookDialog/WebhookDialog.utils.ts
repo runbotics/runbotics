@@ -1,6 +1,6 @@
 import { WebhookAuthorizationType } from 'runbotics-common';
 
-export interface WebhookRegistrationForm {
+export interface WebhookRegistrationFormState {
     name: string;
     applicationUrl: string;
     type: WebhookAuthorizationType;
@@ -13,7 +13,7 @@ export interface WebhookRegistrationForm {
     password: string | null;
 }
 
-export const initialFormState: WebhookRegistrationForm = {
+export const initialFormState: WebhookRegistrationFormState = {
     name: '',
     applicationUrl: '',
     type: WebhookAuthorizationType.NONE,
