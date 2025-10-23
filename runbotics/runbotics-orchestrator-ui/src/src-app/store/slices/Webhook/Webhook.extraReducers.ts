@@ -10,7 +10,6 @@ const buildWebhooksExtraReducers = (builder: ActionReducerMapBuilder<WebhookStat
             state.loading = true;
         })
         .addCase(getWebhooks.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.webhooks = action.payload;
             state.loading = false;
         })
