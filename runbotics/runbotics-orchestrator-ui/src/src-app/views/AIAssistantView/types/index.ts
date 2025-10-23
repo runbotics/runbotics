@@ -1,15 +1,10 @@
 import { FeatureKey } from 'runbotics-common';
 import * as yup from 'yup';
 
-export const LocalizedTextSchema = yup.object({
-    pl: yup.string().required('Polish text is required'),
-    en: yup.string().required('English text is required'),
-});
-
 export const AIAssistantSchema = yup.object({
     id: yup.string().required('ID is required').min(1, 'ID cannot be empty'),
-    name: LocalizedTextSchema.required('Name is required'),
-    description: LocalizedTextSchema.required('Description is required'),
+    name: yup.string().required('Name is required'),
+    description: yup.string().required('Description is required'),
     categories: yup
         .array()
         .of(yup.string().required())
@@ -34,7 +29,6 @@ export const AIAssistantsResponseSchema = yup.object({
         .required('Count is required'),
 });
 
-export type LocalizedText = yup.InferType<typeof LocalizedTextSchema>;
 export type AIAssistant = yup.InferType<typeof AIAssistantSchema>;
 export type AIAssistantsResponse = yup.InferType<
     typeof AIAssistantsResponseSchema
@@ -45,11 +39,3 @@ export const AI_ASSISTANT_CONSTANTS = {
     DEFAULT_PAGE_SIZE: 16,
     DEFAULT_TENANT_ID: 'b7f9092f-5973-c781-08db-4d6e48f78e98',
 } as const;
-
-export const getLocalizedText = (
-    text: LocalizedText,
-    lang: string = 'pl'
-): string => {
-    const baseLang = lang.split('-')[0];
-    return text[baseLang as keyof LocalizedText] || text.pl || text.en || '';
-};
