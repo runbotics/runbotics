@@ -4,13 +4,10 @@ import MockAdapter from 'axios-mock-adapter';
 
 import { afterAll, beforeEach, describe, expect, test } from 'vitest';
 
+import { createMockAIAssistant } from '#src-app/store/slices/AIAssistants/test.utils';
 import axios from '#src-app/utils/axios';
 
-import { createMockAIAssistant } from '#src-app/views/AIAssistantView/test.utils';
-import {
-    
-    AIAssistantsResponse,
-} from '#src-app/views/AIAssistantView/types';
+import { AIAssistantsResponse } from '#src-app/views/AIAssistantView/types';
 
 import { fetchAIAssistants } from './AIAssistants.thunks';
 
@@ -43,11 +40,11 @@ describe('fetchAIAssistants thunk', () => {
             const mockAssistants = [
                 createMockAIAssistant({
                     id: '1',
-                    name: { pl: 'Asystent 1', en: 'Assistant 1' },
+                    name: 'Assistant 1',
                 }),
                 createMockAIAssistant({
                     id: '2',
-                    name: { pl: 'Asystent 2', en: 'Assistant 2' },
+                    name: 'Assistant 2',
                 }),
             ];
 

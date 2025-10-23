@@ -2,16 +2,19 @@ import { useState, useMemo, useEffect } from 'react';
 
 import useAuth from '#src-app/hooks/useAuth';
 import { useDispatch, useSelector } from '#src-app/store';
-import { aiAssistantsActions, aiAssistantsSelector } from '#src-app/store/slices/AIAssistants';
+import {
+    aiAssistantsActions,
+    aiAssistantsSelector,
+} from '#src-app/store/slices/AIAssistants';
 
-import { getLocalizedText, AI_ASSISTANT_CONSTANTS } from '../types';
+import { AI_ASSISTANT_CONSTANTS } from '../types';
 
 interface UseAIAssistantSearchProps {
     pageSize?: number;
 }
 
-export const useAIAssistantSearch = ({ 
-    pageSize = AI_ASSISTANT_CONSTANTS.DEFAULT_PAGE_SIZE 
+export const useAIAssistantSearch = ({
+    pageSize = AI_ASSISTANT_CONSTANTS.DEFAULT_PAGE_SIZE,
 }: UseAIAssistantSearchProps) => {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -28,7 +31,9 @@ export const useAIAssistantSearch = ({
 
     const categories = useMemo(() => {
         const categoriesSet: Set<string> = new Set(
-            assistants.flatMap(assistant => (assistant.categories ?? []).map(String))
+            assistants.flatMap((assistant) =>
+                (assistant.categories ?? []).map(String)
+            )
         );
         const sortedCategories = Array.from(categoriesSet).sort();
         return [AI_ASSISTANT_CONSTANTS.ALL_CATEGORIES_KEY, ...sortedCategories];
@@ -36,25 +41,31 @@ export const useAIAssistantSearch = ({
 
     const filteredAssistants = useMemo(() => {
         const searchTerm = searchQuery.trim().toLowerCase();
-        
+
         if (searchTerm.length > 0) {
-            return assistants.filter(assistant => {
-                const name = getLocalizedText(assistant.name || { pl: '', en: '' }, userLang);
-                const description = getLocalizedText(assistant.description || { pl: '', en: '' }, userLang);
-                return name.toLowerCase().includes(searchTerm) || description.toLowerCase().includes(searchTerm);
+            return assistants.filter((assistant) => {
+                return (
+                    assistant.name.toLowerCase().includes(searchTerm) ||
+                    assistant.description.toLowerCase().includes(searchTerm)
+                );
             });
         }
-        
+
         if (selectedCategories.length === 0) {
             return assistants;
         }
-        
-        return assistants.filter(assistant => 
-            (assistant.categories || []).some(category => selectedCategories.includes(category))
+
+        return assistants.filter((assistant) =>
+            (assistant.categories || []).some((category) =>
+                selectedCategories.includes(category)
+            )
         );
     }, [assistants, selectedCategories, searchQuery, userLang]);
 
-    const pageCount = Math.max(1, Math.ceil(filteredAssistants.length / pageSize));
+    const pageCount = Math.max(
+        1,
+        Math.ceil(filteredAssistants.length / pageSize)
+    );
     const paginatedAssistants = useMemo(() => {
         const start = (page - 1) * pageSize;
         return filteredAssistants.slice(start, start + pageSize);
@@ -62,13 +73,15 @@ export const useAIAssistantSearch = ({
 
     const handleCategoryClick = (category: string) => {
         setSearchQuery('');
-        
+
         if (category === AI_ASSISTANT_CONSTANTS.ALL_CATEGORIES_KEY) {
             setSelectedCategories([]);
         } else {
-            setSelectedCategories(prev => {
+            setSelectedCategories((prev) => {
                 if (prev.includes(category)) {
-                    return prev.filter(currentCategory => currentCategory !== category);
+                    return prev.filter(
+                        (currentCategory) => currentCategory !== category
+                    );
                 }
                 return [...prev, category];
             });
@@ -99,13 +112,13 @@ export const useAIAssistantSearch = ({
         categories,
         loading,
         error,
-        
+
         filteredAssistants,
         paginatedAssistants,
         pageCount,
         totalCount: assistants.length,
         filteredCount: filteredAssistants.length,
-        
+
         handleCategoryClick,
         handleSearchChange,
         handlePageChange,

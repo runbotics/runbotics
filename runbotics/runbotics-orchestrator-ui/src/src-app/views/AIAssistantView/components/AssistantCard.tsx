@@ -10,17 +10,16 @@ import { useSnackbar } from 'notistack';
 import chatBotIcon from '#public/images/icons/chat_bot.svg';
 import { hasFeatureKeyAccess } from '#src-app/components/utils/Secured';
 import useAuth from '#src-app/hooks/useAuth';
-import useTranslations, { translate } from '#src-app/hooks/useTranslations';
+import { translate } from '#src-app/hooks/useTranslations';
 
 import { StyledCard, StyledAvatar, CategoryChip } from './AssistantCard.styles';
-import { AIAssistant, getLocalizedText } from '../types';
+import { AIAssistant } from '../types';
 
 interface AssistantCardProps {
     assistant: AIAssistant;
 }
 
 export const AssistantCard: React.FC<AssistantCardProps> = ({ assistant }) => {
-    const { currentLanguage } = useTranslations();
     const router = useRouter();
     const { user } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
@@ -45,17 +44,14 @@ export const AssistantCard: React.FC<AssistantCardProps> = ({ assistant }) => {
                 <Box>
                     <Box>
                         <Typography variant="h5" mb={0.5}>
-                            {getLocalizedText(assistant.name, currentLanguage)}
+                            {assistant.name}
                         </Typography>
                         <Typography
                             variant="h6"
                             color="textSecondary"
                             fontWeight={400}
                         >
-                            {getLocalizedText(
-                                assistant.description,
-                                currentLanguage
-                            )}
+                            {assistant.description}
                         </Typography>
                     </Box>
 
