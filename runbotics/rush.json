@@ -314,6 +314,10 @@
         {
             "packageName": "runbotics-proxy",
             "projectFolder": "runbotics-proxy"
+        },
+        {
+            "packageName": "runbotics-nest-test",
+            "projectFolder": "runbotics-nest-test"
         }
         // {
         //   /**
