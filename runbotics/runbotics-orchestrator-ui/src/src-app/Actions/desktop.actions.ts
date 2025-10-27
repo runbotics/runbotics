@@ -461,6 +461,75 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             },
         },
     },
+    [DesktopAction.READ_TEXT_FROM_PDF]: {
+        id: DesktopAction.READ_TEXT_FROM_PDF,
+        label: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Label'),
+        script: DesktopAction.READ_TEXT_FROM_PDF,
+        runner: Runner.DESKTOP_SCRIPT,
+        output: {
+            assignVariables: true,
+            outputMethods: {
+                variableName: '${content.output[0]}',
+            },
+        },
+        form: {
+            schema: {
+                type: 'object',
+                properties: {
+                    input: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Input'),
+                        type: 'object',
+                        properties: {
+                            imageFullPath: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath'),
+                                type: 'string',
+                            },
+                            language: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Language'),
+                                type: 'string',
+                                enum: [
+                                    'POL',
+                                    'DEU',
+                                    'ENG'
+                                ]
+                            },
+                        },
+                        required: ['imageFullPath'],
+                    },
+                    output: {
+                        title: translate('Process.Details.Modeler.Actions.Common.Output'),
+                        type: 'object',
+                        properties: {
+                            variableName: {
+                                title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                type: 'string',
+                            },
+                        },
+                        required: ['variableName'],
+                    },
+                },
+            },
+            uiSchema: {
+                'ui:order': ['input', 'output'],
+                input: {
+                    imageFullPath: {
+                        'ui:options': {
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath.Info'),
+                        }
+                    },
+                },
+            },
+            formData: {
+                input: {
+                    imageFullPath: undefined,
+                    language: 'ENG',
+                },
+                output: {
+                    variableName: undefined,
+                },
+            },
+        },
+    },
     [DesktopAction.TYPE_CREDENTIALS]: {
         id: DesktopAction.TYPE_CREDENTIALS,
         label: translate('Process.Details.Modeler.Actions.Desktop.TypeCredentials.Label'),

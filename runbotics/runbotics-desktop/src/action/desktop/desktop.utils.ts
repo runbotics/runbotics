@@ -1,97 +1,114 @@
 import z from 'zod';
-import { ClickTarget, CredentialAttribute, ImageResourceFormat, Language, MouseButton } from './types';
+import {
+    ClickTarget,
+    CredentialAttribute,
+    ImageResourceFormat,
+    Language,
+    MouseButton,
+} from './types';
 import path from 'path';
 import { tmpdir } from 'os';
 import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { RunboticsLogger } from '#logger';
 
-
 const coordinateSchema = z.union([z.string(), z.number()]);
 
 export const pointDataSchema = z.object({
     x: coordinateSchema,
-    y: coordinateSchema
+    y: coordinateSchema,
 });
 
 export const regionDataSchema = z.object({
     left: coordinateSchema,
     top: coordinateSchema,
     width: coordinateSchema,
-    height: coordinateSchema
+    height: coordinateSchema,
 });
 
 export const clickInputSchema = z.object({
     clickTarget: z.nativeEnum(ClickTarget),
-    point: z.union([
-        pointDataSchema,
-        z.string()
-    ]).optional(),
-    region: z.union([
-        regionDataSchema,
-        z.string()
-    ]).optional(),
+    point: z.union([pointDataSchema, z.string()]).optional(),
+    region: z.union([regionDataSchema, z.string()]).optional(),
     mouseButton: z.nativeEnum(MouseButton),
-    doubleClick: z.boolean()
+    doubleClick: z.boolean(),
 });
 
 export const typeInputSchema = z.object({
-    text: z.string()
+    text: z.string(),
 });
 
 export const typeCredentialsInputSchema = z.object({
-    credentialAttribute: z.nativeEnum(CredentialAttribute)
+    credentialAttribute: z.nativeEnum(CredentialAttribute),
 });
 
 export const performKeyboardShortcutInputSchema = z.object({
-    shortcut: z.string()
+    shortcut: z.string(),
 });
 
 export const copyInputSchema = z.object({
-    text: z.string().optional()
+    text: z.string().optional(),
 });
 
 export const cursorSelectInputSchema = z.object({
-    startPoint: z.union([
-        pointDataSchema,
-        z.string()
-    ]),
-    endPoint: z.union([
-        pointDataSchema,
-        z.string()
-    ])
+    startPoint: z.union([pointDataSchema, z.string()]),
+    endPoint: z.union([pointDataSchema, z.string()]),
 });
 
 export const takeScreenshotInputSchema = z.object({
     imageName: z.string().optional(),
     imagePath: z.string().optional(),
     imageFormat: z.nativeEnum(ImageResourceFormat),
-    region: z.union([
-        regionDataSchema,
-        z.string()
-    ]).optional()
+    region: z.union([regionDataSchema, z.string()]).optional(),
 });
 
 export const readTextFromImageInputSchema = z.object({
-    imageFullPath: z.string(),
-    language: z.nativeEnum(Language)
+    imageFullPath: z.string().refine(
+        (path) => {
+            const ext = path.toLowerCase().match(/\.(png|jpeg|jpg)$/);
+            return ext !== null;
+        },
+        {
+            message: 'Image file must have .png, .jpeg, or .jpg extension',
+        }
+    ),
+    language: z.nativeEnum(Language),
 });
 
-export async function preprocessImage(imagePath: string, logger: RunboticsLogger): Promise<string> {
+export const readTextFromPdfInputSchema = z.object({
+    imageFullPath: z.string().refine(
+        (path) => {
+            const ext = path.toLowerCase().match(/\.(pdf)$/);
+            return ext !== null;
+        },
+        {
+            message: 'Path must point to a .pdf file',
+        }
+    ),
+    language: z.nativeEnum(Language),
+});
+
+export async function preprocessImage(
+    imagePath: string,
+    logger: RunboticsLogger
+): Promise<string> {
     const tempProcessedPath = path.join(tmpdir(), `processed_${uuidv4()}.png`);
 
     try {
         const image = sharp(imagePath);
+
         const metadata = await image.metadata();
         const originalWidth = metadata.width ?? 0;
         const originalHeight = metadata.height ?? 0;
 
         if (!originalWidth || !originalHeight) {
-            logger.error(`Image metadata missing width/height for ${imagePath}. Skipping preprocessing.`);
+            logger.error(
+                `Image metadata missing width/height for ${imagePath}. Skipping preprocessing.`
+            );
             return imagePath;
         }
 
-        const scale = 1;
+        const scale = 1.5;
         const scaledWidth = Math.round(originalWidth * scale);
         const scaledHeight = Math.round(originalHeight * scale);
 
@@ -108,18 +125,20 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
 
         const pixels = new Uint8ClampedArray(processedBuffer);
 
-        const threshold = 120;
-        const minHorizontalLineLength = Math.floor(scaledWidth * 0.02);
-        const minVerticalLineLength = Math.floor(scaledHeight * 0.02);
-        const lineThickness = 10;
-        const lineDetectionTolerance = 20;
+        const threshold = 135;
+        const minHorizontalLineLength = Math.floor(scaledWidth * 0.03);
+        const minVerticalLineLength = Math.floor(scaledHeight * 0.03);
+        const lineThickness = 6;
+        const lineDetectionTolerance = 30;
 
         logger.log(
             `Preprocessing: ${scaledWidth}x${scaledHeight}, minH: ${minHorizontalLineLength}, minV: ${minVerticalLineLength}`
         );
 
+        const linesToRemove: Set<number> = new Set();
+
         let verticalLinesRemoved = 0;
-        
+
         for (let x = 0; x < scaledWidth; x++) {
             for (let startY = 0; startY < scaledHeight; startY++) {
                 let consecutiveDarkPixels = 0;
@@ -135,10 +154,10 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
                         break;
                     }
                 }
-                
+
                 if (consecutiveDarkPixels >= minVerticalLineLength) {
                     let darkNeighborColumns = 0;
-                    for (let dx = -3; dx <= 3; dx++) {
+                    for (let dx = -4; dx <= 4; dx++) {
                         if (dx === 0) continue;
                         const checkX = x + dx;
                         if (checkX >= 0 && checkX < scaledWidth) {
@@ -158,14 +177,14 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
                             }
                             if (
                                 darkPixelsInColumn >
-                                consecutiveDarkPixels * 0.3
+                                consecutiveDarkPixels * 0.35
                             ) {
                                 darkNeighborColumns++;
                             }
                         }
                     }
-                    
-                    if (darkNeighborColumns >= 3) {
+
+                    if (darkNeighborColumns >= 2) {
                         verticalLinesRemoved++;
 
                         for (
@@ -176,27 +195,27 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
                             const clearX = x + dx;
                             if (clearX >= 0 && clearX < scaledWidth) {
                                 for (
-                                    let clearY = Math.max(0, lineStart - 2);
+                                    let clearY = Math.max(0, lineStart - 3);
                                     clearY <
                                     Math.min(
                                         scaledHeight,
-                                        lineStart + consecutiveDarkPixels + 2
+                                        lineStart + consecutiveDarkPixels + 3
                                     );
                                     clearY++
                                 ) {
                                     const clearIdx =
-                                    clearY * scaledWidth + clearX;
-                                    pixels[clearIdx] = 255;
+                                        clearY * scaledWidth + clearX;
+                                    linesToRemove.add(clearIdx);
                                 }
                             }
                         }
                     }
                 }
-                
+
                 startY += Math.max(1, consecutiveDarkPixels);
             }
         }
-        
+
         let horizontalLinesRemoved = 0;
         for (let y = 0; y < scaledHeight; y++) {
             let lineStart = -1;
@@ -215,7 +234,7 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
                     if (consecutiveDarkPixels >= minHorizontalLineLength) {
                         let isReallyLine = true;
 
-                        for (let dy = -2; dy <= 2; dy++) {
+                        for (let dy = -3; dy <= 3; dy++) {
                             const checkY = y + dy;
                             if (checkY >= 0 && checkY < scaledHeight) {
                                 let darkPixelsInRow = 0;
@@ -235,7 +254,7 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
                                 }
                                 if (
                                     darkPixelsInRow <
-                                    consecutiveDarkPixels * 0.3
+                                    consecutiveDarkPixels * 0.6
                                 ) {
                                     isReallyLine = false;
                                     break;
@@ -253,19 +272,19 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
                                 const clearY = y + dy;
                                 if (clearY >= 0 && clearY < scaledHeight) {
                                     for (
-                                        let clearX = Math.max(0, lineStart - 2);
+                                        let clearX = Math.max(0, lineStart - 3);
                                         clearX <
                                         Math.min(
                                             scaledWidth,
                                             lineStart +
                                                 consecutiveDarkPixels +
-                                                2
+                                                3
                                         );
                                         clearX++
                                     ) {
                                         const clearIdx =
                                             clearY * scaledWidth + clearX;
-                                        pixels[clearIdx] = 255;
+                                        linesToRemove.add(clearIdx);
                                     }
                                 }
                             }
@@ -282,6 +301,10 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
             `Lines removed - horizontal: ${horizontalLinesRemoved}, vertical: ${verticalLinesRemoved}`
         );
 
+        for (const idx of linesToRemove) {
+            pixels[idx] = 255;
+        }
+
         const rawBuffer = Buffer.from(new Uint8Array(pixels));
         const newImage = sharp(rawBuffer, {
             raw: {
@@ -289,31 +312,28 @@ export async function preprocessImage(imagePath: string, logger: RunboticsLogger
                 height: scaledHeight,
                 channels: 1,
             },
+            limitInputPixels: 500000000,
         })
-            .sharpen({ sigma: 1 })
+            .sharpen({ sigma: 1.2 })
             .normalise()
-            .erode(1)
-            .dilate(1)
             .median(2)
-            .threshold(180)
-            .withMetadata({ density: 550 });
-        
+            .threshold(165)
+            .autoOrient();
+
         await newImage
-            // .resize({
-            //     width: originalWidth,
-            //     height: originalHeight,
-            //     kernel: sharp.kernel.lanczos3,
-            // })
+            .resize({
+                width: originalWidth,
+                height: originalHeight,
+                kernel: sharp.kernel.lanczos3,
+            })
+            .withMetadata({ density: 330 })
             .png({
                 quality: 100,
-                compressionLevel: 0,
+                compressionLevel: 6,
             })
-
             .toFile(tempProcessedPath);
 
-        logger.log(
-            `Image preprocessed successfully: ${tempProcessedPath}`
-        );
+        logger.log(`Image preprocessed successfully: ${tempProcessedPath}`);
         return tempProcessedPath;
     } catch (error) {
         logger.error('Error during image preprocessing:', error);

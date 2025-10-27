@@ -267,6 +267,7 @@ export enum DesktopAction {
     MAXIMIZE_ACTIVE_WINDOW = 'desktop.maximizeActiveWindow',
     TAKE_SCREENSHOT = 'desktop.takeScreenshot',
     READ_TEXT_FROM_IMAGE = 'desktop.readTextFromImage',
+    READ_TEXT_FROM_PDF = "desktop.readTextFromPdf",
     PERFORM_KEYBOARD_SHORTCUT = 'desktop.performKeyboardShortcut',
     TYPE_CREDENTIALS = 'desktop.typeCredentials',
 }

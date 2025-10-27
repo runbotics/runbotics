@@ -506,6 +506,8 @@
     "Process.Details.Modeler.Actions.Desktop.TakeScreenshot.ImagePath": "Image path",
     "Process.Details.Modeler.Actions.Desktop.ReadTextFromImage.Label": "Read text from image",
     "Process.Details.Modeler.Actions.Desktop.ReadTextFromImage.Language": "Text language",
+    "Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Label": "Read text from PDF file",
+    "Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Language": "Text language",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.Label": "Type Credentials",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.HelperTextLabel": "Important! This action inserts selected credential attribute into the currently active text field.",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.CredentialAttribute": "Credential Attribute",

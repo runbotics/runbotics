@@ -35,6 +35,7 @@ import {
     DesktopTakeScreenshotActionOutput,
     DesktopReadTextFromImageActionInput,
     DesktopReadTextFromImageActionOutput,
+    DesktopReadTextFromPdfActionInput,
     ClickTarget,
     MouseButton,
     KEY_REFERENCE,
@@ -44,13 +45,14 @@ import {
     isPointDataType,
     PointData,
     RegionData,
+    DesktopReadTextFromPdfActionOutput,
 } from './types';
 import clipboard from '../../utils/clipboard';
 import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 import { validateInput } from '#utils/zodError';
 import { ServerConfigService } from '#config';
 import { Injectable } from '@nestjs/common';
-import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema, preprocessImage } from './desktop.utils';
+import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema, preprocessImage, readTextFromPdfInputSchema } from './desktop.utils';
 import { tmpdir } from 'os';
 
 @Injectable()
@@ -199,53 +201,46 @@ export default class DesktopActionHandler extends StatelessActionHandler {
     }
 
 
-    async readTextFromImage(rawInput: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
-        const { imageFullPath, language } = await validateInput(rawInput, readTextFromImageInputSchema);
+    async readTextFromPdfFile(rawInput: DesktopReadTextFromPdfActionInput): Promise<DesktopReadTextFromPdfActionOutput> {
+        const { imageFullPath: pdfFullPath, language } = await validateInput(rawInput, readTextFromPdfInputSchema);
 
         let worker: Tesseract.Worker;
         const tempPngPaths: string[] = [];
         const preprocessedPaths: string[] = [];
 
         try {
-            this.checkFileExist(imageFullPath);
+            this.checkFileExist(pdfFullPath);
 
-            const imagePathToUse = imageFullPath;
-            const ext = path.extname(imageFullPath).toLowerCase();
-            const fileName = path.basename(imageFullPath.toLocaleLowerCase(), ext);
-            const isPdf = ext === '.pdf';
             const poppler = new Poppler();
+            const outputDir = tmpdir();
+            const outputPrefix = `converted_${uuidv4()}`;
+            const outputBasePath = path.join(outputDir, outputPrefix);
+    
+            const info = await poppler.pdfInfo(pdfFullPath, { printAsJson: true });
 
-            if (isPdf) {
-                const outputDir = tmpdir();
-                const outputPrefix = `converted_${uuidv4()}`;
-                const outputBasePath = path.join(outputDir, outputPrefix);
-                const info = await poppler.pdfInfo(imagePathToUse, { printAsJson: true });
+            if (!(typeof info === 'object' && 'pages' in info)) {
+                throw new Error('Unable to get pdf pages.');
+            }
 
-                if (!(typeof info === 'object' && 'pages' in info)) {
-                    throw new Error('Unable to get pdf pages.');
+            const totalPages = parseInt((info as any).pages);
+            const options = {
+                pngFile: true,
+                resolutionXYAxis: 550,
+            };
+
+            try {
+                await poppler.pdfToCairo(pdfFullPath, outputBasePath, options);
+            } catch (error) {
+                this.logger.error('Error converting PDF to PNG:', error);
+                throw error;
+            }
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pngPath = `${outputBasePath}-${i}.png`;
+                if (!fs.existsSync(pngPath)) {
+                    throw new Error(`PNG file not found for page ${i}: ${pngPath}`);
                 }
-
-                const totalPages = parseInt((info as any).pages);
-                const options = {
-                    pngFile: true,
-                    resolutionXYAxis: 550,
-                };
-
-                try {
-                    await poppler.pdfToCairo(imagePathToUse, outputBasePath, options);
-                } catch (error) {
-                    console.log('err', error);
-                }
-
-                for (let i = 1; i <= totalPages; i++) {
-                    const pngPath = `${outputBasePath}-${i}.png`;
-                    if (!fs.existsSync(pngPath)) {
-                        throw new Error(`PNG file not find for page ${i}: ${pngPath}`);
-                    }
-                    tempPngPaths.push(pngPath);
-                }
-            } else {
-                tempPngPaths.push(imagePathToUse);
+                tempPngPaths.push(pngPath);
             }
 
             worker = await createWorker({ 
@@ -260,45 +255,99 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
             let combinedHOCR = '';
 
-            const preprocessPromises = tempPngPaths.map(pngPath => preprocessImage(pngPath, this.logger));
+            const preprocessPromises = tempPngPaths.map(pngPath => 
+                preprocessImage(pngPath, this.logger)
+            );
             const preprocessedPathsArray = await Promise.all(preprocessPromises);
             preprocessedPaths.push(...preprocessedPathsArray);
 
-            for (const indexOfPngPath in preprocessedPaths) {
-                const index = parseInt(indexOfPngPath);
-            
+            for (let index = 0; index < preprocessedPaths.length; index++) {
                 const buf = fs.readFileSync(preprocessedPaths[index]);
                 const { data: { hocr } } = await worker.recognize(buf);
                 combinedHOCR += hocr + `\n\n\n\nPAGE${index + 1}\n\n\n\n`;
             }
 
-            const buf = fs.readFileSync(`${preprocessedPaths[0].slice(0, -4)}.png`);
+            const fileName = path.basename(pdfFullPath, '.pdf');
+            const firstPageBuf = fs.readFileSync(preprocessedPaths[0]);
+            const hocrOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.txt`);
+            const pngCheckupOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.png`);
 
-            const hocrOutputPath = path.join('C:xxx\\tested\\10wybranych', `${fileName}.txt`);
-            const pngCheckupOutputPath = path.join('C:xxx\\tested\\10wybranych', `${fileName}.png`);
             fs.writeFileSync(hocrOutputPath, combinedHOCR, 'utf-8');
-            fs.writeFileSync(pngCheckupOutputPath, buf as unknown as string, 'utf-8');
+            fs.writeFileSync(pngCheckupOutputPath, firstPageBuf);
+
             return combinedHOCR;
+
+        } catch (error) {
+            throw new Error('An error occurred while reading PDF file: ' + error);
+        } finally {
+            await worker?.terminate();
+
+            for (const tempPath of tempPngPaths) {
+                if (fs.existsSync(tempPath)) {
+                    try {
+                        fs.unlinkSync(tempPath);
+                    } catch (error) {
+                        this.logger.warn(`Failed to delete temp PNG: ${tempPath}`, error);
+                    }
+                }
+            }
+
+            for (const preprocessedPath of preprocessedPaths) {
+                if (fs.existsSync(preprocessedPath)) {
+                    try {
+                        fs.unlinkSync(preprocessedPath);
+                    } catch (error) {
+                        this.logger.warn(`Failed to delete preprocessed file: ${preprocessedPath}`, error);
+                    }
+                }
+            }
+        }
+    }
+
+    async readTextFromImage(rawInput: DesktopReadTextFromImageActionInput): Promise<DesktopReadTextFromImageActionOutput> {
+        const { imageFullPath, language } = await validateInput(rawInput, readTextFromImageInputSchema);
+
+        let worker: Tesseract.Worker;
+        const preprocessedPaths: string[] = [];
+
+        try {
+            this.checkFileExist(imageFullPath);
+
+            worker = await createWorker({ 
+                langPath: '.\\trained_data',
+            });
+            await worker.loadLanguage(language);
+            await worker.initialize(language);
+            await worker.setParameters({
+                tessjs_create_hocr: '1',
+                tessedit_pageseg_mode: PSM.SPARSE_TEXT,
+            });
+
+            const preprocessedPath = await preprocessImage(imageFullPath, this.logger);
+            preprocessedPaths.push(preprocessedPath);
+
+            const buf = fs.readFileSync(preprocessedPath);
+            const { data: { hocr } } = await worker.recognize(buf);
+    
+            return hocr;
 
         } catch (error) {
             throw new Error('An error occurred while reading data from the image. ' + error);
         } finally {
             await worker?.terminate();
 
-            for (const tempPath of tempPngPaths) {
-                if (fs.existsSync(tempPath)) {
-                    fs.unlinkSync(tempPath);
-                }
-            }
-
             for (const preprocessedPath of preprocessedPaths) {
                 if (fs.existsSync(preprocessedPath) && preprocessedPath !== imageFullPath) {
-                    fs.unlinkSync(preprocessedPath);
+                    try {
+                        fs.unlinkSync(preprocessedPath);
+                    } catch (error) {
+                        this.logger.warn(`Failed to delete preprocessed file: ${preprocessedPath}`, error);
+                    }
                 }
             }
         }
     }
-
+    
     async maximizeActiveWindow(): Promise<void> {
         if (this.system === 'win32') {
             // for Windows:
@@ -412,6 +461,8 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 return this.takeScreenshot(request.input);
             case DesktopAction.READ_TEXT_FROM_IMAGE:
                 return this.readTextFromImage(request.input);
+            case DesktopAction.READ_TEXT_FROM_PDF:
+                return this.readTextFromPdfFile(request.input);
             default:
                 if (!this.pluginService) {
                     throw new Error('Action not found');
