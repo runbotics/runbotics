@@ -12,7 +12,12 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
-import { IAuthority, IFeatureKey, Role } from 'runbotics-common';
+import {
+    DEFAULT_TENANT_ID,
+    IAuthority,
+    IFeatureKey,
+    Role,
+} from 'runbotics-common';
 import { Tenant } from '../tenant/tenant.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { FeatureKey } from '../feature-key/feature-key.entity';
@@ -24,7 +29,7 @@ export class User {
     @PrimaryColumn({
         type: 'bigint',
         transformer: numberTransformer,
-        default: () => 'nextval(\'sequence_generator\')',
+        default: () => "nextval('sequence_generator')",
     })
     id: number;
 
@@ -82,7 +87,7 @@ export class User {
     @Column({
         name: 'tenant_id',
         type: 'uuid',
-        default: 'b7f9092f-5973-c781-08db-4d6e48f78e98',
+        default: DEFAULT_TENANT_ID,
     })
     tenantId: string;
 
@@ -90,11 +95,20 @@ export class User {
         type: () => Tenant,
         description: 'Tenant the user belongs to.',
     })
-    
-    @Column({ name: 'microsoft_tenant_id', type: 'varchar', length: 256, nullable: true })
+    @Column({
+        name: 'microsoft_tenant_id',
+        type: 'varchar',
+        length: 256,
+        nullable: true,
+    })
     microsoftTenantId: string;
 
-    @Column({ name: 'microsoft_user_id', type: 'varchar', length: 256, nullable: true })
+    @Column({
+        name: 'microsoft_user_id',
+        type: 'varchar',
+        length: 256,
+        nullable: true,
+    })
     microsoftUserId: string;
 
     @ManyToOne(() => Tenant, { eager: true })
@@ -221,7 +235,10 @@ export class User {
     @JoinTable({
         name: 'user_feature_key',
         joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'feature_key', referencedColumnName: 'name' },
+        inverseJoinColumn: {
+            name: 'feature_key',
+            referencedColumnName: 'name',
+        },
     })
     userFeatureKeys: IFeatureKey[];
 }

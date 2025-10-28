@@ -13,12 +13,14 @@ import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 import { getQueueToken } from '@nestjs/bull';
 import {
     BotStatus,
+    DEFAULT_TENANT_ID,
     IBot,
     InstantProcess,
     IProcess,
     ProcessInput,
     ScheduledProcess,
-    TriggerEvent, WsMessage,
+    TriggerEvent,
+    WsMessage,
 } from 'runbotics-common';
 import { Job } from '#/utils/process';
 import { ProcessSchedulerService } from '#/queue/process/process-scheduler.service';
@@ -29,7 +31,6 @@ import { ServerConfigService } from '#/config/server-config';
 import { WsBotJwtGuard } from '#/auth/guards';
 import { CanActivate } from '@nestjs/common';
 import { SchedulerService } from '#/queue/scheduler/scheduler.service';
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 import { BlacklistActionAuthService } from '#/blacklist-actions-auth/blacklist-action-auth.service';
 import { DataSource } from 'typeorm';
 
@@ -62,7 +63,8 @@ const INSTANT_PROCESS: InstantProcess = {
 };
 
 const INSTANT_PROCESS_WITHOUT_USER: InstantProcess = {
-    ...INSTANT_PROCESS, triggerData: {}
+    ...INSTANT_PROCESS,
+    triggerData: {},
 };
 
 const SCHEDULED_PROCESS: ScheduledProcess = {
@@ -86,7 +88,7 @@ const SCHEDULED_JOB: Job = {
 
 const JOB_WITHOUT_USER: Job = {
     data: INSTANT_PROCESS_WITHOUT_USER,
-    id: JOB_ID
+    id: JOB_ID,
 } as Job;
 
 describe('SchedulerProcessor', () => {
@@ -114,11 +116,13 @@ describe('SchedulerProcessor', () => {
                 QueueService,
                 QueueMessageService,
                 BotSchedulerService,
-                { 
+                {
                     provide: BlacklistActionAuthService,
                     useValue: {
                         isActionBlacklisted: vi.fn().mockResolvedValue(true),
-                        checkProcessActionsBlacklist: vi.fn().mockResolvedValue(false),
+                        checkProcessActionsBlacklist: vi
+                            .fn()
+                            .mockResolvedValue(false),
                     },
                 },
                 {
@@ -157,7 +161,9 @@ describe('SchedulerProcessor', () => {
         })
             .overrideProvider(BotService)
             .useValue({
-                findAvailableCollection: vi.fn().mockReturnValue([{ status: BotStatus.CONNECTED } as IBot]),
+                findAvailableCollection: vi
+                    .fn()
+                    .mockReturnValue([{ status: BotStatus.CONNECTED } as IBot]),
             })
             .overrideProvider(ProcessService)
             .useValue({
@@ -165,7 +171,11 @@ describe('SchedulerProcessor', () => {
             })
             .overrideProvider(ProcessSchedulerService)
             .useValue({
-                startProcess: vi.fn().mockReturnValue({ orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID }),
+                startProcess: vi
+                    .fn()
+                    .mockReturnValue({
+                        orchestratorProcessInstanceId: ORCHESTRATOR_INSTANCE_ID,
+                    }),
             })
             .overrideProvider(BotWebSocketGateway)
             .useValue({
@@ -188,7 +198,8 @@ describe('SchedulerProcessor', () => {
                 emitClient: vi.fn(),
                 emitTenant: vi.fn(),
             })
-            .overrideGuard(WsBotJwtGuard).useValue(mockForceActivateGuard)
+            .overrideGuard(WsBotJwtGuard)
+            .useValue(mockForceActivateGuard)
             .compile();
 
         schedulerProcessor = moduleRef.get(SchedulerProcessor);
@@ -197,7 +208,9 @@ describe('SchedulerProcessor', () => {
         botService = moduleRef.get(BotService);
         uiGateway = moduleRef.get(UiGateway);
         botWebSocketGateway = moduleRef.get(BotWebSocketGateway);
-        processInstanceSchedulerService = moduleRef.get(ProcessInstanceSchedulerService);
+        processInstanceSchedulerService = moduleRef.get(
+            ProcessInstanceSchedulerService
+        );
         queueService = moduleRef.get(QueueService);
         queueMessageService = moduleRef.get(QueueMessageService);
         blacklistAuthService = moduleRef.get(BlacklistActionAuthService);
@@ -209,60 +222,90 @@ describe('SchedulerProcessor', () => {
 
     describe('process', () => {
         it('should throw an error if job data is empty', async () => {
-            await expect(schedulerProcessor.process({} as any)).rejects.toThrowError('Job data is empty');
+            await expect(
+                schedulerProcessor.process({} as any)
+            ).rejects.toThrowError('Job data is empty');
         });
 
-        it('should run process if it\'s not scheduled process', async () => {
+        it("should run process if it's not scheduled process", async () => {
             const result = await schedulerProcessor.process(JOB);
             expect(result).toBe(ORCHESTRATOR_INSTANCE_ID);
         });
 
-        it('should run process if it\'s scheduled process', async () => {
+        it("should run process if it's scheduled process", async () => {
             vi.spyOn(queueService, 'handleAttendedProcess');
             const result = await schedulerProcessor.process(SCHEDULED_JOB);
             expect(result).toBe(ORCHESTRATOR_INSTANCE_ID);
         });
 
-        it('should not run process if it\'s attended process hasn\'t got required variables', async () => {
-            vi.spyOn(queueService, 'handleAttendedProcess').mockRejectedValue(new Error('Some attended error'));
-            await expect(schedulerProcessor.process(SCHEDULED_JOB)).rejects.toThrowError('Some attended error');
+        it("should not run process if it's attended process hasn't got required variables", async () => {
+            vi.spyOn(queueService, 'handleAttendedProcess').mockRejectedValue(
+                new Error('Some attended error')
+            );
+            await expect(
+                schedulerProcessor.process(SCHEDULED_JOB)
+            ).rejects.toThrowError('Some attended error');
         });
 
-        it('should not run process if it isn\'t bot collection available', async () => {
+        it("should not run process if it isn't bot collection available", async () => {
             vi.mock('#/utils/time', () => ({
                 sleep: vi.fn().mockResolvedValue(undefined),
                 SECOND: 1,
             }));
-            vi.spyOn(botService, 'findAvailableCollection').mockResolvedValue([{ status: BotStatus.BUSY } as IBot]);
-            await expect(schedulerProcessor.process(SCHEDULED_JOB)).rejects.toThrowError('Timeout: all bots are busy');
+            vi.spyOn(botService, 'findAvailableCollection').mockResolvedValue([
+                { status: BotStatus.BUSY } as IBot,
+            ]);
+            await expect(
+                schedulerProcessor.process(SCHEDULED_JOB)
+            ).rejects.toThrowError('Timeout: all bots are busy');
         });
 
-        it('should not run process if it isn\'t any bot connected', async () => {
-            vi.spyOn(botService, 'findAvailableCollection').mockResolvedValue([]);
-            await expect(schedulerProcessor.process(SCHEDULED_JOB)).rejects.toThrowError('All bots are disconnected');
+        it("should not run process if it isn't any bot connected", async () => {
+            vi.spyOn(botService, 'findAvailableCollection').mockResolvedValue(
+                []
+            );
+            await expect(
+                schedulerProcessor.process(SCHEDULED_JOB)
+            ).rejects.toThrowError('All bots are disconnected');
         });
 
         it('should not run process if user in trigger data is null', async () => {
-            await expect(schedulerProcessor.process(JOB_WITHOUT_USER)).rejects.toThrowError();
+            await expect(
+                schedulerProcessor.process(JOB_WITHOUT_USER)
+            ).rejects.toThrowError();
         });
     });
 
     describe('onActive', () => {
         it('should emit WsMessage.ADD_WAITING_SCHEDULE with correct job data', async () => {
-            vi.spyOn(processService, 'findById').mockResolvedValue(PROCESS as any);
-            vi.spyOn(queueService, 'getActiveJobs').mockResolvedValue([JOB] as any);
-            vi.spyOn(queueService, 'getWaitingJobs').mockResolvedValue([] as any);
+            vi.spyOn(processService, 'findById').mockResolvedValue(
+                PROCESS as any
+            );
+            vi.spyOn(queueService, 'getActiveJobs').mockResolvedValue([
+                JOB,
+            ] as any);
+            vi.spyOn(queueService, 'getWaitingJobs').mockResolvedValue(
+                [] as any
+            );
             await schedulerProcessor.onActive(JOB as Job);
 
             expect(processService.findById).toHaveBeenCalledWith(PROCESS_ID);
-            expect(uiGateway.emitTenant).toHaveBeenCalledWith(DEFAULT_TENANT_ID, WsMessage.ADD_WAITING_SCHEDULE, JOB);
+            expect(uiGateway.emitTenant).toHaveBeenCalledWith(
+                DEFAULT_TENANT_ID,
+                WsMessage.ADD_WAITING_SCHEDULE,
+                JOB
+            );
         });
     });
 
     describe('onComplete', () => {
         it('should emit WsMessage.REMOVE_WAITING_SCHEDULE when a job is completed', async () => {
             schedulerProcessor.onComplete(JOB);
-            expect(uiGateway.emitTenant).toHaveBeenCalledWith(DEFAULT_TENANT_ID, WsMessage.REMOVE_WAITING_SCHEDULE, JOB);
+            expect(uiGateway.emitTenant).toHaveBeenCalledWith(
+                DEFAULT_TENANT_ID,
+                WsMessage.REMOVE_WAITING_SCHEDULE,
+                JOB
+            );
         });
     });
 
@@ -270,14 +313,20 @@ describe('SchedulerProcessor', () => {
         it('should emit WsMessage.REMOVE_WAITING_SCHEDULE and log when a job fails', async () => {
             const error = new Error('Test error');
             schedulerProcessor.onFailed(JOB, error);
-            expect(uiGateway.emitTenant).toHaveBeenCalledWith(DEFAULT_TENANT_ID, WsMessage.REMOVE_WAITING_SCHEDULE, JOB);
+            expect(uiGateway.emitTenant).toHaveBeenCalledWith(
+                DEFAULT_TENANT_ID,
+                WsMessage.REMOVE_WAITING_SCHEDULE,
+                JOB
+            );
         });
     });
 
     describe('onError', () => {
         it('should log error without exceptions', async () => {
             const error = new Error('Test error');
-            await expect(schedulerProcessor.onError(JOB, error)).resolves.toBeUndefined();
+            await expect(
+                schedulerProcessor.onError(JOB, error)
+            ).resolves.toBeUndefined();
         });
     });
 });
