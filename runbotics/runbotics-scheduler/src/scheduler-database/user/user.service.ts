@@ -18,7 +18,9 @@ import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
 import {
     BasicUserDto,
+    DEFAULT_TENANT_ID,
     FeatureKey,
+    getRolesAllowedInDefaultTenant,
     getRolesAllowedInTenant,
     Language,
     PartialUserDto,
@@ -357,11 +359,13 @@ export class UserService {
     private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
 
-        const ROLES_ALLOWED_IN_TENANT = getRolesAllowedInTenant();
-
+        const isDefaultTenant = user.tenantId === DEFAULT_TENANT_ID;
+        const allowedRoles = isDefaultTenant
+            ? getRolesAllowedInDefaultTenant()
+            : getRolesAllowedInTenant();
         if (
             !hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) &&
-            !ROLES_ALLOWED_IN_TENANT.includes(roles[0])
+            !allowedRoles.includes(roles[0])
         ) {
             throw new BadRequestException('Wrong role');
         }

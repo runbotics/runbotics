@@ -1,4 +1,4 @@
-import { FeatureKey, Role } from 'runbotics-common';
+import { availableRoles, FeatureKey, Role } from 'runbotics-common';
 
 import useAuth from '#src-app/hooks/useAuth';
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -6,21 +6,26 @@ import { UsersTab } from '#src-app/utils/users-tab';
 
 import { UsersTabsHookProps } from './UsersBrowseView.types';
 
-export const useUsersTabs = (): UsersTabsHookProps[]  => {
+export const useUsersTabs = (): UsersTabsHookProps[] => {
     const { translate } = useTranslations();
-    const { user: { featureKeys } } = useAuth();
+    const {
+        user: { featureKeys },
+    } = useAuth();
 
     const userTabs = [
         {
             value: UsersTab.ALL_USERS,
             label: translate('Users.Browse.Tabs.AllUsers.Label'),
-            featureKeys: [FeatureKey.TENANT_READ_USER]
+            featureKeys: [FeatureKey.TENANT_READ_USER],
         },
         {
             value: UsersTab.WAITING_USERS,
             label: translate('Users.Browse.Tabs.Registration.Label'),
-            featureKeys: [FeatureKey.TENANT_READ_USER, FeatureKey.MANAGE_INACTIVE_USERS]
-        }
+            featureKeys: [
+                FeatureKey.TENANT_READ_USER,
+                FeatureKey.MANAGE_INACTIVE_USERS,
+            ],
+        },
     ];
 
     return userTabs.filter((tab) =>
@@ -36,8 +41,11 @@ export enum UserField {
     CREATED_DATE = 'createdDate',
     LAST_MODIFIED_BY = 'lastModifiedBy',
     LAST_MODIFIED_DATE = 'lastModifiedDate',
-};
+}
 
-export const getAllUserRoles = (): Role[] => Object.values(Role);  
+export const getAllUserRoles = (): Role[] => availableRoles;
+export const getAllUserRolesExceptAdmin = (): Role[] =>
+    availableRoles.filter((role) => role !== Role.ROLE_ADMIN);
 
-export const formatUserRoles = (roles: Role[]) => roles.map((role) => role.match(/^ROLE_(.*)/)[1]);
+export const formatUserRoles = (roles: Role[]) =>
+    roles.map((role) => role.match(/^ROLE_(.*)/)[1]);
