@@ -28,9 +28,4 @@ export const WebhookHeaderTokenContainer = styled.div`
     background-color: ${({ theme }) => theme.palette.grey[100]};
 `;
 
-export const WebhookHeaderTokenText = styled.p`
-    font-size: 0.875rem;
-    
-    color: ${({ theme }) => theme.palette.text.secondary};
-    opacity: .6;
-`;
+

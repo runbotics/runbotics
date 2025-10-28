@@ -118,4 +118,10 @@ export class TenantController {
 
         return this.tenantService.createInviteCodeByTenantId(tenantId);
     }
+    
+    @FeatureKeys(FeatureKey.WEBHOOKS_PAGE_READ)
+    @GetWithTenant('get-token')
+    async getServiceToken(@UserDecorator() { tenantId }: User) {
+        return this.tenantService.getServiceToken(tenantId);
+    }
 }

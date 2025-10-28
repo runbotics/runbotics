@@ -11,6 +11,7 @@ export interface Tenant {
     lastModifiedBy?: string | null;
     activePlugins?: number | null;
     subscriptionEnd?: string | null;
+    serviceTokenExpDate?: string | null;
 }
 
 export interface TenantInviteCode {
@@ -21,5 +22,6 @@ export interface BasicTenantDto {
     id: string;
     name: string;
     subscriptionEnd?: string | null;
+    serviceTokenExpDate?: string | null;
 }
 
