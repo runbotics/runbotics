@@ -1,0 +1,73 @@
+{
+    "eslint.workingDirectories": [
+        "./runbotics/runbotics-desktop",
+        "./runbotics/runbotics-scheduler",
+        "./runbotics/runbotics-orchestrator-ui",
+        "./runbotics/runbotics-common",
+        "./runbotics/runbotics-actions-windows",
+        "./runbotics/runbotics-sdk",
+        "./runbotics/runbotics-cli"
+    ],
+    "conventionalCommits.scopes": [
+        "runbotics-orchestrator-ui",
+        "runbotics-scheduler",
+        "runbotics-desktop",
+        "runbotics-orchestrator",
+        "runbotics-common",
+        "runbotics-cli"
+    ],
+    "svg.preview.background": "transparent",
+    "dbcode.connections": [
+        {
+            "connectionId": "jeZ_4PXfK2vcTv58NdAx4",
+            "name": "rb-prod",
+            "driver": "postgres",
+            "connectionType": "host",
+            "host": "10.206.40.4",
+            "port": 5432,
+            "ssl": false,
+            "username": "runbotics",
+            "password": "",
+            "savePassword": "secretStorage",
+            "connectionTimeout": 30
+        },
+        {
+            "connectionId": "gFFpGl3fQv6gzBh_a8lE2",
+            "name": "rb-dev",
+            "driver": "postgres",
+            "connectionType": "host",
+            "host": "10.206.40.13",
+            "port": 5432,
+            "ssl": false,
+            "username": "runbotics",
+            "password": "",
+            "savePassword": "secretStorage",
+            "connectionTimeout": 30
+        },
+        {
+            "connectionId": "gBwV6a42vT3XFNlEvVw1i",
+            "name": "rb-aws",
+            "driver": "postgres",
+            "connectionType": "host",
+            "host": "52.59.65.110",
+            "port": 5432,
+            "ssl": false,
+            "username": "runbotics",
+            "password": "",
+            "savePassword": "secretStorage",
+            "connectionTimeout": 30
+        },
+        {
+            "connectionId": "5zqHkdpQc_xYJYFMhe3AZ",
+            "name": "rb-localhost",
+            "driver": "postgres",
+            "connectionType": "host",
+            "host": "127.0.0.1",
+            "port": 5432,
+            "ssl": false,
+            "username": "runbotics",
+            "savePassword": "secretStorage",
+            "connectionTimeout": 30
+        }
+    ]
+}

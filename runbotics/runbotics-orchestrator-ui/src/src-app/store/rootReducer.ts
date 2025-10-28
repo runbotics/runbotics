@@ -3,6 +3,7 @@ import { reducer as form } from 'redux-form';
 
 import { actionReducer as action } from './slices/Action/index';
 import { activityReducer as activity } from './slices/Activity';
+import { aiAssistantsReducer as aiAssistants } from './slices/AIAssistants';
 import { authReducer as auth } from './slices/Auth/index';
 import { botReducer as bot } from './slices/Bot';
 import { botCollectionReducer as botCollection } from './slices/BotCollections';
@@ -28,6 +29,7 @@ import httpErrorReducer from './slices/Views/httpErrorSlice';
 const rootReducer = combineReducers({
     action,
     activity,
+    aiAssistants,
     auth,
     bot,
     botCollection,
