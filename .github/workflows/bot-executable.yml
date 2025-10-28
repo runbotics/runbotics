@@ -144,3 +144,53 @@ jobs:
           name: patch-notes-${{ env.PACKAGE_VERSION }}
           path: './runbotics/runbotics-desktop/patch_notes.md'
           if-no-files-found: error
+
+      - name: Cleanup workspace contents
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host "Cleaning up workspace contents..."
+          
+          $workspacePath = "${{ github.workspace }}"
+          Write-Host "Workspace path: $workspacePath"
+          
+          if (Test-Path $workspacePath) {
+            Write-Host "Contents before cleanup:"
+            Get-ChildItem -Path $workspacePath -Force | Format-Table Name, Mode, Length, LastWriteTime
+            
+            # Sanity check: Ensure we're in the correct workspace structure
+            Write-Host "Running safety checks..."
+            
+            # Check if .cache folder is part of the workspace path
+            Write-Host "Checking if .cache folder is part of workspace path..."
+            if ($workspacePath -notlike "*\.cache\*") {
+              Write-Error "Safety check failed: .cache folder not found in workspace path"
+              exit 1
+            }
+            Write-Host ".cache folder check passed"
+            
+            $runboticsFolder = Join-Path $workspacePath "runbotics"
+            $rushJsonFile = Join-Path $runboticsFolder "rush.json"
+            
+            Write-Host "Checking for runbotics folder: $runboticsFolder"
+            Write-Host "Checking for rush.json file: $rushJsonFile"
+            
+            if (-not (Test-Path $runboticsFolder)) {
+              Write-Error "Safety check failed: runbotics folder not found as descendant of workspace"
+              exit 1
+            }
+            
+            if (-not (Test-Path $rushJsonFile)) {
+              Write-Error "Safety check failed: runbotics/rush.json file not found"
+              exit 1
+            }
+            
+            Write-Host "Safety checks passed. Proceeding with workspace cleanup..."
+            
+            Write-Host "Removing all contents from workspace..."
+            Get-ChildItem -Path $workspacePath -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+            
+            Write-Host "Workspace contents removed successfully"
+          } else {
+            Write-Host "Workspace directory does not exist"
+          }
