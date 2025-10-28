@@ -23,7 +23,8 @@ import {
 
 const useUsersRegistrationColumns = (
     handleSelectRoleChange,
-    handleSelectTenantChange
+    handleSelectTenantChange,
+    isForAdmin: boolean
 ): GridColDef[] => {
     const { translate } = useTranslations();
     const user = useSelector(authSelector);
