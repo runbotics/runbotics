@@ -46,14 +46,16 @@ import {
     PointData,
     RegionData,
     DesktopReadTextFromPdfActionOutput,
+    RawHOCRResult,
 } from './types';
 import clipboard from '../../utils/clipboard';
 import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 import { validateInput } from '#utils/zodError';
 import { ServerConfigService } from '#config';
 import { Injectable } from '@nestjs/common';
-import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema, preprocessImage, readTextFromPdfInputSchema } from './desktop.utils';
+import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema, preprocessImage, readTextFromPdfInputSchema, parseHOCR, findTextInRegion, filterLinesByConfidence, findWordCordinate } from './desktop.utils';
 import { tmpdir } from 'os';
+import sharp from 'sharp';
 
 @Injectable()
 export default class DesktopActionHandler extends StatelessActionHandler {
@@ -253,29 +255,43 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 tessedit_pageseg_mode: PSM.SPARSE_TEXT,
             });
 
-            let combinedHOCR = '';
+            const combinedHOCR: RawHOCRResult[] = [];
 
             const preprocessPromises = tempPngPaths.map(pngPath => 
                 preprocessImage(pngPath, this.logger)
             );
             const preprocessedPathsArray = await Promise.all(preprocessPromises);
             preprocessedPaths.push(...preprocessedPathsArray);
-
             for (let index = 0; index < preprocessedPaths.length; index++) {
                 const buf = fs.readFileSync(preprocessedPaths[index]);
+                
+                const ocrImageMetadata =await sharp(preprocessedPaths[index]).metadata();
+                const pageDimensions = {
+                    width: ocrImageMetadata.width ?? 0,
+                    height: ocrImageMetadata.height ?? 0,
+                };
+                this.logger.log(`Preprocessed image dimensions (WxH): ${pageDimensions.width}x${pageDimensions.height}`);
                 const { data: { hocr } } = await worker.recognize(buf);
-                combinedHOCR += hocr + `\n\n\n\nPAGE${index + 1}\n\n\n\n`;
+                combinedHOCR.push({ hocr, pageDimensions });
             }
+            const parsedResult = parseHOCR(combinedHOCR);
+            const filteredResult = filterLinesByConfidence(parsedResult, 70);
+            const textinRegion = findTextInRegion(filteredResult, {x0:30,y0:23,x1:40, y1:28});
+            this.logger.log(`Extracted text ${textinRegion}`);
+
 
             const fileName = path.basename(pdfFullPath, '.pdf');
             const firstPageBuf = fs.readFileSync(preprocessedPaths[0]);
             const hocrOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.txt`);
             const pngCheckupOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.png`);
+            const jsonOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.json`);
 
-            fs.writeFileSync(hocrOutputPath, combinedHOCR, 'utf-8');
+            fs.writeFileSync(jsonOutputPath, `${JSON.stringify(findWordCordinate(parsedResult, 'PO'), null, 2)} ${JSON.stringify(findWordCordinate(parsedResult, 'REMOVAL'), null, 2)}`, 'utf-8');
+
+            fs.writeFileSync(hocrOutputPath, `1111${combinedHOCR[0].hocr}222 ${combinedHOCR[1].hocr} txttt ${parsedResult.fullText}`, 'utf-8');
             fs.writeFileSync(pngCheckupOutputPath, firstPageBuf);
-
-            return combinedHOCR;
+            console.log(`slowo po: ${findWordCordinate(filteredResult, 'PO:')}`);
+            return combinedHOCR[0].hocr;
 
         } catch (error) {
             throw new Error('An error occurred while reading PDF file: ' + error);

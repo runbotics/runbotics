@@ -134,3 +134,50 @@ export const isRegionDataType = (
 ): object is RegionData => {
     return (<RegionData>object).left !== undefined;
 };
+
+export interface ParsedOCRWord {
+    text: string;
+    confidence: number;
+    bbox: {
+        x0: number;
+        y0: number;
+        x1: number;
+        y1: number;
+    };
+    id: string;
+    pageNumber: number;
+}
+
+export interface ParsedOCRLine {
+    text: string;
+    confidence: number;
+    words: ParsedOCRWord[];
+    bbox: {
+        x0: number;
+        y0: number;
+        x1: number;
+        y1: number;
+    };
+    pageNumber: number;
+}
+
+export interface ParsedOCRPage {
+    pageNumber: number;
+    lines: ParsedOCRLine[];
+    fullText: string;
+    averageConfidence: number;
+}
+
+export interface ParsedOCRResult {
+    pages: ParsedOCRPage[];
+    fullText: string;
+    totalAverageConfidence: number;
+}
+
+export interface RawHOCRResult {
+    hocr: string;
+    pageDimensions: {
+        height: number;
+        width: number;
+    };
+}

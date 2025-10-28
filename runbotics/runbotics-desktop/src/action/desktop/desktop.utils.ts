@@ -5,12 +5,18 @@ import {
     ImageResourceFormat,
     Language,
     MouseButton,
+    ParsedOCRLine,
+    ParsedOCRPage,
+    ParsedOCRResult,
+    ParsedOCRWord,
+    RawHOCRResult,
 } from './types';
 import path from 'path';
 import { tmpdir } from 'os';
 import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { RunboticsLogger } from '#logger';
+import parse, { HTMLElement } from 'node-html-parser';
 
 const coordinateSchema = z.union([z.string(), z.number()]);
 
@@ -119,7 +125,7 @@ export async function preprocessImage(
                 height: scaledHeight,
                 kernel: sharp.kernel.lanczos3,
             })
-            .normalize()
+            .normalise()
             .raw()
             .toBuffer();
 
@@ -339,4 +345,256 @@ export async function preprocessImage(
         logger.error('Error during image preprocessing:', error);
         return imagePath;
     }
+}
+
+function normaliseCoordinate(value: number, maxDimension: number): number {
+    return Math.round((value / maxDimension) * 100);
+}
+
+function parseBbox(
+    title: string,
+    documentDimensions: { height: number; width: number }
+): { x0: number; y0: number; x1: number; y1: number } | null {
+    const bboxMatch = title.match(/bbox (\d+) (\d+) (\d+) (\d+)/);
+    if (!bboxMatch) return null;
+
+    const rawX0 = parseInt(bboxMatch[1]);
+    const rawY0 = parseInt(bboxMatch[2]);
+    const rawX1 = parseInt(bboxMatch[3]);
+    const rawY1 = parseInt(bboxMatch[4]);
+
+    return {
+        x0: normaliseCoordinate(rawX0, documentDimensions.width),
+        y0: normaliseCoordinate(rawY0, documentDimensions.height),
+        x1: normaliseCoordinate(rawX1, documentDimensions.width),
+        y1: normaliseCoordinate(rawY1, documentDimensions.height),
+    };
+}
+
+function parseConfidence(title: string): number {
+    const confMatch = title.match(/x_wconf (\d+)/);
+    return confMatch ? parseInt(confMatch[1]) : 0;
+}
+
+function parseWord(
+    pageNumber: number,
+
+    wordElement: HTMLElement,
+    documentDimensions: { height: number; width: number }
+): ParsedOCRWord | null {
+    const title = wordElement.getAttribute('title') || '';
+    const bbox = parseBbox(title, documentDimensions);
+    const confidence = parseConfidence(title);
+    const text = wordElement.text.trim();
+    const id = wordElement.getAttribute('id') || 'unknown_id';
+
+    if (!bbox || !text) return null;
+
+    return {
+        text,
+        confidence,
+        bbox,
+        id,
+        pageNumber,
+    };
+}
+
+function parseLine(
+    pageNumber: number,
+    lineElement: HTMLElement,
+    documentDimensions: { height: number; width: number }
+): ParsedOCRLine | null {
+    const title = lineElement.getAttribute('title') || '';
+    const bbox = parseBbox(title, documentDimensions);
+
+    if (!bbox) return null;
+
+    const wordElements = lineElement.querySelectorAll('.ocrx_word');
+    const words: ParsedOCRWord[] = [];
+
+    for (const wordElement of wordElements) {
+        const word = parseWord(pageNumber, wordElement, documentDimensions);
+        if (word) {
+            words.push(word);
+        }
+    }
+
+    if (words.length === 0) return null;
+
+    const text = words.map((w) => w.text).join(' ');
+    const avgConfidence =
+        words.reduce((sum, w) => sum + w.confidence, 0) / words.length;
+
+    return {
+        text,
+        confidence: Math.round(avgConfidence),
+        words,
+        bbox,
+        pageNumber,
+    };
+}
+
+function parsePage(
+    pageElement: HTMLElement,
+    pageNumber: number,
+    documentDimensions: { height: number; width: number }
+): ParsedOCRPage {
+    const lineElements = pageElement.querySelectorAll('.ocr_line');
+    const lines: ParsedOCRLine[] = [];
+
+    for (const lineElement of lineElements) {
+        const line = parseLine(pageNumber, lineElement, documentDimensions);
+        if (line) {
+            lines.push(line);
+        }
+    }
+
+    const fullText = lines.map((l) => l.text).join('\n');
+    const avgConfidence =
+        lines.length > 0
+            ? Math.round(
+                lines.reduce((sum, l) => sum + l.confidence, 0) / lines.length
+            )
+            : 0;
+
+    return {
+        pageNumber,
+        lines,
+        fullText,
+        averageConfidence: avgConfidence,
+    };
+}
+
+export function parseHOCR(hocrPages: RawHOCRResult[]): ParsedOCRResult {
+    const pages: ParsedOCRPage[] = [];
+
+    for (let i = 0; i < hocrPages.length; i++) {
+        const section = hocrPages[i].hocr.trim();
+        if (!section) continue;
+
+        const root = parse(section, {
+            fixNestedATags: true,
+            parseNoneClosedTags: true,
+        });
+        const pageElement = root.querySelector('.ocr_page');
+
+        if (pageElement) {
+            const page = parsePage(
+                pageElement,
+                i + 1,
+                hocrPages[i].pageDimensions
+            );
+            pages.push(page);
+        }
+    }
+
+    const fullText = pages.map((p) => p.fullText).join('\n\n\n\n');
+    const totalAvgConfidence =
+        pages.length > 0
+            ? Math.round(
+                pages.reduce((sum, p) => sum + p.averageConfidence, 0) /
+                      pages.length
+            )
+            : 0;
+
+    return {
+        pages,
+        fullText,
+        totalAverageConfidence: totalAvgConfidence,
+    };
+}
+
+export function filterLinesByConfidence(
+    result: ParsedOCRResult,
+    minConfidence: number
+): ParsedOCRResult {
+    const filteredPages = result.pages.map((page) => ({
+        ...page,
+        lines: page.lines.filter((line) => line.confidence >= minConfidence),
+    }));
+
+    return {
+        pages: filteredPages,
+        fullText: filteredPages
+            .map((p) => p.lines.map((l) => l.text).join('\n'))
+            .join('\n\n--- PAGE BREAK ---\n\n'),
+        totalAverageConfidence: result.totalAverageConfidence,
+    };
+}
+
+export function filterWordsByConfidence(
+    result: ParsedOCRResult,
+    minConfidence: number
+): ParsedOCRResult {
+    const filteredPages = result.pages.map((page) => ({
+        ...page,
+        lines: page.lines
+            .map((line) => ({
+                ...line,
+                words: line.words.filter(
+                    (word) => word.confidence >= minConfidence
+                ),
+            }))
+            .filter((line) => line.words.length > 0),
+    }));
+
+    return {
+        pages: filteredPages,
+        fullText: filteredPages
+            .map((p) => p.lines.map((l) => l.text).join('\n'))
+            .join('\n\n--- PAGE BREAK ---\n\n'),
+        totalAverageConfidence: result.totalAverageConfidence,
+    };
+}
+
+export function findTextInRegion(
+    result: ParsedOCRResult,
+    region: { x0: number; y0: number; x1: number; y1: number },
+    pageNumber?: number
+): ParsedOCRWord[] {
+    const pagesToSearch = pageNumber
+        ? result.pages.filter((p) => p.pageNumber === pageNumber)
+        : result.pages;
+
+    const wordsInRegion: ParsedOCRWord[] = [];
+
+    for (const page of pagesToSearch) {
+        for (const line of page.lines) {
+            for (const word of line.words) {
+                const bbox = word.bbox;
+                const overlaps = !(
+                    bbox.x1 < region.x0 ||
+                    bbox.x0 > region.x1 ||
+                    bbox.y1 < region.y0 ||
+                    bbox.y0 > region.y1
+                );
+
+                if (overlaps) {
+                    wordsInRegion.push(word);
+                }
+            }
+        }
+    }
+
+    return wordsInRegion;
+}
+
+export function findWordCordinate(
+    result: ParsedOCRResult,
+    searchText: string,
+    searchOnPage?: number
+): ParsedOCRWord[] | null {
+    const foundWords: ParsedOCRWord[] = [];
+    const isSpecificPageSearch = searchOnPage !== undefined;
+    for (const page of result.pages) {
+        if (isSpecificPageSearch && searchOnPage !== page.pageNumber) continue;
+        for (const line of page.lines) {
+            for (const word of line.words) {
+                if (word.text === searchText) {
+                    foundWords.push(word);
+                }
+            }
+        }
+    }
+    return foundWords.length > 0 ? foundWords : null;
 }

@@ -127,6 +127,9 @@ importers:
       nestjs-io-client:
         specifier: 0.1.0
         version: 0.1.0
+      node-html-parser:
+        specifier: ~7.0.1
+        version: 7.0.1
       node-poppler:
         specifier: ~8.0.2
         version: 8.0.2
@@ -8702,7 +8705,7 @@ packages:
       '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.23.2)
       lodash: 4.17.21
       picomatch: 2.3.1
-      styled-components: 5.3.11(@babel/core@7.23.2)(react-dom@18.3.1)(react-is@18.2.0)(react@18.3.1)
+      styled-components: 5.3.11(@babel/core@7.23.2)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -15490,6 +15493,13 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /node-html-parser@7.0.1:
+    resolution: {integrity: sha512-KGtmPY2kS0thCWGK0VuPyOS+pBKhhe8gXztzA2ilAOhbUbxa9homF1bOyKvhGzMLXUoRds9IOmr/v5lr/lqNmA==}
+    dependencies:
+      css-select: 5.1.0
+      he: 1.2.0
+    dev: false
 
   /node-poppler@8.0.2:
     resolution: {integrity: sha512-pAQNglER/SHXlm9yTW53ChzxELsyCoxCioAmoxHdnqK9h3KHq2isAbRCSyJrtFP+P8jpGkI4v7xSW0znjeBksw==}
