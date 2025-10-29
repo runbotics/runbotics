@@ -397,5 +397,20 @@ export class AuthService {
             user: AuthUserDtoSchema.parse(user),
         };
     }
+    
+    async createServiceToken(userId: number) {
+        const user = await this.userService.findById(userId);
+        if (!user) {
+            throw new NotFoundException('Service user not found');
+        }
+        
+        const payload = {sub: user.email, auth: user.authorities.map(authority => authority.name).at(0)};
+        
+        return this.jwtService.sign(payload, {
+            expiresIn: '1y',
+            algorithm: 'HS512',
+            noTimestamp: true,
+        });        
+    }
 }
 

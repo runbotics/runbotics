@@ -1,9 +1,19 @@
 import { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
-import type { AuthState } from './Auth.state';
-import { initialize, login, logout, createGuestAccount, loginWithMsalCookie } from './Auth.thunks';
+import { getServiceToken } from '#src-app/store/slices/Webhook/Webhook.thunks';
 
-const buildAuthExtraReducers = (builder: ActionReducerMapBuilder<AuthState>) => {
+import type { AuthState } from './Auth.state';
+import {
+    createGuestAccount,
+    initialize,
+    login,
+    loginWithMsalCookie,
+    logout,
+} from './Auth.thunks';
+
+const buildAuthExtraReducers = (
+    builder: ActionReducerMapBuilder<AuthState>
+) => {
     builder
         .addCase(login.fulfilled, (state, { payload }) => {
             state.user = payload;
@@ -50,6 +60,9 @@ const buildAuthExtraReducers = (builder: ActionReducerMapBuilder<AuthState>) => 
             state.isInitialized = false;
             state.isAuthenticated = false;
             state.user = null;
+        })
+        .addCase(getServiceToken.fulfilled, (state, { payload }) => {
+            state.user.tenant.serviceTokenExpDate = payload.serviceTokenExpDate;
         });
 };
 
