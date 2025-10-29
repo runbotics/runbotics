@@ -38,9 +38,9 @@ const GenerateToken: FC = () => {
         }
     };
     
-    const copyToken = () => {
+    const copyToken = async () => {
         if(token) {
-            navigator.clipboard.writeText(token);
+            await navigator.clipboard.writeText(token);
             enqueueSnackbar(
                 'Token copied',
                 {
@@ -75,7 +75,7 @@ const GenerateToken: FC = () => {
                         <ExpirationDate>
                             Token is valid for <b>{daysToExpire}</b> days
                         </ExpirationDate>
-                        {isTokenVisible && <ContentCopyOutlined />}
+                        {isTokenVisible && <ContentCopyOutlined onClick={copyToken} />}
                     </TokenInfo>
                 )}
                 {isTokenVisible && <Token>{token}</Token>}
