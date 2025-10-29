@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 
-import { ContentCopyOutlined } from '@mui/icons-material';
-import { Button } from '@mui/material';
+import { ContentCopyOutlined, InfoOutlined } from '@mui/icons-material';
+import { Button, Snackbar, Tooltip } from '@mui/material';
 
 import { differenceInDays } from 'date-fns';
 
@@ -80,6 +80,7 @@ const GenerateToken: FC = () => {
                 )}
                 {isTokenVisible && <Token>{token}</Token>}
             </TokenContainer>
+            {!isTokenVisible && <Tooltip title={'The token is used to authorize client in the RunBotics'} ><InfoOutlined /></Tooltip>}
         </WebhookHeaderTokenContainer>
     );
 };
