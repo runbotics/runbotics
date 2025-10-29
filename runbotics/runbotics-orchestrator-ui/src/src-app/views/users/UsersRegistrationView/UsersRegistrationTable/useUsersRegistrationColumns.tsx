@@ -9,11 +9,10 @@ import { DEFAULT_TENANT_ID } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useSelector } from '#src-app/store';
-import { authSelector } from '#src-app/store/slices/Auth';
 import { tenantsSelector } from '#src-app/store/slices/Tenants';
 import { formatDate } from '#src-app/utils/dateFormat';
 
-import { getAllowedRoles } from '#src-app/utils/getAllowedRoles';
+import { useAllowedRoles } from '#src-app/utils/getAllowedRoles';
 
 import { StyledSelect } from './UsersRegistrationTable.styles';
 import {
@@ -27,9 +26,8 @@ const useUsersRegistrationColumns = (
     isForAdmin: boolean
 ): GridColDef[] => {
     const { translate } = useTranslations();
-    const user = useSelector(authSelector);
-    const roles = getAllowedRoles(user);
-    const formattedRoles = formatUserRoles(roles);
+    const allowedRoles = useAllowedRoles();
+    const formattedRoles = formatUserRoles(allowedRoles);
     const { all: allTenants } = useSelector(tenantsSelector);
 
     const RoleSelect = (row: GridValidRowModel) => {
