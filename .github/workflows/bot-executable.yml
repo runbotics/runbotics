@@ -161,7 +161,7 @@ jobs:
             
             # Check if .cache folder is part of the workspace path
             echo "Checking if .cache folder is part of workspace path..."
-            if [[ "$WORKSPACE_PATH" != *"/.cache/"* ]]; then
+            if [[ "$WORKSPACE_PATH" != *"/.cache/"* ]] && [[ "$WORKSPACE_PATH" != *"\.cache\\"* ]]; then
               echo "ERROR: Safety check failed: .cache folder not found in workspace path"
               exit 1
             fi
