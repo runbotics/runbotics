@@ -143,6 +143,15 @@ jobs:
           path: './runbotics/runbotics-desktop/patch_notes.md'
           if-no-files-found: error
 
+      - name: Dispatch deploy bot
+        if: ${{ github.ref == 'refs/heads/develop' }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GIT_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"ref": "master", "inputs": { "windows-bot-version": "RunBotics-${{ env.PACKAGE_VERSION }}", "run-id": "${{ github.run_id }}" }}' \
+            "https://git.clouddc.eu/api/v1/repos/RPA/runbotics-deployment/actions/workflows/dev-windows-bots.yml/dispatches"
+
       - name: Cleanup workspace contents
         if: always()
         shell: bash
