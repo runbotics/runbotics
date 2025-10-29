@@ -10,6 +10,10 @@ export enum Role {
     ROLE_SERVICE_ACCOUNT = 'ROLE_SERVICE_ACCOUNT',
 }
 
+export const availableRoles: Role[] = Object.values(Role).filter(
+    (role) => role !== Role.ROLE_SERVICE_ACCOUNT
+);
+
 export interface IAuthority {
     name: Role;
     featureKeys: IFeatureKey[]

@@ -9,7 +9,7 @@ import { usersSelector } from '#src-app/store/slices/Users';
 
 import { AVAILABLE_ROWS_PER_PAGE } from '#src-app/views/utils/TablePaging.provider';
 
-import { DataGridStyle} from './UsersRegistrationTable.styles';
+import { DataGridStyle } from './UsersRegistrationTable.styles';
 import useUsersRegistrationColumns from './useUsersRegistrationColumns';
 
 interface UsersRegistrationTableProps {
@@ -35,7 +35,7 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
     handleSelectedRolesChange,
     handleSelectedTenantsChange,
     isForAdmin,
-    isTenantSelected
+    isTenantSelected,
 }) => {
     const userRegistrationColumns = useUsersRegistrationColumns(
         handleSelectedRolesChange,
@@ -62,14 +62,18 @@ const UsersRegistrationTable: FC<UsersRegistrationTableProps> = ({
                         page={page}
                         onPageChange={(newPage) => onPageChange(newPage)}
                         pageSize={pageSize}
-                        onPageSizeChange={(newPageSize) => onPageSizeChange(newPageSize)}
+                        onPageSizeChange={(newPageSize) =>
+                            onPageSizeChange(newPageSize)
+                        }
                         checkboxSelection={true}
                         onSelectionModelChange={(e) => handleSelectionChange(e)}
                         selectionModel={selections}
-                        paginationMode='server'
+                        paginationMode="server"
                         rowsPerPageOptions={AVAILABLE_ROWS_PER_PAGE}
                         localeText={{
-                            noRowsLabel: translate('Users.Registration.Table.Error.Rows')
+                            noRowsLabel: translate(
+                                'Users.Registration.Table.Error.Rows'
+                            ),
                         }}
                     />
                 </Grid>

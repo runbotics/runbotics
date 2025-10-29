@@ -14,14 +14,12 @@ import {
     IBot,
     NotificationBot,
     BotSystemType,
+    DEFAULT_TENANT_ID,
 } from 'runbotics-common';
 import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
 import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
-import {
-    NotificationBot as NotificationBotEntity,
-} from '#/scheduler-database/notification-bot/notification-bot.entity';
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
+import { NotificationBot as NotificationBotEntity } from '#/scheduler-database/notification-bot/notification-bot.entity';
 
 @Entity({ name: 'bot' })
 export class BotEntity implements IBot {
@@ -37,10 +35,19 @@ export class BotEntity implements IBot {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     id: number;
 
-    @CreateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone', nullable: true })
+    @CreateDateColumn({
+        transformer: dateTransformer,
+        type: 'timestamp without time zone',
+        nullable: true,
+    })
     created: string;
 
-    @Column({ name: 'installation_id', unique: true, type: 'varchar', length: 255 })
+    @Column({
+        name: 'installation_id',
+        unique: true,
+        type: 'varchar',
+        length: 255,
+    })
     installationId: string;
 
     @Column({
@@ -51,7 +58,12 @@ export class BotEntity implements IBot {
     })
     lastConnected: string;
 
-    @Column({ type: 'varchar', length: 50, default: BotStatus.DISCONNECTED, nullable: true })
+    @Column({
+        type: 'varchar',
+        length: 50,
+        default: BotStatus.DISCONNECTED,
+        nullable: true,
+    })
     status: BotStatus;
 
     @Column({ type: 'varchar', length: 20, nullable: true })
@@ -64,26 +76,24 @@ export class BotEntity implements IBot {
     @Column({ name: 'system', default: BotSystemType.LINUX, length: 50 })
     systemName: BotSystemType;
 
-    @ManyToOne(
-        () => User,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToOne(() => User, { onDelete: 'CASCADE' })
     @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
     user: User;
 
-    @ManyToOne(
-        () => BotCollection,
-        {
-            nullable: false,
-            onDelete: 'CASCADE',
-        })
+    @ManyToOne(() => BotCollection, {
+        nullable: false,
+        onDelete: 'CASCADE',
+    })
     @JoinColumn([{ name: 'collection_id', referencedColumnName: 'id' }])
     collection: BotCollection;
 
     @Column({ name: 'collection_id' })
     collectionId: string;
 
-    @OneToMany(() => NotificationBotEntity, (notificationBot) => notificationBot.bot)
+    @OneToMany(
+        () => NotificationBotEntity,
+        (notificationBot) => notificationBot.bot
+    )
     @JoinColumn({ name: 'bot_id', referencedColumnName: 'id' })
     notifications: NotificationBot[];
 }

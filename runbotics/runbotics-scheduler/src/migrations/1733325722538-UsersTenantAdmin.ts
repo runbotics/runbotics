@@ -1,5 +1,5 @@
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 import { MigrationInterface, QueryRunner } from 'typeorm';
+import { DEFAULT_TENANT_ID } from 'runbotics-common';
 
 export class UsersTenantAdmin1733325722538 implements MigrationInterface {
     name = 'UsersTenantAdmin1733325722538';
@@ -23,7 +23,9 @@ export class UsersTenantAdmin1733325722538 implements MigrationInterface {
             WHERE "user_id" = 4
         `);
         if (result[0].count != 0) {
-            throw new Error('Relation in "jhi_user_authority" for "user_id" (4) already exists');
+            throw new Error(
+                'Relation in "jhi_user_authority" for "user_id" (4) already exists'
+            );
         }
 
         await queryRunner.query(`
@@ -38,7 +40,7 @@ export class UsersTenantAdmin1733325722538 implements MigrationInterface {
             WHERE "id" = 4
         `);
         if (usersCount[0].count == 0) {
-            throw new Error('User with id (4) doesn\'t exist');
+            throw new Error("User with id (4) doesn't exist");
         }
 
         const result = await queryRunner.query(`
@@ -46,7 +48,9 @@ export class UsersTenantAdmin1733325722538 implements MigrationInterface {
             WHERE "user_id" = 4
         `);
         if (result[0].count == 0) {
-            throw new Error('Couldn\'t find "user_id" (4) in "jhi_user_authority"');
+            throw new Error(
+                'Couldn\'t find "user_id" (4) in "jhi_user_authority"'
+            );
         }
 
         await queryRunner.query(`
