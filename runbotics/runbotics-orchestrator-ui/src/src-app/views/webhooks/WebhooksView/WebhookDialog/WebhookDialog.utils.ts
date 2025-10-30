@@ -1,8 +1,9 @@
-import { WebhookAuthorizationType } from 'runbotics-common';
+import { RequestType, WebhookAuthorizationType } from 'runbotics-common';
 
 export interface WebhookRegistrationFormState {
     name: string;
     applicationUrl: string;
+    applicationRequestType: RequestType;
     type: WebhookAuthorizationType;
     data?: unknown | null;
     registrationPayload?: string;
@@ -16,8 +17,9 @@ export interface WebhookRegistrationFormState {
 export const initialFormState: WebhookRegistrationFormState = {
     name: '',
     applicationUrl: '',
+    applicationRequestType: RequestType.GET,
     type: WebhookAuthorizationType.NONE,
-    registrationPayload: '',
+    registrationPayload: '{ \nwebhookUrl: {{webhook}} \n}',
     webhookIdPath: '',
     payloadDataPath: '',
     token: null,

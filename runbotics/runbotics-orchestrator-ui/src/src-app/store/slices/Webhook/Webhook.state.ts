@@ -1,4 +1,4 @@
-import { WebhookAuthorizationType } from 'runbotics-common';
+import { RequestType, WebhookAuthorizationType } from 'runbotics-common';
 
 export interface WebhookAuthorization {
     id: string;
@@ -76,6 +76,7 @@ export interface ClientRegistrationWebhook {
 export interface CreateClientRegistrationWebhookRequest {
     name: string;
     active?: boolean;
+    applicationRequestType: RequestType;
     applicationUrl: string;
     clientAuthorization: CreateWebhookAuthorizationRequest;
     payload: CreateWebhookPayloadRequest;

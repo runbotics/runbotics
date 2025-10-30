@@ -31,3 +31,4 @@ export * from './api/credential-template.model';
 export * from './api/license.model';
 export * from './api/action-blacklist.model';
 export * from './api/webhook.model';
+export * from './api/request-type.model';

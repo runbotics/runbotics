@@ -9,6 +9,7 @@ import {
     getWebhooks,
 } from '#src-app/store/slices/Webhook/Webhook.thunks';
 import { WebhookRegistrationForm } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookRegistrationForm';
+import useTranslations from '#src-app/hooks/useTranslations';
 
 interface WebhookDialogProps {
     isOpen: boolean;
@@ -21,6 +22,7 @@ const WebhookDialog: FC<WebhookDialogProps> = ({
     onClose,
     isEditMode,
 }) => {
+    const { translate } = useTranslations();
     const dispatch = useDispatch();
     const formData = useSelector((state) => state.webhook.registerWebhook);
 
@@ -39,12 +41,12 @@ const WebhookDialog: FC<WebhookDialogProps> = ({
     return (
         <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'md'}>
             <DialogTitle>
-                {'Register new Webhook'}
+                {translate('Webhooks.List.RegisterNewWebhook')}
             </DialogTitle>
             <WebhookRegistrationForm />
             <DialogActions>
                 <Button variant={'outlined'} onClick={onClose}>
-                    Cancel
+                    {translate('Webhooks.List.Cancel')}
                 </Button>
                 <Button
                     variant={'contained'}
@@ -53,7 +55,7 @@ const WebhookDialog: FC<WebhookDialogProps> = ({
                         onClose();
                     }}
                 >
-                    Register
+                    {translate('Webhooks.List.Register')}
                 </Button>
             </DialogActions>
         </Dialog>
