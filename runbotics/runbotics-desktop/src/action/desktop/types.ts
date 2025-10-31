@@ -135,15 +135,21 @@ export const isRegionDataType = (
     return (<RegionData>object).left !== undefined;
 };
 
+export interface BboxCordinates {
+    x0: number;
+    y0: number;
+    x1: number;
+    y1: number;
+}
+export interface SearchingAreaData {
+    direction: DirectionOfSearching;
+    heightPercentage: number;
+    widthPercentage: number;
+}
 export interface ParsedOCRWord {
     text: string;
     confidence: number;
-    bbox: {
-        x0: number;
-        y0: number;
-        x1: number;
-        y1: number;
-    };
+    bbox: BboxCordinates;
     id: string;
     pageNumber: number;
 }
@@ -152,12 +158,7 @@ export interface ParsedOCRLine {
     text: string;
     confidence: number;
     words: ParsedOCRWord[];
-    bbox: {
-        x0: number;
-        y0: number;
-        x1: number;
-        y1: number;
-    };
+    bbox: BboxCordinates;
     pageNumber: number;
 }
 
@@ -180,4 +181,11 @@ export interface RawHOCRResult {
         height: number;
         width: number;
     };
+}
+
+export enum DirectionOfSearching{
+    LEFT = 'LEFT',
+    RIGHT = 'RIGHT',
+    UP = 'UP',
+    DOWN = 'DOWN',
 }

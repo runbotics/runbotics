@@ -1,7 +1,9 @@
 import z from 'zod';
 import {
+    BboxCordinates,
     ClickTarget,
     CredentialAttribute,
+    DirectionOfSearching,
     ImageResourceFormat,
     Language,
     MouseButton,
@@ -10,6 +12,7 @@ import {
     ParsedOCRResult,
     ParsedOCRWord,
     RawHOCRResult,
+    SearchingAreaData,
 } from './types';
 import path from 'path';
 import { tmpdir } from 'os';
@@ -17,6 +20,7 @@ import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { RunboticsLogger } from '#logger';
 import parse, { HTMLElement } from 'node-html-parser';
+import levenshtein from 'js-levenshtein';
 
 const coordinateSchema = z.union([z.string(), z.number()]);
 
@@ -597,4 +601,217 @@ export function findWordCordinate(
         }
     }
     return foundWords.length > 0 ? foundWords : null;
+}
+
+function sliceSentenceIntoWords(sentence: string): string[] {
+    return sentence
+        .split(' ')
+        .map((word) => word.trim())
+        .filter((word) => word.length > 0);
+}
+
+function findSentenceInLine(
+    line: ParsedOCRLine,
+    anchorWords: string[],
+    acceptableLevenshteinDistance: number
+): ParsedOCRWord[] | null {
+    const anchorLength = anchorWords.length;
+
+    if (line.words.length < anchorLength) {
+        return null;
+    }
+
+    for (let i = 0; i <= line.words.length - anchorLength; i++) {
+        let currentLevenshteinDistance = 0;
+        const matchedWords: ParsedOCRWord[] = [];
+        let foundMatch = true;
+
+        for (let j = 0; j < anchorLength; j++) {
+            const lineWord = line.words[i + j].text.toLowerCase();
+            const anchorWord = anchorWords[j].toLowerCase();
+
+            if (lineWord !== anchorWord) {
+                const distance = levenshtein(lineWord, anchorWord);
+                currentLevenshteinDistance += distance;
+
+                if (
+                    currentLevenshteinDistance > acceptableLevenshteinDistance
+                ) {
+                    foundMatch = false;
+                    break;
+                }
+            }
+
+            matchedWords.push(line.words[i + j]);
+        }
+
+        if (
+            foundMatch &&
+            matchedWords.length === anchorLength &&
+            currentLevenshteinDistance <= acceptableLevenshteinDistance
+        ) {
+            return matchedWords;
+        }
+    }
+
+    return null;
+}
+
+function calculateAcceptableLevenshteinDistance(
+    anchorWords: string[],
+    percentageMarginOfError: number
+): number {
+    const totalChars = anchorWords.reduce((sum, word) => sum + word.length, 0);
+    return Math.floor((percentageMarginOfError / 100) * totalChars);
+}
+
+export function searchForAnchorSentence(
+    result: ParsedOCRResult,
+    anchorSentence: string,
+    acceptableLevenshteinDistance: number,
+    searchOnPage?: number
+): ParsedOCRWord[] | null {
+    if (!anchorSentence?.trim()) {
+        return null;
+    }
+
+    const anchorWords = sliceSentenceIntoWords(anchorSentence);
+
+    if (anchorWords.length === 0) {
+        return null;
+    }
+
+    const isSpecificPageSearch = searchOnPage !== undefined;
+
+    for (const page of result.pages) {
+        if (isSpecificPageSearch && searchOnPage !== page.pageNumber) continue;
+        for (const line of page.lines) {
+            const matchedWords = findSentenceInLine(
+                line,
+                anchorWords,
+                acceptableLevenshteinDistance
+            );
+            if (matchedWords) {
+                return matchedWords;
+            }
+        }
+    }
+
+    return null;
+}
+
+function getBboxFromWords(words: ParsedOCRWord[]): BboxCordinates {
+    if (!words || words.length === 0) {
+        throw new Error('getBboxFromWords requires a non-empty words array');
+    }
+
+    const bboxes = words.map((w) => w.bbox);
+
+    return {
+        x0: Math.min(...bboxes.map((b) => b.x0)),
+        y0: Math.min(...bboxes.map((b) => b.y0)),
+        x1: Math.max(...bboxes.map((b) => b.x1)),
+        y1: Math.max(...bboxes.map((b) => b.y1)),
+    };
+}
+
+function calculateSearchRegion(
+    anchorBbox: BboxCordinates,
+    searchingAreaData: SearchingAreaData
+): BboxCordinates {
+    switch (searchingAreaData.direction) {
+        case DirectionOfSearching.LEFT:
+            return {
+                x0: Math.max(
+                    0,
+                    anchorBbox.x0 - searchingAreaData.widthPercentage
+                ),
+                y0: anchorBbox.y0,
+                x1: anchorBbox.x0 - 1,
+                y1: anchorBbox.y1,
+            };
+        case DirectionOfSearching.RIGHT:
+            return {
+                x0: anchorBbox.x1 + 1,
+                y0: anchorBbox.y0,
+                x1: Math.min(
+                    100,
+                    anchorBbox.x1 + 1 + searchingAreaData.widthPercentage
+                ),
+                y1: Math.min(
+                    100,
+                    anchorBbox.y1 + searchingAreaData.heightPercentage
+                ),
+            };
+        case DirectionOfSearching.UP:
+            return {
+                x0: anchorBbox.x0,
+                y0: Math.max(
+                    0,
+                    anchorBbox.y0 - searchingAreaData.heightPercentage
+                ),
+                x1: Math.min(
+                    100,
+                    anchorBbox.x1 + searchingAreaData.widthPercentage
+                ),
+                y1: anchorBbox.y0 - 1,
+            };
+        case DirectionOfSearching.DOWN:
+            return {
+                x0: anchorBbox.x0,
+                y0: anchorBbox.y1 + 1,
+                x1: Math.min(
+                    100,
+                    anchorBbox.x1 + searchingAreaData.widthPercentage
+                ),
+                y1: Math.min(
+                    100,
+                    anchorBbox.y1 + searchingAreaData.heightPercentage
+                ),
+            };
+        default:
+            throw new Error('Invalid direction for searching area');
+    }
+}
+
+export function getDataFromAnchorSentence(
+    result: ParsedOCRResult,
+    anchorSentence: string,
+    percentageMarginOfError: number,
+    searchingAreaData: SearchingAreaData,
+    searchOnPage?: number
+): ParsedOCRWord[] | null {
+    if (percentageMarginOfError < 0) {
+        throw new Error('percentageMarginOfError must be non-negative');
+    }
+
+    const anchorWords = sliceSentenceIntoWords(anchorSentence);
+    
+    if (anchorWords.length === 0) {
+        return null;
+    }
+
+    const acceptableLevenshteinDistance = calculateAcceptableLevenshteinDistance(
+        anchorWords,
+        percentageMarginOfError
+    );
+
+    const matchedWords = searchForAnchorSentence(
+        result,
+        anchorSentence,
+        acceptableLevenshteinDistance,
+        searchOnPage
+    );
+
+    if (!matchedWords) {
+        return null;
+    }
+
+    const anchorBbox = getBboxFromWords(matchedWords);
+    const searchRegion = calculateSearchRegion(anchorBbox, searchingAreaData);
+
+    const pageNumber = searchOnPage ? searchOnPage : matchedWords[0].pageNumber;
+
+    const wordsInRegion = findTextInRegion(result, searchRegion, pageNumber);
+    return wordsInRegion.length > 0 ? wordsInRegion : null;
 }
