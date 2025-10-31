@@ -2,6 +2,7 @@ import { Column, Entity, Generated, Index, JoinColumn, ManyToOne, OneToOne, Prim
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
+import { dateTransformer } from '#/database/database.utils';
 
 @Entity({ schema: 'scheduler' })
 export class ClientRegistrationWebhook {
@@ -16,11 +17,11 @@ export class ClientRegistrationWebhook {
     @Column({ type: 'uuid', name: 'tenant_id' })
     tenantId: string;
 
-    @Column({ type: 'timestamp', name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
-    createdAt: Date;
+    @Column({ transformer: dateTransformer, type: 'timestamp without time zone', name: 'created_at' })
+    createdAt: string;
 
-    @Column({ type: 'timestamp', name: 'updated_at', default: () => 'CURRENT_TIMESTAMP' })
-    updatedAt: Date;
+    @Column({ transformer: dateTransformer, type: 'timestamp without time zone', name: 'updated_at', nullable: true })
+    updatedAt: string;
 
     @Column({ type: 'boolean', default: true })
     active: boolean;
