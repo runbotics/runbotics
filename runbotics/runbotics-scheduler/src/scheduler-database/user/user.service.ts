@@ -16,7 +16,18 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcryptjs';
 import { generate } from 'generate-password';
-import { BasicUserDto, FeatureKey, getRolesAllowedInTenant, PartialUserDto, Role, UserDto } from 'runbotics-common';
+import {
+    BasicUserDto,
+    DEFAULT_TENANT_ID,
+    FeatureKey,
+    getRolesAllowedInDefaultTenant,
+    getRolesAllowedInTenant,
+    Language,
+    PartialUserDto,
+    Role,
+    SupportedLanguage,
+    UserDto,
+} from 'runbotics-common';
 import { DataSource, FindManyOptions, In, Not, Repository } from 'typeorm';
 import { Authority } from '../authority/authority.entity';
 import { Tenant } from '../tenant/tenant.entity';
@@ -25,7 +36,10 @@ import { ActivateUserDto } from './dto/activate-user.dto';
 import { DeleteUserDto } from './dto/delete-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
-import { getAllFeatureKeysAssignedToUser, hasFeatureKey } from '#/utils/user.utils';
+import {
+    getAllFeatureKeysAssignedToUser,
+    hasFeatureKey,
+} from '#/utils/user.utils';
 
 @Injectable()
 export class UserService {
@@ -38,11 +52,13 @@ export class UserService {
         private readonly authorityRepository: Repository<Authority>,
         private readonly tenantService: TenantService,
         private readonly mailService: MailService,
-        private readonly dataSource: DataSource,
-    ) {
-    }
+        private readonly dataSource: DataSource
+    ) {}
 
-    async addMsalSSOCredentialsToUser(user: User, msalSsoUserDto: MsalSsoUserDto) {
+    async addMsalSSOCredentialsToUser(
+        user: User,
+        msalSsoUserDto: MsalSsoUserDto
+    ) {
         user.microsoftTenantId = msalSsoUserDto.msTenantId;
         user.microsoftUserId = msalSsoUserDto.msObjectId;
 
@@ -143,31 +159,37 @@ export class UserService {
     }
 
     findById(id: number) {
-        return this.userRepository.findOne({ where: { id }, relations: { authorities: true, tenant: true } });
+        return this.userRepository.findOne({
+            where: { id },
+            relations: { authorities: true, tenant: true },
+        });
     }
 
     async findByEmailForAuth(email: string | null) {
-        if(!email) {
+        if (!email) {
             throw new BadRequestException('Email is null');
         }
         const result = await this.userRepository.findOne({
             where: { email },
             relations: { authorities: true, tenant: true },
         });
-        if(!result) {
+        if (!result) {
             throw new NotFoundException(`User with email ${email} not found`);
         }
         const password = await this.userRepository.findOne({
-           select: { email:true, id: true, passwordHash: true},
+            select: { email: true, id: true, passwordHash: true },
             where: { id: result.id },
         });
         return {
-            ...result, 
+            ...result,
             passwordHash: password.passwordHash,
-            roles: result.authorities.map(authority => {
+            roles: result.authorities.map((authority) => {
                 return authority.name;
             }),
-            featureKeys: getAllFeatureKeysAssignedToUser(result.authorities, result.userFeatureKeys),
+            featureKeys: getAllFeatureKeysAssignedToUser(
+                result.authorities,
+                result.userFeatureKeys
+            ),
         };
     }
 
@@ -176,7 +198,10 @@ export class UserService {
     }
 
     findByEmailFromToken(email: string) {
-        return this.userRepository.findOne({ where: { email }, relations: { authorities: true, tenant: true, } });
+        return this.userRepository.findOne({
+            where: { email },
+            relations: { authorities: true, tenant: true },
+        });
     }
 
     async activate(activateDto: ActivateUserDto, id: number, executor: User) {
@@ -198,7 +223,8 @@ export class UserService {
             lastModifiedBy: executor.email,
         };
 
-        const updatedUserEntity = await this.userRepository.save(updatedUserDto);
+        const updatedUserEntity =
+            await this.userRepository.save(updatedUserDto);
 
         const isFirstActivation = !user.hasBeenActivated;
 
@@ -218,7 +244,8 @@ export class UserService {
         const authority = await this.getAuthorityFromRoles(roles);
         const user = await this.getUserForExecutorOrFail(id, executor);
 
-        const isFirstActivation = partialUser.activated && !user.hasBeenActivated;
+        const isFirstActivation =
+            partialUser.activated && !user.hasBeenActivated;
 
         const updatedUser: PartialUserDto = {
             ...user,
@@ -249,7 +276,9 @@ export class UserService {
 
     async deleteInTenant(id: number, user: User, userDto: DeleteUserDto) {
         if (!isTenantAdmin(user)) {
-            throw new ForbiddenException('You have no permission to decline users');
+            throw new ForbiddenException(
+                'You have no permission to decline users'
+            );
         }
         const userToDelete = await this.userRepository
             .findOneByOrFail({ id, tenantId: user.tenantId })
@@ -257,7 +286,9 @@ export class UserService {
                 throw new NotFoundException();
             });
         if (userToDelete.hasBeenActivated) {
-            throw new BadRequestException('User has been activated at least once');
+            throw new BadRequestException(
+                'User has been activated at least once'
+            );
         }
 
         await this.userRepository.delete(id);
@@ -290,7 +321,10 @@ export class UserService {
                 id: user.tenant.id,
                 name: user.tenant.name,
             },
-            featureKeys: getAllFeatureKeysAssignedToUser(user.authorities, user.userFeatureKeys),
+            featureKeys: getAllFeatureKeysAssignedToUser(
+                user.authorities,
+                user.userFeatureKeys
+            ),
             roles: user.authorities.map((auth) => auth.name),
         };
     }
@@ -317,23 +351,28 @@ export class UserService {
         return await (async () =>
             roles
                 ? await this.authorityRepository
-                    .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
-                    .then((auth) => ({ authorities: [auth] }))
+                      .findOneBy({ name: roles[0] }) // compatibility with old multiple roles
+                      .then((auth) => ({ authorities: [auth] }))
                 : {})();
     }
 
     private checkUpdateAllowedRole(user: User, roles: Role[] | undefined) {
         if (!roles) return;
 
-        const ROLES_ALLOWED_IN_TENANT = getRolesAllowedInTenant();
-
-        if (!hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) && !ROLES_ALLOWED_IN_TENANT.includes(roles[0])) {
+        const isDefaultTenant = user.tenantId === DEFAULT_TENANT_ID;
+        const allowedRoles = isDefaultTenant
+            ? getRolesAllowedInDefaultTenant()
+            : getRolesAllowedInTenant();
+        if (
+            !hasFeatureKey(user, FeatureKey.MANAGE_ALL_TENANTS) &&
+            !allowedRoles.includes(roles[0])
+        ) {
             throw new BadRequestException('Wrong role');
         }
     }
 
     private getTenantRelation(
-        tenantId: string | null,
+        tenantId: string | null
     ): Promise<{ tenant: Tenant } | null> {
         return this.tenantService
             .getById(tenantId)
@@ -362,5 +401,24 @@ export class UserService {
             },
             relations: ['authorities'],
         });
+    }
+
+    async updateLanguage(userId: number, langKey: string): Promise<User> {
+        const user = await this.userRepository.findOneBy({ id: userId });
+
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        const supportedLanguages = Object.values(Language);
+
+        if (!supportedLanguages.includes(langKey as SupportedLanguage)) {
+            throw new BadRequestException(
+                `Language '${langKey}' is not supported. Supported languages: ${supportedLanguages.join(', ')}`
+            );
+        }
+
+        user.langKey = langKey;
+        return await this.userRepository.save(user);
     }
 }

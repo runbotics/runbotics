@@ -1,3 +1,4 @@
+import webhooksTranslations from '#src-app/translations/en/webhooks';
 import blogTranslations from '#src-landing/translations/en/blog';
 import feedbackTranslations from '#src-landing/translations/en/feedback';
 import landingPageTranslations from '#src-landing/translations/en/landing';
@@ -51,5 +52,6 @@ const translationResources = {
     ...feedbackTranslations,
     ...marketplaceTranslations,
     ...aiAssistantTranslations,
+    ...webhooksTranslations,
 };
 export default translationResources;

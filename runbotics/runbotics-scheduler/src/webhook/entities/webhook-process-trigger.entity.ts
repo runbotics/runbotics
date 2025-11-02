@@ -4,7 +4,7 @@ import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 import { ProcessEntity } from '#/scheduler-database/process/process.entity';
 
 @Entity({ schema: 'scheduler', name: 'webhook_process_trigger' })
-@Unique(['tenant_id', 'webhook_id', 'process_id'])
+@Unique(['tenantId', 'webhookId', 'processId'])
 export class WebhookProcessTrigger {
     @PrimaryColumn('uuid')
     @Generated('uuid')

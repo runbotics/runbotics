@@ -28,6 +28,7 @@ import {
     getModelerActivitiesElementsWithOutput,
     validateElement,
     validateStartEvents,
+    validateAllConnections,
 } from './useModelerListener.validation';
 import useTranslations from '../useTranslations';
 
@@ -147,6 +148,13 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
                     )
                 );
             }
+            if (event.trigger === 'execute') {
+                validateAllConnections(
+                    modeler,
+                    handleInvalidShape,
+                    handleValidShape
+                );
+            }
         },
         [ModelerEvent.COMMANDSTACK_SHAPE_DELETE_PREEXECUTE]: (
             event: CommandStackEvent
@@ -164,37 +172,20 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         [ModelerEvent.COMMANDSTACK_CONNECTION_DELETE_POSTEXECUTED]: (
             event: CommandStackEvent
         ) => {
-            const { source, target } = event.context;
-
-            validateElement({
-                element: source,
-                handleInvalidElement: handleInvalidShape,
-                handleValidElement: handleValidShape,
+            validateAllConnections(
                 modeler,
-            });
-            validateElement({
-                element: target,
-                handleInvalidElement: handleInvalidShape,
-                handleValidElement: handleValidShape,
-                modeler,
-            });
+                handleInvalidShape,
+                handleValidShape
+            );
         },
         [ModelerEvent.COMMANDSTACK_CONNECTION_CREATE_POSTEXECUTED]: (
             event: CommandStackEvent
         ) => {
-            const { source, target } = event.context;
-            validateElement({
-                element: source,
-                handleInvalidElement: handleInvalidShape,
-                handleValidElement: handleValidShape,
+            validateAllConnections(
                 modeler,
-            });
-            validateElement({
-                element: target,
-                handleInvalidElement: handleInvalidShape,
-                handleValidElement: handleValidShape,
-                modeler,
-            });
+                handleInvalidShape,
+                handleValidShape
+            );
         },
         [ModelerEvent.COMMANDSTACK_ELEMENTS_CREATE_POSTEXECUTED]: (
             event: CommandStackEvent
@@ -222,15 +213,20 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         },
         [ModelerEvent.CONNECTION_REMOVED]: (event: EventBusEvent) => {
             dispatch(processActions.removeError(event.element.id));
-            dispatch(processActions.removeCustomValidationError(event.element.id));
+            dispatch(
+                processActions.removeCustomValidationError(event.element.id)
+            );
             setCurrentTab(null);
         },
         [ModelerEvent.IMPORT_DONE]: () => {
             const { _elements } = modeler.get('elementRegistry');
-            const activitiesWithOutput = getModelerActivitiesElementsWithOutput(_elements);
+            const activitiesWithOutput =
+                getModelerActivitiesElementsWithOutput(_elements);
             Object.values(activitiesWithOutput).forEach(({ element }) => {
                 if (element.businessObject.processOutput) {
-                    dispatch(processActions.setCurrentProcessOutputElement(element));
+                    dispatch(
+                        processActions.setCurrentProcessOutputElement(element)
+                    );
                 }
             });
         },
@@ -246,7 +242,9 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
             setCurrentTab(null);
             dispatch(processActions.removeAppliedAction(event.element.id));
             dispatch(processActions.removeError(event.element.id));
-            dispatch(processActions.removeCustomValidationError(event.element.id));
+            dispatch(
+                processActions.removeCustomValidationError(event.element.id)
+            );
             const relatedError = store
                 .getState()
                 .process.modeler.errors.find((error) =>
@@ -276,7 +274,7 @@ const useModelerListener = ({ setCurrentTab }: ModelerListenerHookProps) => {
         [ModelerEvent.DRAG_INIT]: () => {
             dispatch(processActions.setActiveDrag(true));
         },
-        [ModelerEvent.DRAG_CLEANUP] : () => {
+        [ModelerEvent.DRAG_CLEANUP]: () => {
             dispatch(processActions.setActiveDrag(false));
         },
     });

@@ -108,6 +108,12 @@ export const usePublicSections = (): Section[] => {
                     authorities: [Role.ROLE_USER],
                     featureKeys: [FeatureKey.AI_ASSISTANTS_ACCESS],
                 },
+                // {
+                //     title: translate('Nav.Items.Webhooks'),
+                //     icon: BadgeOutlinedIcon,
+                //     href: '/app/webhooks',
+                //     featureKeys: [FeatureKey.WEBHOOKS_PAGE_READ],
+                // },
             ],
         },
     ];
