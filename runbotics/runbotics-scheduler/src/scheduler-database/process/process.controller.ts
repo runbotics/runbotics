@@ -48,7 +48,7 @@ import { UpdateExecutionInfoDto, updateExecutionInfoSchema, UpdateExecutionInfoS
 import { isTenantAdmin } from '#/utils/authority.utils';
 import { BlacklistGuard } from '#/blacklist-actions-auth/blacklist.guard';
 
-import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { processIdSwaggerObjectDescription, SwaggerTags } from '#/utils/swagger.utils';
 import { ApiDefaultAuthResponses } from '#/utils/decorators/swagger/ApiDefaultAuthResponses.decorator';
 import { ApiProcessPageFilters } from '#/utils/decorators/swagger/ApiProcessPageFilters.decorator';
