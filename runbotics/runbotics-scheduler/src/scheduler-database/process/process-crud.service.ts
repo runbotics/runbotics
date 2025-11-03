@@ -186,19 +186,16 @@ export class ProcessCrudService {
 
         const currentWebhooks = currentProcess.webhookTriggers || [];
 
-        // Check if webhook registered in tenant
-        const registeredWebhook = await this.findWebhookOrFail(webhookToAdd.webhookId, user.tenantId);
+        const webhookRegisteredInTenant = await this.findWebhookOrFail(webhookToAdd.webhookId, user.tenantId);
 
-        // Check if webhook already added to the process
         const existingWebhookProcessTrigger = currentWebhooks.find(webhook => webhook.webhookId === webhookToAdd.webhookId);
 
         if (existingWebhookProcessTrigger) {
             throw new BadRequestException('Webhook already added to this process');
         }
 
-        // If not - create new webhook process trigger
         await this.webhookProcessTriggerRepository.save({
-            webhookId: registeredWebhook.id,
+            webhookId: webhookRegisteredInTenant.id,
             tenantId: user.tenantId,
             processId: currentProcess.id
         });
