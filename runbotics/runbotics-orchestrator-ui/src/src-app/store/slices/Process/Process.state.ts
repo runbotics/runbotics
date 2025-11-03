@@ -5,6 +5,7 @@ import {
     ProcessCredential,
     ProcessCredentialDto,
     ProcessDto,
+    WebhookProcessTrigger,
 } from 'runbotics-common';
 
 import { IBpmnAction } from '#src-app/Actions/types';
@@ -59,6 +60,7 @@ export interface ProcessState {
         error: any;
         processSubscriptions: NotificationProcess[];
         credentials: ProcessCredentialDto[];
+        webhookTriggers: WebhookProcessTrigger[]
     };
     modeler: ModelerState;
     all: {

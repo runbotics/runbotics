@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '#src-app/store';
-import { CreateClientRegistrationWebhookRequest, WebhookState } from '#src-app/store/slices/Webhook/Webhook.state';
 import buildWebhooksExtraReducers from '#src-app/store/slices/Webhook/Webhook.extraReducers';
+import { CreateClientRegistrationWebhookRequest, WebhookState } from '#src-app/store/slices/Webhook/Webhook.state';
+
+import * as webhookThunks from './Webhook.thunks';
 
 const initialState: WebhookState = {
     loading: false,
@@ -38,4 +40,5 @@ export const webhookSelector = (state: RootState) => state.webhook;
 
 export const webhookActions = {
     ...slice.actions,
+    ...webhookThunks,
 };

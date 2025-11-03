@@ -19,6 +19,8 @@ import {
     getProcessCredentials,
     getSimplifiedProcesses,
     createProcess,
+    addWebhook,
+    deleteWebhook,
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
@@ -91,6 +93,7 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         .addCase(fetchProcessById.fulfilled, (state, { payload }) => {
             state.draft.process = payload;
             state.draft.loading = LoadingType.IDLE;
+            state.draft.webhookTriggers = payload.webhookTriggers;
         })
         .addCase(fetchProcessById.rejected, (state, action) => {
             state.draft.loading = LoadingType.IDLE;
@@ -178,6 +181,22 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         // GET ALL PROCESS CREDENTIALS
         .addCase(getProcessCredentials.fulfilled, (state, action) => {
             state.draft.credentials = action.payload;
+        })
+
+        // ADD WEBHOOK TRIGGER TO THE PROCESS
+        .addCase(addWebhook.fulfilled, (state, action) => {
+            state.draft.process = action.payload;
+        })
+        .addCase(addWebhook.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
+        })
+
+        // DELETE WEBHOOK TRIGGER
+        .addCase(deleteWebhook.fulfilled, (state, action) => {
+            state.draft.process = action.payload;
+        })
+        .addCase(deleteWebhook.rejected, (state, action: any) => {
+            state.draft.error = action.payload.status;
         });
 };
 

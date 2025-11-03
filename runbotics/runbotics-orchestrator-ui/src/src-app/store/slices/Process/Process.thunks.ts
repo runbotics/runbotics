@@ -5,6 +5,7 @@ import {
     CreateNotificationProcessDto,
     IProcess,
     NotificationProcess,
+    PatchWebhookProcessTrigger,
     ProcessCredentialDto,
     ProcessDto,
     Tag,
@@ -234,4 +235,14 @@ export const deleteProcessCredential = ApiTenantResource.delete<void>(
 export const getBlacklistedActions = ApiTenantResource.get<ActionBlacklist>(
     'action-blacklist/current',
     'action-blacklist/current'
+);
+
+export const addWebhook = ApiTenantResource.patch<IProcess, PatchWebhookProcessTrigger>(
+    'process/add-webhook',
+    (id: string) => `${PROCESSES_PATH}/${id}/add-webhook`,
+);
+
+export const deleteWebhook = ApiTenantResource.patch<IProcess, PatchWebhookProcessTrigger>(
+    'process/delete-webhook',
+    (id: string) => `${PROCESSES_PATH}/${id}/delete-webhook`
 );
