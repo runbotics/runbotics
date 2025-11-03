@@ -197,11 +197,13 @@ export class ProcessCrudService {
         }
 
         // If not - create new webhook process trigger
-        return this.webhookProcessTriggerRepository.save({
+        await this.webhookProcessTriggerRepository.save({
             webhookId: registeredWebhook.id,
             tenantId: user.tenantId,
             processId: currentProcess.id
         });
+
+        return this.processRepository.findOne({ where: { id: processId }, relations: RELATIONS });
     }
 
     async deleteWebhook(user: User, processId: number, webhookToDelete: UpdateProcessWebhookDto) {
@@ -210,14 +212,16 @@ export class ProcessCrudService {
         const currentWebhooks = currentProcess.webhookTriggers || [];
 
         const existingWebhookProcessTrigger = currentWebhooks.find(
-            (trigger) => trigger.webhookId === webhookToDelete.webhookId
+            (trigger) => trigger.id === webhookToDelete.webhookId
         );
 
         if (!existingWebhookProcessTrigger) {
             throw new NotFoundException('Webhook trigger not found on this process');
         }
 
-        return this.webhookProcessTriggerRepository.delete(existingWebhookProcessTrigger.id);
+        await this.webhookProcessTriggerRepository.delete(existingWebhookProcessTrigger.id);
+
+        return this.processRepository.findOne({ where: { id: processId }, relations: RELATIONS });
     }
 
     async updateDiagram(user: User, id: number, updateDiagramDto: UpdateDiagramDto) {

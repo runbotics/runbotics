@@ -108,6 +108,8 @@ export interface WebhookProcessTrigger {
     createdAt: string;
 }
 
+export type PatchWebhookProcessTrigger = Pick<WebhookProcessTrigger, 'webhookId'>
+
 export interface CreateWebhookProcessTriggerRequest {
     tenantId: Tenant['id'];
     webhookId: ClientRegistrationWebhook['id'];

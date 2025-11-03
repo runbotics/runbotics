@@ -413,7 +413,7 @@ export class ProcessController {
     @ApiForbiddenResponse({
         description: 'User does not have permission to add webhook to this process',
     })
-    @Post(':id/webhooks')
+    @Patch(':id/add-webhook')
     @FeatureKeys(FeatureKey.PROCESS_WEBHOOKS_EDIT)
     async addWebhook(
         @Param('id', new ParseIntPipe()) id: number,
@@ -448,7 +448,7 @@ export class ProcessController {
     @ApiForbiddenResponse({
         description: 'User does not have permission to delete webhook',
     })
-    @Delete(':id/webhooks')
+    @Patch(':id/delete-webhook')
     @FeatureKeys(FeatureKey.PROCESS_WEBHOOKS_EDIT)
     async deleteWebhook(
         @Param('id', new ParseIntPipe()) id: number,
