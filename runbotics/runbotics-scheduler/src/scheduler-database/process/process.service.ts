@@ -17,6 +17,7 @@ const relations = [
     'notifications.user.authorities',
     'processCredential.credential.attributes',
     'processCredential.credential.template',
+    'webhookTriggers'
 ];
 
 interface PartialUpdateProcess extends IProcess {

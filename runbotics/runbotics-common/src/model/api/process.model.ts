@@ -6,6 +6,7 @@ import { Tag } from './tag.model';
 import { ProcessOutput } from './process-output.model';
 import { ProcessCollection } from './process-collection.model';
 import { Tenant } from './tenant.model';
+import { WebhookProcessTrigger } from './webhook.model';
 
 export interface IProcess {
     id?: number;
@@ -27,6 +28,7 @@ export interface IProcess {
     processCollection?: ProcessCollection | null;
     editor?: User | null;
     tags?: Tag[];
+    webhookTriggers?: WebhookProcessTrigger[] | null;
     output?: ProcessOutput;
     tenantId?: Tenant['id'];
 }

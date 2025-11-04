@@ -6,7 +6,7 @@ export const BasicTenantDtoSchema = z.object({
     description: z.string().optional(),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
-    serviceTokenExpDate: z.string().optional(),
+    serviceTokenExpDate: z.string().optional().nullable()
 });
 
 export type BasicTenantDto = z.infer<typeof BasicTenantDtoSchema>;
