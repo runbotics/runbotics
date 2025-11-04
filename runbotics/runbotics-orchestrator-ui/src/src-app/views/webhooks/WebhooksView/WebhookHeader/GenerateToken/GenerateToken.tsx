@@ -1,12 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 
 import { ContentCopyOutlined, InfoOutlined } from '@mui/icons-material';
-import { Button, Snackbar, Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 
 import { differenceInDays } from 'date-fns';
 
 import { useSnackbar } from 'notistack';
 
+import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { getServiceToken } from '#src-app/store/slices/Webhook/Webhook.thunks';
 import {
@@ -19,6 +20,7 @@ import {
 import { WebhookHeaderTokenContainer } from '#src-app/views/webhooks/WebhooksView/WebhookHeader/WebhookHeader.styles';
 
 const GenerateToken: FC = () => {
+    const {translate} = useTranslations();
     const dispatch = useDispatch();
     const tenantState = useSelector((state) => state.auth.user.tenant);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -66,21 +68,21 @@ const GenerateToken: FC = () => {
                     disabled={isButtonDisabled}
                     onClick={onGenerateClick}
                 >
-                    GENERATE TOKEN
+                    {translate('Webhooks.List.RegisterWebhook')}
                 </Button>
             </GenerateTokenButton>
             <TokenContainer>
                 {daysToExpire && (
                     <TokenInfo>
                         <ExpirationDate>
-                            Token is valid for <b>{daysToExpire}</b> days
+                            {translate('Webhooks.List.TokenExpirationInDays', {days: daysToExpire})}
                         </ExpirationDate>
                         {isTokenVisible && <ContentCopyOutlined onClick={copyToken} />}
                     </TokenInfo>
                 )}
                 {isTokenVisible && <Token>{token}</Token>}
             </TokenContainer>
-            {!isTokenVisible && <Tooltip title={'The token is used to authorize client in the RunBotics'} ><InfoOutlined /></Tooltip>}
+            {!isTokenVisible && <Tooltip title={translate('Webhooks.List.TokenAuthorizationInfo')} ><InfoOutlined /></Tooltip>}
         </WebhookHeaderTokenContainer>
     );
 };
