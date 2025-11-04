@@ -1,0 +1,53 @@
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+import { Webhook } from '../model/webhook/webhook.entity';
+import { Token } from '../model/token/token.entity';
+import { HttpService } from '@nestjs/axios';
+import { Cron } from '@nestjs/schedule';
+
+@Injectable()
+export class WebhookService {
+    constructor(private readonly dataSource: DataSource, 
+        private readonly httpService: HttpService) {}
+
+    async register(body: Record<string, any>) {
+        const webhookUrl = body.webhookUrl;
+        const resources = body.data?.resources;
+        const newWebhook = await this.dataSource.manager.save(Webhook, {
+            rbUrl: webhookUrl,
+            authorization: 'JWT',
+            resources: resources ?? 'all',
+        });
+        
+        return newWebhook;
+    }
+    
+    async saveToken(tokenString: string): Promise<any> {
+        const token = await this.dataSource.manager.findOne(Token, {});
+        if(!token) {
+            const newWebhookToken = await this.dataSource.manager.save(Token, {
+                token: tokenString
+            });
+        } else {
+            await this.dataSource.manager.save(Token, { ...token, token: tokenString });
+        }
+        return 'new token saved';
+    }
+    
+    @Cron('45 * * * * *')
+    async sendRequestToRB(): Promise<any> {
+        const registeredWebhook = await this.dataSource.manager.find(Webhook, {});
+        const token = await this.dataSource.manager.findOne(Token, {});
+        if(!token) {
+            throw new InternalServerErrorException('No token found.');
+        }
+        registeredWebhook.forEach((webhook) => {
+            this.httpService.post(webhook.rbUrl, {
+                headers: {
+                    Authorization: `Bearer ${token.token}`
+                }
+            })
+        })
+        
+    }
+}

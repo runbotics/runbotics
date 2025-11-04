@@ -35,7 +35,10 @@
         "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.1",
         "typeorm": "^0.3.27",
-        "wrap-ansi": "7"
+        "wrap-ansi": "7",
+        "@nestjs/axios": "~4.0.1",
+        "axios": "~1.13.1",
+        "@nestjs/schedule": "~6.0.1"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3.2.0",

@@ -13,5 +13,4 @@ export class Webhook {
   
   @Column()
   authorization: string;
-  
 }

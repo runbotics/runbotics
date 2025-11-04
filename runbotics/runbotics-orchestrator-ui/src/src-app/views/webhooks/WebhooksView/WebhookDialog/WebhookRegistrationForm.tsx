@@ -19,10 +19,7 @@ import * as Yup from 'yup';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
-import {
-    CreateClientRegistrationWebhookRequest,
-    webhookActions,
-} from '#src-app/store/slices/Webhook';
+import { CreateClientRegistrationWebhookRequest, webhookActions, } from '#src-app/store/slices/Webhook';
 import { registerValidationSchema } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/registerValidationSchema';
 import {
     RegistrationPayloadInfo,
@@ -79,11 +76,11 @@ export const WebhookRegistrationForm: FC = () => {
                     formValues.type === WebhookAuthorizationType.JWT
                         ? formValues.token
                         : formValues.type === WebhookAuthorizationType.BASIC
-                        ? {
-                              username: formValues.username,
-                              password: formValues.password,
-                          }
-                        : null,
+                            ? {
+                                username: formValues.username,
+                                password: formValues.password,
+                            }
+                            : null,
             },
             payload: {
                 webhookIdPath: formValues.webhookIdPath,
@@ -120,24 +117,33 @@ export const WebhookRegistrationForm: FC = () => {
 
     const onBlur = async () => {
         await validateForm();
+        const clientAuthData = () => {
+            switch (formValues.type) {
+                case WebhookAuthorizationType.NONE:
+                    return null;
+                case WebhookAuthorizationType.JWT:
+                    return {
+                        token: formValues.token,
+                    }
+                case WebhookAuthorizationType.BASIC:
+                    return {
+                        username: formValues.username,
+                        password: formValues.password,
+                    }
+                default:
+                    return null;
+            }
+        };
+        
         const newRegistrationForm: CreateClientRegistrationWebhookRequest = {
             name: formValues.name,
             applicationUrl: formValues.applicationUrl,
             applicationRequestType: formValues.applicationRequestType,
             registrationPayload: formValues.registrationPayload,
+            // @ts-expect-error some union types problems with ts
             clientAuthorization: {
                 type: formValues.type,
-                // @ts-expect-error union types doesn't work well
-                data:
-                    // eslint-disable-next-line no-nested-ternary
-                    formValues.type === WebhookAuthorizationType.JWT
-                        ? formValues.token
-                        : formValues.type === WebhookAuthorizationType.BASIC
-                        ? {
-                              username: formValues.username,
-                              password: formValues.password,
-                          }
-                        : null,
+                data: clientAuthData(),
             },
             payload: {
                 webhookIdPath: formValues.webhookIdPath,
