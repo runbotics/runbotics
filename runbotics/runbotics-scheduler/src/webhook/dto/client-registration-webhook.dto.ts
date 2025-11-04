@@ -4,10 +4,12 @@ import {
     UpdateWebhookAuthorizationDtoSchema,
 } from '#/webhook/dto/webhook-authorization.dto';
 import { CreateWebhookPayloadDtoSchema, UpdateWebhookPayloadDtoSchema } from '#/webhook/dto/webhook-payload.dto';
+import { RequestType } from 'runbotics-common';
 
 export const CreateClientRegistrationWebhookDtoSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     active: z.boolean().default(true),
+    applicationRequestType: z.nativeEnum(RequestType),
     applicationUrl: z.string().url('Invalid URL'),
 
     clientAuthorization: CreateWebhookAuthorizationDtoSchema.optional(),

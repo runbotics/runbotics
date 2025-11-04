@@ -26,7 +26,7 @@ export class WebhookService {
     async createWebhookEntry(tenantId: string, webhookDto: CreateClientRegistrationWebhookDto) {
         const manager = this.dataSource.manager;
         const transactionResult = await manager.transaction(async (manager) => {
-            const { name, applicationUrl, active, clientAuthorization, payload, registrationPayload } = webhookDto;
+            const { name, applicationUrl, applicationRequestType, active, clientAuthorization, payload, registrationPayload } = webhookDto;
 
             const clientAuthDataHashed = clientAuthorization.type !== WebhookAuthorizationType.NONE ? {
                 type: clientAuthorization.type,
@@ -47,6 +47,7 @@ export class WebhookService {
             const newWebhookEntry = await manager.save(ClientRegistrationWebhook, {
                 name,
                 applicationURL: applicationUrl,
+                applicationRequestType,
                 active,
                 tenantId,
                 clientAuthorization: newClientAuth,

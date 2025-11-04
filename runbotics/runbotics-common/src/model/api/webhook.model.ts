@@ -1,4 +1,5 @@
 import { IProcess } from './process.model';
+import { RequestType } from './request-type.model';
 import { Tenant } from './tenant.model';
 
 export enum WebhookAuthorizationType {
@@ -84,6 +85,7 @@ export interface CreateClientRegistrationWebhookRequest {
     name: string;
     active?: boolean;
     applicationUrl: string;
+    applicationRequestType: RequestType;
     clientAuthorization: CreateWebhookAuthorizationRequest;
     payload: CreateWebhookPayloadRequest;
     registrationPayload?: string | null;

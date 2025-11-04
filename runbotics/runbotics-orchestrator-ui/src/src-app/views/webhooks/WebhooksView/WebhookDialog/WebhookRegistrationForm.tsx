@@ -1,14 +1,19 @@
 import { FC, useCallback, useState } from 'react';
 
+import { InfoOutlined } from '@mui/icons-material';
 import {
     Box,
     DialogContent,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
     TextField,
     ToggleButton,
     ToggleButtonGroup,
+    Tooltip,
     Typography,
 } from '@mui/material';
-import { WebhookAuthorizationType } from 'runbotics-common';
+import { RequestType, WebhookAuthorizationType } from 'runbotics-common';
 
 import * as Yup from 'yup';
 
@@ -19,7 +24,11 @@ import {
     webhookActions,
 } from '#src-app/store/slices/Webhook';
 import { registerValidationSchema } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/registerValidationSchema';
-import { WebhookContent } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookDialog.styles';
+import {
+    RegistrationPayloadInfo,
+    WebhookContent,
+    WebhookRegistrationPayloadContainer,
+} from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookDialog.styles';
 import {
     initialFormState,
     newClientAuthorization,
@@ -47,6 +56,49 @@ export const WebhookRegistrationForm: FC = () => {
         }
     };
 
+    const handleSelectChange = (e: SelectChangeEvent<RequestType>) => {
+        if (formValues.applicationRequestType === e.target.value) {
+            return;
+        }
+
+        setFormValues((prev) => ({
+            ...prev,
+            applicationRequestType: e.target.value as RequestType,
+        }));
+
+        const newRegistrationForm: CreateClientRegistrationWebhookRequest = {
+            name: formValues.name,
+            applicationRequestType: e.target.value as RequestType,
+            applicationUrl: formValues.applicationUrl,
+            registrationPayload: formValues.registrationPayload,
+            clientAuthorization: {
+                type: formValues.type,
+                // @ts-expect-error union types doesn't work well
+                data:
+                    // eslint-disable-next-line no-nested-ternary
+                    formValues.type === WebhookAuthorizationType.JWT
+                        ? formValues.token
+                        : formValues.type === WebhookAuthorizationType.BASIC
+                        ? {
+                              username: formValues.username,
+                              password: formValues.password,
+                          }
+                        : null,
+            },
+            payload: {
+                webhookIdPath: formValues.webhookIdPath,
+                payloadDataPath: formValues.payloadDataPath,
+            },
+        };
+        dispatch(webhookActions.setRegistrationForm(newRegistrationForm));
+    };
+
+    const selectOptions = Object.values(RequestType).map((type) => (
+        <MenuItem key={type} value={type}>
+            {type}
+        </MenuItem>
+    ));
+
     const validateForm = useCallback(async () => {
         try {
             await registerValidationSchema.validate(formValues, {
@@ -71,20 +123,21 @@ export const WebhookRegistrationForm: FC = () => {
         const newRegistrationForm: CreateClientRegistrationWebhookRequest = {
             name: formValues.name,
             applicationUrl: formValues.applicationUrl,
+            applicationRequestType: formValues.applicationRequestType,
             registrationPayload: formValues.registrationPayload,
             clientAuthorization: {
                 type: formValues.type,
                 // @ts-expect-error union types doesn't work well
                 data:
-                // eslint-disable-next-line no-nested-ternary
+                    // eslint-disable-next-line no-nested-ternary
                     formValues.type === WebhookAuthorizationType.JWT
                         ? formValues.token
                         : formValues.type === WebhookAuthorizationType.BASIC
-                            ? {
-                                username: formValues.username,
-                                password: formValues.password,
-                            }
-                            : null,
+                        ? {
+                              username: formValues.username,
+                              password: formValues.password,
+                          }
+                        : null,
             },
             payload: {
                 webhookIdPath: formValues.webhookIdPath,
@@ -109,59 +162,120 @@ export const WebhookRegistrationForm: FC = () => {
                     required
                 />
 
-                <TextField
-                    label={translate('Webhooks.Form.ApplicationUrl')}
-                    name="applicationUrl"
-                    value={formValues.applicationUrl}
-                    onChange={handleChange}
-                    error={Boolean(error.applicationUrl)}
-                    helperText={error.applicationUrl}
-                    fullWidth
-                    onBlur={onBlur}
-                    required
-                />
+                <Box flexDirection={'row'} display={'flex'} gap={'.5rem'}>
+                    <Select
+                        onChange={handleSelectChange}
+                        value={formValues.applicationRequestType}
+                        sx={{
+                            flex: 2,
+                        }}
+                    >
+                        {selectOptions}
+                    </Select>
+                    <TextField
+                        label={translate('Webhooks.Form.ApplicationUrl')}
+                        name="applicationUrl"
+                        value={formValues.applicationUrl}
+                        onChange={handleChange}
+                        error={Boolean(error.applicationUrl)}
+                        helperText={error.applicationUrl}
+                        fullWidth
+                        onBlur={onBlur}
+                        required
+                        sx={{
+                            flex: 10,
+                        }}
+                    />
+                </Box>
 
-                <TextField
-                    label={translate('Webhooks.Form.PayloadDataPath')}
-                    name="payloadDataPath"
-                    value={formValues.payloadDataPath}
-                    onChange={handleChange}
-                    error={Boolean(error.payloadDataPath)}
-                    helperText={error.payloadDataPath}
-                    fullWidth
-                    onBlur={onBlur}
-                    required
-                />
+                <Box
+                    flexDirection={'row'}
+                    display={'flex'}
+                    gap={'.5rem'}
+                    alignItems={'center'}
+                >
+                    <TextField
+                        label={translate('Webhooks.Form.PayloadDataPath')}
+                        name="payloadDataPath"
+                        value={formValues.payloadDataPath}
+                        onChange={handleChange}
+                        error={Boolean(error.payloadDataPath)}
+                        helperText={error.payloadDataPath}
+                        fullWidth
+                        onBlur={onBlur}
+                        required
+                    />
+                    <Tooltip
+                        title={
+                            'Provide path as object separated with dot. Example "data.payload.parameters"'
+                        }
+                    >
+                        <InfoOutlined />
+                    </Tooltip>
+                </Box>
+                <Box
+                    flexDirection={'row'}
+                    display={'flex'}
+                    gap={'.5rem'}
+                    alignItems={'center'}
+                >
+                    <TextField
+                        label={translate('Webhooks.Form.WebhookIdPath')}
+                        name="webhookIdPath"
+                        value={formValues.webhookIdPath}
+                        onChange={handleChange}
+                        error={Boolean(error.webhookNamePath)}
+                        helperText={error.webhookNamePath}
+                        fullWidth
+                        onBlur={onBlur}
+                        required
+                    />
+                    <Tooltip
+                        title={
+                            'Provide path as object separated with dot. Example "data.payload.webhookId"'
+                        }
+                    >
+                        <InfoOutlined />
+                    </Tooltip>
+                </Box>
 
-                <TextField
-                    label={translate('Webhooks.Form.WebhookIdPath')}
-                    name="webhookIdPath"
-                    value={formValues.webhookIdPath}
-                    onChange={handleChange}
-                    error={Boolean(error.webhookNamePath)}
-                    helperText={error.webhookNamePath}
-                    fullWidth
-                    onBlur={onBlur}
-                    required
-                />
-
-                <TextField
-                    label={translate('Webhooks.Form.RegistrationPayload')}
-                    name="registrationPayload"
-                    value={formValues.registrationPayload}
-                    onChange={handleChange}
-                    error={Boolean(error.registrationPayload)}
-                    helperText={error.registrationPayload}
-                    fullWidth
-                    multiline
-                    minRows={5}
-                    maxRows={5}
-                    onBlur={onBlur}
-                />
+                <WebhookRegistrationPayloadContainer>
+                    <TextField
+                        label={translate('Webhooks.Form.RegistrationPayload')}
+                        name="registrationPayload"
+                        value={formValues.registrationPayload}
+                        onChange={handleChange}
+                        error={Boolean(error.registrationPayload)}
+                        helperText={error.registrationPayload}
+                        fullWidth
+                        multiline
+                        minRows={5}
+                        maxRows={5}
+                        onBlur={onBlur}
+                    />
+                    <RegistrationPayloadInfo>
+                        {translate('Webhooks.Form.RegistrationPayloadInfo')}
+                    </RegistrationPayloadInfo>
+                </WebhookRegistrationPayloadContainer>
 
                 <Box>
-                    <Typography variant="subtitle1" mb={1}>
+                    <Typography
+                        variant="h5"
+                        mb={1}
+                        sx={{
+                            display: 'flex',
+                            gap: '.5rem',
+                            alignItems: 'center',
+                        }}
+                    >
                         {translate('Webhooks.Form.AuthorizationMethod')}
+                        <Tooltip
+                            title={translate(
+                                'Webhooks.Form.Tooltip.AuthorizationMethod'
+                            )}
+                        >
+                            <InfoOutlined fontSize={'small'} />
+                        </Tooltip>
                     </Typography>
                     <ToggleButtonGroup
                         color="primary"
@@ -192,8 +306,7 @@ export const WebhookRegistrationForm: FC = () => {
                     </ToggleButtonGroup>
                 </Box>
 
-                {formValues.type ===
-                    WebhookAuthorizationType.JWT && (
+                {formValues.type === WebhookAuthorizationType.JWT && (
                     <TextField
                         label={translate('Webhooks.Form.JwtToken')}
                         name="token"
@@ -210,8 +323,7 @@ export const WebhookRegistrationForm: FC = () => {
                     />
                 )}
 
-                {formValues.type ===
-                    WebhookAuthorizationType.BASIC && (
+                {formValues.type === WebhookAuthorizationType.BASIC && (
                     <>
                         <TextField
                             label={translate('Webhooks.Form.Username')}
