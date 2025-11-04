@@ -181,7 +181,7 @@ export class ProcessCrudService {
         return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
     }
 
-    async addWebhook(user: User, processId: number, webhookToAdd: UpdateProcessWebhookDto) {
+    async addWebhookTrigger(user: User, processId: number, webhookToAdd: UpdateProcessWebhookDto) {
         const currentProcess = await this.findProcessOrFail(user, processId);
 
         const currentWebhooks = currentProcess.webhookTriggers || [];
@@ -203,7 +203,7 @@ export class ProcessCrudService {
         return this.processRepository.findOne({ where: { id: processId }, relations: RELATIONS });
     }
 
-    async deleteWebhook(user: User, processId: number, webhookToDelete: UpdateProcessWebhookDto) {
+    async deleteWebhookTrigger(user: User, processId: number, webhookToDelete: UpdateProcessWebhookDto) {
         const currentProcess = await this.findProcessOrFail(user, processId);
 
         const currentWebhooks = currentProcess.webhookTriggers || [];
@@ -430,9 +430,6 @@ export class ProcessCrudService {
             .findOneOrFail({
                 where: { id, tenantId: user.tenantId },
                 relations: RELATIONS
-            })
-            .catch(() => {
-                throw new NotFoundException();
             });
     }
 
@@ -440,9 +437,6 @@ export class ProcessCrudService {
         return this.webhookRepository
             .findOneOrFail({
                 where: { id: webhookId, tenantId }
-            })
-            .catch(() => {
-                throw new NotFoundException();
             });
     }
 }

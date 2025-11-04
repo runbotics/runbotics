@@ -415,7 +415,7 @@ export class ProcessController {
     })
     @Patch(':id/add-webhook')
     @FeatureKeys(FeatureKey.PROCESS_WEBHOOKS_EDIT)
-    async addWebhook(
+    async addWebhookTrigger(
         @Param('id', new ParseIntPipe()) id: number,
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessWebhookSchema))
@@ -423,7 +423,7 @@ export class ProcessController {
     ) {
         await this.hasConfigureAccess(user, id);
 
-        return this.processCrudService.addWebhook(
+        return this.processCrudService.addWebhookTrigger(
             user,
             id,
             updateProcessWebhookDto
@@ -450,7 +450,7 @@ export class ProcessController {
     })
     @Patch(':id/delete-webhook')
     @FeatureKeys(FeatureKey.PROCESS_WEBHOOKS_EDIT)
-    async deleteWebhook(
+    async deleteWebhookTrigger(
         @Param('id', new ParseIntPipe()) id: number,
         @UserDecorator() user: User,
         @Body(new ZodValidationPipe(updateProcessWebhookSchema))
@@ -458,7 +458,7 @@ export class ProcessController {
     ) {
         await this.hasConfigureAccess(user, id);
 
-        return this.processCrudService.deleteWebhook(
+        return this.processCrudService.deleteWebhookTrigger(
             user,
             id,
             updateProcessWebhookDto

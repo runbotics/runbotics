@@ -1,7 +1,7 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useMemo } from 'react';
 
 import { WebhookOutlined } from '@mui/icons-material';
-import { Checkbox, ListItemText, MenuItem, Select, Box, SelectChangeEvent } from '@mui/material';
+import { Checkbox, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 import { FeatureKey, WebhookProcessTrigger } from 'runbotics-common';
 
@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from '#src-app/store';
 import { processActions } from '#src-app/store/slices/Process';
 import { webhookSelector } from '#src-app/store/slices/Webhook';
 
-import { StyledLabel, Wrapper } from './BotComponent.styles';
+import { ProcessWebhookLabel, ProcessWebhookWrapper, StyledLabel } from './ProcessWebhooks.styles';
 
 interface ProcessWebhookProps {
     selectedWebhooks: WebhookProcessTrigger[];
@@ -38,16 +38,20 @@ const ProcessWebhooksComponent: FC<ProcessWebhookProps> = ({ selectedWebhooks, p
         }
     }, [selectedWebhooks, webhooks]);
 
-    const getWebhooks = () =>
-        webhooks && webhooks.length > 0 ?
-            Object.values(webhooks).map(webhook => (
-                <MenuItem value={webhook.name} key={webhook.name}>
-                    <Checkbox checked={webhookNames.includes(webhook.name)} />
-                    <ListItemText primary={webhook.name} />
-                </MenuItem>
-            )) : <MenuItem disabled>
+    const webhooksList = useMemo(() => {
+        if (!webhooks || webhooks.length === 0) {
+            return <MenuItem disabled>
                 {translate('Process.Configure.Webhooks.NoWebhooksMessage')}
-            </MenuItem>;
+            </MenuItem>
+        }
+
+        return Object.values(webhooks).map(webhook => (
+               <MenuItem value={webhook.name} key={webhook.name}>
+                   <Checkbox checked={webhookNames.includes(webhook.name)} />
+                   <ListItemText primary={webhook.name} />
+               </MenuItem>
+           ));
+    }, [webhooks, webhookNames]);
 
     const handleWebhookSelection = async (event: SelectChangeEvent<typeof webhookNames>) => {
         const {
@@ -63,7 +67,7 @@ const ProcessWebhooksComponent: FC<ProcessWebhookProps> = ({ selectedWebhooks, p
             const webhookId = webhooks.find(webhook => webhook.name === added)?.id;
 
             await dispatch(
-                processActions.addWebhook({
+                processActions.addWebhookTrigger({
                     resourceId: processId,
                     payload: { webhookId: webhookId }
                 })
@@ -73,7 +77,7 @@ const ProcessWebhooksComponent: FC<ProcessWebhookProps> = ({ selectedWebhooks, p
             const webhookProcessTrigerId = selectedWebhooks.find(webhookTrigger => webhookTrigger.webhookId === webhookId);
 
             await dispatch(
-                processActions.deleteWebhook({
+                processActions.deleteWebhookTrigger({
                     resourceId: processId,
                     payload: { webhookId: webhookProcessTrigerId.id }
                 })
@@ -83,11 +87,11 @@ const ProcessWebhooksComponent: FC<ProcessWebhookProps> = ({ selectedWebhooks, p
 
     return (
         <If condition={canConfigure && hasReadWebhookAccess}>
-            <Wrapper style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <Box style={{ display: 'flex', alignItems: 'center', gap: 8, paddingBottom: 8 }}>
+            <ProcessWebhookWrapper>
+                <ProcessWebhookLabel>
                     <WebhookOutlined />
                     <StyledLabel>{`${translate('Process.Configure.Webhooks.Label')}: `}</StyledLabel>
-                </Box>
+                </ProcessWebhookLabel>
                 <Select
                     style={{ height: '1.75rem' }}
                     multiple
@@ -107,9 +111,9 @@ const ProcessWebhooksComponent: FC<ProcessWebhookProps> = ({ selectedWebhooks, p
                     disabled={!hasEditWebhookAccess}
                     displayEmpty
                 >
-                    {getWebhooks()}
+                    {webhooksList}
                 </Select>
-            </Wrapper>
+            </ProcessWebhookWrapper>
         </If>
     );
 };

@@ -1,4 +1,15 @@
-import { Column, Entity, Generated, Index, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    Generated,
+    Index,
+    JoinColumn,
+    ManyToOne,
+    OneToOne,
+    PrimaryColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
@@ -17,10 +28,10 @@ export class ClientRegistrationWebhook {
     @Column({ type: 'uuid', name: 'tenant_id' })
     tenantId: string;
 
-    @Column({ transformer: dateTransformer, type: 'timestamp without time zone', name: 'created_at' })
+    @CreateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone', name: 'created_at' })
     createdAt: string;
 
-    @Column({ transformer: dateTransformer, type: 'timestamp without time zone', name: 'updated_at', nullable: true })
+    @UpdateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone', name: 'updated_at', nullable: true })
     updatedAt: string;
 
     @Column({ type: 'boolean', default: true })

@@ -19,8 +19,8 @@ import {
     getProcessCredentials,
     getSimplifiedProcesses,
     createProcess,
-    addWebhook,
-    deleteWebhook,
+    addWebhookTrigger,
+    deleteWebhookTrigger,
 } from './Process.thunks';
 
 // eslint-disable-next-line max-lines-per-function
@@ -184,18 +184,18 @@ const buildProcessExtraReducers = (builder: ActionReducerMapBuilder<ProcessState
         })
 
         // ADD WEBHOOK TRIGGER TO THE PROCESS
-        .addCase(addWebhook.fulfilled, (state, action) => {
+        .addCase(addWebhookTrigger.fulfilled, (state, action) => {
             state.draft.process = action.payload;
         })
-        .addCase(addWebhook.rejected, (state, action: any) => {
+        .addCase(addWebhookTrigger.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
         })
 
         // DELETE WEBHOOK TRIGGER
-        .addCase(deleteWebhook.fulfilled, (state, action) => {
+        .addCase(deleteWebhookTrigger.fulfilled, (state, action) => {
             state.draft.process = action.payload;
         })
-        .addCase(deleteWebhook.rejected, (state, action: any) => {
+        .addCase(deleteWebhookTrigger.rejected, (state, action: any) => {
             state.draft.error = action.payload.status;
         });
 };
