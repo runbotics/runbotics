@@ -21,8 +21,11 @@ import dayjs from 'dayjs';
 import { findProcessActionTemplates } from '#/utils/bpmn/findProcessActionTemplates';
 import { ProcessCredentialService } from '../process-credential/process-credential.service';
 import { ProcessCredential } from '../process-credential/process-credential.entity';
+import { UpdateProcessWebhookDto } from './dto/update-webhooks.dto';
+import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
+import { ClientRegistrationWebhook } from '#/webhook/entities/client-registration-webhook.entity';
 
-const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users'];
+const RELATIONS = ['tags', 'system', 'botCollection', 'output', 'createdBy', 'editor', 'processCollection.users', 'webhookTriggers'];
 
 @Injectable()
 export class ProcessCrudService {
@@ -35,8 +38,12 @@ export class ProcessCrudService {
         private botCollectionRepository: Repository<BotCollection>,
         @Inject(forwardRef(() => ProcessCredentialService))
         private readonly processCredentialService: ProcessCredentialService,
-        private readonly tagService: TagService,) {
-    }
+        private readonly tagService: TagService,
+        @InjectRepository(WebhookProcessTrigger)
+        private webhookProcessTriggerRepository: Repository<WebhookProcessTrigger>,
+        @InjectRepository(ClientRegistrationWebhook)
+        private webhookRepository: Repository<ClientRegistrationWebhook>
+    ) {}
 
     async checkCreateProcessViability(user: User) {
         if (user.authorities.some(authority => authority.name === Role.ROLE_GUEST)) {
@@ -143,17 +150,7 @@ export class ProcessCrudService {
     }
 
     async partialUpdate(user: User, id: number, processDto: PartialUpdateProcessDto) {
-        const currentProcess = await this.processRepository
-            .findOneOrFail({
-                where: {
-                    id,
-                    tenantId: user.tenantId,
-                },
-                relations: RELATIONS,
-            })
-            .catch(() => {
-                throw new NotFoundException();
-            });
+        const currentProcess = await this.findProcessOrFail(user, id);
 
         const partial: Partial<ProcessEntity> = {};
 
@@ -182,6 +179,46 @@ export class ProcessCrudService {
         await this.processRepository.update({ id, tenantId: user.tenantId }, partial);
 
         return this.processRepository.findOne({ where: { id }, relations: RELATIONS });
+    }
+
+    async addWebhookTrigger(user: User, processId: number, webhookToAdd: UpdateProcessWebhookDto) {
+        const currentProcess = await this.findProcessOrFail(user, processId);
+
+        const currentWebhooks = currentProcess.webhookTriggers || [];
+
+        const webhookRegisteredInTenant = await this.findWebhookOrFail(webhookToAdd.webhookId, user.tenantId);
+
+        const existingWebhookProcessTrigger = currentWebhooks.find(webhook => webhook.webhookId === webhookToAdd.webhookId);
+
+        if (existingWebhookProcessTrigger) {
+            throw new BadRequestException('Webhook already added to this process');
+        }
+
+        await this.webhookProcessTriggerRepository.save({
+            webhookId: webhookRegisteredInTenant.id,
+            tenantId: user.tenantId,
+            processId: currentProcess.id
+        });
+
+        return this.processRepository.findOne({ where: { id: processId }, relations: RELATIONS });
+    }
+
+    async deleteWebhookTrigger(user: User, processId: number, webhookToDelete: UpdateProcessWebhookDto) {
+        const currentProcess = await this.findProcessOrFail(user, processId);
+
+        const currentWebhooks = currentProcess.webhookTriggers || [];
+
+        const existingWebhookProcessTrigger = currentWebhooks.find(
+            (trigger) => trigger.id === webhookToDelete.webhookId
+        );
+
+        if (!existingWebhookProcessTrigger) {
+            throw new NotFoundException('Webhook trigger not found on this process');
+        }
+
+        await this.webhookProcessTriggerRepository.delete(existingWebhookProcessTrigger.id);
+
+        return this.processRepository.findOne({ where: { id: processId }, relations: RELATIONS });
     }
 
     async updateDiagram(user: User, id: number, updateDiagramDto: UpdateDiagramDto) {
@@ -386,5 +423,20 @@ export class ProcessCrudService {
                 return this.tagService.create(user, tag);
             })
         );
+    }
+
+    private async findProcessOrFail(user: User, id: number) {
+        return this.processRepository
+            .findOneOrFail({
+                where: { id, tenantId: user.tenantId },
+                relations: RELATIONS
+            });
+    }
+
+    private async findWebhookOrFail(webhookId: string, tenantId: string) {
+        return this.webhookRepository
+            .findOneOrFail({
+                where: { id: webhookId, tenantId }
+            });
     }
 }

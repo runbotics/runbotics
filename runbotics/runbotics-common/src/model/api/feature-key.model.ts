@@ -59,6 +59,12 @@ export enum FeatureKey {
     // Allow to switch state "triggerable" to "not triggerable" [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_EDIT = 'PROCESS_IS_TRIGGERABLE_EDIT',
 
+    // Allow to see webhooks box in process configure view
+    PROCESS_WEBHOOKS_VIEW = 'PROCESS_WEBHOOKS_VIEW',
+
+    // Allow to choose webhooks in process configure view
+    PROCESS_WEBHOOKS_EDIT = 'PROCESS_WEBHOOKS_EDIT',
+
     // Allow to select particular bot collection [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_BOT_COLLECTION_EDIT = 'PROCESS_BOT_COLLECTION_EDIT',
 

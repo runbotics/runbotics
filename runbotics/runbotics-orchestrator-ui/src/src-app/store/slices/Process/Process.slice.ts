@@ -42,6 +42,7 @@ export const initialState: ProcessState = {
         error: null,
         processSubscriptions: [],
         credentials: [],
+        webhookTriggers: null
     },
     modeler: initialModelerState,
     all: {

@@ -9,7 +9,7 @@ import {
     Param,
     ParseIntPipe,
     Patch,
-    Post, 
+    Post,
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
@@ -48,10 +48,11 @@ import { UpdateExecutionInfoDto, updateExecutionInfoSchema, UpdateExecutionInfoS
 import { isTenantAdmin } from '#/utils/authority.utils';
 import { BlacklistGuard } from '#/blacklist-actions-auth/blacklist.guard';
 
-import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { processIdSwaggerObjectDescription, SwaggerTags } from '#/utils/swagger.utils';
 import { ApiDefaultAuthResponses } from '#/utils/decorators/swagger/ApiDefaultAuthResponses.decorator';
 import { ApiProcessPageFilters } from '#/utils/decorators/swagger/ApiProcessPageFilters.decorator';
+import { UpdateProcessWebhookDto, updateProcessWebhookSchema, UpdateProcessWebhookSwaggerDto } from './dto/update-webhooks.dto';
 @ApiTags(SwaggerTags.PROCESS)
 @ApiDefaultAuthResponses()
 @UseInterceptors(TenantInterceptor)
@@ -66,8 +67,8 @@ export class ProcessController {
 
     @ApiOperation({
         summary: 'Create a new process',
-        description: `Creates a new process in the system for the current tenant. 
-            The user must have permission to add processes. 
+        description: `Creates a new process in the system for the current tenant.
+            The user must have permission to add processes.
             Tag list cannot exceed 15 items. The process is validated against the blacklist of actions.`,
     })
     @ApiBody({
@@ -392,6 +393,76 @@ export class ProcessController {
         return this.processCrudService.partialUpdate(user, id, {
             output: updateOutputTypeDto.output,
         });
+    }
+
+    @ApiOperation({
+        summary: 'Adds webhook process trigger',
+    })
+    @ApiBody({
+        description:
+            'Object containing the webhook id to assign',
+        type: UpdateProcessWebhookSwaggerDto,
+    })
+    @ApiOkResponse({
+        description:
+            'System name successfully updated. Returns added process webhook trigger details',
+    })
+    @ApiNotFoundResponse({
+        description: 'Process not found or webhook not registered in the tenant',
+    })
+    @ApiForbiddenResponse({
+        description: 'User does not have permission to add webhook to this process',
+    })
+    @Patch(':id/add-webhook')
+    @FeatureKeys(FeatureKey.PROCESS_WEBHOOKS_EDIT)
+    async addWebhookTrigger(
+        @Param('id', new ParseIntPipe()) id: number,
+        @UserDecorator() user: User,
+        @Body(new ZodValidationPipe(updateProcessWebhookSchema))
+        updateProcessWebhookDto: UpdateProcessWebhookDto
+    ) {
+        await this.hasConfigureAccess(user, id);
+
+        return this.processCrudService.addWebhookTrigger(
+            user,
+            id,
+            updateProcessWebhookDto
+        );
+    }
+
+    @ApiOperation({
+        summary: 'Removes webhook process trigger',
+    })
+    @ApiBody({
+        description:
+            'Object containing the webhook id to assign',
+        type: UpdateProcessWebhookSwaggerDto,
+    })
+    @ApiOkResponse({
+        description:
+            'System name successfully updated. Returns added process webhook trigger details.',
+    })
+    @ApiNotFoundResponse({
+        description: 'Process not found or webhook not registered in the tenant',
+    })
+    @ApiForbiddenResponse({
+        description: 'User does not have permission to delete webhook',
+    })
+    @Patch(':id/delete-webhook')
+    @FeatureKeys(FeatureKey.PROCESS_WEBHOOKS_EDIT)
+    async deleteWebhookTrigger(
+        @Param('id', new ParseIntPipe()) id: number,
+        @UserDecorator() user: User,
+        @Body(new ZodValidationPipe(updateProcessWebhookSchema))
+        updateProcessWebhookDto: UpdateProcessWebhookDto
+    ) {
+        await this.hasConfigureAccess(user, id);
+
+        return this.processCrudService.deleteWebhookTrigger(
+            user,
+            id,
+            updateProcessWebhookDto
+        );
     }
 
     @ApiOperation({
