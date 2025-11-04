@@ -2,6 +2,7 @@ import { Column, Entity, Generated, Index, JoinColumn, ManyToOne, OneToOne, Prim
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
+import { RequestType } from 'runbotics-common';
 
 @Entity({ schema: 'scheduler' })
 export class ClientRegistrationWebhook {
@@ -24,6 +25,9 @@ export class ClientRegistrationWebhook {
 
     @Column({ type: 'boolean', default: true })
     active: boolean;
+    
+    @Column({ type: 'enum', enum: RequestType, default: RequestType.GET, nullable: false })
+    applicationRequestType: RequestType;
 
     @Column({ type: 'varchar', name: 'application_URL' })
     applicationURL: string;

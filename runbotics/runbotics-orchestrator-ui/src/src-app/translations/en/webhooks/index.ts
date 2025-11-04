@@ -9,6 +9,15 @@ const webhooksTranslations = {
     'Webhooks.Form.JwtToken': 'JWT Token',
     'Webhooks.Form.Username': 'Username',
     'Webhooks.Form.Password': 'Password',
+    'Webhooks.List.RegisterWebhook': 'Register Webhook',
+    'Webhooks.List.Search': 'Search...',
+    'Webhooks.Form.Tooltip.AuthorizationMethod': 'This authorization method is used to validate and authorize the webhook on the client side.',
+    'Webhooks.Form.RegistrationPayloadInfo': 'The source URL for RunBotics can be used as a parameter in the form creating a {{webhook}}.',
+    'Webhooks.List.TokenExpirationInDays': 'Token is valid for {{ days }} days',
+    'Webhooks.List.TokenAuthorizationInfo': 'The token is used to authorize client in the RunBotics',
+    'Webhooks.List.RegisterNewWebhook': 'Register new webhook',
+    'Webhooks.List.Register': 'Register',
+    'Webhooks.List.Cancel': 'Cancel',
 }
 
 export default webhooksTranslations;
