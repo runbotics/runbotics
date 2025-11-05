@@ -5,16 +5,20 @@ import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.e
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
 import { ClientRegistrationWebhook } from '#/webhook/entities/client-registration-webhook.entity';
 import { RequestType, WebhookAuthorizationType } from 'runbotics-common';
-import bcrypt from 'bcryptjs';
 import { HttpService } from '@nestjs/axios';
-import { parseAuthorization, replacePlaceholderImmutable } from '#/webhook/webhook-service.utils';
+import { parseAuthorization, replacePlaceholdersImmutable } from '#/webhook/webhook-service.utils';
 import { EncryptionService } from '#/webhook/encryption.service';
 import { ServerConfigService } from '#/config/server-config';
 import { inspect } from 'node:util';
 import { firstValueFrom } from 'rxjs';
+import { Logger } from '#/utils/logger';
+import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
+import { WebhookIncomingEventLog } from '#/webhook/entities/webhook-incoming-event-log.entity';
 
 @Injectable()
 export class WebhookService {
+    private readonly logger = new Logger(WebhookService.name);
+
     constructor(
         private readonly dataSource: DataSource,
         private readonly httpService: HttpService,
@@ -49,7 +53,7 @@ export class WebhookService {
                 type: clientAuthorization.type,
                 data: Object.values(clientAuthorization.data).reduce((acc, value, index) => {
                     const key = Object.keys(clientAuthorization.data)[index];
-                    acc[key] = bcrypt.hashSync(value, 10);
+                    acc[key] = this.encryptionService.encrypt(value);
                     return acc;
                 }, {}),
             } : {
@@ -59,8 +63,9 @@ export class WebhookService {
                 type: WebhookAuthorizationType.JWT,
             });
             const newClientAuth = await manager.save(WebhookAuthorization, clientAuthDataHashed);
+
             const newPayload = await manager.save(WebhookPayload, payload);
-            console.log(typeof registrationPayload, registrationPayload);
+
             const newWebhookEntry = await manager.save(ClientRegistrationWebhook, {
                 name,
                 applicationURL: applicationUrl,
@@ -72,11 +77,13 @@ export class WebhookService {
                 payload: newPayload,
                 registrationPayload: registrationPayload,
             });
-            
-            const registrationPayloadWithUrl = replacePlaceholderImmutable(
+
+            const registrationPayloadWithUrl = replacePlaceholdersImmutable(
                 JSON.parse(newWebhookEntry.registrationPayload as unknown as string),
-                '{{webhook}}',
-                `${this.serverConfigService.entrypointUrl}/api/scheduler/webhook`,
+                {
+                    '{{webhook}}': `${this.serverConfigService.entrypointUrl}/api/scheduler/webhook`,
+                    '{{webhookId}}': newWebhookEntry.id,
+                },
             );
             const headers = {
                 'Content-Type': 'application/json',
@@ -86,8 +93,6 @@ export class WebhookService {
                 'Sending request with data',
                 headers,
                 registrationPayloadWithUrl,
-                newWebhookEntry.applicationURL,
-                typeof newWebhookEntry.registrationPayload,
             );
             let response;
             switch (newWebhookEntry.applicationRequestType) {
@@ -98,20 +103,30 @@ export class WebhookService {
                     break;
                 case RequestType.POST:
                     response = await firstValueFrom(this.httpService.post(newWebhookEntry.applicationURL, {
-                        headers,
                         ...registrationPayloadWithUrl,
+                    }, {
+                        headers: {
+                            ...headers,
+                            'Content-Type': 'application/json',
+                        },
                     }));
                     break;
                 case RequestType.PUT:
                     response = await firstValueFrom(this.httpService.put(newWebhookEntry.applicationURL, {
-                        headers,
                         ...registrationPayloadWithUrl,
+                    }, {
+                        headers: {
+                            ...headers,
+                            'Content-Type': 'application/json',
+                        },
                     }));
                     break;
                 case RequestType.PATCH:
                     response = await firstValueFrom(this.httpService.patch(newWebhookEntry.applicationURL, {
-                        headers,
+
                         ...registrationPayloadWithUrl,
+                    }, {
+                        headers,
                     }));
                     break;
             }
@@ -120,7 +135,31 @@ export class WebhookService {
             return newWebhookEntry;
         });
 
-        //TODO: implement registration of webhook in client application
         return transactionResult;
+    }
+
+    async processWebhook(body: Record<string, unknown>): Promise<any> {
+        this.logger.log(`Processing webhook ${JSON.stringify(body)}`);
+        await this.dataSource.manager.save(WebhookIncomingEventLog, {
+            authorization: WebhookAuthorizationType.JWT,
+            payload: JSON.stringify(body),
+            status: 'Incoming',
+        });
+        if (!body.webhoookId || typeof body.webhookId !== 'string') {
+            await this.dataSource.manager.save(WebhookIncomingEventLog, {
+                authorization: WebhookAuthorizationType.JWT,
+                payload: JSON.stringify(body),
+                status: 'Error',
+                error: 'No webhook id provided.',
+            });
+            this.logger.warn('Processing webhook trigger failed. No webhook ID found.');
+        }
+        const transaction = await this.dataSource.transaction(async (manager) => {
+            const triggers = await manager.findBy(WebhookProcessTrigger, { webhookId: body.webhookId as string });
+
+            for (const trigger of triggers) {
+                this.logger.log(`Triggering process ${trigger.processId}`);
+            }
+        });
     }
 }

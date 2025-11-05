@@ -8,7 +8,7 @@ export const parseAuthorization = async (authorization: WebhookAuthorization, se
             return {};
         case WebhookAuthorizationType.JWT:
             return {
-                Authorization: `Bearer ${authorization.data.token}`,
+                Authorization: `Bearer ${service.decrypt(authorization.data.token)}`,
             };
         case WebhookAuthorizationType.BASIC:
             // eslint-disable-next-line no-case-declarations
@@ -21,27 +21,33 @@ export const parseAuthorization = async (authorization: WebhookAuthorization, se
     }
 };
 
-export const replacePlaceholderImmutable = <T>(
+export function replacePlaceholdersImmutable<T>(
     obj: T,
-    placeholder: string,
-    newValue: string,
-): T => {
+    replacements: Record<string, string>,
+): T {
     if (Array.isArray(obj)) {
-        // Nowa tablica, każdy element przetwarzany rekurencyjnie
         return obj.map((item) =>
-            replacePlaceholderImmutable(item, placeholder, newValue),
+            replacePlaceholdersImmutable(item, replacements),
         ) as T;
-    } else if (typeof obj === 'object' && obj !== null) {
-        // Nowy obiekt
+    }
+
+    if (typeof obj === 'object' && obj !== null) {
         const newObj: any = {};
         for (const [key, value] of Object.entries(obj)) {
-            newObj[key] = replacePlaceholderImmutable(value, placeholder, newValue);
+            newObj[key] = replacePlaceholdersImmutable(value, replacements);
         }
         return newObj;
-    } else if (obj === placeholder) {
-        // Podmiana wartości
-        return newValue as unknown as T;
     }
-    // Inne wartości (np. liczby, boolean, null) — bez zmian
+
+    if (typeof obj === 'string') {
+        let newStr: string = obj;
+        for (const [placeholder, newValue] of Object.entries(replacements)) {
+            if (newStr.includes(placeholder)) {
+                newStr = newStr.split(placeholder).join(newValue);
+            }
+        }
+        return newStr as unknown as T;
+    }
+
     return obj;
-};
+}
