@@ -15,6 +15,10 @@ export class ServerConfigService {
       database: this.configService.get('RUNBOTICS_DB_DATABASE'),
     };
   }
+  
+  get encryptionKey(): string {
+      return this.configService.get('ENCRYPTION_KEY') ?? '';
+  }
   private convertNumber(variable: string | undefined): number | undefined {
     const numericVariable = Number(variable);
     return Number.isNaN(numericVariable) ? undefined : numericVariable;

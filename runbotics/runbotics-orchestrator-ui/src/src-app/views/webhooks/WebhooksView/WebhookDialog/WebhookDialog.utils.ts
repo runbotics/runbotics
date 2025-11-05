@@ -19,7 +19,7 @@ export const initialFormState: WebhookRegistrationFormState = {
     applicationUrl: '',
     applicationRequestType: RequestType.GET,
     type: WebhookAuthorizationType.NONE,
-    registrationPayload: '{ \nwebhookUrl: {{webhook}} \n}',
+    registrationPayload: '{ \n"webhookUrl": "{{webhook}}", \n "webhookId": "{{webhookId}}" \n}',
     webhookIdPath: '',
     payloadDataPath: '',
     token: null,

@@ -8,10 +8,12 @@ export class Webhook {
   @Column({name: 'rb_url'})
   rbUrl: string;
   
+  @Column({name: 'rb_webhook_id', default: '1'})
+  webhookId: string;
+  
   @Column()
   resources: string;
   
   @Column()
   authorization: string;
-  
 }

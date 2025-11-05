@@ -35,7 +35,15 @@
         "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.1",
         "typeorm": "^0.3.27",
-        "wrap-ansi": "7"
+        "wrap-ansi": "7",
+        "@nestjs/axios": "~4.0.1",
+        "axios": "~1.13.1",
+        "@nestjs/schedule": "~6.0.1",
+        "@nestjs/passport": "~11.0.5",
+        "passport": "~0.7.0",
+        "@nestjs/jwt": "~11.0.1",
+        "passport-jwt": "~4.0.1",
+        "passport-http": "~0.3.0"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3.2.0",
@@ -60,7 +68,10 @@
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
         "typescript": "^5.7.3",
-        "typescript-eslint": "^8.20.0"
+        "typescript-eslint": "^8.20.0",
+        "@types/passport-local": "~1.0.38",
+        "@types/passport-http": "~0.3.11",
+        "@types/passport-jwt": "~4.0.1"
     },
     "jest": {
         "moduleFileExtensions": [
