@@ -1,6 +1,6 @@
 {
     "name": "runbotics-lp",
-    "version": "3.5.0-SNAPSHOT.54",
+    "version": "3.6.0-SNAPSHOT.0",
     "private": true,
     "scripts": {
         "dev": "next dev -p 3001",
