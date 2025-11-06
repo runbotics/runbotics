@@ -14,7 +14,7 @@ export type DelayActionOutput = object;
 
 // -- action
 export type ConsoleLogActionInput = {
-    variables: Record<string, any>;
+    variables: Record<string, any>; //obsluz to w pdf file
 };
 export type ConsoleLogActionOutput = object;
 

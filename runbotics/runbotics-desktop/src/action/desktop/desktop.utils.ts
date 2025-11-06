@@ -86,7 +86,7 @@ export const readTextFromImageInputSchema = z.object({
 });
 
 export const readTextFromPdfInputSchema = z.object({
-    imageFullPath: z.string().refine(
+    pdfFullPath: z.string().refine(
         (path) => {
             const ext = path.toLowerCase().match(/\.(pdf)$/);
             return ext !== null;
@@ -96,6 +96,7 @@ export const readTextFromPdfInputSchema = z.object({
         }
     ),
     language: z.nativeEnum(Language),
+    variables: z.record(z.string(), z.any()),
 });
 
 export async function preprocessImage(

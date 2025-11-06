@@ -199,7 +199,8 @@
         // "example2": "npm:@company/example2@^1.0.0"
         "@babel/core": "7.23.2",
         "@babel/traverse": "7.23.2",
-        "form-data": "4.0.4"
+        "form-data": "4.0.4",
+        "moddle-xml": "11.0.0"
     },
 
     /**

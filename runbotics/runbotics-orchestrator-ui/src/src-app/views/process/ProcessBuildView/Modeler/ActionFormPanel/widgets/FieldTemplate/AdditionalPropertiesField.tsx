@@ -43,15 +43,20 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
         return <>{children}</>;
     }
 
-    const { mainFieldLabel, mainFieldInfo, subFieldLabel, subFieldInfo } = schema;
+    const { mainFieldLabel, mainFieldInfo, properties, subFieldLabel, subFieldInfo } = schema;
     const formProps = children.props.children[0].props.children[0].props;
     const formData = formProps.formData;
-    const subFieldValue = (typeof formData === 'string' && formData !== SUB_FIELD_PREDEFINED_LABEL ? formData : '');
+
+    console.log('formData', formData);
+
+    const subFieldValue = ( formData !== SUB_FIELD_PREDEFINED_LABEL ? formData : '');
     const errorMessage = translate('Process.Details.Modeler.Actions.General.ConsoleLog.ValidationError');
     const isDisabled = disabled || readonly;
     const isRequired = required || Boolean(formProps.schema?.isRequired);
     const isMainFieldErrorDisplayed = isRequired && !mainFieldValue;
     const isSubFieldErrorDisplayed = isRequired && !subFieldValue;
+    const hasNestedProperties = properties && Object.keys(properties).length > 0;
+
 
     const handleBlur = ({ target }: React.FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
 
@@ -82,7 +87,7 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                 </TooltipTextFieldWrapper>
             </Grid>
             <Grid item xs={12}>
-                <TooltipTextFieldWrapper>
+                {/* <TooltipTextFieldWrapper>
                     <CustomTextWidget
                         {...formProps}
                         required={isRequired}
@@ -96,7 +101,12 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                     <If condition={Boolean(subFieldInfo)}>
                         <InfoButtonTooltip message={subFieldInfo} />
                     </If>
-                </TooltipTextFieldWrapper>
+                </TooltipTextFieldWrapper> */}
+                {hasNestedProperties && (
+                    <Grid item xs={12}>
+                        {children}
+                    </Grid>
+                )}
             </Grid>
             <Grid item>
                 <Button color="secondary" disabled={isDisabled} onClick={onDropPropertyClick(label)}>

@@ -480,8 +480,8 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                         title: translate('Process.Details.Modeler.Actions.Common.Input'),
                         type: 'object',
                         properties: {
-                            imageFullPath: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath'),
+                            pdfFullPath: {
+                                title: translate('Process.Details.Modeler.Actions.Desktop.Common.PdfFullPath'),
                                 type: 'string',
                             },
                             language: {
@@ -493,8 +493,90 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                     'ENG'
                                 ]
                             },
+                            variables: {
+                                title: translate('Process.Details.Modeler.Actions.Common.Input'), // add proper translation
+                                type: 'object',
+                                additionalProperties: {
+                                    mainFieldLabel: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Message'),
+                                    subFieldLabel: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                    isRequired: false,
+                                    type: 'object',
+                                    properties: {
+                                        variableName: {
+                                            title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
+                                            type: 'string',
+                                        },
+                                        direction: {
+                                            title: 'direction',
+                                            type: 'string',
+                                            enum: [
+                                                'DOWN',
+                                                'LEFT',
+                                                'RIGHT',
+                                                'UP'
+                                            ],
+                                            default: 'DOWN'
+                                        }
+                                    },
+                                    required: [ 'direction']
+                                },
+                            },
+                            // tasks: {
+                            //     type: 'array',
+                            //     title: 'Tasks',
+                            //     items: {
+                            //         type: 'object',
+                            //         required: [
+                            //             'title'
+                            //         ],
+                            //         properties: {
+                            //             title: {
+                            //                 type: 'string',
+                            //                 title: 'Title',
+                            //                 description: 'A sample title',
+                            //                 default: 'test1'
+                            //             },
+                            //             details: {
+                            //                 type: 'string',
+                            //                 title: 'Task details',
+                            //                 description: 'Enter the task details',
+                            //                 default: 'test2'
+                            //             },
+                            //             done: {
+                            //                 type: 'boolean',
+                            //                 title: 'Done?',
+                            //                 default: false
+                            //             }
+                            //         }
+                            //     }
+                            // }
+                            // variables: {
+                            //     title: 'dssd',
+                            //     type: 'array',
+                            //     items: {
+                            //         type: 'object',
+                            //         properties: {
+                            //             name: {
+                            //                 title: 'name',
+                            //                 type: 'string',
+                            //             },
+                            //             anchorText: {
+                            //                 title: 'dsds',
+                            //                 type: 'string',
+                            //             },
+                            //             direction: {
+                            //                 title: 'dsfgsg',
+                            //                 type: 'string',
+                            //                 enum: ['DOWN', 'LEFT', 'RIGHT', 'UP'],
+                            //                 default: 'DOWN'
+
+                            //             }
+                            //         },
+                            //         required: []
+                            //     },
+                            // },
                         },
-                        required: ['imageFullPath'],
+                        required: ['pdfFullPath'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -512,23 +594,42 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    imageFullPath: {
+                    pdfFullPath: {
                         'ui:options': {
-                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath.Info'),
+                            info: translate('Process.Details.Modeler.Actions.Desktop.Common.PdfFullPath.Info'),
                         }
                     },
+                    variables: {
+                        'ui:options': {
+                            addable: true,
+                            orderable: false,
+                            removable: true,
+                        },
+                        items: {
+                            'ui:order': ['name', 'anchorText', 'direction'],
+                            name: {
+                                'ui:widget': 'text',
+                            },
+                            anchorText: {
+                                'ui:widget': 'text',
+                            },
+                            direction: {
+                                'ui:widget': 'select',
+                            },
+                        },
+                    }                
                 },
-            },
+            },            
             formData: {
                 input: {
-                    imageFullPath: undefined,
+                    pdfFullPath: undefined,
                     language: 'ENG',
+                    variables: []
                 },
                 output: {
                     variableName: undefined,
                 },
-            },
-        },
+            }        },
     },
     [DesktopAction.TYPE_CREDENTIALS]: {
         id: DesktopAction.TYPE_CREDENTIALS,

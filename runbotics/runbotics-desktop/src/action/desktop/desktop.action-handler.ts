@@ -205,7 +205,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
 
     async readTextFromPdfFile(rawInput: DesktopReadTextFromPdfActionInput): Promise<DesktopReadTextFromPdfActionOutput> {
-        const { imageFullPath: pdfFullPath, language } = await validateInput(rawInput, readTextFromPdfInputSchema);
+        const { pdfFullPath, language, variables } = await validateInput(rawInput, readTextFromPdfInputSchema);
 
         let worker: Tesseract.Worker;
         const tempPngPaths: string[] = [];

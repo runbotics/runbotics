@@ -29,7 +29,10 @@ export const saveProcess = async ({
     enqueueSnackbar,
 }: SaveProcessParams) => {
     try {
+
+        console.log('Saving process...');
         const definition = await BpmnModelerRef.current.export();
+        console.log('2222');
         const globalVariableIds = retrieveGlobalVariableIds(modeler);
 
         await dispatch(

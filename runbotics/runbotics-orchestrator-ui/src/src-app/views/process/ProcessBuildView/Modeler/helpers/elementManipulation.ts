@@ -81,6 +81,7 @@ export const applyModelerElement = ({
     element.businessObject.runFromHere = additionalParameters?.runFromHere;
     element.businessObject.processOutput = additionalParameters?.processOutput;
 
+    // debugger;
     const data = {
         input: {
             ...getInputParameters(element),
@@ -90,12 +91,13 @@ export const applyModelerElement = ({
             ...(additionalParameters?.output ?? getOutputParameters(element)),
         },
     };
-
+    console.log('applyModelerElement data:', data);
     const inputParams = actionToBPMNElement.formDataToParameters(
         ParameterDestination.Input,
         data.input,
         action ? action.form.schema : null
     );
+    // debugger;
     if (inputParams.length > 0) {
         actionToBPMNElement.setInputParameters(element, inputParams);
     }

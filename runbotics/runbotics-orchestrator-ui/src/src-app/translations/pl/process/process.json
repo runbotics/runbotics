@@ -483,6 +483,8 @@
     "Process.Details.Modeler.Actions.Excel.SetCellValue.Value": "Wartość",
     "Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath": "Ścieżka do obrazu, np. C:\\Użytkownicy\\Jan\\Obrazy\\obraz.png",
     "Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath.Info": "Ścieżka może być względna lub absolutna.",
+    "Process.Details.Modeler.Actions.Desktop.Common.PdfFullPath": "Ścieżka do pliku PDF, np. C:\\Użytkownicy\\Jan\\Dokumenty\\dokument.pdf",
+    "Process.Details.Modeler.Actions.Desktop.Common.PdfFullPath.Info": "Ścieżka może być względna lub absolutna.",
     "Process.Details.Modeler.Actions.Desktop.Common.Point.Info": "Punkt na ekranie definiowany jest przez obiekt posiadający dwa atrybuty - x, y, np. { x: 25, y: 298 }",
     "Process.Details.Modeler.Actions.Desktop.Common.Region.Info": "Region na ekranie obejmuje obszar zdefiniowany przez obiekt z czterema atrybutami - left, top, width, height, np. { left: 0, top: 100, width: 335, height: 125 }.",
     "Process.Details.Modeler.Actions.Desktop.Click.Label": "Kliknij",

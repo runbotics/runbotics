@@ -29,7 +29,7 @@ import FieldTemplate from '../widgets/FieldTemplate';
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any>>;
 
 const widgets = {
-    Autocomplete: AutocompleteWidget,
+    // Autocomplete: AutocompleteWidget,
 };
 
 interface FormPropsExtended extends FormProps<any> {
@@ -80,6 +80,8 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
     };
 
     const handleChange = (e: IChangeEvent<FormData>) => {
+        // debugger;
+        console.log('Form change detected:', e.formData);
         setEditMode(true);
         setFormState(prevState => ({
             ...prevState,
@@ -94,7 +96,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
         // Update the form state refs used in component cleanup
         formValueRef.current = formState;
         isFormDirtyRef.current = isFormDirty;
-        editModeRef.current = editMode;
+        editModeRef.current = editMode;//zmienic sposob zapisu na akis lista stingow lub json
     }, [formState, editMode, isFormDirty]);
 
     useEffect(() => {
@@ -107,7 +109,7 @@ const JSONSchemaFormRenderer: FC<FormPropsExtended> = (props) => {
 
     useEffect(() => {
         if (formState?.formData && isFormDirty) {
-            handleSubmit(formState);
+            handleSubmit(debouncedForm);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedForm]);

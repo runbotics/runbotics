@@ -8,6 +8,7 @@ overrides:
   '@babel/core': 7.23.2
   '@babel/traverse': 7.23.2
   form-data: 4.0.4
+  moddle-xml: 11.0.0
 
 importers:
 
@@ -496,11 +497,11 @@ importers:
         specifier: ^1.4.0
         version: 1.9.5(react-redux@7.2.9)(react@18.2.0)
       '@rjsf/core':
-        specifier: ^4.2.0
-        version: 4.2.3(react@18.2.0)
+        specifier: 4.2.0
+        version: 4.2.0(react@18.2.0)
       '@rjsf/material-ui':
-        specifier: ^4.2.0
-        version: 4.2.3(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@mui/icons-material@5.14.7)(@mui/material@5.14.7)(@rjsf/core@4.2.3)(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 4.2.0
+        version: 4.2.0(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@mui/icons-material@5.14.7)(@mui/material@5.14.7)(@rjsf/core@4.2.0)(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0)
       ajv:
         specifier: ^6.12.4
         version: 6.12.6
@@ -6050,8 +6051,8 @@ packages:
       reselect: 4.1.8
     dev: false
 
-  /@rjsf/core@4.2.3(react@18.2.0):
-    resolution: {integrity: sha512-dRXhd1Tac/9OcG0VDrYDF2boNTyKINEEITEtJ4L1Yce2iMVk66U52BhWKIFp/WXDM27vwnOfwQo4NwGiqeQeHw==}
+  /@rjsf/core@4.2.0(react@18.2.0):
+    resolution: {integrity: sha512-bGWWCZjXHhBCkzag1Yh6F7a15/D6AqKRyks1szYWdCe+4jwWU3maC3apUxHJlHFRz3V1aBW6j6i/UB6zHmFXLQ==}
     engines: {node: '>=12'}
     peerDependencies:
       react: '>=16 || >=17'
@@ -6062,15 +6063,14 @@ packages:
       json-schema-merge-allof: 0.6.0
       jsonpointer: 5.0.1
       lodash: 4.17.21
-      lodash-es: 4.17.21
-      nanoid: 3.3.6
+      nanoid: 3.3.11
       prop-types: 15.8.1
       react: 18.2.0
-      react-is: 16.9.0
+      react-is: 16.13.1
     dev: false
 
-  /@rjsf/material-ui@4.2.3(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@mui/icons-material@5.14.7)(@mui/material@5.14.7)(@rjsf/core@4.2.3)(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-BNlIxI730NWvb2ClYzM1jrzfns8FjPh46gvGSH80xzUwOY7l/RWoy+UcdwQeaDVFRfAmR5B+z1n7la7OT+PY4w==}
+  /@rjsf/material-ui@4.2.0(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@mui/icons-material@5.14.7)(@mui/material@5.14.7)(@rjsf/core@4.2.0)(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-WQ1dMX1tlMjG5jPbRbFPFkuy5zSb+rDb7HRE2Zx/JgYndBRdxiqAbGB8DcaJKaGUJ+1eURk3MWClU5pWfoN3qg==}
     peerDependencies:
       '@emotion/react': ^11.7.0
       '@emotion/styled': ^11.6.0
@@ -6100,7 +6100,7 @@ packages:
       '@emotion/styled': 11.11.0(@emotion/react@11.10.8)(@types/react@18.3.23)(react@18.2.0)
       '@mui/icons-material': 5.14.7(@mui/material@5.14.7)(@types/react@18.3.23)(react@18.2.0)
       '@mui/material': 5.14.7(@emotion/react@11.10.8)(@emotion/styled@11.11.0)(@types/react@18.3.23)(react-dom@18.2.0)(react@18.2.0)
-      '@rjsf/core': 4.2.3(react@18.2.0)
+      '@rjsf/core': 4.2.0(react@18.2.0)
       '@types/react': 18.3.23
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -8715,7 +8715,7 @@ packages:
       '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.23.2)
       lodash: 4.17.21
       picomatch: 2.3.1
-      styled-components: 5.3.11(@babel/core@7.23.2)(react-dom@18.3.1)(react-is@18.2.0)(react@18.3.1)
+      styled-components: 5.3.11(@babel/core@7.23.2)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -8945,7 +8945,7 @@ packages:
     dependencies:
       min-dash: 3.8.1
       moddle: 5.0.4
-      moddle-xml: 9.0.6
+      moddle-xml: 11.0.0(moddle@5.0.4)
 
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -14692,6 +14692,9 @@ packages:
   /min-dash@3.8.1:
     resolution: {integrity: sha512-evumdlmIlg9mbRVPbC4F5FuRhNmcMS5pvuBUbqb1G9v09Ro0ImPEgz5n3khir83lFok1inKqVDjnKEg3GpDxQg==}
 
+  /min-dash@4.2.3:
+    resolution: {integrity: sha512-VLMYQI5+FcD9Ad24VcB08uA83B07OhueAlZ88jBK6PyupTvEJwllTMUqMy0wPGYs7pZUEtEEMWdHB63m3LtEcg==}
+
   /min-document@2.19.0:
     resolution: {integrity: sha512-9Wy1B3m3f66bPPmU5hdA4DR4PB2OfDU/+GS3yAB7IQozE3tqXaVv2zOjgla7MEGSRv95+ILmOuvhLkOK6wJtCQ==}
     dependencies:
@@ -15197,12 +15200,15 @@ packages:
     dependencies:
       bpmn-moddle: 7.1.3
 
-  /moddle-xml@9.0.6:
-    resolution: {integrity: sha512-tl0reHpsY/aKlLGhXeFlQWlYAQHFxTkFqC8tq8jXRYpQSnLVw13T6swMaourLd7EXqHdWsc+5ggsB+fEep6xZQ==}
+  /moddle-xml@11.0.0(moddle@5.0.4):
+    resolution: {integrity: sha512-L3Sseepfcq9Uy0iIfqEDTXSoYLva1Y/JGbN/4AMOeQ6cqbu8Ma/SDJIdOFm7smsAa64j2z3SwCGG3FIilQVnUg==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      moddle: '>= 6.2.0'
     dependencies:
-      min-dash: 3.8.1
+      min-dash: 4.2.3
       moddle: 5.0.4
-      saxen: 8.1.2
+      saxen: 10.0.0
 
   /moddle@5.0.4:
     resolution: {integrity: sha512-Kjb+hjuzO+YlojNGxEUXvdhLYTHTtAABDlDcJTtTcn5MbJF9Zkv4I1Fyvp3Ypmfgg1EfHDZ3PsCQTuML9JD6wg==}
@@ -15302,12 +15308,6 @@ packages:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
-
-  /nanoid@3.3.6:
-    resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-    dev: false
 
   /napi-build-utils@2.0.0:
     resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
@@ -17768,10 +17768,6 @@ packages:
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
-  /react-is@16.9.0:
-    resolution: {integrity: sha512-tJBzzzIgnnRfEm046qRcURvwQnZVXmuCbscxUO5RWrGTXpon2d4c8mI0D8WE6ydVIm29JiLB6+RslkIvym9Rjw==}
-    dev: false
-
   /react-is@17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
 
@@ -18707,8 +18703,9 @@ packages:
   /sax@1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
 
-  /saxen@8.1.2:
-    resolution: {integrity: sha512-xUOiiFbc3Ow7p8KMxwsGICPx46ZQvy3+qfNVhrkwfz3Vvq45eGt98Ft5IQaA1R/7Tb5B5MKh9fUR9x3c3nDTxw==}
+  /saxen@10.0.0:
+    resolution: {integrity: sha512-RXsmWok/SAWqOG/f5ADEz51DN9WtZEzqih3e08ranldcaXekxjx8NBKjGh/y5hlowjo0JH/LekBu6gtPFD1G6g==}
+    engines: {node: '>= 18'}
 
   /saxes@6.0.0:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}

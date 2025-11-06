@@ -115,11 +115,12 @@ export type DesktopTakeScreenshotActionOutput = string;
 export type DesktopReadTextFromImageActionInput = z.infer<
     typeof readTextFromImageInputSchema
 >;
+
+export type DesktopReadTextFromImageActionOutput = string;
+
 export type DesktopReadTextFromPdfActionInput = z.infer<
     typeof readTextFromPdfInputSchema
 >;
-
-export type DesktopReadTextFromImageActionOutput = string;
 
 export type DesktopReadTextFromPdfActionOutput = string;
 

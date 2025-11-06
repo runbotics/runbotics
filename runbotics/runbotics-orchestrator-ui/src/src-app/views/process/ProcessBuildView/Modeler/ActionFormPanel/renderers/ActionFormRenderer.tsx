@@ -51,6 +51,8 @@ const ActionFormRenderer: FC = () => {
     );
 
     const handleSubmit = (event: FormState) => {
+        // debugger;
+        console.log('Submitting form data:', event.formData.input);
         dispatch(processActions.addAppliedAction(selectedElement.id));
         'processOutput' in event.formData && toggleProcessOutput(event);
         applyModelerElement({

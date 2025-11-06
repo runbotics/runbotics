@@ -483,6 +483,8 @@
     "Process.Details.Modeler.Actions.Excel.SetCellValue.Value": "Value",
     "Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath": "Image path, e.g. C:\\Users\\John\\Pictures\\picture.png",
     "Process.Details.Modeler.Actions.Desktop.Common.ImageFullPath.Info": "The path can be relative or absolute.",
+    "Process.Details.Modeler.Actions.Desktop.Common.PdfFullPath": "PDF path, e.g. C:\\Users\\John\\Files\\myDocument.pdf",
+    "Process.Details.Modeler.Actions.Desktop.Common.PdfFullPath.Info": "The path can be relative or absolute.",
     "Process.Details.Modeler.Actions.Desktop.Common.Point.Info": "Point on the screen is defined by an object with two attributes - x, y, e.g. { x: 25, y: 298 }.",
     "Process.Details.Modeler.Actions.Desktop.Common.Region.Info": "Region on the screen covers the area defined by an object with four attributes - left, top, width, height, e.g. { left: 0, top: 100, width: 335, height: 125 }.",
     "Process.Details.Modeler.Actions.Desktop.Click.Label": "Click",
