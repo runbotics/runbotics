@@ -6,6 +6,7 @@ import {
     Index,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     OneToOne,
     PrimaryColumn,
     UpdateDateColumn
@@ -15,6 +16,7 @@ import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.e
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
 import { dateTransformer } from '#/database/database.utils';
 import { RequestType } from 'runbotics-common';
+import { WebhookProcessTrigger } from './webhook-process-trigger.entity';
 
 @Entity({ schema: 'scheduler' })
 export class ClientRegistrationWebhook {
@@ -82,4 +84,7 @@ export class ClientRegistrationWebhook {
     )
     @JoinColumn({ name: 'payload_id' })
     payload: WebhookPayload;
+
+    @OneToMany(() => WebhookProcessTrigger, (trigger) => trigger.webhook, { onDelete: 'CASCADE', cascade: true })
+    webhookProcessTriggers: WebhookProcessTrigger[];
 }

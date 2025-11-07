@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
 import { CreateClientRegistrationWebhookDto } from '#/webhook/dto/client-registration-webhook.dto';
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
@@ -14,6 +14,16 @@ import { firstValueFrom } from 'rxjs';
 import { Logger } from '#/utils/logger';
 import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
 import { WebhookIncomingEventLog } from '#/webhook/entities/webhook-incoming-event-log.entity';
+import { DeleteClientRegistrationWebhookDto } from './dto/client-unregistration-webhook.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AxiosResponse } from 'axios';
+
+interface AxiosRequestConfigParams {
+    requestType: RequestType;
+    url: string;
+    payload: Record<string, unknown>;
+    authorization: WebhookAuthorization;
+}
 
 @Injectable()
 export class WebhookService {
@@ -24,43 +34,40 @@ export class WebhookService {
         private readonly httpService: HttpService,
         private readonly encryptionService: EncryptionService,
         private readonly serverConfigService: ServerConfigService,
-    ) {
-    }
+        @InjectRepository(ClientRegistrationWebhook)
+        private readonly clientRegistrationWebhookRepository: Repository<ClientRegistrationWebhook>
+    ) {}
 
     async get(tenantId: string): Promise<ClientRegistrationWebhook[]> {
         return this.dataSource.manager.find(ClientRegistrationWebhook, {
-            where: { tenantId }, relations: {
+            where: { tenantId },
+            relations: {
                 clientAuthorization: true,
-                payload: true,
-            },
+                payload: true
+            }
         });
     }
 
     async createWebhookEntry(tenantId: string, webhookDto: CreateClientRegistrationWebhookDto) {
         const manager = this.dataSource.manager;
-        const transactionResult = await manager.transaction(async (manager) => {
-            const {
-                name,
-                applicationUrl,
-                applicationRequestType,
-                active,
-                clientAuthorization,
-                payload,
-                registrationPayload,
-            } = webhookDto;
+        const transactionResult = await manager.transaction(async manager => {
+            const { name, applicationUrl, applicationRequestType, active, clientAuthorization, payload, registrationPayload } = webhookDto;
 
-            const clientAuthDataHashed = clientAuthorization.type !== WebhookAuthorizationType.NONE ? {
-                type: clientAuthorization.type,
-                data: Object.values(clientAuthorization.data).reduce((acc, value, index) => {
-                    const key = Object.keys(clientAuthorization.data)[index];
-                    acc[key] = this.encryptionService.encrypt(value);
-                    return acc;
-                }, {}),
-            } : {
-                type: WebhookAuthorizationType.NONE,
-            };
+            const clientAuthDataHashed =
+                clientAuthorization.type !== WebhookAuthorizationType.NONE
+                    ? {
+                          type: clientAuthorization.type,
+                          data: Object.values(clientAuthorization.data).reduce((acc, value, index) => {
+                              const key = Object.keys(clientAuthorization.data)[index];
+                              acc[key] = this.encryptionService.encrypt(value);
+                              return acc;
+                          }, {})
+                      }
+                    : {
+                          type: WebhookAuthorizationType.NONE
+                      };
             const newAuth = await manager.save(WebhookAuthorization, {
-                type: WebhookAuthorizationType.JWT,
+                type: WebhookAuthorizationType.JWT
             });
             const newClientAuth = await manager.save(WebhookAuthorization, clientAuthDataHashed);
 
@@ -75,61 +82,26 @@ export class WebhookService {
                 clientAuthorization: newClientAuth,
                 authorization: newAuth,
                 payload: newPayload,
-                registrationPayload: registrationPayload,
+                registrationPayload: registrationPayload
             });
 
             const registrationPayloadWithUrl = replacePlaceholdersImmutable(
                 JSON.parse(newWebhookEntry.registrationPayload as unknown as string),
                 {
                     '{{webhook}}': `${this.serverConfigService.entrypointUrl}/api/scheduler/webhook`,
-                    '{{webhookId}}': newWebhookEntry.id,
-                },
+                    '{{webhookId}}': newWebhookEntry.id
+                }
             );
-            const headers = {
-                'Content-Type': 'application/json',
-                ...(await parseAuthorization(newClientAuth, this.encryptionService)),
-            };
-            console.log(
-                'Sending request with data',
-                headers,
-                registrationPayloadWithUrl,
-            );
-            let response;
-            switch (newWebhookEntry.applicationRequestType) {
-                case RequestType.GET:
-                    response = await firstValueFrom(this.httpService.get(newWebhookEntry.applicationURL, {
-                        headers,
-                    }));
-                    break;
-                case RequestType.POST:
-                    response = await firstValueFrom(this.httpService.post(newWebhookEntry.applicationURL, {
-                        ...registrationPayloadWithUrl,
-                    }, {
-                        headers: {
-                            ...headers,
-                            'Content-Type': 'application/json',
-                        },
-                    }));
-                    break;
-                case RequestType.PUT:
-                    response = await firstValueFrom(this.httpService.put(newWebhookEntry.applicationURL, {
-                        ...registrationPayloadWithUrl,
-                    }, {
-                        headers: {
-                            ...headers,
-                            'Content-Type': 'application/json',
-                        },
-                    }));
-                    break;
-                case RequestType.PATCH:
-                    response = await firstValueFrom(this.httpService.patch(newWebhookEntry.applicationURL, {
 
-                        ...registrationPayloadWithUrl,
-                    }, {
-                        headers,
-                    }));
-                    break;
-            }
+            const axiosRequestConfig: AxiosRequestConfigParams = {
+                requestType: newWebhookEntry.applicationRequestType,
+                url: newWebhookEntry.applicationURL,
+                authorization: newClientAuth,
+                payload: registrationPayloadWithUrl
+            };
+
+            const response = this.getAxiosResponse(axiosRequestConfig);
+
             console.log(inspect(response, { depth: 6 }));
 
             return newWebhookEntry;
@@ -138,28 +110,144 @@ export class WebhookService {
         return transactionResult;
     }
 
+    async deleteWebhookEntry(tenantId: string, webhookId: string, webhookDto: DeleteClientRegistrationWebhookDto) {
+        const webhook = await this.clientRegistrationWebhookRepository.findOne({
+            where: { id: webhookId, tenantId },
+            relations: ['authorization']
+        });
+
+        if (!webhook) throw new NotFoundException();
+
+        console.dir(webhook);
+
+        const authorization = webhook.authorization;
+
+        console.dir(authorization);
+
+        const axiosConfigParams = {
+            requestType: webhookDto.applicationRequestType,
+            authorization,
+            url: webhookDto.applicationUrl,
+            payload: webhookDto.unregisterPayload
+        };
+
+        const response = await this.getAxiosResponse(axiosConfigParams);
+
+        console.log(inspect(response, { depth: 6 }));
+
+        const wasRequestSuccessful = this.checkIsResponseSuccess(webhookDto.applicationRequestType, response.status);
+
+        if (!wasRequestSuccessful) {
+            throw new BadRequestException(`Unregistration failed, status code: ${response.status}, status message: ${response.statusText}`);
+        }
+
+        await this.clientRegistrationWebhookRepository.delete(webhookId);
+    }
+
     async processWebhook(body: Record<string, unknown>): Promise<any> {
         this.logger.log(`Processing webhook ${JSON.stringify(body)}`);
         await this.dataSource.manager.save(WebhookIncomingEventLog, {
             authorization: WebhookAuthorizationType.JWT,
             payload: JSON.stringify(body),
-            status: 'Incoming',
+            status: 'Incoming'
         });
         if (!body.webhoookId || typeof body.webhookId !== 'string') {
             await this.dataSource.manager.save(WebhookIncomingEventLog, {
                 authorization: WebhookAuthorizationType.JWT,
                 payload: JSON.stringify(body),
                 status: 'Error',
-                error: 'No webhook id provided.',
+                error: 'No webhook id provided.'
             });
             this.logger.warn('Processing webhook trigger failed. No webhook ID found.');
         }
-        const transaction = await this.dataSource.transaction(async (manager) => {
+        const transaction = await this.dataSource.transaction(async manager => {
             const triggers = await manager.findBy(WebhookProcessTrigger, { webhookId: body.webhookId as string });
 
             for (const trigger of triggers) {
                 this.logger.log(`Triggering process ${trigger.processId}`);
             }
         });
+    }
+
+    private async getAxiosResponse(configParams: AxiosRequestConfigParams) {
+        const { requestType, authorization, url, payload } = configParams;
+
+        const headers = {
+            'Content-Type': 'application/json',
+            ...(await parseAuthorization(authorization, this.encryptionService))
+        };
+
+        console.log('Sending request with data', headers, payload);
+
+        let response: AxiosResponse;
+        switch (requestType) {
+            case RequestType.GET:
+                response = await firstValueFrom(
+                    this.httpService.get(url, {
+                        headers
+                    })
+                );
+                break;
+            case RequestType.POST:
+                response = await firstValueFrom(
+                    this.httpService.post(
+                        url,
+                        {
+                            ...payload
+                        },
+                        {
+                            headers: {
+                                ...headers,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    )
+                );
+                break;
+            case RequestType.PUT:
+                response = await firstValueFrom(
+                    this.httpService.put(
+                        url,
+                        {
+                            ...payload
+                        },
+                        {
+                            headers: {
+                                ...headers,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    )
+                );
+                break;
+            case RequestType.PATCH:
+                response = await firstValueFrom(
+                    this.httpService.patch(
+                        url,
+                        {
+                            ...payload
+                        },
+                        {
+                            headers
+                        }
+                    )
+                );
+                break;
+        }
+
+        return response;
+    }
+
+    private checkIsResponseSuccess(requestType: RequestType, status: number): boolean {
+        const successStatusMap: Record<RequestType, number[]> = {
+            [RequestType.GET]: [200],
+            [RequestType.POST]: [200, 201],
+            [RequestType.PUT]: [200, 201, 204],
+            [RequestType.PATCH]: [200, 204],
+            [RequestType.DELETE]: [200, 204, 202]
+        };
+
+        const validStatuses = successStatusMap[requestType];
+        return validStatuses.includes(status);
     }
 }
