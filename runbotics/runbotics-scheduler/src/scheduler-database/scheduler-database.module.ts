@@ -31,6 +31,7 @@ import { ProcessSummaryNotificationSubscribersModule } from './process-summary-n
 import { ActionBlacklistModule } from '#/scheduler-database/action-blacklist/action-blacklist.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { UnsubscribeTokenModule } from './unsubscribe-token/unsubscribe-token.module';
+import { ProcessSnapshotModule } from './process-snapshot/process-snapshot.module';
 
 @Module({
     imports: [
@@ -66,6 +67,7 @@ import { UnsubscribeTokenModule } from './unsubscribe-token/unsubscribe-token.mo
         ActionBlacklistModule,
         ProcessSummaryNotificationSubscribersModule,
         UnsubscribeTokenModule,
+        ProcessSnapshotModule,
     ],
     exports: [
         DatabaseModule,
