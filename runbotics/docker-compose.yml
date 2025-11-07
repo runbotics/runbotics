@@ -109,11 +109,11 @@ services:
     restart: on-failure
     network_mode: host
     environment:
-      - RUNBOTICS_ENTRYPOINT_URL=http://localhost:8080
-      - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://localhost:4000
-      - RUNBOTICS_INSTALLATION_ID=admin
-      - RUNBOTICS_USERNAME=runbotics@localhost
-      - RUNBOTICS_PASSWORD=
+      - RUNBOTICS_ENTRYPOINT_URL=http://localhost:7777
+      - RUNBOTICS_SCHEDULER_ENTRYPOINT_URL=http://localhost:7777
+      - RUNBOTICS_INSTALLATION_ID=tenant-admin
+      - RUNBOTICS_USERNAME=tenant-admin@localhost
+      - RUNBOTICS_PASSWORD=yz32n%FEqk&qbBGy
       - RUNBOTICS_HOT_RELOAD=true
       - RUNBOTICS_BOT_COLLECTION=30bdfb61-841b-519b-ce54-1d0e56877f73
       - RUNBOTICS_LOGGER_FILE_MODE=false

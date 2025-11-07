@@ -9,6 +9,13 @@ import { WebhookController } from '#/webhook/webhook.controller';
 import { WebhookService } from '#/webhook/webhook.service';
 import { HttpModule } from '@nestjs/axios';
 import { EncryptionService } from '#/webhook/encryption.service';
+import { BullModule } from '@nestjs/bull';
+import { QueueModule } from '#/queue/queue.module';
+import { WebhooksProcessor } from '#/webhook/webhook.processor';
+import { ConfigModule } from '#/config/config.module';
+import { ServerConfigService } from '#/config/server-config';
+import { Logger } from '#/utils/logger';
+import IORedis from 'ioredis';
 
 @Module({
     imports: [
@@ -20,9 +27,30 @@ import { EncryptionService } from '#/webhook/encryption.service';
             WebhookProcessTrigger,
         ]),
         HttpModule,
+        BullModule.registerQueueAsync({
+            name: 'webhooks',
+            imports: [ ConfigModule ],
+            inject: [ ServerConfigService ],
+            useFactory: (serverConfigService: ServerConfigService) => ({
+                createClient: (_, redisOpts) => {
+                    const logger = new Logger(BullModule.name);
+                    const redis = new IORedis({ ...redisOpts, ...serverConfigService.redisSettings });
+
+                    redis.on('error', async (err) => {
+                        logger.error('Redis error', err);
+                    });
+                    redis.on('connect', () => {
+                        logger.log('Redis connected');
+                    });
+
+                    return redis;
+                },
+            }),
+        }),
+        QueueModule,
     ],
     controllers: [WebhookController],
-    providers: [WebhookService, EncryptionService],
+    providers: [WebhookService, EncryptionService, WebhooksProcessor],
 })
 export class WebhookModule {
 }

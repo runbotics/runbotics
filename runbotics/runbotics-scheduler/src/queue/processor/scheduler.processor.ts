@@ -46,12 +46,14 @@ export class SchedulerProcessor {
         if (!job.data) {
             throw new Error('Job data is empty');
         }
-
+        this.logger.log('DUPA1', job.data.triggerData);
         await this.validateTriggerData(job)
             .catch((err) => Promise.reject(new Error(err)));
 
+        this.logger.log('DUPA2');
         const process = await this.processService.findById(job.data.process.id);
 
+        this.logger.log('DUPA3');
         //reverse value of check, because it returns if the process is blacklisted, so is allowed when is not blacklisted
         const isAllowedToRun = !(await this.blacklistActionAuthService.checkProcessActionsBlacklist(process.id ?? job.data.process.id));
 
