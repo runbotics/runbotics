@@ -58,8 +58,6 @@ export class WebhooksProcessor {
 
     @Process({ concurrency: 1 })
     async process(job: Job) {
-        this.logger.log(`Webhook processing: ${job.id} [${inspect(job.data, { depth: 4 })}]`);
-
         await this.dataSource.transaction(async (manager) => {
             const triggers = await manager.find(
                 WebhookProcessTrigger,
@@ -90,7 +88,6 @@ export class WebhooksProcessor {
             }
 
             for (const trigger of triggers) {
-                this.logger.log(`Triggering process ${trigger.processId}`);
                 try {
                     const variables = this.getValueByPath(job.data, trigger.webhook.payload.payloadDataPath) ?? {};
 

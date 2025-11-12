@@ -129,7 +129,6 @@ export class WebhookService {
                     }));
                     break;
             }
-            console.log(inspect(response, { depth: 6 }));
 
             return newWebhookEntry;
         });
@@ -138,7 +137,6 @@ export class WebhookService {
     }
 
     async processWebhook(body: WebhookRequestPayloadDto, tenantId: string): Promise<any> {
-        this.logger.log(`Processing webhook ${JSON.stringify(body)}`);
         await this.dataSource.manager.save(WebhookIncomingEventLog, {
             authorization: WebhookAuthorizationType.JWT,
             payload: JSON.stringify(body),
@@ -155,12 +153,17 @@ export class WebhookService {
             this.logger.warn('Processing webhook trigger failed. No webhook ID found.');
         }
         try {
-            const newJob = await this.webhookQueue.add({
+            await this.webhookQueue.add({
                 ...(body as unknown as JobData),
                 tenantId,
             });
-            this.logger.log(`JOb Data ${JSON.stringify(newJob)}`);
         } catch (e) {
+            await this.dataSource.manager.save(WebhookIncomingEventLog, {
+                authorization: WebhookAuthorizationType.JWT,
+                payload: JSON.stringify(body),
+                status: 'Error',
+                error: (e as Error).message ?? 'Error during adding new request to queue',
+            });
             this.logger.error(e);
         }
     }
