@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { CreateClientRegistrationWebhookRequest } from 'runbotics-common';
+
 import { RootState } from '#src-app/store';
 import buildWebhooksExtraReducers from '#src-app/store/slices/Webhook/Webhook.extraReducers';
-import { CreateClientRegistrationWebhookRequest, WebhookState } from '#src-app/store/slices/Webhook/Webhook.state';
+import { WebhookState } from '#src-app/store/slices/Webhook/Webhook.state';
 
 import * as webhookThunks from './Webhook.thunks';
 
