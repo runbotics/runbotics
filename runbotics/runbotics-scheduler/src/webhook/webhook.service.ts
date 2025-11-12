@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { CreateClientRegistrationWebhookDto } from '#/webhook/dto/client-registration-webhook.dto';
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
@@ -93,11 +93,7 @@ export class WebhookService {
                 'Content-Type': 'application/json',
                 ...(await parseAuthorization(newClientAuth, this.encryptionService)),
             };
-            console.log(
-                'Sending request with data',
-                headers,
-                registrationPayloadWithUrl,
-            );
+            
             let response;
             switch (newWebhookEntry.applicationRequestType) {
                 case RequestType.GET:
@@ -141,8 +137,6 @@ export class WebhookService {
         return transactionResult;
     }
 
-
-    
     async processWebhook(body: WebhookRequestPayloadDto, tenantId: string): Promise<any> {
         this.logger.log(`Processing webhook ${JSON.stringify(body)}`);
         await this.dataSource.manager.save(WebhookIncomingEventLog, {
@@ -150,7 +144,7 @@ export class WebhookService {
             payload: JSON.stringify(body),
             status: 'Incoming',
         });
-        
+
         if (!body.data.webhookId || typeof body.data.webhookId !== 'string') {
             await this.dataSource.manager.save(WebhookIncomingEventLog, {
                 authorization: WebhookAuthorizationType.JWT,

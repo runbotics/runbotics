@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const CreateWebhookPayloadDtoSchema = z.object({
-    webhookIdPath: z.string().min(1),
+    webhookIdPath: z.string().min(1).optional(),
     payloadDataPath: z.string().min(1),
 });
 

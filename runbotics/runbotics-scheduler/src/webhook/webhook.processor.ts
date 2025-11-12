@@ -5,8 +5,9 @@ import { DataSource } from 'typeorm';
 import { QueueService } from '#/queue/queue.service';
 import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
 import { User } from '#/scheduler-database/user/user.entity';
-import { Role } from 'runbotics-common';
+import { Role, WebhookAuthorizationType } from 'runbotics-common';
 import { inspect } from 'node:util';
+import { WebhookIncomingEventLog } from '#/webhook/entities/webhook-incoming-event-log.entity';
 
 @Processor('webhooks')
 export class WebhooksProcessor {
@@ -59,7 +60,7 @@ export class WebhooksProcessor {
     async process(job: Job) {
         this.logger.log(`Webhook processing: ${job.id} [${inspect(job.data, { depth: 4 })}]`);
 
-        const transaction = await this.dataSource.transaction(async (manager) => {
+        await this.dataSource.transaction(async (manager) => {
             const triggers = await manager.find(
                 WebhookProcessTrigger,
                 {
@@ -83,7 +84,7 @@ export class WebhooksProcessor {
                     tenantId: job.data.tenantId,
                 },
             });
-            console.log(user, triggers.length);
+            
             if (!user) {
                 throw new NotFoundException('Service user does not exist');
             }
@@ -92,7 +93,6 @@ export class WebhooksProcessor {
                 this.logger.log(`Triggering process ${trigger.processId}`);
                 try {
                     const variables = this.getValueByPath(job.data, trigger.webhook.payload.payloadDataPath) ?? {};
-                    console.log(variables);
 
                     this.queueService.createInstantJob({
                         process: trigger.process,
@@ -108,6 +108,19 @@ export class WebhooksProcessor {
                     this.logger.error(error);
                 }
             }
+            await manager.save(WebhookIncomingEventLog, {
+                status: 'success',
+                payload: job.data,
+                authorization: WebhookAuthorizationType.JWT,
+            });
+        }).catch(e => {
+            this.dataSource.manager.save(WebhookIncomingEventLog, {
+                status: 'failed',
+                error: e,
+                payload: job.data,
+                authorization: WebhookAuthorizationType.JWT,
+            });
+            this.logger.error(e);
         });
     }
 
