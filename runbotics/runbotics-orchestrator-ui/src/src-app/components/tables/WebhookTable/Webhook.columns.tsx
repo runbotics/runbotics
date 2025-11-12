@@ -33,10 +33,6 @@ export const useWebhookColumns = () => {
             accessor: (webhook) => webhook?.payload.payloadDataPath,
         },
         {
-            Header: translate('Component.WebhookTable.WebhookIdPath'),
-            accessor: (webhook) => webhook?.payload.webhookIdPath,
-        },
-        {
             Header: translate('Component.WebhookTable.AuthorizationMethod'),
             accessor: (webhook) => webhook?.clientAuthorization.type,
             Cell: ({ row }) =>

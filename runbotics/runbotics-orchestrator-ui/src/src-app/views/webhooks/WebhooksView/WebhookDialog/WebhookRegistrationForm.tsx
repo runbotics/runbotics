@@ -13,13 +13,17 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { RequestType, WebhookAuthorizationType } from 'runbotics-common';
+import {
+    CreateClientRegistrationWebhookRequest,
+    RequestType,
+    WebhookAuthorizationType,
+} from 'runbotics-common';
 
 import * as Yup from 'yup';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
-import { CreateClientRegistrationWebhookRequest, webhookActions, } from '#src-app/store/slices/Webhook';
+import { webhookActions } from '#src-app/store/slices/Webhook';
 import { registerValidationSchema } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/registerValidationSchema';
 import {
     RegistrationPayloadInfo,
@@ -70,7 +74,7 @@ export const WebhookRegistrationForm: FC = () => {
             registrationPayload: formValues.registrationPayload,
             clientAuthorization: {
                 type: formValues.type,
-                // @ts-expect-error union types doesn't work well
+                // @ts-expect-error union types don't work well
                 data:
                     // eslint-disable-next-line no-nested-ternary
                     formValues.type === WebhookAuthorizationType.JWT
@@ -83,7 +87,6 @@ export const WebhookRegistrationForm: FC = () => {
                             : null,
             },
             payload: {
-                webhookIdPath: formValues.webhookIdPath,
                 payloadDataPath: formValues.payloadDataPath,
             },
         };
@@ -124,12 +127,12 @@ export const WebhookRegistrationForm: FC = () => {
                 case WebhookAuthorizationType.JWT:
                     return {
                         token: formValues.token,
-                    }
+                    };
                 case WebhookAuthorizationType.BASIC:
                     return {
                         username: formValues.username,
                         password: formValues.password,
-                    }
+                    };
                 default:
                     return null;
             }
@@ -140,13 +143,12 @@ export const WebhookRegistrationForm: FC = () => {
             applicationUrl: formValues.applicationUrl,
             applicationRequestType: formValues.applicationRequestType,
             registrationPayload: formValues.registrationPayload,
-            // @ts-expect-error some union types problems with ts
+            // @ts-expect-error union types don't work well
             clientAuthorization: {
                 type: formValues.type,
                 data: clientAuthData(),
             },
             payload: {
-                webhookIdPath: formValues.webhookIdPath,
                 payloadDataPath: formValues.payloadDataPath,
             },
         };
@@ -214,31 +216,6 @@ export const WebhookRegistrationForm: FC = () => {
                     <Tooltip
                         title={
                             'Provide path as object separated with dot. Example "data.payload.parameters"'
-                        }
-                    >
-                        <InfoOutlined />
-                    </Tooltip>
-                </Box>
-                <Box
-                    flexDirection={'row'}
-                    display={'flex'}
-                    gap={'.5rem'}
-                    alignItems={'center'}
-                >
-                    <TextField
-                        label={translate('Webhooks.Form.WebhookIdPath')}
-                        name="webhookIdPath"
-                        value={formValues.webhookIdPath}
-                        onChange={handleChange}
-                        error={Boolean(error.webhookNamePath)}
-                        helperText={error.webhookNamePath}
-                        fullWidth
-                        onBlur={onBlur}
-                        required
-                    />
-                    <Tooltip
-                        title={
-                            'Provide path as object separated with dot. Example "data.payload.webhookId"'
                         }
                     >
                         <InfoOutlined />

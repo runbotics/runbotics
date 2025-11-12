@@ -7,7 +7,6 @@ export interface WebhookRegistrationFormState {
     type: WebhookAuthorizationType;
     data?: unknown | null;
     registrationPayload?: string;
-    webhookIdPath: string;
     payloadDataPath: string;
     token: string | null;
     username: string | null;
@@ -20,7 +19,6 @@ export const initialFormState: WebhookRegistrationFormState = {
     applicationRequestType: RequestType.GET,
     type: WebhookAuthorizationType.NONE,
     registrationPayload: '{ \n"webhookUrl": "{{webhook}}", \n "webhookId": "{{webhookId}}" \n}',
-    webhookIdPath: '',
     payloadDataPath: '',
     token: null,
     username: null,

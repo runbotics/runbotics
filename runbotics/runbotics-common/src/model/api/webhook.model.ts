@@ -58,7 +58,7 @@ export interface WebhookPayload {
 }
 
 export interface CreateWebhookPayloadRequest {
-    webhookIdPath: string;
+    webhookIdPath?: string;
     payloadDataPath: string;
 }
 

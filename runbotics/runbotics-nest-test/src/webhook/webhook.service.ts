@@ -60,7 +60,12 @@ export class WebhookService {
             const response = await firstValueFrom(this.httpService.post(
                 webhook.rbUrl,
                 {
-                    webhookId: webhook.webhookId,
+                    data: {
+                        webhookId: webhook.webhookId,
+                        params: {
+                            input: 'AttendedForm Process Log',
+                        }
+                    },
                 },
                 {
                     headers: {

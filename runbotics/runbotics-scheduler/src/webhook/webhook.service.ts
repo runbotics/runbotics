@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { CreateClientRegistrationWebhookDto } from '#/webhook/dto/client-registration-webhook.dto';
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
@@ -15,6 +15,7 @@ import { Logger } from '#/utils/logger';
 import { WebhookIncomingEventLog } from '#/webhook/entities/webhook-incoming-event-log.entity';
 import { Queue } from 'bull';
 import { InjectQueue } from '@nestjs/bull';
+import { WebhookRequestPayloadDto } from '#/webhook/dto/webhook-request-payload.dto';
 
 @Injectable()
 export class WebhookService {
@@ -67,7 +68,7 @@ export class WebhookService {
             });
             const newClientAuth = await manager.save(WebhookAuthorization, clientAuthDataHashed);
 
-            const newPayload = await manager.save(WebhookPayload, payload);
+            const newPayload = await manager.save(WebhookPayload, { ...payload, webhookIdPath: '' });
 
             const newWebhookEntry = await manager.save(ClientRegistrationWebhook, {
                 name,
@@ -126,7 +127,6 @@ export class WebhookService {
                     break;
                 case RequestType.PATCH:
                     response = await firstValueFrom(this.httpService.patch(newWebhookEntry.applicationURL, {
-
                         ...registrationPayloadWithUrl,
                     }, {
                         headers,
@@ -141,14 +141,17 @@ export class WebhookService {
         return transactionResult;
     }
 
-    async processWebhook(body: Record<string, unknown>, tenantId: string): Promise<any> {
+
+    
+    async processWebhook(body: WebhookRequestPayloadDto, tenantId: string): Promise<any> {
         this.logger.log(`Processing webhook ${JSON.stringify(body)}`);
         await this.dataSource.manager.save(WebhookIncomingEventLog, {
             authorization: WebhookAuthorizationType.JWT,
             payload: JSON.stringify(body),
             status: 'Incoming',
         });
-        if (!body.webhookId || typeof body.webhookId !== 'string') {
+        
+        if (!body.data.webhookId || typeof body.data.webhookId !== 'string') {
             await this.dataSource.manager.save(WebhookIncomingEventLog, {
                 authorization: WebhookAuthorizationType.JWT,
                 payload: JSON.stringify(body),
@@ -166,12 +169,5 @@ export class WebhookService {
         } catch (e) {
             this.logger.error(e);
         }
-        // const transaction = await this.dataSource.transaction(async (manager) => {
-        //     const triggers = await manager.findBy(WebhookProcessTrigger, { webhookId: body.webhookId as string });
-        //
-        //     for (const trigger of triggers) {
-        //         this.logger.log(`Triggering process ${trigger.processId}`);
-        //     }
-        // });
     }
 }
