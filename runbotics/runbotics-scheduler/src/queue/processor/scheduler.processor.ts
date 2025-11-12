@@ -46,7 +46,6 @@ export class SchedulerProcessor {
         if (!job.data) {
             throw new Error('Job data is empty');
         }
-
         await this.validateTriggerData(job)
             .catch((err) => Promise.reject(new Error(err)));
 

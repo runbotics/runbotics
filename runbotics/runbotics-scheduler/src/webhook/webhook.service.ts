@@ -4,7 +4,7 @@ import { CreateClientRegistrationWebhookDto } from '#/webhook/dto/client-registr
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
 import { ClientRegistrationWebhook } from '#/webhook/entities/client-registration-webhook.entity';
-import { RequestType, WebhookAuthorizationType } from 'runbotics-common';
+import { JobData, RequestType, WebhookAuthorizationType } from 'runbotics-common';
 import { HttpService } from '@nestjs/axios';
 import { parseAuthorization, replacePlaceholdersImmutable } from '#/webhook/webhook-service.utils';
 import { EncryptionService } from '#/webhook/encryption.service';
@@ -12,8 +12,10 @@ import { ServerConfigService } from '#/config/server-config';
 import { inspect } from 'node:util';
 import { firstValueFrom } from 'rxjs';
 import { Logger } from '#/utils/logger';
-import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
 import { WebhookIncomingEventLog } from '#/webhook/entities/webhook-incoming-event-log.entity';
+import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bull';
+import { WebhookRequestPayloadDto } from '#/webhook/dto/webhook-request-payload.dto';
 
 @Injectable()
 export class WebhookService {
@@ -24,6 +26,8 @@ export class WebhookService {
         private readonly httpService: HttpService,
         private readonly encryptionService: EncryptionService,
         private readonly serverConfigService: ServerConfigService,
+        @InjectQueue('webhooks')
+        private readonly webhookQueue: Queue<JobData & { tenantId: string }>,
     ) {
     }
 
@@ -64,7 +68,7 @@ export class WebhookService {
             });
             const newClientAuth = await manager.save(WebhookAuthorization, clientAuthDataHashed);
 
-            const newPayload = await manager.save(WebhookPayload, payload);
+            const newPayload = await manager.save(WebhookPayload, { ...payload, webhookIdPath: '' });
 
             const newWebhookEntry = await manager.save(ClientRegistrationWebhook, {
                 name,
@@ -89,11 +93,7 @@ export class WebhookService {
                 'Content-Type': 'application/json',
                 ...(await parseAuthorization(newClientAuth, this.encryptionService)),
             };
-            console.log(
-                'Sending request with data',
-                headers,
-                registrationPayloadWithUrl,
-            );
+            
             let response;
             switch (newWebhookEntry.applicationRequestType) {
                 case RequestType.GET:
@@ -123,7 +123,6 @@ export class WebhookService {
                     break;
                 case RequestType.PATCH:
                     response = await firstValueFrom(this.httpService.patch(newWebhookEntry.applicationURL, {
-
                         ...registrationPayloadWithUrl,
                     }, {
                         headers,
@@ -138,14 +137,15 @@ export class WebhookService {
         return transactionResult;
     }
 
-    async processWebhook(body: Record<string, unknown>): Promise<any> {
+    async processWebhook(body: WebhookRequestPayloadDto, tenantId: string): Promise<any> {
         this.logger.log(`Processing webhook ${JSON.stringify(body)}`);
         await this.dataSource.manager.save(WebhookIncomingEventLog, {
             authorization: WebhookAuthorizationType.JWT,
             payload: JSON.stringify(body),
             status: 'Incoming',
         });
-        if (!body.webhoookId || typeof body.webhookId !== 'string') {
+
+        if (!body.data.webhookId || typeof body.data.webhookId !== 'string') {
             await this.dataSource.manager.save(WebhookIncomingEventLog, {
                 authorization: WebhookAuthorizationType.JWT,
                 payload: JSON.stringify(body),
@@ -154,12 +154,14 @@ export class WebhookService {
             });
             this.logger.warn('Processing webhook trigger failed. No webhook ID found.');
         }
-        const transaction = await this.dataSource.transaction(async (manager) => {
-            const triggers = await manager.findBy(WebhookProcessTrigger, { webhookId: body.webhookId as string });
-
-            for (const trigger of triggers) {
-                this.logger.log(`Triggering process ${trigger.processId}`);
-            }
-        });
+        try {
+            const newJob = await this.webhookQueue.add({
+                ...(body as unknown as JobData),
+                tenantId,
+            });
+            this.logger.log(`JOb Data ${JSON.stringify(newJob)}`);
+        } catch (e) {
+            this.logger.error(e);
+        }
     }
 }
