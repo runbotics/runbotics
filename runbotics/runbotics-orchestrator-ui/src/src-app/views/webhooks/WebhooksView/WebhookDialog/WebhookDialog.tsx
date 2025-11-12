@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
+import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { webhookActions } from '#src-app/store/slices/Webhook';
 import {
@@ -9,7 +10,6 @@ import {
     getWebhooks,
 } from '#src-app/store/slices/Webhook/Webhook.thunks';
 import { WebhookRegistrationForm } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookRegistrationForm';
-import useTranslations from '#src-app/hooks/useTranslations';
 
 interface WebhookDialogProps {
     isOpen: boolean;

@@ -2,6 +2,7 @@ import {
     ClientRegistrationWebhook,
     CreateClientRegistrationWebhookRequest,
 } from 'runbotics-common';
+
 import ApiTenantResource from '#src-app/utils/ApiTenantResource';
 
 export const createWebhookEntry = ApiTenantResource.post<ClientRegistrationWebhook, CreateClientRegistrationWebhookRequest>(
