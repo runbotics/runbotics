@@ -112,7 +112,7 @@ export class WebhooksProcessor {
             });
         }).catch(e => {
             this.dataSource.manager.save(WebhookIncomingEventLog, {
-                status: 'failed',
+                status: 'Error',
                 error: e,
                 payload: job.data,
                 authorization: WebhookAuthorizationType.JWT,
