@@ -26,6 +26,10 @@ export class WebhookService {
         return newWebhook;
     }
 
+    async unregister(id: string) {
+        return await this.dataSource.manager.delete(Webhook, { webhookId: id })
+    }
+
     async saveToken(tokenString: string): Promise<any> {
         const token = await this.dataSource.manager.findOne(Token, {});
         if (!token) {
