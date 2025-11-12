@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { CreateClientRegistrationWebhookDto } from '#/webhook/dto/client-registration-webhook.dto';
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
@@ -100,9 +100,9 @@ export class WebhookService {
                 payload: registrationPayloadWithUrl
             };
 
-            const response = this.getAxiosResponse(axiosRequestConfig);
+            const response = await this.getAxiosResponse(axiosRequestConfig);
 
-            console.log(inspect(response, { depth: 6 }));
+            console.log(inspect(response.status));
 
             return newWebhookEntry;
         });
@@ -113,14 +113,14 @@ export class WebhookService {
     async deleteWebhookEntry(tenantId: string, webhookId: string, webhookDto: DeleteClientRegistrationWebhookDto) {
         const webhook = await this.clientRegistrationWebhookRepository.findOne({
             where: { id: webhookId, tenantId },
-            relations: ['authorization']
+            relations: ['authorization', 'clientAuthorization', 'webhookProcessTriggers', 'payload']
         });
 
         if (!webhook) throw new NotFoundException();
 
         console.dir(webhook);
 
-        const authorization = webhook.authorization;
+        const authorization = webhook.clientAuthorization;
 
         console.dir(authorization);
 
@@ -133,7 +133,7 @@ export class WebhookService {
 
         const response = await this.getAxiosResponse(axiosConfigParams);
 
-        console.log(inspect(response, { depth: 6 }));
+        console.log(inspect(response.status));
 
         const wasRequestSuccessful = this.checkIsResponseSuccess(webhookDto.applicationRequestType, response.status);
 
@@ -141,7 +141,28 @@ export class WebhookService {
             throw new BadRequestException(`Unregistration failed, status code: ${response.status}, status message: ${response.statusText}`);
         }
 
-        await this.clientRegistrationWebhookRepository.delete(webhookId);
+        this.logger.log(`Unregistration success with status code: ${response.status}.`);
+
+        return await this.dataSource.transaction(async manager => {
+            console.log('manago');
+            const triggerIds = webhook.webhookProcessTriggers.map(trigger => trigger.id);
+
+            if (triggerIds.length > 0) {
+                await manager.delete(WebhookProcessTrigger, { id: In(webhook.webhookProcessTriggers.map(trigger => trigger.id))});
+            }
+
+            await manager.delete(ClientRegistrationWebhook, { id: webhook.id });
+
+            await manager.delete(WebhookAuthorization, { id: webhook.clientAuthorization.id});
+
+            await manager.delete(WebhookAuthorization, { id: webhook.authorization.id});
+
+            if (webhook.payload?.id) {
+                await manager.delete(WebhookPayload, { id: webhook.payload.id });
+            }
+
+        });
+
     }
 
     async processWebhook(body: Record<string, unknown>): Promise<any> {
@@ -227,6 +248,16 @@ export class WebhookService {
                         {
                             ...payload
                         },
+                        {
+                            headers
+                        }
+                    )
+                );
+                break;
+            case RequestType.DELETE:
+                response = await firstValueFrom(
+                    this.httpService.delete(
+                        url,
                         {
                             headers
                         }
