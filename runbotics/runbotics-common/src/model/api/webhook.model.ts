@@ -58,7 +58,7 @@ export interface WebhookPayload {
 }
 
 export interface CreateWebhookPayloadRequest {
-    webhookIdPath: string;
+    webhookIdPath?: string;
     payloadDataPath: string;
 }
 
@@ -91,12 +91,6 @@ export interface CreateClientRegistrationWebhookRequest {
     registrationPayload?: string | null;
 }
 
-export interface UnregisterClientWebhookRequest {
-    applicationUrl: string;
-    applicationRequestType: RequestType;
-    unregisterPayload?: string | null;
-}
-
 export interface UpdateClientRegistrationWebhookRequest {
     name?: string;
     tenantId?: Tenant['id'];
@@ -106,6 +100,12 @@ export interface UpdateClientRegistrationWebhookRequest {
     clientAuthorization?: UpdateWebhookAuthorizationRequest;
     payload?: UpdateWebhookPayloadRequest;
     registrationPayload?: Record<string, any> | null;
+}
+
+export interface UnregisterClientWebhookRequest {
+    applicationUrl: string;
+    applicationRequestType: RequestType;
+    unregisterPayload?: string | null;
 }
 
 export interface WebhookProcessTrigger {

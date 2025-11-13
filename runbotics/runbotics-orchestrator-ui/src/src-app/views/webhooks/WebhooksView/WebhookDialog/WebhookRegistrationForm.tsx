@@ -14,7 +14,10 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { CreateClientRegistrationWebhookRequest, RequestType, WebhookAuthorizationType } from 'runbotics-common';
+import {
+    CreateClientRegistrationWebhookRequest,
+    RequestType, WebhookAuthorizationType
+} from 'runbotics-common';
 
 import * as Yup from 'yup';
 
