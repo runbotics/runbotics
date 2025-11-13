@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { FC, useCallback, useState } from 'react';
 
 import { InfoOutlined } from '@mui/icons-material';
@@ -13,14 +14,14 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { RequestType, WebhookAuthorizationType } from 'runbotics-common';
+import { CreateClientRegistrationWebhookRequest, RequestType, WebhookAuthorizationType } from 'runbotics-common';
 
 import * as Yup from 'yup';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
-import { CreateClientRegistrationWebhookRequest, webhookActions, } from '#src-app/store/slices/Webhook';
-import { registerValidationSchema } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/registerValidationSchema';
+import { webhookActions } from '#src-app/store/slices/Webhook';
+import { registerValidationSchema } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/validationSchema';
 import {
     RegistrationPayloadInfo,
     WebhookContent,
@@ -124,17 +125,17 @@ export const WebhookRegistrationForm: FC = () => {
                 case WebhookAuthorizationType.JWT:
                     return {
                         token: formValues.token,
-                    }
+                    };
                 case WebhookAuthorizationType.BASIC:
                     return {
                         username: formValues.username,
                         password: formValues.password,
-                    }
+                    };
                 default:
                     return null;
             }
         };
-        
+
         const newRegistrationForm: CreateClientRegistrationWebhookRequest = {
             name: formValues.name,
             applicationUrl: formValues.applicationUrl,

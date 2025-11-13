@@ -39,7 +39,7 @@ const GenerateToken: FC = () => {
             console.log(e);
         }
     };
-    
+
     const copyToken = async () => {
         if(token) {
             await navigator.clipboard.writeText(token);
@@ -68,7 +68,7 @@ const GenerateToken: FC = () => {
                     disabled={isButtonDisabled}
                     onClick={onGenerateClick}
                 >
-                    {translate('Webhooks.List.RegisterWebhook')}
+                    {translate('Webhooks.List.GenerateToken')}
                 </Button>
             </GenerateTokenButton>
             <TokenContainer>

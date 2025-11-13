@@ -7,6 +7,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import Loader from '#src-app/components/Loader';
 import WebhookTable from '#src-app/components/tables/WebhookTable';
+import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { webhookActions } from '#src-app/store/slices/Webhook';
 import { getWebhooks } from '#src-app/store/slices/Webhook/Webhook.thunks';
@@ -16,6 +17,7 @@ import {
 } from '#src-app/views/webhooks/WebhooksView/WebhookList/WebhookList.styles';
 
 const WebhookList: FC = () => {
+    const { translate } = useTranslations();
     const dispatch = useDispatch();
     const { search, loading } = useSelector((state) => state.webhook);
     const [localSearch, setLocalSearch] = useState(search);
@@ -58,7 +60,7 @@ const WebhookList: FC = () => {
                     onChange={handleSearchChange}
                 />
                 <Button variant={'contained'} onClick={handleDialogOpen}>
-                    {'Register webhook'}
+                    {translate('Webhooks.List.RegisterNewWebhook')}
                 </Button>
             </WebhookListActionRow>
             {loading ? <Loader /> : <WebhookTable />}

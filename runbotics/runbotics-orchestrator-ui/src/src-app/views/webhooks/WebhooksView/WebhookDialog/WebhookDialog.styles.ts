@@ -13,10 +13,11 @@ export const WebhookRegistrationPayloadContainer = styled.div`
     gap: 0.25rem;
 `;
 
-export const RegistrationPayloadInfo = styled.p`
+export const RegistrationPayloadInfo = styled.p(({ theme }) => `
     font-size: 0.75rem;
+    font-family: ${theme.typography.fontFamily};
     line-height: 166%;
     letter-spacing: 0.4px;
-    color: ${({theme})=> theme.palette.text.secondary};
+    color: ${theme.palette.text.secondary};
     opacity: .6;
-`;
+`);
