@@ -27,6 +27,18 @@ export const initialFormState: WebhookRegistrationFormState = {
     password: null,
 };
 
+export interface WebhookUnregisterFormState {
+    applicationUrl: string;
+    applicationRequestType: RequestType;
+    unregisterPayload?: string | null;
+}
+
+export const initialUnregistrationState: WebhookUnregisterFormState = {
+    applicationUrl: '',
+    applicationRequestType: RequestType.DELETE,
+    unregisterPayload: null
+};
+
 export const newClientAuthorization = (
     newAuthorizationMethod: WebhookAuthorizationType
 ) => {
@@ -37,7 +49,6 @@ export const newClientAuthorization = (
                 token: null,
                 username: null,
                 password: null,
-                
             };
         case WebhookAuthorizationType.JWT:
             return {
