@@ -91,6 +91,12 @@ export interface CreateClientRegistrationWebhookRequest {
     registrationPayload?: string | null;
 }
 
+export interface UnregisterClientWebhookRequest {
+    applicationUrl: string;
+    applicationRequestType: RequestType;
+    unregisterPayload?: string | null;
+}
+
 export interface UpdateClientRegistrationWebhookRequest {
     name?: string;
     tenantId?: Tenant['id'];
