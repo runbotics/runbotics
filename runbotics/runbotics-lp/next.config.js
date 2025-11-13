@@ -23,6 +23,7 @@ const nextConfig = {
         mixpanelAnalyticsToken: process.env.MIXPANEL_ANALYTICS_TOKEN,
         copilotChatUrl: process.env.COPILOT_CHAT_URL,
         isSsoEnabled: process.env.IS_SSO_ENABLED,
+        isRunboticsLpOnly: process.env.IS_RUNBOTICS_LP_ONLY || false,
     },
 
     serverRuntimeConfig: {
