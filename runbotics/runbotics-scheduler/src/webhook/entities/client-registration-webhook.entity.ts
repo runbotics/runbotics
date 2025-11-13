@@ -1,7 +1,20 @@
-import { Column, Entity, Generated, Index, JoinColumn, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    Generated,
+    Index,
+    JoinColumn,
+    ManyToOne,
+    OneToOne,
+    PrimaryColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import { Tenant } from '#/scheduler-database/tenant/tenant.entity';
 import { WebhookAuthorization } from '#/webhook/entities/webhook-authorization.entity';
 import { WebhookPayload } from '#/webhook/entities/webhook-payload.entity';
+import { dateTransformer } from '#/database/database.utils';
+import { RequestType } from 'runbotics-common';
 
 @Entity({ schema: 'scheduler' })
 export class ClientRegistrationWebhook {
@@ -16,14 +29,17 @@ export class ClientRegistrationWebhook {
     @Column({ type: 'uuid', name: 'tenant_id' })
     tenantId: string;
 
-    @Column({ type: 'timestamp', name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
-    createdAt: Date;
+    @CreateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone', name: 'created_at' })
+    createdAt: string;
 
-    @Column({ type: 'timestamp', name: 'updated_at', default: () => 'CURRENT_TIMESTAMP' })
-    updatedAt: Date;
+    @UpdateDateColumn({ transformer: dateTransformer, type: 'timestamp without time zone', name: 'updated_at', nullable: true })
+    updatedAt: string;
 
     @Column({ type: 'boolean', default: true })
     active: boolean;
+
+    @Column({ type: 'enum', enum: RequestType, default: RequestType.GET, nullable: false })
+    applicationRequestType: RequestType;
 
     @Column({ type: 'varchar', name: 'application_URL' })
     applicationURL: string;
@@ -33,7 +49,7 @@ export class ClientRegistrationWebhook {
     authorizationId: string | null;
 
     @Index()
-    @Column({ type: 'uuid', name: 'client_registration_auth_id', nullable: true })
+    @Column({ type: 'uuid', name: 'client_authorization_id', nullable: true })
     clientRegistrationAuthId: string | null;
 
     @Index()
@@ -47,15 +63,23 @@ export class ClientRegistrationWebhook {
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 
-    @OneToOne(() => WebhookAuthorization, (auth) => auth.clientRegistrationWebhook)
+    @OneToOne(
+        () => WebhookAuthorization,
+        (auth) => auth.clientRegistrationWebhook,
+    )
     @JoinColumn({ name: 'authorization_id' })
     authorization: WebhookAuthorization;
 
-    @OneToOne(() => WebhookAuthorization, (auth) => auth.clientRegistrationClientWebhookForClient)
+    @OneToOne(
+        () => WebhookAuthorization, (auth) => auth.clientRegistrationClientWebhookForClient,
+    )
     @JoinColumn({ name: 'client_authorization_id' })
     clientAuthorization: WebhookAuthorization;
 
-    @OneToOne(() => WebhookPayload, (payload) => payload.clientRegistrationWebhook)
+    @OneToOne(
+        () => WebhookPayload,
+        (payload) => payload.clientRegistrationWebhook,
+    )
     @JoinColumn({ name: 'payload_id' })
     payload: WebhookPayload;
 }

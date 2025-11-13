@@ -8,6 +8,7 @@ import {
     NotificationProcess,
     NotificationProcessType,
     Role,
+    WebhookProcessTrigger,
 } from 'runbotics-common';
 
 import { ProcessOutput } from 'runbotics-common/dist/model/api/process-output.model';
@@ -32,6 +33,8 @@ import { processOutputActions } from '#src-app/store/slices/ProcessOutput';
 
 import { ProcessSubscriptionStatisticsActions, subscribersSelector } from '#src-app/store/slices/ProcessSubscriptionStatisctics';
 
+import { webhookActions } from '#src-app/store/slices/Webhook';
+
 import AddEmailSubscriptionComponent from './AddEmailSubscriptionComponent';
 import BotCollectionComponent from './BotCollection.component';
 import BotSystemComponent from './BotSystem.component';
@@ -47,6 +50,8 @@ import {
 import ProcessCredentials from './ProcessCredentials';
 import ProcessOutputComponent from './ProcessOutput.component';
 import ProcessTriggerableComponent from './ProcessTriggerableComponent';
+import ProcessWebhooksComponent from './ProcessWebhooks.component';
+
 
 // eslint-disable-next-line max-lines-per-function
 const ProcessConfigureView: VFC = () => {
@@ -74,6 +79,7 @@ const ProcessConfigureView: VFC = () => {
     const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const [openSubscription, setOpenSubscription] = useState(false);
+    const [selectedWebhooks, setSelectedWebhooks] = useState<WebhookProcessTrigger[]>(process?.webhookTriggers);
 
     const notificationTableColumns = useProcessNotificationColumns({
         onDelete: handleDeleteSubscription,
@@ -98,7 +104,7 @@ const ProcessConfigureView: VFC = () => {
     );
 
     const processSubscriptionsTableRows = useMemo(
-        () => 
+        () =>
             processNotificationSubscribers.map<NotificationRow>(
                 (sub) => ({
                     id: sub.id,
@@ -121,6 +127,7 @@ const ProcessConfigureView: VFC = () => {
         dispatch(processOutputActions.getAll());
         handleGetProcessSubscribers();
         dispatch(ProcessSubscriptionStatisticsActions.fetchSubscribersByProcessId(processId));
+        dispatch(webhookActions.getWebhooks());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [processId]);
 
@@ -134,6 +141,8 @@ const ProcessConfigureView: VFC = () => {
         if (process?.isTriggerable) setTriggerable(process.isTriggerable);
 
         if (process?.output) setProcessOutputType(process.output);
+
+        if (process?.webhookTriggers) setSelectedWebhooks(process.webhookTriggers);
     }, [process]);
 
     const fetchProcess = async () => {
@@ -233,7 +242,7 @@ const ProcessConfigureView: VFC = () => {
     const handleProcessSubscriptionChange = async (subscriptionState: boolean) => {
         subscriptionState ? await dispatch(
             ProcessSubscriptionStatisticsActions.createSubscriber({processId: processId, userId: user.id})
-        ) : 
+        ) :
             await dispatch(ProcessSubscriptionStatisticsActions.deleteSubscriber(
                 processNotificationSubscribers.find(
                     (sub) => Number(sub.userId) === user.id && !sub.customEmail
@@ -334,6 +343,14 @@ const ProcessConfigureView: VFC = () => {
                                 onSubscriptionChange={handleProcessSubscriptionChange}
                                 label={translate('Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Label')}
                                 tooltip={translate('Process.Edit.Form.Fields.ProcessStatisticsIsSubscribed.Tooltip')}
+                            />
+                        </StyledPaper>
+                    </Box>
+                    <Box>
+                        <StyledPaper>
+                            <ProcessWebhooksComponent
+                                selectedWebhooks={selectedWebhooks}
+                                processId={processId}
                             />
                         </StyledPaper>
                     </Box>

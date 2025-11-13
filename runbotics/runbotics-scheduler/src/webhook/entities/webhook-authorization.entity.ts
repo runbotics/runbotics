@@ -12,19 +12,19 @@ export class WebhookAuthorization {
     type: WebhookAuthorizationType;
 
     @Column({ type: 'jsonb', nullable: true })
-    data: Record<string, unknown>;
+    data: Record<string, string>;
 
     @OneToOne(
         () => ClientRegistrationWebhook,
         (clientRegistrationWebhook) => clientRegistrationWebhook.authorization,
-        { onDelete: 'CASCADE' },
+        { onDelete: 'CASCADE', cascade: true },
     )
     clientRegistrationWebhook: ClientRegistrationWebhook;
 
     @OneToOne(
         () => ClientRegistrationWebhook,
         (clientRegistrationWebhook) => clientRegistrationWebhook.clientAuthorization,
-        { onDelete: 'CASCADE' },
+        { onDelete: 'CASCADE', cascade: true },
     )
     clientRegistrationClientWebhookForClient: ClientRegistrationWebhook;
 }
