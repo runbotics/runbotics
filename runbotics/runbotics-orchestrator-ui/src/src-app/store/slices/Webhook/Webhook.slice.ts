@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { CreateClientRegistrationWebhookRequest } from 'runbotics-common';
+import { CreateClientRegistrationWebhookRequest, UnregisterClientWebhookRequest } from 'runbotics-common';
 
 import { RootState } from '#src-app/store';
 import buildWebhooksExtraReducers from '#src-app/store/slices/Webhook/Webhook.extraReducers';
@@ -16,7 +16,10 @@ const initialState: WebhookState = {
     triggers: null,
     tokenExpirationDate: null,
     registerWebhook: null,
+    unregisterWebhook: null,
     isModalOpen: false,
+    isUnregisterModalOpen: false,
+    modalWebhookId: null
 };
 
 export const slice = createSlice({
@@ -29,9 +32,18 @@ export const slice = createSlice({
         setIsModalOpen(state, action:PayloadAction<boolean>) {
             state.isModalOpen = action.payload;
         },
+        setIsUnregisterModalOpen(state, action:PayloadAction<boolean>) {
+            state.isUnregisterModalOpen = action.payload;
+        },
         setRegistrationForm(state, action:PayloadAction<CreateClientRegistrationWebhookRequest>) {
             state.registerWebhook = action.payload;
-        }
+        },
+        setUnregistrationForm(state, action:PayloadAction<UnregisterClientWebhookRequest>) {
+            state.unregisterWebhook = action.payload;
+        },
+        setModalWebhookId(state, action:PayloadAction<string>) {
+            state.modalWebhookId = action.payload;
+        },
     },
     extraReducers: builder => buildWebhooksExtraReducers(builder),
 });
