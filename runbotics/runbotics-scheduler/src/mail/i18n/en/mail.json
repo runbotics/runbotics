@@ -1,0 +1,59 @@
+{
+    "mail": {
+        "processFailure": {
+            "subject": "RunBotics Healthcheck Notification 🔧",
+            "greeting": "Hello",
+            "processFailedMessage": "Process ⚙️ {{processName}} ({{processId}}) has failed with status ({{status}}).",
+            "visitLink": "You can visit us here",
+            "signature": "Best regards,\nRunBotics"
+        },
+        "botDisconnection": {
+            "subject": "RunBotics Healthcheck Notification 🔧",
+            "greeting": "Hello",
+            "botDisconnectedMessage": "Bot 🤖 ({{installationId}}) has been disconnected.",
+            "visitLink": "You can visit us here",
+            "signature": "Best regards,\nRunBotics"
+        },
+        "subscriptionExpiration": {
+            "subject": "RunBotics - Subscription",
+            "greeting": "Hello",
+            "title": "Your subscription {{status}}",
+            "expired": "has expired",
+            "expiring": "will expire in {{days}} days",
+            "expirationInfo": "We would like to inform you that your <strong>RunBotics</strong> subscription",
+            "renewMessage": "To renew it, please contact us:",
+            "contactLink": "Contact us",
+            "teamMessage": "Our team will be happy to help you renew your subscription and answer any questions.",
+            "thankYou": "Thank you for your trust!",
+            "signature": "RunBotics Team",
+            "unsubscribeMessage": "Don't want to receive such messages?",
+            "unsubscribeLink": "Click here",
+            "copyright": "{{year}} © {{env}} v{{version}}"
+        },
+        "processSummary": {
+            "subject": "Process Statistics",
+            "greeting": "Hello",
+            "intro": "Here are the latest statistics for the tracked process in the period: {{fromDate}} - {{toDate}}.",
+            "completedTasks": "Completed tasks",
+            "failedTasks": "Failed tasks",
+            "averageDuration": "Average execution time",
+            "totalDuration": "Total execution time",
+            "moreDetails": "If you want to see more details, ",
+            "moreDetailsLink": "log in to the process statistics panel",
+            "thankYou": "Thank you for your trust!",
+            "signature": "RunBotics Team",
+            "unsubscribeMessage": "Don't want to receive such messages?",
+            "unsubscribeLink": "Click here",
+            "copyright": "{{year}} © {{env}} v{{version}}"
+        },
+        "credentialChange": {
+            "subject": "Credential change inside owned collection",
+            "messageWithAttribute": "User with email <b>{{editorEmail}}</b> {{operationType}} with name <i>{{attributeName}}</i> for credential <b>{{credentialName}}</b>{{oldNameInfo}} in collection <b>{{collectionName}}</b>",
+            "messageWithoutAttribute": "User with email <b>{{editorEmail}}</b> {{operationType}} credential <b>{{credentialName}}</b>{{oldNameInfo}} in collection <b>{{collectionName}}</b>",
+            "oldNameInfo": " (name before change <b>{{oldName}}</b>)"
+        },
+        "userActivation": {
+            "subject": "RunBotics - User Activation"
+        }
+    }
+}

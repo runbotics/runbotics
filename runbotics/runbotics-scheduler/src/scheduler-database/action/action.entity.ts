@@ -1,8 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Tenant } from '../tenant/tenant.entity';
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
-import { ActionCredentialType } from 'runbotics-common';
-
+import { ActionCredentialType, DEFAULT_TENANT_ID } from 'runbotics-common';
 
 @Entity({ name: 'action' })
 export class Action {
@@ -21,10 +19,14 @@ export class Action {
     @Column({ type: 'varchar', length: 255, default: '' })
     credentialType: ActionCredentialType;
 
-    @PrimaryColumn({ name: 'tenant_id', type: 'uuid', default: DEFAULT_TENANT_ID })
+    @PrimaryColumn({
+        name: 'tenant_id',
+        type: 'uuid',
+        default: DEFAULT_TENANT_ID,
+    })
     tenantId: string;
 
-    @ManyToOne(() => Tenant, tenant => tenant.id)
+    @ManyToOne(() => Tenant, (tenant) => tenant.id)
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 }

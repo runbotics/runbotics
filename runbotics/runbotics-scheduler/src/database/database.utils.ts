@@ -23,19 +23,15 @@ export const numberTransformer: TypedTransformer<string | number, number> = {
     from: (data: string | number): number => Number(data),
 };
 
-const productionEnvs = ['Runbotics-QAS', 'Runbotics-DEV', 'Runbotics-PROD'];
-const isProductionEnv = productionEnvs.includes(process.env.RUNBOTICS_ENVIRONMENT);
-
+const isLocalEnv = process.env.RUNBOTICS_ENVIRONMENT === 'Runbotics-local';
 export const getMigrations = () => {
-    if (isProductionEnv) {
-        return [
-            'dist/src/migrations/*.js',
-        ];
+    const migrations = [
+        'dist/src/migrations/*.js',
+    ];
+
+    if (isLocalEnv) {
+        migrations.push('dist/src/migrations/local/*.js');
     }
-    else {
-        return [
-            'dist/src/migrations/*.js',
-            'dist/src/migrations/local/*.js',
-        ];
-    }
+
+    return migrations;
 };

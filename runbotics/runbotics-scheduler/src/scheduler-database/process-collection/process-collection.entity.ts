@@ -1,4 +1,3 @@
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 import {
     Column,
     CreateDateColumn,
@@ -14,6 +13,7 @@ import {
 import { User } from '../user/user.entity';
 import { Tenant } from '../tenant/tenant.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { DEFAULT_TENANT_ID } from 'runbotics-common';
 
 @Entity({ name: 'process_collection' })
 export class ProcessCollection {

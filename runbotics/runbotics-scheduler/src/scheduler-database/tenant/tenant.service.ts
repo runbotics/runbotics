@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, LessThan, MoreThanOrEqual, Repository } from 'typeorm';
 import dayjs from 'dayjs';
@@ -17,6 +17,11 @@ import { getPage } from '#/utils/page/page';
 import { EmailTriggerWhitelistItem } from '../email-trigger-whitelist-item/email-trigger-whitelist-item.entity';
 
 import { LicenseService } from '../license/license.service';
+import { Role } from 'runbotics-common';
+import { Authority } from '#/scheduler-database/authority/authority.entity';
+import bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { randomUUID } from 'crypto';
 
 const relations = ['createdByUser', 'emailTriggerWhitelist'];
 
@@ -31,8 +36,10 @@ export class TenantService {
         @InjectRepository(TenantInviteCode)
         private readonly inviteCodeRepository: Repository<TenantInviteCode>,
         @InjectRepository(EmailTriggerWhitelistItem)
-        private readonly emailTriggerWhitelistItem: Repository<EmailTriggerWhitelistItem>
-    ) {}
+        private readonly emailTriggerWhitelistItem: Repository<EmailTriggerWhitelistItem>,
+        private readonly jwtService: JwtService,
+    ) {
+    }
 
     getById(id: string) {
         return this.tenantRepository.findOne({ where: { id }, relations });
@@ -62,10 +69,10 @@ export class TenantService {
 
                     activeLicenses:
                         await this.licenseService.countLicensesByTenant(
-                            tenant.id
+                            tenant.id,
                         ),
                 };
-            })
+            }),
         );
 
         return {
@@ -92,7 +99,7 @@ export class TenantService {
     async update(
         tenantDto: UpdateTenantDto,
         id: string,
-        requester: User
+        requester: User,
     ): Promise<Tenant> {
         const tenant = await this.tenantRepository
             .findOneByOrFail({ id })
@@ -108,7 +115,7 @@ export class TenantService {
             if (tenantByName)
                 throw new BadRequestException(
                     'Name already exist',
-                    'NameExist'
+                    'NameExist',
                 );
 
             tenant.name = tenantDto.name;
@@ -124,7 +131,7 @@ export class TenantService {
                     item.tenantId = id;
                     item.whitelistItem = whitelistItem;
                     return item;
-                }
+                },
             );
 
             tenant.emailTriggerWhitelist = emailTriggerWhitelist;
@@ -147,7 +154,7 @@ export class TenantService {
             })
             .catch(() => {
                 throw new BadRequestException(
-                    'Invite code not valid or expired'
+                    'Invite code not valid or expired',
                 );
             });
 
@@ -155,7 +162,7 @@ export class TenantService {
     }
 
     getActiveInviteCodeByTenantId(
-        tenantId: string
+        tenantId: string,
     ): Promise<TenantInviteCodeDto | null> {
         return this.inviteCodeRepository
             .findOneBy({
@@ -163,7 +170,7 @@ export class TenantService {
                 expirationDate: MoreThanOrEqual(new Date()),
             })
             .then((inviteCode) =>
-                inviteCode ? { inviteCode: inviteCode.inviteId } : null
+                inviteCode ? { inviteCode: inviteCode.inviteId } : null,
             );
     }
 
@@ -173,7 +180,7 @@ export class TenantService {
             .catch(() => {
                 throw new NotFoundException(
                     'Cannot find tenant with id: ',
-                    tenantId
+                    tenantId,
                 );
             });
 
@@ -207,15 +214,98 @@ export class TenantService {
             .catch(() => {
                 throw new BadRequestException(
                     'Cannot find tenant with provided id',
-                    'BadTenantID'
+                    'BadTenantID',
                 );
             });
 
         await this.tenantRepository.delete(tenantId).catch(() => {
             throw new BadRequestException(
                 'Cannot delete tenant related to other resources',
-                'RelatedTenant'
+                'RelatedTenant',
             );
+        });
+    }
+
+    async getServiceToken(tenantId: string) {
+        const transactionResult = await this.tenantRepository.manager.transaction(async manager => {
+            const tenant = await manager.findOne(Tenant, { where: { id: tenantId } });
+            let serviceUser = await manager.findOne(User, {
+                where: {
+                    tenantId, authorities: {
+                        name: Role.ROLE_SERVICE_ACCOUNT,
+                    },
+                },
+            });
+            if (!serviceUser) {
+                const serviceAccountAuthority = await manager.findOneByOrFail(
+                    Authority,
+                    { name: Role.ROLE_SERVICE_ACCOUNT },
+                );
+                serviceUser = await manager.save(User, {
+                    tenantId: tenantId,
+                    email: `service_${tenant.name}@service`,
+                    authorities: [serviceAccountAuthority],
+                    activated: true,
+                    createdBy: 'system',
+                    lastModifiedBy: 'system',
+                    hasBeenActivated: true,
+                    passwordHash: await bcrypt.hash(this.generateSecurePassword(14), 10),
+                    activationKey: randomUUID().slice(20),
+                });
+            }
+
+            const newToken = await this.createServiceToken(serviceUser);
+
+            const updatedTenant = await manager.save(Tenant, { ...tenant, serviceTokenExpDate: dayjs().add(1, 'year').toDate() });
+            return { token: newToken, serviceTokenExpDate: updatedTenant.serviceTokenExpDate };
+        });
+
+        if (!transactionResult) {
+            throw new InternalServerErrorException(`Could not create service token for tenant ${tenantId}`);
+        }
+        return transactionResult;
+
+    }
+
+    private generateSecurePassword(length: number) {
+        const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const lower = 'abcdefghijklmnopqrstuvwxyz';
+        const digits = '0123456789';
+        const special = '!@#$%^&*()-_=+[]{};:,.<>?';
+        const allChars = upper + lower + digits + special;
+
+        const randomChar = (chars) => {
+            const array = new Uint32Array(1);
+            crypto.getRandomValues(array);
+            return chars[array[0] % chars.length];
+        };
+
+        const password = [
+            randomChar(upper),
+            randomChar(digits),
+            randomChar(special),
+        ];
+
+        for (let i = password.length; i < length; i++) {
+            password.push(randomChar(allChars));
+        }
+
+        for (let i = password.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [password[i], password[j]] = [password[j], password[i]];
+        }
+
+        return password.join('');
+    }
+
+    private async createServiceToken(user: User) {
+
+        const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
+
+        return this.jwtService.sign(payload, {
+            expiresIn: '1y',
+            algorithm: 'HS512',
+            noTimestamp: true,
         });
     }
 }

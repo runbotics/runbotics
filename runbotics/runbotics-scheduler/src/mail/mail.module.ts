@@ -7,6 +7,7 @@ import { BotModule } from '#/scheduler-database/bot/bot.module';
 import { ProcessModule } from '#/scheduler-database/process/process.module';
 import { NotificationProcessModule } from '#/scheduler-database/notification-process/notification-process.module';
 import { NotificationBotModule } from '#/scheduler-database/notification-bot/notification-bot.module';
+import { I18nService } from './i18n.service';
 
 @Module({
     imports: [
@@ -34,7 +35,7 @@ import { NotificationBotModule } from '#/scheduler-database/notification-bot/not
         NotificationProcessModule,
         NotificationBotModule,
     ],
-    providers: [MailService],
+    providers: [MailService, I18nService],
     exports: [MailService],
 })
 export class MailModule {}

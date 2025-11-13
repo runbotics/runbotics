@@ -1,6 +1,6 @@
 export enum FeatureKey {
-     // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
-     PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW',
+    // Add switcher "display processes as a LIST or GRID" (by default it's grid) [ Processes page ]
+    PROCESS_LIST_TABLE_VIEW = 'PROCESS_LIST_TABLE_VIEW',
 
     // CRUD access to every process for admins -> in the future can be extended for starting, stopping, etc.
     PROCESS_ALL_ACCESS = 'PROCESS_ALL_ACCESS',
@@ -58,6 +58,12 @@ export enum FeatureKey {
 
     // Allow to switch state "triggerable" to "not triggerable" [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_IS_TRIGGERABLE_EDIT = 'PROCESS_IS_TRIGGERABLE_EDIT',
+
+    // Allow to see webhooks box in process configure view
+    PROCESS_WEBHOOKS_VIEW = 'PROCESS_WEBHOOKS_VIEW',
+
+    // Allow to choose webhooks in process configure view
+    PROCESS_WEBHOOKS_EDIT = 'PROCESS_WEBHOOKS_EDIT',
 
     // Allow to select particular bot collection [ Processes page -> process -> CONFIGURE tab ]
     PROCESS_BOT_COLLECTION_EDIT = 'PROCESS_BOT_COLLECTION_EDIT',
@@ -240,7 +246,19 @@ export enum FeatureKey {
     TAG_DELETE = 'TAG_DELETE',
 
     // Allows to access AI assistant
-    AI_ASSISTANT_ACCESS = 'AI_ASSISTANT_ACCESS',
+    AI_ASSISTANTS_ACCESS = 'AI_ASSISTANTS_ACCESS',
+
+    // Allows to access Contracts AI assistant
+    AI_ASSISTANT_CONTRACTS_ASSISTANT = 'AI_ASSISTANT_CONTRACTS_ASSISTANT',
+
+    // Allows to access Company Guide AI assistant
+    AI_ASSISTANT_COMPANY_GUIDE = 'AI_ASSISTANT_COMPANY_GUIDE',
+
+    // Allows to access webhook page
+    WEBHOOKS_PAGE_READ = 'WEBHOOKS_PAGE_READ',
+
+    // Allows to send request to webhook endpoint
+    WEBHOOKS_SERVICE_ACCESS = 'WEBHOOKS_SERVICE_ACCESS',
 }
 
 export interface IFeatureKey {

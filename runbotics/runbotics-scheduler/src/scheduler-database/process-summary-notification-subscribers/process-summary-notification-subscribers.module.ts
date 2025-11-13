@@ -14,6 +14,7 @@ import {
 import { ProcessSummaryNotificationSubscribersService } from './process-summary-notification-subscribers.service';
 import { ProcessSummaryNotificationSubscribersEntity } from './process-summary-notification-subscribers.entity';
 import { UnsubscribeTokenModule } from '../unsubscribe-token/unsubscribe-token.module';
+import { I18nService } from '#/mail/i18n.service';
 
 @Module({
     imports: [
@@ -24,12 +25,13 @@ import { UnsubscribeTokenModule } from '../unsubscribe-token/unsubscribe-token.m
         ProcessModule,
         NotificationProcessModule,
         NotificationBotModule,
-        UnsubscribeTokenModule
+        UnsubscribeTokenModule,
     ],
     providers: [
         ProcessSummaryNotificationSubscribersService,
         ProcessStatisticsService,
         MailService,
+        I18nService,
     ],
     exports: [
         ProcessSummaryNotificationSubscribersService,

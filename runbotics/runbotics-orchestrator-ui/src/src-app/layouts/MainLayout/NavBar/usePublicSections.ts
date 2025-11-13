@@ -1,3 +1,4 @@
+import { WebhookOutlined } from '@mui/icons-material';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
@@ -106,8 +107,14 @@ export const usePublicSections = (): Section[] => {
                     icon: SmartToyOutlinedIcon,
                     href: '/app/ai-assistants',
                     authorities: [Role.ROLE_USER],
-                    featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
+                    featureKeys: [FeatureKey.AI_ASSISTANTS_ACCESS],
                 },
+                {
+                    title: translate('Nav.Items.Webhooks'),
+                    icon: WebhookOutlined,
+                    href: '/app/webhooks',
+                    featureKeys: [FeatureKey.WEBHOOKS_PAGE_READ],
+                }
             ],
         },
     ];

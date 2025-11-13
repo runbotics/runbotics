@@ -12,10 +12,12 @@ import { ProcessCredentialModule } from '../process-credential/process-credentia
 import { ProcessCollectionModule } from '../process-collection/process-collection.module';
 import { ProcessCollection } from '../process-collection/process-collection.entity';
 import { BlacklistActionAuthModule } from '#/blacklist-actions-auth/blacklist-action-auth.module';
+import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
+import { ClientRegistrationWebhook } from '#/webhook/entities/client-registration-webhook.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([ProcessEntity, ProcessCollection, GlobalVariable, BotCollection]),
+        TypeOrmModule.forFeature([ProcessEntity, ProcessCollection, GlobalVariable, BotCollection, WebhookProcessTrigger, ClientRegistrationWebhook]),
         ProcessCollectionModule,
         forwardRef(() => UserModule),
         TagModule,
