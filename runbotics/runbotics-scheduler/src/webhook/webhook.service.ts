@@ -9,7 +9,6 @@ import { HttpService } from '@nestjs/axios';
 import { parseAuthorization, replacePlaceholdersImmutable } from '#/webhook/webhook-service.utils';
 import { EncryptionService } from '#/webhook/encryption.service';
 import { ServerConfigService } from '#/config/server-config';
-import { inspect } from 'node:util';
 import { firstValueFrom } from 'rxjs';
 import { Logger } from '#/utils/logger';
 import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
@@ -100,9 +99,7 @@ export class WebhookService {
                 payload: registrationPayloadWithUrl
             };
 
-            const response = await this.getAxiosResponse(axiosRequestConfig);
-
-            console.log(inspect(response.status));
+            await this.getAxiosResponse(axiosRequestConfig);
 
             return newWebhookEntry;
         });
@@ -118,11 +115,7 @@ export class WebhookService {
 
         if (!webhook) throw new NotFoundException();
 
-        console.dir(webhook);
-
         const authorization = webhook.clientAuthorization;
-
-        console.dir(authorization);
 
         const axiosConfigParams = {
             requestType: webhookDto.applicationRequestType,
@@ -133,8 +126,6 @@ export class WebhookService {
 
         const response = await this.getAxiosResponse(axiosConfigParams);
 
-        console.log(inspect(response.status));
-
         const wasRequestSuccessful = this.checkIsResponseSuccess(webhookDto.applicationRequestType, response.status);
 
         if (!wasRequestSuccessful) {
@@ -144,7 +135,6 @@ export class WebhookService {
         this.logger.log(`Unregistration success with status code: ${response.status}.`);
 
         return await this.dataSource.transaction(async manager => {
-            console.log('manago');
             const triggerIds = webhook.webhookProcessTriggers.map(trigger => trigger.id);
 
             if (triggerIds.length > 0) {
@@ -160,7 +150,6 @@ export class WebhookService {
             if (webhook.payload?.id) {
                 await manager.delete(WebhookPayload, { id: webhook.payload.id });
             }
-
         });
 
     }
