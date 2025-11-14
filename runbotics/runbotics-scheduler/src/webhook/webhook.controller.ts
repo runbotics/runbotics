@@ -34,7 +34,6 @@ export class WebhookController {
     }
 
     @DeleteWithTenant('webhook/:id')
-    @HttpCode(HttpStatus.NO_CONTENT)
     async deleteWebhook(
         @Param('tenantId') tenantId: string,
         @Param('id') webhookId: string,

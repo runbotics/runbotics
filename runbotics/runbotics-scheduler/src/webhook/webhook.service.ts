@@ -124,7 +124,15 @@ export class WebhookService {
             payload: webhookDto.unregisterPayload
         };
 
-        const response = await this.getAxiosResponse(axiosConfigParams);
+        const response = await this.getAxiosResponse(axiosConfigParams).catch(error => {
+            if (error && error.response && error.status) {
+                throw new BadRequestException(
+                    `Unregistration failed, status code: ${error.response.status}, status message: ${error.response.statusText}`
+                );
+            } else {
+                throw new BadRequestException();
+            }
+        });
 
         const wasRequestSuccessful = this.checkIsResponseSuccess(webhookDto.applicationRequestType, response.status);
 
@@ -138,20 +146,19 @@ export class WebhookService {
             const triggerIds = webhook.webhookProcessTriggers.map(trigger => trigger.id);
 
             if (triggerIds.length > 0) {
-                await manager.delete(WebhookProcessTrigger, { id: In(webhook.webhookProcessTriggers.map(trigger => trigger.id))});
+                await manager.delete(WebhookProcessTrigger, { id: In(webhook.webhookProcessTriggers.map(trigger => trigger.id)) });
             }
 
             await manager.delete(ClientRegistrationWebhook, { id: webhook.id });
 
-            await manager.delete(WebhookAuthorization, { id: webhook.clientAuthorization.id});
+            await manager.delete(WebhookAuthorization, { id: webhook.clientAuthorization.id });
 
-            await manager.delete(WebhookAuthorization, { id: webhook.authorization.id});
+            await manager.delete(WebhookAuthorization, { id: webhook.authorization.id });
 
             if (webhook.payload?.id) {
                 await manager.delete(WebhookPayload, { id: webhook.payload.id });
             }
         });
-
     }
 
     async processWebhook(body: Record<string, unknown>): Promise<any> {
@@ -245,12 +252,9 @@ export class WebhookService {
                 break;
             case RequestType.DELETE:
                 response = await firstValueFrom(
-                    this.httpService.delete(
-                        url,
-                        {
-                            headers
-                        }
-                    )
+                    this.httpService.delete(url, {
+                        headers
+                    })
                 );
                 break;
         }

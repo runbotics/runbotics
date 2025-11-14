@@ -18,14 +18,40 @@ import { Logger } from '#/utils/logger';
 import IORedis from 'ioredis';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([
-        ClientRegistrationWebhook,
-        WebhookAuthorization,
-        WebhookPayload,
-        WebhookIncomingEventLog,
-        WebhookProcessTrigger
-    ])],
+    imports: [
+        TypeOrmModule.forFeature([
+            ClientRegistrationWebhook,
+            WebhookAuthorization,
+            WebhookPayload,
+            WebhookIncomingEventLog,
+            WebhookProcessTrigger,
+        ]),
+        HttpModule,
+        BullModule.registerQueueAsync({
+            name: 'webhooks',
+            imports: [ ConfigModule ],
+            inject: [ ServerConfigService ],
+            useFactory: (serverConfigService: ServerConfigService) => ({
+                createClient: (_, redisOpts) => {
+                    const logger = new Logger(BullModule.name);
+                    const redis = new IORedis({ ...redisOpts, ...serverConfigService.redisSettings });
 
+                    redis.on('error', async (err) => {
+                        logger.error('Redis error', err);
+                    });
+                    redis.on('connect', () => {
+                        logger.log('Redis connected');
+                    });
+
+                    return redis;
+                },
+            }),
+        }),
+        QueueModule,
+    ],
+    controllers: [WebhookController],
+    providers: [WebhookService, EncryptionService, WebhooksProcessor],
 })
+
 export class WebhookModule {
 }
