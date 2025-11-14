@@ -194,8 +194,6 @@ export class WebhookService {
             ...(await parseAuthorization(authorization, this.encryptionService))
         };
 
-        console.log('Sending request with data', headers, payload);
-
         let response: AxiosResponse;
         switch (requestType) {
             case RequestType.GET:

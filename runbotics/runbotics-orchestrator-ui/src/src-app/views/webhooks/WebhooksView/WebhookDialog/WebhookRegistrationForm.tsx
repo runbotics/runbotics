@@ -87,7 +87,6 @@ export const WebhookRegistrationForm: FC = () => {
                             : null,
             },
             payload: {
-                webhookIdPath: formValues.webhookIdPath,
                 payloadDataPath: formValues.payloadDataPath,
             },
         };
