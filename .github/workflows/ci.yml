@@ -204,6 +204,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxtst-dev libpng++-dev
+
       - name: Cache Rush
         id: cache-rush
         uses: actions/cache@v3
