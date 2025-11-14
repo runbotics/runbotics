@@ -1,21 +1,34 @@
+import { BotAuthSocket } from '#/types/auth-socket';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Socket } from 'socket.io';
 import { AuthService } from '../auth.service';
+import { TaskQueue } from '#/utils/task-queue';
 
 @Injectable()
 export class WsBotJwtGuard implements CanActivate {
-    constructor(private authService: AuthService) { }
+    private static taskQueue = new TaskQueue(4);
+
+    constructor(private authService: AuthService) {}
 
     async canActivate(context: ExecutionContext) {
-        const client = context.switchToWs().getClient<Socket>();
-
-        const validationResponse = await this.authService.validateBotWebsocketConnection({client, isGuard: true});
-        if (validationResponse === null || validationResponse === undefined) {
+        const client = context.switchToWs().getClient<BotAuthSocket>();
+        
+        if (!client.bot || !client.user) {
             return false;
         }
-        const { bot, user } = validationResponse;
-        context.switchToWs().getClient().bot = bot;
-        context.switchToWs().getClient().user = user;
-        return !!user;
+
+        const { token } = client.handshake.auth;
+        if (!token) {
+            return false;
+        }
+
+        return WsBotJwtGuard.taskQueue.enqueue(async () => {
+            const user = await this.authService.validateToken(token);
+            
+            if (!user || !user.tenant?.active) {
+                return false;
+            }
+
+            return true;
+        });
     }
 }

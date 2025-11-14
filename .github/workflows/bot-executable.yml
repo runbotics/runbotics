@@ -7,12 +7,10 @@ on:
       - 'master'
       - 'release/**'
       - 'hotfix/**'
-      - 'feature/**'
-      - 'bugfix/**'
   workflow_dispatch:
 
 env:
-  NODE_VERSION: 18.20.1
+  NODE_VERSION: 22.16.0
   PNPM_VERSION: 8.7.1
   RUSH: node ../common/scripts/install-run-rush.js
 
@@ -69,8 +67,8 @@ jobs:
       - name: Update .npmrc
         shell: bash
         run: |
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../common/config/rush/.npmrc
-          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ../runbotics-build-configuration/runbotics-desktop/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" >> ../common/config/rush/.npmrc
+          echo -en "\n@runbotics:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${{ secrets.GH_TOKEN }}" >> ../runbotics-build-configuration/runbotics-desktop/.npmrc
 
       - name: Install dependencies
         run:  ${{ env.RUSH }} install -t .
@@ -97,13 +95,9 @@ jobs:
             cd ../common/deploy/runbotics-desktop/ &&
             ./electron-install.sh
 
-      - name: Set default sign to false
-        run: |
-          cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
-          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win | Add-Member -Name "verifyUpdateCodeSignature" -Value $false -MemberType NoteProperty } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json; `
-          (Get-Content ./package.json -Raw | ConvertFrom-Json | ForEach-Object { if ($_.build -and $_.build.win) { $_.build.win.PSObject.Properties.Remove('certificateFile'); $_.build.win.PSObject.Properties.Remove('certificatePassword') } ; $_ } | ConvertTo-Json -Depth 20) | Set-Content ./package.json
-
       - name: Build rb-desktop
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
         run: |
           cd '../common/deploy/runbotics-desktop/runbotics-desktop/'; `
           pnpm electron-builder
@@ -114,12 +108,14 @@ jobs:
         with:
           certificate: '${{ secrets.CERT_BASE64 }}'
           password: '${{ secrets.CERT_PASSWORD }}'
-          folder: './runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/'
-          recursive: true
+          files: |
+            ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/RunBotics*.exe
+            ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/win-unpacked/RunBotics.exe
+            ./runbotics/common/deploy/runbotics-desktop/runbotics-desktop/release/win-unpacked/driver/windows/geckodriver-v0.29.1-win64/geckodriver.exe
 
       - name: Upload bot artifact
         id: upload-bot-executable-artifact
-        uses: actions/upload-artifact@v4.0.0
+        uses: christopherhx/gitea-upload-artifact@v4
         if: ${{ ! startsWith(github.ref, 'refs/heads/feature/') && ! startsWith(github.ref, 'refs/heads/bugfix/') }}
         with:
           name: RunBotics-${{ env.PACKAGE_VERSION }}
@@ -140,9 +136,69 @@ jobs:
 
       - name: Upload patch notes
         id: upload-patch-notes-artifact
-        uses: actions/upload-artifact@v4.0.0
+        uses: christopherhx/gitea-upload-artifact@v4
         if: ${{ ! startsWith(github.ref, 'refs/heads/feature/') && ! startsWith(github.ref, 'refs/heads/bugfix/') }}
         with:
           name: patch-notes-${{ env.PACKAGE_VERSION }}
           path: './runbotics/runbotics-desktop/patch_notes.md'
           if-no-files-found: error
+
+      - name: Dispatch deploy bot
+        if: ${{ github.ref == 'refs/heads/develop' }}
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GIT_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"ref": "master", "inputs": { "windows-bot-version": "RunBotics-${{ env.PACKAGE_VERSION }}", "run-id": "${{ github.run_id }}" }}' \
+            "https://git.clouddc.eu/api/v1/repos/RPA/runbotics-deployment/actions/workflows/dev-windows-bots.yml/dispatches"
+
+      - name: Cleanup workspace contents
+        if: always()
+        shell: bash
+        run: |
+          echo "Cleaning up workspace contents..."
+          
+          WORKSPACE_PATH="${{ github.workspace }}"
+          echo "Workspace path: $WORKSPACE_PATH"
+          
+          if [ -d "$WORKSPACE_PATH" ]; then
+            echo "Contents before cleanup:"
+            ls -lah "$WORKSPACE_PATH"
+            
+            # Sanity check: Ensure we're in the correct workspace structure
+            echo "Running safety checks..."
+            
+            # Check if .cache folder is part of the workspace path
+            echo "Checking if .cache folder is part of workspace path..."
+            if [[ "$WORKSPACE_PATH" != *"/.cache/"* ]] && [[ "$WORKSPACE_PATH" != *"\.cache\\"* ]]; then
+              echo "ERROR: Safety check failed: .cache folder not found in workspace path"
+              exit 1
+            fi
+            echo ".cache folder check passed"
+            
+            RUNBOTICS_FOLDER="$WORKSPACE_PATH/runbotics"
+            RUSH_JSON_FILE="$RUNBOTICS_FOLDER/rush.json"
+            
+            echo "Checking for runbotics folder: $RUNBOTICS_FOLDER"
+            echo "Checking for rush.json file: $RUSH_JSON_FILE"
+            
+            if [ ! -d "$RUNBOTICS_FOLDER" ]; then
+              echo "ERROR: Safety check failed: runbotics folder not found as descendant of workspace"
+              exit 1
+            fi
+            
+            if [ ! -f "$RUSH_JSON_FILE" ]; then
+              echo "ERROR: Safety check failed: runbotics/rush.json file not found"
+              exit 1
+            fi
+            
+            echo "Safety checks passed. Proceeding with workspace cleanup..."
+            
+            echo "Removing all contents from workspace..."
+            rm -rf "$WORKSPACE_PATH"/*
+            rm -rf "$WORKSPACE_PATH"/.[!.]*
+            
+            echo "Workspace contents removed successfully"
+          else
+            echo "Workspace directory does not exist"
+          fi
