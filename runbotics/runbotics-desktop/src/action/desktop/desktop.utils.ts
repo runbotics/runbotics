@@ -96,7 +96,7 @@ const pdfTextSearchVariableSchema = z.object({
 export const readTextFromPdfInputSchema = z.object({
     pdfFullPath: z.string(),
     language: z.string(),
-    variables: z.record(z.string(), z.string()).transform((varsObj) => {
+    searchPatterns: z.record(z.string(), z.string()).transform((varsObj) => {
 
         return Object.entries(varsObj).map(([variableName, jsonString]) => {
             const parsed = JSON.parse(jsonString);

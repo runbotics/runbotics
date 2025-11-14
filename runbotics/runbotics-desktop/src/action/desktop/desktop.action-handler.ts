@@ -204,7 +204,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
 
     async readTextFromPdfFile(rawInput: DesktopReadTextFromPdfActionInput): Promise<DesktopReadTextFromPdfActionOutput> {
-        const { pdfFullPath, language, variables } = await validateInput(rawInput, readTextFromPdfInputSchema);
+        const { pdfFullPath, language, searchPatterns } = await validateInput(rawInput, readTextFromPdfInputSchema);
 
         let worker: Tesseract.Worker;
         const tempPngPaths: string[] = [];
@@ -212,7 +212,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
         try {
 
-            this.logger.log('Parsed variables:', JSON.stringify(variables, null, 2));
+            this.logger.log('Parsed searchPatterns:', JSON.stringify(searchPatterns, null, 2));
             this.checkFileExist(pdfFullPath);
 
             const poppler = new Poppler();
@@ -281,7 +281,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
 
             const results: Record<string, string> = {};
 
-            for (const variable of variables) {
+            for (const variable of searchPatterns) {
                 this.logger.log(`Processing variable: ${variable.variableName} (anchor: ${variable.anchorText})`);
                 
                 const extractedWords = getDataFromAnchorSentence(
@@ -300,7 +300,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                     : '';
                 
                 results[variable.variableName] = extractedText;
-                this.logger.log(`Extracted for "${variable.variableName}": ${extractedText || '(empty)'}`);
+                this.logger.log(`Extracted for "${variable.variableName}": ${extractedText}`);
             }
 
             const fileName = path.basename(pdfFullPath, '.pdf');

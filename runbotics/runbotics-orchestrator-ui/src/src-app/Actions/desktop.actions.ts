@@ -492,7 +492,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                     'ENG'
                                 ]
                             },
-                            variables: {
+                            searchPatterns: {
                                 title: translate('Process.Details.Modeler.Actions.Common.Input'), // add proper translation
                                 type: 'object',
                                 additionalProperties: {
@@ -513,7 +513,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                 },
                             },
                         },
-                        required: ['pdfFullPath', 'variables'],
+                        required: ['pdfFullPath', 'searchPatterns'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -531,7 +531,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
-                    variables: {
+                    searchPatterns: {
                         'ui:widget': 'EditorWidget',
                         'ui:options': {
                             'language': 'json',
@@ -548,7 +548,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                 input: {
                     pdfFullPath: undefined,
                     language: 'ENG',
-                    variables: []
+                    searchPatterns: []
                 },
                 output: {
                     variableName: undefined,
