@@ -95,7 +95,7 @@ export class BotController {
         const botProcessInstances =
             await this.processInstanceService.findAllByBotId(id, user.tenantId);
 
-        botProcessInstances.forEach(async (instance) => {
+        for (const instance of botProcessInstances) {
             if (
                 instance.status === ProcessInstanceStatus.IN_PROGRESS ||
                 instance.status === ProcessInstanceStatus.INITIALIZING
@@ -103,7 +103,7 @@ export class BotController {
                 instance.status = ProcessInstanceStatus.TERMINATED;
                 await this.processInstanceService.create(instance);
             }
-        });
+        }
 
         return await this.botSchedulerService.deleteById(bot).catch((err) => {
             this.logger.log(`<= Bot ${id} deletion failed`);
