@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { DataSource, Like } from 'typeorm';
 import { Webhook } from '../model/webhook/webhook.entity';
 import { Token } from '../model/token/token.entity';
@@ -27,6 +27,10 @@ export class WebhookService {
     }
 
     async unregister(id: string) {
+        const existingWebhook = await this.dataSource.manager.findOne(Webhook, { where: { webhookId: id } })
+
+        if (!existingWebhook) throw new NotFoundException()
+
         return await this.dataSource.manager.delete(Webhook, { webhookId: id })
     }
 
