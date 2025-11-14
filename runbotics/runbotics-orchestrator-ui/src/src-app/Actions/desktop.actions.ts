@@ -493,16 +493,16 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                 ]
                             },
                             searchPatterns: {
-                                title: translate('Process.Details.Modeler.Actions.Common.Input'), // add proper translation
+                                title: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.SearchPatterns.Title'), // add proper translation
                                 type: 'object',
                                 additionalProperties: {
-                                    mainFieldLabel: 'SQL Query',
+                                    mainFieldLabel: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.SearchPatterns.PatternName'),
                                     subFieldLabel: 'Variable Name',
                                     type: 'string',
                                     useEditorWidget: true,
                                     editorLanguage: 'json',
                                     editorHeight: '20vh',
-                                    helpDescription: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Description'),
+                                    helpDescription: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.SearchPatterns.Description'),
                                     default: JSON.stringify({
                                         anchorText: '',
                                         percentageOfError: 9,
