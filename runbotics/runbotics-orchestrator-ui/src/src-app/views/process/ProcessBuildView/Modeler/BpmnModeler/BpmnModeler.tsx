@@ -212,7 +212,6 @@ const BpmnModeler = React.forwardRef<ModelerImperativeHandle, ModelerProps>(
         }, [modeler, offsetTop]);
 
         const handleSave = () => {
-            debugger;
             recordItemClick({ itemName: CLICKABLE_ITEM.SAVE_BUTTON, sourcePage: identifyPageByUrl(pathname) });
             if (isSaveDisabled) return;
             onSave(modeler);

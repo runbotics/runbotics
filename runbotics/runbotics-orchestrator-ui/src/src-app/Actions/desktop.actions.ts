@@ -504,7 +504,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                     editorHeight: '20vh',
                                     helpDescription: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Description'),
                                     default: JSON.stringify({
-                                        anchorText: 'EXAMPLE',
+                                        anchorText: '',
                                         percentageOfError: 9,
                                         direction: 'DOWN',
                                         heightPercentage: 1,

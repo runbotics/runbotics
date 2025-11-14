@@ -295,10 +295,12 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                     }
                 );
                 
-                const extractedText = extractedWords.map(word => word.text).join(' ');
+                const extractedText = extractedWords?.length 
+                    ? extractedWords.map(word => word.text).join(' ')
+                    : '';
                 
                 results[variable.variableName] = extractedText;
-                this.logger.log(`Extracted for "${variable.variableName}": ${extractedText}`);
+                this.logger.log(`Extracted for "${variable.variableName}": ${extractedText || '(empty)'}`);
             }
 
             const fileName = path.basename(pdfFullPath, '.pdf');
