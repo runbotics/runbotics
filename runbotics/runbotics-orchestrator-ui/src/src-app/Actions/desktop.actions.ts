@@ -5,7 +5,6 @@ import { translate } from '#src-app/hooks/useTranslations';
 import { propertyCustomCredential, schemaCustomCredential } from './actions.utils';
 import { IBpmnAction, Runner } from './types';
 
-
 // eslint-disable-next-line max-lines-per-function
 const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
     [DesktopAction.CLICK]: {
@@ -497,86 +496,24 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                 title: translate('Process.Details.Modeler.Actions.Common.Input'), // add proper translation
                                 type: 'object',
                                 additionalProperties: {
-                                    mainFieldLabel: translate('Process.Details.Modeler.Actions.General.ConsoleLog.Message'),
-                                    subFieldLabel: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                    isRequired: false,
-                                    type: 'object',
-                                    properties: {
-                                        variableName: {
-                                            title: translate('Process.Details.Modeler.Actions.Common.VariableName'),
-                                            type: 'string',
-                                        },
-                                        direction: {
-                                            title: 'direction',
-                                            type: 'string',
-                                            enum: [
-                                                'DOWN',
-                                                'LEFT',
-                                                'RIGHT',
-                                                'UP'
-                                            ],
-                                            default: 'DOWN'
-                                        }
-                                    },
-                                    required: [ 'direction']
+                                    mainFieldLabel: 'SQL Query',
+                                    subFieldLabel: 'Variable Name',
+                                    type: 'string',
+                                    useEditorWidget: true,
+                                    editorLanguage: 'json',
+                                    editorHeight: '20vh',
+                                    helpDescription: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Description'),
+                                    default: JSON.stringify({
+                                        anchorText: 'EXAMPLE',
+                                        percentageOfError: 9,
+                                        direction: 'DOWN',
+                                        heightPercentage: 1,
+                                        widthPercentage: 10,
+                                    }, null, 2),
                                 },
                             },
-                            // tasks: {
-                            //     type: 'array',
-                            //     title: 'Tasks',
-                            //     items: {
-                            //         type: 'object',
-                            //         required: [
-                            //             'title'
-                            //         ],
-                            //         properties: {
-                            //             title: {
-                            //                 type: 'string',
-                            //                 title: 'Title',
-                            //                 description: 'A sample title',
-                            //                 default: 'test1'
-                            //             },
-                            //             details: {
-                            //                 type: 'string',
-                            //                 title: 'Task details',
-                            //                 description: 'Enter the task details',
-                            //                 default: 'test2'
-                            //             },
-                            //             done: {
-                            //                 type: 'boolean',
-                            //                 title: 'Done?',
-                            //                 default: false
-                            //             }
-                            //         }
-                            //     }
-                            // }
-                            // variables: {
-                            //     title: 'dssd',
-                            //     type: 'array',
-                            //     items: {
-                            //         type: 'object',
-                            //         properties: {
-                            //             name: {
-                            //                 title: 'name',
-                            //                 type: 'string',
-                            //             },
-                            //             anchorText: {
-                            //                 title: 'dsds',
-                            //                 type: 'string',
-                            //             },
-                            //             direction: {
-                            //                 title: 'dsfgsg',
-                            //                 type: 'string',
-                            //                 enum: ['DOWN', 'LEFT', 'RIGHT', 'UP'],
-                            //                 default: 'DOWN'
-
-                            //             }
-                            //         },
-                            //         required: []
-                            //     },
-                            // },
                         },
-                        required: ['pdfFullPath'],
+                        required: ['pdfFullPath', 'variables'],
                     },
                     output: {
                         title: translate('Process.Details.Modeler.Actions.Common.Output'),
@@ -594,30 +531,17 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
             uiSchema: {
                 'ui:order': ['input', 'output'],
                 input: {
+                    variables: {
+                        'ui:widget': 'EditorWidget',
+                        'ui:options': {
+                            'language': 'json',
+                        },
+                    },
                     pdfFullPath: {
                         'ui:options': {
                             info: translate('Process.Details.Modeler.Actions.Desktop.Common.PdfFullPath.Info'),
                         }
-                    },
-                    variables: {
-                        'ui:options': {
-                            addable: true,
-                            orderable: false,
-                            removable: true,
-                        },
-                        items: {
-                            'ui:order': ['name', 'anchorText', 'direction'],
-                            name: {
-                                'ui:widget': 'text',
-                            },
-                            anchorText: {
-                                'ui:widget': 'text',
-                            },
-                            direction: {
-                                'ui:widget': 'select',
-                            },
-                        },
-                    }                
+                    },           
                 },
             },            
             formData: {
@@ -629,7 +553,8 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                 output: {
                     variableName: undefined,
                 },
-            }        },
+            }        
+        },
     },
     [DesktopAction.TYPE_CREDENTIALS]: {
         id: DesktopAction.TYPE_CREDENTIALS,

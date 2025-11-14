@@ -122,7 +122,7 @@ export type DesktopReadTextFromPdfActionInput = z.infer<
     typeof readTextFromPdfInputSchema
 >;
 
-export type DesktopReadTextFromPdfActionOutput = string;
+export type DesktopReadTextFromPdfActionOutput = any;
 
 export const isPointDataType = (
     object: PointData | RegionData
@@ -189,4 +189,13 @@ export enum DirectionOfSearching{
     RIGHT = 'RIGHT',
     UP = 'UP',
     DOWN = 'DOWN',
+}
+
+export interface PdfTextSearchVariable {
+    variableName: string;
+    anchorText: string;
+    percentageOfError: number;
+    direction: DirectionOfSearching;
+    heightPercentage: number;
+    widthPercentage: number;
 }

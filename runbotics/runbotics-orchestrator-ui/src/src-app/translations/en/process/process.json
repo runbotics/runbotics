@@ -519,6 +519,7 @@
     "Process.Details.Modeler.Actions.Desktop.ReadTextFromImage.Language": "Text language",
     "Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Label": "Read text from PDF file",
     "Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Language": "Text language",
+    "Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Description": "anchorText - the text to search for in the PDF.\npercentageOfError - acceptable error margin (0-100).\ndirection - where to look from anchor: DOWN | LEFT | RIGHT | UP.\nheightPercentage - height of search area relative to anchor (1-100).\nwidthPercentage - width of search area relative to anchor (1-100).\n",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.Label": "Type Credentials",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.HelperTextLabel": "Important! This action inserts selected credential attribute into the currently active text field.",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.CredentialAttribute": "Credential Attribute",

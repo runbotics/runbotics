@@ -13,6 +13,9 @@ const EditorWidget: FC<WidgetProps> = (props) => {
         ? (props.uiSchema['ui:options']?.language as string)
         : 'typescript';
     const readOnly = !!props.uiSchema['ui:options']?.readonly;
+    const editorHeight: string = props.uiSchema['ui:options']?.editorHeight
+        ? (props.uiSchema['ui:options']?.editorHeight as string)
+        : '60vh';
 
     const handleEditorDidMount = (editor, monacoInstance) => {
         editorRef.current = editor;
@@ -57,11 +60,13 @@ const EditorWidget: FC<WidgetProps> = (props) => {
         }
     }, [monaco]);
 
+
+    console.log('EditorWidget render', props.formData);
     return (
         <Editor
-            height="60vh"
+            height={editorHeight}
             defaultLanguage={language}
-            defaultValue={props.value}
+            value={props.value ?? props.formData ?? ''}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
             options={{ readOnly }}

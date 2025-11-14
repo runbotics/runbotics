@@ -85,18 +85,29 @@ export const readTextFromImageInputSchema = z.object({
     language: z.nativeEnum(Language),
 });
 
+const pdfTextSearchVariableSchema = z.object({
+    anchorText: z.string(),
+    percentageOfError: z.number(),
+    direction: z.nativeEnum(DirectionOfSearching),
+    heightPercentage: z.number(),
+    widthPercentage: z.number(),
+});
+
 export const readTextFromPdfInputSchema = z.object({
-    pdfFullPath: z.string().refine(
-        (path) => {
-            const ext = path.toLowerCase().match(/\.(pdf)$/);
-            return ext !== null;
-        },
-        {
-            message: 'Path must point to a .pdf file',
-        }
-    ),
-    language: z.nativeEnum(Language),
-    variables: z.record(z.string(), z.any()),
+    pdfFullPath: z.string(),
+    language: z.string(),
+    variables: z.record(z.string(), z.string()).transform((varsObj) => {
+
+        return Object.entries(varsObj).map(([variableName, jsonString]) => {
+            const parsed = JSON.parse(jsonString);
+            const validated = pdfTextSearchVariableSchema.parse(parsed);
+            
+            return {
+                variableName,
+                ...validated
+            };
+        });
+    }),
 });
 
 export async function preprocessImage(

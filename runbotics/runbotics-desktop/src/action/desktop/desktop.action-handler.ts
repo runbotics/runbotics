@@ -47,14 +47,13 @@ import {
     RegionData,
     DesktopReadTextFromPdfActionOutput,
     RawHOCRResult,
-    DirectionOfSearching,
 } from './types';
 import clipboard from '../../utils/clipboard';
 import { credentialAttributesMapper } from '#utils/credentialAttributesMapper';
 import { validateInput } from '#utils/zodError';
 import { ServerConfigService } from '#config';
 import { Injectable } from '@nestjs/common';
-import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema, preprocessImage, readTextFromPdfInputSchema, parseHOCR, findTextInRegion, filterLinesByConfidence, findWordCordinate, getDataFromAnchorSentence } from './desktop.utils';
+import { clickInputSchema, typeInputSchema, performKeyboardShortcutInputSchema, copyInputSchema, cursorSelectInputSchema, takeScreenshotInputSchema, readTextFromImageInputSchema, typeCredentialsInputSchema, preprocessImage, readTextFromPdfInputSchema, parseHOCR, filterLinesByConfidence, getDataFromAnchorSentence } from './desktop.utils';
 import { tmpdir } from 'os';
 import sharp from 'sharp';
 
@@ -212,6 +211,8 @@ export default class DesktopActionHandler extends StatelessActionHandler {
         const preprocessedPaths: string[] = [];
 
         try {
+
+            this.logger.log('Parsed variables:', JSON.stringify(variables, null, 2));
             this.checkFileExist(pdfFullPath);
 
             const poppler = new Poppler();
@@ -276,27 +277,42 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 combinedHOCR.push({ hocr, pageDimensions });
             }
             const parsedResult = parseHOCR(combinedHOCR);
-            const filteredResult = filterLinesByConfidence(parsedResult, 70);
-            const textinRegion = findTextInRegion(filteredResult, {x0:30,y0:23,x1:40, y1:28});
-            this.logger.log(`Extracted text ${textinRegion}`);
+            const filteredResult = filterLinesByConfidence(parsedResult, 50);
 
+            const results: Record<string, string> = {};
+
+            for (const variable of variables) {
+                this.logger.log(`Processing variable: ${variable.variableName} (anchor: ${variable.anchorText})`);
+                
+                const extractedWords = getDataFromAnchorSentence(
+                    filteredResult,
+                    variable.anchorText,
+                    variable.percentageOfError,
+                    {
+                        direction: variable.direction,
+                        heightPercentage: variable.heightPercentage,
+                        widthPercentage: variable.widthPercentage
+                    }
+                );
+                
+                const extractedText = extractedWords.map(word => word.text).join(' ');
+                
+                results[variable.variableName] = extractedText;
+                this.logger.log(`Extracted for "${variable.variableName}": ${extractedText}`);
+            }
 
             const fileName = path.basename(pdfFullPath, '.pdf');
-            const firstPageBuf = fs.readFileSync(preprocessedPaths[0]);
+            const jsonOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.json`);
             const hocrOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.txt`);
             const pngCheckupOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.png`);
-            const jsonOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.json`);
 
-            // fs.writeFileSync(jsonOutputPath, `${JSON.stringify(findWordCordinate(parsedResult, 'PO'), null, 2)} ${JSON.stringify(findWordCordinate(parsedResult, 'REMOVAL'), null, 2)}`, 'utf-8');
-            // fs.writeFileSync(jsonOutputPath, `${JSON.stringify(getDataFromAnchorSentence(parsedResult, 'PO',5,{direction:DirectionOfSearching.DOWN,heightPercentage: 1, widthPercentage: 10}), null, 2)}`, 'utf-8');
-            fs.writeFileSync(jsonOutputPath, `${JSON.stringify(getDataFromAnchorSentence(parsedResult, 'REASON FOR REMOVAL:',9,{direction:DirectionOfSearching.DOWN,heightPercentage: 2, widthPercentage: 100}), null, 2)}`, 'utf-8');
-            // fs.writeFileSync(jsonOutputPath, `${JSON.stringify(getDataFromAnchorSentence(parsedResult, 'As released',5,{direction:DirectionOfSearching.DOWN,heightPercentage: 5, widthPercentage: 100}), null, 2)}`, 'utf-8');
-            // fs.writeFileSync(jsonOutputPath, `${JSON.stringify(getDataFromAnchorSentence(parsedResult, 'Reason for removal confirmed',5,{direction:DirectionOfSearching.RIGHT,heightPercentage: 0, widthPercentage: 10}), null, 2)}`, 'utf-8');
-
-            fs.writeFileSync(hocrOutputPath, `1111${combinedHOCR[0].hocr}222 ${combinedHOCR[1].hocr} txttt ${parsedResult.fullText}`, 'utf-8');
-            fs.writeFileSync(pngCheckupOutputPath, firstPageBuf);
-            console.log(`slowo po: ${findWordCordinate(filteredResult, 'PO:')}`);
-            return combinedHOCR[0].hocr;
+            fs.writeFileSync(jsonOutputPath, JSON.stringify(results, null, 2), 'utf-8');
+            fs.writeFileSync(hocrOutputPath, `${parsedResult.fullText}`, 'utf-8');
+            
+            const firstPageBuf = fs.readFileSync(preprocessedPaths[0]);
+            fs.writeFileSync(pngCheckupOutputPath, firstPageBuf as any);
+            
+            return results;
 
         } catch (error) {
             throw new Error('An error occurred while reading PDF file: ' + error);

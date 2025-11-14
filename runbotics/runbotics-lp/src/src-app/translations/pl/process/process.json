@@ -509,6 +509,7 @@
     "Process.Details.Modeler.Actions.Desktop.ReadTextFromImage.Language": "Język tekstu",
     "Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Label": "Odczytaj tekst z pliku PDF",
     "Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Language": "Język tekstu",
+    "Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.Description": "anchorText - tekst do wyszukania w pliku PDF\npercentageOfError - dopuszczalny margines błędu (0-100)\ndirection - kierunek wyszukiwania od kotwicy: DOWN | LEFT | RIGHT | UP\nheightPercentage - wysokość obszaru wyszukiwania względem kotwicy (1-100)\nwidthPercentage - szerokość obszaru wyszukiwania względem kotwicy (1-100)\n",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.Label": "Wpisz poświadczenia",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.HelperTextLabel": "Ważne! Ta akcja wstawia wybrany atrybut poświadczenia w aktualnie aktywne pole tekstowe.",
     "Process.Details.Modeler.Actions.Desktop.TypeCredentials.CredentialAttribute": "Atrybut poświadczenia",

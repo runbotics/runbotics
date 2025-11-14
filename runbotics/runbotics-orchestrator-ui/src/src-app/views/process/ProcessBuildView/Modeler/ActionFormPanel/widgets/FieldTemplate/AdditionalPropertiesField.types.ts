@@ -4,7 +4,11 @@ type FieldsWithInfo = {
     mainFieldLabel?: string,
     mainFieldInfo?: string,
     subFieldLabel?: string,
-    subFieldInfo?: string
+    subFieldInfo?: string,
+    useEditorWidget?: boolean,
+    editorLanguage?: string, 
+    editorHeight?: string,
+    helpDescription?: string,
 };
 type JSONSchema7Labels = JSONSchema7 & FieldsWithInfo;
 

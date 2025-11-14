@@ -29,7 +29,7 @@ import FieldTemplate from '../widgets/FieldTemplate';
 const Form = withTheme<any>(Mui5Theme) as FC<FormProps<any>>;
 
 const widgets = {
-    // Autocomplete: AutocompleteWidget,
+    Autocomplete: AutocompleteWidget,
 };
 
 interface FormPropsExtended extends FormProps<any> {

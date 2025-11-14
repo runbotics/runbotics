@@ -10,6 +10,7 @@ import useTranslations from '#src-app/hooks/useTranslations';
 
 import { AdditionalPropertiesFieldProps } from './AdditionalPropertiesField.types';
 
+import EditorWidget from '../EditorWidget';
 import InfoButtonTooltip from '../InfoTooltip/InfoButtonTooltip';
 import { TooltipTextFieldWrapper } from '../InfoTooltip/InfoButtonTooltip.styles';
 
@@ -43,13 +44,17 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
         return <>{children}</>;
     }
 
-    const { mainFieldLabel, mainFieldInfo, properties, subFieldLabel, subFieldInfo } = schema;
+    const { mainFieldLabel, mainFieldInfo, subFieldLabel, subFieldInfo, properties  } = schema;
+    const defaultEditorValue = schema.default;
+    console.log('AdditionalPropertiesField render', { children, schema });
     const formProps = children.props.children[0].props.children[0].props;
+    console.log('formdata', formProps.formData);
     const formData = formProps.formData;
 
-    console.log('formData', formData);
-
-    const subFieldValue = ( formData !== SUB_FIELD_PREDEFINED_LABEL ? formData : '');
+    const useEditorWidget = schema.useEditorWidget || false;
+    const isFormDataCustom = formData !== SUB_FIELD_PREDEFINED_LABEL;
+    const subFieldValue = ( isFormDataCustom ? formData : '');
+    const textWidgetValue = isFormDataCustom ? formData : defaultEditorValue;
     const errorMessage = translate('Process.Details.Modeler.Actions.General.ConsoleLog.ValidationError');
     const isDisabled = disabled || readonly;
     const isRequired = required || Boolean(formProps.schema?.isRequired);
@@ -87,21 +92,40 @@ const AdditionalPropertiesField: FC<AdditionalPropertiesFieldProps> = ({
                 </TooltipTextFieldWrapper>
             </Grid>
             <Grid item xs={12}>
-                {/* <TooltipTextFieldWrapper>
-                    <CustomTextWidget
-                        {...formProps}
-                        required={isRequired}
-                        customErrors={isSubFieldErrorDisplayed ? [errorMessage] : null}
-                        label={subFieldLabel ? subFieldLabel : translate('Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value')}
-                        defaultValue={subFieldValue}
-                        value={subFieldValue}
-                        disabled={isDisabled}
-                        type="text"
-                    />
+                <TooltipTextFieldWrapper>
+                    {useEditorWidget ? (
+                        <>
+                            <EditorWidget
+                                {...formProps}
+                                uiSchema={{
+                                    'ui:options': {
+                                        language: schema.editorLanguage || 'json',
+                                        editorHeight: schema.editorHeight || '60vh'
+                                    }
+                                }}
+                                label={subFieldLabel || 'Assign variable'}
+                                defaultValue={subFieldValue}
+                                value={textWidgetValue}
+                            />
+                            <If condition={Boolean(schema.helpDescription)}>
+                                <InfoButtonTooltip message={schema.helpDescription} />
+                            </If></>
+                    ) : (
+                        <CustomTextWidget
+                            {...formProps}
+                            required={isRequired}
+                            customErrors={isSubFieldErrorDisplayed ? [errorMessage] : null}
+                            label={subFieldLabel ? subFieldLabel : translate('Process.Details.Modeler.Widgets.FieldTemplate.TextField.Value')}
+                            defaultValue={subFieldValue}
+                            value={subFieldValue}
+                            disabled={isDisabled}
+                            type="text"
+                        />
+                    )}
                     <If condition={Boolean(subFieldInfo)}>
                         <InfoButtonTooltip message={subFieldInfo} />
                     </If>
-                </TooltipTextFieldWrapper> */}
+                </TooltipTextFieldWrapper>
                 {hasNestedProperties && (
                     <Grid item xs={12}>
                         {children}
