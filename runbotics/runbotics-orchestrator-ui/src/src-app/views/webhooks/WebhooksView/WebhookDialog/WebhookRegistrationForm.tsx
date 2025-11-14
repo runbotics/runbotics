@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { FC, useCallback, useState } from 'react';
 
 import { InfoOutlined } from '@mui/icons-material';
@@ -15,8 +16,7 @@ import {
 } from '@mui/material';
 import {
     CreateClientRegistrationWebhookRequest,
-    RequestType,
-    WebhookAuthorizationType,
+    RequestType, WebhookAuthorizationType
 } from 'runbotics-common';
 
 import * as Yup from 'yup';
@@ -24,7 +24,7 @@ import * as Yup from 'yup';
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch } from '#src-app/store';
 import { webhookActions } from '#src-app/store/slices/Webhook';
-import { registerValidationSchema } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/registerValidationSchema';
+import { registerValidationSchema } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/validationSchema';
 import {
     RegistrationPayloadInfo,
     WebhookContent,
@@ -74,7 +74,7 @@ export const WebhookRegistrationForm: FC = () => {
             registrationPayload: formValues.registrationPayload,
             clientAuthorization: {
                 type: formValues.type,
-                // @ts-expect-error union types don't work well
+                // @ts-expect-error union types doesn't work well
                 data:
                     // eslint-disable-next-line no-nested-ternary
                     formValues.type === WebhookAuthorizationType.JWT
@@ -137,18 +137,19 @@ export const WebhookRegistrationForm: FC = () => {
                     return null;
             }
         };
-        
+
         const newRegistrationForm: CreateClientRegistrationWebhookRequest = {
             name: formValues.name,
             applicationUrl: formValues.applicationUrl,
             applicationRequestType: formValues.applicationRequestType,
             registrationPayload: formValues.registrationPayload,
-            // @ts-expect-error union types don't work well
+            // @ts-expect-error some union types problems with ts
             clientAuthorization: {
                 type: formValues.type,
                 data: clientAuthData(),
             },
             payload: {
+                webhookIdPath: formValues.webhookIdPath,
                 payloadDataPath: formValues.payloadDataPath,
             },
         };
@@ -216,6 +217,31 @@ export const WebhookRegistrationForm: FC = () => {
                     <Tooltip
                         title={
                             'Provide path as object separated with dot. Example "data.payload.parameters"'
+                        }
+                    >
+                        <InfoOutlined />
+                    </Tooltip>
+                </Box>
+                <Box
+                    flexDirection={'row'}
+                    display={'flex'}
+                    gap={'.5rem'}
+                    alignItems={'center'}
+                >
+                    <TextField
+                        label={translate('Webhooks.Form.WebhookIdPath')}
+                        name="webhookIdPath"
+                        value={formValues.webhookIdPath}
+                        onChange={handleChange}
+                        error={Boolean(error.webhookNamePath)}
+                        helperText={error.webhookNamePath}
+                        fullWidth
+                        onBlur={onBlur}
+                        required
+                    />
+                    <Tooltip
+                        title={
+                            'Provide path as object separated with dot. Example "data.payload.webhookId"'
                         }
                     >
                         <InfoOutlined />

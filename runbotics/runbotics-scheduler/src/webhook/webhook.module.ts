@@ -52,5 +52,6 @@ import IORedis from 'ioredis';
     controllers: [WebhookController],
     providers: [WebhookService, EncryptionService, WebhooksProcessor],
 })
+
 export class WebhookModule {
 }

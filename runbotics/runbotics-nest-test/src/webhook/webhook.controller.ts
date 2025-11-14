@@ -1,13 +1,13 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards, Delete, Param } from '@nestjs/common';
 import { WebhookService } from './webhook.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { BasicAuthGuard } from '../auth/guards/basic.guard';
 
 @Controller('api/webhook')
 export class WebhookController {
-    
+
     constructor(private readonly webhookService: WebhookService) {}
-    
+
     @Post('register/none')
     async registerWebhookNone(@Body() body: Record<string, any>, @Req() req: Request) {
         return this.webhookService.register(body);
@@ -23,11 +23,16 @@ export class WebhookController {
     async registerWebhookBasic(@Body() body: Record<string, any>, @Req() req: Request) {
         return this.webhookService.register(body);
     }
-    
+
     @Post('token')
     async token(@Body() body: {token: string},): Promise<any>{
         return this.webhookService.saveToken(body.token);
     }
-    
-    
+
+    @Delete('delete/:id')
+    async unregisterWebhook(
+        @Param('id') webhookId: string
+    ) {
+        return this.webhookService.unregister(webhookId)
+    }
 }

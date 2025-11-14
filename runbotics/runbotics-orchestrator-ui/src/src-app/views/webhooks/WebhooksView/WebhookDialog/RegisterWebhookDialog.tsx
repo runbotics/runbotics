@@ -11,13 +11,13 @@ import {
 } from '#src-app/store/slices/Webhook/Webhook.thunks';
 import { WebhookRegistrationForm } from '#src-app/views/webhooks/WebhooksView/WebhookDialog/WebhookRegistrationForm';
 
-interface WebhookDialogProps {
+interface RegisterWebhookDialogProps {
     isOpen: boolean;
     onClose: () => void;
     isEditMode?: boolean;
 }
 
-const WebhookDialog: FC<WebhookDialogProps> = ({
+const RegisterWebhookDialog: FC<RegisterWebhookDialogProps> = ({
     isOpen,
     onClose,
     isEditMode,
@@ -62,4 +62,4 @@ const WebhookDialog: FC<WebhookDialogProps> = ({
     );
 };
 
-export default WebhookDialog;
+export default RegisterWebhookDialog;

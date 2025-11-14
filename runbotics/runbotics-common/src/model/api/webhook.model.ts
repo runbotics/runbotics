@@ -102,6 +102,12 @@ export interface UpdateClientRegistrationWebhookRequest {
     registrationPayload?: Record<string, any> | null;
 }
 
+export interface UnregisterClientWebhookRequest {
+    applicationUrl: string;
+    applicationRequestType: RequestType;
+    unregisterPayload?: string | null;
+}
+
 export interface WebhookProcessTrigger {
     id: string;
     tenantId: Tenant['id'];

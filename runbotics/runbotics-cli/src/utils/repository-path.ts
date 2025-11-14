@@ -6,7 +6,7 @@ import { Emoji } from './emoji';
 const exec = promisify(nativeExec);
 
 const getRepositoryPath = async () => {
-    await exec('git config -l | grep -E "remote.origin.url=(https://github.com/runbotics/runbotics|git@github.com:runbotics/runbotics)"')
+    await exec('git config -l | grep -E "remote.origin.url=(https://git.clouddc.eu/RPA/runbotics|git@git.clouddc.eu/RPA/runbotics|https://github.com/runbotics/runbotics|git@github.com:runbotics/runbotics)"')
         .catch(() => {
             console.log(chalk.red(`${Emoji.error} Error: This command can be run only inside RunBotics repository`));
             process.exit(1);

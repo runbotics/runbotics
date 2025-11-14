@@ -1,6 +1,5 @@
+import { RequestType } from 'runbotics-common';
 import * as Yup from 'yup';
-
-
 
 export const registerValidationSchema = Yup.object({
     name: Yup.string().trim().required('Name is required'),
@@ -9,8 +8,8 @@ export const registerValidationSchema = Yup.object({
     applicationUrl: Yup.string()
         .required('Application URL is required'),
     type: Yup.string().optional(),
-    
-    // These fields are not conditionally checked, because of Yup validation errors 
+
+    // These fields are not conditionally checked, because of Yup validation errors
     token: Yup.string().trim().required('JWT token is required'),
     username: Yup.string().trim().required('Username is required'),
     password: Yup.string().trim().required('Password is required'),
@@ -21,4 +20,11 @@ export const registerValidationSchema = Yup.object({
         .required('Payload data path is required'),
 
     registrationPayload: Yup.string().nullable(),
+});
+
+export const unregisterValidationSchema = Yup.object({
+    applicationUrl: Yup.string()
+        .required('Application URL is required'),
+    applicationRequestType: Yup.mixed<RequestType>().oneOf(Object.values(RequestType)).required(),
+    unregisterPayload: Yup.string().nullable(),
 });

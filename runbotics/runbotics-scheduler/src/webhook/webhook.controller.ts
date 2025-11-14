@@ -1,11 +1,11 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
-import { GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
+import { Body, Controller, HttpCode, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
+import { DeleteWithTenant, GetWithTenant, PostWithTenant } from '#/utils/decorators/with-tenant.decorator';
 import { WebhookService } from '#/webhook/webhook.service';
 import { CreateClientRegistrationWebhookDto } from '#/webhook/dto/client-registration-webhook.dto';
 import { ClientRegistrationWebhook } from '#/webhook/entities/client-registration-webhook.entity';
 import { JwtAuthGuard } from '#/auth/guards';
-import { User as UserDecorator } from '#/utils/decorators/user.decorator';
-import { User } from '#/scheduler-database/user/user.entity';
+import { DeleteClientRegistrationWebhookDto, deleteClientRegistrationWebhookDtoSchema } from './dto/client-unregistration-webhook.dto';
+import { ZodValidationPipe } from '#/utils/pipes/zod-validation.pipe';
 
 @Controller('api/scheduler')
 export class WebhookController {
@@ -29,7 +29,16 @@ export class WebhookController {
 
     @Post('webhook')
     @UseGuards(JwtAuthGuard)
-    async processWebhook(@Body() body: Record<string, unknown>, @UserDecorator() { tenantId }: User) {
-        return this.webhookService.processWebhook(body, tenantId);
+    async processWebhook(@Body() body: Record<string,unknown>) {
+        return this.webhookService.processWebhook(body);
+    }
+
+    @DeleteWithTenant('webhook/:id')
+    async deleteWebhook(
+        @Param('tenantId') tenantId: string,
+        @Param('id') webhookId: string,
+        @Body(new ZodValidationPipe(deleteClientRegistrationWebhookDtoSchema)) deleteWebhook: DeleteClientRegistrationWebhookDto,
+    ) {
+        return await this.webhookService.deleteWebhookEntry(tenantId, webhookId, deleteWebhook);
     }
 }

@@ -31,7 +31,7 @@ export class WebhookProcessTrigger {
     @JoinColumn({ name: 'tenant_id' })
     tenant: Tenant;
 
-    @ManyToOne(() => ClientRegistrationWebhook)
+    @ManyToOne(() => ClientRegistrationWebhook, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'webhook_id' })
     webhook: ClientRegistrationWebhook;
 

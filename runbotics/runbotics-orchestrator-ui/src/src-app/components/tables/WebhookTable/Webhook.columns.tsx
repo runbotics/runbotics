@@ -1,9 +1,13 @@
 import React from 'react';
 
-import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
+import { DeleteOutlined } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import { Box } from '@mui/system';
 import { WebhookAuthorizationType } from 'runbotics-common';
 
 import useTranslations from '#src-app/hooks/useTranslations';
+import { useDispatch } from '#src-app/store';
+import { webhookActions } from '#src-app/store/slices/Webhook';
 import Typography from '#src-landing/components/Typography';
 
 const mapAuthMetod: Record<WebhookAuthorizationType, string> = {
@@ -14,15 +18,15 @@ const mapAuthMetod: Record<WebhookAuthorizationType, string> = {
 
 export const useWebhookColumns = () => {
     const { translate } = useTranslations();
+    const dispatch = useDispatch();
+
     return [
         {
             Header: translate('Component.WebhookTable.Name'),
             accessor: (webhook) => webhook?.name,
-            Cell: (row) => {
-                return <Typography color={'accent'} variant={'body3'} >
-                    {row.row.original.name}
-                </Typography>;
-            },
+            Cell: (row) => <Typography color={'accent'} variant={'body3'} >
+                {row.row.original.name}
+            </Typography>,
         },
         {
             Header: translate('Component.WebhookTable.ApplicationUrl'),
@@ -44,11 +48,20 @@ export const useWebhookColumns = () => {
         {
             Header: translate('Component.WebhookTable.Actions'),
             width: '70px',
+            accessor: (webhook) => webhook?.id,
             Cell: ({ row }) => (
-                <div>
-                    <EditOutlined />
-                    <DeleteOutlined color={'error'} />
-                </div>
+                <Box sx={{ display: 'flex' }}>
+                    {/* <IconButton>
+                        <EditOutlined />
+                    </IconButton> */}
+                    <IconButton>
+                        <DeleteOutlined color={'error'} onClick={() => {
+                            dispatch(webhookActions.setIsUnregisterModalOpen(true));
+                            dispatch(webhookActions.setModalWebhookId(row.original.id));
+                        }
+                        }/>
+                    </IconButton>
+                </Box>
             ),
         },
     ];

@@ -5,19 +5,27 @@ const webhooksTranslations = {
     'Webhooks.Form.PayloadDataPath': 'Payload data path',
     'Webhooks.Form.WebhookIdPath': 'Webhook ID type',
     'Webhooks.Form.RegistrationPayload': 'Registration payload',
+    'Webhooks.Form.UnregisterPayload': 'Unregister payload',
     'Webhooks.Form.AuthorizationMethod': 'Authorization Method',
     'Webhooks.Form.JwtToken': 'JWT Token',
     'Webhooks.Form.Username': 'Username',
     'Webhooks.Form.Password': 'Password',
+    'Webhooks.Dialog.UnregisterWebhook': 'Delete webhook',
+    'Webhooks.Dialog.UnregisterWebhook.Success': 'Webhook successfully unregistered and deleted',
+    'Webhooks.Dialog.UnregisterWebhook.Error': 'Error during webhook unregistration. Error message: {{ message }} ',
+    'Webhooks.Dialog.UnregisterWebhook.UnexpectedError': 'Unexpected during webhook unregistration',
+    'Webhooks.Dialog.Delete': 'Delete',
+    'Webhooks.Dialog.DeletionWarning': 'Are you sure you want to delete this webhook? This action cannot be undone and may impact processes which use webhooks already.',
     'Webhooks.List.RegisterWebhook': 'Register Webhook',
     'Webhooks.List.Search': 'Search...',
     'Webhooks.Form.Tooltip.AuthorizationMethod': 'This authorization method is used to validate and authorize the webhook on the client side.',
     'Webhooks.Form.RegistrationPayloadInfo': 'The source URL for RunBotics can be used as a parameter in the form creating a {{webhook}}.',
+    'Webhooks.List.GenerateToken': 'Generate token',
     'Webhooks.List.TokenExpirationInDays': 'Token is valid for {{ days }} days',
     'Webhooks.List.TokenAuthorizationInfo': 'The token is used to authorize client in the RunBotics',
     'Webhooks.List.RegisterNewWebhook': 'Register new webhook',
     'Webhooks.List.Register': 'Register',
     'Webhooks.List.Cancel': 'Cancel',
-}
+};
 
 export default webhooksTranslations;
