@@ -31,6 +31,7 @@ const WebhookList: FC = () => {
             dispatch(webhookActions.setSearch(localSearch));
         }, 300);
         return () => clearTimeout(delayDebounceFn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localSearch]);
 
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {

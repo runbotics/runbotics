@@ -42,15 +42,15 @@ const ProcessWebhooksComponent: FC<ProcessWebhookProps> = ({ selectedWebhooks, p
         if (!webhooks || webhooks.length === 0) {
             return <MenuItem disabled>
                 {translate('Process.Configure.Webhooks.NoWebhooksMessage')}
-            </MenuItem>
+            </MenuItem>;
         }
 
         return Object.values(webhooks).map(webhook => (
-               <MenuItem value={webhook.name} key={webhook.name}>
-                   <Checkbox checked={webhookNames.includes(webhook.name)} />
-                   <ListItemText primary={webhook.name} />
-               </MenuItem>
-           ));
+            <MenuItem value={webhook.name} key={webhook.name}>
+                <Checkbox checked={webhookNames.includes(webhook.name)} />
+                <ListItemText primary={webhook.name} />
+            </MenuItem>
+        ));
     }, [webhooks, webhookNames]);
 
     const handleWebhookSelection = async (event: SelectChangeEvent<typeof webhookNames>) => {

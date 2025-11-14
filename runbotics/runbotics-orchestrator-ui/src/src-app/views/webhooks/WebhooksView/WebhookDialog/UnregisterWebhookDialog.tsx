@@ -2,14 +2,12 @@ import { FC } from 'react';
 
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 
+import { useSnackbar } from 'notistack';
 
 import useTranslations from '#src-app/hooks/useTranslations';
 import { useDispatch, useSelector } from '#src-app/store';
 import { webhookActions } from '#src-app/store/slices/Webhook';
-import {
-    deleteWebhookEntry,
-    getWebhooks,
-} from '#src-app/store/slices/Webhook/Webhook.thunks';
+import { deleteWebhookEntry, getWebhooks } from '#src-app/store/slices/Webhook/Webhook.thunks';
 
 import { WebhookUnregisterForm } from './WebhookUnregisterForm';
 
@@ -17,13 +15,12 @@ interface UnregisterWebhookDialogProps {
     isOpen: boolean;
 }
 
-const UnregisterWebhookDialog: FC<UnregisterWebhookDialogProps> = ({
-    isOpen,
-}) => {
+const UnregisterWebhookDialog: FC<UnregisterWebhookDialogProps> = ({ isOpen }) => {
     const { translate } = useTranslations();
+    const { enqueueSnackbar } = useSnackbar();
     const dispatch = useDispatch();
-    const formData = useSelector((state) => state.webhook.unregisterWebhook);
-    const webhookId = useSelector((state) => state.webhook.modalWebhookId);
+    const formData = useSelector(state => state.webhook.unregisterWebhook);
+    const webhookId = useSelector(state => state.webhook.modalWebhookId);
 
     const onClose = () => {
         dispatch(webhookActions.setIsUnregisterModalOpen(false));
@@ -35,15 +32,21 @@ const UnregisterWebhookDialog: FC<UnregisterWebhookDialogProps> = ({
             await dispatch(
                 deleteWebhookEntry({
                     resourceId: webhookId,
-                    payload: { data: formData },
+                    payload: { data: formData }
                 })
             )
                 .unwrap()
                 .then(() => {
-                    // success snackbar
+                    enqueueSnackbar(translate('Credentials.Collection.Tile.MenuItem.Delete.Success'), { variant: 'success' });
                 })
-                .catch(() => {
-                    // error snackbar
+                .catch(error => {
+                    if (error.message) {
+                        enqueueSnackbar(translate('Webhooks.Dialog.UnregisterWebhook.Error', { message: error.message }), {
+                            variant: 'error'
+                        });
+                    } else {
+                        enqueueSnackbar(translate('Webhooks.Dialog.UnregisterWebhook.UnexpectedError'), { variant: 'error' });
+                    }
                 });
             dispatch(webhookActions.setUnregistrationForm(null));
             dispatch(getWebhooks());
@@ -52,12 +55,10 @@ const UnregisterWebhookDialog: FC<UnregisterWebhookDialogProps> = ({
 
     return (
         <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'md'}>
-            <DialogTitle>
-                {translate('Webhooks.Dialog.UnregisterWebhook')}
-            </DialogTitle>
-            <WebhookUnregisterForm/>
+            <DialogTitle>{translate('Webhooks.Dialog.UnregisterWebhook')}</DialogTitle>
+            <WebhookUnregisterForm />
             <DialogActions>
-                <Button variant={'text'} onClick={onClose} color='inherit'>
+                <Button variant={'text'} onClick={onClose} color="inherit">
                     {translate('Webhooks.List.Cancel')}
                 </Button>
                 <Button
@@ -66,7 +67,7 @@ const UnregisterWebhookDialog: FC<UnregisterWebhookDialogProps> = ({
                         onSubmit();
                         onClose();
                     }}
-                    color='error'
+                    color="error"
                 >
                     {translate('Webhooks.Dialog.Delete')}
                 </Button>
