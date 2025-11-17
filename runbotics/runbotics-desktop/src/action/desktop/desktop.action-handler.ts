@@ -301,19 +301,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 
                 results[variable.variableName] = extractedText;
                 this.logger.log(`Extracted for "${variable.variableName}": ${extractedText}`);
-            }
-
-            const fileName = path.basename(pdfFullPath, '.pdf');
-            const jsonOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.json`);
-            const hocrOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.txt`);
-            const pngCheckupOutputPath = path.join('C:\\xxx\\tested\\10wybranych', `${fileName}.png`);
-
-            fs.writeFileSync(jsonOutputPath, JSON.stringify(results, null, 2), 'utf-8');
-            fs.writeFileSync(hocrOutputPath, `${parsedResult.fullText}`, 'utf-8');
-            
-            const firstPageBuf = fs.readFileSync(preprocessedPaths[0]);
-            fs.writeFileSync(pngCheckupOutputPath, firstPageBuf as any);
-            
+            }            
             return results;
 
         } catch (error) {
