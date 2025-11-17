@@ -277,7 +277,7 @@ export default class DesktopActionHandler extends StatelessActionHandler {
                 combinedHOCR.push({ hocr, pageDimensions });
             }
             const parsedResult = parseHOCR(combinedHOCR);
-            const filteredResult = filterLinesByConfidence(parsedResult, 20);
+            const filteredResult = filterLinesByConfidence(parsedResult, 10);
 
             const results: Record<string, string> = {};
 
