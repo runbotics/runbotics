@@ -493,7 +493,7 @@ const getDesktopActions: () => Record<string, IBpmnAction> = () => ({
                                 ]
                             },
                             searchPatterns: {
-                                title: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.SearchPatterns.Title'), // add proper translation
+                                title: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.SearchPatterns.Title'),
                                 type: 'object',
                                 additionalProperties: {
                                     mainFieldLabel: translate('Process.Details.Modeler.Actions.Desktop.ReadTextFromPdf.SearchPatterns.PatternName'),

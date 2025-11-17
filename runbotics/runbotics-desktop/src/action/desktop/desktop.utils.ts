@@ -86,11 +86,11 @@ export const readTextFromImageInputSchema = z.object({
 });
 
 const pdfTextSearchVariableSchema = z.object({
-    anchorText: z.string(),
-    percentageOfError: z.number(),
-    direction: z.nativeEnum(DirectionOfSearching),
-    heightPercentage: z.number(),
-    widthPercentage: z.number(),
+    anchorText: z.string().describe('Text to search for in the PDF document'),
+    percentageOfError: z.number().min(0, 'Percentage of error must be non-negative').max(100, 'Percentage of error cannot exceed 100%'),
+    direction: z.nativeEnum(DirectionOfSearching, { errorMap: () => ({ message: 'Direction must be one of: LEFT, RIGHT, UP, or DOWN' }) }),
+    heightPercentage: z.number().min(0, 'Height percentage must be non-negative').max(100, 'Height percentage cannot exceed 100%'),
+    widthPercentage: z.number().min(0, 'Width percentage must be non-negative').max(100, 'Width percentage cannot exceed 100%'),
 });
 
 export const readTextFromPdfInputSchema = z.object({
