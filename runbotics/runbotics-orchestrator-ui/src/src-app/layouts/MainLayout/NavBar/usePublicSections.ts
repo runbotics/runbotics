@@ -104,10 +104,16 @@ export const usePublicSections = (): Section[] => {
                 {
                     title: translate('Nav.Items.AIAssistant'),
                     icon: SmartToyOutlinedIcon,
-                    href: '/app/assistant',
-                    authorities: [Role.ROLE_USER], // todo: change Role.ROLE_USER to the 'new' ROLE_USER when it appears
-                    featureKeys: [FeatureKey.AI_ASSISTANT_ACCESS],
+                    href: '/app/ai-assistants',
+                    authorities: [Role.ROLE_USER],
+                    featureKeys: [FeatureKey.AI_ASSISTANTS_ACCESS],
                 },
+                // {
+                //     title: translate('Nav.Items.Webhooks'),
+                //     icon: BadgeOutlinedIcon,
+                //     href: '/app/webhooks',
+                //     featureKeys: [FeatureKey.WEBHOOKS_PAGE_READ],
+                // },
             ],
         },
     ];

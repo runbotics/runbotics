@@ -1,6 +1,6 @@
 {
     "name": "runbotics-scheduler",
-    "version": "3.4.2",
+    "version": "3.5.0",
     "author": {
         "name": "runbotics",
         "email": "contact@runbotics.com"
@@ -19,8 +19,10 @@
         "test:watch": "vitest dev",
         "test:cov": "vitest run --coverage",
         "test:debug": "vitest --inspect-brk --threads false",
-        "typeorm": "rm -rf ./dist && rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./dist/src/ormconfig.js",
-        "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create"
+        "typeorm": "rimraf dist & rushx build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./dist/src/ormconfig.js",
+        "mig:create": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create",
+        "mig:run": "rushx typeorm migration:run",
+        "mig:revert": "rushx typeorm migration:revert"
     },
     "dependencies": {
         "@azure/msal-node": "~3.6.0",
@@ -73,7 +75,8 @@
         "bcryptjs": "~3.0.2",
         "@nestjs/swagger": "6.3.0",
         "nestjs-zod": "~4.3.1",
-        "jwt-decode": "~4.0.0"
+        "jwt-decode": "~4.0.0",
+        "helmet": "~8.1.0"
     },
     "devDependencies": {
         "@nestjs/testing": "^9.2.0",

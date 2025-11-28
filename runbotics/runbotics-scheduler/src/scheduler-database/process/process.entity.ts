@@ -3,32 +3,36 @@ import {
     CreateDateColumn,
     Entity,
     Generated,
-    JoinColumn, JoinTable, ManyToMany,
-    ManyToOne, OneToMany, OneToOne,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    OneToMany,
+    OneToOne,
     PrimaryColumn,
 } from 'typeorm';
 import { dateTransformer, numberTransformer } from '#/database/database.utils';
 import {
     IBotCollection,
     IScheduleProcess,
-    NotificationProcess, ProcessCollection as IProcessCollection,
+    NotificationProcess,
+    ProcessCollection as IProcessCollection,
     BotSystemType,
+    DEFAULT_TENANT_ID,
 } from 'runbotics-common';
 import { BotSystem } from '#/scheduler-database/bot-system/bot-system.entity';
 import { ScheduleProcess } from '#/scheduler-database/schedule-process/schedule-process.entity';
 import { User } from '#/scheduler-database/user/user.entity';
 import { BotCollection } from '#/scheduler-database/bot-collection/bot-collection.entity';
 import { ProcessContext } from '#/scheduler-database/process-context/process-context.entity';
-import {
-    NotificationProcess as NotificationProcessEntity,
-} from '#/scheduler-database/notification-process/notification-process.entity';
+import { NotificationProcess as NotificationProcessEntity } from '#/scheduler-database/notification-process/notification-process.entity';
 import { GlobalVariable } from '#/scheduler-database/global-variable/global-variable.entity';
 import { ProcessCredential } from '#/scheduler-database/process-credential/process-credential.entity';
 import { Tag } from '#/scheduler-database/tags/tag.entity';
 import { ProcessOutput } from '#/scheduler-database/process-output/process-output.entity';
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 import { ProcessCollection } from '../process-collection/process-collection.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { WebhookProcessTrigger } from '#/webhook/entities/webhook-process-trigger.entity';
 
 @Entity({ name: 'process' })
 export class ProcessEntity {
@@ -36,7 +40,6 @@ export class ProcessEntity {
     @PrimaryColumn({ type: 'bigint', transformer: numberTransformer })
     @Generated()
     id: number;
-
 
     @ApiProperty({ example: DEFAULT_TENANT_ID })
     @Column({
@@ -51,11 +54,16 @@ export class ProcessEntity {
     @Column({ type: 'varchar', length: 255 })
     name: string;
 
-    @ApiProperty({ example: 'This process handles invoice parsing and archiving.' })
+    @ApiProperty({
+        example: 'This process handles invoice parsing and archiving.',
+    })
     @Column('text')
     description: string;
 
-    @ApiProperty({ example: '<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>\n<bpmn2:definitions xmlns:xsi=\\"http://www.w3.org/2001/XMLSchema-instance\\""' })
+    @ApiProperty({
+        example:
+            '<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>\n<bpmn2:definitions xmlns:xsi=\\"http://www.w3.org/2001/XMLSchema-instance\\""',
+    })
     @Column('text')
     definition: string;
 
@@ -71,7 +79,7 @@ export class ProcessEntity {
     @Column({ name: 'is_public' })
     isPublic: boolean;
 
- @ApiProperty({ example: false, required: false })
+    @ApiProperty({ example: false, required: false })
     @Column({ name: 'is_attended', default: false, nullable: true })
     isAttended?: boolean;
 
@@ -80,7 +88,12 @@ export class ProcessEntity {
     isTriggerable?: boolean;
 
     @ApiProperty({ example: '2025-01-03T15:00:00.000Z', nullable: true })
-    @Column({ name: 'last_run', transformer: dateTransformer, type: 'timestamp without time zone', nullable: true })
+    @Column({
+        name: 'last_run',
+        transformer: dateTransformer,
+        type: 'timestamp without time zone',
+        nullable: true,
+    })
     lastRun?: string;
 
     @ApiProperty({ example: 'Success', nullable: true })
@@ -88,25 +101,35 @@ export class ProcessEntity {
     executionInfo: string;
 
     @ApiProperty({ type: () => ProcessOutput })
-    @ManyToOne(() => ProcessOutput, output => output.processes, { onUpdate: 'CASCADE' })
+    @ManyToOne(() => ProcessOutput, (output) => output.processes, {
+        onUpdate: 'CASCADE',
+    })
     @JoinColumn({ name: 'output_type' })
     output: ProcessOutput;
-    
+
     @ApiProperty({ example: 'JSON' })
-    @Column({ name: 'output_type', type: 'varchar', length: 50, default: 'JSON' })
+    @Column({
+        name: 'output_type',
+        type: 'varchar',
+        length: 50,
+        default: 'JSON',
+    })
     outputType: string;
 
     @ApiProperty({ type: () => BotSystem })
-    @ManyToOne(() => BotSystem, system => system.processes)
+    @ManyToOne(() => BotSystem, (system) => system.processes)
     @JoinColumn({ name: 'system' })
     system: BotSystem;
 
     @ApiProperty({ enum: BotSystemType, example: BotSystemType.WINDOWS })
     @Column({ name: 'system', default: BotSystemType.ANY, length: 50 })
     systemName: BotSystemType;
-    
+
     @ApiProperty({ type: () => [ScheduleProcess] })
-    @OneToMany(() => ScheduleProcess, scheduleProcess => scheduleProcess.process)
+    @OneToMany(
+        () => ScheduleProcess,
+        (scheduleProcess) => scheduleProcess.process
+    )
     schedules: IScheduleProcess[];
 
     @ApiProperty({ type: () => User })
@@ -124,14 +147,14 @@ export class ProcessEntity {
     botCollectionId: string;
 
     @ApiProperty({ type: () => ProcessCollection, nullable: true })
-    @ManyToOne(
-        () => ProcessCollection,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToOne(() => ProcessCollection, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'process_collection' })
     processCollection: IProcessCollection;
 
-    @ApiProperty({ example: '91e785a3-20d4-4911-91d4-c15cf75c9c9f', nullable: true })
+    @ApiProperty({
+        example: '91e785a3-20d4-4911-91d4-c15cf75c9c9f',
+        nullable: true,
+    })
     @Column({ name: 'process_collection', nullable: true })
     processCollectionId: string;
 
@@ -141,7 +164,7 @@ export class ProcessEntity {
     editor: User;
 
     @ApiProperty({ type: () => ProcessContext, nullable: true })
-    @OneToOne(() => ProcessContext, processContext => processContext.process)
+    @OneToOne(() => ProcessContext, (processContext) => processContext.process)
     context: ProcessContext | null;
 
     @ApiProperty({ type: () => [GlobalVariable] })
@@ -149,38 +172,40 @@ export class ProcessEntity {
     @JoinTable({
         name: 'process_global_variable',
         joinColumn: { name: 'process_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'global_variable_id', referencedColumnName: 'id' },
+        inverseJoinColumn: {
+            name: 'global_variable_id',
+            referencedColumnName: 'id',
+        },
     })
     globalVariables: GlobalVariable[];
 
     @ApiProperty({ type: () => [NotificationProcessEntity] })
     @OneToMany(
         () => NotificationProcessEntity,
-        (notificationProcess) => notificationProcess.process,
+        (notificationProcess) => notificationProcess.process
     )
     notifications: NotificationProcess[];
 
     @ApiProperty({ type: () => [ProcessCredential] })
     @OneToMany(
         () => ProcessCredential,
-        (processCredential) => processCredential.process,
+        (processCredential) => processCredential.process
     )
     processCredential: ProcessCredential[];
 
     @ApiProperty({ type: () => [Tag] })
-    @ManyToMany(
-        () => Tag,
-        tag => tag.processes,
-        {
-            eager: true,
-            cascade: true,
-            onDelete: 'CASCADE',
-        },
-    )
+    @ManyToMany(() => Tag, (tag) => tag.processes, {
+        eager: true,
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
     @JoinTable({
         name: 'tag_process',
         joinColumn: { name: 'process_id', referencedColumnName: 'id' },
         inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
     })
     tags: Tag[];
+
+    @OneToMany(() => WebhookProcessTrigger, (trigger) => trigger.process)
+    webhookTriggers: WebhookProcessTrigger[];
 }

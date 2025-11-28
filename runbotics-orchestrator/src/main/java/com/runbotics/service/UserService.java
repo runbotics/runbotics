@@ -156,7 +156,7 @@ public class UserService {
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        authorityRepository.findById(AuthoritiesConstants.RPA_USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
 
         if (inviteCodeId != null) {
@@ -624,7 +624,7 @@ public class UserService {
 
     private boolean checkTenantAllowedRoles(Set<String> userRoles) {
         Set<String> allowedRoles = new HashSet<>();
-        allowedRoles.add(AuthoritiesConstants.USER);
+        allowedRoles.add(AuthoritiesConstants.RPA_USER);
         allowedRoles.add(AuthoritiesConstants.EXTERNAL_USER);
         allowedRoles.add(AuthoritiesConstants.TENANT_ADMIN);
 

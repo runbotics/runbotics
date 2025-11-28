@@ -26,6 +26,10 @@ export const withLoggedInRedirectGuard = <P extends {}>(Component: ComponentType
                 return;
             }
 
+            const loginUrl = getLocalizedUrl('/login');
+            const currentPath = window.location.pathname;
+            if (currentPath !== loginUrl) return;
+
             const hasAdminRole = decoded.auth?.includes?.(Role.ROLE_ADMIN) ||
                 decoded.authorities?.includes?.(Role.ROLE_ADMIN) ||
                 decoded.roles?.includes?.(Role.ROLE_ADMIN);

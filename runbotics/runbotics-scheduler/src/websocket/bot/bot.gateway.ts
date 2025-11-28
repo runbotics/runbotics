@@ -22,7 +22,6 @@ import {
     IProcessInstanceLoopEvent,
     ProcessInstanceEventStatus,
     ProcessInstanceStatus,
-    User,
     WsMessage,
 } from 'runbotics-common';
 import { BotProcessEventService } from '#/websocket/bot/process-launch/bot-process-instance-event.service';
@@ -33,12 +32,16 @@ import { BotService } from '#/scheduler-database/bot/bot.service';
 import { GuestService } from '#/scheduler-database/guest/guest.service';
 import { MailService } from '#/mail/mail.service';
 import { ProcessService } from '#/scheduler-database/process/process.service';
+import { TaskQueue } from '../../utils/task-queue';
+import { User } from '#/scheduler-database/user/user.entity';
 
 @WebSocketGateway({ path: '/ws-bot', cors: { origin: '*' } })
 export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnection, OnModuleInit {
     private logger: Logger = new Logger(BotWebSocketGateway.name);
     @WebSocketServer() server: Server;
     private CONNECTION_TIMEOUT = 60_000;
+    private globalQueue: TaskQueue;
+    private readonly DEFAULT_MAX_PARALLELISM = 4;
 
     constructor(
         private readonly authService: AuthService,
@@ -51,6 +54,7 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         private readonly mailService: MailService,
         private readonly processService: ProcessService,
     ) {
+        this.globalQueue = new TaskQueue(this.DEFAULT_MAX_PARALLELISM);
     }
 
     onModuleInit() {
@@ -58,6 +62,10 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
             this.server.engine.opts.maxHttpBufferSize = 2_000_000;
             // this.server.engine.opts.transports = ['websocket'];
         }
+    }
+
+    private enqueueTask<T>(task: () => Promise<T>, botId?: string): Promise<T> {
+        return this.globalQueue.enqueue(task, botId);
     }
 
     mapProcessStatusToHttpStatus(status?: ProcessInstanceStatus): HttpStatus {
@@ -104,7 +112,13 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         clearTimeout(connectionTimeout);
 
         if (validationResponse !== null && validationResponse !== undefined) {
-            const { bot } = validationResponse as { bot: IBot, user: User };
+            const { bot, user } = validationResponse as { bot: IBot, user: User };
+            
+            // Store bot and user on socket for subsequent guard checks
+            const authSocket = client as BotAuthSocket;
+            authSocket.bot = bot;
+            authSocket.user = user;
+            
             const tenantRoom = bot.tenantId;
             this.uiGateway.emitTenant(tenantRoom, WsMessage.BOT_STATUS, bot);
 
@@ -122,6 +136,8 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
 
         const bot = await this.authService.unregisterBot(installationId as string);
 
+        await this.globalQueue.waitForCompletion(String(bot.id));
+
         const tenantRoom = bot.tenantId;
         this.uiGateway.emitTenant(tenantRoom, WsMessage.BOT_STATUS, bot);
 
@@ -138,38 +154,40 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstance: IProcessInstance,
     ) {
-        const installationId = socket.bot.installationId;
-        this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
+        return this.enqueueTask(async () => {
+            const installationId = socket.bot.installationId;
+            this.logger.log(`=> Updating process-instance (${processInstance.id}) by bot (${installationId}) | status: ${processInstance.status}`);
 
-        try {
-            if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS ||
-                processInstance.status === ProcessInstanceStatus.INITIALIZING) {
-                await this.setBotStatusBusy(socket.bot);
+            try {
+                if (processInstance.status === ProcessInstanceStatus.IN_PROGRESS ||
+                    processInstance.status === ProcessInstanceStatus.INITIALIZING) {
+                    await this.setBotStatusBusy(socket.bot);
+                }
+
+                if (!installationId) {
+                    return HttpStatus.BAD_REQUEST;
+                }
+
+                await this.botProcessService.updateProcessInstanceAndNotify(installationId, processInstance);
+
+                if (
+                    processInstance.status === ProcessInstanceStatus.ERRORED ||
+                    processInstance.status === ProcessInstanceStatus.TERMINATED
+                ) {
+                    await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
+                    await this.guestService.decrementExecutionsCount(processInstance.user.id);
+                    this.logger.log('Restored user\'s executions-count because of process interruption');
+                }
+
+                await this.handleProcessInstanceNotification(processInstance);
+            } catch (e) {
+                this.logger.error(e);
+                return HttpStatus.INTERNAL_SERVER_ERROR;
             }
+            this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
 
-            if (!installationId) {
-                return HttpStatus.BAD_REQUEST;
-            }
-
-            await this.botProcessService.updateProcessInstanceAndNotify(installationId, processInstance);
-
-            if (
-                processInstance.status === ProcessInstanceStatus.ERRORED ||
-                processInstance.status === ProcessInstanceStatus.TERMINATED
-            ) {
-                await this.botProcessEventService.setEventStatusesAlikeInstance(socket.bot, processInstance);
-                await this.guestService.decrementExecutionsCount(processInstance.user.id);
-                this.logger.log('Restored user\'s executions-count because of process interruption');
-            }
-
-            await this.handleProcessInstanceNotification(processInstance);
-        } catch (e) {
-            this.logger.error(e);
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        this.logger.log(`<= Success: process-instance (${processInstance.id}) updated by bot (${installationId}) | status: ${processInstance.status}`);
-
-        return this.mapProcessStatusToHttpStatus(processInstance.status);
+            return this.mapProcessStatusToHttpStatus(processInstance.status);
+        }, String(socket.bot.id));
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -178,21 +196,23 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceEvent,
     ) {
-        try {
-            if (processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
-                this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
-                return;
-            } else {
-                await this.setBotStatusBusy(socket.bot);
+        return this.enqueueTask(async () => {
+            try {
+                if (processInstanceEvent.status !== ProcessInstanceEventStatus.IN_PROGRESS) {
+                    this.updateProcessInstanceEvent(socket.bot, processInstanceEvent);
+                    return;
+                } else {
+                    await this.setBotStatusBusy(socket.bot);
+                }
+            } catch (e) {
+                this.logger.error(e);
+                return HttpStatus.INTERNAL_SERVER_ERROR;
             }
-        } catch (e) {
-            this.logger.error(e);
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
 
-        setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
+            setTimeout(() => this.updateProcessInstanceEvent(socket.bot, processInstanceEvent), 500);
 
-        return this.mapEventStatusToHttpStatus(processInstanceEvent.status);
+            return this.mapEventStatusToHttpStatus(processInstanceEvent.status);
+        }, String(socket.bot.id));
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -201,21 +221,23 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() socket: BotAuthSocket,
         @MessageBody() processInstanceEvent: IProcessInstanceLoopEvent,
     ) {
-        if (processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS) {
-            await this.setBotStatusBusy(socket.bot);
-        }
+        return this.enqueueTask(async () => {
+            if (processInstanceEvent.status === ProcessInstanceEventStatus.IN_PROGRESS) {
+                await this.setBotStatusBusy(socket.bot);
+            }
 
-        const installationId = socket.bot.installationId;
-        this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
-        try {
-            await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
-        } catch (e) {
-            this.logger.error(e);
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        this.logger.log(`<= Success: process-instance-loop-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+            const installationId = socket.bot.installationId;
+            this.logger.log(`=> Updating process-instance-loop-event (${processInstanceEvent.executionId}) by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
+            try {
+                await this.botProcessEventService.updateProcessInstanceLoopEvent(processInstanceEvent, socket.bot);
+            } catch (e) {
+                this.logger.error(e);
+                return HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            this.logger.log(`<= Success: process-instance-loop-event (${processInstanceEvent.executionId}) updated by bot (${installationId}) | step: ${processInstanceEvent.step}, status: ${processInstanceEvent.status}`);
 
-        return this.mapEventStatusToHttpStatus(processInstanceEvent.status);
+            return this.mapEventStatusToHttpStatus(processInstanceEvent.status);
+        }, String(socket.bot.id));
     }
 
     @UseGuards(WsBotJwtGuard)
@@ -224,10 +246,12 @@ export class BotWebSocketGateway implements OnGatewayDisconnect, OnGatewayConnec
         @ConnectedSocket() client: BotAuthSocket,
         @MessageBody() logs: string,
     ) {
-        const installationId = client.bot.installationId;
-        this.logger.log(`=> Saving logs from bot ${installationId} in a file`);
-        this.botLogService.writeLogsToFile(client.bot.id, logs);
-        this.logger.log(`<= Success: logs from bot ${installationId} saved`);
+        return this.enqueueTask(async () => {
+            const installationId = client.bot.installationId;
+            this.logger.log(`=> Saving logs from bot ${installationId} in a file`);
+            this.botLogService.writeLogsToFile(client.bot.id, logs);
+            this.logger.log(`<= Success: logs from bot ${installationId} saved`);
+        }, String(client.bot.id));
     }
 
     @UseGuards(WsBotJwtGuard)

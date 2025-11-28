@@ -1,0 +1,59 @@
+{
+    "mail": {
+        "processFailure": {
+            "subject": "RunBotics Powiadomienie o Awarii 🔧",
+            "greeting": "Cześć",
+            "processFailedMessage": "Proces ⚙️ {{processName}} ({{processId}}) zakończył się niepowodzeniem ze statusem ({{status}}).",
+            "visitLink": "Możesz odwiedzić nas tutaj",
+            "signature": "Pozdrawiamy,\nRunBotics"
+        },
+        "botDisconnection": {
+            "subject": "RunBotics Powiadomienie o Awarii 🔧",
+            "greeting": "Cześć",
+            "botDisconnectedMessage": "Bot 🤖 ({{installationId}}) został odłączony.",
+            "visitLink": "Możesz odwiedzić nas tutaj",
+            "signature": "Pozdrawiamy,\nRunBotics"
+        },
+        "subscriptionExpiration": {
+            "subject": "RunBotics - Subskrypcja",
+            "greeting": "Cześć",
+            "title": "Twoja subskrypcja {{status}}",
+            "expired": "wygasła",
+            "expiring": "wygaśnie za {{days}} dni",
+            "expirationInfo": "Pragniemy poinformować, że Twoja subskrypcja <strong>RunBotics</strong> ",
+            "renewMessage": "Aby ją przedłużyć, skontaktuj się z Nami:",
+            "contactLink": "Skontaktuj się",
+            "teamMessage": "Nasz zespół z przyjemnością pomoże w odnowieniu subskrypcji oraz odpowie na wszelkie pytania.",
+            "thankYou": "Dziękujemy za zaufanie!",
+            "signature": "Zespół RunBotics",
+            "unsubscribeMessage": "Nie chcesz otrzymywać takich wiadomości?",
+            "unsubscribeLink": "Kliknij tutaj",
+            "copyright": "{{year}} © {{env}} v{{version}}"
+        },
+        "processSummary": {
+            "subject": "Statystyki Procesów",
+            "greeting": "Cześć",
+            "intro": "Oto najnowsze statystyki dla śledzonego procesu w okresie: {{fromDate}} - {{toDate}}.",
+            "completedTasks": "Wykonane zadania",
+            "failedTasks": "Niewykonane zadania",
+            "averageDuration": "Średni czas wykonania",
+            "totalDuration": "Łączny czas wykonania",
+            "moreDetails": "Jeśli chcesz zobaczyć więcej szczegółów, ",
+            "moreDetailsLink": "zaloguj się do panelu statystyk procesu",
+            "thankYou": "Dziękujemy za zaufanie!",
+            "signature": "Zespół RunBotics",
+            "unsubscribeMessage": "Nie chcesz otrzymywać takich wiadomości?",
+            "unsubscribeLink": "Kliknij tutaj",
+            "copyright": "{{year}} © {{env}} v{{version}}"
+        },
+        "credentialChange": {
+            "subject": "Zmiana danych uwierzytelniających w posiadanej kolekcji",
+            "messageWithAttribute": "Użytkownik z adresem email <b>{{editorEmail}}</b> {{operationType}} z nazwą <i>{{attributeName}}</i> dla danych uwierzytelniających <b>{{credentialName}}</b>{{oldNameInfo}} w kolekcji <b>{{collectionName}}</b>",
+            "messageWithoutAttribute": "Użytkownik z adresem email <b>{{editorEmail}}</b> {{operationType}} dane uwierzytelniające <b>{{credentialName}}</b>{{oldNameInfo}} w kolekcji <b>{{collectionName}}</b>",
+            "oldNameInfo": " (nazwa przed zmianą <b>{{oldName}}</b>)"
+        },
+        "userActivation": {
+            "subject": "RunBotics - Aktywacja Użytkownika"
+        }
+    }
+}

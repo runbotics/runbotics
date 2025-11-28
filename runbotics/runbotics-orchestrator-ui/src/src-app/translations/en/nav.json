@@ -9,6 +9,7 @@
     "Nav.Items.Tenants": "Tenants",
     "Nav.Items.Users": "Users",
     "Nav.Items.Monitoring": "Monitoring",
-    "Nav.Items.AIAssistant": "AI Assistant",
-    "Nav.Hide": "Hide"
+    "Nav.Items.AIAssistant": "AI Assistants",
+    "Nav.Hide": "Hide",
+    "Nav.Items.Webhooks": "Webhooks"
 }

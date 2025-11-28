@@ -38,7 +38,7 @@ export const withAuthGuard = ({
     
     const hasToken = isBrowser && window.localStorage.getItem('access_token');
     const isAuthenticated = isInitialized && isBrowser && isAuthed && hasToken;
-
+    
     if (!isAuthenticated) {
         setAccessToken(null);
         redirectToWebsiteRoot(router.locale);

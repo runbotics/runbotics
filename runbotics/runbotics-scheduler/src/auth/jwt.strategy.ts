@@ -20,6 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: JWTPayload) {
-        return this.userService.findByEmail(payload.sub);
+        return this.userService.findByEmailFromToken(payload.sub);
     }
 }

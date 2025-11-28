@@ -180,17 +180,20 @@ export function LoopSubProcessBehaviour(activity, context) {
             switch (messageType) {
                 case 'stopped': {
                     broker.cancel(executionConsumerTag);
+                    removeExecutionById(executionId);
                     break;
                 }
                 case 'discard': {
                     broker.cancel(executionConsumerTag);
                     broker.publish('execution', 'execute.discard', cloneContent(content));
+                    removeExecutionById(executionId);
                     break;
                 }
                 case 'completed': {
                     setLoopVariablesInProcess(content);
                     broker.cancel(executionConsumerTag);
                     broker.publish('execution', 'execute.completed', cloneContent(content));
+                    removeExecutionById(executionId);
                     break;
                 }
                 case 'error': {
@@ -199,6 +202,7 @@ export function LoopSubProcessBehaviour(activity, context) {
                     const {error} = content;
                     logger.error(`<${id}>`, error);
                     broker.publish('execution', 'execute.error', cloneContent(content));
+                    removeExecutionById(executionId);
                     break;
                 }
             }
@@ -232,5 +236,12 @@ export function LoopSubProcessBehaviour(activity, context) {
 
     function getExecutionById(executionId) {
         return processExecutions.find((pe) => pe.executionId === executionId);
+    }
+
+    function removeExecutionById(executionId) {
+        const index = processExecutions.findIndex((pe) => pe.executionId === executionId);
+        if (index !== -1) {
+            processExecutions.splice(index, 1);
+        }
     }
 }

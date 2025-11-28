@@ -24,6 +24,7 @@ import getSQLActions from '#src-app/Actions/sql.actions';
 import getVariablesActions from '#src-app/Actions/variables.actions';
 import getVisualBasicActions from '#src-app/Actions/visualBasic.actions';
 import getWindowsActions from '#src-app/Actions/windows.actions';
+import getXmlActions from '#src-app/Actions/xml.actions';
 import getZipActions from '#src-app/Actions/zip.actions';
 
 import useTranslations from '#src-app/hooks/useTranslations';
@@ -135,6 +136,12 @@ const useInternalActionsGroups = (): Record<
                 'Process.Details.Modeler.ActionsGroup.Csv'
             ),
             items: Object.values(getCsvActions())
+        },
+        xml: {
+            label: translate(
+                'Process.Details.Modeler.ActionsGroup.Xml'
+            ),
+            items: Object.values(getXmlActions())
         },
         excel: {
             label: translate(

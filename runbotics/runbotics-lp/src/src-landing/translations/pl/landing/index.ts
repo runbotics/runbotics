@@ -2,6 +2,7 @@ import aboutTeamTranslations from './about-team.json';
 import benefitsTranslations from './benefits.json';
 import blogTranslations from './blog.json';
 import contactTranslations from './contact.json';
+import enterpriseTranslations from './enterprise.json';
 import footerTranslations from './footer.json';
 import headerTranslations from './header.json';
 import heroTranslations from './hero.json';
@@ -32,6 +33,7 @@ const landingPageTranslations = {
     ...policyTranslations,
     ...marketplaceTranslations,
     ...referencesTranslations,
+    ...enterpriseTranslations,
 };
 
 export default landingPageTranslations;

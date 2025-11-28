@@ -7,7 +7,7 @@ import { User } from '#/scheduler-database/user/user.entity';
 import { UserService } from '#/scheduler-database/user/user.service';
 import { JWTPayload } from '#/types';
 import { Logger } from '#/utils/logger';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
@@ -15,6 +15,11 @@ import { BotStatus, BotSystemType, IBot, Role } from 'runbotics-common';
 import { Socket } from 'socket.io';
 import { Connection } from 'typeorm';
 import { MsalSsoUserDto, MutableBotParams, RegisterNewBotParams } from './auth.service.types';
+import bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { Guest } from '#/scheduler-database/guest/guest.entity';
+import { AuthDto } from '#/auth/dto/auth.dto';
+import { AuthUserDtoSchema } from '#/auth/dto/auth-user.dto';
 
 interface ValidatorBotWsProps {
     client: Socket;
@@ -32,6 +37,7 @@ export class AuthService {
         private readonly botCollectionService: BotCollectionService,
         private readonly serverConfigService: ServerConfigService,
         private readonly connection: Connection,
+        private readonly jwtService: JwtService,
     ) {
     }
 
@@ -82,21 +88,38 @@ export class AuthService {
 
         return user;
     }
-    
+
     async handleMsalSsoAuth(userDto: MsalSsoUserDto) {
         const user = await this.userService.findByEmail(userDto.email);
-        if (user) {
-            if (
-                user.microsoftTenantId !== userDto.msTenantId ||
-                user.microsoftUserId !== userDto.msObjectId
-            ) {
-                throw new UnauthorizedException('Tenant ID or Microsoft User ID does not match');
-            }
-            return this.signInMicrosoftSSOUser(user);
+
+        if (!user) {
+            return this.registerMicrosoftSSOUser(userDto);
         }
-        return this.registerMicrosoftSSOUser(userDto);
+
+        const isFirstMsalLogin = !user.microsoftTenantId && !user.microsoftUserId;
+
+        if (!isFirstMsalLogin) {
+            this.validateMicrosoftCredentials(user, userDto);
+        }
+
+        const updatedUser = isFirstMsalLogin
+            ? await this.userService.addMsalSSOCredentialsToUser(user, userDto)
+            : user;
+
+        return this.signInMicrosoftSSOUser(updatedUser);
     }
-    
+
+    private validateMicrosoftCredentials(user: User, userDto: MsalSsoUserDto) {
+        if (
+            user.microsoftTenantId !== userDto.msTenantId ||
+            user.microsoftUserId !== userDto.msObjectId
+        ) {
+            throw new UnauthorizedException(
+                'Tenant ID or Microsoft User ID does not match',
+            );
+        }
+    }
+
     private signInMicrosoftSSOUser({ email, authorities }: User) {
         const roles = authorities.map((authority) => authority.name);
 
@@ -148,7 +171,7 @@ export class AuthService {
             const [
                 requiredMajor,
                 requiredMinor,
-                requiredPatch
+                requiredPatch,
             ] = await this.extractSemanticVersion(this.serverConfigService.requiredBotVersion);
 
             const [major, minor, patch] = await this.extractSemanticVersion(botVersion);
@@ -174,7 +197,7 @@ export class AuthService {
     }
 
     async validateBotWebsocketConnection({ client, isGuard }: ValidatorBotWsProps) {
-        return this.validateBotConnection({client, isGuard})
+        return this.validateBotConnection({ client, isGuard })
             .catch((error) => {
                 this.logger.error('Bot connection error', error);
                 return null;
@@ -248,7 +271,7 @@ export class AuthService {
     }
 
     private registerNewBot({
-        installationId, system, user, collection, version
+        installationId, system, user, collection, version,
     }: RegisterNewBotParams) {
         const bot = new BotEntity();
         bot.installationId = installationId;
@@ -287,7 +310,10 @@ export class AuthService {
         await queryRunner.startTransaction();
         try {
             const bot = await queryRunner.manager
-                .findOne(BotEntity, { where: { installationId: installationId }, relations: ['user', 'system', 'collection']});
+                .findOne(
+                    BotEntity,
+                    { where: { installationId: installationId }, relations: ['user', 'system', 'collection'] },
+                );
 
             bot.status = BotStatus.DISCONNECTED;
 
@@ -295,7 +321,7 @@ export class AuthService {
                 .createQueryBuilder()
                 .update(BotEntity)
                 .set({
-                   ...bot,
+                    ...bot,
                 })
                 .where('id = :id', { id: bot.id })
                 .execute();
@@ -310,6 +336,66 @@ export class AuthService {
         } finally {
             await queryRunner.release();
         }
+    }
+
+    async authenticate({ username, password, rememberMe }: AuthDto) {
+        const user = await this.userService.findByEmailForAuth(username);
+        if (!user) {
+            throw new NotFoundException({
+                message: `User with email ${username} not found`,
+                errorKey: 'user_not_found',
+            });
+        }
+        if (!user.tenant.active) {
+            throw new ForbiddenException({
+                message: 'Tenant for user is deactivated',
+                errorKey: 'tenant_not_activated',
+            });
+        }
+        const passwordAuth = await bcrypt.compare(password, user.passwordHash);
+        if (!passwordAuth) {
+            throw new UnauthorizedException();
+        }
+        if (!user.activated) {
+            throw new ForbiddenException({
+                message: `User with email ${username} is not activated`,
+                errorKey: 'user_not_activated',
+            });
+        }
+        const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
+        return {
+            idToken: this.jwtService.sign(payload, {
+                expiresIn: rememberMe ? '30d' : '1d',
+                algorithm: 'HS512',
+                noTimestamp: true,
+            }),
+            user: AuthUserDtoSchema.parse(user),
+        };
+    }
+
+    async createGuestToken(guest: Guest) {
+        if(!guest.user) {
+            throw new NotFoundException({
+                message: 'Guest has no associated user',
+                errorKey: 'guest_user_not_found',
+            });
+        }
+        const user = await this.userService.findByEmailForAuth(guest.user.email);
+        if(!user) {
+            throw new NotFoundException({
+                message: `User with email ${guest.user.email} not found`,
+                errorKey: 'user_not_found',
+            });
+        }
+        const payload = { sub: user.email, auth: user.authorities.map(authority => authority.name).at(0) };
+        return {
+            idToken: this.jwtService.sign(payload, {
+                expiresIn: '1h',
+                algorithm: 'HS512',
+                noTimestamp: true,
+            }),
+            user: AuthUserDtoSchema.parse(user),
+        };
     }
 }
 

@@ -15,17 +15,22 @@ import { UserService } from '#/scheduler-database/user/user.service';
 
 @Injectable()
 export class TenantSubscriptionValidationService {
-    private readonly logger = new Logger(TenantSubscriptionValidationService.name);
+    private readonly logger = new Logger(
+        TenantSubscriptionValidationService.name
+    );
 
     constructor(
         @InjectDataSource()
         private readonly dataSource: DataSource,
         private readonly userService: UserService,
         private readonly mailService: MailService,
-        private readonly scheduleProcessService: SchedulerService,
+        private readonly scheduleProcessService: SchedulerService
     ) {}
 
-    private async checkTenantScheduledProcesses(tenantId: string, manager: EntityManager) {
+    private async checkTenantScheduledProcesses(
+        tenantId: string,
+        manager: EntityManager
+    ) {
         const processes = await manager.find(ScheduleProcess, {
             where: {
                 user: {
@@ -44,22 +49,34 @@ export class TenantSubscriptionValidationService {
 
         const users = await manager.find(User, { where: { tenantId } });
         for (const user of users) {
-            const scheduledJobs = await this.scheduleProcessService.getScheduledJobs(user);
-            const waitingJobs = await this.scheduleProcessService.getWaitingJobs(user);
+            const scheduledJobs =
+                await this.scheduleProcessService.getScheduledJobs(user);
+            const waitingJobs =
+                await this.scheduleProcessService.getWaitingJobs(user);
             for (const job of waitingJobs) {
-                this.logger.log(`Deleting job ${job.id} for user ${user.email} in tenant ${tenantId}`);
-                await this.scheduleProcessService.deleteJobFromQueue(job.id, user);
+                this.logger.log(
+                    `Deleting job ${job.id} for user ${user.email} in tenant ${tenantId}`
+                );
+                await this.scheduleProcessService.deleteJobFromQueue(
+                    job.id,
+                    user
+                );
             }
             for (const job of scheduledJobs) {
-                this.logger.log(`Deleting job ${job.id} for user ${user.email} in tenant ${tenantId}`);
-                await this.scheduleProcessService.deleteRepeatableJob(job.id, user);
+                this.logger.log(
+                    `Deleting job ${job.id} for user ${user.email} in tenant ${tenantId}`
+                );
+                await this.scheduleProcessService.deleteRepeatableJob(
+                    job.id,
+                    user
+                );
             }
         }
     }
 
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
     async validateTenants() {
-        await this.dataSource.transaction(async manager => {
+        await this.dataSource.transaction(async (manager) => {
             this.logger.log('Starting tenant subscription validation...');
             const tenants = await manager.find(Tenant);
 
@@ -69,13 +86,15 @@ export class TenantSubscriptionValidationService {
                 const now = dayjs();
                 const endDate = dayjs(tenant.subscriptionEnd).endOf('day');
                 const diffDays = endDate.diff(now, 'day');
-
-                if (tenant.active && [30, 14, 7, -1].includes(diffDays)) {
+                if (tenant.active && [30, 14, 7, 0].includes(diffDays)) {
                     await this.notifyUsersAboutExpiration(tenant, diffDays);
                 }
 
                 if (endDate.isBefore(now) && tenant.active) {
-                    await this.checkTenantScheduledProcesses(tenant.id, manager);
+                    await this.checkTenantScheduledProcesses(
+                        tenant.id,
+                        manager
+                    );
                     await this.deactivateExpiredTenant(manager, tenant);
                 }
             }
@@ -90,24 +109,39 @@ export class TenantSubscriptionValidationService {
             let mailToLink = '';
 
             const isTenantAdmin = hasRole(user, Role.ROLE_TENANT_ADMIN);
-            const isUser = hasRole(user, Role.ROLE_USER);
+            const isRpaUser = hasRole(user, Role.ROLE_RPA_USER);
 
-            if (isUser) {
-                const tenantAdmins = await this.userService.findAllByTenantIdAndRole(tenant.id, Role.ROLE_TENANT_ADMIN);
-                recipients = tenantAdmins.map(admin => admin.email);
+            if (isRpaUser) {
+                const tenantAdmins =
+                    await this.userService.findAllByTenantIdAndRole(
+                        tenant.id,
+                        Role.ROLE_TENANT_ADMIN
+                    );
+                recipients = tenantAdmins.map((admin) => admin.email);
                 mailToLink = `mailto:${recipients.join(',')}`;
             } else if (isTenantAdmin) {
-                const globalAdmins = await this.userService.findAllByRole(Role.ROLE_ADMIN);
-                recipients = globalAdmins.map(admin => admin.email);
+                const globalAdmins = await this.userService.findAllByRole(
+                    Role.ROLE_ADMIN
+                );
+                recipients = globalAdmins.map((admin) => admin.email);
                 mailToLink = `mailto:${recipients.join(',')}`;
             }
 
-            await this.mailService.sendSubscriptionExpirationNotification(user, diffDays, mailToLink);
+            await this.mailService.sendSubscriptionExpirationNotification(
+                user,
+                diffDays,
+                mailToLink
+            );
         }
     }
 
-    private async deactivateExpiredTenant(manager: EntityManager, tenant: Tenant) {
-        this.logger.warn(`Tenant with subscription end date ${tenant.subscriptionEnd} is expired.`);
+    private async deactivateExpiredTenant(
+        manager: EntityManager,
+        tenant: Tenant
+    ) {
+        this.logger.warn(
+            `Tenant with subscription end date ${tenant.subscriptionEnd} is expired.`
+        );
         const updatedTenant: Tenant = {
             ...tenant,
             active: false,

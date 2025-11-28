@@ -1,4 +1,5 @@
 import avkLogo from '#public/images/logos/avk-logo.png';
+import lideaLogo from '#public/images/logos/logo_lidea.png';
 import raiffeisenLogo from '#public/images/logos/raiffeisen-logo.png';
 
 import { Reference } from './ReferencesContent/ReferencesContent.types';
@@ -16,6 +17,12 @@ export const REFERENCES_DATA: Reference[] = [
         quotes: ['Landing.References.Raiffeisen.Quote.1', 'Landing.References.Raiffeisen.Quote.2'],
         logo: raiffeisenLogo,
         caseStudyLink: '/blog/post/automate-hr-and-payroll-data-flow',
+    },
+    {
+        id: 'lidea',
+        quotes: ['Landing.References.Lidea.Quote.1', 'Landing.References.Lidea.Quote.2'],
+        logo: lideaLogo,
+        caseStudyLink: '/blog/post/automation-of-the-process-of-acquiring-potential-customers',
     }
 ];
 

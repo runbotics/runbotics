@@ -9,7 +9,10 @@ import {
     getFormData,
     getFormSchema,
 } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementForm';
-import { BPMNElement, BPMNElementRegistry } from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
+import {
+    BPMNElement,
+    BPMNElementRegistry,
+} from '#src-app/views/process/ProcessBuildView/Modeler/helpers/elementParameters';
 
 import {
     ModelerSyncParams,
@@ -23,17 +26,25 @@ export const getModelerActivities = (elements: BPMNElement[]) =>
         Object.keys(elements)?.filter((elm) => elm.startsWith('Activity'))
     );
 
-export const getModelerActivitiesElementsWithOutput = (elements: BPMNElementRegistry) =>
-    Object.entries(elements)?.reduce<BPMNElementRegistry>((acc, [elmKey, elmValue]) => {
-        if (elmKey.startsWith('Activity') &&
-            elmValue.element.businessObject.extensionElements.values[0]?.outputParameters) {
-            return {
-                ...acc,
-                [elmKey]: elmValue,
-            };
-        }
-        return acc;
-    }, {});
+export const getModelerActivitiesElementsWithOutput = (
+    elements: BPMNElementRegistry
+) =>
+    Object.entries(elements)?.reduce<BPMNElementRegistry>(
+        (acc, [elmKey, elmValue]) => {
+            if (
+                elmKey.startsWith('Activity') &&
+                elmValue.element.businessObject.extensionElements.values[0]
+                    ?.outputParameters
+            ) {
+                return {
+                    ...acc,
+                    [elmKey]: elmValue,
+                };
+            }
+            return acc;
+        },
+        {}
+    );
 
 export const isModelerSync = ({
     modeler,
@@ -42,7 +53,7 @@ export const isModelerSync = ({
     commandStack,
     errors,
     customValidationErrors,
-    activeDrag
+    activeDrag,
 }: ModelerSyncParams) => {
     if (!modeler) return false;
     const { _elements } = modeler.get('elementRegistry');
@@ -51,7 +62,11 @@ export const isModelerSync = ({
         _.sortBy(modelerActivities),
         _.sortBy(appliedActivities)
     );
-    if (imported && errors.length === 0 && customValidationErrors.length === 0) {
+    if (
+        imported &&
+        errors.length === 0 &&
+        customValidationErrors.length === 0
+    ) {
         return true;
     }
 
@@ -145,24 +160,25 @@ export const validateElement = ({
     }
 
     const isConnectionValid = validateConnections(element);
-    if (element.id.includes('Activity') === false) {
-        if (!isConnectionValid) {
-            const formattedType =
-                element.type[0].toUpperCase() +
-                element.type.replace(':', '.').slice(1);
+    if (!isConnectionValid) {
+        const formattedType =
+            element.type[0].toUpperCase() +
+            element.type.replace(':', '.').slice(1);
 
-            handleInvalidElement({
-                element,
-                modeler,
-                errorType: ModelerErrorType.CONNECTION_ERROR,
-                nameKey: `Process.Details.Modeler.Actions.${formattedType}.Label`,
-            });
-        } else {
-            handleValidElement({
-                element,
-                modeler,
-            });
-        }
+        handleInvalidElement({
+            element,
+            modeler,
+            errorType: ModelerErrorType.CONNECTION_ERROR,
+            nameKey: `Process.Details.Modeler.Actions.${formattedType}.Label`,
+        });
+        return;
+    }
+
+    if (element.id.includes('Activity') === false) {
+        handleValidElement({
+            element,
+            modeler,
+        });
         return;
     }
 
@@ -231,4 +247,25 @@ export const validateStartEvents = ({
             });
         }
     }
+};
+
+export const validateAllConnections = (
+    modeler: any,
+    handleInvalidElement: (props: any) => void,
+    handleValidElement: (props: any) => void
+) => {
+    const { _elements } = modeler.get('elementRegistry');
+
+    Object.values(_elements).forEach(
+        ({ element }: { element: BPMNElement }) => {
+            if (element.id && element.id.includes('Activity')) {
+                validateElement({
+                    element,
+                    handleInvalidElement,
+                    handleValidElement,
+                    modeler,
+                });
+            }
+        }
+    );
 };

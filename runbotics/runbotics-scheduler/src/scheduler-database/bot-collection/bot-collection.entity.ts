@@ -1,5 +1,6 @@
 import {
-    Column, CreateDateColumn,
+    Column,
+    CreateDateColumn,
     Entity,
     JoinColumn,
     JoinTable,
@@ -10,10 +11,9 @@ import {
     Unique,
     UpdateDateColumn,
 } from 'typeorm';
-import { IBotCollection } from 'runbotics-common';
+import { DEFAULT_TENANT_ID, IBotCollection } from 'runbotics-common';
 import { User } from '#/scheduler-database/user/user.entity';
 import { BotEntity } from '#/scheduler-database/bot/bot.entity';
-import { DEFAULT_TENANT_ID } from '#/utils/tenant.utils';
 
 @Entity({ name: 'bot_collection' })
 @Unique(['name', 'tenantId'])
@@ -44,23 +44,17 @@ export class BotCollection implements IBotCollection {
     })
     tenantId: string;
 
-    @ManyToOne(
-        () => User,
-        {
-            nullable: false,
-            onDelete: 'CASCADE',
-        },
-    )
+    @ManyToOne(() => User, {
+        nullable: false,
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
     createdByUser: User;
 
-    @OneToMany(() => BotEntity, bot => bot.collection)
+    @OneToMany(() => BotEntity, (bot) => bot.collection)
     bots: BotEntity[];
 
-    @ManyToMany(
-        () => User,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToMany(() => User, { onDelete: 'CASCADE' })
     @JoinTable({
         name: 'bot_collection_user',
         joinColumn: { name: 'bot_collection_id', referencedColumnName: 'id' },

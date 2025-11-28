@@ -653,5 +653,9 @@
     "Process.Modeler.VariablesPanel.Tag.Variable": "Variable",
     "Process.Modeler.VariablesPanel.Tag.ActionOutput": "Action output",
     "Process.Modeler.VariablesPanel.Copy.Message.Success": "Variable copied",
-    "Process.Modeler.VariablesPanel.Empty.Message": "No variables has yet been used in this process"
+    "Process.Modeler.VariablesPanel.Empty.Message": "No variables has yet been used in this process",
+    "Process.Details.Modeler.Actions.Xml.XmlToJson.Label": "Convert XML to JSON",
+    "Process.Details.Modeler.Actions.Xml.XmlToJson.Xml": "XML input",
+    "Process.Details.Modeler.Actions.Xml.JsonToXml.Label": "Convert JSON to XML",
+    "Process.Details.Modeler.Actions.Xml.JsonToXml.Json": "JSON input"
 }
